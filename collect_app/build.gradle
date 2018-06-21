@@ -181,6 +181,13 @@ allprojects {
 }
 
 dependencies {
+    //naxa [start]
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    //naxa [ends]
+
+
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation "com.android.support:support-v13:${rootProject.supportLibraryVersion}"
     implementation "com.android.support:customtabs:${rootProject.supportLibraryVersion}"
