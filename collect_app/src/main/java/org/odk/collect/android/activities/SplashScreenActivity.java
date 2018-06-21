@@ -36,6 +36,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.naxa.login.LoginActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -129,7 +130,7 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void endSplashScreen() {
-        startActivity(new Intent(this, MainMenuActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
         finish();
     }
 
