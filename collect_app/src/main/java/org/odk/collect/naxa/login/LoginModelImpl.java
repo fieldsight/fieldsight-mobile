@@ -2,19 +2,54 @@ package org.odk.collect.naxa.login;
 
 import android.os.AsyncTask;
 
+import org.odk.collect.naxa.login.model.MeResponse;
+import org.odk.collect.naxa.network.ApiInterface;
+import org.odk.collect.naxa.network.ServiceGenerator;
+
+import io.reactivex.observers.DisposableObserver;
+
 public class LoginModelImpl implements LoginModel {
 
-    private static final String[] DUMMY_CREDENTIALS = new String[] {
+    private static final String[] DUMMY_CREDENTIALS = new String[]{
             "test@gmail.com:12345678", "test2@gmail.edu:asdfasdf"
     };
     private UserLoginTask mAuthTask = null;
 
     private OnLoginFinishedListener loginFinishedListener;
+    private OnFetchUserInfoListener fetchUserInfoListener;
 
     @Override
     public void login(String username, String password, OnLoginFinishedListener listener) {
         this.loginFinishedListener = listener;
-        new UserLoginTask(username,password).execute();
+        new UserLoginTask(username, password).execute();
+    }
+
+    @Override
+    public void fetchUserInformation(OnFetchUserInfoListener listener) {
+        this.fetchUserInfoListener = listener;
+        fetchUserTask();
+    }
+
+
+    private void fetchUserTask() {
+        ServiceGenerator.createService(ApiInterface.class).getUserInformation()
+                .subscribe(new DisposableObserver<MeResponse>() {
+                    @Override
+                    public void onNext(MeResponse meResponse) {
+                        fetchUserInfoListener.onSucess(meResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        fetchUserInfoListener.onError();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     /**
