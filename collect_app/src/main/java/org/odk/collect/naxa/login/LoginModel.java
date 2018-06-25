@@ -5,7 +5,7 @@ import org.odk.collect.naxa.login.model.MeResponse;
 public interface LoginModel {
 
     interface OnLoginFinishedListener {
-        void onCanceled();
+        void onError();
 
         void onPasswordError();
 
@@ -14,7 +14,6 @@ public interface LoginModel {
 
 
     interface OnFetchUserInfoListener {
-        void onCanceled();
 
         void onError();
 

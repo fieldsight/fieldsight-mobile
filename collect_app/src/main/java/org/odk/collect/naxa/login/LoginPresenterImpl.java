@@ -3,8 +3,9 @@ package org.odk.collect.naxa.login;
 import android.text.TextUtils;
 
 import org.odk.collect.android.R;
+import org.odk.collect.naxa.login.model.MeResponse;
 
-public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFinishedListener {
+public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFinishedListener, LoginModel.OnFetchUserInfoListener {
 
     private LoginView loginView;
     private LoginModel loginModel;
@@ -29,7 +30,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
         }
 
         loginView.showProgress(true);
-        loginModel.login(username,password,this);
+        loginModel.login(username, password, this);
     }
 
     private boolean isPasswordValid(String password) {
@@ -38,8 +39,13 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     }
 
     @Override
-    public void onCanceled() {
+    public void onError() {
         loginView.showProgress(false);
+    }
+
+    @Override
+    public void onSucess(MeResponse meResponse) {
+
     }
 
     @Override

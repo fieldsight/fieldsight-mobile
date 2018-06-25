@@ -10,10 +10,10 @@ import java.util.Map;
 /**
  * Created by Susan on 11/21/2016.
  */
-public class User_All_Data_Model {
+public class User {
 
     @SerializedName("my_sites")
-    private List<My_Sites_Model> mySitesModel = new ArrayList<My_Sites_Model>();
+    private List<MySites> mySitesModel = new ArrayList<MySites>();
     @SerializedName("username")
     private String user_name;
     @SerializedName("profile_pic")
@@ -41,7 +41,7 @@ public class User_All_Data_Model {
      * @return
      *     The mySitesModel
      */
-    public List<My_Sites_Model> getMySitesModel() {
+    public List<MySites> getMySitesModel() {
         return mySitesModel;
     }
 
@@ -50,7 +50,7 @@ public class User_All_Data_Model {
      * @param mySitesModel
      *     The fieldsight_info
      */
-    public void setMySitesModel(List<My_Sites_Model> mySitesModel) {
+    public void setMySitesModel(List<MySites> mySitesModel) {
         this.mySitesModel = mySitesModel;
     }
 

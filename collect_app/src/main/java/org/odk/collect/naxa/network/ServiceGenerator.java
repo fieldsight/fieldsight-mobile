@@ -2,6 +2,7 @@ package org.odk.collect.naxa.network;
 
 import android.text.TextUtils;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -14,11 +15,12 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ServiceGenerator {
-    public final static String BASE_API_URL = "http://dotag.naxa.com.np/";
+    public final static String BASE_API_URL = "http://app.fieldsight.org";
     private static Retrofit retrofit = null;
     private static Retrofit cacheablesRetrofit = null;
     private static Gson gson = new GsonBuilder().create();
@@ -48,6 +50,8 @@ public class ServiceGenerator {
         if (!TextUtils.isEmpty(token)) {
             okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
         }
+
+        okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
 
         return okHttpClientBuilder
                 .build();
@@ -87,6 +91,8 @@ public class ServiceGenerator {
             retrofit = new Retrofit.Builder()
                     .client(createOkHttpClient())
                     .baseUrl(BASE_API_URL)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }

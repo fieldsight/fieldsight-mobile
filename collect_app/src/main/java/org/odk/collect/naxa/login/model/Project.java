@@ -7,10 +7,6 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.bcss.collect.android.fieldsight.model.SiteMetaAttribute;
-
-import java.io.Serializable;
-import java.util.Comparator;
 import java.util.List;
 
 /**

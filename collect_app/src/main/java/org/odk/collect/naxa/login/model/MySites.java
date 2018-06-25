@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class My_Sites_Model {
+public class MySites {
 
     private Project project;
     private Site site;
