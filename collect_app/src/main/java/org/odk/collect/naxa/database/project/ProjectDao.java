@@ -17,5 +17,5 @@ public interface ProjectDao {
     void deleteAll();
 
     @Query("SELECT * from project_table ORDER BY id ASC")
-    LiveData<List<ProjectModel>> getAllProjects();
+    List<ProjectModel> getAllProjects();
 }

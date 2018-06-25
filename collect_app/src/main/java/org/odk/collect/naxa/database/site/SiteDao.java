@@ -17,5 +17,5 @@ public interface SiteDao {
     void deleteAll();
 
     @Query("SELECT * from site_table ORDER BY id ASC")
-    LiveData<List<SiteModel>> getAllSites();
+    List<SiteModel> getAllSites();
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class SiteRepository {
 
     private SiteDao mSiteDao;
-    private LiveData<List<SiteModel>> mAllSiteModel;
+    private List<SiteModel> mAllSiteModel;
 
     public SiteRepository(Application application) {
         FieldSightRoomDatabase database = FieldSightRoomDatabase.getDatabase(application);
@@ -19,7 +19,7 @@ public class SiteRepository {
         this.mAllSiteModel = mSiteDao.getAllSites();
     }
 
-    LiveData<List<SiteModel>> getAllWords() {
+    public List<SiteModel> getAllSites() {
         return mAllSiteModel;
     }
 

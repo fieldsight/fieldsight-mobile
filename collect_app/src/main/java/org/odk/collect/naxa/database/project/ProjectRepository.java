@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ProjectRepository {
     private ProjectDao mProjectDao;
-    private LiveData<List<ProjectModel>> mAllProjectModel;
+    private List<ProjectModel> mAllProjectModel;
 
     public ProjectRepository(Application application) {
         FieldSightRoomDatabase database = FieldSightRoomDatabase.getDatabase(application);
@@ -18,7 +18,7 @@ public class ProjectRepository {
         this.mAllProjectModel = mProjectDao.getAllProjects();
     }
 
-    LiveData<List<ProjectModel>> getAllProjects() {
+    public List<ProjectModel> getAllProjects() {
         return mAllProjectModel;
     }
 

@@ -10,16 +10,16 @@ import java.util.List;
 public class SiteViewModel extends AndroidViewModel {
 
     private SiteRepository mSiteRepository;
-    private LiveData<List<SiteModel>> mAllSiteModel;
+    private List<SiteModel> mAllSites;
 
     public SiteViewModel(@NonNull Application application) {
         super(application);
         this.mSiteRepository = new SiteRepository(application);
-        this.mAllSiteModel = mSiteRepository.getAllWords();
+        this.mAllSites = mSiteRepository.getAllSites();
     }
 
-    public LiveData<List<SiteModel>> getmAllSiteModel() {
-        return mAllSiteModel;
+    public List<SiteModel> getmAllSites() {
+        return mAllSites;
     }
 
     public void insert(SiteModel siteModel) {

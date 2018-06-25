@@ -9,16 +9,16 @@ import java.util.List;
 
 public class ProjectViewModel extends AndroidViewModel {
     private ProjectRepository mProjectRepository;
-    private LiveData<List<ProjectModel>> mAllProjectModel;
+    private List<ProjectModel> mAllProjects;
 
     public ProjectViewModel(@NonNull Application application) {
         super(application);
         this.mProjectRepository = new ProjectRepository(application);
-        this.mAllProjectModel = mProjectRepository.getAllProjects();
+        this.mAllProjects = mProjectRepository.getAllProjects();
     }
 
-    public LiveData<List<ProjectModel>> getmAllProjectModel() {
-        return mAllProjectModel;
+    public List<ProjectModel> getmAllProjects() {
+        return mAllProjects;
     }
 
     public void insert(ProjectModel projectModel) {
