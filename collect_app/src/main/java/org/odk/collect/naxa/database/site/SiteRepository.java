@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 
 import org.odk.collect.naxa.database.FieldSightRoomDatabase;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 public class SiteRepository {
@@ -17,14 +16,14 @@ public class SiteRepository {
     public SiteRepository(Application application) {
         FieldSightRoomDatabase database = FieldSightRoomDatabase.getDatabase(application);
         this.mSiteDao = database.siteDao();
-        this.mAllSiteModel = mSiteDao.getAllWords();
+        this.mAllSiteModel = mSiteDao.getAllSites();
     }
 
     LiveData<List<SiteModel>> getAllWords() {
         return mAllSiteModel;
     }
 
-    public void insert (SiteModel siteModel) {
+    public void insert(SiteModel siteModel) {
         new insertAsyncTask(mSiteDao).execute(siteModel);
     }
 

@@ -5,13 +5,17 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import org.odk.collect.naxa.database.project.ProjectDao;
+import org.odk.collect.naxa.database.project.ProjectModel;
 import org.odk.collect.naxa.database.site.SiteDao;
 import org.odk.collect.naxa.database.site.SiteModel;
 
-@Database(entities = {SiteModel.class}, version = 1)
+@Database(entities = {SiteModel.class, ProjectModel.class}, version = 1)
 public abstract class FieldSightRoomDatabase extends RoomDatabase {
 
     public abstract SiteDao siteDao();
+
+    public abstract ProjectDao projectDao();
 
     private static FieldSightRoomDatabase INSTANCE;
 
