@@ -245,6 +245,7 @@ dependencies {
     implementation "net.danlew:android.joda:2.9.9"
 
     // Real LeakCanary for debug builds only: notifications, analysis, etc
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     debugImplementation "com.squareup.leakcanary:leakcanary-android:${rootProject.leakyCanaryVersion}"
     // No-Op version of LeakCanary for release builds: no notifications, no analysis, nothing
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
@@ -287,6 +288,9 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 
+    //for image - fieldsight
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"
     testImplementation "org.mockito:mockito-core:2.8.47"
@@ -314,6 +318,3 @@ dependencies {
 // Must be at bottom to prevent dependency collisions
 // https://developers.google.com/android/guides/google-services-plugin
 apply plugin: 'com.google.gms.google-services'
-
-
-

@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
+                    android:text="nishon.tan@gmail.com"
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -50,6 +51,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
+                    android:text="12345678"
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

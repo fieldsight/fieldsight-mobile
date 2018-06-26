@@ -1,0 +1,31 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_logout"
+        android:title="Logout"
+        app:showAsAction="never" />
+
+
+    <item
+        android:visible="false"
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_refresh"
+        android:title="Refresh"
+        app:showAsAction="never" />
+
+
+    <item
+        android:id="@+id/action_notificaiton"
+        android:icon="@drawable/ic_notifications_none_white_24dp"
+        android:orderInCategory="100"
+        android:title="Notifications"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_app_settings"
+        android:title="Settings"
+        app:showAsAction="never" />
+
+
+</menu>

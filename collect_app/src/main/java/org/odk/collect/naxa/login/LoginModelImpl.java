@@ -1,6 +1,5 @@
 package org.odk.collect.naxa.login;
 
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.android.application.Collect;
@@ -11,85 +10,44 @@ import org.odk.collect.naxa.login.model.MeResponse;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
 
+import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class LoginModelImpl implements LoginModel {
 
-    private OnLoginFinishedListener loginFinishedListener;
-    private OnFetchUserInfoListener fetchUserInfoListener;
-
     @Override
     public void login(String username, String password, OnLoginFinishedListener listener) {
-        this.loginFinishedListener = listener;
         authenticateUser(username, password, listener);
-
     }
 
-    @Override
-    public void fetchUserInformation(OnFetchUserInfoListener listener) {
-        this.fetchUserInfoListener = listener;
-        fetchUserTask();
-    }
-
-
-    private void authenticateUser(String username, String password, OnLoginFinishedListener listener) {
+    private void authenticateUser(String username, String password, OnLoginFinishedListener onLoginFinishedListener) {
         ServiceGenerator.createService(ApiInterface.class)
                 .getAuthToken(username, password)
-                .flatMap((Function<AuthResponse, ObservableSource<MeResponse>>) authResponse -> {
-
+                .map((Function<AuthResponse, ObservableSource<MeResponse>>) authResponse -> {
                     SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), Constant.PrefKey.token, authResponse.getToken());
-                    return ServiceGenerator.createService(ApiInterface.class).getUserInformation();
+                    return Observable.empty();
                 })
-                .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(getObserable(listener));
-    }
-
-    private void fetchUserTask() {
-        ServiceGenerator.createService(ApiInterface.class).getUserInformation()
-                .subscribe(new DisposableObserver<MeResponse>() {
+                .retry(3)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<ObservableSource<MeResponse>>() {
                     @Override
-                    public void onNext(MeResponse meResponse) {
-                        fetchUserInfoListener.onSucess(meResponse);
+                    public void onSuccess(ObservableSource<MeResponse> meResponseObservableSource) {
+                        onLoginFinishedListener.onSuccess();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        onLoginFinishedListener.onError();
                         e.printStackTrace();
-                        fetchUserInfoListener.onError();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
                     }
                 });
-
     }
 
-    @NonNull
-    private Observer<? super Object> getObserable(OnLoginFinishedListener listener) {
-        return new DisposableObserver<Object>() {
-            @Override
-            public void onNext(Object o) {
-
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                listener.onError();
-            }
-
-            @Override
-            public void onComplete() {
-                listener.onSuccess();
-            }
-        };
-    }
 }

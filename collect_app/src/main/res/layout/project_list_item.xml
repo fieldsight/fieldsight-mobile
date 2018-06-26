@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="165dp"
+    android:layout_marginEnd="@dimen/margin_medium"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_medium"
+    card_view:cardCornerRadius="@dimen/corner_radius"
+    card_view:cardElevation="@dimen/margin_medium">
+
+    <RelativeLayout
+        android:id="@+id/project_list_item_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/tv_project_list_name"
+            style="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_toLeftOf="@+id/img_card_main_3"
+            android:layout_toStartOf="@+id/img_card_main_3"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:minLines="1"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/tv_organization_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_project_list_name"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_toLeftOf="@id/img_card_main_3"
+            android:layout_toStartOf="@id/img_card_main_3"
+            android:maxLines="3"
+            android:minLines="1" />
+
+
+        <View
+            android:id="@+id/view_card_main3_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+
+            android:layout_marginTop="120dp"
+
+            android:background="@color/color_grey_light" />
+
+
+        <android.support.v7.widget.CardView
+
+            android:id="@+id/img_card_main_3"
+            android:layout_width="96dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            app:cardCornerRadius="3dp"
+            app:cardPreventCornerOverlap="false">
+
+
+            <ImageView
+                android:id="@+id/iv_org_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/spacing_medium"
+                app:ignore="ContentDescription" />
+
+        </android.support.v7.widget.CardView>
+
+
+        <Button
+            android:id="@+id/btn_project_list_open_survey_form"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/btn_survey_form"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

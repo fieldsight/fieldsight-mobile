@@ -13,14 +13,9 @@ public interface LoginModel {
     }
 
 
-    interface OnFetchUserInfoListener {
 
-        void onError();
-
-        void onSucess(MeResponse meResponse);
-    }
 
     void login(String username, String password, OnLoginFinishedListener listener);
 
-    void fetchUserInformation(OnFetchUserInfoListener listener);
+
 }
