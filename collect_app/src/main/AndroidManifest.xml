@@ -279,8 +279,10 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
         <activity android:name="org.odk.collect.naxa.login.LoginActivity" />
         <activity android:name="org.odk.collect.naxa.onboarding.DownloadActivity" />
-        <activity android:name="org.odk.collect.naxa.project.ProjectsActivity" />
-        <activity android:name="org.odk.collect.naxa.site.DashboardActivity" />
+        <activity
+            android:exported="true"
+            android:name="org.odk.collect.naxa.project.ProjectsActivity" />
+
 
     </application>
 
