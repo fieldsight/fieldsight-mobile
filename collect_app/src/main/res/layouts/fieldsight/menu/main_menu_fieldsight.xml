@@ -3,16 +3,21 @@
 
     <item
         android:id="@+id/action_logout"
-        android:title="Logout"
-        app:showAsAction="never" />
+        android:title="Logout" />
 
 
     <item
-        android:visible="false"
         android:id="@+id/action_refresh"
         android:icon="@drawable/ic_refresh"
         android:title="Refresh"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_refresh"
+        android:title="Search"
+        app:showAsAction="ifRoom" />
 
 
     <item
@@ -24,8 +29,9 @@
 
     <item
         android:id="@+id/action_app_settings"
-        android:title="Settings"
-        app:showAsAction="never" />
+        android:title="Settings" />
+
+
 
 
 </menu>

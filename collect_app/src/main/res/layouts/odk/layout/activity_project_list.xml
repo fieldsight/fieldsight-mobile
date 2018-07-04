@@ -7,7 +7,6 @@
 
     <include layout="@layout/general_toolbar" />
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_projects_list"
         android:layout_width="match_parent"

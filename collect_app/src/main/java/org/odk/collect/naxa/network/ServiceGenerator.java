@@ -24,6 +24,7 @@ public class ServiceGenerator {
     private static Retrofit retrofit = null;
     private static Retrofit cacheablesRetrofit = null;
     private static Gson gson = new GsonBuilder().create();
+    private static Retrofit rxRetrofit;
 
 
     public static void clearInstance() {
@@ -45,7 +46,7 @@ public class ServiceGenerator {
 
     private static OkHttpClient createOkHttpClient() {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-        String token = SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
+        String token = SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "5091b915cd28e331c04056e402b85ecae7a3da7a");
 
         if (!TextUtils.isEmpty(token)) {
             okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
@@ -109,6 +110,22 @@ public class ServiceGenerator {
         }
 
         return cacheablesRetrofit.create(serviceClass);
+    }
+
+    public static Retrofit getRxClient() {
+
+
+        if (rxRetrofit == null) {
+            rxRetrofit = new Retrofit.Builder()
+                    .client(createOkHttpClient())
+                    .baseUrl(BASE_API_URL)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+
+
+        return rxRetrofit;
     }
 
 }

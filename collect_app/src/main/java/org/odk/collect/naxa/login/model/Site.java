@@ -1,213 +1,56 @@
 package org.odk.collect.naxa.login.model;
 
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-public class Site implements Serializable {
-
-
-    private String lSiteDesc;
-    private String lLongitude;
-    private String progress;
-    private String projectName;
-    private String projectId;
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    private String add_desc;
-    private String bluePrintString;
-    private int isSiteVerified;
-    private boolean isSiteSelected;
-
-
-    @SerializedName("id")
-    @Expose
+@Entity(tableName = "site")
+public class Site {
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "id")
     private String id;
-    @SerializedName("lat")
-    @Expose
+    @ColumnInfo(name = "latitude")
     private String latitude;
-    @SerializedName("lon")
-    @Expose
+    @ColumnInfo(name = "longitude")
     private String longitude;
-    @SerializedName("identifier")
-    @Expose
+    @ColumnInfo(name = "identifier")
     private String identifier;
-    @SerializedName("name")
-    @Expose
+    @ColumnInfo(name = "name")
     private String name;
-    @SerializedName("type_id")
-    @Expose
+    @ColumnInfo(name = "typeId")
     private Integer typeId;
-    @SerializedName("type_label")
-    @Expose
+    @ColumnInfo(name = "typeLabel")
     private String typeLabel;
-    @SerializedName("phone")
-    @Expose
+    @ColumnInfo(name = "phone")
     private String phone;
-    @SerializedName("address")
-    @Expose
+    @ColumnInfo(name = "address")
     private String address;
-    @SerializedName("public_desc")
-    @Expose
+    @ColumnInfo(name = "publicDesc")
     private String publicDesc;
-    @SerializedName("additional_desc")
-    @Expose
-    private Object additionalDesc;
-    @SerializedName("logo")
-    @Expose
+    @ColumnInfo(name = "additionalDesc")
+    private String additionalDesc;
+    @ColumnInfo(name = "logo")
     private String logo;
-    @SerializedName("is_active")
-    @Expose
+    @ColumnInfo(name = "isActive")
     private Boolean isActive;
-    @SerializedName("location")
-    @Expose
+    @ColumnInfo(name = "location")
     private String location;
-    @SerializedName("is_survey")
-    @Expose
+    @ColumnInfo(name = "isSurvey")
     private Boolean isSurvey;
-    @SerializedName("date_created")
-    @Expose
+    @ColumnInfo(name = "dateCreated")
     private String dateCreated;
-    @SerializedName("project")
-    @Expose
+    @ColumnInfo(name = "project")
     private Integer project;
 
-    @SerializedName("non_field_errors")
-    @Expose
-    private String nonFieldError;
-
-    @SerializedName("type")
-    @Expose
-    private String siteTypeError;
-
     @NonNull
-    public String getNonFieldError() {
-        return nonFieldError;
-    }
-
-    @NonNull
-    public String getSiteTypeError() {
-        return siteTypeError;
-    }
-
-
-    public boolean isSiteSelected() {
-        return isSiteSelected;
-    }
-
-    public void setSiteSelected(boolean siteSelected) {
-        isSiteSelected = siteSelected;
-    }
-
-    @SerializedName("blueprints")
-    private ArrayList<String> bluePrintArrayList = new ArrayList<String>();
-
-    public int getIsSiteVerified() {
-        return isSiteVerified;
-    }
-
-    public void setIsSiteVerified(int isSiteVerified) {
-        this.isSiteVerified = isSiteVerified;
-    }
-
-
-    /**
-     * @return The name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name The name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getlSiteDesc() {
-        return lSiteDesc;
-    }
-
-    public void setlSiteDesc(String lSiteDesc) {
-        this.lSiteDesc = lSiteDesc;
-    }
-
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getProgress() {
-        return progress;
-    }
-
-    public void setProgress(String progress) {
-        this.progress = progress;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public String getAdd_desc() {
-        return add_desc;
-    }
-
-    public void setAdd_desc(String add_desc) {
-        this.add_desc = add_desc;
-    }
-
-    public List<String> getBluePrintArrayList() {
-        return bluePrintArrayList;
-    }
-
-    public void setBluePrintArrayList(ArrayList<String> bluePrintArrayList) {
-        this.bluePrintArrayList = bluePrintArrayList;
-    }
-
-    public String getBluePrintString() {
-        return bluePrintString;
-    }
-
-    public void setBluePrintString(String bluePrintString) {
-        this.bluePrintString = bluePrintString;
-    }
-
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -227,78 +70,20 @@ public class Site implements Serializable {
         this.longitude = longitude;
     }
 
-
-    public String getPhone() {
-        return phone;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
-
-    public String getPublicDesc() {
-        return publicDesc;
+    public String getName() {
+        return name;
     }
 
-    public void setPublicDesc(String publicDesc) {
-        this.publicDesc = publicDesc;
-    }
-
-    public Object getAdditionalDesc() {
-        return additionalDesc;
-    }
-
-    public void setAdditionalDesc(Object additionalDesc) {
-        this.additionalDesc = additionalDesc;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Boolean getIsSurvey() {
-        return isSurvey;
-    }
-
-    public void setIsSurvey(Boolean isSurvey) {
-        this.isSurvey = isSurvey;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Integer getProject() {
-        return project;
-    }
-
-    public void setProject(Integer project) {
-        this.project = project;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getTypeId() {
@@ -316,4 +101,85 @@ public class Site implements Serializable {
     public void setTypeLabel(String typeLabel) {
         this.typeLabel = typeLabel;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPublicDesc() {
+        return publicDesc;
+    }
+
+    public void setPublicDesc(String publicDesc) {
+        this.publicDesc = publicDesc;
+    }
+
+    public String getAdditionalDesc() {
+        return additionalDesc;
+    }
+
+    public void setAdditionalDesc(String additionalDesc) {
+        this.additionalDesc = additionalDesc;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Boolean getSurvey() {
+        return isSurvey;
+    }
+
+    public void setSurvey(Boolean survey) {
+        isSurvey = survey;
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Integer getProject() {
+        return project;
+    }
+
+    public void setProject(Integer project) {
+        this.project = project;
+    }
 }
+

@@ -36,17 +36,16 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView title, organizationName;
         private ImageView ivLogo;
-        private Button btnViewSurveyForms;
+
         private RelativeLayout rootLayout;
 
 
         private MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.tv_project_list_name);
-            organizationName = (TextView) view.findViewById(R.id.tv_organization_name);
-            ivLogo = (ImageView) view.findViewById(R.id.iv_org_logo);
-            btnViewSurveyForms = (Button) view.findViewById(R.id.btn_project_list_open_survey_form);
-            rootLayout = (RelativeLayout) view.findViewById(R.id.project_list_item_root_layout);
+            title = view.findViewById(R.id.tv_project_list_name);
+            organizationName = view.findViewById(R.id.tv_organization_name);
+            ivLogo = view.findViewById(R.id.iv_org_logo);
+            rootLayout = view.findViewById(R.id.project_list_item_root_layout);
 
             title.setTypeface(face);
 
@@ -54,7 +53,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
     }
 
 
-    public MyProjectsAdapter(final List<Project> myProjectList) {
+    MyProjectsAdapter(final List<Project> myProjectList) {
         this.myProjectList = myProjectList;
 
     }
@@ -64,6 +63,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
         return position;
     }
 
+    @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         itemView = LayoutInflater.from(parent.getContext())
@@ -82,8 +82,6 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
 
         loadImage(project.getOrganizationlogourl()).into(holder.ivLogo);
 
-        holder.btnViewSurveyForms.setOnClickListener(view -> {
-        });
 
         holder.rootLayout.setOnClickListener(view -> {
 
