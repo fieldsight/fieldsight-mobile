@@ -1,8 +1,12 @@
 package org.odk.collect.naxa.login.model;
 
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -12,8 +16,11 @@ import java.util.List;
 /**
  * Created by Susan on 11/24/2016.
  */
+@Entity(tableName = "project")
 public class Project implements Parcelable {
 
+    @PrimaryKey
+    @NonNull
     private String id;
     private String name;
     private String description;
@@ -123,6 +130,7 @@ public class Project implements Parcelable {
     @Expose
     private String phone;
 
+    @Ignore
     @SerializedName("site_meta_attributes")
     @Expose
     private List<SiteMetaAttribute> siteMetaAttributes = null;

@@ -1,0 +1,38 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_create_offline_site"
+            android:icon="@drawable/ic_search"
+            android:title="@string/nav_create_offline_site" />
+
+        <item
+            android:id="@+id/nav_view_finalized_offline_site"
+            android:icon="@drawable/ic_search"
+            android:title="@string/nav_finalized_offline_site" />
+
+        <item
+            android:id="@+id/nav_view_site_dashboard"
+            android:icon="@drawable/ic_search"
+            android:title="@string/nav_site_dashboard" />
+    </group>
+
+
+    <item android:title="@string/nav_overall_forms">
+        <menu>
+            <item
+                android:id="@+id/nav_delete_saved_form"
+                android:icon="@drawable/ic_search"
+                android:title="@string/nav_delete_saved_form" />
+            <item
+                android:id="@+id/nav_send_final_form"
+                android:icon="@drawable/ic_search"
+                android:title="@string/nav_send_final_form" />
+            <item
+                android:id="@+id/nav_edit_saved_form"
+                android:icon="@drawable/ic_search"
+                android:title="@string/nav_edit_saved_form" />
+        </menu>
+    </item>
+
+</menu>

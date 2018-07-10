@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="@dimen/margin_medium">
+
+    <!--https://stackoverflow.com/questions/27484126/adjust-icon-size-of-floating-action-button-fab-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/tab_site_list"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:elevation="0dp"
+
+        app:backgroundTint="@color/primaryColor"
+        app:useCompatPadding="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/tab_contacts"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:elevation="0dp"
+
+        app:backgroundTint="@color/primaryColor"
+        app:useCompatPadding="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/tab_map"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:elevation="0dp"
+        app:backgroundTint="@color/primaryColor"
+        app:useCompatPadding="true" />
+
+
+</LinearLayout>

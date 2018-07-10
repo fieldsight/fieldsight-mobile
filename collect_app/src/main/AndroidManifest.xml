@@ -283,6 +283,14 @@ the specific language governing permissions and limitations under the License.
             android:theme="@style/AppTheme.Light"
             android:exported="true"
             android:name="org.odk.collect.naxa.project.ProjectsActivity" />
+        <activity
+            android:theme="@style/AppTheme.Light"
+            android:exported="true"
+            android:name="org.odk.collect.naxa.site.DashboardActivity" />
+        <activity
+            android:theme="@style/AppTheme.Light"
+            android:exported="true"
+            android:name="org.odk.collect.naxa.site.SiteDashboardActivity" />
 
 
     </application>

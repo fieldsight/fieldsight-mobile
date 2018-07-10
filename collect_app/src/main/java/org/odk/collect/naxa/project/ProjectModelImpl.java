@@ -9,6 +9,7 @@ import org.odk.collect.naxa.login.model.MySites;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
+import org.odk.collect.naxa.project.db.ProjectViewModel;
 import org.odk.collect.naxa.project.event.ErrorEvent;
 import org.odk.collect.naxa.project.event.PayloadEvent;
 import org.odk.collect.naxa.project.event.ProgressEvent;
@@ -31,9 +32,11 @@ import timber.log.Timber;
 public class ProjectModelImpl implements ProjectModel {
 
     private SiteViewModel siteViewModel;
+    private ProjectViewModel projectViewModel;
 
     public ProjectModelImpl() {
         this.siteViewModel = new SiteViewModel(Collect.getInstance());
+        this.projectViewModel = new ProjectViewModel(Collect.getInstance());
     }
 
     @Override
@@ -41,10 +44,13 @@ public class ProjectModelImpl implements ProjectModel {
         ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUserInformation()
+
                 .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> Observable.just(meResponse.getData().getMySitesModel()))
+
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(mySites -> {
                     siteViewModel.insert(mySites.getSite());
+                    projectViewModel.insert(mySites.getProject());
                     return mySites.getProject();
                 })
                 .toList()

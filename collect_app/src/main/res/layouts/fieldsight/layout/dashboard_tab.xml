@@ -1,0 +1,24 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="android.support.design.widget.CoordinatorLayout">
+
+    <org.odk.collect.naxa.common.NonSwipeableViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:behavior_overlapTop="78dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@+id/pager"
+        app:layout_anchorGravity="top|right|end"
+        app:layout_collapseMode="pin"
+        app:tabIndicatorColor="@null"
+        app:tabMode="fixed" />
+
+</merge>

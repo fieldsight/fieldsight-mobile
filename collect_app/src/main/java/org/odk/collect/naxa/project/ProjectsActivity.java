@@ -1,6 +1,5 @@
 package org.odk.collect.naxa.project;
 
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -13,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,15 +19,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.naxa.common.RVEmptyObserver;
 import org.odk.collect.naxa.login.model.Project;
-import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.project.adapter.MyProjectsAdapter;
+import org.odk.collect.naxa.project.db.ProjectViewModel;
 import org.odk.collect.naxa.project.event.ErrorEvent;
 import org.odk.collect.naxa.project.event.PayloadEvent;
 import org.odk.collect.naxa.project.event.ProgressEvent;
-import org.odk.collect.naxa.project.event.SucessEvent;
-import org.odk.collect.naxa.site.db.SiteRepository;
 import org.odk.collect.naxa.site.db.SiteViewModel;
 
 import java.util.ArrayList;
@@ -73,8 +68,12 @@ public class ProjectsActivity extends AppCompatActivity implements ProjectView {
         new SiteViewModel(Collect.getInstance())
                 .getmAllSites()
                 .observe(this, sites -> {
-                    Timber.i("%s sites found", sites != null ? sites.size() : 0);
+                    Timber.i("%s sites found / database", sites != null ? sites.size() : 0);
                 });
+
+        new ProjectViewModel(Collect.getInstance()).getAllProjects().observe(this, projects -> {
+            rvProjects.swapAdapter(new MyProjectsAdapter(projects), true);
+        });
     }
 
     @Override
@@ -161,6 +160,9 @@ public class ProjectsActivity extends AppCompatActivity implements ProjectView {
 
     @Override
     public void showContent(boolean show, List<Project> projectList) {
+        if(true){
+            return;
+        }
         Timber.i("Showing content %s", show);
         if (show && projectList != null) {
             rvProjects.swapAdapter(new MyProjectsAdapter(projectList), true);

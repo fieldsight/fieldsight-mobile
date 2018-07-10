@@ -12,7 +12,6 @@ import java.util.List;
 public class SiteRepository {
 
     private SiteDao mSiteDao;
-    private List<Site> mAllSiteModel;
 
     public SiteRepository(Application application) {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(application);

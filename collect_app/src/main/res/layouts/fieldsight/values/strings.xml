@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_create_offline_site">Create New Site</string>
+    <string name="nav_finalized_offline_site">View Finalized Site(s)</string>
+    <string name="nav_site_dashboard">My Site(s)</string>
+    <string name="nav_edit_saved_form">Edit Forms</string>
+    <string name="nav_send_final_form">Upload Forms</string>
+    <string name="nav_delete_saved_form">Delete Forms</string>
+    <string name="nav_overall_forms">Overall Forms</string>
+</resources>
