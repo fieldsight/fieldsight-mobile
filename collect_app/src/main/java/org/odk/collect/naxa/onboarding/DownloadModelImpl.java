@@ -11,7 +11,9 @@ import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.project.db.ProjectViewModel;
 import org.odk.collect.naxa.site.db.SiteViewModel;
+
 import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
@@ -19,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_ERROR;
 
 public class DownloadModelImpl implements DownloadModel {
@@ -54,6 +57,11 @@ public class DownloadModelImpl implements DownloadModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getObsebable(Constant.DownloadUID.PROJECT_SITES));
+    }
+
+    @Override
+    public void fetchODKForms() {
+
     }
 
     private SingleObserver<? super List<Project>> getObsebable(int uid) {

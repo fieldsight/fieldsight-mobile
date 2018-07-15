@@ -13,10 +13,15 @@ public class DownloadPresenterImpl implements DownloadPresenter {
     @Override
     public void onDownloadItemClick(DownloadableItem downloadItem) {
 
-        switch (downloadItem.getUid()) {
-            default:
-                downloadModel.fetchProjectSites();
-                break;
-        }
+    }
+
+    @Override
+    public void onToggleButtonClick() {
+        downloadView.toggleAll();
+    }
+
+    @Override
+    public void onDownloadSelectedButtonClick() {
+        downloadModel.fetchProjectSites();
     }
 }

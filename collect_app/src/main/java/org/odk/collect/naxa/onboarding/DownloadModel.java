@@ -7,4 +7,5 @@ public interface DownloadModel {
 
     void fetchProjectSites();
 
+    void fetchODKForms();
 }

@@ -21,13 +21,17 @@ import org.odk.collect.naxa.generalforms.GeneralFormsDiffCallback;
 
 import java.util.ArrayList;
 
-public class DownloadListAdapter extends RecyclerView.Adapter<DisplayGeneralFormsAdapter.ViewHolder> {
+public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapter.ViewHolder> {
 
     private ArrayList<DownloadableItem> downloadableItems;
     private onDownLoadItemClick listener;
 
     DownloadListAdapter(ArrayList<DownloadableItem> downloadableItems) {
         this.downloadableItems = downloadableItems;
+    }
+
+    public void setOnClickListener(onDownLoadItemClick listener) {
+        this.listener = listener;
     }
 
     public void updateList(ArrayList<DownloadableItem> newList) {
@@ -39,48 +43,41 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DisplayGeneralForm
 
     @NonNull
     @Override
-    public DisplayGeneralFormsAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
+    public DownloadListAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
         View rootLayout = LayoutInflater.from(parent.getContext()).inflate(R.layout.download_list_item, null);
         final DisplayGeneralFormsAdapter.ViewHolder viewHolder = new DisplayGeneralFormsAdapter.ViewHolder(rootLayout);
-        return new DisplayGeneralFormsAdapter.ViewHolder(rootLayout);
+        return new DownloadListAdapter.ViewHolder(rootLayout);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final DisplayGeneralFormsAdapter.ViewHolder viewHolder, int position) {
-
+    public void onBindViewHolder(@NonNull final DownloadListAdapter.ViewHolder viewHolder, int position) {
+        DownloadableItem downloadableItem = downloadableItems.get(viewHolder.getAdapterPosition());
+        viewHolder.checkedItem.setText(downloadableItem.getTitle(), downloadableItem.getDetail());
     }
-
 
     @Override
     public int getItemCount() {
         return downloadableItems.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvFormName, tvDesc, tvLastFilledDateTime, tvIconText;
-        Button btnOpenEdu, btnOpenHistory;
         RelativeLayout rootLayout;
+        CheckedItem checkedItem;
 
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
+            rootLayout = itemLayoutView.findViewById(R.id.layout_download_list_item);
+            checkedItem = itemLayoutView.findViewById(R.id.checked_item);
 
-            tvFormName = (TextView) itemLayoutView.findViewById(R.id.tv_name);
-            tvDesc = (TextView) itemLayoutView.findViewById(R.id.tv_desc);
-            tvLastFilledDateTime = (TextView) itemLayoutView.findViewById(R.id.tv_last_filled_dt);
-            btnOpenHistory = (Button) itemLayoutView.findViewById(R.id.btn_general_history);
-            btnOpenEdu = (Button) itemLayoutView.findViewById(R.id.btn_open_edu);
-            rootLayout = (RelativeLayout) itemLayoutView.findViewById(R.id.rl_form_list_item);
-            tvIconText = (TextView) itemLayoutView.findViewById(R.id.general_icon_text);
-
-
+            rootLayout.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemTap(downloadableItems.get(getAdapterPosition()));
+                    checkedItem.toggle();
+                }
+            });
         }
-    }
-
-
-    public void setGeneralFormClickListener(DownloadListAdapter.onDownLoadItemClick listener) {
-        this.listener = listener;
     }
 
 
