@@ -64,4 +64,7 @@ public class Constant {
     public static final String EXTRA_MESSAGE = "extra_msg";
     public static final String EXTRA_PROJECT_ID = "extra_msg";
 
+    public final static class DownloadUID {
+        public static final int PROJECT_SITES = 1;
+    }
 }

@@ -23,17 +23,17 @@ import java.util.ArrayList;
 
 public class DownloadListAdapter extends RecyclerView.Adapter<DisplayGeneralFormsAdapter.ViewHolder> {
 
-    private ArrayList<GeneralForm> generalForms;
-    private DisplayGeneralFormsAdapter.onGeneralFormClickListener listener;
+    private ArrayList<DownloadableItem> downloadableItems;
+    private onDownLoadItemClick listener;
 
-    DownloadListAdapter(ArrayList<GeneralForm> generalForms) {
-        this.generalForms = generalForms;
+    DownloadListAdapter(ArrayList<DownloadableItem> downloadableItems) {
+        this.downloadableItems = downloadableItems;
     }
 
-    public void updateList(ArrayList<GeneralForm> newList) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new GeneralFormsDiffCallback(newList, generalForms));
-        generalForms.clear();
-        generalForms.addAll(newList);
+    public void updateList(ArrayList<DownloadableItem> newList) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DownloadableItemsDiffCallback(newList, downloadableItems));
+        downloadableItems.clear();
+        downloadableItems.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -47,63 +47,13 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DisplayGeneralForm
 
     @Override
     public void onBindViewHolder(@NonNull final DisplayGeneralFormsAdapter.ViewHolder viewHolder, int position) {
-        final GeneralForm generalForm = generalForms.get(viewHolder.getAdapterPosition());
 
-        viewHolder.tvFormName.setText(generalForm.getFormName());
-        viewHolder.tvDesc.setText(generalForm.getFormName());
-        viewHolder.tvLastFilledDateTime.setText(generalForm.getLastFilledDateTime());
-        viewHolder.tvIconText.setText(generalForm.getFormName().substring(0, 1));
-
-        viewHolder.btnOpenEdu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onGuideBookButtonClicked(generalForm, position);
-            }
-        });
-
-        viewHolder.btnOpenHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                listener.onFormHistoryButtonClicked(generalForm);
-            }
-        });
-
-        viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                listener.onFormItemClicked(generalForm);
-            }
-        });
-
-        viewHolder.rootLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (BuildConfig.DEBUG) {
-
-                    Context context = viewHolder.rootLayout.getContext();
-                    String msg = String.format("FormID %s\nSiteID %s\nDeployedFrom %s", generalForm.getFsFormId(), generalForm.getSiteId(), generalForm.getFormDeployedFrom());
-                    DialogFactory.createGenericErrorDialog(context, msg).show();
-
-                }
-                return false;
-            }
-        });
-
-        viewHolder.btnOpenEdu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onGuideBookButtonClicked(generalForm, position);
-            }
-        });
     }
 
 
     @Override
     public int getItemCount() {
-        return generalForms.size();
+        return downloadableItems.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -129,21 +79,12 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DisplayGeneralForm
     }
 
 
-    public void setGeneralFormClickListener(DisplayGeneralFormsAdapter.onGeneralFormClickListener listener) {
+    public void setGeneralFormClickListener(DownloadListAdapter.onDownLoadItemClick listener) {
         this.listener = listener;
     }
 
-    public interface onGeneralFormClickListener {
 
-
-        void onGuideBookButtonClicked(GeneralForm generalForm, int position);
-
-        void onFormItemClicked(GeneralForm generalForm);
-
-        void onFormStatusClicked();
-
-        void onFormItemLongClicked(String deployedFrom);
-
-        void onFormHistoryButtonClicked(GeneralForm generalForm);
+    public interface onDownLoadItemClick {
+        void onItemTap(DownloadableItem downloadableItem);
     }
 }

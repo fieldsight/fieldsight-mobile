@@ -126,12 +126,6 @@ public class GeneralFormListFragment extends Fragment implements DisplayGeneralF
             Collect.createODKDirs();
         } catch (RuntimeException e) {
             createErrorDialog(e.getMessage(), true);
-            return;
-        }
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(syncMsgKey)) {
-            TextView tv = (TextView) getActivity().findViewById(R.id.status_text);
-            tv.setText(savedInstanceState.getString(syncMsgKey));
         }
     }
 
