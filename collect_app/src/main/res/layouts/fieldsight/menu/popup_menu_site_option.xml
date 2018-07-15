@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popup_view_blue_prints"
+        android:title="View Site Documents" />
+
+    <item
+        android:id="@+id/popup_open_in_map"
+        android:title="Open in Map" />
+
+    <item
+        android:id="@+id/popup_open_edit"
+        android:title="Edit Site Information" />
+
+
+    <item
+        android:id="@+id/popup_view_metadata"
+        android:title="View MetaData"
+        android:visible="false" />
+</menu>

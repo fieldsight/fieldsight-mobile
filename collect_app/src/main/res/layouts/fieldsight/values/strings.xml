@@ -7,4 +7,54 @@
     <string name="nav_send_final_form">Upload Forms</string>
     <string name="nav_delete_saved_form">Delete Forms</string>
     <string name="nav_overall_forms">Overall Forms</string>
+    <string name="msg_coming_soon">Coming Soon</string>
+    <string name="msg_form_submitted_by">Submitted by %s</string>
+    <string name="msg_loading_failed">Loading Failed</string>
+    <string name="btn_previous_submissions">View Submissions</string>
+    <string name="btn_education_materials">View Materials</string>
+    <string name="toolbar_prev_submission_list">Previous submissions</string>
+    <string name="btn_survey_form">Open Survey Form</string>
+    <string name="msg_no_data_found">No data found</string>
+    <string name="title_activity_site_option">SiteOptionActivity</string>
+    <string name="transition_previous_submission">transition_previous_submission</string>
+    <string name="scheduled_forms">Scheduled Forms</string>
+    <string name="desc_schedule_forms">Opens list of schedule forms</string>
+    <string name="desc_general_forms">Opens list of general forms</string>
+    <string name="desc_staged_forms">Opens list of stages</string>
+    <string name="general_forms">General Forms</string>
+    <string name="staged_forms">Staged Forms</string>
+    <string name="overall_forms">Overall Forms</string>
+    <string name="title_activity_finalized_site_list">FinalizedSiteListActivity</string>
+    <string name="action_toggle_site_finalize">Toggle Finalized Site(s)</string>
+    <string name="dialog_title_delete_site">Delete %s ?</string>
+    <string name="msg_delete_sucess">%s has been deleted</string>
+    <string name="msg_delete_failed">Failed to delete %s</string>
+    <string name="msg_permanent_network_error">Server incapable of responding to the request</string>
+    <string name="msg_temporary_network_error">Temporary network error</string>
+    <string name="btn_text_off_not_finalized">Not Finalized</string>
+    <string name="btn_text_on_finalized">Finalized</string>
+    <string name="btn_text_delete_site">Delete Site</string>
+    <string name="upload">Upload</string>
+    <string name="all_msg_logout_no__internet">Active Internet required to logout</string>
+    <string name="toolbar_form_types">Form Types</string>
+
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_error_title">Unexpected Error Occurred.</string>
+    <string name="dialog_error_title_sync_failed">Data Sync Failed (Code: %1$s)</string>
+    <string name="dialog_title_warning_logout"> Caution</string>
+    <string name="dialog_warning_logout_pos">Delete and logout</string>
+    <string name="dialog_warning_logout_neg">Dismiss</string>
+    <string name="dialog_title_error_register">Error Registering.</string>
+    <string name="dialog_error_register">Could not register to sever.\n • Try again in a few minutes \n • If error persists contact Web Admin.</string>
+    <string name="dialog_title_delete_sites">Delete %1$d sites</string>
+    <string name="dialog_msg_delete_site">%s will be permanently deleted</string>
+    <string name="dialog_action_delete">Delete</string>
+    <string name="dialog_action_hide">Hide</string>
+    <string name="dialog_unexpected_error_title">An unexpected error occurred.</string>
+    <string name="dialog_action_dismiss">Dismiss</string>
+    <string name="forms_msg_none_available">Nothing available to display.\\n\\nTry Refreshing or Contact Web Admin.</string>
+    <string name="toolbar_general_forms">General Forms</string>
+    <string name="form_not_present">Unable to edit this saved form because the corresponding blank form is not present or was deleted.\\n\\nForm ID: %1$s</string>
+
+
 </resources>

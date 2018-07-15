@@ -280,19 +280,12 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="org.odk.collect.naxa.login.LoginActivity" />
         <activity android:name="org.odk.collect.naxa.onboarding.DownloadActivity" />
         <activity
-            android:theme="@style/AppTheme.Light"
+            android:name="org.odk.collect.naxa.project.ProjectsActivity"
             android:exported="true"
-            android:name="org.odk.collect.naxa.project.ProjectsActivity" />
+            android:theme="@style/AppTheme.Light" />
         <activity
-            android:theme="@style/AppTheme.Light"
-            android:exported="true"
-            android:name="org.odk.collect.naxa.site.DashboardActivity" />
-        <activity
-            android:theme="@style/AppTheme.Light"
-            android:exported="true"
-            android:name="org.odk.collect.naxa.site.SiteDashboardActivity" />
-
-
+            android:name="org.odk.collect.naxa.site.FragmentHostActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

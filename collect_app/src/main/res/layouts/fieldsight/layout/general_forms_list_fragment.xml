@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/no_message"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/white"
+        android:gravity="center"
+        android:paddingEnd="20dip"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/forms_msg_none_available"
+        android:textColor="@drawable/black"
+        android:textSize="@dimen/text_size_medium" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/android_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+</LinearLayout>

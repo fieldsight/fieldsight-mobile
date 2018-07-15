@@ -11,20 +11,25 @@ import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.project.db.ProjectDao;
 import org.odk.collect.naxa.site.db.SiteDao;
 
+import java.io.File;
+
 @Database(entities = {Site.class, Project.class}, version = 2)
 public abstract class FieldSightDatabase extends RoomDatabase {
 
     private static FieldSightDatabase INSTANCE;
 
     public abstract SiteDao getSiteDAO();
+
     public abstract ProjectDao getProjectDAO();
+
+    private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 
     public static FieldSightDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (FieldSightDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            FieldSightDatabase.class, "fieldsight_database")
+                            FieldSightDatabase.class, DB_PATH)
                             .build();
                 }
             }

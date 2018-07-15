@@ -6,19 +6,28 @@ import android.preference.PreferenceManager;
 
 public class SharedPreferenceUtils {
 
-    public static String KEY_DoTagCounter = "DoTagCounter";
-    public static String KEY_FirstTimeLoad = "FirstTimeLoad";
+    public static class PREF_KEY {
+        public static final String FORM_SESSION = "form_id";
+    }
+
+    public static class PREF_VALUE_KEY {
+        public String KEY_URL = "url";
+        public String KEY_FORM_TYPE = "form_type";
+        public String KEY_PROJECT_ID = "project_id";
+        public String KEY_FORM_DEPLOYED_FROM = "form_deployed_from";
+    }
 
     /**
      * Called to save supplied value in shared preferences against given key.
+     *
      * @param context Context of caller activity
-     * @param key Key of value to save against
-     * @param value Value to save
+     * @param key     Key of value to save against
+     * @param value   Value to save
      */
     public static void saveToPrefs(Context context, String key, String value) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(key,value);
+        editor.putString(key, value);
         editor.commit();
     }
 
@@ -28,11 +37,13 @@ public class SharedPreferenceUtils {
         editor.putBoolean(key, value);
         editor.commit();
     }
+
     /**
      * Called to retrieve required value from shared preferences, identified by given key.
      * Default value will be returned of no value found or error occurred.
-     * @param context Context of caller activity
-     * @param key Key to find value against
+     *
+     * @param context      Context of caller activity
+     * @param key          Key to find value against
      * @param defaultValue Value to return if no data found against given key
      * @return Return the value found against given key, default if not found or any error occurs
      */
@@ -55,10 +66,10 @@ public class SharedPreferenceUtils {
             return defaultValue;
         }
     }
+
     /**
-     *
      * @param context Context of caller activity
-     * @param key Key to delete from SharedPreferences
+     * @param key     Key to delete from SharedPreferences
      */
     public static void removeFromPrefs(Context context, String key) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
