@@ -1,5 +1,13 @@
 package org.odk.collect.naxa.onboarding;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.utilities.ToastUtils;
+
 public class DownloadPresenterImpl implements DownloadPresenter {
 
     private DownloadView downloadView;
@@ -22,6 +30,15 @@ public class DownloadPresenterImpl implements DownloadPresenter {
 
     @Override
     public void onDownloadSelectedButtonClick() {
-        downloadModel.fetchProjectSites();
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) Collect.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
+
+        if (ni == null || !ni.isConnected()) {
+            ToastUtils.showShortToast(R.string.no_connection);
+            return;
+        }
+
+        downloadModel.fetchODKForms();
     }
 }

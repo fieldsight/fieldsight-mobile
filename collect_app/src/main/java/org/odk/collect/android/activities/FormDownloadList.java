@@ -89,11 +89,11 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     private static final String SELECTED_FORMS = "selectedForms";
 
     public static final String FORMNAME = "formname";
-    private static final String FORMDETAIL_KEY = "formdetailkey";
+    public static final String FORMDETAIL_KEY = "formdetailkey";
     public static final String FORMID_DISPLAY = "formiddisplay";
 
     public static final String FORM_ID_KEY = "formid";
-    private static final String FORM_VERSION_KEY = "formversion";
+    public static final String FORM_VERSION_KEY = "formversion";
 
     private String alertMsg;
     private boolean alertShowing = false;
