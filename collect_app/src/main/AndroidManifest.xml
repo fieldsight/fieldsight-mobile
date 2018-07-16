@@ -252,6 +252,7 @@ the specific language governing permissions and limitations under the License.
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
             android:exported="false" />
+        <service android:name="org.odk.collect.naxa.onboarding.XMLFormDownloadService" />
         <!-- ... -->
 
         <meta-data

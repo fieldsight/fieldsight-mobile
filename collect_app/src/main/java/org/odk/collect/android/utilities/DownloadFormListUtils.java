@@ -52,9 +52,16 @@ public class DownloadFormListUtils {
     }
 
     private DownloadFormListUtils() {
+
     }
 
+
     public static HashMap<String, FormDetails> downloadFormList(boolean alwaysCheckMediaFiles) {
+
+        return null;
+    }
+
+    public static HashMap<String, FormDetails> downloadFormList(boolean alwaysCheckMediaFiles, String url) {
         SharedPreferences settings =
                 PreferenceManager.getDefaultSharedPreferences(
                         Collect.getInstance().getBaseContext());
@@ -76,7 +83,7 @@ public class DownloadFormListUtils {
         HttpClient httpclient = WebUtils.createHttpClient(WebUtils.CONNECTION_TIMEOUT);
 
         DocumentFetchResult result =
-                WebUtils.getXmlDocument(downloadListUrl, localContext, httpclient);
+                WebUtils.getXmlDocument(url, localContext, httpclient);
 
         // If we can't get the document, return the error, cancel the task
         if (result.errorMessage != null) {

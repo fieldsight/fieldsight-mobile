@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import org.odk.collect.android.listeners.FormListDownloaderListener;
 import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.utilities.DownloadFormListUtils;
+import org.odk.collect.naxa.onboarding.XMLForm;
 
 import java.util.HashMap;
 
@@ -33,10 +34,19 @@ import java.util.HashMap;
 public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String, FormDetails>> {
 
     private FormListDownloaderListener stateListener;
+    private XMLForm xmlForm;
+
+    public DownloadFormListTask(XMLForm xmlForm) {
+        this.xmlForm = xmlForm;
+    }
+
+    public DownloadFormListTask(){
+
+    }
 
     @Override
     protected HashMap<String, FormDetails> doInBackground(Void... values) {
-        return DownloadFormListUtils.downloadFormList(false);
+        return DownloadFormListUtils.downloadFormList(false, xmlForm.getDownloadUrl());
     }
 
     @Override

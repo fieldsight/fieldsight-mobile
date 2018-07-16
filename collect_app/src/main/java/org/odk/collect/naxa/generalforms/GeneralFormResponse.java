@@ -3,8 +3,6 @@ package org.odk.collect.naxa.generalforms;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import org.bcss.collect.android.naxa.project.Em;
-
 import java.util.List;
 
 public class GeneralFormResponse {

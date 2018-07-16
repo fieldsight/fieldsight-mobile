@@ -5,6 +5,7 @@ import org.odk.collect.android.R;
 public class Constant {
 
     public static int selectedFragmentId;
+    public static String EXTRA_RECEIVER = "extra_receiver";
 
     public static class Notification {
         public static final int FOREGROUND_SERVICE = 123;
