@@ -88,6 +88,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
             @Override
             public void onChanged(@Nullable List<Project> projects) {
                 ArrayList<String> projectIds = new ArrayList<>();
+
                 for (Project project : projects) {
                     projectIds.add(project.getId());
                 }
@@ -95,7 +96,12 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                 for (String projectId : projectIds) {
                     XMLForm XMLForm;
 
-                    XMLForm = new XMLFormBuilder().setFormCreatorsId(projectId).setIsCreatedFromProject(false).setDownloadUrl(APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(projectId)).createXMLForm();
+                    XMLForm = new XMLFormBuilder()
+                            .setFormCreatorsId(projectId)
+                            .setIsCreatedFromProject(false)
+                            .setDownloadUrl(APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(projectId))
+                            .createXMLForm();
+
                     formsToDownlaod.add(XMLForm);
 
                     XMLForm = new XMLFormBuilder().setFormCreatorsId(projectId).setIsCreatedFromProject(true).setDownloadUrl(APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(projectId)).createXMLForm();
@@ -118,7 +124,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
 
     public void downloadFormList(Context context, FormListDownloaderListener fl, DownloadFormsTaskListener fdl, XMLForm xmlForm) {
-
 
         mFormNamesAndURLs = new HashMap<String, FormDetails>();
         if (mDownloadFormListTask != null && mDownloadFormListTask.getStatus() != AsyncTask.Status.FINISHED) {

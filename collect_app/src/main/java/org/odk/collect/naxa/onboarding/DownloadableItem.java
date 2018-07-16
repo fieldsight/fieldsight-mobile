@@ -9,15 +9,15 @@ import com.google.common.base.Objects;
 
 public class DownloadableItem {
 
-    private String uid;
+    private int uid;
     private String downloadingStatus;
     private String lastSyncDateTime;
-
-
     private String title;
     private String detail;
 
-    public DownloadableItem(String uid, String downloadingStatus, String lastSyncDateTime, String title, String detail) {
+
+
+    public DownloadableItem(int uid, String downloadingStatus, String lastSyncDateTime, String title, String detail) {
         this.uid = uid;
         this.downloadingStatus = downloadingStatus;
         this.lastSyncDateTime = lastSyncDateTime;
@@ -29,6 +29,10 @@ public class DownloadableItem {
         return downloadingStatus;
     }
 
+    public void setDownloadingStatus(String downloadingStatus){
+        this.downloadingStatus = downloadingStatus;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -37,7 +41,7 @@ public class DownloadableItem {
         return detail;
     }
 
-    public String getUid() {
+    public int getUid() {
         return uid;
     }
 

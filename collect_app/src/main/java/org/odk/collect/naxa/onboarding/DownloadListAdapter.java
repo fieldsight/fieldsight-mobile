@@ -1,25 +1,18 @@
 package org.odk.collect.naxa.onboarding;
 
-import android.content.Context;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
-import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.generalforms.DisplayGeneralFormsAdapter;
-import org.odk.collect.naxa.generalforms.GeneralForm;
-import org.odk.collect.naxa.generalforms.GeneralFormsDiffCallback;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapter.ViewHolder> {
 
@@ -30,11 +23,16 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
         this.downloadableItems = downloadableItems;
     }
 
+
+    public ArrayList<DownloadableItem> getList() {
+        return downloadableItems;
+    }
+
     public void setOnClickListener(onDownLoadItemClick listener) {
         this.listener = listener;
     }
 
-    public void updateList(ArrayList<DownloadableItem> newList) {
+    public void updateList(List<DownloadableItem> newList) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DownloadableItemsDiffCallback(newList, downloadableItems));
         downloadableItems.clear();
         downloadableItems.addAll(newList);

@@ -67,5 +67,7 @@ public class Constant {
 
     public final static class DownloadUID {
         public static final int PROJECT_SITES = 1;
+        public static final int ODK_FORMS = 2;
+        public static final int GENERAL_FORMS = 3;
     }
 }
