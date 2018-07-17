@@ -52,8 +52,11 @@ import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.project.MapFragment;
 import org.odk.collect.naxa.project.ProjectContactsFragment;
+import org.odk.collect.naxa.site.db.SiteRepository;
+import org.odk.collect.naxa.site.db.SiteViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -123,7 +126,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
         searchView.setOnClickListener(view -> {
             if (Collect.allowClick()) {
-                ToastUtils.showLongToast("Search not implemented");
+                loadToolBarSearch();
             }
         });
 
@@ -542,21 +545,19 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                     }
                 })
                 .distinctUntilChanged()
-                .switchMap(new Function<String, ObservableSource<ArrayList<Site>>>() {
+                .switchMap(new Function<String, ObservableSource<List<Site>>>() {
                     @Override
-                    public ObservableSource<ArrayList<Site>> apply(String userQuery) throws Exception {
-                        ArrayList<Site> filteredSites = DatabaseHelper
-                                .getInstance()
-                                .searchSites(userQuery.trim());
-
+                    public ObservableSource<List<Site>> apply(String userQuery) throws Exception {
+                        List<Site> filteredSites =
+                                new SiteViewModel(Collect.getInstance()).searchSites(userQuery.trim());
                         return Observable.just(filteredSites);
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<ArrayList<Site>>() {
+                .subscribe(new DisposableObserver<List<Site>>() {
                     @Override
-                    public void onNext(ArrayList<Site> mySiteLocationPojos) {
+                    public void onNext(List<Site> mySiteLocationPojos) {
 
 
                         listSearch.setVisibility(mySiteLocationPojos.isEmpty() ? View.GONE : View.VISIBLE);

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/card_view_list_item_title_desc"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_small"
+    android:layout_marginEnd="@dimen/margin_medium"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_medium"
+    android:background="@android:color/white"
+    android:foreground="?attr/selectableItemBackground"
+    card_view:cardCornerRadius="@dimen/card_recycler_corner_radius"
+    card_view:cardElevation="@dimen/card_recycler_elevation">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/margin_large">
+
+
+        <RelativeLayout
+            android:id="@+id/rela_round"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large">
+
+
+            <ImageView
+                android:layout_width="@dimen/margin_extra_large"
+                android:layout_height="@dimen/margin_extra_large"
+                android:src="@drawable/circle_blue" />
+
+
+            <TextView
+                android:id="@+id/title_desc_tv_icon_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_medium" />
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/search_item_site_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/search_item_site_identifier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_item_site_name"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            />
+
+        <TextView
+            android:id="@+id/search_item_site_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_item_site_identifier"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            />
+
+        <TextView
+            android:id="@+id/search_item_site_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_item_site_address"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -18,6 +18,11 @@ public class SiteRepository {
         this.mSiteDao = database.getSiteDAO();
     }
 
+
+    public List<Site> searchSites(String name){
+        return mSiteDao.searchSites(name);
+    }
+
     public LiveData<List<Site>> getAllSites() {
         return mSiteDao.getSites();
     }

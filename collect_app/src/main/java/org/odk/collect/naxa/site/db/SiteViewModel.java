@@ -21,6 +21,10 @@ public class SiteViewModel extends AndroidViewModel {
 
     }
 
+    public List<Site> searchSites(String name) {
+        return mSiteRepository.searchSites(name);
+    }
+
     public LiveData<List<Site>> getmAllSites() {
         return mSiteRepository.getAllSites();
     }

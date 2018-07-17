@@ -36,6 +36,9 @@ public class Project implements Parcelable {
     @SerializedName("cluster_sites")
     private Boolean hasClusteredSites;
 
+
+
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);

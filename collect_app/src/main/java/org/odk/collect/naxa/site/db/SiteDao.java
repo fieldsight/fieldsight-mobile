@@ -8,6 +8,7 @@ import android.arch.persistence.room.Query;
 
 import org.odk.collect.naxa.login.model.Site;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -18,4 +19,7 @@ public interface SiteDao {
 
     @Query("SELECT * FROM site")
     LiveData<List<Site>> getSites();
+
+    @Query("SELECT * FROM site WHERE name LIKE :name")
+    List<Site> searchSites(String name);
 }
