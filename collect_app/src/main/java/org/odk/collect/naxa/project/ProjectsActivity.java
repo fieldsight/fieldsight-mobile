@@ -160,9 +160,6 @@ public class ProjectsActivity extends AppCompatActivity implements ProjectView {
 
     @Override
     public void showContent(boolean show, List<Project> projectList) {
-        if(true){
-            return;
-        }
         Timber.i("Showing content %s", show);
         if (show && projectList != null) {
             rvProjects.swapAdapter(new MyProjectsAdapter(projectList), true);

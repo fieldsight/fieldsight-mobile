@@ -129,7 +129,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                         .map(downloadableItem -> {
 
                             if (syncEvent.getUid() == downloadableItem.getUid()) {
-                                downloadableItem.setDownloadingStatus("DUCK");
+
                             }
 
                             return downloadableItem;

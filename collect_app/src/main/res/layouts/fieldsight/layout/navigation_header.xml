@@ -15,6 +15,7 @@
         android:background="@drawable/transparent_black_gradient_shape">
 
 
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/image_profile"
             android:layout_width="60dp"

@@ -199,7 +199,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     implementation 'org.greenrobot:eventbus:3.1.1'
-
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
     implementation ('io.github.benas:random-beans:3.4.0')
     implementation "android.arch.persistence.room:runtime:1.0.0"
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"

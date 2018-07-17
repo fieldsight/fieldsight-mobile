@@ -72,6 +72,6 @@
         android:layout_gravity="start"
         android:background="#ffff"
         android:overScrollMode="always"
-        app:headerLayout="@layout/navigation_header"
+
         app:menu="@menu/navigation_view_items" />
 </android.support.v4.widget.DrawerLayout>

@@ -289,6 +289,7 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name="org.odk.collect.naxa.site.FragmentHostActivity"
             android:exported="true" />
+        <activity android:name="org.odk.collect.naxa.site.ProjectDashboardActivity" />
     </application>
 
 </manifest>

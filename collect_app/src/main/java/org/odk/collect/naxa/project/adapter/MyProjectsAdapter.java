@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.odk.collect.android.R;
 import org.odk.collect.naxa.login.model.Project;
+import org.odk.collect.naxa.site.ProjectDashboardActivity;
 
 import java.util.List;
 
@@ -83,7 +84,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
 
 
         holder.rootLayout.setOnClickListener(view -> {
-
+            ProjectDashboardActivity.start(holder.rootLayout.getContext(), project);
         });
 
         holder.organizationName.setText(formatOrganizationName(project.getOrganizationName()));
