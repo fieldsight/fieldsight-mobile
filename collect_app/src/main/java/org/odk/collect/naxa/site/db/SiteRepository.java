@@ -19,8 +19,8 @@ public class SiteRepository {
     }
 
 
-    public List<Site> searchSites(String name){
-        return mSiteDao.searchSites(name);
+    public List<Site> searchSites(String searchQuery){
+        return mSiteDao.searchSites(searchQuery);
     }
 
     public LiveData<List<Site>> getAllSites() {
