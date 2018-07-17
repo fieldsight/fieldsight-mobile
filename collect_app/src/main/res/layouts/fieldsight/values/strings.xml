@@ -55,6 +55,7 @@
     <string name="forms_msg_none_available">Nothing available to display.\\n\\nTry Refreshing or Contact Web Admin.</string>
     <string name="toolbar_general_forms">General Forms</string>
     <string name="form_not_present">Unable to edit this saved form because the corresponding blank form is not present or was deleted.\\n\\nForm ID: %1$s</string>
+    <string name="search_sites">Search Sites</string>
 
 
 </resources>

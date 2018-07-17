@@ -37,4 +37,7 @@ ext {
     leakyCanaryVersion = '1.5.4'
     daggerVersion = '2.14'
     rxLifecycleVersion = '2.2.1'
+
+    roomVersion = '1.0.0'
+    archLifecycleVersion = '1.1.0'
 }

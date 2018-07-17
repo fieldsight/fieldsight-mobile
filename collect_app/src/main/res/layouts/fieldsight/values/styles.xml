@@ -30,4 +30,14 @@
         <item name="android:windowExitAnimation">@anim/dialog_slide_bottom</item>
     </style>
 
+    <style name="MaterialSearch" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.7</item>
+
+    </style>
+
 </resources>
