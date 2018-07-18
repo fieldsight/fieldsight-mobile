@@ -8,21 +8,21 @@
 
     <item
         android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh"
+        android:icon="@drawable/ic_refresh_white"
         android:title="Refresh"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
 
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/ic_refresh"
+        android:icon="@drawable/ic_search_white"
         android:title="Search"
         app:showAsAction="ifRoom" />
 
 
     <item
         android:id="@+id/action_notificaiton"
-        android:icon="@drawable/ic_refresh"
+        android:icon="@drawable/ic_notifications_white"
         android:orderInCategory="100"
         android:title="Notifications"
         app:showAsAction="ifRoom" />
@@ -30,8 +30,6 @@
     <item
         android:id="@+id/action_app_settings"
         android:title="Settings" />
-
-
 
 
 </menu>

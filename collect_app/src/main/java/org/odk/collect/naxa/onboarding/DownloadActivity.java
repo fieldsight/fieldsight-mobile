@@ -1,6 +1,8 @@
 package org.odk.collect.naxa.onboarding;
 
 import android.arch.lifecycle.Observer;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,6 +17,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.common.anim.ScaleUpAndDownItemAnimator;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.sync.SyncRepository;
 
@@ -44,6 +47,13 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     DownloadPresenter downloadPresenter;
     SyncRepository syncRepository;
 
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, DownloadActivity.class);
+        context.startActivity(intent);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,19 +70,20 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setItemAnimator(new ScaleUpAndDownItemAnimator());
+
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         downloadListAdapter = new DownloadListAdapter(syncableItems);
         downloadListAdapter.setOnClickListener(this);
         recyclerView.setAdapter(downloadListAdapter);
 
-
-        syncRepository.getAllSyncItems().observe(this, new Observer<List<SyncableItems>>() {
-            @Override
-            public void onChanged(@Nullable List<SyncableItems> items) {
-                downloadListAdapter.updateList(items);
-            }
-        });
+        syncRepository.getAllSyncItems()
+                .observe(this, new Observer<List<SyncableItems>>() {
+                    @Override
+                    public void onChanged(@Nullable List<SyncableItems> items) {
+                        downloadListAdapter.updateList(items);
+                    }
+                });
     }
 
 
@@ -199,4 +210,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     public void downloadSelected() {
         downloadPresenter.onDownloadSelectedButtonClick(downloadListAdapter.getList());
     }
+
+
 }

@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     tools:context="org.odk.collect.naxa.onboarding.DownloadActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/activity_download_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/button_wrapper"
+        android:layout_margin="@dimen/margin_small"
+        app:cardCornerRadius="@dimen/corner_radius">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/activity_download_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v7.widget.CardView>
 
     <LinearLayout
+        android:id="@+id/button_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -21,6 +33,7 @@
 
         <Button
             android:id="@+id/toggle_button"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,6 +41,7 @@
 
         <Button
             android:id="@+id/download_button"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -35,6 +49,7 @@
 
         <Button
             android:id="@+id/cancel_button"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -48,4 +48,5 @@
     <color name="secondaryDarkColor">#0069c0</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
+    <color name="material_grey">#fffafafa</color>
 </resources>

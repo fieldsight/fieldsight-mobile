@@ -283,7 +283,7 @@ the specific language governing permissions and limitations under the License.
             android:exported="true"
             android:name="org.odk.collect.naxa.onboarding.DownloadActivity" />
         <activity
-            android:name="org.odk.collect.naxa.project.ProjectsActivity"
+            android:name="org.odk.collect.naxa.project.ProjectListActivity"
             android:exported="true"
             android:theme="@style/AppTheme.Light" />
         <activity

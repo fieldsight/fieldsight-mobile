@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.login.model.Project;
+import org.odk.collect.naxa.onboarding.DownloadActivity;
 import org.odk.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.odk.collect.naxa.project.db.ProjectViewModel;
 import org.odk.collect.naxa.project.event.ErrorEvent;
@@ -34,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class ProjectsActivity extends AppCompatActivity implements ProjectView {
+public class ProjectListActivity extends AppCompatActivity implements ProjectView {
 
     @BindView(R.id.toolbar_general)
     Toolbar toolbar;
@@ -106,7 +107,7 @@ public class ProjectsActivity extends AppCompatActivity implements ProjectView {
         switch (item.getItemId()) {
             case R.id.action_refresh:
 
-                projectPresenter.initiateDownload();
+                DownloadActivity.start(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
