@@ -19,7 +19,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
     }
 
     @Override
-    public void onDownloadItemClick(DownloadableItem downloadItem) {
+    public void onDownloadItemClick(SyncableItems downloadItem) {
 
     }
 
@@ -40,5 +40,6 @@ public class DownloadPresenterImpl implements DownloadPresenter {
         }
 
         downloadModel.fetchODKForms();
+        downloadModel.fetchProjectContacts();
     }
 }

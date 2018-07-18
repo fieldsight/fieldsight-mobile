@@ -1,23 +1,28 @@
 package org.odk.collect.naxa.onboarding;
 
-import org.odk.collect.naxa.common.Constant;
-
-import java.util.HashMap;
-import java.util.Hashtable;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 
 import com.google.common.base.Objects;
 
-public class DownloadableItem {
 
+@Entity(tableName = "sync")
+public class SyncableItems {
+
+    @PrimaryKey
     private int uid;
-    private String downloadingStatus;
+    private int downloadingStatus;
     private String lastSyncDateTime;
     private String title;
     private String detail;
 
+    public SyncableItems(){
 
+    }
 
-    public DownloadableItem(int uid, String downloadingStatus, String lastSyncDateTime, String title, String detail) {
+    @Ignore
+    public SyncableItems(int uid, int downloadingStatus, String lastSyncDateTime, String title, String detail) {
         this.uid = uid;
         this.downloadingStatus = downloadingStatus;
         this.lastSyncDateTime = lastSyncDateTime;
@@ -25,40 +30,51 @@ public class DownloadableItem {
         this.detail = detail;
     }
 
-    public String getDownloadingStatus() {
-        return downloadingStatus;
-    }
-
-    public void setDownloadingStatus(String downloadingStatus){
-        this.downloadingStatus = downloadingStatus;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDetail() {
-        return detail;
-    }
-
     public int getUid() {
         return uid;
     }
 
-    public String getStatus() {
+    public void setUid(int uid) {
+        this.uid = uid;
+    }
+
+    public int getDownloadingStatus() {
         return downloadingStatus;
+    }
+
+    public void setDownloadingStatus(int downloadingStatus) {
+        this.downloadingStatus = downloadingStatus;
     }
 
     public String getLastSyncDateTime() {
         return lastSyncDateTime;
     }
 
+    public void setLastSyncDateTime(String lastSyncDateTime) {
+        this.lastSyncDateTime = lastSyncDateTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DownloadableItem)) return false;
-        DownloadableItem that = (DownloadableItem) o;
+        if (!(o instanceof SyncableItems)) return false;
+        SyncableItems that = (SyncableItems) o;
         return Objects.equal(getUid(), that.getUid()) &&
                 Objects.equal(getDownloadingStatus(), that.getDownloadingStatus()) &&
                 Objects.equal(getLastSyncDateTime(), that.getLastSyncDateTime()) &&

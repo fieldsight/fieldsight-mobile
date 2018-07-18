@@ -16,26 +16,26 @@ import java.util.List;
 
 public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapter.ViewHolder> {
 
-    private ArrayList<DownloadableItem> downloadableItems;
+    private ArrayList<SyncableItems> syncableItems;
     private onDownLoadItemClick listener;
 
-    DownloadListAdapter(ArrayList<DownloadableItem> downloadableItems) {
-        this.downloadableItems = downloadableItems;
+    DownloadListAdapter(ArrayList<SyncableItems> syncableItems) {
+        this.syncableItems = syncableItems;
     }
 
 
-    public ArrayList<DownloadableItem> getList() {
-        return downloadableItems;
+    public ArrayList<SyncableItems> getList() {
+        return syncableItems;
     }
 
     public void setOnClickListener(onDownLoadItemClick listener) {
         this.listener = listener;
     }
 
-    public void updateList(List<DownloadableItem> newList) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DownloadableItemsDiffCallback(newList, downloadableItems));
-        downloadableItems.clear();
-        downloadableItems.addAll(newList);
+    public void updateList(List<SyncableItems> newList) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DownloadableItemsDiffCallback(newList, syncableItems));
+        syncableItems.clear();
+        syncableItems.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -49,13 +49,13 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final DownloadListAdapter.ViewHolder viewHolder, int position) {
-        DownloadableItem downloadableItem = downloadableItems.get(viewHolder.getAdapterPosition());
-        viewHolder.checkedItem.setText(downloadableItem.getTitle(), downloadableItem.getDetail());
+        SyncableItems syncableItems = this.syncableItems.get(viewHolder.getAdapterPosition());
+        viewHolder.checkedItem.setText(syncableItems.getTitle(), syncableItems.getDetail());
     }
 
     @Override
     public int getItemCount() {
-        return downloadableItems.size();
+        return syncableItems.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -71,7 +71,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
             rootLayout.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onItemTap(downloadableItems.get(getAdapterPosition()));
+                    listener.onItemTap(syncableItems.get(getAdapterPosition()));
                     checkedItem.toggle();
                 }
             });
@@ -80,6 +80,6 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
 
     public interface onDownLoadItemClick {
-        void onItemTap(DownloadableItem downloadableItem);
+        void onItemTap(SyncableItems syncableItems);
     }
 }

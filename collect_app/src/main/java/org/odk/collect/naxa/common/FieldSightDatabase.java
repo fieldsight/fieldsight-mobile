@@ -8,12 +8,14 @@ import android.content.Context;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.onboarding.SyncableItems;
 import org.odk.collect.naxa.project.db.ProjectDao;
 import org.odk.collect.naxa.site.db.SiteDao;
+import org.odk.collect.naxa.sync.SyncDao;
 
 import java.io.File;
 
-@Database(entities = {Site.class, Project.class}, version = 2)
+@Database(entities = {Site.class, Project.class, SyncableItems.class}, version = 3)
 public abstract class FieldSightDatabase extends RoomDatabase {
 
     private static FieldSightDatabase INSTANCE;
@@ -21,6 +23,8 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     public abstract SiteDao getSiteDAO();
 
     public abstract ProjectDao getProjectDAO();
+
+    public abstract SyncDao getSyncDAO();
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 

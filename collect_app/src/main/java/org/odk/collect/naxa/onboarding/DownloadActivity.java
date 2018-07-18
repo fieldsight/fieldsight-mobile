@@ -1,6 +1,8 @@
 package org.odk.collect.naxa.onboarding;
 
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,18 +13,16 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
-import org.odk.collect.naxa.project.event.ErrorEvent;
-import org.odk.collect.naxa.project.event.PayloadEvent;
-import org.odk.collect.naxa.project.event.ProgressEvent;
+import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -36,47 +36,43 @@ import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_
 
 public class DownloadActivity extends CollectAbstractActivity implements DownloadListAdapter.onDownLoadItemClick, DownloadView {
     private RecyclerView recyclerView;
-    private ArrayList<DownloadableItem> downloadableItems = new ArrayList<>();
+    private ArrayList<SyncableItems> syncableItems = new ArrayList<>();
     private DownloadListAdapter downloadListAdapter;
     private Button btnToggle;
     private Button btnCancle;
     private Button btnDownload;
     DownloadPresenter downloadPresenter;
+    SyncRepository syncRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
+        downloadPresenter = new DownloadPresenterImpl(this);
+        syncRepository = new SyncRepository(Collect.getInstance());
+
         bindUI();
-        populateItems();
         setupRecyclerView();
 
-        downloadPresenter = new DownloadPresenterImpl(this);
-
     }
 
-    private void populateItems() {
-        DownloadableItem downloadableItem = null;
-
-        downloadableItem = new DownloadableItem(Constant.DownloadUID.PROJECT_SITES, "0", "", "Projects", "Download Projects and sites");
-        downloadableItems.add(downloadableItem);
-
-        downloadableItem = new DownloadableItem(GENERAL_FORMS, "0", "", "General Forms", "Download General Forms");
-        downloadableItems.add(downloadableItem);
-
-        downloadableItem = new DownloadableItem(Constant.DownloadUID.ODK_FORMS, "0", "", "ODK Forms", "Download ODK Forms");
-        downloadableItems.add(downloadableItem);
-
-    }
 
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        downloadListAdapter = new DownloadListAdapter(downloadableItems);
+        downloadListAdapter = new DownloadListAdapter(syncableItems);
         downloadListAdapter.setOnClickListener(this);
         recyclerView.setAdapter(downloadListAdapter);
+
+
+        syncRepository.getAllSyncItems().observe(this, new Observer<List<SyncableItems>>() {
+            @Override
+            public void onChanged(@Nullable List<SyncableItems> items) {
+                downloadListAdapter.updateList(items);
+            }
+        });
     }
 
 
@@ -125,7 +121,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
             case EVENT_START:
                 Observable
                         .just(downloadListAdapter.getList())
-                        .flatMapIterable((Function<ArrayList<DownloadableItem>, Iterable<DownloadableItem>>) downloadableItems -> downloadableItems)
+                        .flatMapIterable((Function<ArrayList<SyncableItems>, Iterable<SyncableItems>>) downloadableItems -> downloadableItems)
                         .map(downloadableItem -> {
 
                             if (syncEvent.getUid() == downloadableItem.getUid()) {
@@ -135,15 +131,15 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                             return downloadableItem;
                         })
                         .toList()
-                        .subscribe(new SingleObserver<List<DownloadableItem>>() {
+                        .subscribe(new SingleObserver<List<SyncableItems>>() {
                             @Override
                             public void onSubscribe(Disposable d) {
 
                             }
 
                             @Override
-                            public void onSuccess(List<DownloadableItem> downloadableItems) {
-                                downloadListAdapter.updateList(downloadableItems);
+                            public void onSuccess(List<SyncableItems> syncableItems) {
+                                downloadListAdapter.updateList(syncableItems);
                             }
 
                             @Override
@@ -162,7 +158,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     }
 
     @Override
-    public void onItemTap(DownloadableItem downloadableItem) {
+    public void onItemTap(SyncableItems syncableItems) {
 
     }
 

@@ -9,6 +9,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.generalforms.GeneralFormResponse;
@@ -147,7 +148,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> Observable.just(meResponse.getData().getMySitesModel()))
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(mySites -> {
-                    siteViewModel.insertSitesAsVerified(mySites.getSite(),mySites.getProject());
+                    siteViewModel.insertSitesAsVerified(mySites.getSite(), mySites.getProject());
                     projectViewModel.insert(mySites.getProject());
                     return mySites.getProject();
                 })
@@ -182,6 +183,12 @@ public class DownloadModelImpl implements DownloadModel {
         });
         XMLFormDownloadService.start(Collect.getInstance(), xmlFormDownloadReceiver);
 
+    }
+
+    @Override
+    public void fetchProjectContacts() {
+        int uid = Constant.DownloadUID.PROJECT_CONTACTS;
+        ToastUtils.showShortToastInMiddle("Starting fetchProjectContacts");
     }
 
 

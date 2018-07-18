@@ -3,17 +3,15 @@ package org.odk.collect.naxa.onboarding;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
-import org.odk.collect.naxa.generalforms.GeneralForm;
-
 import java.util.List;
 
 public class DownloadableItemsDiffCallback extends DiffUtil.Callback {
 
-    private List<DownloadableItem> oldItems;
-    private List<DownloadableItem> newItems;
+    private List<SyncableItems> oldItems;
+    private List<SyncableItems> newItems;
 
 
-    public DownloadableItemsDiffCallback(List<DownloadableItem> newItems, List<DownloadableItem> oldItems) {
+    public DownloadableItemsDiffCallback(List<SyncableItems> newItems, List<SyncableItems> oldItems) {
         this.newItems = newItems;
         this.oldItems = oldItems;
     }

@@ -69,5 +69,13 @@ public class Constant {
         public static final int PROJECT_SITES = 1;
         public static final int ODK_FORMS = 2;
         public static final int GENERAL_FORMS = 3;
+        public static final int PROJECT_CONTACTS = 4;
+    }
+
+    public final static class DownloadStatus {
+        public static final int PENDING = 1;
+        public static final int FAILED = 2;
+        public static final int RUNNING = 3;
+        public static final int COMPLETED = 4;
     }
 }
