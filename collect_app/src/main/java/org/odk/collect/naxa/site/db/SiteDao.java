@@ -20,6 +20,9 @@ public interface SiteDao {
     @Query("SELECT * FROM site")
     LiveData<List<Site>> getSites();
 
-    @Query("SELECT * FROM site WHERE name LIKE :siteName OR phone LIKE :sitePhoneNumber OR identifier LIKE :siteIdentifier OR address LIKE :siteAddress")
-    List<Site> searchSites(String searchQuery, String sitePhoneNumber, String siteIdentifier, String siteAddress);
+    @Query("SELECT * FROM site WHERE name LIKE :searchQuery OR phone LIKE :searchQuery OR identifier LIKE :searchQuery OR address LIKE :searchQuery")
+    List<Site> searchSites(String searchQuery);
+
+    @Query("SELECT * from site WHERE project =  :projectID")
+    LiveData<List<Site>> getSiteByProjectId(String projectID);
 }

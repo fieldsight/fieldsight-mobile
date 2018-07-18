@@ -45,7 +45,7 @@
     <dimen name="padding_touch_target_minimum">8dp</dimen>
 
     <!-- corner radius -->
-    <dimen name="corner_radius">2dp</dimen>
+    <dimen name="corner_radius">8dp</dimen>
 
     <!-- divider -->
     <dimen name="divier_height">3dp</dimen>

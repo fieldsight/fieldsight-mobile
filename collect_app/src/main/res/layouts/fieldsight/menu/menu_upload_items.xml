@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--https://stackoverflow.com/questions/31400870/add-toggle-button-to-the-menu-to-stop-and-start-service-->
+    <item
+
+        android:id="@+id/action_upload_sites"
+        android:icon="@drawable/ic_cloud_upload"
+        android:orderInCategory="100"
+        android:title="@string/action_upload"
+        app:showAsAction="always" />
+
+
+    <item
+        android:visible="false"
+        android:id="@+id/action_delete_sites"
+        android:icon="@drawable/ic_delete_forever"
+        android:orderInCategory="100"
+        android:title="@string/action_delete"
+        app:showAsAction="always" />
+</menu>

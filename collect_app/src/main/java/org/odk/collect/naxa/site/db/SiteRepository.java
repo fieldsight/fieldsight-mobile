@@ -31,6 +31,10 @@ public class SiteRepository {
         new insertAsyncTask(mSiteDao).execute(siteModel);
     }
 
+    public LiveData<List<Site>> getSiteByProjectId(String projectID) {
+        return mSiteDao.getSiteByProjectId(projectID);
+    }
+
     private static class insertAsyncTask extends AsyncTask<Site, Void, Void> {
 
         private SiteDao mAsyncTaskDao;

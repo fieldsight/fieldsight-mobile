@@ -49,7 +49,7 @@ public class ProjectModelImpl implements ProjectModel {
 
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(mySites -> {
-                    siteViewModel.insert(mySites.getSite());
+                    siteViewModel.insertSitesAsVerified(mySites.getSite(),mySites.getProject());
                     projectViewModel.insert(mySites.getProject());
                     return mySites.getProject();
                 })

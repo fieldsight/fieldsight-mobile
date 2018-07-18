@@ -15,6 +15,7 @@ import org.odk.collect.naxa.generalforms.GeneralFormResponse;
 import org.odk.collect.naxa.login.model.MeResponse;
 import org.odk.collect.naxa.login.model.MySites;
 import org.odk.collect.naxa.login.model.Project;
+import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.project.db.ProjectRepository;
@@ -146,7 +147,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> Observable.just(meResponse.getData().getMySitesModel()))
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(mySites -> {
-                    siteViewModel.insert(mySites.getSite());
+                    siteViewModel.insertSitesAsVerified(mySites.getSite(),mySites.getProject());
                     projectViewModel.insert(mySites.getProject());
                     return mySites.getProject();
                 })

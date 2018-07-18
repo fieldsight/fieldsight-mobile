@@ -56,6 +56,9 @@
     <string name="toolbar_general_forms">General Forms</string>
     <string name="form_not_present">Unable to edit this saved form because the corresponding blank form is not present or was deleted.\\n\\nForm ID: %1$s</string>
     <string name="search_sites">Search Sites</string>
+    <string name="action_upload">Upload</string>
+    <string name="action_delete">Delete</string>
+    <string name="msg_offline_site">%1$s Offline Site</string>
 
 
 </resources>
