@@ -7,6 +7,13 @@ import android.net.NetworkInfo;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.naxa.common.Constant;
+
+import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 
 public class DownloadPresenterImpl implements DownloadPresenter {
 
@@ -25,11 +32,12 @@ public class DownloadPresenterImpl implements DownloadPresenter {
 
     @Override
     public void onToggleButtonClick() {
+
         downloadView.toggleAll();
     }
 
     @Override
-    public void onDownloadSelectedButtonClick() {
+    public void onDownloadSelectedButtonClick(ArrayList<SyncableItems> list) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) Collect.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
@@ -39,7 +47,44 @@ public class DownloadPresenterImpl implements DownloadPresenter {
             return;
         }
 
-        downloadModel.fetchODKForms();
-        downloadModel.fetchProjectContacts();
+        Observable.just(list)
+                .flatMapIterable((Function<ArrayList<SyncableItems>, Iterable<SyncableItems>>) syncableItems -> syncableItems)
+                .filter(SyncableItems::getIsSelected)
+                .flatMap(syncableItems -> {
+                    switch (syncableItems.getUid()) {
+                        case Constant.DownloadUID.PROJECT_SITES:
+                            downloadModel.fetchProjectSites();
+                            break;
+                        case Constant.DownloadUID.ODK_FORMS:
+                            downloadModel.fetchODKForms();
+                            break;
+                        case Constant.DownloadUID.GENERAL_FORMS:
+                            downloadModel.fetchGeneralForms();
+                            break;
+                        case Constant.DownloadUID.PROJECT_CONTACTS:
+                            downloadModel.fetchProjectContacts();
+                            break;
+
+                    }
+                    return Observable.empty();
+                })
+                .subscribe(new DisposableObserver<Object>() {
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtils.showShortToastInMiddle(Collect.getInstance().getString(R.string.error_occured));
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
     }
 }

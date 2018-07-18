@@ -51,6 +51,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
     public void onBindViewHolder(@NonNull final DownloadListAdapter.ViewHolder viewHolder, int position) {
         SyncableItems syncableItems = this.syncableItems.get(viewHolder.getAdapterPosition());
         viewHolder.checkedItem.setText(syncableItems.getTitle(), syncableItems.getDetail());
+        viewHolder.checkedItem.setChecked(syncableItems.getIsSelected());
     }
 
     @Override
@@ -71,8 +72,11 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
             rootLayout.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onItemTap(syncableItems.get(getAdapterPosition()));
-                    checkedItem.toggle();
+                    SyncableItems syncableItem = syncableItems.get(getAdapterPosition());
+                    listener.onItemTap(syncableItem);
+                    syncableItem.toggleSelected();
+
+                    notifyDataSetChanged();
                 }
             });
         }

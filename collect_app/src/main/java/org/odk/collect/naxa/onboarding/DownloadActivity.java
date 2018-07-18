@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Button;
 
 import org.greenrobot.eventbus.EventBus;
@@ -14,20 +15,19 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
-import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableSingleObserver;
 
-import static org.odk.collect.naxa.common.Constant.DownloadUID.GENERAL_FORMS;
 import static org.odk.collect.naxa.common.Constant.DownloadUID.ODK_FORMS;
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_ERROR;
@@ -82,14 +82,20 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         btnCancle = findViewById(R.id.cancel_button);
         btnDownload = findViewById(R.id.download_button);
 
-        btnToggle.setOnClickListener(v -> downloadPresenter.onToggleButtonClick());
+        btnToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadPresenter.onToggleButtonClick();
+            }
+        });
+
 
         btnCancle.setOnClickListener(v -> {
             //     downloadPresenter.onDownloadSelectedButtonClick();
         });
 
         btnDownload.setOnClickListener(v -> {
-            downloadPresenter.onDownloadSelectedButtonClick();
+            downloadPresenter.onDownloadSelectedButtonClick(downloadListAdapter.getList());
         });
     }
 
@@ -164,7 +170,24 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
     @Override
     public void toggleAll() {
+        Observable.just(downloadListAdapter.getList())
+                .flatMapIterable((Function<ArrayList<SyncableItems>, Iterable<SyncableItems>>) syncableItems -> syncableItems)
+                .flatMap((Function<SyncableItems, ObservableSource<SyncableItems>>) syncableItems -> {
+                    syncableItems.toggleSelected();
+                    return Observable.just(syncableItems);
+                })
+                .toList()
+                .subscribe(new DisposableSingleObserver<List<SyncableItems>>() {
+                    @Override
+                    public void onSuccess(List<SyncableItems> items) {
+                        downloadListAdapter.updateList(items);
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     @Override
@@ -174,6 +197,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
     @Override
     public void downloadSelected() {
-
+        downloadPresenter.onDownloadSelectedButtonClick(downloadListAdapter.getList());
     }
 }

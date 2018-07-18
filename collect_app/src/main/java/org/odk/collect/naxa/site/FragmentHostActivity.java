@@ -43,16 +43,15 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_dashboard);
-        //    loadedSite = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
-        new SiteViewModel(Collect.getInstance()).getmAllSites().observe(this, sites -> {
-            bindUI();
-            setupToolbar();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.fragment_container, SiteDashboardFragment.getInstance(sites.get(0)), "frag0")
-                    .commit();
+        loadedSite = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
+        bindUI();
+        setupToolbar();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, SiteDashboardFragment.getInstance(loadedSite), "frag0")
+                .commit();
 
-        });
+
     }
 
     private void setupToolbar() {

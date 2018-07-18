@@ -156,6 +156,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getObservable(Constant.DownloadUID.PROJECT_SITES));
+
     }
 
     @Override

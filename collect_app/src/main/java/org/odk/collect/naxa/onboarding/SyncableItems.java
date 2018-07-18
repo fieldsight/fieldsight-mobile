@@ -17,8 +17,19 @@ public class SyncableItems {
     private String title;
     private String detail;
 
-    public SyncableItems(){
+    @Ignore
+    private boolean isSelected;
 
+    public SyncableItems() {
+
+    }
+
+    public boolean getIsSelected() {
+        return isSelected;
+    }
+
+    public void toggleSelected() {
+        isSelected = !isSelected;
     }
 
     @Ignore
@@ -28,6 +39,7 @@ public class SyncableItems {
         this.lastSyncDateTime = lastSyncDateTime;
         this.title = title;
         this.detail = detail;
+        this.isSelected = false;
     }
 
     public int getUid() {
