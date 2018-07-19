@@ -8,7 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-@Entity(tableName = "site")
+@Entity(tableName = "sites")
 public class Site implements Parcelable {
     @PrimaryKey
     @NonNull

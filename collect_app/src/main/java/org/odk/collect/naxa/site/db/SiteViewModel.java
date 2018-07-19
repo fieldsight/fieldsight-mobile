@@ -35,14 +35,8 @@ public class SiteViewModel extends AndroidViewModel {
         return mSiteRepository.getSiteByProjectId(project.getId());
     }
 
-    public void insert(Site siteModel) {
-        mSiteRepository.insert(siteModel);
-    }
 
     public void insertSitesAsVerified(Site site, Project project) {
-        site.setIsSiteVerified(Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
-        site.setProject(project.getId());
-
-        mSiteRepository.insert(site);
+        mSiteRepository.insertSitesAsVerified(site,project);
     }
 }

@@ -11,11 +11,13 @@ import org.odk.collect.naxa.login.model.Site;
 
 import java.util.List;
 
+import io.reactivex.Maybe;
+
 @Dao
 public interface ProjectDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Project... projects);
 
     @Query("SELECT * FROM project")
-    LiveData<List<Project>> getProjects();
+    Maybe<List<Project>> getProjects();
 }

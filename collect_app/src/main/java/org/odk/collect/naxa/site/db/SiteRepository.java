@@ -4,7 +4,9 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
+import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.FieldSightDatabase;
+import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 
 import java.util.List;
@@ -27,12 +29,15 @@ public class SiteRepository {
         return mSiteDao.getSites();
     }
 
-    public void insert(Site...siteModel) {
-        new insertAsyncTask(mSiteDao).execute(siteModel);
-    }
-
     public LiveData<List<Site>> getSiteByProjectId(String projectID) {
         return mSiteDao.getSiteByProjectId(projectID);
+    }
+
+    public void insertSitesAsVerified(Site site, Project project) {
+        site.setIsSiteVerified(Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
+        site.setProject(project.getId());
+        new insertAsyncTask(mSiteDao).execute(site);
+
     }
 
     private static class insertAsyncTask extends AsyncTask<Site, Void, Void> {

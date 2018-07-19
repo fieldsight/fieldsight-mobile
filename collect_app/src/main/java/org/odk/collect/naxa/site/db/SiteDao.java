@@ -17,12 +17,12 @@ public interface SiteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Site... sites);
 
-    @Query("SELECT * FROM site")
+    @Query("SELECT * FROM sites")
     LiveData<List<Site>> getSites();
 
-    @Query("SELECT * FROM site WHERE name LIKE :searchQuery OR phone LIKE :searchQuery OR identifier LIKE :searchQuery OR address LIKE :searchQuery")
+    @Query("SELECT * FROM sites WHERE name LIKE :searchQuery OR phone LIKE :searchQuery OR identifier LIKE :searchQuery OR address LIKE :searchQuery")
     List<Site> searchSites(String searchQuery);
 
-    @Query("SELECT * from site WHERE project =  :projectID")
+    @Query("SELECT * from sites WHERE project =  :projectID")
     LiveData<List<Site>> getSiteByProjectId(String projectID);
 }

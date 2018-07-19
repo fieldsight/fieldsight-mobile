@@ -20,7 +20,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
     private DownloadView downloadView;
     private DownloadModel downloadModel;
 
-    public DownloadPresenterImpl(DownloadView downloadView) {
+    DownloadPresenterImpl(DownloadView downloadView) {
         this.downloadView = downloadView;
         this.downloadModel = new DownloadModelImpl();
     }
@@ -40,7 +40,11 @@ public class DownloadPresenterImpl implements DownloadPresenter {
     public void onDownloadSelectedButtonClick(ArrayList<SyncableItems> list) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) Collect.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
+        NetworkInfo ni = null;
+
+        if (connectivityManager != null) {
+            ni = connectivityManager.getActiveNetworkInfo();
+        }
 
         if (ni == null || !ni.isConnected()) {
             ToastUtils.showShortToast(R.string.no_connection);

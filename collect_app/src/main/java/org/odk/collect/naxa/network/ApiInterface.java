@@ -1,7 +1,7 @@
 package org.odk.collect.naxa.network;
 
 
-import org.odk.collect.naxa.generalforms.GeneralFormResponse;
+import org.odk.collect.naxa.generalforms.GeneralForm;
 import org.odk.collect.naxa.login.model.AuthResponse;
 import org.odk.collect.naxa.login.model.MeResponse;
 
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -32,6 +31,6 @@ public interface ApiInterface {
     );
 
     @GET(GET_GENERAL_FORM)
-    Observable<ArrayList<GeneralFormResponse>> getGeneralFormsObservable(@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
+    Observable<ArrayList<GeneralForm>> getGeneralFormsObservable(@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
 
 }

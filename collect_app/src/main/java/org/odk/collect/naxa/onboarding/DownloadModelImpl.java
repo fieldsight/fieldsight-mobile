@@ -1,8 +1,6 @@
 package org.odk.collect.naxa.onboarding;
 
-import android.arch.lifecycle.Observer;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
 import org.odk.collect.android.application.Collect;
@@ -12,30 +10,32 @@ import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
-import org.odk.collect.naxa.generalforms.GeneralFormResponse;
+import org.odk.collect.naxa.generalforms.GeneralForm;
+import org.odk.collect.naxa.generalforms.db.GeneralFormRepository;
+import org.odk.collect.naxa.generalforms.db.GeneralFormViewModel;
 import org.odk.collect.naxa.login.model.MeResponse;
 import org.odk.collect.naxa.login.model.MySites;
 import org.odk.collect.naxa.login.model.Project;
-import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.project.db.ProjectRepository;
 import org.odk.collect.naxa.project.db.ProjectViewModel;
+import org.odk.collect.naxa.site.db.SiteRepository;
 import org.odk.collect.naxa.site.db.SiteViewModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -43,85 +43,77 @@ import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_ERROR;
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_START;
-import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_UPDATE;
 
 public class DownloadModelImpl implements DownloadModel {
 
-    private SiteViewModel siteViewModel;
-    private ProjectViewModel projectViewModel;
+    private SiteRepository siteRepository;
+    private GeneralFormRepository generalFormRepository;
+    private ProjectRepository projectRepository;
     private DownloadFormsTask downloadFormsTask;
     private HashMap<String, FormDetails> formNamesAndURLs;
     private ArrayList<HashMap<String, String>> formList;
     private DownloadFormListTask downloadFormListTask;
 
-    public DownloadModelImpl() {
-        this.siteViewModel = new SiteViewModel(Collect.getInstance());
-        this.projectViewModel = new ProjectViewModel(Collect.getInstance());
+    DownloadModelImpl() {
+        this.siteRepository = new SiteRepository(Collect.getInstance());
+        this.generalFormRepository = new GeneralFormRepository(Collect.getInstance());
+        this.projectRepository = new ProjectRepository(Collect.getInstance());
         formList = new ArrayList<>();
+
     }
 
     @Override
     public void fetchGeneralForms() {
-        new ProjectRepository(Collect.getInstance())
-                .getAllProjects()
-                .observeForever(projects -> {
 
-                    ArrayList<String> projectIds = new ArrayList<>();
-                    ArrayList<XMLForm> projectForms = new ArrayList<>();
+        projectRepository.getAllProjects()
+                .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
+                .map(project -> new XMLFormBuilder()
+                        .setFormCreatorsId(project.getId())
+                        .setIsCreatedFromProject(true)
+                        .createXMLForm())
+                .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::downloadGeneralForm)
+                .flatMap(generalFormRespons -> {
+                    generalFormRepository.insert(generalFormRespons);
+                    return Observable.empty();
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_START));
+                    }
 
-                    for (Project project : projects) {
-
-                        projectForms.add(new XMLFormBuilder()
-                                .setFormCreatorsId(project.getId())
-                                .setIsCreatedFromProject(true)
-                                .createXMLForm());
-
-                        downloadProjectGeneral(projectForms)
-                                .subscribe(new DisposableObserver<Object>() {
-                                    @Override
-                                    public void onNext(Object o) {
-
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-
-                                    }
-                                });
+                    @Override
+                    public void onNext(Object o) {
 
                     }
 
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_ERROR));
 
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
+
+                    }
                 });
+
     }
 
 
-    private Observable<Object> downloadProjectGeneral(ArrayList<XMLForm> projectForms) {
-        return Observable.just(projectForms)
-                .flatMapIterable((Function<ArrayList<XMLForm>, Iterable<XMLForm>>) forms -> forms)
-                .flatMap((Function<XMLForm, Observable<Object>>) xmlForm -> {
+    private Observable<ArrayList<GeneralForm>> downloadGeneralForm(XMLForm xmlForm) {
+        String createdFromProject = XMLForm.toNumeralString(xmlForm.isCreatedFromProject());
+        String creatorsId = xmlForm.getFormCreatorsId();
 
-                    String createdFromProject = XMLForm.toNumeralString(xmlForm.isCreatedFromProject());
-                    String creatorsId = xmlForm.getFormCreatorsId();
-
-                    Observable<ArrayList<GeneralFormResponse>> generalFormsObservable = ServiceGenerator
-                            .getRxClient()
-                            .create(ApiInterface.class)
-                            .getGeneralFormsObservable(createdFromProject, creatorsId);
-
-                    return generalFormsObservable
-                            .flatMap(new Function<ArrayList<GeneralFormResponse>, ObservableSource<?>>() {
-                                @Override
-                                public ObservableSource<?> apply(ArrayList<GeneralFormResponse> generalFormResponses) throws Exception {
-                                    return Observable.empty();
-                                }
-                            });
-                })
+        return ServiceGenerator
+                .getRxClient()
+                .create(ApiInterface.class)
+                .getGeneralFormsObservable(createdFromProject, creatorsId)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
@@ -136,9 +128,11 @@ public class DownloadModelImpl implements DownloadModel {
                             }
                         });
                     }
-                }).subscribeOn(Schedulers.io())
+                })
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
 
     @Override
     public void fetchProjectSites() {
@@ -148,8 +142,8 @@ public class DownloadModelImpl implements DownloadModel {
                 .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> Observable.just(meResponse.getData().getMySitesModel()))
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(mySites -> {
-                    siteViewModel.insertSitesAsVerified(mySites.getSite(), mySites.getProject());
-                    projectViewModel.insert(mySites.getProject());
+                    siteRepository.insertSitesAsVerified(mySites.getSite(), mySites.getProject());
+                    projectRepository.insert(mySites.getProject());
                     return mySites.getProject();
                 })
                 .toList()
@@ -158,6 +152,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .subscribe(getObservable(Constant.DownloadUID.PROJECT_SITES));
 
     }
+
 
     @Override
     public void fetchODKForms() {
@@ -213,4 +208,6 @@ public class DownloadModelImpl implements DownloadModel {
             }
         };
     }
+
+
 }

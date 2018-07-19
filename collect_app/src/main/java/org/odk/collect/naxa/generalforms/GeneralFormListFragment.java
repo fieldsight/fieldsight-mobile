@@ -255,13 +255,13 @@ public class GeneralFormListFragment extends Fragment implements DisplayGeneralF
 
     private void openGeneralForm(GeneralForm viewModel) {
         try {
-            long formId = getFormId(viewModel.getJrFormId());
+            long formId = getFormId(viewModel.getIdString());
             Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, formId);
             String action = getActivity().getIntent().getAction();
 
 
             FormSessionManager formUploadPrefManager = new FormSessionManager(getActivity().getApplicationContext());
-            formUploadPrefManager.setFormSession(viewModel.getFsFormId(), loadedSite.getId(), loadedSite.getProject().toString(), viewModel.getFormDeployedFrom());
+            formUploadPrefManager.setFormSession(viewModel.getFsFormId(), loadedSite.getId(), loadedSite.getProject(), null);
 
             if (Intent.ACTION_PICK.equals(action)) {
                 // caller is waiting on a picked form

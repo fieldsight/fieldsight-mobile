@@ -70,10 +70,10 @@ public class DisplayGeneralFormsAdapter extends RecyclerView.Adapter<DisplayGene
     public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
         final GeneralForm generalForm = totalList.get(position);
 
-        viewHolder.tvFormName.setText(generalForm.getFormName());
-        viewHolder.tvDesc.setText(generalForm.getFormName());
-        viewHolder.tvLastFilledDateTime.setText(generalForm.getLastFilledDateTime());
-        viewHolder.tvIconText.setText(generalForm.getFormName().substring(0, 1));
+        viewHolder.tvFormName.setText(generalForm.getName());
+        viewHolder.tvDesc.setText(generalForm.getName());
+        viewHolder.tvLastFilledDateTime.setText(generalForm.getName());
+        viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1));
 
         viewHolder.tvFormName.setTypeface(face);
         viewHolder.tvDesc.setTypeface(face1);
@@ -110,7 +110,7 @@ public class DisplayGeneralFormsAdapter extends RecyclerView.Adapter<DisplayGene
                 if (BuildConfig.DEBUG) {
 
                     Context context = viewHolder.rootLayout.getContext();
-                    String msg = String.format("FormID %s\nSiteID %s\nDeployedFrom %s",generalForm.getFsFormId(),generalForm.getSiteId(),generalForm.getFormDeployedFrom());
+                    String msg = String.format("FormID %s\nSiteID %s\nDeployedFrom %s",generalForm.getFsFormId(),generalForm.getIdString(),generalForm.getDownloadUrl());
                     DialogFactory.createGenericErrorDialog(context,msg).show();
 
                 }

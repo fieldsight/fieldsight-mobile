@@ -72,9 +72,6 @@ public class ProjectListActivity extends AppCompatActivity implements ProjectVie
                     Timber.i("%s sites found / database", sites != null ? sites.size() : 0);
                 });
 
-        new ProjectViewModel(Collect.getInstance()).getAllProjects().observe(this, projects -> {
-            rvProjects.swapAdapter(new MyProjectsAdapter(projects), true);
-        });
     }
 
     @Override

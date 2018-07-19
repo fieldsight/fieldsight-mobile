@@ -2,14 +2,13 @@ package org.odk.collect.naxa.project.db;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.naxa.login.model.Project;
-import org.odk.collect.naxa.login.model.Site;
-import org.odk.collect.naxa.site.db.SiteRepository;
 
 import java.util.List;
+
+import io.reactivex.Maybe;
 
 public class ProjectViewModel extends AndroidViewModel {
 
@@ -22,7 +21,7 @@ public class ProjectViewModel extends AndroidViewModel {
 
     }
 
-    public LiveData<List<Project>> getAllProjects() {
+    public Maybe<List<Project>> getAllProjects() {
         return projectRepository.getAllProjects();
     }
 
