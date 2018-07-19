@@ -1,10 +1,9 @@
 package org.odk.collect.naxa.site;
 
-import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,18 +11,11 @@ import android.view.MenuItem;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Connectivity;
-import org.odk.collect.naxa.login.model.MySites;
+import org.odk.collect.naxa.generalforms.ViewModelFactory;
+import org.odk.collect.naxa.generalforms.db.GeneralFormViewModel;
 import org.odk.collect.naxa.login.model.Site;
-import org.odk.collect.naxa.site.db.SiteRepository;
-import org.odk.collect.naxa.site.db.SiteViewModel;
-
-import java.util.List;
-
-import io.github.benas.randombeans.EnhancedRandomBuilder;
-import io.github.benas.randombeans.api.EnhancedRandom;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -106,5 +98,17 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         //DialogFactoryImpl.createLogoutDialog(this);
 
     }
+
+    public static GeneralFormViewModel obtainViewModel(FragmentActivity activity) {
+        // Use a Factory to inject dependencies into the ViewModel
+
+        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
+
+        GeneralFormViewModel viewModel =
+                ViewModelProviders.of(activity,factory).get(GeneralFormViewModel.class);
+
+        return viewModel;
+    }
+
 
 }

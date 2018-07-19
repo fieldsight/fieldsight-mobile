@@ -13,5 +13,5 @@ import java.util.List;
 public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
 
     @Query("SELECT * FROM general_form_proj")
-    abstract LiveData<List<GeneralForm>> getProjectGeneralForms();
+    public abstract LiveData<List<GeneralForm>> getProjectGeneralForms();
 }

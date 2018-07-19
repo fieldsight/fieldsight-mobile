@@ -17,35 +17,27 @@ import org.odk.collect.android.R;
 import org.odk.collect.naxa.common.DialogFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DisplayGeneralFormsAdapter extends RecyclerView.Adapter<DisplayGeneralFormsAdapter.ViewHolder> {
 
-    public static ArrayList<GeneralForm> totalList;
-    public static Context context;
+    private ArrayList<GeneralForm> totalList;
 
     View itemLayoutView;
-    Typeface face, face1;
+
 
     public static String idFormsTable;
-    public static FragmentActivity c;
     private onGeneralFormClickListener listener;
 
 
-    public DisplayGeneralFormsAdapter(ArrayList<GeneralForm> totalList, Context context, FragmentActivity c) {
+    public DisplayGeneralFormsAdapter(ArrayList<GeneralForm> totalList) {
         this.totalList = totalList;
-        this.context = context;
-        this.c = c;
-    }
-
-    public void update(ArrayList<GeneralForm> totalList, int position) {
-        this.totalList = totalList;
-        notifyDataSetChanged();
     }
 
 
-    public void updateList(ArrayList<GeneralForm> newList) {
+    public void updateList(List<GeneralForm> newList) {
 
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new GeneralFormsDiffCallback( newList,totalList));
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new GeneralFormsDiffCallback(newList, totalList));
         totalList.clear();
         totalList.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
@@ -56,8 +48,6 @@ public class DisplayGeneralFormsAdapter extends RecyclerView.Adapter<DisplayGene
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         // create a new view
         itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fieldsigh_general_list_row, null);
-        face = Typeface.createFromAsset(itemLayoutView.getContext().getAssets(), "fonts/OpenSans-Semibold.ttf");
-        face1 = Typeface.createFromAsset(itemLayoutView.getContext().getAssets(), "fonts/OpenSans-Regular.ttf");
         final ViewHolder viewHolder = new ViewHolder(itemLayoutView);
 
 
@@ -74,11 +64,6 @@ public class DisplayGeneralFormsAdapter extends RecyclerView.Adapter<DisplayGene
         viewHolder.tvDesc.setText(generalForm.getName());
         viewHolder.tvLastFilledDateTime.setText(generalForm.getName());
         viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1));
-
-        viewHolder.tvFormName.setTypeface(face);
-        viewHolder.tvDesc.setTypeface(face1);
-        viewHolder.tvLastFilledDateTime.setTypeface(face1);
-
 
         viewHolder.btnOpenEdu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,8 +95,8 @@ public class DisplayGeneralFormsAdapter extends RecyclerView.Adapter<DisplayGene
                 if (BuildConfig.DEBUG) {
 
                     Context context = viewHolder.rootLayout.getContext();
-                    String msg = String.format("FormID %s\nSiteID %s\nDeployedFrom %s",generalForm.getFsFormId(),generalForm.getIdString(),generalForm.getDownloadUrl());
-                    DialogFactory.createGenericErrorDialog(context,msg).show();
+                    String msg = String.format("FormID %s\nSiteID %s\nDeployedFrom %s", generalForm.getFsFormId(), generalForm.getIdString(), generalForm.getDownloadUrl());
+                    DialogFactory.createGenericErrorDialog(context, msg).show();
 
                 }
                 return false;

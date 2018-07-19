@@ -11,17 +11,16 @@ import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.generalforms.GeneralForm;
+import org.odk.collect.naxa.generalforms.GeneralFormLocalSource;
+import org.odk.collect.naxa.generalforms.GeneralFormRemoteSource;
 import org.odk.collect.naxa.generalforms.db.GeneralFormRepository;
-import org.odk.collect.naxa.generalforms.db.GeneralFormViewModel;
 import org.odk.collect.naxa.login.model.MeResponse;
 import org.odk.collect.naxa.login.model.MySites;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.project.db.ProjectRepository;
-import org.odk.collect.naxa.project.db.ProjectViewModel;
 import org.odk.collect.naxa.site.db.SiteRepository;
-import org.odk.collect.naxa.site.db.SiteViewModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +33,6 @@ import io.reactivex.Observer;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -56,7 +54,7 @@ public class DownloadModelImpl implements DownloadModel {
 
     DownloadModelImpl() {
         this.siteRepository = new SiteRepository(Collect.getInstance());
-        this.generalFormRepository = new GeneralFormRepository(Collect.getInstance());
+        this.generalFormRepository = GeneralFormRepository.getInstance(GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
         this.projectRepository = new ProjectRepository(Collect.getInstance());
         formList = new ArrayList<>();
 
@@ -73,7 +71,7 @@ public class DownloadModelImpl implements DownloadModel {
                         .createXMLForm())
                 .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::downloadGeneralForm)
                 .flatMap(generalFormRespons -> {
-                    generalFormRepository.insert(generalFormRespons);
+                    generalFormRepository.save(generalFormRespons);
                     return Observable.empty();
                 })
                 .subscribeOn(Schedulers.io())

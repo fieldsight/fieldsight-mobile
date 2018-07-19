@@ -1,80 +1,80 @@
 package org.odk.collect.naxa.generalforms.db;
 
-import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.support.annotation.NonNull;
 
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.common.BaseLocalDataSource;
 import org.odk.collect.naxa.common.FieldSightDatabase;
 import org.odk.collect.naxa.generalforms.GeneralForm;
+import org.odk.collect.naxa.generalforms.GeneralFormLocalSource;
+import org.odk.collect.naxa.generalforms.GeneralFormRemoteSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
+import static com.google.api.client.util.Preconditions.checkNotNull;
 
-public class GeneralFormRepository {
+public class GeneralFormRepository implements BaseLocalDataSource<GeneralForm> {
 
-    private GeneralFormDAO dao;
+    private static GeneralFormRepository INSTANCE = null;
+    private final GeneralFormLocalSource localSource;
+    private final GeneralFormRemoteSource remoteSource;
 
-    public GeneralFormRepository(Application application) {
-        FieldSightDatabase database = FieldSightDatabase.getDatabase(application);
-        this.dao = database.getProjectGeneralFormDao();
+    public static GeneralFormRepository getInstance(GeneralFormLocalSource localSource, GeneralFormRemoteSource remoteSource) {
+        if (INSTANCE == null) {
+            synchronized (GeneralFormRepository.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new GeneralFormRepository(localSource, remoteSource);
+                }
+            }
+        }
+        return INSTANCE;
     }
 
 
-    public void insert(ArrayList<GeneralForm> forms) {
-        io.reactivex.Observable.just(forms)
-                .flatMap(generalForms -> {
-                    dao.insert(generalForms);
-                    return io.reactivex.Observable.empty();
-                })
-                .subscribeOn(Schedulers.io())
-                .subscribe(new DisposableObserver<Object>() {
-                    @Override
-                    public void onNext(Object o) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    public void insert(GeneralForm... forms) {
-
-        io.reactivex.Observable.just(forms)
-                .flatMap(generalForms -> {
-                    dao.insert(generalForms);
-                    return io.reactivex.Observable.empty();
-                })
-                .subscribe(new DisposableObserver<Object>() {
-                    @Override
-                    public void onNext(Object o) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+    private GeneralFormRepository(@NonNull GeneralFormLocalSource localSource, @NonNull GeneralFormRemoteSource remoteSource) {
+        FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());
+        this.localSource = localSource;
+        this.remoteSource = remoteSource;
     }
 
 
-    public LiveData<List<GeneralForm>> getFromProjectId(String id) {
-        return dao.getProjectGeneralForms();
+
+
+    @Override
+    public LiveData<List<GeneralForm>> getById(String id) {
+        return localSource.getById(id);
+    }
+
+    @Override
+    public LiveData<List<GeneralForm>> getAll() {
+        remoteSource.updateAll();
+        return localSource.getAll();
+    }
+
+    @Override
+    public void save(GeneralForm... items) {
+        localSource.save(items);
+    }
+
+    @Override
+    public void save(ArrayList<GeneralForm> items) {
+        localSource.save(items);
+    }
+
+    @Override
+    public void refresh() {
+        boolean isDataDirty = true;
+    }
+
+    @Override
+    public void deleteAll() {
+
+    }
+
+    @Override
+    public void updateAll() {
+
     }
 }

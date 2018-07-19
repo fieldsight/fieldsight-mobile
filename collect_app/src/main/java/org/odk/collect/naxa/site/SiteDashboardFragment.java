@@ -23,6 +23,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.DialogFactory;
+import org.odk.collect.naxa.generalforms.GeneralFormsFragment;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.generalforms.GeneralFormListFragment;
 
@@ -267,7 +268,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void toForms() {
         Bundle bundle = new Bundle();
-        Fragment fragment = new GeneralFormListFragment();
+        Fragment fragment = new GeneralFormsFragment();
         bundle.putParcelable(EXTRA_OBJECT, loadedSite);
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();

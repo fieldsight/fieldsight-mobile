@@ -90,7 +90,6 @@ public class GeneralFormListFragment extends Fragment implements DisplayGeneralF
         Constant.selectedFragmentId = 8;
 
         Bundle bundle = getArguments();
-        noMessage = (TextView) rootView.findViewById(R.id.no_message);
 
         if (bundle != null) {
             loadedSite = bundle.getParcelable(EXTRA_OBJECT);
@@ -158,7 +157,7 @@ public class GeneralFormListFragment extends Fragment implements DisplayGeneralF
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mAdapter = new DisplayGeneralFormsAdapter(generalFormList, getActivity(), getActivity());
+        mAdapter = new DisplayGeneralFormsAdapter(generalFormList);
         mAdapter.setGeneralFormClickListener(this);
         recyclerView.setAdapter(mAdapter);
 
