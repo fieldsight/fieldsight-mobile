@@ -65,7 +65,7 @@ public class DownloadModelImpl implements DownloadModel {
     @Override
     public void fetchGeneralForms() {
 
-        projectRepository.getAllProjects()
+        projectRepository.getAllProjectsMaybe()
                 .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .map(project -> new XMLFormBuilder()
                         .setFormCreatorsId(project.getId())

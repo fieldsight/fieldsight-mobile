@@ -19,5 +19,8 @@ public interface ProjectDao {
     void insert(Project... projects);
 
     @Query("SELECT * FROM project")
-    Maybe<List<Project>> getProjects();
+    Maybe<List<Project>> getProjectsMaybe();
+
+    @Query("SELECT * FROM project")
+    LiveData<List<Project>> getProjectsLive();
 }

@@ -1,6 +1,7 @@
 package org.odk.collect.naxa.project.db;
 
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import org.odk.collect.naxa.common.FieldSightDatabase;
@@ -18,8 +19,12 @@ public class ProjectRepository {
         this.projectDao = database.getProjectDAO();
     }
 
-    public Maybe<List<Project>> getAllProjects() {
-        return projectDao.getProjects();
+    public Maybe<List<Project>> getAllProjectsMaybe() {
+        return projectDao.getProjectsMaybe();
+    }
+
+    public LiveData<List<Project>> getAllProjectsLive() {
+        return projectDao.getProjectsLive();
     }
 
     public void insert(Project...projects) {

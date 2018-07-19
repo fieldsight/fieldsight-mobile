@@ -257,8 +257,11 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-
-
+        switch (view.getId()) {
+            case R.id.site_option_frag_general_form:
+                toForms();
+                break;
+        }
     }
 
 

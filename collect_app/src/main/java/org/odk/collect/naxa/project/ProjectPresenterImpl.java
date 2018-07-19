@@ -1,5 +1,9 @@
 package org.odk.collect.naxa.project;
 
+import org.odk.collect.naxa.login.model.Project;
+
+import java.util.List;
+
 public class ProjectPresenterImpl implements ProjectPresenter {
 
     private ProjectView projectView;
@@ -14,5 +18,11 @@ public class ProjectPresenterImpl implements ProjectPresenter {
     public void initiateDownload() {
         projectView.showProgress(true);
         projectModel.downloadUserInformation();
+    }
+
+    public void showContent(List<Project> projectList){
+        projectView.showProgress(false);
+        projectView.showEmpty(false);
+        projectView.showContent(true,projectList);
     }
 }

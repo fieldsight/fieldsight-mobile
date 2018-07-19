@@ -1,5 +1,8 @@
 package org.odk.collect.naxa.project;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -66,11 +69,11 @@ public class ProjectListActivity extends AppCompatActivity implements ProjectVie
 
         projectPresenter = new ProjectPresenterImpl(this);
 
-        new SiteViewModel(Collect.getInstance())
-                .getmAllSites()
-                .observe(this, sites -> {
-                    Timber.i("%s sites found / database", sites != null ? sites.size() : 0);
-                });
+
+        ViewModelProviders.of(this)
+                .get(ProjectViewModel.class)
+                .getAllProjectsLive()
+                .observe(this, projects -> projectPresenter.showContent(projects));
 
     }
 
@@ -117,11 +120,6 @@ public class ProjectListActivity extends AppCompatActivity implements ProjectVie
         rvProjects.setItemAnimator(new DefaultItemAnimator());
         rvProjects.setAdapter(projectlistAdapter);
 
-//        adapterDataObserver = new RVEmptyObserver(rvProjects, emptyLayout, () -> {
-//            ToastUtils.showLongToast("Retrying");
-//        });
-
-//        projectlistAdapter.registerAdapterDataObserver(adapterDataObserver);
     }
 
 
@@ -158,6 +156,7 @@ public class ProjectListActivity extends AppCompatActivity implements ProjectVie
 
     @Override
     public void showContent(boolean show, List<Project> projectList) {
+        this.projectList = projectList;
         Timber.i("Showing content %s", show);
         if (show && projectList != null) {
             rvProjects.swapAdapter(new MyProjectsAdapter(projectList), true);

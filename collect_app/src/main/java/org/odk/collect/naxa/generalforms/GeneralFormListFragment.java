@@ -93,7 +93,6 @@ public class GeneralFormListFragment extends Fragment implements DisplayGeneralF
         noMessage = (TextView) rootView.findViewById(R.id.no_message);
 
         if (bundle != null) {
-            projectId_FromSiteName = Integer.valueOf(bundle.getString(EXTRA_PROJECT_ID));
             loadedSite = bundle.getParcelable(EXTRA_OBJECT);
             // isSiteMocked = DatabaseHelper.getInstance(getActivity().getApplicationContext()).isThisSiteOffline(loadedSite.getId());
             bindUI(rootView);
@@ -162,6 +161,7 @@ public class GeneralFormListFragment extends Fragment implements DisplayGeneralF
         mAdapter = new DisplayGeneralFormsAdapter(generalFormList, getActivity(), getActivity());
         mAdapter.setGeneralFormClickListener(this);
         recyclerView.setAdapter(mAdapter);
+
 
     }
 
