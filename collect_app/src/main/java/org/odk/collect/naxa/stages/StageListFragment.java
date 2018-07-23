@@ -2,6 +2,7 @@ package org.odk.collect.naxa.stages;
 
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.naxa.generalforms.DisplayGeneralFormsAdapter;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.scheduled.data.ScheduledFormViewModel;
 import org.odk.collect.naxa.stages.data.Stage;
 
 import java.util.ArrayList;
@@ -75,6 +77,10 @@ public class StageListFragment extends Fragment {
         View rootView =
                 inflater.inflate(R.layout.general_forms_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+
+        viewModel = ViewModelProviders.of(getActivity(), factory).get(StageViewModel.class);
+
         return rootView;
     }
 

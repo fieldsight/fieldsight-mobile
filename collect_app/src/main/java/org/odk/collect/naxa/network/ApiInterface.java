@@ -43,5 +43,5 @@ public interface ApiInterface {
 
 
     @GET(GET_STAGE_SUB_STAGE)
-    Observable<ArrayList<Stage>> getStageSubStage(String createdFromProject, String creatorsId);
+    Observable<ArrayList<Stage>> getStageSubStage(@Path(value = "is_project", encoded = true) String createdFromProject, @Path("id") String creatorsId);
 }

@@ -1,6 +1,7 @@
 package org.odk.collect.naxa.stages.data;
 
 import android.arch.lifecycle.LiveData;
+import android.os.AsyncTask;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseLocalDataSource;
@@ -40,16 +41,17 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
     @Override
     public void save(Stage... items) {
-        dao.insert(items);
+        AsyncTask.execute(() -> dao.insert(items));
+
     }
 
     @Override
     public void save(ArrayList<Stage> items) {
-        dao.insert(items);
+        AsyncTask.execute(() -> dao.insert(items));
     }
 
     @Override
     public void updateAll(ArrayList<Stage> items) {
-        dao.updateAll(items);
+        AsyncTask.execute(() -> dao.updateAll(items));
     }
 }

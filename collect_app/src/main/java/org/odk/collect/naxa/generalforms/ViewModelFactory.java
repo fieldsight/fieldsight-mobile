@@ -13,6 +13,10 @@ import org.odk.collect.naxa.scheduled.data.ScheduledFormRepository;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormViewModel;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormsLocalSource;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
+import org.odk.collect.naxa.stages.StageFormRepository;
+import org.odk.collect.naxa.stages.StageViewModel;
+import org.odk.collect.naxa.stages.data.StageLocalSource;
+import org.odk.collect.naxa.stages.data.StageRemoteSource;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
@@ -21,14 +25,16 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final GeneralFormRepository generalFormRepository;
     private final ScheduledFormRepository scheduledFormRepository;
+    private final StageFormRepository stageFormRepository;
 
 
     private final Application application;
 
-    public ViewModelFactory(Application application, GeneralFormRepository repository, ScheduledFormRepository scheduledFormRepository) {
+    public ViewModelFactory(Application application, GeneralFormRepository repository, ScheduledFormRepository scheduledFormRepository, StageFormRepository stageFormRepository) {
         this.application = application;
         this.generalFormRepository = repository;
         this.scheduledFormRepository = scheduledFormRepository;
+        this.stageFormRepository = stageFormRepository;
     }
 
     public static ViewModelFactory getInstance(Application application) {
@@ -43,7 +49,10 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
                     ScheduledFormRepository scheduledFormRepository = ScheduledFormRepository.getInstance(
                             ScheduledFormsLocalSource.getInstance(), ScheduledFormsRemoteSource.getInstance());
 
-                    INSTANCE = new ViewModelFactory(application, generalFormRepository, scheduledFormRepository);
+
+                    StageFormRepository stageFormRepository = StageFormRepository.getInstance(StageLocalSource.getInstance(), StageRemoteSource.getInstance());
+
+                    INSTANCE = new ViewModelFactory(application, generalFormRepository, scheduledFormRepository, stageFormRepository);
                 }
             }
         }
@@ -59,6 +68,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(ScheduledFormViewModel.class)) {
             //noinspection unchecked
             return (T) new ScheduledFormViewModel(scheduledFormRepository);
+        } else if (modelClass.isAssignableFrom(StageViewModel.class)) {
+            //noinspection unchecked
+            return (T) new StageViewModel(stageFormRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());
