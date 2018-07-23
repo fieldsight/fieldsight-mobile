@@ -1,4 +1,4 @@
-package org.odk.collect.naxa.generalforms;
+package org.odk.collect.naxa.generalforms.data;
 
 import com.google.gson.annotations.SerializedName;
 

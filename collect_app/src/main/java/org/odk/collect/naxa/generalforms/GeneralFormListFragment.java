@@ -34,6 +34,7 @@ import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.common.FormSessionManager;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.login.model.Site;
 
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
-import static org.odk.collect.naxa.common.Constant.EXTRA_PROJECT_ID;
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_START;
 

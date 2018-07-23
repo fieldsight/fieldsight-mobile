@@ -14,7 +14,7 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Connectivity;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
-import org.odk.collect.naxa.generalforms.db.GeneralFormViewModel;
+import org.odk.collect.naxa.generalforms.GeneralFormViewModel;
 import org.odk.collect.naxa.login.model.Site;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;

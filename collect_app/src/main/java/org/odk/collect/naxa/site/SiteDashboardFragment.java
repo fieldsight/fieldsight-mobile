@@ -26,10 +26,14 @@ import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.generalforms.GeneralFormsFragment;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.generalforms.GeneralFormListFragment;
+import org.odk.collect.naxa.scheduled.data.ScheduledFormsFragment;
+import org.odk.collect.naxa.stages.StageListFragment;
 
 import java.io.File;
 
 
+import static org.odk.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
+import static org.odk.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.naxa.common.ViewUtils.showOrHide;
 
@@ -53,8 +57,8 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
         FragmentManager fragmentManager = context.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(Constant.ANIM.fragmentEnterAnimation, Constant.ANIM.fragmentExitAnimation,
-                Constant.ANIM.fragmentEnterAnimation, Constant.ANIM.fragmentExitAnimation);
+        fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation,
+                fragmentEnterAnimation, fragmentExitAnimation);
         fragmentTransaction.replace(R.id.fragment_container, SiteDashboardFragment);
         fragmentTransaction.addToBackStack("myfrag0");
         fragmentTransaction.commit();
@@ -262,6 +266,12 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             case R.id.site_option_frag_general_form:
                 toForms();
                 break;
+            case R.id.site_option_frag_schedule_form:
+                toScheduleList();
+                break;
+            case R.id.site_option_frag_staged_form:
+                toStageList();
+                break;
         }
     }
 
@@ -273,10 +283,41 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(Constant.ANIM.fragmentEnterAnimation, Constant.ANIM.fragmentExitAnimation, Constant.ANIM.fragmentEnterAnimation, Constant.ANIM.fragmentExitAnimation);
+        fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentEnterAnimation, fragmentExitAnimation);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack("generalfrag");
         fragmentTransaction.commit();
+
+    }
+
+
+
+    private void toStageList() {
+
+        StageListFragment stageListFragment = StageListFragment.newInstance(loadedSite);
+
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentEnterAnimation, fragmentExitAnimation)
+                .replace(R.id.fragment_container, stageListFragment)
+                .addToBackStack("myfrag2").commit();
+
+
+    }
+
+    private void toScheduleList() {
+
+
+        ScheduledFormsFragment scheduleFormListFragment = ScheduledFormsFragment
+                .newInstance(loadedSite);
+
+
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentEnterAnimation, fragmentExitAnimation)
+                .replace(R.id.fragment_container, scheduleFormListFragment)
+                .addToBackStack("myfrag1").commit();
+
 
     }
 }

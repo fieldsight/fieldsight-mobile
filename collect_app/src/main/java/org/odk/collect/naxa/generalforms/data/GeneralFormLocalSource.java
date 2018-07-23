@@ -1,17 +1,24 @@
-package org.odk.collect.naxa.generalforms;
+package org.odk.collect.naxa.generalforms.data;
 
 import android.arch.lifecycle.LiveData;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseLocalDataSource;
 import org.odk.collect.naxa.common.FieldSightDatabase;
-import org.odk.collect.naxa.generalforms.db.GeneralFormDAO;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.Observer;
+import io.reactivex.SingleTransformer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> {
 
@@ -19,7 +26,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     private GeneralFormDAO dao;
 
 
-    public GeneralFormLocalSource() {
+    private GeneralFormLocalSource() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
         this.dao = database.getProjectGeneralFormDao();
     }
@@ -50,6 +57,8 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
                     dao.insert(generalForms);
                     return io.reactivex.Observable.empty();
                 })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableObserver<Object>() {
                     @Override
                     public void onNext(Object o) {
@@ -75,6 +84,8 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
                     dao.insert(generalForms);
                     return io.reactivex.Observable.empty();
                 })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableObserver<Object>() {
                     @Override
                     public void onNext(Object o) {
@@ -94,17 +105,70 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
     @Override
-    public void refresh() {
+    public void updateAll(ArrayList<GeneralForm> items) {
+
+        Observable.just(items)
+                .map(new Function<ArrayList<GeneralForm>, Object>() {
+                    @Override
+                    public Object apply(ArrayList<GeneralForm> generalForms) throws Exception {
+                        dao.updateAll(generalForms);
+                        return Observable.empty();
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<Object>() {
+                    @Override
+                    public void onNext(Object o) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
 
     }
 
-    @Override
+    private <T> Observer applySubscriber() {
+        return new DisposableObserver() {
+
+            @Override
+            public void onNext(Object o) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+
+        };
+    }
+
+    private <T> ObservableTransformer applySchedulers() {
+        return observable -> observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private <T> SingleTransformer applySchedulersSingle() {
+        return observable -> observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     public void deleteAll() {
-
-    }
-
-    @Override
-    public void updateAll() {
-
+        AsyncTask.execute(() -> dao.deleteAll());
     }
 }

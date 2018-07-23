@@ -6,18 +6,35 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.naxa.generalforms.GeneralForm;
-import org.odk.collect.naxa.generalforms.db.GeneralFormDAO;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
+import org.odk.collect.naxa.generalforms.data.GeneralFormDAO;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.onboarding.SyncableItems;
 import org.odk.collect.naxa.project.db.ProjectDao;
+import org.odk.collect.naxa.scheduled.data.ScheduleForm;
+import org.odk.collect.naxa.scheduled.data.ScheduledFormDAO;
 import org.odk.collect.naxa.site.db.SiteDao;
+import org.odk.collect.naxa.stages.data.Stage;
+import org.odk.collect.naxa.stages.data.StageFormDAO;
+import org.odk.collect.naxa.stages.data.Substage;
 import org.odk.collect.naxa.sync.SyncDao;
 
 import java.io.File;
 
-@Database(entities = {Site.class, Project.class, SyncableItems.class, GeneralForm.class}, version = 1)
+@Database(entities =
+        {
+                Site.class,
+                Project.class,
+                SyncableItems.class,
+                GeneralForm.class,
+                ScheduleForm.class,
+                Stage.class,
+                Substage.class
+
+        },
+        version = 1)
+
 public abstract class FieldSightDatabase extends RoomDatabase {
 
     private static FieldSightDatabase INSTANCE;
@@ -29,6 +46,10 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     public abstract SyncDao getSyncDAO();
 
     public abstract GeneralFormDAO getProjectGeneralFormDao();
+
+    public abstract ScheduledFormDAO getProjectScheduledFormsDAO();
+
+    public abstract StageFormDAO getStageDAO();
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 
@@ -44,7 +65,6 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
-
 
 
 }

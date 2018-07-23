@@ -1,14 +1,9 @@
-package org.odk.collect.naxa.generalforms.db;
+package org.odk.collect.naxa.generalforms.data;
 
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseLocalDataSource;
-import org.odk.collect.naxa.common.FieldSightDatabase;
-import org.odk.collect.naxa.generalforms.GeneralForm;
-import org.odk.collect.naxa.generalforms.GeneralFormLocalSource;
-import org.odk.collect.naxa.generalforms.GeneralFormRemoteSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,22 +29,18 @@ public class GeneralFormRepository implements BaseLocalDataSource<GeneralForm> {
 
 
     private GeneralFormRepository(@NonNull GeneralFormLocalSource localSource, @NonNull GeneralFormRemoteSource remoteSource) {
-        FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());
         this.localSource = localSource;
         this.remoteSource = remoteSource;
     }
 
 
-
-
     @Override
-    public LiveData<List<GeneralForm>> getById(String id) {
+    public LiveData<List<GeneralForm>> getById(@NonNull String id) {
         return localSource.getById(id);
     }
 
     @Override
     public LiveData<List<GeneralForm>> getAll() {
-        remoteSource.updateAll();
         return localSource.getAll();
     }
 
@@ -64,17 +55,12 @@ public class GeneralFormRepository implements BaseLocalDataSource<GeneralForm> {
     }
 
     @Override
-    public void refresh() {
-        boolean isDataDirty = true;
+    public void updateAll(ArrayList<GeneralForm> items) {
+        localSource.updateAll(items);
     }
 
-    @Override
+
     public void deleteAll() {
-
-    }
-
-    @Override
-    public void updateAll() {
-
+        localSource.deleteAll();
     }
 }

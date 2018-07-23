@@ -1,4 +1,4 @@
-package org.odk.collect.naxa.generalforms;
+package org.odk.collect.naxa.generalforms.data;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;

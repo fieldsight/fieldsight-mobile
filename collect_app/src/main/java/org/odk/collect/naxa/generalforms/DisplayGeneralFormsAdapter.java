@@ -1,8 +1,6 @@
 package org.odk.collect.naxa.generalforms;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +13,7 @@ import android.widget.TextView;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.naxa.common.DialogFactory;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class DisplayGeneralFormsAdapter extends RecyclerView.Adapter<DisplayGene
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         // create a new view
-        itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fieldsigh_general_list_row, null);
+        itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item, null);
         final ViewHolder viewHolder = new ViewHolder(itemLayoutView);
 
 
@@ -127,13 +126,13 @@ public class DisplayGeneralFormsAdapter extends RecyclerView.Adapter<DisplayGene
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
 
-            tvFormName = (TextView) itemLayoutView.findViewById(R.id.tv_name);
-            tvDesc = (TextView) itemLayoutView.findViewById(R.id.tv_desc);
-            tvLastFilledDateTime = (TextView) itemLayoutView.findViewById(R.id.tv_last_filled_dt);
-            btnOpenHistory = (Button) itemLayoutView.findViewById(R.id.btn_general_history);
-            btnOpenEdu = (Button) itemLayoutView.findViewById(R.id.btn_open_edu);
+            tvFormName = (TextView) itemLayoutView.findViewById(R.id.tv_form_primary);
+            tvDesc = (TextView) itemLayoutView.findViewById(R.id.tv_form_secondary);
+            tvLastFilledDateTime = (TextView) itemLayoutView.findViewById(R.id.tv_form_status);
+            btnOpenHistory = (Button) itemLayoutView.findViewById(R.id.btn_form_responses);
+            btnOpenEdu = (Button) itemLayoutView.findViewById(R.id.btn_form_edu);
             rootLayout = (RelativeLayout) itemLayoutView.findViewById(R.id.rl_form_list_item);
-            tvIconText = (TextView) itemLayoutView.findViewById(R.id.general_icon_text);
+            tvIconText = (TextView) itemLayoutView.findViewById(R.id.form_icon_text);
 
 
         }

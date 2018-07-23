@@ -1,10 +1,11 @@
-package org.odk.collect.naxa.generalforms.db;
+package org.odk.collect.naxa.generalforms;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 
-import org.odk.collect.naxa.generalforms.GeneralForm;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
+import org.odk.collect.naxa.generalforms.data.GeneralFormRepository;
 
 import java.util.List;
 
@@ -27,4 +28,9 @@ public class GeneralFormViewModel extends AndroidViewModel {
 
         return repository.getAll();
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
+
 }

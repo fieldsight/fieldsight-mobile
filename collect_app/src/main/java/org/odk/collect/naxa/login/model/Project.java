@@ -142,6 +142,7 @@ public class Project implements Parcelable {
         return siteMetaAttributes;
     }
 
+    @Ignore
     public Project(String id, String name) {
         this.id = id;
         this.name = name;

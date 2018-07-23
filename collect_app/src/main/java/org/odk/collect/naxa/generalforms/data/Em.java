@@ -1,9 +1,7 @@
-package org.odk.collect.naxa.generalforms;
+package org.odk.collect.naxa.generalforms.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import org.odk.collect.naxa.generalforms.EmImage;
 
 import java.util.ArrayList;
 import java.util.List;

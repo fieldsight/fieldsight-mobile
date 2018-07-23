@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_grey">
+
+
+    <ProgressBar
+        android:layout_centerInParent="true"
+        android:layout_width="@dimen/icon_width_height"
+        android:layout_height="@dimen/icon_width_height" />
+
+    <TextView
+        android:id="@+id/msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/msg_no_data_found"
+        android:textSize="@dimen/text_size_large" />
+
+    <Button
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/msg"
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/ic_refresh"
+        android:drawableStart="@drawable/ic_refresh"
+        android:text="Check Now" />
+</RelativeLayout>

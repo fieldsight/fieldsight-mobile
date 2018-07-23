@@ -3,6 +3,8 @@ package org.odk.collect.naxa.generalforms;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
+
 import java.util.List;
 
 

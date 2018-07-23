@@ -1,12 +1,10 @@
-package org.odk.collect.naxa.generalforms;
+package org.odk.collect.naxa.generalforms.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
 
 public class GetResponce implements Parcelable {
 

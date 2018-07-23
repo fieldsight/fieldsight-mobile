@@ -1,5 +1,7 @@
-package org.odk.collect.naxa.generalforms;
+package org.odk.collect.naxa.stages;
 
+
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,12 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.rockerhieu.rvadapter.states.StatesRecyclerViewAdapter;
-
 import org.odk.collect.android.R;
-import org.odk.collect.naxa.site.FragmentHostActivity;
+import org.odk.collect.naxa.generalforms.DisplayGeneralFormsAdapter;
+import org.odk.collect.naxa.generalforms.ViewModelFactory;
+import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.stages.data.Stage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,15 +30,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
-public class GeneralFormsFragment extends Fragment {
+import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
+
+public class StageListFragment extends Fragment {
 
     @Inject
     ViewModelFactory viewModelFactory;
-
-    @Inject
-    SyncCommentLifecycleObserver syncCommentLifecycleObserver;
-
-    private GeneralFormViewModel viewModel;
 
     @BindView(R.id.android_list)
     RecyclerView recyclerView;
@@ -42,16 +43,30 @@ public class GeneralFormsFragment extends Fragment {
     @BindView(R.id.root_layout_general_form_frag)
     LinearLayout rootLayout;
 
-    Unbinder unbinder;
-    private DisplayGeneralFormsAdapter generalFormsAdapter;
-    private StatesRecyclerViewAdapter statesRecyclerViewAdapter;
 
-    public static GeneralFormsFragment newInstance() {
-        return new GeneralFormsFragment();
+    private StageListAdapter listAdapter;
+    private Site loadedSite;
+    Unbinder unbinder;
+
+    private StageViewModel viewModel;
+
+    public static StageListFragment newInstance(@NonNull Site loadedSite) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_OBJECT, loadedSite);
+        StageListFragment scheduleListFragment = new StageListFragment();
+        scheduleListFragment.setArguments(bundle);
+        return scheduleListFragment;
+
     }
 
-    public GeneralFormsFragment() {
+    public StageListFragment() {
 
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
     }
 
     @Nullable
@@ -60,28 +75,27 @@ public class GeneralFormsFragment extends Fragment {
         View rootView =
                 inflater.inflate(R.layout.general_forms_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        viewModel = FragmentHostActivity.obtainViewModel(getActivity());
-
         return rootView;
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.loadGeneralForms(true)
-                .observe(this, generalForms -> {
-                    Timber.i("General forms data has been changed");
-                    generalFormsAdapter.updateList(generalForms);
-
+        viewModel.loadStages(true)
+                .observe(this, new Observer<List<Stage>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Stage> stages) {
+                        Timber.i("Stage forms data has been changed");
+                        listAdapter.updateList(stages);
+                    }
                 });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     private void setupListAdapter() {
@@ -90,14 +104,9 @@ public class GeneralFormsFragment extends Fragment {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        generalFormsAdapter = new DisplayGeneralFormsAdapter(new ArrayList<>(0));
-
-//        View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.empty_layout,rootLayout);
-//        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        rootLayout.setLayoutParams(lp);
-
-
-        //statesRecyclerViewAdapter = new StatesRecyclerViewAdapter(generalFormsAdapter, null, emptyView, null);
-        recyclerView.setAdapter(generalFormsAdapter);
+        listAdapter = new StageListAdapter(new ArrayList<>(0));
+        recyclerView.setAdapter(listAdapter);
     }
+
+
 }
