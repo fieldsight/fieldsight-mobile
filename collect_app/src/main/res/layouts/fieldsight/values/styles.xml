@@ -40,4 +40,8 @@
 
     </style>
 
+    <style name="ColoredCaption" parent="@style/TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
 </resources>

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.Constant;
+import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.SharedPreferenceUtils;
 import org.odk.collect.naxa.login.model.AuthResponse;
 import org.odk.collect.naxa.login.model.MeResponse;
@@ -30,7 +31,7 @@ public class LoginModelImpl implements LoginModel {
         ServiceGenerator.createService(ApiInterface.class)
                 .getAuthToken(username, password)
                 .map((Function<AuthResponse, ObservableSource<MeResponse>>) authResponse -> {
-                    SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), Constant.PrefKey.token, authResponse.getToken());
+                    FieldSightUserSession.saveAuthToken(authResponse.getToken());
                     return Observable.empty();
                 })
                 .retry(3)

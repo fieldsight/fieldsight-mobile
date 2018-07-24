@@ -3,6 +3,7 @@ package org.odk.collect.naxa.login;
 import android.text.TextUtils;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.naxa.login.model.MeResponse;
 
 public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFinishedListener {
@@ -41,6 +42,8 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     @Override
     public void onError() {
         loginView.showProgress(false);
+        loginView.showError();
+
     }
 
 

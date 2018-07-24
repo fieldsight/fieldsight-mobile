@@ -2,18 +2,32 @@ package org.odk.collect.naxa.login;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.utilities.SnackbarUtils;
+import org.odk.collect.naxa.common.DialogFactory;
+import org.odk.collect.naxa.network.APIEndpoint;
+import org.odk.collect.naxa.onboarding.DownloadActivity;
+import org.odk.collect.naxa.project.ProjectListActivity;
 
 /**
  * A login screen that offers login via email/password.
@@ -27,6 +41,8 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
     private View mLoginFormView;
 
     private LoginPresenter loginPresenter;
+    private Button mEmailSignInButton;
+    private RelativeLayout rootLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +52,31 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        rootLayout = findViewById(R.id.root_layout_activity_login);
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View view) {
+                hideKeyboardInActivity(LoginActivity.this);
                 attemptLogin();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
+        mLoginFormView = findViewById(R.id.logo);
         mProgressView = findViewById(R.id.login_progress);
+
+
+        findViewById(R.id.tv_forgot_pwd).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = APIEndpoint.PASSWORD_RESET;
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
         loginPresenter = new LoginPresenterImpl(this);
     }
@@ -68,7 +97,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         String password = mPasswordView.getText().toString();
 
 
-        loginPresenter.validateCredentials(email,password);
+        loginPresenter.validateCredentials(email, password);
 
     }
 
@@ -76,7 +105,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
     public void showProgress(final boolean show) {
 
         runOnUiThread(() -> {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_longAnimTime);
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
@@ -97,6 +126,8 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
+
+            mEmailSignInButton.setEnabled(!show);
         });
 
     }
@@ -117,8 +148,38 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
     @Override
     public void successAction() {
         Toast.makeText(this, "Logged In!", Toast.LENGTH_SHORT).show();
+        DownloadActivity.start(LoginActivity.this);
     }
 
+    @Override
+    public void showError() {
+        showProgress(false);
+        showErrorDialog();
+    }
 
+    private void showErrorDialog() {
+        Dialog dialog = DialogFactory.createMessageDialog(LoginActivity.this, "Login Failed", "Invalid email/username or password");
+        new Handler().postDelayed(() -> dialog.show(), 500);
+
+    }
+
+    /**
+     * Only works from an activity, using getActivity() does not work
+     *
+     * @param activity
+     */
+    public void hideKeyboardInActivity(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        }
+    }
 }
 

@@ -9,4 +9,6 @@ public interface LoginView {
     void showUsernameError(int resourceId);
 
     void successAction();
+
+    void showError();
 }

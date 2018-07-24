@@ -104,9 +104,9 @@ the specific language governing permissions and limitations under the License.
         </provider>
 
         <activity
-            android:exported="true"
             android:name=".activities.MainMenuActivity"
-            android:configChanges="locale|orientation|screenSize" />
+            android:configChanges="locale|orientation|screenSize"
+            android:exported="true" />
         <activity
             android:name=".activities.ScannerWithFlashlightActivity"
             android:screenOrientation="portrait"
@@ -279,10 +279,12 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.WebViewActivity" />
         <activity android:name=".activities.CaptureSelfieVideoActivity" />
         <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
-        <activity android:name="org.odk.collect.naxa.login.LoginActivity" />
         <activity
-            android:exported="true"
-            android:name="org.odk.collect.naxa.onboarding.DownloadActivity" />
+            android:name="org.odk.collect.naxa.login.LoginActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="org.odk.collect.naxa.onboarding.DownloadActivity"
+            android:exported="true" />
         <activity
             android:name="org.odk.collect.naxa.project.ProjectListActivity"
             android:exported="true"
