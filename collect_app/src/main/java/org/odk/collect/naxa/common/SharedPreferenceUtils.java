@@ -38,6 +38,13 @@ public class SharedPreferenceUtils {
         editor.commit();
     }
 
+    public static void deleteAll(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+    }
+
+
     /**
      * Called to retrieve required value from shared preferences, identified by given key.
      * Default value will be returned of no value found or error occurred.

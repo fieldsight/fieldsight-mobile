@@ -22,6 +22,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.onboarding.DownloadActivity;
 import org.odk.collect.naxa.project.adapter.MyProjectsAdapter;
@@ -108,6 +109,9 @@ public class ProjectListActivity extends AppCompatActivity implements ProjectVie
             case R.id.action_refresh:
 
                 DownloadActivity.start(this);
+                break;
+            case R.id.action_logout:
+                FieldSightUserSession.createLogoutDialog(this);
                 break;
         }
         return super.onOptionsItemSelected(item);
