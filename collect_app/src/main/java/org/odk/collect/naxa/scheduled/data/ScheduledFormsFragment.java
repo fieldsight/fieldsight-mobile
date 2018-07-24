@@ -14,6 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.common.FieldSightFormListFragment;
+import org.odk.collect.naxa.common.OnFormItemClickListener;
+import org.odk.collect.naxa.common.SharedPreferenceUtils;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.scheduled.ScheduledFormsAdapter;
@@ -28,8 +32,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.odk.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
-public class ScheduledFormsFragment extends Fragment {
+public class ScheduledFormsFragment extends FieldSightFormListFragment implements OnFormItemClickListener<ScheduleForm> {
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -77,13 +82,6 @@ public class ScheduledFormsFragment extends Fragment {
                 scheduledFormsAdapter.updateList(scheduleForms);
             }
         });
-
-//        viewModel.getBySiteId(loadedSite.getId(), true)
-//                .observe(this, scheduleForms -> {
-//                    Timber.i("ScheduleForm has changed");
-//
-//                    scheduledFormsAdapter.updateList(scheduleForms);
-//                });
     }
 
 
@@ -93,7 +91,7 @@ public class ScheduledFormsFragment extends Fragment {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        scheduledFormsAdapter = new ScheduledFormsAdapter(new ArrayList<>(0));
+        scheduledFormsAdapter = new ScheduledFormsAdapter(new ArrayList<>(0), this);
         recyclerView.setAdapter(scheduledFormsAdapter);
     }
 
@@ -109,5 +107,28 @@ public class ScheduledFormsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
+    }
+
+    @Override
+    public void onGuideBookButtonClicked(ScheduleForm scheduleForm, int position) {
+
+    }
+
+    @Override
+    public void onFormItemClicked(ScheduleForm scheduleForm) {
+        String submissionUrl = generateSubmissionUrl(PROJECT, loadedSite.getProject(), scheduleForm.getFsFormId());
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
+
+        fillODKForm(scheduleForm.getIdString());
+    }
+
+    @Override
+    public void onFormItemLongClicked(ScheduleForm scheduleForm) {
+
+    }
+
+    @Override
+    public void onFormHistoryButtonClicked(ScheduleForm scheduleForm) {
+
     }
 }

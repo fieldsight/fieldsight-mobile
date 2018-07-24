@@ -15,12 +15,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.naxa.common.FieldSightFormListFragment;
+import org.odk.collect.naxa.common.OnFormItemClickListener;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.stages.StageListAdapter;
 import org.odk.collect.naxa.stages.data.Stage;
 import org.odk.collect.naxa.stages.data.StageRemoteSource;
+import org.odk.collect.naxa.stages.data.SubStage;
 
 import java.util.ArrayList;
 
@@ -34,7 +38,7 @@ import timber.log.Timber;
 import static org.odk.collect.naxa.common.Constant.EXTRA_ID;
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 
-public class SubStageListFragment extends Fragment {
+public class SubStageListFragment extends FieldSightFormListFragment implements OnFormItemClickListener<SubStage> {
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -118,4 +122,23 @@ public class SubStageListFragment extends Fragment {
     }
 
 
+    @Override
+    public void onGuideBookButtonClicked(SubStage subStage, int position) {
+
+    }
+
+    @Override
+    public void onFormItemClicked(SubStage subStage) {
+
+    }
+
+    @Override
+    public void onFormItemLongClicked(SubStage subStage) {
+        ToastUtils.showShortToastInMiddle("Not implmeneted");
+    }
+
+    @Override
+    public void onFormHistoryButtonClicked(SubStage subStage) {
+
+    }
 }

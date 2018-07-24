@@ -14,6 +14,8 @@ import android.widget.TextView;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.naxa.common.DialogFactory;
+import org.odk.collect.naxa.common.OnFormItemClickListener;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.scheduled.data.ScheduleForm;
 
 import java.util.ArrayList;
@@ -30,10 +32,11 @@ public class ScheduledFormsAdapter extends
 
     private ArrayList<ScheduleForm> totalList;
 
-    private OnFormClickListener onClickListener;
+    private OnFormItemClickListener<ScheduleForm> listener;
 
-    public ScheduledFormsAdapter(ArrayList<ScheduleForm> totalList) {
+    public ScheduledFormsAdapter(ArrayList<ScheduleForm> totalList, OnFormItemClickListener<ScheduleForm> listener) {
         this.totalList = totalList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -57,45 +60,8 @@ public class ScheduledFormsAdapter extends
             viewHolder.tvScheduleLevel.setText(scheduleForm.getScheduleLevel());
 
         } catch (NullPointerException e) {
-
+            Timber.e(e.getMessage());
         }
-
-
-        viewHolder.btnOpenHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickListener.onPreviousSubmissionButtonClicked(scheduleForm);
-            }
-        });
-
-        viewHolder.btnOpenEdu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickListener.onGuideBookButtonClicked(scheduleForm, viewHolder.getAdapterPosition());
-            }
-        });
-
-        viewHolder.rootLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickListener.onFormItemClicked(scheduleForm);
-            }
-        });
-
-        viewHolder.rootLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (BuildConfig.DEBUG) {
-
-                    Context context = viewHolder.rootLayout.getContext();
-                    String msg = String.format("FormID %s\nSiteID %s\nDeployedFrom %s", scheduleForm.getFsFormId(), scheduleForm.getSiteId(), scheduleForm.getFormDeployedFrom());
-                    DialogFactory.createGenericErrorDialog(context, msg).show();
-
-
-                }
-                return false;
-            }
-        });
     }
 
     @Override
@@ -110,7 +76,7 @@ public class ScheduledFormsAdapter extends
         diffResult.dispatchUpdatesTo(this);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tvFormName, tvDesc, tvLastFilledAt, tvIconText, tvScheduleLevel;
         Button btnOpenEdu, btnOpenHistory;
@@ -127,21 +93,30 @@ public class ScheduledFormsAdapter extends
             rootLayout = itemLayoutView.findViewById(R.id.rl_form_list_item);
             tvIconText = itemLayoutView.findViewById(R.id.form_icon_text);
             // tvScheduleLevel = itemLayoutView.findViewById(R.id.tv_schedule_level);
+
+
+            rootLayout.setOnClickListener(this);
+            btnOpenEdu.setOnClickListener(this);
+            btnOpenHistory.setOnClickListener(this);
         }
-    }
 
-    public void setOnClickListener(OnFormClickListener onClickListener) {
-        this.onClickListener = onClickListener;
-    }
+        @Override
+        public void onClick(View v) {
+            ScheduleForm scheduleForm = totalList.get(getAdapterPosition());
 
-    public interface OnFormClickListener {
-        void onPreviousSubmissionButtonClicked(ScheduleForm scheduleForm);
+            switch (v.getId()) {
+                case R.id.rl_form_list_item:
+                    listener.onFormItemClicked(scheduleForm);
+                    break;
+                case R.id.btn_form_edu:
+                    listener.onGuideBookButtonClicked(scheduleForm, getAdapterPosition());
+                    break;
+                case R.id.btn_form_responses:
+                    listener.onFormHistoryButtonClicked(scheduleForm);
+                    break;
 
-        void onGuideBookButtonClicked(ScheduleForm scheduleForm, int position);
-
-        void onFormItemClicked(ScheduleForm scheduleForm);
-
-        void onFormStatusClicked();
+            }
+        }
     }
 
 
