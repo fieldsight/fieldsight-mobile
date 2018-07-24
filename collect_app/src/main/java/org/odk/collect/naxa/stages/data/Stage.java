@@ -3,19 +3,22 @@ package org.odk.collect.naxa.stages.data;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "stages")
 public class Stage {
 
+    @NonNull
     @PrimaryKey
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
 
     @SerializedName("project_stage_id")
     @Expose
@@ -24,7 +27,7 @@ public class Stage {
     @Ignore
     @SerializedName("parent")
     @Expose
-    private List<Substage> substage;
+    private ArrayList<SubStage> subStage;
 
     @SerializedName("name")
     @Expose
@@ -63,10 +66,10 @@ public class Stage {
     }
 
     @Ignore
-    public Stage(Integer id, Integer projectStageId, List<Substage> substage, String name, String description, Integer order, String dateCreated, String dateModified, Integer site, Integer project, String mockStages) {
+    public Stage(String id, Integer projectStageId, ArrayList<SubStage> subStage, String name, String description, Integer order, String dateCreated, String dateModified, Integer site, Integer project, String mockStages) {
         this.id = id;
         this.projectStageId = projectStageId;
-        this.substage = substage;
+        this.subStage = subStage;
         this.name = name;
         this.description = description;
         this.order = order;
@@ -86,16 +89,16 @@ public class Stage {
         this.mockStages = mockStages;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public List<Substage> getSubstage() {
-        return substage;
+    public ArrayList<SubStage> getSubStage() {
+        return subStage;
     }
 
     public Integer getProjectStageId() {
@@ -106,8 +109,8 @@ public class Stage {
         this.projectStageId = projectStageId;
     }
 
-    public void setSubStage(List<Substage> substage) {
-        this.substage = substage;
+    public void setSubStage(ArrayList<SubStage> subStage) {
+        this.subStage = subStage;
     }
 
     public String getName() {

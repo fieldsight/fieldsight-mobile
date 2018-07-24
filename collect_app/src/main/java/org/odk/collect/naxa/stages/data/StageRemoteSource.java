@@ -8,6 +8,7 @@ import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.onboarding.XMLForm;
 import org.odk.collect.naxa.onboarding.XMLFormBuilder;
 import org.odk.collect.naxa.project.db.ProjectRepository;
+import org.odk.collect.naxa.substages.data.SubStageLocalSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,22 +43,28 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
                         .setIsCreatedFromProject(true)
                         .createXMLForm())
                 .flatMap((Function<XMLForm, ObservableSource<ArrayList<Stage>>>) this::downloadProjectStages)
+                .map(stages -> {
+                    StageLocalSource.getInstance().updateAll(stages);
+                    return stages;
+                })
+                .flatMapIterable((Function<ArrayList<Stage>, Iterable<Stage>>) stages -> stages)
+                .map(stage -> stage.getSubStage())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArrayList<Stage>>() {
+                .subscribe(new Observer<ArrayList<SubStage>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(ArrayList<Stage> stages) {
-                        StageLocalSource.getInstance().updateAll(stages);
+                    public void onNext(ArrayList<SubStage> subStages) {
+                        SubStageLocalSource.getInstance().updateAll(subStages);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+
                     }
 
                     @Override

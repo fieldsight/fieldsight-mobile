@@ -23,7 +23,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
                 childColumns = "stageId",
                 onDelete = CASCADE))
 
-public class Substage {
+public class SubStage {
 
     @PrimaryKey
     @SerializedName("id")
@@ -73,12 +73,12 @@ public class Substage {
     private List<FormResponse> latestSubmission = null;
 
 
-    public Substage() {
+    public SubStage() {
 
     }
 
     @Ignore
-    public Substage(Integer id, StageForms stageForms, String name, String description, Integer order, String responseCount, Em em, Integer projectStageId, List<FormResponse> latestSubmission) {
+    public SubStage(Integer id, StageForms stageForms, String name, String description, Integer order, String responseCount, Em em, Integer projectStageId, List<FormResponse> latestSubmission) {
         this.id = id;
         this.stageForms = stageForms;
         this.name = name;

@@ -60,7 +60,7 @@ public class SubstageBuilder {
         return this;
     }
 
-    public Substage createSubstageNEWAPI() {
-        return new Substage(id, stageForms, name, description, order, responseCount, em, projectStageId, latestSubmission);
+    public SubStage createSubstageNEWAPI() {
+        return new SubStage(id, stageForms, name, description, order, responseCount, em, projectStageId, latestSubmission);
     }
 }

@@ -1,29 +1,31 @@
 package org.odk.collect.naxa.stages;
 
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import org.odk.collect.android.R;
-import org.odk.collect.naxa.generalforms.DisplayGeneralFormsAdapter;
+import org.odk.collect.naxa.common.Constant;
+import org.odk.collect.naxa.common.OnFormItemClickListener;
+import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Site;
-import org.odk.collect.naxa.scheduled.data.ScheduledFormViewModel;
 import org.odk.collect.naxa.stages.data.Stage;
+import org.odk.collect.naxa.substages.SubStageListFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -34,23 +36,25 @@ import timber.log.Timber;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 
-public class StageListFragment extends Fragment {
+public class StageListFragment extends Fragment implements OnFormItemClickListener<Stage> {
 
     @Inject
     ViewModelFactory viewModelFactory;
 
     @BindView(R.id.android_list)
-    RecyclerView recyclerView;
+    RecyclerViewEmptySupport recyclerView;
 
     @BindView(R.id.root_layout_general_form_frag)
     LinearLayout rootLayout;
-
 
     private StageListAdapter listAdapter;
     private Site loadedSite;
     Unbinder unbinder;
 
     private StageViewModel viewModel;
+
+    @BindView(R.id.root_layout_empty_layout)
+    public RelativeLayout emptyLayout;
 
     public static StageListFragment newInstance(@NonNull Site loadedSite) {
         Bundle bundle = new Bundle();
@@ -89,12 +93,9 @@ public class StageListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
         viewModel.loadStages(true)
-                .observe(this, new Observer<List<Stage>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Stage> stages) {
-                        Timber.i("Stage forms data has been changed");
-                        listAdapter.updateList(stages);
-                    }
+                .observe(this, stages -> {
+                    Timber.i("Stage forms data has been changed");
+                    listAdapter.updateList(stages);
                 });
     }
 
@@ -110,9 +111,45 @@ public class StageListFragment extends Fragment {
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        listAdapter = new StageListAdapter(new ArrayList<>(0));
+        recyclerView.setEmptyView(emptyLayout, new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
+            @Override
+            public void onRetryButtonClick() {
+
+            }
+        });
+        listAdapter = new StageListAdapter(new ArrayList<>(0), this);
         recyclerView.setAdapter(listAdapter);
     }
 
 
+    @Override
+    public void onGuideBookButtonClicked(Stage stage, int position) {
+
+    }
+
+    @Override
+    public void onFormItemClicked(Stage stage) {
+        Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getId());
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_OBJECT, loadedSite);
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(Constant.ANIM.fragmentEnterAnimation
+                , Constant.ANIM.fragmentExitAnimation, Constant.ANIM.fragmentEnterAnimation, Constant.ANIM.fragmentExitAnimation);
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.addToBackStack("myfrag3");
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onFormItemLongClicked(Stage stage) {
+
+    }
+
+    @Override
+    public void onFormHistoryButtonClicked(Stage stage) {
+
+
+    }
 }

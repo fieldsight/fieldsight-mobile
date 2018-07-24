@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import org.odk.collect.android.R;
-import org.odk.collect.naxa.generalforms.DisplayGeneralFormsAdapter;
+import org.odk.collect.naxa.generalforms.GeneralFormsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,6 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
     @Override
     public DownloadListAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
         View rootLayout = LayoutInflater.from(parent.getContext()).inflate(R.layout.download_list_item, null);
-        final DisplayGeneralFormsAdapter.ViewHolder viewHolder = new DisplayGeneralFormsAdapter.ViewHolder(rootLayout);
         return new DownloadListAdapter.ViewHolder(rootLayout);
     }
 

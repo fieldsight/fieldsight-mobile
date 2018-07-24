@@ -36,6 +36,7 @@ public class GeneralFormRepository implements BaseLocalDataSource<GeneralForm> {
 
     @Override
     public LiveData<List<GeneralForm>> getById(@NonNull String id) {
+        remoteSource.getAll();
         return localSource.getById(id);
     }
 

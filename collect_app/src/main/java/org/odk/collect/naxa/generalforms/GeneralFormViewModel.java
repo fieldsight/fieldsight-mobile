@@ -14,19 +14,15 @@ public class GeneralFormViewModel extends AndroidViewModel {
     private final Application application;
 
 
-
     public GeneralFormViewModel(Application application, GeneralFormRepository repository) {
         super(application);
         this.application = application;
         this.repository = repository;
     }
 
-    public LiveData<List<GeneralForm>> loadGeneralForms(boolean forceUpdate) {
-        if (forceUpdate) {
+    public LiveData<List<GeneralForm>> loadGeneralForms(boolean forceUpdate, String siteId) {
 
-        }
-
-        return repository.getAll();
+        return repository.getById(siteId);
     }
 
     public void deleteAll() {

@@ -1,11 +1,12 @@
 package org.odk.collect.naxa.stages.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StageBuilder {
-    private Integer id;
+    private String id;
     private Integer projectStageId;
-    private List<Substage> substage;
+    private ArrayList<SubStage> subStage;
     private String name;
     private String description;
     private Integer order;
@@ -15,7 +16,7 @@ public class StageBuilder {
     private Integer project;
     private String mockStages;
 
-    public StageBuilder setId(Integer id) {
+    public StageBuilder setId(String id) {
         this.id = id;
         return this;
     }
@@ -25,8 +26,8 @@ public class StageBuilder {
         return this;
     }
 
-    public StageBuilder setSubstage(List<Substage> substage) {
-        this.substage = substage;
+    public StageBuilder setSubStage(ArrayList<SubStage> subStage) {
+        this.subStage = subStage;
         return this;
     }
 
@@ -71,6 +72,6 @@ public class StageBuilder {
     }
 
     public Stage createStageNEWAPI() {
-        return new Stage(id, projectStageId, substage, name, description, order, dateCreated, dateModified, site, project, mockStages);
+        return new Stage(id, projectStageId, subStage, name, description, order, dateCreated, dateModified, site, project, mockStages);
     }
 }

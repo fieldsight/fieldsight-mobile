@@ -14,12 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
-import org.odk.collect.naxa.generalforms.DisplayGeneralFormsAdapter;
-import org.odk.collect.naxa.generalforms.GeneralFormViewModel;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.scheduled.ScheduledFormsAdapter;
-import org.odk.collect.naxa.site.FragmentHostActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +26,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 

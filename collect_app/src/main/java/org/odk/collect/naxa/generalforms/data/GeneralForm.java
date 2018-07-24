@@ -24,6 +24,7 @@ public class GeneralForm {
     @SerializedName("name")
     @Expose
     private String name;
+
     @SerializedName("id_string")
     @Expose
     private String idString;

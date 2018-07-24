@@ -7,10 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.odk.collect.android.R;
+import org.odk.collect.naxa.common.OnFormItemClickListener;
 import org.odk.collect.naxa.stages.data.Stage;
 
 import java.util.ArrayList;
@@ -18,17 +21,15 @@ import java.util.List;
 
 
 public class StageListAdapter extends
-        RecyclerView.Adapter<StageListAdapter.ViewHolder> {
+        RecyclerView.Adapter<StageListAdapter.ViewHolder> implements View.OnClickListener {
 
     private ArrayList<Stage> totalList;
+    public OnFormItemClickListener<Stage> onFormItemClickListener;
 
 
-    public StageListAdapter() {
-
-    }
-
-    public StageListAdapter(ArrayList<Stage> totalList) {
+    public StageListAdapter(ArrayList<Stage> totalList, OnFormItemClickListener<Stage> onFormItemClickListener) {
         this.totalList = totalList;
+        this.onFormItemClickListener = onFormItemClickListener;
     }
 
 
@@ -70,22 +71,52 @@ public class StageListAdapter extends
         return totalList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onClick(View v) {
 
-        TextView tvStageName, tvSubTitle, stageIdTv, tvIconText;
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        TextView tvStageName, tvSubTitle, tvIconText;
         ImageView stageBadge;
+        RelativeLayout rootLayout;
+        Button btnFormResponse, btnEduMaterials;
 
-        public ViewHolder(View itemLayoutView) {
-            super(itemLayoutView);
+        public ViewHolder(View view) {
+            super(view);
 
-            tvStageName = (TextView) itemLayoutView.findViewById(R.id.tv_form_primary);
-            tvSubTitle = (TextView) itemLayoutView.findViewById(R.id.tv_form_secondary);
-            tvIconText = (TextView) itemLayoutView.findViewById(R.id.form_icon_text);
-            stageBadge = (ImageView) itemLayoutView.findViewById(R.id.iv_stage_badge);
+            tvStageName = view.findViewById(R.id.tv_form_primary);
+            tvSubTitle = view.findViewById(R.id.tv_form_secondary);
+            tvIconText = view.findViewById(R.id.form_icon_text);
+            stageBadge = view.findViewById(R.id.iv_stage_badge);
+            btnFormResponse = view.findViewById(R.id.btn_form_responses);
+            btnEduMaterials = view.findViewById(R.id.btn_form_edu);
+            rootLayout = view.findViewById(R.id.rl_form_list_item);
+
+            rootLayout.setOnClickListener(this);
+            btnEduMaterials.setOnClickListener(this);
+            btnFormResponse.setOnClickListener(this);
 
 
         }
 
+        @Override
+        public void onClick(View v) {
+
+            Stage stage = totalList.get(getAdapterPosition());
+            switch (v.getId()) {
+                case R.id.rl_form_list_item:
+                    onFormItemClickListener.onFormItemClicked(stage);
+                    break;
+                case R.id.btn_form_edu:
+                    onFormItemClickListener.onGuideBookButtonClicked(stage, getAdapterPosition());
+                    break;
+                case R.id.btn_form_responses:
+                    onFormItemClickListener.onFormHistoryButtonClicked(stage);
+                    break;
+            }
+        }
     }
 
 }

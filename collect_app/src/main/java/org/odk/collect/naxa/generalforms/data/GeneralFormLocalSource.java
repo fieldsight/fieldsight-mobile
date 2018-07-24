@@ -42,7 +42,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
     @Override
     public LiveData<List<GeneralForm>> getById(@NonNull String id) {
-        return null;
+        return dao.getProjectGeneralForms();
     }
 
     @Override

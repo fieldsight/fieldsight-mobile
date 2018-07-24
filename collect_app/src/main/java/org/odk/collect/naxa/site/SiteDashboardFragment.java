@@ -25,7 +25,6 @@ import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.generalforms.GeneralFormsFragment;
 import org.odk.collect.naxa.login.model.Site;
-import org.odk.collect.naxa.generalforms.GeneralFormListFragment;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormsFragment;
 import org.odk.collect.naxa.stages.StageListFragment;
 
@@ -277,10 +276,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void toForms() {
-        Bundle bundle = new Bundle();
-        Fragment fragment = new GeneralFormsFragment();
-        bundle.putParcelable(EXTRA_OBJECT, loadedSite);
-        fragment.setArguments(bundle);
+        GeneralFormsFragment fragment = GeneralFormsFragment.newInstance(loadedSite);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentEnterAnimation, fragmentExitAnimation);
@@ -289,7 +285,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         fragmentTransaction.commit();
 
     }
-
 
 
     private void toStageList() {
