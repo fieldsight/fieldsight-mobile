@@ -22,6 +22,8 @@ import org.kxml2.io.KXmlParser;
 import org.kxml2.kdom.Document;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.common.Constant;
+import org.odk.collect.naxa.common.SharedPreferenceUtils;
 import org.opendatakit.httpclientandroidlib.Header;
 import org.opendatakit.httpclientandroidlib.HttpEntity;
 import org.opendatakit.httpclientandroidlib.HttpHost;
@@ -78,6 +80,7 @@ public final class WebUtils {
     private static final String USER_AGENT_HEADER = "User-Agent";
 
     private static final String OPEN_ROSA_VERSION_HEADER = "X-OpenRosa-Version";
+    private static final String FIELDSIGHT_AUTH_HEADER = "Authorization";
     private static final String OPEN_ROSA_VERSION = "1.0";
     private static final String DATE_HEADER = "Date";
 
@@ -179,10 +182,17 @@ public final class WebUtils {
                 DateFormat.format("E, dd MMM yyyy hh:mm:ss zz", g).toString());
     }
 
+    private static void setFieldSightHeaders(HttpRequest req) {
+        String token = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), Constant.PrefKey.token, "Token 5091b915cd28e331c04056e402b85ecae7a3da7a");
+        req.setHeader(FIELDSIGHT_AUTH_HEADER, token);
+    }
+
+
     public static HttpHead createOpenRosaHttpHead(URI uri) {
         HttpHead req = new HttpHead(uri);
         setCollectHeaders(req);
         setOpenRosaHeaders(req);
+        setFieldSightHeaders(req);
         return req;
     }
 
@@ -190,6 +200,7 @@ public final class WebUtils {
         HttpGet req = new HttpGet();
         setCollectHeaders(req);
         setOpenRosaHeaders(req);
+        setFieldSightHeaders(req);
         req.setURI(uri);
         return req;
     }
@@ -198,6 +209,7 @@ public final class WebUtils {
         HttpPost req = new HttpPost(URI.create(u.toString()));
         setCollectHeaders(req);
         setOpenRosaHeaders(req);
+        setFieldSightHeaders(req);
         return req;
     }
 

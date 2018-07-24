@@ -43,7 +43,9 @@ import com.crashlytics.android.Crashlytics;
 import org.bcss.collect.android.fieldsight.utils.AppBarStateChangeListener;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.InstanceUploaderList;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.fragments.DataManagerList;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.NonSwipeableViewPager;
 import org.odk.collect.naxa.common.RxSearchObservable;
@@ -273,16 +275,21 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 //                startActivity(toCollectSite);
                 break;
             case R.id.nav_delete_saved_form:
-//                Intent toDelSaved = new Intent(getApplicationContext(), DataManagerList.class);
-//                startActivity(toDelSaved);
+                Collect.getInstance().getActivityLogger()
+                        .logAction(this, "deleteSavedInstances", "click");
+                startActivity(new Intent(getApplicationContext(), DataManagerList.class));
                 break;
             case R.id.nav_edit_saved_form:
 //                Intent toEditSaved = new Intent(getApplicationContext(), EditSavedFormActivity.class);
 //                startActivity(toEditSaved);
                 break;
             case R.id.nav_send_final_form:
-//                Intent toSendFinal = new Intent(getApplicationContext(), InstanceUploaderList.class);
-//                startActivity(toSendFinal);
+
+                Collect.getInstance().getActivityLogger()
+                        .logAction(this, "uploadForms", "click");
+                startActivity(new Intent(getApplicationContext(),
+                        InstanceUploaderList.class));
+
                 break;
             case R.id.nav_view_finalized_offline_site:
 //                FinalizedSiteListActivity.start(this, loadedProject);

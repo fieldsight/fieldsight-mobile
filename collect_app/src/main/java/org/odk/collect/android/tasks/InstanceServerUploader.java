@@ -546,12 +546,12 @@ public class InstanceServerUploader extends InstanceUploader {
                             ? getServerSubmissionURL() : c.getString(subIdx).trim();
 
                     // add the deviceID to the request...
-                    try {
-                        urlString += "?deviceID=" + URLEncoder.encode(deviceId, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        // unreachable...
-                        Timber.i(e, "Error encoding URL for device id : %s", deviceId);
-                    }
+//                    try {
+//                        urlString += "?deviceID=" + URLEncoder.encode(deviceId, "UTF-8");
+//                    } catch (UnsupportedEncodingException e) {
+//                        // unreachable...
+//                        Timber.i(e, "Error encoding URL for device id : %s", deviceId);
+//                    }
 
                     if (!uploadOneSubmission(urlString, id, instance, toUpdate, localContext,
                             uriRemap, outcome)) {

@@ -34,6 +34,7 @@ import org.odk.collect.android.utilities.EncryptionUtils;
 import org.odk.collect.android.utilities.EncryptionUtils.EncryptedFormInformation;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaManager;
+import org.odk.collect.naxa.common.SharedPreferenceUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -207,6 +208,10 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
                     if (!c.isNull(c.getColumnIndex(FormsColumns.SUBMISSION_URI))) {
                         submissionUri = c.getString(c.getColumnIndex(FormsColumns.SUBMISSION_URI));
                     }
+
+                    //mutate url for fieldsight
+                    submissionUri = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
+                            SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, "");
 
                     // add missing fields into values
                     values.put(InstanceColumns.INSTANCE_FILE_PATH, instancePath);

@@ -20,12 +20,14 @@ import android.widget.LinearLayout;
 import com.rockerhieu.rvadapter.states.StatesRecyclerViewAdapter;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.provider.FormsProviderAPI;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.common.OnFormItemClickListener;
+import org.odk.collect.naxa.common.SharedPreferenceUtils;
 import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.network.APIEndpoint;
 import org.odk.collect.naxa.site.FragmentHostActivity;
 
 import java.util.ArrayList;
@@ -39,6 +41,8 @@ import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.odk.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.odk.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class GeneralFormsFragment extends Fragment implements OnFormItemClickListener<GeneralForm> {
 
@@ -118,13 +122,9 @@ public class GeneralFormsFragment extends Fragment implements OnFormItemClickLis
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         generalFormsAdapter = new GeneralFormsAdapter(new ArrayList<>(0), this);
-
 //        View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.empty_layout,rootLayout);
-//        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        rootLayout.setLayoutParams(lp);
-
-
-        //statesRecyclerViewAdapter = new StatesRecyclerViewAdapter(generalFormsAdapter, null, emptyView, null);
+//       RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);rootLayout.setLayoutParams(lp);
+//        statesRecyclerViewAdapter = new StatesRecyclerViewAdapter(generalFormsAdapter, null, emptyView, null);
         recyclerView.setAdapter(generalFormsAdapter);
     }
 
@@ -135,6 +135,9 @@ public class GeneralFormsFragment extends Fragment implements OnFormItemClickLis
 
     @Override
     public void onFormItemClicked(GeneralForm generalForm) {
+        String submissionUrl = generateSubmissionUrl(PROJECT, loadedSite.getProject(), generalForm.getFsFormId());
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
+
         openGeneralForm(generalForm.getIdString());
     }
 
@@ -154,14 +157,11 @@ public class GeneralFormsFragment extends Fragment implements OnFormItemClickLis
             Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, formId);
             String action = getActivity().getIntent().getAction();
 
-//            FormUploadPrefManager formUploadPrefManager = new FormUploadPrefManager(getActivity().getApplicationContext());
-//            formUploadPrefManager.setFormSession(viewModel.getFsFormId(), loadedSite.getSiteId(), loadedSite.getProjectId(), viewModel.getFormDeployedFrom());
 
             if (Intent.ACTION_PICK.equals(action)) {
                 // caller is waiting on a picked form
                 getActivity().setResult(RESULT_OK, new Intent().setData(formUri));
             } else {
-
                 // caller wants to view/edit a form, so launch formentryactivity
                 Intent toFormEntry = new Intent(Intent.ACTION_EDIT, formUri);
                 toFormEntry.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -179,13 +179,30 @@ public class GeneralFormsFragment extends Fragment implements OnFormItemClickLis
 
     }
 
+    private String generateSubmissionUrl(String formDeployedFrom, String creatorsId, String fsFormId) {
+        String submissionUrl = APIEndpoint.BASE_URL + APIEndpoint.FORM_SUBMISSION_PAGE;
+
+        switch (formDeployedFrom) {
+            case PROJECT:
+                submissionUrl += "project/" + fsFormId + "/" + creatorsId;
+                break;
+            case SITE:
+                submissionUrl += fsFormId + "/" + creatorsId;
+                break;
+            default:
+                throw new RuntimeException("Unknown form deployed");
+        }
+
+        return submissionUrl;
+
+    }
+
     private long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
 
         String[] projection = new String[]{FormsProviderAPI.FormsColumns._ID, FormsProviderAPI.FormsColumns.FORM_FILE_PATH};
         String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
         String[] selectionArgs = new String[]{jrFormId};
         String sortOrder = FormsProviderAPI.FormsColumns.JR_VERSION + " DESC LIMIT 1";
-
 
         Cursor cursor = getActivity().getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI,
                 projection,
