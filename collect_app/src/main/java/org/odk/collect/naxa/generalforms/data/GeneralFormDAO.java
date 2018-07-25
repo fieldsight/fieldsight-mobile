@@ -13,11 +13,11 @@ import java.util.List;
 @Dao
 public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
 
-    @Query("SELECT * FROM general_form_proj")
+    @Query("SELECT * FROM general_forms")
     public abstract LiveData<List<GeneralForm>> getProjectGeneralForms();
 
 
-    @Query("DELETE FROM general_form_proj")
+    @Query("DELETE FROM general_forms")
     public abstract void deleteAll();
 
     @Transaction

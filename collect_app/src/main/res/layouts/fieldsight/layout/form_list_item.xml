@@ -23,12 +23,12 @@
             android:paddingBottom="@dimen/margin_large"
             android:paddingLeft="@dimen/margin_large"
             android:paddingRight="@dimen/margin_large"
-            android:paddingTop="20dp">
+            android:paddingTop="24dp">
 
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:src="@drawable/circle_blue" />
 
 
@@ -49,7 +49,8 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/circle_grey"
-                android:src="@drawable/ic_check" />
+                android:src="@drawable/ic_check"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -60,14 +61,16 @@
             android:layout_below="@id/tv_form_status"
             android:layout_marginEnd="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
+
+            android:layout_marginBottom="@dimen/margin_small"
             android:layout_toEndOf="@+id/icon_container"
             android:layout_toRightOf="@+id/icon_container"
             android:ellipsize="end"
             android:maxLines="2"
             android:minLines="1"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_small" />
+            android:textSize="@dimen/text_size_medium"
+            tools:text="Form Name " />
 
         <TextView
             android:id="@+id/tv_form_secondary"
@@ -79,10 +82,11 @@
             android:layout_toEndOf="@+id/icon_container"
             android:layout_toRightOf="@+id/icon_container"
             android:maxLines="2"
-            android:minLines="1" />
+            android:minLines="1"
+            tools:text="Form Description" />
 
         <TextView
-
+            android:padding="@dimen/padding_small"
             android:id="@+id/tv_form_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -99,8 +103,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_form_secondary"
-            android:layout_marginLeft="60dp"
-            android:layout_marginStart="60dp"
+            android:layout_marginLeft="72dp"
+            android:layout_marginStart="72dp"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/btn_previous_submissions" />
 

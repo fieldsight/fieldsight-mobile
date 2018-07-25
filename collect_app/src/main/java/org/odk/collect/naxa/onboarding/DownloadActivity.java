@@ -38,6 +38,7 @@ import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_UPDATE;
 
 public class DownloadActivity extends CollectAbstractActivity implements DownloadListAdapter.onDownLoadItemClick, DownloadView {
+
     private RecyclerView recyclerView;
     private ArrayList<SyncableItems> syncableItems = new ArrayList<>();
     private DownloadListAdapter downloadListAdapter;

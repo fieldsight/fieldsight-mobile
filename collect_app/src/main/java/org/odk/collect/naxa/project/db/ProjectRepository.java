@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.FieldSightDatabase;
 import org.odk.collect.naxa.login.model.Project;
 
@@ -14,8 +15,8 @@ import io.reactivex.Maybe;
 public class ProjectRepository {
     private ProjectDao projectDao;
 
-    public ProjectRepository(Application application) {
-        FieldSightDatabase database = FieldSightDatabase.getDatabase(application);
+    public ProjectRepository() {
+        FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject contxt
         this.projectDao = database.getProjectDAO();
     }
 

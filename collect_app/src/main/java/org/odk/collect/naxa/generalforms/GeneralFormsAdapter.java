@@ -54,7 +54,11 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         viewHolder.tvFormName.setText(generalForm.getName());
         viewHolder.tvDesc.setText(generalForm.getName());
         viewHolder.tvLastFilledDateTime.setText(generalForm.getName());
-        viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1));
+
+        if (generalForm.getName() != null) {
+            viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1));
+        }
+
     }
 
 
@@ -68,6 +72,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         TextView tvFormName, tvDesc, tvLastFilledDateTime, tvIconText;
         Button btnOpenEdu, btnOpenHistory;
         RelativeLayout rootLayout;
+        View badge;
 
 
         public ViewHolder(View view) {
@@ -80,6 +85,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             btnOpenEdu = view.findViewById(R.id.btn_form_edu);
             rootLayout = view.findViewById(R.id.rl_form_list_item);
             tvIconText = view.findViewById(R.id.form_icon_text);
+            badge = view.findViewById(R.id.iv_stage_badge);
 
             rootLayout.setOnClickListener(this);
             btnOpenEdu.setOnClickListener(this);

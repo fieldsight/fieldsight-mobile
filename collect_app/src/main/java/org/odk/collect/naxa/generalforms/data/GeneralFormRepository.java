@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.naxa.common.BaseLocalDataSource;
+import org.odk.collect.naxa.project.db.ProjectRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ public class GeneralFormRepository implements BaseLocalDataSource<GeneralForm> {
 
     @Override
     public LiveData<List<GeneralForm>> getAll() {
+        
         return localSource.getAll();
     }
 

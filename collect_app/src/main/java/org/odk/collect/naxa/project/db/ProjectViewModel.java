@@ -18,7 +18,7 @@ public class ProjectViewModel extends AndroidViewModel {
 
     public ProjectViewModel(@NonNull Application application) {
         super(application);
-        this.projectRepository = new ProjectRepository(application);
+        this.projectRepository = new ProjectRepository();
     }
 
     public LiveData<List<Project>> getAllProjectsLive() {

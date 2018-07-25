@@ -89,7 +89,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
 
 
-        new ProjectRepository(Collect.getInstance()).getAllProjectsLive().observeForever(new Observer<List<Project>>() {
+        new ProjectRepository().getAllProjectsLive().observeForever(new Observer<List<Project>>() {
             @Override
             public void onChanged(@Nullable List<Project> projects) {
                 ArrayList<String> projectIds = new ArrayList<>();

@@ -35,7 +35,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
 
     @Override
     public void getAll() {
-        new ProjectRepository(Collect.getInstance()).getAllProjectsMaybe()
+        new ProjectRepository().getAllProjectsMaybe()
                 .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .map(project -> new XMLFormBuilder()
                         .setFormCreatorsId(project.getId())

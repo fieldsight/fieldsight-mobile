@@ -55,7 +55,7 @@ public class DownloadModelImpl implements DownloadModel {
     DownloadModelImpl() {
         this.siteRepository = new SiteRepository(Collect.getInstance());
         this.generalFormRepository = GeneralFormRepository.getInstance(GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
-        this.projectRepository = new ProjectRepository(Collect.getInstance());
+        this.projectRepository = new ProjectRepository();
         formList = new ArrayList<>();
 
     }

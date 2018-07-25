@@ -1,5 +1,6 @@
 package org.odk.collect.naxa.common;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
+import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.naxa.login.LoginActivity;
 import org.odk.collect.naxa.site.db.SiteDao;
 
@@ -71,6 +73,8 @@ public class FieldSightUserSession {
     private static void logout(Context context) {
         AsyncTask.execute(() -> FieldSightDatabase.getDatabase(context).clearAllTables());
         SharedPreferenceUtils.deleteAll(context);
+
+
 
         DeleteInstancesTask deleteInstancesTask = new DeleteInstancesTask();
         deleteInstancesTask.setContentResolver(context.getContentResolver());

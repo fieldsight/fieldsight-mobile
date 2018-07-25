@@ -1,9 +1,14 @@
 package org.odk.collect.naxa.generalforms.data;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.greenrobot.eventbus.EventBus;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseRemoteDataSource;
 import org.odk.collect.naxa.common.Constant;
+import org.odk.collect.naxa.common.database.FieldSightConfigDatabase;
+import org.odk.collect.naxa.common.database.SiteOveride;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.ApiInterface;
@@ -13,9 +18,12 @@ import org.odk.collect.naxa.onboarding.XMLFormBuilder;
 import org.odk.collect.naxa.project.db.ProjectRepository;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
@@ -31,12 +39,18 @@ import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_
 public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm> {
 
     private static GeneralFormRemoteSource INSTANCE;
+    private ProjectRepository projectRepository;
 
     public static GeneralFormRemoteSource getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new GeneralFormRemoteSource();
         }
         return INSTANCE;
+    }
+
+
+    public GeneralFormRemoteSource() {
+        this.projectRepository = new ProjectRepository();
     }
 
 
@@ -69,13 +83,40 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     @Override
     public void getAll() {
-        new ProjectRepository(Collect.getInstance()).getAllProjectsMaybe()
+        Observable<XMLForm> siteODKForms = FieldSightConfigDatabase
+                .getDatabase(Collect.getInstance())
+                .getSiteOverideDAO()
+                .getAll()
+                .map((Function<SiteOveride, LinkedList<String>>) siteOveride -> {
+                    Type type = new TypeToken<LinkedList<String>>() {
+                    }.getType();//todo use typeconvertor
+                    return new Gson().fromJson(siteOveride.getGeneralFormIds(), type);
+                }).flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
+                .map(siteId -> new XMLFormBuilder()
+                        .setFormCreatorsId(siteId)
+                        .setIsCreatedFromProject(false)
+                        .createXMLForm());
+
+
+        Observable<XMLForm> projectODKForms = projectRepository
+                .getAllProjectsMaybe()
                 .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .map(project -> new XMLFormBuilder()
                         .setFormCreatorsId(project.getId())
                         .setIsCreatedFromProject(true)
-                        .createXMLForm())
+                        .createXMLForm());
+
+
+        Observable.merge(siteODKForms, projectODKForms)
                 .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::downloadGeneralForm)
+                .map(generalForms -> {
+                    for (GeneralForm generalForm : generalForms) {
+                        String deployedFrom = generalForm.getProject() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+                        generalForm.setFormDeployedFrom(deployedFrom);
+                    }
+
+                    return generalForms;
+                })
                 .flatMap(generalForms -> {
                     GeneralFormLocalSource.getInstance().updateAll(generalForms);
                     return Observable.empty();

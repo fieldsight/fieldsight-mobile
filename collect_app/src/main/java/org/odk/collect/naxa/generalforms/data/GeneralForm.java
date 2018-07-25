@@ -2,25 +2,32 @@ package org.odk.collect.naxa.generalforms.data;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.odk.collect.naxa.common.Constant;
+
 import java.util.List;
 
-@Entity(tableName = "general_form_proj")
+@Entity(tableName = "general_forms",
+        primaryKeys = {"fsFormId", "formDeployedFrom"})
 public class GeneralForm {
-    @PrimaryKey
+
     @NonNull
     @SerializedName("id")
     @Expose
     private String fsFormId;
+
+    @NonNull
+    private String formDeployedFrom;
+
     @SerializedName("em")
     @Expose
     @Ignore
     private Em em;
+
     @SerializedName("name")
     @Expose
     private String name;
@@ -28,40 +35,36 @@ public class GeneralForm {
     @SerializedName("id_string")
     @Expose
     private String idString;
+
     @SerializedName("responses_count")
     @Expose
     private Integer responsesCount;
+
     @Expose
     private String dateCreated;
     @SerializedName("date_modified")
+
     @Expose
     private String dateModified;
     @SerializedName("form_status")
+
     @Expose
     private Integer formStatus;
     @SerializedName("is_deployed")
+
     @Expose
     private Boolean isDeployed;
-    @SerializedName("is_deleted")
-    @Expose
-    private Boolean isDeleted;
-    @SerializedName("is_survey")
+
+    @SerializedName("from_project")
     private Boolean fromProject;
+
     @SerializedName("default_submission_status")
     @Expose
+
     private Integer defaultSubmissionStatus;
     @SerializedName("xf")
     @Expose
     private Integer xf;
-
-    @NonNull
-    public String getFsFormId() {
-        return fsFormId;
-    }
-
-    public void setFsFormId(@NonNull String fsFormId) {
-        this.fsFormId = fsFormId;
-    }
 
     @SerializedName("site")
     @Expose
@@ -86,6 +89,23 @@ public class GeneralForm {
     @Ignore
     private List<FormResponse> latestSubmission = null;
 
+    @NonNull
+    public String getFsFormId() {
+        return fsFormId;
+    }
+
+    public void setFsFormId(@NonNull String fsFormId) {
+        this.fsFormId = fsFormId;
+    }
+
+    @NonNull
+    public String getFormDeployedFrom() {
+        return formDeployedFrom;
+    }
+
+    public void setFormDeployedFrom(@NonNull String formDeployedFrom) {
+        this.formDeployedFrom = formDeployedFrom;
+    }
 
     public Em getEm() {
         return em;
@@ -153,14 +173,6 @@ public class GeneralForm {
         this.isDeployed = isDeployed;
     }
 
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
 
     public Boolean getFromProject() {
         return fromProject;
@@ -208,6 +220,7 @@ public class GeneralForm {
 
     public void setProject(String project) {
         this.project = project;
+        formDeployedFrom = project != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
     }
 
     public String getFsform() {
