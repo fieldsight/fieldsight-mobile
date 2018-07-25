@@ -39,6 +39,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.android.fieldsight.utils.AppBarStateChangeListener;
 import org.odk.collect.android.R;
@@ -47,6 +48,7 @@ import org.odk.collect.android.activities.InstanceUploaderList;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.DataManagerList;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.NonSwipeableViewPager;
 import org.odk.collect.naxa.common.RxSearchObservable;
 import org.odk.collect.naxa.common.ViewUtils;
@@ -54,6 +56,7 @@ import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.project.MapFragment;
 import org.odk.collect.naxa.project.ProjectContactsFragment;
+import org.odk.collect.naxa.project.ProjectListActivity;
 import org.odk.collect.naxa.site.db.SiteRepository;
 import org.odk.collect.naxa.site.db.SiteViewModel;
 
@@ -67,6 +70,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -451,7 +455,24 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
                 break;
             case R.id.action_logout:
-                ToastUtils.showLongToast("Not implemented yet");
+                ReactiveNetwork.checkInternetConnectivity()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new DisposableSingleObserver<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean aBoolean) {
+                                if (aBoolean) {
+                                    FieldSightUserSession.createLogoutDialog(ProjectDashboardActivity.this);
+                                } else {
+                                    FieldSightUserSession.stopLogoutDialog(ProjectDashboardActivity.this);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
                 //logout();
                 break;
         }

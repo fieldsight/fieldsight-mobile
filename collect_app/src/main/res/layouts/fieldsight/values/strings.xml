@@ -65,6 +65,7 @@
     <string name="logout_message_only_filled_forms" >If you logout all your account data including %d filled form(s) would be deleted.</string>
     <string name="logout_message_only_offline_sites" >If you logout all your account data including %d offline site(s) would be deleted.</string>
     <string name="logout_message_none" >If you logout all your account data would be deleted.</string>
+    <string name="empty_message">Once you are assigned %s, you\'ll see them listed here</string>
 
 
 </resources>

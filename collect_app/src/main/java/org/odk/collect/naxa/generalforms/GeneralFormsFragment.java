@@ -121,16 +121,14 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         generalFormsAdapter = new GeneralFormsAdapter(new ArrayList<>(0), this);
-        recyclerView.setEmptyView(emptyLayout, "Once you are assigned to a site, you'll see general forms listed here",
+        recyclerView.setEmptyView(emptyLayout,
+                getString(R.string.empty_message, "general forms"),
                 new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {
                         viewModel.loadGeneralForms(true, loadedSite.getId());
                     }
                 });
-//        View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.empty_layout,rootLayout);
-//       RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);rootLayout.setLayoutParams(lp);
-//        statesRecyclerViewAdapter = new StatesRecyclerViewAdapter(generalFormsAdapter, null, emptyView, null);
         recyclerView.setAdapter(generalFormsAdapter);
     }
 

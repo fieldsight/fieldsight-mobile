@@ -9,13 +9,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Connectivity;
+import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
 import org.odk.collect.naxa.generalforms.GeneralFormViewModel;
 import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.project.ProjectListActivity;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -80,24 +88,29 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
                 break;
             case R.id.action_logout:
-                logout();
+                ReactiveNetwork.checkInternetConnectivity()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new DisposableSingleObserver<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean aBoolean) {
+                                if (aBoolean) {
+                                    FieldSightUserSession.createLogoutDialog(FragmentHostActivity.this);
+                                } else {
+                                    FieldSightUserSession.stopLogoutDialog(FragmentHostActivity.this);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void logout() {
-        Boolean isNotConnectedToNetwork = Connectivity.isNotConnected(getApplicationContext());
-
-        if (isNotConnectedToNetwork) {
-            ToastUtils.showShortToastInMiddle(getString(R.string.all_msg_logout_no__internet));
-            return;
-        }
-
-        ToastUtils.showShortToast("Todo logout dialog");
-        //DialogFactoryImpl.createLogoutDialog(this);
-
-    }
 
     public static GeneralFormViewModel obtainViewModel(FragmentActivity activity) {
         // Use a Factory to inject dependencies into the ViewModel
