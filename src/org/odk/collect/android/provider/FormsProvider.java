@@ -37,6 +37,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -266,14 +267,16 @@ public class FormsProvider extends ContentProvider {
 			String[] selectionArgs, String sortOrder) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		qb.setTables(FORMS_TABLE_NAME);
+		qb.setProjectionMap(sFormsProjectionMap);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+			qb.setStrict(true);
+		}
 
 		switch (sUriMatcher.match(uri)) {
 		case FORMS:
-			qb.setProjectionMap(sFormsProjectionMap);
 			break;
 
 		case FORM_ID:
-			qb.setProjectionMap(sFormsProjectionMap);
 			qb.appendWhere(FormsColumns._ID + "="
 					+ uri.getPathSegments().get(1));
 			break;
@@ -521,10 +524,9 @@ public class FormsProvider extends ContentProvider {
 			count = db.delete(
 					FORMS_TABLE_NAME,
 					FormsColumns._ID
-							+ "="
-							+ formId
+							+ "=?"
 							+ (!TextUtils.isEmpty(where) ? " AND (" + where
-									+ ')' : ""), whereArgs);
+									+ ')' : ""), prepareWhereArgs(whereArgs, formId));
 			break;
 
 		default:
@@ -673,10 +675,9 @@ public class FormsProvider extends ContentProvider {
 							FORMS_TABLE_NAME,
 							values,
 							FormsColumns._ID
-									+ "="
-									+ formId
+									+ "=?"
 									+ (!TextUtils.isEmpty(where) ? " AND ("
-											+ where + ')' : ""), whereArgs);
+											+ where + ')' : ""), prepareWhereArgs(whereArgs, formId));
 				} else {
 					Log.e(t, "Attempting to update row that does not exist");
 				}
@@ -693,6 +694,18 @@ public class FormsProvider extends ContentProvider {
 
 		getContext().getContentResolver().notifyChange(uri, null);
 		return count;
+	}
+
+	private String[] prepareWhereArgs(String[] whereArgs, String formId) {
+		String[] newWhereArgs;
+		if (whereArgs == null || whereArgs.length == 0) {
+			newWhereArgs = new String[] {formId};
+		} else {
+			newWhereArgs = new String[(whereArgs.length + 1)];
+			newWhereArgs[0] = formId;
+			System.arraycopy(whereArgs, 0, newWhereArgs, 1, whereArgs.length);
+		}
+		return newWhereArgs;
 	}
 
 	static {
