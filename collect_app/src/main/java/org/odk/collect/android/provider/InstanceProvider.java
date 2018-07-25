@@ -29,6 +29,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -137,14 +138,16 @@ public class InstanceProvider extends ContentProvider {
             String sortOrder) {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         qb.setTables(INSTANCES_TABLE_NAME);
+        qb.setProjectionMap(sInstancesProjectionMap);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            qb.setStrict(true);
+        }
 
         switch (sUriMatcher.match(uri)) {
             case INSTANCES:
-                qb.setProjectionMap(sInstancesProjectionMap);
                 break;
 
             case INSTANCE_ID:
-                qb.setProjectionMap(sInstancesProjectionMap);
                 qb.appendWhere(InstanceColumns._ID + "=" + uri.getPathSegments().get(1));
                 break;
 
@@ -320,9 +323,9 @@ public class InstanceProvider extends ContentProvider {
 
                 count =
                     db.delete(INSTANCES_TABLE_NAME,
-                        InstanceColumns._ID + "=" + instanceId
+                        InstanceColumns._ID + "=?"
                                 + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""),
-                        whereArgs);
+                            prepareWhereArgs(whereArgs, instanceId));
                 break;
 
             default:
@@ -376,8 +379,8 @@ public class InstanceProvider extends ContentProvider {
                 }
 
                 count =
-                    db.update(INSTANCES_TABLE_NAME, values, InstanceColumns._ID + "=" + instanceId
-                            + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+                    db.update(INSTANCES_TABLE_NAME, values, InstanceColumns._ID + "=?"
+                            + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), prepareWhereArgs(whereArgs, instanceId));
                 break;
 
             default:
@@ -386,6 +389,18 @@ public class InstanceProvider extends ContentProvider {
 
         getContext().getContentResolver().notifyChange(uri, null);
         return count;
+    }
+
+    private String[] prepareWhereArgs(String[] whereArgs, String instanceId) {
+        String[] newWhereArgs;
+        if (whereArgs == null || whereArgs.length == 0) {
+            newWhereArgs = new String[] {instanceId};
+        } else {
+            newWhereArgs = new String[(whereArgs.length + 1)];
+            newWhereArgs[0] = instanceId;
+            System.arraycopy(whereArgs, 0, newWhereArgs, 1, whereArgs.length);
+        }
+        return newWhereArgs;
     }
 
     static {
