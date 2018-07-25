@@ -2,8 +2,10 @@ package org.odk.collect.naxa.common;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.annotation.ColorInt;
 import android.support.v4.graphics.drawable.DrawableCompat;
 
@@ -18,9 +20,12 @@ import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
+import org.odk.collect.naxa.login.LoginActivity;
 import org.odk.collect.naxa.site.db.SiteDao;
 
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 public class FieldSightUserSession {
 
@@ -30,7 +35,8 @@ public class FieldSightUserSession {
     }
 
     public static String getAuthToken() {
-        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "Token 5091b915cd28e331c04056e402b85ecae7a3da7a");
+        String demo = "Token 5091b915cd28e331c04056e402b85ecae7a3da7a";
+        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
     }
 
     public static void saveAuthToken(String token) {
@@ -57,8 +63,13 @@ public class FieldSightUserSession {
         return msg;
     }
 
+
+    public static void stopLogoutDialog(Context context) {
+        DialogFactory.createMessageDialog(context, "Can't logout", "An active internet connection required").show();
+    }
+
     private static void logout(Context context) {
-        FieldSightDatabase.getDatabase(context).clearAllTables();
+        AsyncTask.execute(() -> FieldSightDatabase.getDatabase(context).clearAllTables());
         SharedPreferenceUtils.deleteAll(context);
 
         DeleteInstancesTask deleteInstancesTask = new DeleteInstancesTask();
@@ -71,7 +82,7 @@ public class FieldSightUserSession {
 
             @Override
             public void progressUpdate(int progress, int total) {
-
+                Timber.i("Deleting %s out of %s instances", progress, total);
             }
         });
 
@@ -84,6 +95,10 @@ public class FieldSightUserSession {
         deleteFormsTask.setDeleteListener(new DeleteFormsListener() {
             @Override
             public void deleteComplete(int deletedForms) {
+                Timber.i("%s forms has been deleted", deletedForms);
+                Intent intent = new Intent(context, LoginActivity.class)
+                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.startActivity(intent);
 
             }
         });
@@ -163,5 +178,10 @@ public class FieldSightUserSession {
             }
         }).setNegativeButton(negMsg, null).setIcon(wrapped).show();
 
+    }
+
+    public static boolean isLoggedIn() {
+        String token = getAuthToken();
+        return token != null && token.length() > 0;
     }
 }

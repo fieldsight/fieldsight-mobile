@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
+    android:elevation="@dimen/elevation_appbar"
     android:background="@drawable/toolbar_gradient"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -11,6 +12,7 @@
         android:id="@+id/toolbar_general"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <TextView

@@ -65,7 +65,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             app:cardCornerRadius="3dp"
-            app:cardPreventCornerOverlap="false">
+            app:cardPreventCornerOverlap="true">
 
 
             <ImageView

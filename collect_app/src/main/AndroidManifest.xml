@@ -281,7 +281,8 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
         <activity
             android:name="org.odk.collect.naxa.login.LoginActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:noHistory="true"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.odk.collect.naxa.onboarding.DownloadActivity"
             android:exported="true" />

@@ -8,6 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -36,8 +37,30 @@ public class Project implements Parcelable {
     @SerializedName("cluster_sites")
     private Boolean hasClusteredSites;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Project)) return false;
+        Project project = (Project) o;
+        return Objects.equal(getId(), project.getId()) &&
+                Objects.equal(getName(), project.getName()) &&
+                Objects.equal(getDescription(), project.getDescription()) &&
+                Objects.equal(getAddress(), project.getAddress()) &&
+                Objects.equal(getLat(), project.getLat()) &&
+                Objects.equal(getLon(), project.getLon()) &&
+                Objects.equal(getOrganizationName(), project.getOrganizationName()) &&
+                Objects.equal(getOrganizationlogourl(), project.getOrganizationlogourl()) &&
+                Objects.equal(getHasClusteredSites(), project.getHasClusteredSites()) &&
+                Objects.equal(getTypeId(), project.getTypeId()) &&
+                Objects.equal(getTypeLabel(), project.getTypeLabel()) &&
+                Objects.equal(getPhone(), project.getPhone()) &&
+                Objects.equal(getSiteMetaAttributes(), project.getSiteMetaAttributes());
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId(), getName(), getDescription(), getAddress(), getLat(), getLon(), getOrganizationName(), getOrganizationlogourl(), getHasClusteredSites(), getTypeId(), getTypeLabel(), getPhone(), getSiteMetaAttributes());
+    }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

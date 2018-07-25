@@ -23,6 +23,7 @@ import org.kxml2.kdom.Document;
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.Constant;
+import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.SharedPreferenceUtils;
 import org.opendatakit.httpclientandroidlib.Header;
 import org.opendatakit.httpclientandroidlib.HttpEntity;
@@ -183,7 +184,7 @@ public final class WebUtils {
     }
 
     private static void setFieldSightHeaders(HttpRequest req) {
-        String token = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), Constant.PrefKey.token, "Token 5091b915cd28e331c04056e402b85ecae7a3da7a");
+        String token = FieldSightUserSession.getAuthToken();
         req.setHeader(FIELDSIGHT_AUTH_HEADER, token);
     }
 

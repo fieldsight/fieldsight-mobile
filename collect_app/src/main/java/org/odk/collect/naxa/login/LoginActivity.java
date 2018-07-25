@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -22,12 +20,11 @@ import android.widget.Toast;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.network.APIEndpoint;
 import org.odk.collect.naxa.onboarding.DownloadActivity;
-import org.odk.collect.naxa.project.ProjectListActivity;
+
+import static org.odk.collect.android.application.Collect.allowClick;
 
 /**
  * A login screen that offers login via email/password.
@@ -59,8 +56,10 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
             @Override
             public void onClick(View view) {
-                hideKeyboardInActivity(LoginActivity.this);
-                attemptLogin();
+                if(allowClick()){
+                    hideKeyboardInActivity(LoginActivity.this);
+                    attemptLogin();
+                }
             }
         });
 
@@ -71,10 +70,13 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         findViewById(R.id.tv_forgot_pwd).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = APIEndpoint.PASSWORD_RESET;
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
+                if (allowClick()) {
+                    String url = APIEndpoint.PASSWORD_RESET;
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    startActivity(i);
+
+                }
             }
         });
 
@@ -152,13 +154,13 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
     }
 
     @Override
-    public void showError() {
+    public void showError(String msg) {
         showProgress(false);
-        showErrorDialog();
+        showErrorDialog(msg);
     }
 
-    private void showErrorDialog() {
-        Dialog dialog = DialogFactory.createMessageDialog(LoginActivity.this, "Login Failed", "Invalid email/username or password");
+    private void showErrorDialog(String msg) {
+        Dialog dialog = DialogFactory.createMessageDialog(LoginActivity.this, "Login Failed", msg);
         new Handler().postDelayed(() -> dialog.show(), 500);
 
     }

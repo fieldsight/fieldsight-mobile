@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,6 +18,7 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.anim.ScaleUpAndDownItemAnimator;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
+import org.odk.collect.naxa.project.ProjectListActivity;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     private ArrayList<SyncableItems> syncableItems = new ArrayList<>();
     private DownloadListAdapter downloadListAdapter;
     private Button btnToggle;
-    private Button btnCancle;
+    private Button btnClose;
     private Button btnDownload;
     DownloadPresenter downloadPresenter;
     SyncRepository syncRepository;
@@ -90,7 +90,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     private void bindUI() {
         recyclerView = findViewById(R.id.activity_download_recycler_view);
         btnToggle = findViewById(R.id.toggle_button);
-        btnCancle = findViewById(R.id.cancel_button);
+        btnClose = findViewById(R.id.btn_cancle);
         btnDownload = findViewById(R.id.download_button);
 
         btnToggle.setOnClickListener(new View.OnClickListener() {
@@ -101,8 +101,8 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         });
 
 
-        btnCancle.setOnClickListener(v -> {
-            //     downloadPresenter.onDownloadSelectedButtonClick();
+        btnClose.setOnClickListener(v -> {
+            startActivity(new Intent(DownloadActivity.this, ProjectListActivity.class));
         });
 
         btnDownload.setOnClickListener(v -> {

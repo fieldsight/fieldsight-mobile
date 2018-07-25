@@ -10,5 +10,5 @@ public interface LoginView {
 
     void successAction();
 
-    void showError();
+    void showError(String errorMessage);
 }

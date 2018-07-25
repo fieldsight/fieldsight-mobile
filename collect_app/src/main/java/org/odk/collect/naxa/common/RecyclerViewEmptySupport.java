@@ -4,8 +4,12 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.TextView;
 
 import org.odk.collect.android.R;
+import org.odk.collect.naxa.onboarding.DownloadActivity;
+
+import javax.annotation.Nullable;
 
 //https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview
 public class RecyclerViewEmptySupport extends RecyclerView {
@@ -55,14 +59,19 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         emptyObserver.onChanged();
     }
 
-    public void setEmptyView(View emptyView, OnEmptyLayoutClickListener onEmptyLayoutClickListener) {
+    public void setEmptyView(View emptyView, @Nullable String message, OnEmptyLayoutClickListener onEmptyLayoutClickListener) {
         this.emptyView = emptyView;
-        this.emptyView.findViewById(R.id.btn_retry).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onEmptyLayoutClickListener.onRetryButtonClick();
-            }
-        });
+        TextView tvMsg = this.emptyView.findViewById(R.id.msg);
+        if (message != null) {
+            tvMsg.setText(message);
+        }
+        this.emptyView.findViewById(R.id.btn_retry)
+                .setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onEmptyLayoutClickListener.onRetryButtonClick();
+                    }
+                });
     }
 
     public interface OnEmptyLayoutClickListener {

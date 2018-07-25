@@ -42,6 +42,7 @@ public class SharedPreferenceUtils {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = prefs.edit();
         editor.clear();
+        editor.apply();
     }
 
 

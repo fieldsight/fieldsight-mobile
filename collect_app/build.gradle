@@ -206,6 +206,7 @@ dependencies {
     implementation 'android.arch.persistence.room:rxjava2:1.1.1'
     implementation 'com.rockerhieu:rv-adapter-states:1.2'
 
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:2.0.0'
     //naxa [ends]
 
 

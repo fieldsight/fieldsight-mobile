@@ -17,12 +17,16 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.FieldSightUserSession;
+import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.onboarding.DownloadActivity;
 import org.odk.collect.naxa.project.adapter.MyProjectsAdapter;
@@ -37,9 +41,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class ProjectListActivity extends AppCompatActivity implements ProjectView {
+public class ProjectListActivity extends CollectAbstractActivity implements ProjectView {
 
     @BindView(R.id.toolbar_general)
     Toolbar toolbar;
@@ -50,13 +57,14 @@ public class ProjectListActivity extends AppCompatActivity implements ProjectVie
     @BindView(R.id.appbar_general)
     AppBarLayout appbarGeneral;
     @BindView(R.id.my_projects_list)
-    RecyclerView rvProjects;
+    RecyclerViewEmptySupport rvProjects;
     @BindView(R.id.coordinatorLayout_project_listing)
     CoordinatorLayout coordinatorLayoutProjectListing;
 
 
     private List<Project> projectList = new ArrayList<>();
     private ProjectPresenterImpl projectPresenter;
+    private MyProjectsAdapter projectlistAdapter;
 
 
     @Override
@@ -74,8 +82,10 @@ public class ProjectListActivity extends AppCompatActivity implements ProjectVie
         ViewModelProviders.of(this)
                 .get(ProjectViewModel.class)
                 .getAllProjectsLive()
-                .observe(this, projects -> projectPresenter.showContent(projects));
-
+                .observe(this, projects -> {
+                    Timber.i("Projects data changing %s", projects.size());
+                    projectPresenter.showContent(projects);
+                });
     }
 
     @Override
@@ -111,16 +121,38 @@ public class ProjectListActivity extends AppCompatActivity implements ProjectVie
                 DownloadActivity.start(this);
                 break;
             case R.id.action_logout:
-                FieldSightUserSession.createLogoutDialog(this);
+                ReactiveNetwork.checkInternetConnectivity()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new DisposableSingleObserver<Boolean>() {
+                            @Override
+                            public void onSuccess(Boolean aBoolean) {
+                                if (aBoolean) {
+                                    FieldSightUserSession.createLogoutDialog(ProjectListActivity.this);
+                                } else {
+                                    FieldSightUserSession.stopLogoutDialog(ProjectListActivity.this);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        });
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void setupProjectlist() {
-        MyProjectsAdapter projectlistAdapter = new MyProjectsAdapter(projectList);
+        projectlistAdapter = new MyProjectsAdapter(new ArrayList<>(0));
         RecyclerView.LayoutManager myProjectLayoutManager = new LinearLayoutManager(getApplicationContext());
         rvProjects.setLayoutManager(myProjectLayoutManager);
+//        rvProjects.setEmptyView(findViewById(R.id.root_layout_empty_layout),
+//                "Once you are assigned to a site, you'll see projects listed here",
+//                () -> {
+//
+//                });
         rvProjects.setItemAnimator(new DefaultItemAnimator());
         rvProjects.setAdapter(projectlistAdapter);
 
@@ -162,9 +194,8 @@ public class ProjectListActivity extends AppCompatActivity implements ProjectVie
     public void showContent(boolean show, List<Project> projectList) {
         this.projectList = projectList;
         Timber.i("Showing content %s", show);
-        if (show && projectList != null) {
-            rvProjects.swapAdapter(new MyProjectsAdapter(projectList), true);
-        }
+        projectlistAdapter.updateList(projectList);
+
     }
 
 

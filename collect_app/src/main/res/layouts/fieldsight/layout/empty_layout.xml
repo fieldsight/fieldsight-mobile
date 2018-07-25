@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout_empty_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_grey">
+    android:background="@color/background_grey"
+    android:visibility="gone">
 
 
     <ProgressBar
@@ -13,12 +15,26 @@
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/msg"
+        android:layout_centerHorizontal="true"
+        android:text="Nothing here"
+        android:textSize="@dimen/text_size_medium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
         android:text="@string/msg_no_data_found"
-        android:textSize="@dimen/text_size_large" />
+        android:textAlignment="center"
+        android:textSize="@dimen/text_size_small"
+        tools:text="Once you are assigned to a site, you'll see them listed here" />
 
     <Button
         android:id="@+id/btn_retry"

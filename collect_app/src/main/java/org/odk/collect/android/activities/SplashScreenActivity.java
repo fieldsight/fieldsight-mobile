@@ -36,7 +36,9 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.login.LoginActivity;
+import org.odk.collect.naxa.project.ProjectListActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -130,7 +132,11 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void endSplashScreen() {
-        startActivity(new Intent(this, LoginActivity.class));
+        if(FieldSightUserSession.isLoggedIn()){
+            startActivity(new Intent(this, ProjectListActivity.class));
+        }else {
+            startActivity(new Intent(this, LoginActivity.class));
+        }
         finish();
     }
 

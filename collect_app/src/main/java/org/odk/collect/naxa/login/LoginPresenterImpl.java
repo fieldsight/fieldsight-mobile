@@ -2,9 +2,16 @@ package org.odk.collect.naxa.login;
 
 import android.text.TextUtils;
 
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+
 import org.odk.collect.android.R;
-import org.odk.collect.android.utilities.SnackbarUtils;
-import org.odk.collect.naxa.login.model.MeResponse;
+
+import java.util.logging.Handler;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFinishedListener {
 
@@ -30,9 +37,28 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
             return;
         }
 
-        loginView.showProgress(true);
-        loginModel.login(username, password, this);
+        ReactiveNetwork.checkInternetConnectivity()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<Boolean>() {
+                    @Override
+                    public void onSuccess(Boolean aBoolean) {
+                        if (aBoolean) {
+                            loginView.showProgress(true);
+                            loginModel.login(username, password, LoginPresenterImpl.this);
+                        } else {
+                            loginView.showError("No Network Connectivity");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
     }
+
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
@@ -42,7 +68,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     @Override
     public void onError() {
         loginView.showProgress(false);
-        loginView.showError();
+        loginView.showError("Invalid email/username or password");
 
     }
 
@@ -56,6 +82,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     @Override
     public void onSuccess() {
         loginView.showProgress(false);
+
         loginView.successAction();
     }
 }

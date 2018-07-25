@@ -17,12 +17,12 @@ import org.odk.collect.android.listeners.DownloadFormsTaskListener;
 import org.odk.collect.android.listeners.FormDownloaderListener;
 import org.odk.collect.android.listeners.FormListDownloaderListener;
 import org.odk.collect.android.logic.FormDetails;
-import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.APIEndpoint;
 import org.odk.collect.naxa.project.db.ProjectDao;
 import org.odk.collect.naxa.project.db.ProjectRepository;
+import org.odk.collect.naxa.task.FieldSightDownloadFormListTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +30,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
+import io.reactivex.Maybe;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableSingleObserver;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
@@ -57,7 +61,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
     private static final String TAG = XMLFormDownloadService.class.getName();
 
-    private DownloadFormListTask mDownloadFormListTask;
+    private FieldSightDownloadFormListTask mDownloadFormListTask;
     private HashMap<String, FormDetails> mFormNamesAndURLs = new HashMap<String, FormDetails>();
     private ArrayList<HashMap<String, String>> mFormList;
     private LinkedList<XMLForm> formsToDownlaod;
@@ -83,6 +87,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         formsToDownlaod = new LinkedList<>();
         message = new Bundle();
         receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
+
 
         new ProjectRepository(Collect.getInstance()).getAllProjectsLive().observeForever(new Observer<List<Project>>() {
             @Override
@@ -115,7 +120,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
                 downloadFormList(getApplicationContext(), XMLFormDownloadService.this, XMLFormDownloadService.this, formsToDownlaod.get(0));
                 broadcastDownloadStarted();
-
             }
         });
 
@@ -136,7 +140,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         }
 
         Timber.d("Hitting URL %s ", xmlForm.getDownloadUrl());
-        mDownloadFormListTask = new DownloadFormListTask(xmlForm);
+        mDownloadFormListTask = new FieldSightDownloadFormListTask(xmlForm);
         mDownloadFormListTask.setDownloaderListener(fl);
         mDownloadFormListTask.execute();
     }

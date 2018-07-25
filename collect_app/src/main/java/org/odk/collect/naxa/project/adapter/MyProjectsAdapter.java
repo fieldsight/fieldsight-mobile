@@ -3,6 +3,7 @@ package org.odk.collect.naxa.project.adapter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.odk.collect.android.R;
+import org.odk.collect.naxa.generalforms.GeneralFormsDiffCallback;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.login.model.Project;
+import org.odk.collect.naxa.project.ProjectsDiffCallback;
 import org.odk.collect.naxa.site.ProjectDashboardActivity;
 
 import java.util.List;
@@ -57,6 +61,15 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
         this.myProjectList = myProjectList;
 
     }
+
+    public void updateList(List<Project> newList) {
+
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ProjectsDiffCallback(newList, myProjectList));
+        myProjectList.clear();
+        myProjectList.addAll(newList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
 
     @Override
     public int getItemViewType(int position) {
@@ -105,7 +118,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
 
         return Glide
                 .with(context)
-                .load(BASE_URL + imagePath)
+                .load(imagePath)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .fitCenter()
                 .crossFade();

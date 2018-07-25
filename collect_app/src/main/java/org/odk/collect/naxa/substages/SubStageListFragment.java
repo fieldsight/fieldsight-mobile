@@ -114,7 +114,7 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
     private void setupListAdapter() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setEmptyView(emptyLayout, () -> {
+        recyclerView.setEmptyView(emptyLayout, null, () -> {
             new StageRemoteSource().getAll();
         });
         listAdapter = new SubStageListAdapter(new ArrayList<>(0));

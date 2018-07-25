@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.Constant;
+import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.SharedPreferenceUtils;
 
 import okhttp3.Cache;
@@ -46,8 +47,7 @@ public class ServiceGenerator {
 
     private static OkHttpClient createOkHttpClient() {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-        String token = SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "5091b915cd28e331c04056e402b85ecae7a3da7a");
-
+        String token = FieldSightUserSession.getAuthToken();
         if (!TextUtils.isEmpty(token)) {
             okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
         }
