@@ -27,6 +27,9 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -83,7 +86,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     @Override
     public void getAll() {
-        Observable<XMLForm> siteODKForms = FieldSightConfigDatabase
+        Observable<List<XMLForm>> siteODKForms = FieldSightConfigDatabase
                 .getDatabase(Collect.getInstance())
                 .getSiteOverideDAO()
                 .getAll()
@@ -95,19 +98,30 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .map(siteId -> new XMLFormBuilder()
                         .setFormCreatorsId(siteId)
                         .setIsCreatedFromProject(false)
-                        .createXMLForm());
+                        .createXMLForm())
+                .toList()
+                .toObservable();
 
 
-        Observable<XMLForm> projectODKForms = projectRepository
+        Observable<List<XMLForm>> projectODKForms = projectRepository
                 .getAllProjectsMaybe()
                 .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .map(project -> new XMLFormBuilder()
                         .setFormCreatorsId(project.getId())
                         .setIsCreatedFromProject(true)
-                        .createXMLForm());
+                        .createXMLForm())
+                .toList()
+                .toObservable();
 
 
         Observable.merge(siteODKForms, projectODKForms)
+
+                .flatMapIterable(new Function<List<XMLForm>, Iterable<XMLForm>>() {
+                    @Override
+                    public Iterable<XMLForm> apply(List<XMLForm> xmlForms) throws Exception {
+                        return xmlForms;
+                    }
+                })
                 .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::downloadGeneralForm)
                 .map(generalForms -> {
                     for (GeneralForm generalForm : generalForms) {
@@ -117,20 +131,31 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
                     return generalForms;
                 })
-                .flatMap(generalForms -> {
-                    GeneralFormLocalSource.getInstance().updateAll(generalForms);
-                    return Observable.empty();
+                .toList()
+                .map(new Function<List<ArrayList<GeneralForm>>, ArrayList<GeneralForm>>() {
+                    @Override
+                    public ArrayList<GeneralForm> apply(List<ArrayList<GeneralForm>> arrayLists) throws Exception {
+                        ArrayList<GeneralForm> generalForms = new ArrayList<>(0);
+
+                        for (ArrayList<GeneralForm> generalFormList : arrayLists) {
+                            generalForms.addAll(generalFormList);
+                        }
+                        GeneralFormLocalSource.getInstance().updateAll(generalForms);
+                        return generalForms;
+                    }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Object>() {
+                .subscribe(new SingleObserver<ArrayList<GeneralForm>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_START));
+
                     }
 
                     @Override
-                    public void onNext(Object o) {
+                    public void onSuccess(ArrayList<GeneralForm> generalForms) {
+                        EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
 
                     }
 
@@ -138,12 +163,6 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_ERROR));
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
 
                     }
                 });

@@ -148,11 +148,11 @@ public class ProjectListActivity extends CollectAbstractActivity implements Proj
         projectlistAdapter = new MyProjectsAdapter(new ArrayList<>(0));
         RecyclerView.LayoutManager myProjectLayoutManager = new LinearLayoutManager(getApplicationContext());
         rvProjects.setLayoutManager(myProjectLayoutManager);
-//        rvProjects.setEmptyView(findViewById(R.id.root_layout_empty_layout),
-//                "Once you are assigned to a site, you'll see projects listed here",
-//                () -> {
-//
-//                });
+        rvProjects.setEmptyView(findViewById(R.id.root_layout_empty_layout),
+                "Once you are assigned to a site, you'll see projects listed here",
+                () -> {
+
+                });
         rvProjects.setItemAnimator(new DefaultItemAnimator());
         rvProjects.setAdapter(projectlistAdapter);
 

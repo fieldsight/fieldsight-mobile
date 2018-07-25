@@ -105,7 +105,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         setupListAdapter();
 
 
-        viewModel.loadGeneralForms(false, loadedSite.getId())
+        viewModel.loadGeneralForms(true, loadedSite.getId())
                 .observe(this, generalForms -> {
                     Timber.i("General forms data has been changed");
                     generalFormsAdapter.updateList(generalForms);
