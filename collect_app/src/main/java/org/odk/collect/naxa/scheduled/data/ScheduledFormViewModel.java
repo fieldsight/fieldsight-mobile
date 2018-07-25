@@ -13,8 +13,8 @@ public class ScheduledFormViewModel extends ViewModel {
     }
 
 
-    public LiveData<List<ScheduleForm>> getBySiteId(String id, boolean isProject) {
-        return repository.getBySiteId(id, isProject);
+    public LiveData<List<ScheduleForm>> getBySiteId(Boolean forcedUpdate,String id, boolean isProject) {
+        return repository.getBySiteId(forcedUpdate,id, isProject);
     }
 
     public LiveData<List<ScheduleForm>> getAll(boolean forcedUpdate) {

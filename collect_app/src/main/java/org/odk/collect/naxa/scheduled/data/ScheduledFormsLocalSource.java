@@ -29,7 +29,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
 
 
     @Override
-    public LiveData<List<ScheduleForm>> getById(String id) {
+    public LiveData<List<ScheduleForm>> getById(boolean forceUpdate, String id) {
         return dao.getBySiteId(id);
     }
 

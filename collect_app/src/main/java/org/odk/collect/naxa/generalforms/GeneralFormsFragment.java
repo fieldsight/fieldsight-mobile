@@ -1,6 +1,7 @@
 package org.odk.collect.naxa.generalforms;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,12 +18,14 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.FieldSightFormListFragment;
 import org.odk.collect.naxa.common.OnFormItemClickListener;
+import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.common.SharedPreferenceUtils;
 import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.site.FragmentHostActivity;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -45,10 +48,13 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     private GeneralFormViewModel viewModel;
 
     @BindView(R.id.android_list)
-    RecyclerView recyclerView;
+    RecyclerViewEmptySupport recyclerView;
 
     @BindView(R.id.root_layout_general_form_frag)
     LinearLayout rootLayout;
+
+    @BindView(R.id.root_layout_empty_layout)
+    View emptyLayout;
 
     Unbinder unbinder;
     private GeneralFormsAdapter generalFormsAdapter;
@@ -97,10 +103,13 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.loadGeneralForms(true, loadedSite.getId())
+
+
+        viewModel.loadGeneralForms(false, loadedSite.getId())
                 .observe(this, generalForms -> {
                     Timber.i("General forms data has been changed");
                     generalFormsAdapter.updateList(generalForms);
+
 
                 });
     }
@@ -112,6 +121,13 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         generalFormsAdapter = new GeneralFormsAdapter(new ArrayList<>(0), this);
+        recyclerView.setEmptyView(emptyLayout, "Once you are assigned to a site, you'll see general forms listed here",
+                new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
+                    @Override
+                    public void onRetryButtonClick() {
+                        viewModel.loadGeneralForms(true, loadedSite.getId());
+                    }
+                });
 //        View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.empty_layout,rootLayout);
 //       RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);rootLayout.setLayoutParams(lp);
 //        statesRecyclerViewAdapter = new StatesRecyclerViewAdapter(generalFormsAdapter, null, emptyView, null);

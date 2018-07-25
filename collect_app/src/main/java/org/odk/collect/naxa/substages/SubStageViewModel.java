@@ -25,7 +25,7 @@ public class SubStageViewModel extends ViewModel {
 
         boolean isDeployedFromProject = true;
 
-        return repository.getById(id);
+        return repository.getById(forceUpdate, id);
     }
 
 }

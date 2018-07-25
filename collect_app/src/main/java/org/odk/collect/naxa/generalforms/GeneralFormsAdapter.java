@@ -52,13 +52,13 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         GeneralForm generalForm = generalForms.get(viewHolder.getAdapterPosition());
         viewHolder.tvFormName.setText(generalForm.getName());
-        viewHolder.tvDesc.setText(generalForm.getName());
         viewHolder.tvLastFilledDateTime.setText(generalForm.getName());
 
         if (generalForm.getName() != null) {
             viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1));
         }
 
+        viewHolder.badge.setVisibility(View.GONE);
     }
 
 

@@ -22,7 +22,7 @@ public class GeneralFormViewModel extends AndroidViewModel {
 
     public LiveData<List<GeneralForm>> loadGeneralForms(boolean forceUpdate, String siteId) {
 
-        return repository.getById(siteId);
+        return repository.getById(forceUpdate,siteId);
     }
 
     public void deleteAll() {

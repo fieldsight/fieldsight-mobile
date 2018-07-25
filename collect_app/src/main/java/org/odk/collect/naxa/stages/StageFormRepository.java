@@ -37,7 +37,7 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
     }
 
     @Override
-    public LiveData<List<Stage>> getById(String scheduleForm) {
+    public LiveData<List<Stage>> getById(boolean forceUpdate, String id) {
         return null;
     }
 

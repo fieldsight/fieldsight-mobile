@@ -30,7 +30,7 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
 
     @Override
-    public LiveData<List<Stage>> getById(String stageId) {
+    public LiveData<List<Stage>> getById(boolean forceUpdate, String stageId) {
         return null;
     }
 

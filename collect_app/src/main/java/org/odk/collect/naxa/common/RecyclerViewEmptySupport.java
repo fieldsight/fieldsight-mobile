@@ -14,14 +14,51 @@ import javax.annotation.Nullable;
 //https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview
 public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
-    private OnEmptyLayoutClickListener onEmptyLayoutClickListener;
-
 
     private AdapterDataObserver emptyObserver = new AdapterDataObserver() {
 
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount) {
+            super.onItemRangeChanged(positionStart, itemCount);
+            dispatchViewChanges();
+
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            super.onItemRangeInserted(positionStart, itemCount);
+            dispatchViewChanges();
+
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, @android.support.annotation.Nullable Object payload) {
+            super.onItemRangeChanged(positionStart, itemCount, payload);
+            dispatchViewChanges();
+
+        }
+
+        @Override
+        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+            super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+            dispatchViewChanges();
+
+        }
+
+        @Override
+        public void onItemRangeRemoved(int positionStart, int itemCount) {
+            super.onItemRangeRemoved(positionStart, itemCount);
+            dispatchViewChanges();
+
+        }
 
         @Override
         public void onChanged() {
+            super.onChanged();
+            dispatchViewChanges();
+        }
+
+        private void dispatchViewChanges() {
             Adapter<?> adapter = getAdapter();
             if (adapter != null && emptyView != null) {
                 if (adapter.getItemCount() == 0) {
@@ -32,7 +69,6 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                     RecyclerViewEmptySupport.this.setVisibility(View.VISIBLE);
                 }
             }
-
         }
     };
 

@@ -38,8 +38,8 @@ public class ScheduledFormRepository implements BaseLocalDataSource<ScheduleForm
     }
 
     @Override
-    public LiveData<List<ScheduleForm>> getById(String scheduleForm) {
-        LiveData<List<ScheduleForm>> forms = localSource.getById(scheduleForm);
+    public LiveData<List<ScheduleForm>> getById(boolean forceUpdate, String id) {
+        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
         mediatorLiveData.addSource(forms, new Observer<List<ScheduleForm>>() {
             @Override
             public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
@@ -79,9 +79,9 @@ public class ScheduledFormRepository implements BaseLocalDataSource<ScheduleForm
         localSource.updateAll(items);
     }
 
-    public LiveData<List<ScheduleForm>> getBySiteId(String id, boolean isProject) {
+    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate,String id, boolean isProject) {
         MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
-        LiveData<List<ScheduleForm>> forms = localSource.getById(id);
+        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
 
         mediatorLiveData.addSource(forms, new Observer<List<ScheduleForm>>() {
             @Override

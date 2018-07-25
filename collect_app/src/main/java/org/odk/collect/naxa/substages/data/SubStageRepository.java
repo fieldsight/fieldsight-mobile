@@ -36,8 +36,8 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
     }
 
     @Override
-    public LiveData<List<SubStage>> getById(String id) {
-        return localSource.getById(id);
+    public LiveData<List<SubStage>> getById(boolean forceUpdate, String id) {
+        return localSource.getById(forceUpdate, id);
     }
 
     @Override

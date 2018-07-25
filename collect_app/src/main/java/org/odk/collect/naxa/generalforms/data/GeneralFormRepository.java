@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.naxa.common.BaseLocalDataSource;
-import org.odk.collect.naxa.project.db.ProjectRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +35,16 @@ public class GeneralFormRepository implements BaseLocalDataSource<GeneralForm> {
 
 
     @Override
-    public LiveData<List<GeneralForm>> getById(@NonNull String id) {
-        remoteSource.getAll();
-        return localSource.getById(id);
+    public LiveData<List<GeneralForm>> getById(boolean forceUpdate, @NonNull String id) {
+        if (forceUpdate) {
+            remoteSource.getAll();
+        }
+        return localSource.getById(forceUpdate, id);
     }
 
     @Override
     public LiveData<List<GeneralForm>> getAll() {
-        
+
         return localSource.getAll();
     }
 
