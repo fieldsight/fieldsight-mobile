@@ -20,4 +20,6 @@ public class ScheduledFormViewModel extends ViewModel {
     public LiveData<List<ScheduleForm>> getAll(boolean forcedUpdate) {
         return repository.getAll();
     }
+
+
 }

@@ -70,7 +70,9 @@ public class Constant {
         public static final int PROJECT_SITES = 1;
         public static final int ODK_FORMS = 2;
         public static final int GENERAL_FORMS = 3;
-        public static final int PROJECT_CONTACTS = 4;
+        public static final int SCHEDULED_FORMS = 4;
+        public static final int STAGED_FORMS = 5;
+        public static final int PROJECT_CONTACTS = 6;
     }
 
     public final static class DownloadStatus {

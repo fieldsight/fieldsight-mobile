@@ -79,22 +79,28 @@ public class ScheduledFormRepository implements BaseLocalDataSource<ScheduleForm
         localSource.updateAll(items);
     }
 
-    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate,String id, boolean isProject) {
-        MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
-        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
+    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String id, boolean isProject) {
+//        MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
+//        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
+//
+//        mediatorLiveData.addSource(forms, new Observer<List<ScheduleForm>>() {
+//            @Override
+//            public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
+//                if (scheduleForms == null || scheduleForms.isEmpty()) {
+//                    remoteSource.getAll();
+//                } else {
+//                    mediatorLiveData.removeSource(forms);
+//                    mediatorLiveData.setValue(scheduleForms);
+//                }
+//            }
+//        });
+//
+//        return mediatorLiveData;
 
-        mediatorLiveData.addSource(forms, new Observer<List<ScheduleForm>>() {
-            @Override
-            public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
-                if (scheduleForms == null || scheduleForms.isEmpty()) {
-                    remoteSource.getAll();
-                } else {
-                    mediatorLiveData.removeSource(forms);
-                    mediatorLiveData.setValue(scheduleForms);
-                }
-            }
-        });
+        if (forceUpdate) {
+            remoteSource.getAll();
+        }
 
-        return mediatorLiveData;
+        return localSource.getAll();
     }
 }

@@ -6,8 +6,6 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.naxa.login.model.Site;
-import org.odk.collect.naxa.site.db.SiteDao;
 
 import java.io.File;
 

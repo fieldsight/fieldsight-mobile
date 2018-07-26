@@ -6,7 +6,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
+import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.onboarding.DownloadActivity;
 
 import javax.annotation.Nullable;
@@ -72,6 +76,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         }
     };
 
+
     public RecyclerViewEmptySupport(Context context) {
         super(context);
     }
@@ -113,4 +118,6 @@ public class RecyclerViewEmptySupport extends RecyclerView {
     public interface OnEmptyLayoutClickListener {
         void onRetryButtonClick();
     }
+
+
 }

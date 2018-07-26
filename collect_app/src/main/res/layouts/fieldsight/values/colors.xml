@@ -2,6 +2,7 @@
 <resources>
     <drawable name="white">#ffffffff</drawable>
     <drawable name="black">#ff000000</drawable>
+    <color name="black_160">#a0000000</color>
     <color name="colorPrimary">#00628e</color>
     <color name="colorPrimaryDark">#003860</color>
     <color name="colorAccent">#4b8fbe</color>

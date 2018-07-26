@@ -11,24 +11,19 @@ import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_
 public class DataSyncEvent {
 
     private String event;
-    private String status;
     private int uid;
     private DownloadProgress downloadProgress;
 
 
-    public DataSyncEvent(int uid, String status) {
+    public DataSyncEvent(int uid, String event) {
         this.uid = uid;
-        this.status = status;
+        this.event = event;
     }
 
-    public DataSyncEvent(String event, String status) {
-        this.event = event;
-        this.status = status;
-    }
 
 
     public DataSyncEvent(int uid, DownloadProgress downloadProgress) {
-        this.status = EVENT_UPDATE;
+        this.event = EVENT_UPDATE;
         this.uid = uid;
         this.downloadProgress = downloadProgress;
     }
@@ -41,9 +36,6 @@ public class DataSyncEvent {
         return event;
     }
 
-    public String getStatus() {
-        return status;
-    }
 
     public int getUid() {
         return uid;
@@ -53,7 +45,7 @@ public class DataSyncEvent {
     public String toString() {
         return "DataSyncEvent{" +
                 "event='" + event + '\'' +
-                ", status='" + status + '\'' +
+                ", uid='" + uid + '\'' +
                 '}';
     }
 
