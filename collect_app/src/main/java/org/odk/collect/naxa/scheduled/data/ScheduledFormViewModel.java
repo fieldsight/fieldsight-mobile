@@ -17,7 +17,7 @@ public class ScheduledFormViewModel extends ViewModel {
         return repository.getBySiteId(forcedUpdate,id, isProject);
     }
 
-    public LiveData<List<ScheduleForm>> getAll(boolean forcedUpdate) {
+    public LiveData<List<ScheduleForm>> getAll( ) {
         return repository.getAll();
     }
 

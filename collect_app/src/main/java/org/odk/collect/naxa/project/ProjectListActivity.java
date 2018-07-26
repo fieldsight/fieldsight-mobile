@@ -1,13 +1,10 @@
 package org.odk.collect.naxa.project;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,17 +21,20 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
+import org.odk.collect.naxa.common.event.DataSyncEvent;
+import org.odk.collect.naxa.common.utilities.FlashBarUtils;
+import org.odk.collect.naxa.generalforms.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.onboarding.DownloadActivity;
 import org.odk.collect.naxa.project.adapter.MyProjectsAdapter;
-import org.odk.collect.naxa.project.db.ProjectViewModel;
+import org.odk.collect.naxa.project.data.ProjectViewModel;
 import org.odk.collect.naxa.project.event.ErrorEvent;
 import org.odk.collect.naxa.project.event.PayloadEvent;
 import org.odk.collect.naxa.project.event.ProgressEvent;
-import org.odk.collect.naxa.site.db.SiteViewModel;
+import org.odk.collect.naxa.scheduled.data.ScheduledFormViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class ProjectListActivity extends CollectAbstractActivity implements ProjectView {
+public class ProjectListActivity extends CollectAbstractActivity {
 
     @BindView(R.id.toolbar_general)
     Toolbar toolbar;
@@ -62,9 +62,8 @@ public class ProjectListActivity extends CollectAbstractActivity implements Proj
     CoordinatorLayout coordinatorLayoutProjectListing;
 
 
-    private List<Project> projectList = new ArrayList<>();
-    private ProjectPresenterImpl projectPresenter;
     private MyProjectsAdapter projectlistAdapter;
+    private ProjectViewModel viewModel;
 
 
     @Override
@@ -76,28 +75,16 @@ public class ProjectListActivity extends CollectAbstractActivity implements Proj
         setupToolbar();
         setupProjectlist();
 
-        projectPresenter = new ProjectPresenterImpl(this);
+        ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
+        viewModel = ViewModelProviders.of(this, factory).get(ProjectViewModel.class);
 
 
-        ViewModelProviders.of(this)
-                .get(ProjectViewModel.class)
-                .getAllProjectsLive()
-                .observe(this, projects -> {
+        viewModel
+                .getAll(false)
+                .observe(ProjectListActivity.this, projects -> {
                     Timber.i("Projects data changing %s", projects.size());
-                    projectPresenter.showContent(projects);
+                    projectlistAdapter.updateList(projects);
                 });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 
 
@@ -151,7 +138,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements Proj
         rvProjects.setEmptyView(findViewById(R.id.root_layout_empty_layout),
                 "Once you are assigned to a site, you'll see projects listed here",
                 () -> {
-
+                    viewModel.getAll(true);
                 });
         rvProjects.setItemAnimator(new DefaultItemAnimator());
         rvProjects.setAdapter(projectlistAdapter);
@@ -159,44 +146,35 @@ public class ProjectListActivity extends CollectAbstractActivity implements Proj
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onErrorEvent(ErrorEvent errorEvent) {
-        showProgress(false);
-        showContent(false, null);
-        showEmpty(true);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onContentEvent(PayloadEvent payloadEvent) {
-        showProgress(false);
-        showContent(true, payloadEvent.getPayload());
-        showEmpty(false);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onProgressEvent(ProgressEvent progressEvent) {
-        showProgress(true);
-        showContent(false, null);
-        showEmpty(false);
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
-    public void showProgress(boolean show) {
-        Timber.i("Showing progress %s", show);
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void showEmpty(boolean show) {
-        Timber.i("Showing empty %s", show);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DataSyncEvent event) {
+
+        String syncItem = "projects and sites";
+
+        Timber.i(event.toString());
+        switch (event.getEvent()) {
+            case DataSyncEvent.EventStatus.EVENT_START:
+                FlashBarUtils.showFlashBar(this, getString(R.string.download_update_start_message, syncItem));
+                break;
+            case DataSyncEvent.EventStatus.EVENT_END:
+                FlashBarUtils.showFlashBar(this, getString(R.string.download_update_end_message, syncItem));
+                break;
+            case DataSyncEvent.EventStatus.EVENT_ERROR:
+                FlashBarUtils.showFlashBar(this, getString(R.string.download_update_error_message, syncItem));
+                break;
+        }
     }
-
-    @Override
-    public void showContent(boolean show, List<Project> projectList) {
-        this.projectList = projectList;
-        Timber.i("Showing content %s", show);
-        projectlistAdapter.updateList(projectList);
-
-    }
-
 
 }

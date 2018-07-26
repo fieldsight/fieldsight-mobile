@@ -19,7 +19,8 @@ import org.odk.collect.naxa.login.model.MySites;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
-import org.odk.collect.naxa.project.db.ProjectRepository;
+import org.odk.collect.naxa.project.data.ProjectRepository;
+import org.odk.collect.naxa.project.data.ProjectSitesRemoteSource;
 import org.odk.collect.naxa.site.db.SiteRepository;
 
 import java.io.IOException;
@@ -53,9 +54,7 @@ public class DownloadModelImpl implements DownloadModel {
     private DownloadFormListTask downloadFormListTask;
 
     DownloadModelImpl() {
-        this.siteRepository = new SiteRepository(Collect.getInstance());
         this.generalFormRepository = GeneralFormRepository.getInstance(GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
-        this.projectRepository = new ProjectRepository();
         formList = new ArrayList<>();
 
     }
@@ -63,92 +62,13 @@ public class DownloadModelImpl implements DownloadModel {
     @Override
     public void fetchGeneralForms() {
 
-        projectRepository.getAllProjectsMaybe()
-                .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
-                .map(project -> new XMLFormBuilder()
-                        .setFormCreatorsId(project.getId())
-                        .setIsCreatedFromProject(true)
-                        .createXMLForm())
-                .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::downloadGeneralForm)
-                .flatMap(generalFormRespons -> {
-                    generalFormRepository.save(generalFormRespons);
-                    return Observable.empty();
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Object>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_START));
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_ERROR));
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
-
-                    }
-                });
-
-    }
-
-
-    private Observable<ArrayList<GeneralForm>> downloadGeneralForm(XMLForm xmlForm) {
-        String createdFromProject = XMLForm.toNumeralString(xmlForm.isCreatedFromProject());
-        String creatorsId = xmlForm.getFormCreatorsId();
-
-        return ServiceGenerator
-                .getRxClient()
-                .create(ApiInterface.class)
-                .getGeneralFormsObservable(createdFromProject, creatorsId)
-                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
-                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-                            @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                                if (throwable instanceof IOException) {
-                                    return throwableObservable;
-                                }
-
-                                return Observable.error(throwable);
-                            }
-                        });
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        new GeneralFormRemoteSource().getAll();
     }
 
 
     @Override
     public void fetchProjectSites() {
-        ServiceGenerator.getRxClient()
-                .create(ApiInterface.class)
-                .getUserInformation()
-                .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> Observable.just(meResponse.getData().getMySitesModel()))
-                .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
-                .map(mySites -> {
-                    siteRepository.insertSitesAsVerified(mySites.getSite(), mySites.getProject());
-                    projectRepository.insert(mySites.getProject());
-                    return mySites.getProject();
-                })
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(getObservable(Constant.DownloadUID.PROJECT_SITES));
-
+        new ProjectSitesRemoteSource().getAll();
     }
 
 
@@ -184,28 +104,5 @@ public class DownloadModelImpl implements DownloadModel {
         int uid = Constant.DownloadUID.PROJECT_CONTACTS;
         ToastUtils.showShortToastInMiddle("Starting fetchProjectContacts");
     }
-
-
-    private SingleObserver<? super List<Project>> getObservable(int uid) {
-
-        return new SingleObserver<List<Project>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
-            }
-
-            @Override
-            public void onSuccess(List<Project> projects) {
-                EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_ERROR));
-            }
-        };
-    }
-
 
 }

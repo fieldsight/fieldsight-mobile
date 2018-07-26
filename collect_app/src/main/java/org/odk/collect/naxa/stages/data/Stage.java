@@ -8,14 +8,17 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.odk.collect.naxa.common.Constant;
+
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(tableName = "stages")
+
+@Entity(tableName = "stages",
+        primaryKeys = {"id", "formDeployedFrom"})
 public class Stage {
 
     @NonNull
-    @PrimaryKey
     @SerializedName("id")
     @Expose
     private String id;
@@ -60,8 +63,10 @@ public class Stage {
     @Ignore
     private String mockStages;
 
+    @NonNull
+    private String formDeployedFrom;
 
-    public Stage(){
+    public Stage() {
 
     }
 
@@ -78,8 +83,17 @@ public class Stage {
         this.site = site;
         this.project = project;
         this.mockStages = mockStages;
+        this.formDeployedFrom = project != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+
     }
 
+    public String getFormDeployedFrom() {
+        return project != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+    }
+
+    public void setFormDeployedFrom(String formDeployedFrom) {
+        this.formDeployedFrom = formDeployedFrom;
+    }
 
     public String getMockStages() {
         return mockStages;

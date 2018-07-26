@@ -16,10 +16,15 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.OnFormItemClickListener;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
+import org.odk.collect.naxa.common.event.DataSyncEvent;
+import org.odk.collect.naxa.common.utilities.FlashBarUtils;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.stages.data.Stage;
@@ -111,12 +116,13 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setEmptyView(emptyLayout, null, new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
-            @Override
-            public void onRetryButtonClick() {
+        recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged forms")
+                , new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
+                    @Override
+                    public void onRetryButtonClick() {
 
-            }
-        });
+                    }
+                });
         listAdapter = new StageListAdapter(new ArrayList<>(0), this);
         recyclerView.setAdapter(listAdapter);
     }
@@ -152,4 +158,40 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
 
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DataSyncEvent event) {
+
+        if (!isAdded() || getActivity() == null) {
+            //Fragment is not added
+            return;
+        }
+
+
+        Timber.i(event.toString());
+        switch (event.getEvent()) {
+            case DataSyncEvent.EventStatus.EVENT_START:
+                FlashBarUtils.showFlashBar(getActivity(), getString(R.string.forms_update_start_message));
+                break;
+            case DataSyncEvent.EventStatus.EVENT_END:
+                FlashBarUtils.showFlashBar(getActivity(), getString(R.string.forms_update_end_message));
+                break;
+            case DataSyncEvent.EventStatus.EVENT_ERROR:
+                FlashBarUtils.showFlashBar(getActivity(), getString(R.string.forms_update_error_message));
+                break;
+        }
+    }
+
 }

@@ -42,7 +42,7 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
     }
 
     @Override
-    public LiveData<List<Stage>> getAll() {
+    public LiveData<List<Stage>> getAll( ) {
         remoteSource.getAll();
         return localSource.getAll();
     }

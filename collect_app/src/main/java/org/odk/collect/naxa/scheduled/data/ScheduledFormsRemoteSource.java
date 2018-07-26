@@ -10,14 +10,12 @@ import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.odk.collect.naxa.common.database.SiteOveride;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
-import org.odk.collect.naxa.generalforms.data.GeneralForm;
-import org.odk.collect.naxa.generalforms.data.GeneralFormLocalSource;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.onboarding.XMLForm;
 import org.odk.collect.naxa.onboarding.XMLFormBuilder;
-import org.odk.collect.naxa.project.db.ProjectRepository;
+import org.odk.collect.naxa.project.data.ProjectLocalSource;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -31,7 +29,6 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
@@ -41,7 +38,7 @@ import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_
 public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<ScheduleForm> {
 
     private static ScheduledFormsRemoteSource INSTANCE;
-    private ProjectRepository projectRepository;
+    private ProjectLocalSource projectLocalSource;
 
 
     public static ScheduledFormsRemoteSource getInstance() {
@@ -52,7 +49,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
     }
 
     private ScheduledFormsRemoteSource() {
-        this.projectRepository = new ProjectRepository();
+        this.projectLocalSource = ProjectLocalSource.getInstance();
     }
 
 
@@ -76,8 +73,8 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                 .toObservable();
 
 
-        Observable<List<XMLForm>> projectODKForms = projectRepository
-                .getAllProjectsMaybe()
+        Observable<List<XMLForm>> projectODKForms = projectLocalSource
+                .getProjectsMaybe()
                 .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .map(project -> new XMLFormBuilder()
                         .setFormCreatorsId(project.getId())
@@ -144,12 +141,6 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
 
 
     }
-
-    @Override
-    public void getById(ScheduleForm... items) {
-
-    }
-
 
 
     private Observable<ArrayList<ScheduleForm>> downloadProjectSchedule(XMLForm xmlForm) {

@@ -11,7 +11,7 @@ import org.odk.collect.naxa.generalforms.data.GeneralFormDAO;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.onboarding.SyncableItems;
-import org.odk.collect.naxa.project.db.ProjectDao;
+import org.odk.collect.naxa.project.data.ProjectDao;
 import org.odk.collect.naxa.scheduled.data.ScheduleForm;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormDAO;
 import org.odk.collect.naxa.site.db.SiteDao;

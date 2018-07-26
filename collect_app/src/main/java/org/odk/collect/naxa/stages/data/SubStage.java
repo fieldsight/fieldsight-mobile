@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -16,13 +17,14 @@ import java.util.List;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
+//
+//@Entity(tableName = "substage",
+//        foreignKeys = @ForeignKey(entity = Stage.class,
+//                parentColumns = "id",
+//                childColumns = "stageId",
+//                onDelete = CASCADE))
 
-@Entity(tableName = "substage",
-        foreignKeys = @ForeignKey(entity = Stage.class,
-                parentColumns = "id",
-                childColumns = "stageId",
-                onDelete = CASCADE))
-
+@Entity(tableName = "substage")
 public class SubStage {
 
     @PrimaryKey
@@ -31,6 +33,10 @@ public class SubStage {
     private Integer id;
 
     private String stageId;
+
+    private String fsFormId;
+
+    private String jrFormId;
 
     @Ignore
     @SerializedName("stage_forms")
@@ -88,6 +94,24 @@ public class SubStage {
         this.em = em;
         this.projectStageId = projectStageId;
         this.latestSubmission = latestSubmission;
+        this.jrFormId = stageForms.getXf().getJrFormId();
+        this.fsFormId = stageForms.getId();
+    }
+
+    public String getFsFormId() {
+        return stageForms.getId();
+    }
+
+    public void setFsFormId(String fsFormId) {
+        this.fsFormId = fsFormId;
+    }
+
+    public String getJrFormId() {
+        return stageForms.getXf().getJrFormId();
+    }
+
+    public void setJrFormId(String jrFormId) {
+        this.jrFormId = jrFormId;
     }
 
     public String getStageId() {

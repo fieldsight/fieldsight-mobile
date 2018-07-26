@@ -6,7 +6,6 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import org.odk.collect.naxa.common.BaseLocalDataSource;
-import org.odk.collect.naxa.generalforms.data.GeneralFormRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class ScheduledFormRepository implements BaseLocalDataSource<ScheduleForm
 
     public static ScheduledFormRepository getInstance(ScheduledFormsLocalSource localSource, ScheduledFormsRemoteSource remoteSource) {
         if (INSTANCE == null) {
-            synchronized (GeneralFormRepository.class) {
+            synchronized (ScheduledFormRepository.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new ScheduledFormRepository(localSource, remoteSource);
                 }
@@ -63,6 +62,7 @@ public class ScheduledFormRepository implements BaseLocalDataSource<ScheduleForm
         remoteSource.getAll();
         return localSource.getAll();
     }
+
 
     @Override
     public void save(ScheduleForm... items) {

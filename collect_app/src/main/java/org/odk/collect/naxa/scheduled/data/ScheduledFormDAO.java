@@ -14,14 +14,14 @@ import java.util.List;
 @Dao
 public abstract class ScheduledFormDAO implements BaseDaoFieldSight<ScheduleForm> {
 
-    @Query("SELECT * FROM scheduled_form_proj")
+    @Query("SELECT * FROM scheduled_form")
     public abstract LiveData<List<ScheduleForm>> getAll();
 
-    @Query("SELECT * FROM scheduled_form_proj WHERE siteId =:id")
+    @Query("SELECT * FROM scheduled_form WHERE siteId =:id")
     public abstract LiveData<List<ScheduleForm>> getBySiteId(String id);
 
 
-    @Query("DELETE FROM scheduled_form_proj")
+    @Query("DELETE FROM scheduled_form")
     public abstract void deleteAll();
 
     @Transaction

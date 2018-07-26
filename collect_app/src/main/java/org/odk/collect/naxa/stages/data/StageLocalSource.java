@@ -35,7 +35,7 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
     }
 
     @Override
-    public LiveData<List<Stage>> getAll() {
+    public LiveData<List<Stage>> getAll( ) {
         return dao.getAllStages();
     }
 

@@ -10,5 +10,4 @@ public interface BaseRemoteDataSource<T> {
 
     void getAll();
 
-    void getById(T... items);
-}
+  }

@@ -1,23 +1,21 @@
 package org.odk.collect.naxa.common;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
-import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.naxa.common.event.DataSyncEvent;
-import org.odk.collect.naxa.onboarding.DownloadActivity;
 
 import javax.annotation.Nullable;
 
 //https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview
 public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
+    private long lastDispatch;
+
 
     private AdapterDataObserver emptyObserver = new AdapterDataObserver() {
 
@@ -63,6 +61,8 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         }
 
         private void dispatchViewChanges() {
+
+
             Adapter<?> adapter = getAdapter();
             if (adapter != null && emptyView != null) {
                 if (adapter.getItemCount() == 0) {
@@ -75,6 +75,17 @@ public class RecyclerViewEmptySupport extends RecyclerView {
             }
         }
     };
+
+    // Preventing multiple dispatch, using threshold of 2000 ms
+    public boolean allowDispatch() {
+        long elapsedRealtime = SystemClock.elapsedRealtime();
+        boolean allowDispatch = (lastDispatch == 0 || lastDispatch == elapsedRealtime)
+                || elapsedRealtime - lastDispatch > 2000;
+        if (allowDispatch) {
+            lastDispatch = elapsedRealtime;
+        }
+        return allowDispatch;
+    }
 
 
     public RecyclerViewEmptySupport(Context context) {

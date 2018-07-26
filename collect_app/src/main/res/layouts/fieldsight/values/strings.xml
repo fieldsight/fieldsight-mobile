@@ -71,5 +71,9 @@
     <string name="forms_update_end_message">Form(s) information updated just now</string>
     <string name="forms_update_error_message">Failed to update latest form(s) information</string>
 
+    <string name="download_update_start_message">Updating %s information</string>
+    <string name="download_update_end_message">%s information updated just now</string>
+    <string name="download_update_error_message">Failed to update latest %s information</string>
+
 
 </resources>

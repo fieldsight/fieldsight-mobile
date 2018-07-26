@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import org.odk.collect.naxa.common.BaseLocalDataSource;
-import org.odk.collect.naxa.generalforms.data.GeneralForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +20,7 @@ public class SiteOverideRepository  implements BaseLocalDataSource<SiteOveride> 
     public LiveData<List<SiteOveride>> getAll() {
         return null;
     }
+
 
     @Override
     public void save(SiteOveride... items) {
