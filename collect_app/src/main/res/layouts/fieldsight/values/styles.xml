@@ -43,5 +43,11 @@
     <style name="ColoredCaption" parent="@style/TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
+    <style name="ToolBarWithNavigationClose" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/gray_deep</item>
+        <item name="android:textColorSecondary">@color/gray_deep</item>
+        <item name="actionMenuTextColor">@color/gray_deep</item>
+        <item name="navigationIcon">@drawable/ic_close</item>
+    </style>
 
 </resources>

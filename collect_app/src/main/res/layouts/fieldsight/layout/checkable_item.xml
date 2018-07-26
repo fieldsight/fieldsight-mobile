@@ -22,7 +22,8 @@ the specific language governing permissions and limitations under the License. -
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/checkbox"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:background="?selectableItemBackground">
 
         <TextView
             android:id="@+id/text1"
@@ -38,7 +39,6 @@ the specific language governing permissions and limitations under the License. -
             tools:text="text1" />
 
         <TextView
-            tools:text="text2"
             android:id="@+id/text3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,8 +47,8 @@ the specific language governing permissions and limitations under the License. -
             android:layout_below="@+id/text1"
             android:layout_toLeftOf="@id/checkbox"
             android:layout_toStartOf="@id/checkbox"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="text2" />
 
 
         <TextView

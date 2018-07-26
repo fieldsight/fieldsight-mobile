@@ -9,15 +9,16 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import org.odk.collect.android.R;
-import org.odk.collect.naxa.generalforms.GeneralFormsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapter.ViewHolder> {
 
     private ArrayList<SyncableItems> syncableItems;
     private onDownLoadItemClick listener;
+    private int selectedItemCount = 0;
 
     DownloadListAdapter(ArrayList<SyncableItems> syncableItems) {
         this.syncableItems = syncableItems;
@@ -51,11 +52,17 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
         SyncableItems syncableItems = this.syncableItems.get(viewHolder.getAdapterPosition());
         viewHolder.checkedItem.setText(syncableItems.getTitle(), syncableItems.getDetail());
         viewHolder.checkedItem.setChecked(syncableItems.getIsSelected());
+        viewHolder.checkedItem.showSucessMessage("Last sync 2 min ago");
     }
 
     @Override
     public int getItemCount() {
         return syncableItems.size();
+    }
+
+    public int getSelectedItemsCount() {
+
+        return selectedItemCount;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -72,12 +79,25 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             rootLayout.setOnClickListener(v -> {
                 if (listener != null) {
                     SyncableItems syncableItem = syncableItems.get(getAdapterPosition());
-                    listener.onItemTap(syncableItem);
                     syncableItem.toggleSelected();
 
-                    notifyDataSetChanged();
+                    manipulateCheckedUI(syncableItem);
+
+
                 }
             });
+        }
+
+        private void manipulateCheckedUI(SyncableItems syncableItem) {
+            if (syncableItem.getIsSelected()) {
+                selectedItemCount++;
+            } else {
+                selectedItemCount--;
+            }
+
+            listener.onItemTap(syncableItem);
+            checkedItem.setChecked(syncableItem.getIsSelected());
+
         }
     }
 

@@ -116,12 +116,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
         Observable.merge(siteODKForms, projectODKForms)
 
-                .flatMapIterable(new Function<List<XMLForm>, Iterable<XMLForm>>() {
-                    @Override
-                    public Iterable<XMLForm> apply(List<XMLForm> xmlForms) throws Exception {
-                        return xmlForms;
-                    }
-                })
+                .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
                 .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::downloadGeneralForm)
                 .map(generalForms -> {
                     for (GeneralForm generalForm : generalForms) {
@@ -132,17 +127,14 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     return generalForms;
                 })
                 .toList()
-                .map(new Function<List<ArrayList<GeneralForm>>, ArrayList<GeneralForm>>() {
-                    @Override
-                    public ArrayList<GeneralForm> apply(List<ArrayList<GeneralForm>> arrayLists) throws Exception {
-                        ArrayList<GeneralForm> generalForms = new ArrayList<>(0);
+                .map(arrayLists -> {
+                    ArrayList<GeneralForm> generalForms = new ArrayList<>(0);
 
-                        for (ArrayList<GeneralForm> generalFormList : arrayLists) {
-                            generalForms.addAll(generalFormList);
-                        }
-                        GeneralFormLocalSource.getInstance().updateAll(generalForms);
-                        return generalForms;
+                    for (ArrayList<GeneralForm> generalFormList : arrayLists) {
+                        generalForms.addAll(generalFormList);
                     }
+                    GeneralFormLocalSource.getInstance().updateAll(generalForms);
+                    return generalForms;
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -150,13 +142,11 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     @Override
                     public void onSubscribe(Disposable d) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_START));
-
                     }
 
                     @Override
                     public void onSuccess(ArrayList<GeneralForm> generalForms) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
-
                     }
 
                     @Override

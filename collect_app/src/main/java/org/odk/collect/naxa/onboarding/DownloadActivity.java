@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
@@ -18,12 +19,14 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.anim.ScaleUpAndDownItemAnimator;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
-import org.odk.collect.naxa.project.ProjectListActivity;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
@@ -39,7 +42,11 @@ import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_
 
 public class DownloadActivity extends CollectAbstractActivity implements DownloadListAdapter.onDownLoadItemClick, DownloadView {
 
-    private RecyclerView recyclerView;
+
+    @BindView(R.id.toggle_button)
+    Button toggleButton;
+    @BindView(R.id.download_button)
+    Button downloadButton;
     private ArrayList<SyncableItems> syncableItems = new ArrayList<>();
     private DownloadListAdapter downloadListAdapter;
     private Button btnToggle;
@@ -47,6 +54,12 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     private Button btnDownload;
     DownloadPresenter downloadPresenter;
     SyncRepository syncRepository;
+
+    @BindView(R.id.activity_download_recycler_view)
+    public RecyclerView recyclerView;
+
+    @BindView(R.id.toolbar)
+    public Toolbar toolbar;
 
 
     public static void start(Context context) {
@@ -59,12 +72,17 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
+        ButterKnife.bind(this);
         downloadPresenter = new DownloadPresenterImpl(this);
         syncRepository = new SyncRepository(Collect.getInstance());
-
-        bindUI();
         setupRecyclerView();
+        setupToolbar();
 
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getString(R.string.toolbar_downloads));
     }
 
 
@@ -78,6 +96,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         downloadListAdapter.setOnClickListener(this);
         recyclerView.setAdapter(downloadListAdapter);
 
+
         syncRepository.getAllSyncItems()
                 .observe(this, new Observer<List<SyncableItems>>() {
                     @Override
@@ -86,31 +105,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                     }
                 });
     }
-
-
-    private void bindUI() {
-        recyclerView = findViewById(R.id.activity_download_recycler_view);
-        btnToggle = findViewById(R.id.toggle_button);
-        btnClose = findViewById(R.id.btn_cancle);
-        btnDownload = findViewById(R.id.download_button);
-
-        btnToggle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadPresenter.onToggleButtonClick();
-            }
-        });
-
-
-        btnClose.setOnClickListener(v -> {
-            startActivity(new Intent(DownloadActivity.this, ProjectListActivity.class));
-        });
-
-        btnDownload.setOnClickListener(v -> {
-            downloadPresenter.onDownloadSelectedButtonClick(downloadListAdapter.getList());
-        });
-    }
-
 
     @Override
     public void onStart() {
@@ -178,6 +172,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     @Override
     public void onItemTap(SyncableItems syncableItems) {
 
+
     }
 
     @Override
@@ -213,4 +208,17 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     }
 
 
+    @OnClick({R.id.toggle_button, R.id.download_button})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.toggle_button:
+                downloadPresenter.onToggleButtonClick();
+
+                break;
+            case R.id.download_button:
+                downloadPresenter.onDownloadSelectedButtonClick(downloadListAdapter.getList());
+
+                break;
+        }
+    }
 }

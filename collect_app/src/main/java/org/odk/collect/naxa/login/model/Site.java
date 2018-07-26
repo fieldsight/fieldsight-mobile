@@ -50,6 +50,36 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "isSiteVerified")
     private int isSiteVerified;
 
+    private String generalFormDeployedFrom;
+    private String stagedFormDeployedFrom;
+    private String scheduleFormDeployedForm;
+
+
+    public String getGeneralFormDeployedFrom() {
+        return generalFormDeployedFrom;
+    }
+
+    public void setGeneralFormDeployedFrom(String generalFormDeployedFrom) {
+        this.generalFormDeployedFrom = generalFormDeployedFrom;
+    }
+
+    public String getStagedFormDeployedFrom() {
+        return stagedFormDeployedFrom;
+    }
+
+    public void setStagedFormDeployedFrom(String stagedFormDeployedFrom) {
+        this.stagedFormDeployedFrom = stagedFormDeployedFrom;
+    }
+
+    public String getScheduleFormDeployedForm() {
+        return scheduleFormDeployedForm;
+    }
+
+    public void setScheduleFormDeployedForm(String scheduleFormDeployedForm) {
+        this.scheduleFormDeployedForm = scheduleFormDeployedForm;
+    }
+
+
     public int getIsSiteVerified() {
         return isSiteVerified;
     }
@@ -219,6 +249,9 @@ public class Site implements Parcelable {
         dest.writeValue(this.isSurvey);
         dest.writeString(this.dateCreated);
         dest.writeString(this.project);
+        dest.writeString(this.generalFormDeployedFrom);
+        dest.writeString(this.scheduleFormDeployedForm);
+        dest.writeString(this.stagedFormDeployedFrom);
         dest.writeInt(this.isSiteVerified);
     }
 
@@ -242,6 +275,9 @@ public class Site implements Parcelable {
         this.location = in.readString();
         this.isSurvey = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.dateCreated = in.readString();
+        this.generalFormDeployedFrom = in.readString();
+        this.scheduleFormDeployedForm = in.readString();
+        this.stagedFormDeployedFrom = in.readString();
         this.project = in.readString();
         this.isSiteVerified = (Integer) in.readValue(Integer.class.getClassLoader());
     }
