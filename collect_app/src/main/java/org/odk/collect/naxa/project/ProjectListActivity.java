@@ -21,23 +21,16 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.common.utilities.FlashBarUtils;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
-import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.onboarding.DownloadActivity;
 import org.odk.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.odk.collect.naxa.project.data.ProjectViewModel;
-import org.odk.collect.naxa.project.event.ErrorEvent;
-import org.odk.collect.naxa.project.event.PayloadEvent;
-import org.odk.collect.naxa.project.event.ProgressEvent;
-import org.odk.collect.naxa.scheduled.data.ScheduledFormViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -140,6 +133,7 @@ public class ProjectListActivity extends CollectAbstractActivity {
                 () -> {
                     viewModel.getAll(true);
                 });
+        rvProjects.setProgressView(findViewById(R.id.progress_layout));
         rvProjects.setItemAnimator(new DefaultItemAnimator());
         rvProjects.setAdapter(projectlistAdapter);
 
@@ -166,13 +160,13 @@ public class ProjectListActivity extends CollectAbstractActivity {
         Timber.i(event.toString());
         switch (event.getEvent()) {
             case DataSyncEvent.EventStatus.EVENT_START:
-                FlashBarUtils.showFlashBar(this, getString(R.string.download_update_start_message, syncItem));
+                FlashBarUtils.showFlashbar(this, getString(R.string.download_update_start_message, syncItem), true);
                 break;
             case DataSyncEvent.EventStatus.EVENT_END:
-                FlashBarUtils.showFlashBar(this, getString(R.string.download_update_end_message, syncItem));
+                FlashBarUtils.showFlashbar(this, getString(R.string.download_update_end_message, syncItem), false);
                 break;
             case DataSyncEvent.EventStatus.EVENT_ERROR:
-                FlashBarUtils.showFlashBar(this, getString(R.string.download_update_error_message, syncItem));
+                FlashBarUtils.showFlashbar(this, getString(R.string.download_update_error_message, syncItem), false);
                 break;
         }
     }

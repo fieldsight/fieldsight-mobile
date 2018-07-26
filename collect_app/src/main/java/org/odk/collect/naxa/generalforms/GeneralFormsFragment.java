@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.FieldSightFormListFragment;
 import org.odk.collect.naxa.common.OnFormItemClickListener;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
@@ -181,13 +180,13 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         Timber.i(event.toString());
         switch (event.getEvent()) {
             case DataSyncEvent.EventStatus.EVENT_START:
-                FlashBarUtils.showFlashBar(getActivity(), getString(R.string.forms_update_start_message));
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
                 break;
             case DataSyncEvent.EventStatus.EVENT_END:
-                FlashBarUtils.showFlashBar(getActivity(), getString(R.string.forms_update_end_message));
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
                 break;
             case DataSyncEvent.EventStatus.EVENT_ERROR:
-                FlashBarUtils.showFlashBar(getActivity(), getString(R.string.forms_update_error_message));
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
                 break;
         }
     }

@@ -37,6 +37,7 @@ public class FieldSightFormListFragment extends Fragment {
 
             }
         } catch (NullPointerException | NumberFormatException e) {
+            e.printStackTrace();
             DialogFactory.createGenericErrorDialog(getActivity(), e.getMessage()).show();
             Timber.e("Failed to load xml form %s", e.getMessage());
         } catch (CursorIndexOutOfBoundsException e) {

@@ -11,9 +11,11 @@ import org.odk.collect.android.R;
 
 import javax.annotation.Nullable;
 
-//https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview
+////https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview
 public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
+    private View progressView;
+
     private long lastDispatch;
 
 
@@ -124,6 +126,25 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                         onEmptyLayoutClickListener.onRetryButtonClick();
                     }
                 });
+    }
+
+
+    public void setProgressView(View progressView) {
+        this.progressView = progressView;
+        progressView.setVisibility(GONE);
+    }
+
+
+    public void showProgressView(boolean show) {
+        if (show) {
+            emptyView.setVisibility(GONE);
+            RecyclerViewEmptySupport.this.setVisibility(GONE);
+            progressView.setVisibility(VISIBLE);
+        } else {
+            emptyView.setVisibility(VISIBLE);
+            RecyclerViewEmptySupport.this.setVisibility(VISIBLE);
+            progressView.setVisibility(GONE);
+        }
     }
 
     public interface OnEmptyLayoutClickListener {

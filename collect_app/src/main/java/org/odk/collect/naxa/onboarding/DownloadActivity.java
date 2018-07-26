@@ -86,16 +86,19 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.toolbar_downloads));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(DownloadActivity.this,ProjectListActivity.class));
-                return true;
-            }
-        });
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(DownloadActivity.this, ProjectListActivity.class));
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

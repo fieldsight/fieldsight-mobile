@@ -183,13 +183,13 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         Timber.i(event.toString());
         switch (event.getEvent()) {
             case DataSyncEvent.EventStatus.EVENT_START:
-                FlashBarUtils.showFlashBar(getActivity(), getString(R.string.forms_update_start_message));
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
                 break;
             case DataSyncEvent.EventStatus.EVENT_END:
-                FlashBarUtils.showFlashBar(getActivity(), getString(R.string.forms_update_end_message));
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
                 break;
             case DataSyncEvent.EventStatus.EVENT_ERROR:
-                FlashBarUtils.showFlashBar(getActivity(), getString(R.string.forms_update_error_message));
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
                 break;
         }
     }

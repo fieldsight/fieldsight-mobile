@@ -11,17 +11,19 @@ import org.odk.collect.android.R;
 
 import java.util.concurrent.TimeUnit;
 
+import de.mateware.snacky.Snacky;
+
 public class FlashBarUtils {
 
     private static final int LONG_DURATION_MS = (int) TimeUnit.SECONDS.toMillis(5);
 
 
-    public static void showFlashBar(@NonNull Activity context, @NonNull String message) {
+    public static void showFlashbar(@NonNull Activity context, @NonNull String message, boolean progressIcon) {
         if (message.isEmpty()) {
             return;
         }
 
-        Flashbar bar = new Flashbar.Builder(context)
+        Flashbar.Builder bar = new Flashbar.Builder(context)
                 .gravity(Flashbar.Gravity.BOTTOM)
                 .title(message)
                 .messageColor(R.color.white)
@@ -36,10 +38,14 @@ public class FlashBarUtils {
                 .exitAnimation(FlashAnim.with(context)
                         .animateBar()
                         .duration(750)
-                        .accelerateDecelerate())
-                .build();
+                        .accelerateDecelerate());
 
-        bar.show();
+        if (progressIcon) {
+            bar.showProgress(Flashbar.ProgressPosition.LEFT);
+        }
+
+
+        bar.build().show();
 
     }
 }
