@@ -6,6 +6,7 @@
     </style>
 
     <style name="BaseLightAppTheme.Collect">
+        <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="android:buttonStyle">@style/CustomButtonStyle</item>
     </style>
 </resources>
