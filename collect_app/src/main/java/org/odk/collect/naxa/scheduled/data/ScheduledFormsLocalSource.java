@@ -34,7 +34,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
     }
 
     @Override
-    public LiveData<List<ScheduleForm>> getAll() {
+    public LiveData<List<ScheduleForm>> getAll( ) {
         return dao.getAll();
     }
 

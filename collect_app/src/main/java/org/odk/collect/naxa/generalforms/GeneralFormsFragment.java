@@ -1,31 +1,31 @@
 package org.odk.collect.naxa.generalforms;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.rockerhieu.rvadapter.states.StatesRecyclerViewAdapter;
-
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.FieldSightFormListFragment;
 import org.odk.collect.naxa.common.OnFormItemClickListener;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.common.SharedPreferenceUtils;
+import org.odk.collect.naxa.common.event.DataSyncEvent;
+import org.odk.collect.naxa.common.utilities.FlashBarUtils;
 import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.site.FragmentHostActivity;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -58,7 +58,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
 
     Unbinder unbinder;
     private GeneralFormsAdapter generalFormsAdapter;
-    private StatesRecyclerViewAdapter statesRecyclerViewAdapter;
+
     private Site loadedSite;
 
     public static GeneralFormsFragment newInstance(Site loadedSite) {
@@ -153,6 +153,42 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     @Override
     public void onFormHistoryButtonClicked(GeneralForm generalForm) {
 
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DataSyncEvent event) {
+
+        if (!isAdded() || getActivity() == null) {
+            //Fragment is not added
+            return;
+        }
+
+
+        Timber.i(event.toString());
+        switch (event.getEvent()) {
+            case DataSyncEvent.EventStatus.EVENT_START:
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
+                break;
+            case DataSyncEvent.EventStatus.EVENT_END:
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
+                break;
+            case DataSyncEvent.EventStatus.EVENT_ERROR:
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
+                break;
+        }
     }
 
 }

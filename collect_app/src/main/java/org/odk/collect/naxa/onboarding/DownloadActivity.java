@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,6 +20,7 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.anim.ScaleUpAndDownItemAnimator;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
+import org.odk.collect.naxa.project.ProjectListActivity;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
@@ -83,8 +85,20 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     private void setupToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.toolbar_downloads));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                startActivity(new Intent(DownloadActivity.this, ProjectListActivity.class));
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void setupRecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

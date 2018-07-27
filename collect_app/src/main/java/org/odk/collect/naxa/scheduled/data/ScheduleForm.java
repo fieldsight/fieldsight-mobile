@@ -16,20 +16,23 @@ import org.odk.collect.naxa.generalforms.data.FormResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Entity(tableName = "scheduled_form_proj")
+@Entity(tableName = "scheduled_form",
+        primaryKeys = {"scheduleId", "formDeployedFrom"})
 public class ScheduleForm {
+
+
+    @NonNull
+    private String formDeployedFrom;
+
+    @NonNull
+    @SerializedName("id")
+    private String scheduleId;
 
     @SerializedName("form")
     private String fsFormId;
 
-    @NonNull
-    @PrimaryKey
-    @SerializedName("id")
-    private String scheduleId;
-
     @Ignore
-    private  FormResponse formResponse;
+    private FormResponse formResponse;
 
     @Ignore
     @SerializedName("em")
@@ -127,6 +130,7 @@ public class ScheduleForm {
     public String getIdString() {
         return idString;
     }
+
     public Em getEm() {
         return em;
     }
@@ -193,7 +197,6 @@ public class ScheduleForm {
         this.formDeployedFrom = formDeployedFrom;
     }
 
-    private String formDeployedFrom;
 
     public FormResponse getFormResponse() {
 

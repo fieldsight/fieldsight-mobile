@@ -16,7 +16,8 @@ import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.onboarding.XMLForm;
 import org.odk.collect.naxa.onboarding.XMLFormBuilder;
-import org.odk.collect.naxa.project.db.ProjectRepository;
+import org.odk.collect.naxa.project.data.ProjectLocalSource;
+import org.odk.collect.naxa.project.data.ProjectRepository;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -24,13 +25,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
-import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -43,7 +40,7 @@ import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_
 public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm> {
 
     private static GeneralFormRemoteSource INSTANCE;
-    private ProjectRepository projectRepository;
+    private ProjectLocalSource projectLocalSource;
 
     public static GeneralFormRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -54,7 +51,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
 
     public GeneralFormRemoteSource() {
-        this.projectRepository = new ProjectRepository();
+        this.projectLocalSource = ProjectLocalSource.getInstance();
     }
 
 
@@ -104,8 +101,8 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .toObservable();
 
 
-        Observable<List<XMLForm>> projectODKForms = projectRepository
-                .getAllProjectsMaybe()
+        Observable<List<XMLForm>> projectODKForms = projectLocalSource
+                .getProjectsMaybe()
                 .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .map(project -> new XMLFormBuilder()
                         .setFormCreatorsId(project.getId())
@@ -160,8 +157,4 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     }
 
-    @Override
-    public void getById(GeneralForm... items) {
-
-    }
 }

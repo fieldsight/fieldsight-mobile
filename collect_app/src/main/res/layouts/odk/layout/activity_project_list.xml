@@ -15,4 +15,6 @@
 
     <include layout="@layout/empty_layout" />
 
+    <include layout="@layout/progress_layout" />
+
 </android.support.design.widget.CoordinatorLayout>

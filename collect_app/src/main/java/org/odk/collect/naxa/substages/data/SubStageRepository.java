@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.naxa.common.BaseLocalDataSource;
-import org.odk.collect.naxa.stages.StageFormRepository;
 import org.odk.collect.naxa.stages.data.StageRemoteSource;
 import org.odk.collect.naxa.stages.data.SubStage;
 
@@ -20,7 +19,7 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
 
     public static SubStageRepository getInstance(SubStageLocalSource localSource, StageRemoteSource remoteSource) {
         if (INSTANCE == null) {
-            synchronized (StageFormRepository.class) {
+            synchronized (SubStageRepository.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new SubStageRepository(localSource, remoteSource);
                 }
@@ -37,11 +36,12 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
 
     @Override
     public LiveData<List<SubStage>> getById(boolean forceUpdate, String id) {
+
         return localSource.getById(forceUpdate, id);
     }
 
     @Override
-    public LiveData<List<SubStage>> getAll() {
+    public LiveData<List<SubStage>> getAll( ) {
         return localSource.getAll();
     }
 

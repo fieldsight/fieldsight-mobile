@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Dao
+
 public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
     @Query("SELECT * FROM SubStage")
     public abstract LiveData<List<SubStage>> getAllSubStages();

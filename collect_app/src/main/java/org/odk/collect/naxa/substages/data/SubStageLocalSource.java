@@ -37,7 +37,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
     }
 
     @Override
-    public LiveData<List<SubStage>> getAll() {
+    public LiveData<List<SubStage>> getAll( ) {
         return dao.getAllSubStages();
     }
 

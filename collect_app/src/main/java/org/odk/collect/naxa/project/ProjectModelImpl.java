@@ -3,14 +3,17 @@ package org.odk.collect.naxa.project;
 
 import org.greenrobot.eventbus.EventBus;
 import org.odk.collect.android.application.Collect;
+
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
+
 import org.odk.collect.naxa.login.model.MeResponse;
 import org.odk.collect.naxa.login.model.MySites;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
-import org.odk.collect.naxa.project.db.ProjectViewModel;
+
+import org.odk.collect.naxa.project.data.ProjectLocalSource;
 import org.odk.collect.naxa.site.db.SiteViewModel;
 
 import java.util.List;
@@ -26,11 +29,9 @@ import io.reactivex.schedulers.Schedulers;
 public class ProjectModelImpl implements ProjectModel {
 
     private SiteViewModel siteViewModel;
-    private ProjectViewModel projectViewModel;
 
     public ProjectModelImpl() {
         this.siteViewModel = new SiteViewModel(Collect.getInstance());
-        this.projectViewModel = new ProjectViewModel(Collect.getInstance());
     }
 
     @Override
@@ -44,7 +45,7 @@ public class ProjectModelImpl implements ProjectModel {
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(mySites -> {
                     siteViewModel.insertSitesAsVerified(mySites.getSite(),mySites.getProject());
-                    projectViewModel.insert(mySites.getProject());
+                    ProjectLocalSource.getInstance().save(mySites.getProject());
                     return mySites.getProject();
                 })
                 .toList()

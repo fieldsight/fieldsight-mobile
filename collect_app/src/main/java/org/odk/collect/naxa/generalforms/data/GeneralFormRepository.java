@@ -43,7 +43,7 @@ public class GeneralFormRepository implements BaseLocalDataSource<GeneralForm> {
     }
 
     @Override
-    public LiveData<List<GeneralForm>> getAll() {
+    public LiveData<List<GeneralForm>> getAll( ) {
 
         return localSource.getAll();
     }

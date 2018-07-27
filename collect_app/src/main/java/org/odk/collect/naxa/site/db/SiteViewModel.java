@@ -19,7 +19,7 @@ public class SiteViewModel extends AndroidViewModel {
 
     public SiteViewModel(@NonNull Application application) {
         super(application);
-        this.mSiteRepository = new SiteRepository(application);
+        this.mSiteRepository = new SiteRepository();
 
     }
 

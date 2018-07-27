@@ -54,19 +54,26 @@
     <string name="dialog_action_dismiss">Dismiss</string>
     <string name="forms_msg_none_available">Nothing available to display.\\n\\nTry Refreshing or Contact Web Admin.</string>
     <string name="toolbar_general_forms">General Forms</string>
-    <string name="form_not_present">Unable to edit this saved form because the corresponding blank form is not present or was deleted.\\n\\nForm ID: %1$s</string>
+    <string name="form_not_present">Unable to load this form because it is not present or was deleted</string>
     <string name="search_sites">Search Sites</string>
     <string name="action_upload">Upload</string>
     <string name="action_delete">Delete</string>
     <string name="msg_offline_site">%1$s Offline Site</string>
 
 
-    <string name="logout_message_all" >If you logout all your account data including, %1$d offline site(s) and %2$d filled form(s) would be deleted.</string>
-    <string name="logout_message_only_filled_forms" >If you logout all your account data including %d filled form(s) would be deleted.</string>
-    <string name="logout_message_only_offline_sites" >If you logout all your account data including %d offline site(s) would be deleted.</string>
-    <string name="logout_message_none" >If you logout all your account data would be deleted.</string>
+    <string name="logout_message_all">If you logout all your account data including, %1$d offline site(s) and %2$d filled form(s) would be deleted.</string>
+    <string name="logout_message_only_filled_forms">If you logout all your account data including %d filled form(s) would be deleted.</string>
+    <string name="logout_message_only_offline_sites">If you logout all your account data including %d offline site(s) would be deleted.</string>
+    <string name="logout_message_none">If you logout all your account data would be deleted.</string>
     <string name="empty_message">Once you are assigned %s, you\'ll see them listed here</string>
     <string name="toolbar_downloads">Downloads</string>
+    <string name="forms_update_start_message">Updating form(s) information</string>
+    <string name="forms_update_end_message">Form(s) information updated just now</string>
+    <string name="forms_update_error_message">Failed to update latest form(s) information</string>
+
+    <string name="download_update_start_message">Updating %s information</string>
+    <string name="download_update_end_message">%s information updated just now</string>
+    <string name="download_update_error_message">Failed to update latest %s information</string>
 
 
 </resources>

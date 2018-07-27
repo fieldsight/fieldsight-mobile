@@ -204,8 +204,8 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
     implementation 'android.arch.persistence.room:rxjava2:1.1.1'
-    implementation 'com.rockerhieu:rv-adapter-states:1.2'
-
+    implementation 'com.andrognito.flashbar:flashbar:1.0.2'
+    implementation 'com.github.matecode:Snacky:1.0.3'
     implementation 'com.github.pwittchen:reactivenetwork-rx2:2.0.0'
     //naxa [ends]
 

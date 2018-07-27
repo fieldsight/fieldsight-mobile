@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,11 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.FieldSightFormListFragment;
 import org.odk.collect.naxa.common.OnFormItemClickListener;
 import org.odk.collect.naxa.common.SharedPreferenceUtils;
+import org.odk.collect.naxa.common.event.DataSyncEvent;
+import org.odk.collect.naxa.common.utilities.FlashBarUtils;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.scheduled.ScheduledFormsAdapter;
@@ -30,6 +34,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
@@ -76,12 +81,13 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.getAll(true).observe(this, new Observer<List<ScheduleForm>>() {
-            @Override
-            public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
-                scheduledFormsAdapter.updateList(scheduleForms);
-            }
-        });
+        viewModel.getBySiteId(true, loadedSite.getId(), false)
+                .observe(this, new Observer<List<ScheduleForm>>() {
+                    @Override
+                    public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
+                        scheduledFormsAdapter.updateList(scheduleForms);
+                    }
+                });
     }
 
 
@@ -101,6 +107,19 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
         super.onDestroyView();
         unbinder.unbind();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,4 +150,29 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
     public void onFormHistoryButtonClicked(ScheduleForm scheduleForm) {
 
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(DataSyncEvent event) {
+
+        if (!isAdded() || getActivity() == null) {
+            //Fragment is not added
+            return;
+        }
+
+
+        Timber.i(event.toString());
+        switch (event.getEvent()) {
+            case DataSyncEvent.EventStatus.EVENT_START:
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
+                break;
+            case DataSyncEvent.EventStatus.EVENT_END:
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
+                break;
+            case DataSyncEvent.EventStatus.EVENT_ERROR:
+                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
+                break;
+        }
+    }
+
 }
