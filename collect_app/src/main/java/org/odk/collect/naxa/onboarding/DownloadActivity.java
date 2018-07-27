@@ -42,7 +42,7 @@ import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_START;
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_UPDATE;
 
-public class DownloadActivity extends CollectAbstractActivity implements DownloadListAdapter.onDownLoadItemClick, DownloadView {
+public class DownloadActivity extends CollectAbstractActivity implements DownloadView {
 
 
     @BindView(R.id.toggle_button)
@@ -79,7 +79,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         syncRepository = new SyncRepository(Collect.getInstance());
         setupRecyclerView();
         setupToolbar();
-
     }
 
     private void setupToolbar() {
@@ -107,7 +106,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         downloadListAdapter = new DownloadListAdapter(syncableItems);
-        downloadListAdapter.setOnClickListener(this);
         recyclerView.setAdapter(downloadListAdapter);
 
 
@@ -183,11 +181,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         }
     }
 
-    @Override
-    public void onItemTap(SyncableItems syncableItems) {
-
-
-    }
 
     @Override
     public void toggleAll() {

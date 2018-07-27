@@ -10,6 +10,9 @@ import org.odk.collect.naxa.onboarding.SyncableItems;
 
 import java.util.List;
 
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.subscribers.DisposableSubscriber;
+
 public class SyncRepository {
 
     private SyncDao syncDao;
@@ -17,11 +20,27 @@ public class SyncRepository {
     public SyncRepository(Application application) {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(application);
         this.syncDao = database.getSyncDAO();
-        init();
+
+        syncDao.getItemCount()
+                .single(0)
+                .subscribe(new DisposableSingleObserver<Integer>() {
+                    @Override
+                    public void onSuccess(Integer count) {
+                        if (count == 0)
+                            init();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        init();
+                    }
+                });
+
     }
 
-    public void init() {
 
+    public void init() {
         SyncableItems[] syncableItems = new SyncableItems[]{
                 new SyncableItems(Constant.DownloadUID.PROJECT_SITES,
                         Constant.DownloadStatus.PENDING, null, "Project and Sites", "Downloads your assigned project and sites"),
@@ -31,18 +50,16 @@ public class SyncRepository {
                         Constant.DownloadStatus.PENDING, null, "General Forms", "Downloads general forms for your sites"),
                 new SyncableItems(Constant.DownloadUID.PROJECT_CONTACTS,
                         Constant.DownloadStatus.PENDING, null, "Project Contacts", "Downloads contact information for personale in your project")
-          };
-
-
+        };
         insert(syncableItems);
     }
+
 
     public void insert(SyncableItems... items) {
         new insertAsyncTask(syncDao).execute(items);
     }
 
-
-    public LiveData<List<SyncableItems>> getAllSyncItems(){
+    public LiveData<List<SyncableItems>> getAllSyncItems() {
         return syncDao.getAllSyncableItems();
     }
 

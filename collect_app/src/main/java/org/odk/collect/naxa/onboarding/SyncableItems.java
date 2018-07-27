@@ -38,6 +38,14 @@ public class SyncableItems {
         this.progressStatus = false;
     }
 
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public void setProgressStatus(boolean progressStatus) {
+        this.progressStatus = progressStatus;
+    }
+
     public boolean getIsSelected() {
         return isSelected;
     }

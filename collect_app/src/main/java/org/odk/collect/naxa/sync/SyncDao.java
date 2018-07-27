@@ -11,11 +11,20 @@ import org.odk.collect.naxa.onboarding.SyncableItems;
 
 import java.util.List;
 
+import io.reactivex.Flowable;
+
 @Dao
 public interface SyncDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(SyncableItems... items);
 
     @Query("SELECT * FROM sync")
     LiveData<List<SyncableItems>> getAllSyncableItems();
+
+    @Query("SELECT COUNT(*) FROM sync")
+    Flowable<Integer> getItemCount();
+
+//    @Query("UPDATE TABLE sync WH")
+//    @Query()
 }

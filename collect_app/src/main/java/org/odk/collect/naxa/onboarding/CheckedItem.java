@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.Checkable;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,17 +15,17 @@ import org.odk.collect.android.R;
 
 public class CheckedItem extends RelativeLayout implements Checkable {
 
-    CheckBox c;
-    TextView tvUpdateInfo;
-    TextView title;
-    TextView tvSubtitle;
+    private CheckBox c;
+    private TextView tvUpdateInfo;
+    private TextView title;
+    private TextView tvSubtitle;
+    private ProgressBar progressBar;
     private int sucessColor, failureColor;
 
 
     public CheckedItem(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
-
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CheckedItem);
         String text = typedArray.getString(R.styleable.CheckedItem_checked_item_title);
         String buttonText = typedArray.getString(R.styleable.CheckedItem_checked_item_title);
@@ -57,8 +58,9 @@ public class CheckedItem extends RelativeLayout implements Checkable {
         tvSubtitle = rootView.findViewById(R.id.text3);
         sucessColor = Color.parseColor("#4CAF50");
         failureColor = Color.RED;
-
+        progressBar = rootView.findViewById(R.id.update_progress);
     }
+
 
     public void setText(String title, String subtitle) {
         this.title.setText(title);
@@ -73,6 +75,14 @@ public class CheckedItem extends RelativeLayout implements Checkable {
     public void showSucessMessage(String message) {
         tvUpdateInfo.setTextColor(sucessColor);
         tvUpdateInfo.setText(message);
+    }
+
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

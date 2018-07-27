@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,21 +18,18 @@ import java.util.logging.Handler;
 
 public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapter.ViewHolder> {
 
+    private final SyncRepository syncRepository;
     private ArrayList<SyncableItems> syncableItems;
-    private onDownLoadItemClick listener;
+    //    private SyncRepository
     private int selectedItemCount = 0;
 
     DownloadListAdapter(ArrayList<SyncableItems> syncableItems) {
         this.syncableItems = syncableItems;
+        syncRepository = new SyncRepository(Collect.getInstance());
     }
-
 
     public ArrayList<SyncableItems> getList() {
         return syncableItems;
-    }
-
-    public void setOnClickListener(onDownLoadItemClick listener) {
-        this.listener = listener;
     }
 
     public void updateList(List<SyncableItems> newList) {
@@ -49,10 +48,23 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final DownloadListAdapter.ViewHolder viewHolder, int position) {
-        SyncableItems syncableItems = this.syncableItems.get(viewHolder.getAdapterPosition());
-        viewHolder.checkedItem.setText(syncableItems.getTitle(), syncableItems.getDetail());
-        viewHolder.checkedItem.setChecked(syncableItems.getIsSelected());
-        viewHolder.checkedItem.showSucessMessage("Last sync 2 min ago");
+        SyncableItems item = this.syncableItems.get(viewHolder.getAdapterPosition());
+        CheckedItem checkedItem = viewHolder.checkedItem;
+        checkedItem.setText(item.getTitle(), item.getDetail());
+        if (item.isChecked()) {
+            checkedItem.setChecked(true);
+        } else {
+            checkedItem.setChecked(false);
+        }
+        if (item.isProgressStatus()) {
+            checkedItem.showProgress();
+        } else {
+            checkedItem.hideProgress();
+        }
+//        SyncableItems syncableItems = this.syncableItems.get(viewHolder.getAdapterPosition());
+//        viewHolder.checkedItem.setText(syncableItems.getTitle(), syncableItems.getDetail());
+//        viewHolder.checkedItem.setChecked(syncableItems.getIsSelected());
+//        viewHolder.checkedItem.showSucessMessage("Last sync 2 min ago");
     }
 
     @Override
@@ -77,14 +89,11 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             checkedItem = itemLayoutView.findViewById(R.id.checked_item);
 
             rootLayout.setOnClickListener(v -> {
-                if (listener != null) {
-                    SyncableItems syncableItem = syncableItems.get(getAdapterPosition());
-                    syncableItem.toggleSelected();
+                SyncableItems syncableItem = syncableItems.get(getAdapterPosition());
+                syncableItem.toggleSelected();
 
-                    manipulateCheckedUI(syncableItem);
+                manipulateCheckedUI(syncableItem);
 
-
-                }
             });
         }
 
@@ -94,15 +103,9 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             } else {
                 selectedItemCount--;
             }
-
-            listener.onItemTap(syncableItem);
             checkedItem.setChecked(syncableItem.getIsSelected());
 
         }
     }
 
-
-    public interface onDownLoadItemClick {
-        void onItemTap(SyncableItems syncableItems);
-    }
 }
