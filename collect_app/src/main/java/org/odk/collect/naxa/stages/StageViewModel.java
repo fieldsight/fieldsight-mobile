@@ -12,16 +12,12 @@ public class StageViewModel extends ViewModel {
     private final StageFormRepository repository;
 
 
-    public StageViewModel(StageFormRepository repository){
+    public StageViewModel(StageFormRepository repository) {
         this.repository = repository;
     }
 
-    public LiveData<List<Stage>> loadStages(boolean forceUpdate){
-        if(forceUpdate){
-
-        }
-
-        return repository.getAll();
+    public LiveData<List<Stage>> getBySiteId(boolean forceUpdate, String siteId, String formDeployedForm) {
+        return repository.getBySiteId(forceUpdate,siteId,formDeployedForm);
     }
 
 

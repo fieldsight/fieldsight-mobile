@@ -380,7 +380,8 @@ public class FieldSightDownloadFormListUtils {
         Timber.i("Overidden staged ids %s its size is %s", stagedJson, stagedDuplicatedRemoved.size());
 
         SiteOveride siteOveride = new SiteOveride(formCreatorsId, generalJson, scheduledJson, stagedJson);
-        FieldSightConfigDatabase.getDatabase(Collect.getInstance()).getSiteOverideDAO().insert(siteOveride);
+
+        SiteOverideLocalSource.getInstance().save(siteOveride);
 
 
     }

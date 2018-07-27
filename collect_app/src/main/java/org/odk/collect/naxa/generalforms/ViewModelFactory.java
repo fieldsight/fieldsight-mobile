@@ -83,7 +83,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(GeneralFormViewModel.class)) {
             //noinspection unchecked
-            return (T) new GeneralFormViewModel(application, generalFormRepository);
+            return (T) new GeneralFormViewModel(generalFormRepository);
         } else if (modelClass.isAssignableFrom(ScheduledFormViewModel.class)) {
             //noinspection unchecked
             return (T) new ScheduledFormViewModel(scheduledFormRepository);

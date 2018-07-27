@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface BaseRepository<T> {
 
-    LiveData<List<T>> getById(boolean forceUpdate, String id);
-
     LiveData<List<T>> getAll(boolean forceUpdate);
 
     void save(T... items);

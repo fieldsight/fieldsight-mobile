@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import org.odk.collect.naxa.login.model.Site;
 
@@ -25,4 +26,18 @@ public interface SiteDao {
 
     @Query("SELECT * from sites WHERE project =  :projectID")
     LiveData<List<Site>> getSiteByProjectId(String projectID);
+
+    @Update
+    void update(Site site);
+
+    @Query("UPDATE sites SET generalFormDeployedFrom = :deployedFrom WHERE id = :siteId ")
+    void updateGeneralFormDeployedFrom(String siteId, String deployedFrom);
+
+
+    @Query("UPDATE sites SET stagedFormDeployedFrom = :deployedFrom WHERE id = :siteId ")
+    void updateStagedFormDeployedFrom(String siteId, String deployedFrom);
+
+
+    @Query("UPDATE sites SET scheduleFormDeployedForm = :deployedFrom WHERE id = :siteId ")
+    void updateScheduleFormDeployedFrom(String siteId, String deployedFrom);
 }

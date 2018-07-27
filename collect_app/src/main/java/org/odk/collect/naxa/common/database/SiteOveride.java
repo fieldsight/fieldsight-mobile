@@ -7,6 +7,14 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 @Entity(tableName = "site_overide_ids")
 public class SiteOveride {
     @PrimaryKey
@@ -16,7 +24,18 @@ public class SiteOveride {
     private String scheduleFormIds;
     private String stagedFormIds;
 
+    @Ignore
+    private List<String> generalformIdList;
+
+    @Ignore
+    private List<String> scheduleFormIdList;
+
+    @Ignore
+    private List<String> stagedformIdList;
+
+
     public SiteOveride() {
+
     }
 
     @Ignore
@@ -58,5 +77,26 @@ public class SiteOveride {
 
     public void setStagedFormIds(String stagedFormIds) {
         this.stagedFormIds = stagedFormIds;
+    }
+
+    public List<String> getGeneralformIdList() {
+        Type type = new TypeToken<LinkedList<String>>() {
+        }.getType();//todo use typeconvertor
+        return new Gson().fromJson(generalFormIds, type);
+
+    }
+
+    public List<String> getScheduleFormIdList() {
+        Type type = new TypeToken<LinkedList<String>>() {
+        }.getType();//todo use typeconvertor
+        return new Gson().fromJson(scheduleFormIds, type);
+
+    }
+
+    public List<String> getStagedformIdList() {
+        Type type = new TypeToken<LinkedList<String>>() {
+        }.getType();//todo use typeconvertor
+        return new Gson().fromJson(stagedFormIds, type);
+
     }
 }

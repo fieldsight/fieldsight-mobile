@@ -8,6 +8,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import org.odk.collect.naxa.common.Constant;
+
 @Entity(tableName = "sites")
 public class Site implements Parcelable {
     @PrimaryKey
@@ -50,9 +52,10 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "isSiteVerified")
     private int isSiteVerified;
 
-    private String generalFormDeployedFrom;
-    private String stagedFormDeployedFrom;
-    private String scheduleFormDeployedForm;
+    //default values for  table
+    private String generalFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
+    private String stagedFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
+    private String scheduleFormDeployedForm = Constant.FormDeploymentFrom.PROJECT;
 
 
     public String getGeneralFormDeployedFrom() {

@@ -19,6 +19,7 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.FieldSightFormListFragment;
 import org.odk.collect.naxa.common.OnFormItemClickListener;
+import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.common.SharedPreferenceUtils;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.common.utilities.FlashBarUtils;
@@ -45,7 +46,10 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
     ViewModelFactory viewModelFactory;
 
     @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    RecyclerViewEmptySupport recyclerView;
+
+    @BindView(R.id.root_layout_empty_layout)
+    View emptyLayout;
 
     private Site loadedSite;
     private Unbinder unbinder;
@@ -81,7 +85,7 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.getBySiteId(true, loadedSite.getId(), false)
+        viewModel.getBySiteId(true, loadedSite.getId(), loadedSite.getScheduleFormDeployedForm())
                 .observe(this, new Observer<List<ScheduleForm>>() {
                     @Override
                     public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
@@ -98,6 +102,14 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         scheduledFormsAdapter = new ScheduledFormsAdapter(new ArrayList<>(0), this);
+        recyclerView.setEmptyView(emptyLayout,
+                getString(R.string.empty_message, "general forms"),
+                new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
+                    @Override
+                    public void onRetryButtonClick() {
+                        viewModel.getBySiteId(true, loadedSite.getId(), loadedSite.getGeneralFormDeployedFrom());
+                    }
+                });
         recyclerView.setAdapter(scheduledFormsAdapter);
     }
 

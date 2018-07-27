@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface BaseLocalDataSource<T> {
 
-    LiveData<List<T>> getById(boolean forceUpdate, String id);
-
     LiveData<List<T>> getAll();
 
     void save(T... items);

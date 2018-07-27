@@ -23,4 +23,7 @@ public abstract class StageFormDAO implements BaseDaoFieldSight<Stage> {
         deleteAll();
         insert(items);
     }
+
+    @Query("SELECT * FROM stages WHERE site =:siteId AND formDeployedFrom = :formDeployedForm")
+    public abstract LiveData<List<Stage>> getBySiteId(String siteId, String formDeployedForm);
 }

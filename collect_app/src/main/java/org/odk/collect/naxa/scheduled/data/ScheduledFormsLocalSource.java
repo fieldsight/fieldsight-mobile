@@ -29,12 +29,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
 
 
     @Override
-    public LiveData<List<ScheduleForm>> getById(boolean forceUpdate, String id) {
-        return dao.getBySiteId(id);
-    }
-
-    @Override
-    public LiveData<List<ScheduleForm>> getAll( ) {
+    public LiveData<List<ScheduleForm>> getAll() {
         return dao.getAll();
     }
 
@@ -51,5 +46,9 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
     @Override
     public void updateAll(ArrayList<ScheduleForm> items) {
         AsyncTask.execute(() -> dao.updateAll(items));
+    }
+
+    public LiveData<List<ScheduleForm>> getBySiteId(String siteId, String formDeployedFrom) {
+        return dao.getBySiteId(siteId, formDeployedFrom);
     }
 }

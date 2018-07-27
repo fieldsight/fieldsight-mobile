@@ -28,12 +28,6 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
         return INSTANCE;
     }
 
-
-    @Override
-    public LiveData<List<Stage>> getById(boolean forceUpdate, String stageId) {
-        return null;
-    }
-
     @Override
     public LiveData<List<Stage>> getAll( ) {
         return dao.getAllStages();
@@ -42,7 +36,6 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
     @Override
     public void save(Stage... items) {
         AsyncTask.execute(() -> dao.insert(items));
-
     }
 
     @Override
@@ -53,5 +46,9 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
     @Override
     public void updateAll(ArrayList<Stage> items) {
         AsyncTask.execute(() -> dao.updateAll(items));
+    }
+
+    public LiveData<List<Stage>> getBySiteId(String siteId, String formDeployedForm) {
+        return dao.getBySiteId(siteId,formDeployedForm);
     }
 }

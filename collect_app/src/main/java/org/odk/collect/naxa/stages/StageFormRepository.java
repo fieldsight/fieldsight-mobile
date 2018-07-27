@@ -36,13 +36,9 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
         this.remoteSource = remoteSource;
     }
 
-    @Override
-    public LiveData<List<Stage>> getById(boolean forceUpdate, String id) {
-        return null;
-    }
 
     @Override
-    public LiveData<List<Stage>> getAll( ) {
+    public LiveData<List<Stage>> getAll() {
         remoteSource.getAll();
         return localSource.getAll();
     }
@@ -60,5 +56,13 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
     @Override
     public void updateAll(ArrayList<Stage> items) {
         localSource.updateAll(items);
+    }
+
+    public LiveData<List<Stage>> getBySiteId(boolean forceUpdate, String siteId, String formDeployedForm) {
+        if (forceUpdate) {
+            remoteSource.getAll();
+        }
+
+        return localSource.getBySiteId(siteId, formDeployedForm);
     }
 }

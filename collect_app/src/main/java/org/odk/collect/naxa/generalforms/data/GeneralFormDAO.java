@@ -25,4 +25,7 @@ public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
         deleteAll();
         insert(items);
     }
+
+    @Query("SELECT * FROM general_forms WHERE site =:siteId AND formDeployedFrom = :formDeployedForm")
+    public abstract LiveData<List<GeneralForm>> getGeneralForms(String siteId, String formDeployedForm);
 }

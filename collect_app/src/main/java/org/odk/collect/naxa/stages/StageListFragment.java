@@ -97,7 +97,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.loadStages(true)
+        viewModel.getBySiteId(true, loadedSite.getId(), loadedSite.getStagedFormDeployedFrom())
                 .observe(this, stages -> {
                     Timber.i("Stage forms data has been changed");
                     listAdapter.updateList(stages);

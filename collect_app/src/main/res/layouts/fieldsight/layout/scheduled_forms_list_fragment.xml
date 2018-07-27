@@ -3,22 +3,9 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/empty_layout" />
 
-    <TextView
-        android:id="@+id/no_message"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@drawable/white"
-        android:gravity="center"
-        android:paddingEnd="20dip"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="@string/forms_msg_none_available"
-        android:textColor="@drawable/black"
-        android:visibility="gone" />
-
-
-    <android.support.v7.widget.RecyclerView
+    <org.odk.collect.naxa.common.RecyclerViewEmptySupport
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

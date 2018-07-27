@@ -1,28 +1,23 @@
 package org.odk.collect.naxa.generalforms;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModel;
 
 import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRepository;
 
 import java.util.List;
 
-public class GeneralFormViewModel extends AndroidViewModel {
+public class GeneralFormViewModel extends ViewModel {
     private final GeneralFormRepository repository;
-    private final Application application;
 
 
-    public GeneralFormViewModel(Application application, GeneralFormRepository repository) {
-        super(application);
-        this.application = application;
+    public GeneralFormViewModel(GeneralFormRepository repository) {
         this.repository = repository;
     }
 
-    public LiveData<List<GeneralForm>> loadGeneralForms(boolean forceUpdate, String siteId) {
-
-        return repository.getById(forceUpdate,siteId);
+    public LiveData<List<GeneralForm>> getBySiteId(boolean forceUpdate, String siteId, String formDeployedFrom) {
+        return repository.getBySiteId(forceUpdate, siteId, formDeployedFrom);
     }
 
     public void deleteAll() {

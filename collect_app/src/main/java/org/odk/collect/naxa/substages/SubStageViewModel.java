@@ -19,13 +19,8 @@ public class SubStageViewModel extends ViewModel {
 
 
     public LiveData<List<SubStage>> loadSubStages(boolean forceUpdate, String id, String project, String stageId) {
-        if (forceUpdate) {
 
-        }
-
-        boolean isDeployedFromProject = true;
-
-        return repository.getById(forceUpdate, stageId);
+        return repository.getBySiteId(forceUpdate, stageId);
     }
 
 }

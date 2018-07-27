@@ -4,13 +4,14 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import org.odk.collect.naxa.common.BaseLocalDataSource;
+import org.odk.collect.naxa.common.BaseRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.api.client.util.Preconditions.checkNotNull;
 
-public class GeneralFormRepository implements BaseLocalDataSource<GeneralForm> {
+public class GeneralFormRepository implements BaseRepository<GeneralForm> {
 
     private static GeneralFormRepository INSTANCE = null;
     private final GeneralFormLocalSource localSource;
@@ -34,19 +35,23 @@ public class GeneralFormRepository implements BaseLocalDataSource<GeneralForm> {
     }
 
 
-    @Override
-    public LiveData<List<GeneralForm>> getById(boolean forceUpdate, @NonNull String id) {
-        if (forceUpdate) {
+    public LiveData<List<GeneralForm>> getBySiteId(boolean forceUpdate, @NonNull String siteId, @NonNull String deployedForm) {
+        if(forceUpdate){
             remoteSource.getAll();
         }
-        return localSource.getById(forceUpdate, id);
+
+        return localSource.getBySiteId(siteId,deployedForm);
     }
 
     @Override
-    public LiveData<List<GeneralForm>> getAll( ) {
+    public LiveData<List<GeneralForm>> getAll(boolean forceUpdate) {
+        if(forceUpdate){
+            remoteSource.getAll();
+        }
 
         return localSource.getAll();
     }
+
 
     @Override
     public void save(GeneralForm... items) {

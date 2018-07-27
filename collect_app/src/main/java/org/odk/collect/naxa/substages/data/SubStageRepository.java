@@ -34,11 +34,6 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
         this.remoteSource = remoteSource;
     }
 
-    @Override
-    public LiveData<List<SubStage>> getById(boolean forceUpdate, String id) {
-
-        return localSource.getById(forceUpdate, id);
-    }
 
     @Override
     public LiveData<List<SubStage>> getAll( ) {
@@ -58,5 +53,9 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
     @Override
     public void updateAll(ArrayList<SubStage> items) {
         localSource.updateAll(items);
+    }
+
+    public LiveData<List<SubStage>> getBySiteId(boolean forceUpdate, String stageId) {
+        return localSource.getAll();
     }
 }

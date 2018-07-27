@@ -24,6 +24,9 @@ public class ProjectRepository implements BaseRepository<Project> {
 
     private MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
 
+    public static ProjectRepository getInstance() {
+        return getInstance(ProjectLocalSource.getInstance(), ProjectSitesRemoteSource.getInstance());
+    }
 
     public static ProjectRepository getInstance(ProjectLocalSource localSource, ProjectSitesRemoteSource remoteSource) {
         if (INSTANCE == null) {
@@ -42,26 +45,13 @@ public class ProjectRepository implements BaseRepository<Project> {
         this.remoteSource = remoteSource;
     }
 
-
-
-    @Override
-    public LiveData<List<Project>> getById(boolean forceUpdate, String id) {
-        if (forceUpdate) {
-            remoteSource.getAll();
-        }
-        return localSource.getById(forceUpdate, id);
-
-    }
-
     @Override
     public LiveData<List<Project>> getAll(boolean forceUpdate) {
-        if(forceUpdate)remoteSource.getAll();
+        if (forceUpdate) remoteSource.getAll();
 
 
         return localSource.getAll();
     }
-
-
 
 
     @Override

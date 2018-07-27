@@ -16,7 +16,6 @@ import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.onboarding.XMLForm;
 import org.odk.collect.naxa.onboarding.XMLFormBuilder;
 import org.odk.collect.naxa.project.data.ProjectLocalSource;
-import org.odk.collect.naxa.project.data.ProjectRepository;
 import org.odk.collect.naxa.substages.data.SubStageLocalSource;
 
 import java.io.IOException;
@@ -77,7 +76,7 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
 
         Observable.merge(siteODKForms, projectODKForms)
                 .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
-                .flatMap((Function<XMLForm, ObservableSource<ArrayList<Stage>>>) this::downloadProjectStages)
+                .flatMap((Function<XMLForm, ObservableSource<ArrayList<Stage>>>) this::downloadStages)
                 .toList()
                 .map(listOfStages -> {
                     ArrayList<Stage> stagesList = new ArrayList<>(0);
@@ -113,7 +112,7 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
     }
 
 
-    private Observable<ArrayList<Stage>> downloadProjectStages(XMLForm xmlForm) {
+    private Observable<ArrayList<Stage>> downloadStages(XMLForm xmlForm) {
 
         String createdFromProject = XMLForm.toNumeralString(xmlForm.isCreatedFromProject());
         String creatorsId = xmlForm.getFormCreatorsId();

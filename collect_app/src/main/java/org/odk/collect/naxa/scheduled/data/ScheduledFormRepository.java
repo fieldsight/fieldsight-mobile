@@ -6,11 +6,12 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
 import org.odk.collect.naxa.common.BaseLocalDataSource;
+import org.odk.collect.naxa.common.BaseRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScheduledFormRepository implements BaseLocalDataSource<ScheduleForm> {
+public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
 
 
     private static ScheduledFormRepository INSTANCE = null;
@@ -36,33 +37,15 @@ public class ScheduledFormRepository implements BaseLocalDataSource<ScheduleForm
         this.remoteSource = remoteSource;
     }
 
-    @Override
-    public LiveData<List<ScheduleForm>> getById(boolean forceUpdate, String id) {
-        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
-        mediatorLiveData.addSource(forms, new Observer<List<ScheduleForm>>() {
-            @Override
-            public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
-                if (scheduleForms == null || scheduleForms.isEmpty()) {
-                    remoteSource.getAll();
-                } else {
-                    mediatorLiveData.removeSource(forms);
-                    mediatorLiveData.setValue(scheduleForms);
-                }
-            }
-        });
-
-        return mediatorLiveData;
-    }
 
     @Override
-    public LiveData<List<ScheduleForm>> getAll() {
-        //todo introduce auto value update from remote source
+    public LiveData<List<ScheduleForm>> getAll(boolean forceUpdate) {
+        if(forceUpdate){
+            remoteSource.getAll();
+        }
 
-
-        remoteSource.getAll();
         return localSource.getAll();
     }
-
 
     @Override
     public void save(ScheduleForm... items) {
@@ -79,7 +62,7 @@ public class ScheduledFormRepository implements BaseLocalDataSource<ScheduleForm
         localSource.updateAll(items);
     }
 
-    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String id, boolean isProject) {
+    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String siteId, String formDeployedFrom) {
 //        MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
 //        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
 //
@@ -101,6 +84,6 @@ public class ScheduledFormRepository implements BaseLocalDataSource<ScheduleForm
             remoteSource.getAll();
         }
 
-        return localSource.getAll();
+        return localSource.getBySiteId(siteId,formDeployedFrom);
     }
 }

@@ -30,12 +30,6 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
         return INSTANCE;
     }
 
-
-    @Override
-    public LiveData<List<SubStage>> getById(boolean forceUpdate, String id) {
-        return dao.getByStageId(id);
-    }
-
     @Override
     public LiveData<List<SubStage>> getAll( ) {
         return dao.getAllSubStages();

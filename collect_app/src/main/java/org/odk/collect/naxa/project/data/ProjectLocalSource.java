@@ -33,11 +33,6 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
     }
 
     @Override
-    public LiveData<List<Project>> getById(boolean forceUpdate, String id) {
-        return dao.getProjectsLive();
-    }
-
-    @Override
     public LiveData<List<Project>> getAll( ) {
         return dao.getProjectsLive();
     }
