@@ -16,21 +16,14 @@ public class SyncableItems {
     private String lastSyncDateTime;
     private String title;
     private String detail;
-//    private boolean progressbar;
+    private boolean checked;
+    private boolean progressStatus;
 
     @Ignore
     private boolean isSelected;
 
     public SyncableItems() {
 
-    }
-
-    public boolean getIsSelected() {
-        return isSelected;
-    }
-
-    public void toggleSelected() {
-        isSelected = !isSelected;
     }
 
     @Ignore
@@ -41,7 +34,24 @@ public class SyncableItems {
         this.title = title;
         this.detail = detail;
         this.isSelected = false;
-//        this.progressbar = false;
+        this.checked = true;
+        this.progressStatus = false;
+    }
+
+    public boolean getIsSelected() {
+        return isSelected;
+    }
+
+    public void toggleSelected() {
+        isSelected = !isSelected;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public boolean isProgressStatus() {
+        return progressStatus;
     }
 
     public int getUid() {

@@ -73,5 +73,10 @@ the specific language governing permissions and limitations under the License. -
             android:layout_gravity="center_vertical"
             android:clickable="false"
             android:focusable="false" />
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/update_info"/>
     </RelativeLayout>
 </org.odk.collect.android.views.TwoItemMultipleChoiceView>
