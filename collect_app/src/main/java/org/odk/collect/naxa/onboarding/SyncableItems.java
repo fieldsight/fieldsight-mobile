@@ -16,6 +16,7 @@ public class SyncableItems {
     private String lastSyncDateTime;
     private String title;
     private String detail;
+//    private boolean progressbar;
 
     @Ignore
     private boolean isSelected;
@@ -40,6 +41,7 @@ public class SyncableItems {
         this.title = title;
         this.detail = detail;
         this.isSelected = false;
+//        this.progressbar = false;
     }
 
     public int getUid() {

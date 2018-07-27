@@ -1,13 +1,10 @@
 package org.odk.collect.naxa.project;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,17 +21,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.onboarding.DownloadActivity;
 import org.odk.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.odk.collect.naxa.project.db.ProjectViewModel;
-import org.odk.collect.naxa.project.event.ErrorEvent;
-import org.odk.collect.naxa.project.event.PayloadEvent;
-import org.odk.collect.naxa.project.event.ProgressEvent;
-import org.odk.collect.naxa.site.db.SiteViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,26 +151,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements Proj
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onErrorEvent(ErrorEvent errorEvent) {
-        showProgress(false);
-        showContent(false, null);
-        showEmpty(true);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onContentEvent(PayloadEvent payloadEvent) {
-        showProgress(false);
-        showContent(true, payloadEvent.getPayload());
-        showEmpty(false);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onProgressEvent(ProgressEvent progressEvent) {
-        showProgress(true);
-        showContent(false, null);
-        showEmpty(false);
-    }
 
     @Override
     public void showProgress(boolean show) {

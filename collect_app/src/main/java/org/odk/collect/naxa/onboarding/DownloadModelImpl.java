@@ -60,6 +60,7 @@ public class DownloadModelImpl implements DownloadModel {
 
     }
 
+    @Deprecated
     @Override
     public void fetchGeneralForms() {
 

@@ -221,4 +221,5 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 break;
         }
     }
+
 }

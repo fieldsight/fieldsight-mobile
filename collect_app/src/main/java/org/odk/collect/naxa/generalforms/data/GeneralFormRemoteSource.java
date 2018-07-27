@@ -1,5 +1,6 @@
 package org.odk.collect.naxa.generalforms.data;
 
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -127,7 +128,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     return generalForms;
                 })
                 .toList()
-                .map(arrayLists -> {
+                .map((List<ArrayList<GeneralForm>> arrayLists) -> {
                     ArrayList<GeneralForm> generalForms = new ArrayList<>(0);
 
                     for (ArrayList<GeneralForm> generalFormList : arrayLists) {
