@@ -4,6 +4,7 @@
     tools:parentTag="android.support.design.widget.CoordinatorLayout">
 
     <org.odk.collect.naxa.common.NonSwipeableViewPager
+        android:transitionName="pager"
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

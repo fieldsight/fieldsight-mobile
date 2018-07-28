@@ -6,7 +6,6 @@
     android:id="@+id/activity_dashboard_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_grey"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -16,6 +15,7 @@
         tools:context="org.bcss.collect.android.fieldsight.activities.DashboardActivity">
 
         <android.support.design.widget.AppBarLayout
+            android:transitionName="simple_activity_transition"
             android:id="@+id/act_dashboard_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

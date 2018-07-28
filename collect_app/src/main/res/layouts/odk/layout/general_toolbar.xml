@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:elevation="@dimen/elevation_appbar"
+    android:transitionName="simple_activity_transition"
     android:background="@drawable/toolbar_gradient"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 

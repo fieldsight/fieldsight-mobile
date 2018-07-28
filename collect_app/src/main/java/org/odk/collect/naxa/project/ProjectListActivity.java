@@ -1,20 +1,21 @@
 package org.odk.collect.naxa.project;
 
-import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,8 +47,6 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
-
 public class ProjectListActivity extends CollectAbstractActivity implements MyProjectsAdapter.OnItemClickListener {
 
     @BindView(R.id.toolbar_general)
@@ -71,13 +70,10 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_list);
-        initAnimation();
-
+        setupWindowTransition();
         ButterKnife.bind(this);
-
         setupToolbar();
         setupProjectlist();
 
@@ -186,17 +182,16 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
     @Override
     public void onItemClick(Project project) {
-            ActivityOptions activityOptions =  ActivityOptions.makeSceneTransitionAnimation(this);
-            Intent intent = new Intent(this,ProjectDashboardActivity.class);
-            intent.putExtra(EXTRA_OBJECT,project);
-            startActivity(intent,activityOptions.toBundle());
 
-            //ProjectDashboardActivity.start(this, project);
+
+        Pair<View, String> p1 = Pair.create(appbarGeneral, ViewCompat.getTransitionName(appbarGeneral));
+        //inspection
+        ProjectDashboardActivity.start(this,project,p1);
 
     }
 
 
-    private void initAnimation() {
+    private void setupWindowTransition() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Transition slide = TransitionInflater.from(this).inflateTransition(R.transition.slide);
             getWindow().setEnterTransition(slide);

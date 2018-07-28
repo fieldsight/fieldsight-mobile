@@ -1,5 +1,7 @@
 package org.odk.collect.naxa.site;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +22,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,6 +30,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.transition.Slide;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -109,6 +113,23 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     }
 
 
+    @SafeVarargs
+    public static void start(Activity context, Project project, Pair<View, String>... pairs) {
+        ActivityOptions activityOptions = null;
+        Intent intent = new Intent(context, ProjectDashboardActivity.class);
+        intent.putExtra(EXTRA_OBJECT, project);
+
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
+        }
+
+        if (activityOptions != null) {
+            context.startActivity(intent, activityOptions.toBundle());
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -128,12 +149,13 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         bindUI();
         setViewpager();
         setupTabLayout();
+        setupMapMode();
+
         setupToolbar();
         setupAppBar();
         setupSearchView();
         setupNavigation();
         setupNavigationHeader();
-        setupMapMode();
 
     }
 
@@ -148,7 +170,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
     }
 
-    private void initAnimation(){
+    private void initAnimation() {
         Explode explode = null;
         Slide slide = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -156,7 +178,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
             slide = new Slide();
             slide.setDuration(1000);
             slide.setSlideEdge(Gravity.BOTTOM);
-         //   getWindow().setEnterTransition(slide);
+            //   getWindow().setEnterTransition(slide);
         }
     }
 
@@ -388,6 +410,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         drawerLayout = findViewById(R.id.activity_dashboard_drawer_layout);
         navigationView = findViewById(R.id.activity_dashboard_navigation_view);
         navigationHeader = (FrameLayout) navigationView.getHeaderView(0);
+
+//        pager.setVisibility(View.GONE);
     }
 
     private void setupTabLayout() {
@@ -407,7 +431,16 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     }
 
 
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        pager.setVisibility(View.VISIBLE);
+
+    }
+
     private void setViewpager() {
+
+
         ArrayList<Fragment> fragments = new ArrayList<>();
         SiteListFragment siteListFragment = SiteListFragment.getInstance(projectId, loadedProject);
         ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.getInstance();

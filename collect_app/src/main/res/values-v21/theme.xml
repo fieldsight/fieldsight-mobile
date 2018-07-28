@@ -12,6 +12,7 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowSharedElementEnterTransition">@transition/enter</item>
         <item name="android:windowSharedElementExitTransition">@transition/enter</item>
+        <item name="android:windowSharedElementsUseOverlay">false</item>
 
 
     </style>
@@ -28,5 +29,6 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowSharedElementEnterTransition">@transition/enter</item>
         <item name="android:windowSharedElementExitTransition">@transition/enter</item>
+        <item name="android:windowSharedElementsUseOverlay">false</item>
     </style>
 </resources>
