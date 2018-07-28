@@ -32,9 +32,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
 
     private List<Project> myProjectList;
 
-    private Context context;
-    private View itemView;
-    private Typeface face;
+    private OnItemClickListener onItemClickListener;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -51,14 +49,20 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
             ivLogo = view.findViewById(R.id.iv_org_logo);
             rootLayout = view.findViewById(R.id.project_list_item_root_layout);
 
-            title.setTypeface(face);
 
+            rootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(myProjectList.get(getAdapterPosition()));
+                }
+            });
         }
     }
 
 
-    public MyProjectsAdapter(final List<Project> myProjectList) {
+    public MyProjectsAdapter(final List<Project> myProjectList, OnItemClickListener onItemClickListener) {
         this.myProjectList = myProjectList;
+        this.onItemClickListener = onItemClickListener;
 
     }
 
@@ -79,7 +83,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        itemView = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.project_list_item, parent, false);
 
         return new MyViewHolder(itemView);
@@ -89,16 +93,13 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final Project project = myProjectList.get(holder.getAdapterPosition());
 
-        this.context = holder.title.getContext();
+        Context context = holder.title.getContext();
 
         holder.title.setText(project.getName());
 
-        loadImage(project.getOrganizationlogourl()).into(holder.ivLogo);
+        loadImage(context, project.getOrganizationlogourl()).into(holder.ivLogo);
 
 
-        holder.rootLayout.setOnClickListener(view -> {
-            ProjectDashboardActivity.start(holder.rootLayout.getContext(), project);
-        });
 
         holder.organizationName.setText(formatOrganizationName(project.getOrganizationName()));
 
@@ -114,7 +115,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
         return "A Project by " + name;
     }
 
-    private DrawableRequestBuilder<String> loadImage(@NonNull String imagePath) {
+    private DrawableRequestBuilder<String> loadImage(Context context, @NonNull String imagePath) {
 
         return Glide
                 .with(context)
@@ -124,5 +125,9 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
                 .crossFade();
     }
 
+
+    public interface OnItemClickListener {
+        void onItemClick(Project project);
+    }
 
 }

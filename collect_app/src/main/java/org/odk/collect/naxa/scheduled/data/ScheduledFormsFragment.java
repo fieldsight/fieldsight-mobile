@@ -12,11 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.andrognito.flashbar.Flashbar;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.naxa.common.FieldSightFormListFragment;
 import org.odk.collect.naxa.common.OnFormItemClickListener;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
@@ -90,9 +93,17 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
                     @Override
                     public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
                         scheduledFormsAdapter.updateList(scheduleForms);
+
+                        if (!isAdded() || getActivity() == null) {
+                            //Fragment is not added
+                            return;
+                        }
+                        FlashBarUtils.showFlashbar(getActivity(),getString(R.string.msg_schedule_form_found, scheduleForms != null ? scheduleForms.size() : 0,loadedSite.getName()),false);
+
                     }
                 });
     }
+
 
 
     private void setupListAdapter() {

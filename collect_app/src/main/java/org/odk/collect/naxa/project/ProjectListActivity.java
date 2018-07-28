@@ -1,6 +1,8 @@
 package org.odk.collect.naxa.project;
 
+import android.app.ActivityOptions;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -9,8 +11,11 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -26,9 +31,11 @@ import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.common.utilities.FlashBarUtils;
 import org.odk.collect.naxa.generalforms.ViewModelFactory;
+import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.onboarding.DownloadActivity;
 import org.odk.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.odk.collect.naxa.project.data.ProjectViewModel;
+import org.odk.collect.naxa.site.ProjectDashboardActivity;
 
 import java.util.ArrayList;
 
@@ -39,7 +46,9 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-public class ProjectListActivity extends CollectAbstractActivity {
+import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
+
+public class ProjectListActivity extends CollectAbstractActivity implements MyProjectsAdapter.OnItemClickListener {
 
     @BindView(R.id.toolbar_general)
     Toolbar toolbar;
@@ -61,8 +70,12 @@ public class ProjectListActivity extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_list);
+        initAnimation();
+
         ButterKnife.bind(this);
 
         setupToolbar();
@@ -125,7 +138,7 @@ public class ProjectListActivity extends CollectAbstractActivity {
     }
 
     private void setupProjectlist() {
-        projectlistAdapter = new MyProjectsAdapter(new ArrayList<>(0));
+        projectlistAdapter = new MyProjectsAdapter(new ArrayList<>(0), this);
         RecyclerView.LayoutManager myProjectLayoutManager = new LinearLayoutManager(getApplicationContext());
         rvProjects.setLayoutManager(myProjectLayoutManager);
         rvProjects.setEmptyView(findViewById(R.id.root_layout_empty_layout),
@@ -171,4 +184,23 @@ public class ProjectListActivity extends CollectAbstractActivity {
         }
     }
 
+    @Override
+    public void onItemClick(Project project) {
+            ActivityOptions activityOptions =  ActivityOptions.makeSceneTransitionAnimation(this);
+            Intent intent = new Intent(this,ProjectDashboardActivity.class);
+            intent.putExtra(EXTRA_OBJECT,project);
+            startActivity(intent,activityOptions.toBundle());
+
+            //ProjectDashboardActivity.start(this, project);
+
+    }
+
+
+    private void initAnimation() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Transition slide = TransitionInflater.from(this).inflateTransition(R.transition.slide);
+            getWindow().setEnterTransition(slide);
+            getWindow().setExitTransition(slide);
+        }
+    }
 }

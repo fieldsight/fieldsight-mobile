@@ -8,9 +8,11 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,12 +25,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Slide;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -103,10 +108,15 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         context.startActivity(intent);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_dashboard);
+        initAnimation();
 
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
@@ -136,6 +146,18 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
             }
         });
 
+    }
+
+    private void initAnimation(){
+        Explode explode = null;
+        Slide slide = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            explode = new Explode();
+            slide = new Slide();
+            slide.setDuration(1000);
+            slide.setSlideEdge(Gravity.BOTTOM);
+         //   getWindow().setEnterTransition(slide);
+        }
     }
 
 

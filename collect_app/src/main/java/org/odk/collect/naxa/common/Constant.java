@@ -6,6 +6,12 @@ public class Constant {
 
     public static int selectedFragmentId;
     public static String EXTRA_RECEIVER = "extra_receiver";
+    public static final String KEY_ANIM_TYPE = "anim_type";
+    public static final String KEY_TITLE = "anim_title";
+
+    public enum TransitionType {
+        ExplodeJava, ExplodeXML
+    }
 
     public static class Notification {
         public static final int FOREGROUND_SERVICE = 123;

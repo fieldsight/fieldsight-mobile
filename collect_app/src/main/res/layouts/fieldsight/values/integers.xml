@@ -2,4 +2,5 @@
 <resources>
     <integer name="card_flip_time_full">500</integer>
     <integer name="card_flip_time_half">200</integer>
+    <integer name="anim_duration_long">1000</integer>
 </resources>
