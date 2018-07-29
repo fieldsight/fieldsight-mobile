@@ -108,7 +108,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         downloadListAdapter = new DownloadListAdapter(syncableItems);
         recyclerView.setAdapter(downloadListAdapter);
 
-
         syncRepository.getAllSyncItems()
                 .observe(this, new Observer<List<SyncableItems>>() {
                     @Override
@@ -147,18 +146,14 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                         .just(downloadListAdapter.getList())
                         .flatMapIterable((Function<ArrayList<SyncableItems>, Iterable<SyncableItems>>) downloadableItems -> downloadableItems)
                         .map(downloadableItem -> {
-
                             if (syncEvent.getUid() == downloadableItem.getUid()) {
-
                             }
-
                             return downloadableItem;
                         })
                         .toList()
                         .subscribe(new SingleObserver<List<SyncableItems>>() {
                             @Override
                             public void onSubscribe(Disposable d) {
-
                             }
 
                             @Override
@@ -168,7 +163,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
                             @Override
                             public void onError(Throwable e) {
-
+                                e.printStackTrace();
                             }
                         });
                 break;
@@ -224,7 +219,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 break;
             case R.id.download_button:
                 downloadPresenter.onDownloadSelectedButtonClick(downloadListAdapter.getList());
-
                 break;
         }
     }

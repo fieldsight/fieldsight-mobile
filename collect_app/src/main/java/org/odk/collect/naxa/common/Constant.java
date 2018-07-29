@@ -81,4 +81,11 @@ public class Constant {
         public static final int RUNNING = 3;
         public static final int COMPLETED = 4;
     }
+
+    public final static class SyncableNames {
+        public static final String PROJECT_AND_SITES = "Project and Sites";
+        public static final String ODK_FORMS = "ODK Forms";
+        public static final String GENERAL_FORMS = "General Forms";
+        public static final String PROJECT_CONTACTS = "Project Contacts";
+    }
 }

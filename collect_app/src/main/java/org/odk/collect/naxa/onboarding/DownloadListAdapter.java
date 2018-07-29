@@ -6,21 +6,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
+
+import static org.odk.collect.naxa.common.Constant.DownloadStatus.COMPLETED;
+import static org.odk.collect.naxa.common.Constant.DownloadStatus.FAILED;
+import static org.odk.collect.naxa.common.Constant.DownloadStatus.PENDING;
+import static org.odk.collect.naxa.common.Constant.DownloadStatus.RUNNING;
 
 public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapter.ViewHolder> {
 
     private final SyncRepository syncRepository;
     private ArrayList<SyncableItems> syncableItems;
-    //    private SyncRepository
     private int selectedItemCount = 0;
 
     DownloadListAdapter(ArrayList<SyncableItems> syncableItems) {
@@ -48,23 +53,36 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final DownloadListAdapter.ViewHolder viewHolder, int position) {
-        SyncableItems item = this.syncableItems.get(viewHolder.getAdapterPosition());
+        SyncableItems item = this.syncableItems.get(position);
         CheckedItem checkedItem = viewHolder.checkedItem;
         checkedItem.setText(item.getTitle(), item.getDetail());
+
         if (item.isChecked()) {
             checkedItem.setChecked(true);
         } else {
             checkedItem.setChecked(false);
         }
+
         if (item.isProgressStatus()) {
             checkedItem.showProgress();
         } else {
             checkedItem.hideProgress();
         }
-//        SyncableItems syncableItems = this.syncableItems.get(viewHolder.getAdapterPosition());
-//        viewHolder.checkedItem.setText(syncableItems.getTitle(), syncableItems.getDetail());
-//        viewHolder.checkedItem.setChecked(syncableItems.getIsSelected());
-//        viewHolder.checkedItem.showSucessMessage("Last sync 2 min ago");
+
+        switch (item.getDownloadingStatus()) {
+            case PENDING:
+                checkedItem.showFailureMessage("Not synced yet!!");
+                break;
+            case COMPLETED:
+                checkedItem.showSucessMessage("Last synced at " + item.getLastSyncDateTime());
+                break;
+            case FAILED:
+                checkedItem.showFailureMessage("Last failed at " + item.getLastSyncDateTime());
+                break;
+            case RUNNING:
+                break;
+        }
+
     }
 
     @Override
@@ -90,10 +108,13 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
             rootLayout.setOnClickListener(v -> {
                 SyncableItems syncableItem = syncableItems.get(getAdapterPosition());
-                syncableItem.toggleSelected();
-
+//                checkedItem.toggle();
+                if (syncableItem.isChecked()) {
+                    syncRepository.setChecked(syncableItem.getUid(), false);
+                } else {
+                    syncRepository.setChecked(syncableItem.getUid(), true);
+                }
                 manipulateCheckedUI(syncableItem);
-
             });
         }
 
@@ -103,9 +124,8 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             } else {
                 selectedItemCount--;
             }
-            checkedItem.setChecked(syncableItem.getIsSelected());
-
         }
     }
+
 
 }
