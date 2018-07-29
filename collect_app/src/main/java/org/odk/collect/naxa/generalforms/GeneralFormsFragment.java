@@ -19,6 +19,7 @@ import org.odk.collect.naxa.common.FieldSightFormListFragment;
 import org.odk.collect.naxa.common.OnFormItemClickListener;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.common.SharedPreferenceUtils;
+import org.odk.collect.naxa.common.ViewModelFactory;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.common.utilities.FlashBarUtils;
 import org.odk.collect.naxa.generalforms.data.GeneralForm;

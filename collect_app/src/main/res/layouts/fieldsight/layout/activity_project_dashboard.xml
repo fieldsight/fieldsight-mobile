@@ -6,8 +6,8 @@
     android:id="@+id/activity_dashboard_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
     <android.support.design.widget.CoordinatorLayout
@@ -16,11 +16,11 @@
         tools:context="org.bcss.collect.android.fieldsight.activities.DashboardActivity">
 
         <android.support.design.widget.AppBarLayout
-            android:transitionName="@string/shared_transition_toolbar"
             android:id="@+id/act_dashboard_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:transitionName="@string/shared_transition_toolbar">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/act_dashboard_collapsing_toolbar_layout"
@@ -40,13 +40,13 @@
 
 
                 <android.support.v7.widget.Toolbar
-                    app:navigationIcon="@drawable/navigate_back_button"
                     android:id="@+id/act_dashboard_toolbar"
-
                     android:layout_width="match_parent"
+
                     android:layout_height="?android:attr/actionBarSize"
                     android:background="@null"
                     app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/navigate_back_button"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     app:subtitle="Sites"
                     app:title="Project Name"
@@ -61,8 +61,8 @@
         <include layout="@layout/dashboard_tab" />
 
 
-    </android.support.design.widget.CoordinatorLayout>
 
+    </android.support.design.widget.CoordinatorLayout>
 
 
     <android.support.design.widget.NavigationView

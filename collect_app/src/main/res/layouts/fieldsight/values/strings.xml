@@ -79,6 +79,8 @@
     <string
         translatable="false"
         name="shared_transition_toolbar">toolbar_shared_transition</string>
+    <string name="btn_add_site_photo">Add Site photo</string>
+    <string name="toolbar_title_offline_site">Create Site</string>
 
 
 </resources>

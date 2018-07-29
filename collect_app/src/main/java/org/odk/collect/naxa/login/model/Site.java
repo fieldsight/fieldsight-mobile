@@ -258,7 +258,28 @@ public class Site implements Parcelable {
         dest.writeInt(this.isSiteVerified);
     }
 
-    public Site() {
+    public Site(@NonNull String id, String latitude, String longitude, String identifier, String name, Integer typeId, String typeLabel, String phone, String address, String publicDesc, String additionalDesc, String logo, Boolean isActive, String location, Boolean isSurvey, String dateCreated, String project, int isSiteVerified, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.identifier = identifier;
+        this.name = name;
+        this.typeId = typeId;
+        this.typeLabel = typeLabel;
+        this.phone = phone;
+        this.address = address;
+        this.publicDesc = publicDesc;
+        this.additionalDesc = additionalDesc;
+        this.logo = logo;
+        this.isActive = isActive;
+        this.location = location;
+        this.isSurvey = isSurvey;
+        this.dateCreated = dateCreated;
+        this.project = project;
+        this.isSiteVerified = isSiteVerified;
+        this.generalFormDeployedFrom = generalFormDeployedFrom;
+        this.stagedFormDeployedFrom = stagedFormDeployedFrom;
+        this.scheduleFormDeployedForm = scheduleFormDeployedForm;
     }
 
     protected Site(Parcel in) {
@@ -288,7 +309,7 @@ public class Site implements Parcelable {
     public static final Parcelable.Creator<Site> CREATOR = new Parcelable.Creator<Site>() {
         @Override
         public Site createFromParcel(Parcel source) {
-            return new Site(source);
+            return new SiteBuilder().setIn(source).createSite();
         }
 
         @Override

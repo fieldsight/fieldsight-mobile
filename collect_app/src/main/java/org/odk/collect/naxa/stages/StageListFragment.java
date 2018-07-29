@@ -25,7 +25,7 @@ import org.odk.collect.naxa.common.OnFormItemClickListener;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.common.utilities.FlashBarUtils;
-import org.odk.collect.naxa.generalforms.ViewModelFactory;
+import org.odk.collect.naxa.common.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.stages.data.Stage;
 import org.odk.collect.naxa.substages.SubStageListFragment;

@@ -26,6 +26,8 @@ public class Constant {
         public static final int RC_STORAGE = 1235;
         public static final int RC_LOCATION = 1236;
         public static final int GEOPOINT_RESULT_CODE = 1994;
+        public static final int SELECT_FILE = 1993;
+
     }
 
     public final static class ANIM {

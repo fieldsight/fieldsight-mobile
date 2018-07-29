@@ -32,7 +32,7 @@ import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.RecyclerViewEmptySupport;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.common.utilities.FlashBarUtils;
-import org.odk.collect.naxa.generalforms.ViewModelFactory;
+import org.odk.collect.naxa.common.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.onboarding.DownloadActivity;
 import org.odk.collect.naxa.project.adapter.MyProjectsAdapter;

@@ -14,13 +14,10 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.naxa.common.Connectivity;
 import org.odk.collect.naxa.common.FieldSightUserSession;
-import org.odk.collect.naxa.generalforms.ViewModelFactory;
+import org.odk.collect.naxa.common.ViewModelFactory;
 import org.odk.collect.naxa.generalforms.GeneralFormViewModel;
 import org.odk.collect.naxa.login.model.Site;
-import org.odk.collect.naxa.project.ProjectListActivity;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;

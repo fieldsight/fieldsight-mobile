@@ -6,7 +6,7 @@
     <color name="colorPrimary">#00628e</color>
     <color name="colorPrimaryDark">#003860</color>
     <color name="colorAccent">#4b8fbe</color>
-    <color name="colorTransparentBlueTop">#f02196f3</color>
+    <color name="colorTransparentBlueTop">#f000628e</color>
     <color name="colorTransparentBlue">#DE00628e</color>
     <color name="transparent">#00ffffff</color>
     <color name="colorGreenPrimaryLight">#43A047</color>

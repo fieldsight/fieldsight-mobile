@@ -169,9 +169,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
 
     private void setupAnimation() {
-        pager.setVisibility(View.INVISIBLE);
-        hideTabs();
-        pager.animate().alpha(0.0f).start();
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -180,14 +177,15 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
             sharedElementEnterTransition.addListener(new Transition.TransitionListener() {
                 @Override
                 public void onTransitionStart(Transition transition) {
+                    pager.setVisibility(View.INVISIBLE);
+                    hideTabs();
+                    pager.animate().alpha(0.0f).start();
                 }
 
                 @Override
                 public void onTransitionEnd(Transition transition) {
-
-
                     pager.setVisibility(View.VISIBLE);
-
+                    pager.animate().alpha(1.0f).start();
                     showTabs();
                 }
 
@@ -356,6 +354,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     private void handleNavDrawerClicks(int id) {
         switch (id) {
             case R.id.nav_create_offline_site:
+
+
 //                Intent toCollectSite = new Intent(this, CreateOfflineSiteActivity.class);
 //                toCollectSite.putExtra(EXTRA_OBJECT, loadedProject);
 //                startActivity(toCollectSite);

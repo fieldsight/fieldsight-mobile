@@ -1,4 +1,4 @@
-package org.odk.collect.naxa.generalforms;
+package org.odk.collect.naxa.common;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -6,10 +6,10 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
+import org.odk.collect.naxa.generalforms.GeneralFormViewModel;
 import org.odk.collect.naxa.generalforms.data.GeneralFormLocalSource;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRepository;
-import org.odk.collect.naxa.project.ProjectView;
 import org.odk.collect.naxa.project.data.ProjectLocalSource;
 import org.odk.collect.naxa.project.data.ProjectRepository;
 import org.odk.collect.naxa.project.data.ProjectSitesRemoteSource;
@@ -18,6 +18,7 @@ import org.odk.collect.naxa.scheduled.data.ScheduledFormRepository;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormViewModel;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormsLocalSource;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
+import org.odk.collect.naxa.site.CreateSiteViewModel;
 import org.odk.collect.naxa.stages.StageFormRepository;
 import org.odk.collect.naxa.stages.StageViewModel;
 import org.odk.collect.naxa.stages.data.StageLocalSource;
@@ -61,11 +62,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
                 if (INSTANCE == null) {
                     GeneralFormRepository generalFormRepository = GeneralFormRepository.getInstance(
                             GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
-
-
                     ScheduledFormRepository scheduledFormRepository = ScheduledFormRepository.getInstance(
                             ScheduledFormsLocalSource.getInstance(), ScheduledFormsRemoteSource.getInstance());
-
 
                     StageFormRepository stageFormRepository = StageFormRepository.getInstance(StageLocalSource.getInstance(), StageRemoteSource.getInstance());
                     SubStageRepository subStageRepository = SubStageRepository.getInstance(SubStageLocalSource.getInstance(), StageRemoteSource.getInstance());
@@ -77,6 +75,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         }
         return INSTANCE;
     }
+
 
     @NonNull
     @Override
@@ -96,6 +95,10 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(ProjectViewModel.class)) {
             //noinspection unchecked
             return (T) new ProjectViewModel(projectRepository);
+        }
+        else if (modelClass.isAssignableFrom(CreateSiteViewModel.class)) {
+            //noinspection unchecked
+            return (T) new CreateSiteViewModel();
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());

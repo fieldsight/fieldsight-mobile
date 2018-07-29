@@ -11,18 +11,13 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorInt;
 import android.support.annotation.StringRes;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 
 import org.odk.collect.android.R;
 
 
 public final class DialogFactory {
-
-
 
 
     public static Dialog createSimpleOkErrorDialog(Context context, String title, String message) {
@@ -154,4 +149,11 @@ public final class DialogFactory {
         return builder.create();
     }
 
+
+    public static AlertDialog.Builder createListActionDialog(Context context, String title, CharSequence[] items, DialogInterface.OnClickListener onClickListener) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.RiseUpDialog);
+        builder.setTitle(title).setItems(items, onClickListener);
+        return builder;
+    }
 }
