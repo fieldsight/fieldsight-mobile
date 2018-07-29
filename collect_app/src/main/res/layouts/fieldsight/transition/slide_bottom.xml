@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<slide xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:interpolator/accelerate_decelerate"
+    android:slideEdge="bottom"
+    android:duration="@android:integer/config_mediumAnimTime"
+    android:transitionOrdering="sequential">
+
+
+    <targets>
+        <target android:excludeId="@android:id/statusBarBackground" />
+        <target android:excludeId="@id/action_bar_container" />
+        <target android:excludeId="@android:id/navigationBarBackground" />
+    </targets>
+</slide>

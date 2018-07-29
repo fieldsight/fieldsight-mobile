@@ -2,12 +2,13 @@
 <transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:transitionOrdering="together"
-    android:interpolator="@android:interpolator/overshoot"
+    android:interpolator="@android:interpolator/accelerate_decelerate"
     tools:targetSdkVersion="21">
     <targets>
         <target android:excludeId="@android:id/navigationBarBackground" />
         <target android:excludeId="@id/action_bar_container" />
         <target android:excludeId="@android:id/statusBarBackground" />
+
     </targets>
 
 

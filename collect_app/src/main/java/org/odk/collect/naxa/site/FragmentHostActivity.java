@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
@@ -41,6 +42,8 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_dashboard);
         loadedSite = getIntent().getExtras().getParcelable(EXTRA_OBJECT);

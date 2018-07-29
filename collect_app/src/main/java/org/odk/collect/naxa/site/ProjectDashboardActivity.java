@@ -1,5 +1,8 @@
 package org.odk.collect.naxa.site;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
@@ -30,6 +33,8 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionListenerAdapter;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -133,11 +138,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_dashboard);
-        initAnimation();
 
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
@@ -157,6 +163,50 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         setupNavigation();
         setupNavigationHeader();
 
+        setupAnimation();
+
+    }
+
+
+    private void setupAnimation() {
+        pager.setVisibility(View.INVISIBLE);
+        hideTabs();
+        pager.animate().alpha(0.0f).start();
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Transition sharedElementEnterTransition = getWindow().getSharedElementEnterTransition();
+
+            sharedElementEnterTransition.addListener(new Transition.TransitionListener() {
+                @Override
+                public void onTransitionStart(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionEnd(Transition transition) {
+
+
+                    pager.setVisibility(View.VISIBLE);
+
+                    showTabs();
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+                }
+            });
+        } else {
+            pager.setVisibility(View.VISIBLE);
+            showTabs();
+        }
     }
 
 
@@ -168,18 +218,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
             }
         });
 
-    }
-
-    private void initAnimation() {
-        Explode explode = null;
-        Slide slide = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            explode = new Explode();
-            slide = new Slide();
-            slide.setDuration(1000);
-            slide.setSlideEdge(Gravity.BOTTOM);
-            //   getWindow().setEnterTransition(slide);
-        }
     }
 
 
@@ -364,10 +402,10 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
             public void onStateChanged(AppBarLayout appBarLayout, int state) {
                 switch (state) {
                     case State.EXPANDED:
-                        hideTabs();
+                        showTabs();
                         break;
                     case State.COLLAPSED:
-                        showTabs();
+                        hideTabs();
                         break;
                     case State.IDLE:
                         break;
@@ -377,15 +415,15 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     }
 
     private void hideTabs() {
-        fabTabSitelist.show();
-        fabTabContactList.show();
-        fabMap.show();
-    }
-
-    private void showTabs() {
         fabTabSitelist.hide();
         fabTabContactList.hide();
         fabMap.hide();
+    }
+
+    private void showTabs() {
+        fabTabSitelist.show();
+        fabTabContactList.show();
+        fabMap.show();
     }
 
     private void setupToolbar() {
@@ -430,13 +468,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         ViewUtils.setButtonTint(fabTabSitelist, ColorStateList.valueOf(Color.parseColor("#4b8fbe")));
     }
 
-
-    @Override
-    public void onEnterAnimationComplete() {
-        super.onEnterAnimationComplete();
-        pager.setVisibility(View.VISIBLE);
-
-    }
 
     private void setViewpager() {
 

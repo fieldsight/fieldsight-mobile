@@ -76,5 +76,9 @@
     <string name="download_update_error_message">Failed to update latest %s information</string>
     <string name="msg_schedule_form_found"> %1$d schedules forms found in %2$s</string>
 
+    <string
+        translatable="false"
+        name="shared_transition_toolbar">toolbar_shared_transition</string>
+
 
 </resources>

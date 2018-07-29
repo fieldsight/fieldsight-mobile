@@ -10,6 +10,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Pair;
@@ -193,9 +194,15 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
     private void setupWindowTransition() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Transition slide = TransitionInflater.from(this).inflateTransition(R.transition.slide);
-            getWindow().setEnterTransition(slide);
-            getWindow().setExitTransition(slide);
+            Transition slide = TransitionInflater.from(this).inflateTransition(R.transition.slide_top);
+            Transition exit = TransitionInflater.from(this).inflateTransition(R.transition.slide_bottom);
+
+            Fade fade = new Fade();
+            fade.setDuration(1000);
+
+//            getWindow().setEnterTransition(fade);
+//            getWindow().setExitTransition(fade);
+
         }
     }
 }

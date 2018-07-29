@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
     tools:openDrawer="start">
 
     <android.support.design.widget.CoordinatorLayout
@@ -15,7 +16,7 @@
         tools:context="org.bcss.collect.android.fieldsight.activities.DashboardActivity">
 
         <android.support.design.widget.AppBarLayout
-            android:transitionName="simple_activity_transition"
+            android:transitionName="@string/shared_transition_toolbar"
             android:id="@+id/act_dashboard_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

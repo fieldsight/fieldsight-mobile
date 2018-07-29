@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fade xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_mediumAnimTime"
+    android:startDelay="@android:integer/config_longAnimTime"
+    android:transitionOrdering="sequential">
+
+
+    <targets>
+        <target android:excludeId="@android:id/statusBarBackground" />
+        <target android:excludeId="@id/action_bar_container" />
+        <target android:excludeId="@android:id/navigationBarBackground" />
+        <target android:excludeId="@id/pager" />
+        <target android:excludeId="@id/tabs" />
+    </targets>
+</fade>

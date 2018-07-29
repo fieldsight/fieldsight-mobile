@@ -131,6 +131,8 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void onUselessLayoutClicked(Site site) {
+
+
         FragmentHostActivity.start(getActivity(),site);
     }
 
