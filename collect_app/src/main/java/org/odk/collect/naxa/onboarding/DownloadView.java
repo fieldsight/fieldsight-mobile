@@ -1,9 +1,12 @@
 package org.odk.collect.naxa.onboarding;
 
+import android.arch.lifecycle.LifecycleOwner;
+
+import java.util.List;
+
 interface DownloadView {
-    void toggleAll();
 
-    void closeDownloadView();
+    void setUpRecyclerView(List<SyncableItems> syncableItems);
 
-    void downloadSelected();
+    LifecycleOwner getLifeCycleOwner();
 }

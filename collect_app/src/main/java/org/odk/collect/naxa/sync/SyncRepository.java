@@ -50,7 +50,6 @@ public class SyncRepository {
                     @Override
                     public void onError(Throwable t) {
                         t.printStackTrace();
-
                     }
 
                     @Override
