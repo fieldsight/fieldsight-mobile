@@ -148,18 +148,14 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     @Override
                     public void onSuccess(ArrayList<GeneralForm> generalForms) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
-                        syncRepository.hideProgress(Constant.DownloadUID.GENERAL_FORMS);
-                        syncRepository.updateDate(Constant.DownloadUID.GENERAL_FORMS);
-                        syncRepository.updateStatus(Constant.DownloadUID.GENERAL_FORMS, Constant.DownloadStatus.COMPLETED);
+                        syncRepository.setSuccess(Constant.DownloadUID.GENERAL_FORMS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_ERROR));
-                        syncRepository.hideProgress(Constant.DownloadUID.GENERAL_FORMS);
-                        syncRepository.updateDate(Constant.DownloadUID.GENERAL_FORMS);
-                        syncRepository.updateStatus(Constant.DownloadUID.GENERAL_FORMS, Constant.DownloadStatus.FAILED);
+                        syncRepository.setFailed(Constant.DownloadUID.GENERAL_FORMS);
                     }
                 });
 

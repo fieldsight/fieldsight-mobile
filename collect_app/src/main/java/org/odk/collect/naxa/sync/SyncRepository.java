@@ -73,24 +73,36 @@ public class SyncRepository {
         updateField(uid, PROGRESS, true, null);
     }
 
-    public void hideProgress(int uid) {
-        updateField(uid, PROGRESS, false, null);
-    }
-
     public void setAllCheckedTrue() {
         updateField(0, STATUS_ALL, true, null);
     }
 
-    public void updateDate(int uid) {
+    public void updateStatus(int uid, int status) {
+        updateField(uid, STATUS, false, String.valueOf(status));
+    }
+
+    public void setSuccess(int uid){
+        hideProgress(uid);
+        updateDate(uid);
+        updateStatus(uid, Constant.DownloadStatus.COMPLETED);
+    }
+
+    public void setFailed(int uid){
+        hideProgress(uid);
+        updateDate(uid);
+        updateStatus(uid, Constant.DownloadStatus.FAILED);
+    }
+
+    private void hideProgress(int uid) {
+        updateField(uid, PROGRESS, false, null);
+    }
+
+    private void updateDate(int uid) {
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa");
         String formattedDate = df.format(date);
         updateField(uid, DATE, false, formattedDate);
         hideProgress(uid);
-    }
-
-    public void updateStatus(int uid, int status) {
-        updateField(uid, STATUS, false, String.valueOf(status));
     }
 
     private void updateField(int uid, String code, boolean value, String stringValue) {
