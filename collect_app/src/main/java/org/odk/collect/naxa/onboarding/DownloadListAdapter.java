@@ -6,12 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
     private ArrayList<SyncableItems> syncableItems;
     private int selectedItemCount = 0;
 
-    DownloadListAdapter(ArrayList<SyncableItems> syncableItems) {
+    public DownloadListAdapter(ArrayList<SyncableItems> syncableItems) {
         this.syncableItems = syncableItems;
         syncRepository = new SyncRepository(Collect.getInstance());
     }
@@ -91,7 +89,6 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
     }
 
     public int getSelectedItemsCount() {
-
         return selectedItemCount;
     }
 
@@ -100,7 +97,6 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
         RelativeLayout rootLayout;
         CheckedItem checkedItem;
 
-
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
             rootLayout = itemLayoutView.findViewById(R.id.layout_download_list_item);
@@ -108,8 +104,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
             rootLayout.setOnClickListener(v -> {
                 SyncableItems syncableItem = syncableItems.get(getAdapterPosition());
-//                checkedItem.toggle();
-                if (syncableItem.isChecked()) {
+                if (checkedItem.isChecked()) {
                     syncRepository.setChecked(syncableItem.getUid(), false);
                 } else {
                     syncRepository.setChecked(syncableItem.getUid(), true);

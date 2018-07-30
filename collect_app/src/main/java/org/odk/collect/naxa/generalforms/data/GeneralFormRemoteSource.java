@@ -18,6 +18,7 @@ import org.odk.collect.naxa.onboarding.XMLForm;
 import org.odk.collect.naxa.onboarding.XMLFormBuilder;
 import org.odk.collect.naxa.project.data.ProjectLocalSource;
 import org.odk.collect.naxa.project.data.ProjectRepository;
+import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -41,6 +42,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     private static GeneralFormRemoteSource INSTANCE;
     private ProjectLocalSource projectLocalSource;
+    private SyncRepository syncRepository;
 
     public static GeneralFormRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -52,6 +54,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     public GeneralFormRemoteSource() {
         this.projectLocalSource = ProjectLocalSource.getInstance();
+        this.syncRepository = new SyncRepository(Collect.getInstance());
     }
 
 
@@ -145,13 +148,18 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     @Override
                     public void onSuccess(ArrayList<GeneralForm> generalForms) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
+                        syncRepository.hideProgress(Constant.DownloadUID.GENERAL_FORMS);
+                        syncRepository.updateDate(Constant.DownloadUID.GENERAL_FORMS);
+                        syncRepository.updateStatus(Constant.DownloadUID.GENERAL_FORMS, Constant.DownloadStatus.COMPLETED);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_ERROR));
-
+                        syncRepository.hideProgress(Constant.DownloadUID.GENERAL_FORMS);
+                        syncRepository.updateDate(Constant.DownloadUID.GENERAL_FORMS);
+                        syncRepository.updateStatus(Constant.DownloadUID.GENERAL_FORMS, Constant.DownloadStatus.FAILED);
                     }
                 });
 

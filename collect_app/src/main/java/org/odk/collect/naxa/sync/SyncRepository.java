@@ -15,8 +15,8 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 import static org.odk.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.odk.collect.naxa.common.Constant.SyncableNames.GENERAL_FORMS;
@@ -31,26 +31,34 @@ public class SyncRepository {
     private final String PROGRESS = "progress";
     private final String DATE = "date";
     private final String STATUS = "status";
+    private final String STATUS_ALL = "status_all";
 
     public SyncRepository(Application application) {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(application);
         this.syncDao = database.getSyncDAO();
 
         syncDao.getItemCount()
-                .single(0)
-                .subscribe(new DisposableSingleObserver<Integer>() {
+                .subscribeOn(Schedulers.io())
+                .subscribe(new DisposableSubscriber<Integer>() {
                     @Override
-                    public void onSuccess(Integer count) {
-                        if (count == 0)
+                    public void onNext(Integer count) {
+                        if (count == 0) {
                             init();
+                        }
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        init();
+                    public void onError(Throwable t) {
+                        t.printStackTrace();
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
+
     }
 
     public void insert(SyncableItems... items) {
@@ -67,6 +75,10 @@ public class SyncRepository {
 
     public void hideProgress(int uid) {
         updateField(uid, PROGRESS, false, null);
+    }
+
+    public void setAllCheckedTrue() {
+        updateField(0, STATUS_ALL, true, null);
     }
 
     public void updateDate(int uid) {
@@ -99,6 +111,9 @@ public class SyncRepository {
                                 break;
                             case STATUS:
                                 syncDao.updateStatus(uid, Integer.parseInt(stringValue));
+                                break;
+                            case STATUS_ALL:
+                                syncDao.setAllCheckedTrue(true);
                         }
                     }
 

@@ -53,7 +53,7 @@ public class DownloadModelImpl implements DownloadModel {
     private ArrayList<HashMap<String, String>> formList;
     private DownloadFormListTask downloadFormListTask;
 
-    DownloadModelImpl() {
+    public DownloadModelImpl() {
         this.generalFormRepository = GeneralFormRepository.getInstance(GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
         formList = new ArrayList<>();
 
@@ -62,7 +62,6 @@ public class DownloadModelImpl implements DownloadModel {
     @Deprecated
     @Override
     public void fetchGeneralForms() {
-
         new GeneralFormRemoteSource().getAll();
     }
 

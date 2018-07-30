@@ -34,9 +34,13 @@ public interface SyncDao {
     @Query("UPDATE sync SET checked=:value WHERE uid=:key")
     void updateChecked(int key, boolean value);
 
+    @Query("UPDATE sync SET checked=:value")
+    void setAllCheckedTrue(boolean value);
+
     @Query("UPDATE sync SET lastSyncDateTime=:value WHERE uid=:key")
     void updateDate(int key, String value);
 
     @Query("UPDATE sync SET downloadingStatus=:status WHERE uid=:key")
     void updateStatus(int key, int status);
+
 }

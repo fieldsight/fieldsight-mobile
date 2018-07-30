@@ -18,8 +18,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.anim.ScaleUpAndDownItemAnimator;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
+import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.odk.collect.naxa.project.ProjectListActivity;
 import org.odk.collect.naxa.sync.SyncRepository;
 
@@ -105,16 +107,17 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         recyclerView.setItemAnimator(new ScaleUpAndDownItemAnimator());
 
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        downloadListAdapter = new DownloadListAdapter(syncableItems);
-        recyclerView.setAdapter(downloadListAdapter);
 
+        syncRepository.setAllCheckedTrue();
         syncRepository.getAllSyncItems()
                 .observe(this, new Observer<List<SyncableItems>>() {
                     @Override
                     public void onChanged(@Nullable List<SyncableItems> items) {
-                        downloadListAdapter.updateList(items);
+                        downloadListAdapter = new DownloadListAdapter((ArrayList<SyncableItems>) items);
+                        recyclerView.setAdapter(downloadListAdapter);
                     }
                 });
+
     }
 
     @Override
@@ -218,7 +221,25 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
                 break;
             case R.id.download_button:
-                downloadPresenter.onDownloadSelectedButtonClick(downloadListAdapter.getList());
+//                downloadPresenter.onDownloadSelectedButtonClick(downloadListAdapter.getList());
+                syncRepository.getAllSyncItems().observe(this,
+                        new Observer<List<SyncableItems>>() {
+                            @Override
+                            public void onChanged(@Nullable List<SyncableItems> syncableItemsList) {
+                                syncableItems = (ArrayList<SyncableItems>) syncableItemsList;
+
+                            }
+                        });
+                for (SyncableItems syncableItem : syncableItems) {
+                    if (syncableItem.isChecked()) {
+                        syncRepository.showProgress(syncableItem.getUid());
+                        switch (syncableItem.getUid()) {
+                            case Constant.DownloadUID.GENERAL_FORMS:
+                                new GeneralFormRemoteSource().getAll();
+                                break;
+                        }
+                    }
+                }
                 break;
         }
     }
