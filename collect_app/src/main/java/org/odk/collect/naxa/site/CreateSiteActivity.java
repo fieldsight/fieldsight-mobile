@@ -2,9 +2,11 @@ package org.odk.collect.naxa.site;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
@@ -23,6 +25,7 @@ import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.common.ViewModelFactory;
+import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.login.model.SiteBuilder;
 
@@ -32,6 +35,9 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
+
+import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class CreateSiteActivity extends CollectAbstractActivity {
 
@@ -70,7 +76,13 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     private File image;
     private CreateSiteViewModel createSiteViewModel;
-    private Site site;
+    private Project project;
+
+    public static void start(Context context, @NonNull Project project) {
+        Intent intent = new Intent(context, CreateSiteActivity.class);
+        intent.putExtra(EXTRA_OBJECT, project);
+        context.startActivity(intent);
+    }
 
 
     @Override
@@ -78,6 +90,16 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_create);
         ButterKnife.bind(this);
+
+        try {
+            project = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
+        } catch (NullPointerException e) {
+            Timber.e("Can't start activity without project extra_object");
+            ToastUtils.showLongToast(getString(R.string.msg_failed_to_load));
+            finish();
+        }
+
+
         setupToolbar();
         setupViewModel();
         setupSaveBtn();
@@ -114,9 +136,12 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 .observe(this, new Observer<Site>() {
                     @Override
                     public void onChanged(@Nullable Site site) {
-                        setSite(site);
+
                     }
                 });
+
+        createSiteViewModel.getProjectMutableLiveData().setValue(project);
+
     }
 
 
@@ -149,9 +174,16 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String mockedSiteId = String.valueOf(System.currentTimeMillis());
 
-                Site site = new SiteBuilder().setName(getText(tiSiteName))
-                        .setIdentifier(getText(tiSiteIdentifier)).createSite();
+                Site site = new SiteBuilder()
+                        .setName(getText(tiSiteName))
+                        .setId(mockedSiteId)
+                        .setIdentifier(getText(tiSiteIdentifier))
+                        .setName(getText(tiSiteName))
+                        .setPhone(getText(tiSitePhone))
+                        .setPublicDesc(getText(tiSitePublicDesc))
+                        .createSite();
                 createSiteViewModel.setSite(site);
                 createSiteViewModel.saveSite();
             }
@@ -194,7 +226,18 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 default:
                     break;
             }
-        });
+        }).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Constant.Key.RC_CAMERA:
+                break;
+            case Constant.Key.RC_STORAGE:
+                break;
+        }
     }
 
     @OnClick(R.id.btnCollectSiteRecordLocation)
@@ -202,10 +245,6 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     }
 
-    public void setSite(Site site) {
-        site.setName(getText(tiSiteName));
-        site.setIdentifier(getText(tiSiteIdentifier));
-    }
 
     private String getText(TextInputLayout textInputLayout) {
         return Objects.requireNonNull(textInputLayout.getEditText()).getText().toString();

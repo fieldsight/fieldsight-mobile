@@ -354,7 +354,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     private void handleNavDrawerClicks(int id) {
         switch (id) {
             case R.id.nav_create_offline_site:
-
+                CreateSiteActivity.start(this, loadedProject);
 
 //                Intent toCollectSite = new Intent(this, CreateOfflineSiteActivity.class);
 //                toCollectSite.putExtra(EXTRA_OBJECT, loadedProject);

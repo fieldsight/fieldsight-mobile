@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Dao
-public interface SiteDao {
+public interface SiteDao  {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Site... sites);

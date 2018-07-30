@@ -9,6 +9,8 @@ import org.odk.collect.naxa.login.model.MySites;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
+import org.odk.collect.naxa.site.db.SiteLocalSource;
+import org.odk.collect.naxa.site.db.SiteRemoteSource;
 import org.odk.collect.naxa.site.db.SiteRepository;
 
 import java.util.List;
@@ -34,7 +36,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     }
 
     public ProjectSitesRemoteSource() {
-        siteRepository = new SiteRepository();
+        siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
         projectLocalSource = ProjectLocalSource.getInstance();
     }
 
@@ -47,7 +49,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> Observable.just(meResponse.getData().getMySitesModel()))
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(mySites -> {
-                    siteRepository.insertSitesAsVerified(mySites.getSite(), mySites.getProject());
+                    siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
                     projectLocalSource.save(mySites.getProject());
                     return mySites.getProject();
                 })

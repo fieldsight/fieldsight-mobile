@@ -3,56 +3,89 @@ package org.odk.collect.naxa.site.db;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.common.BaseRepository;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.FieldSightDatabase;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
+import org.odk.collect.naxa.generalforms.data.GeneralFormLocalSource;
+import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
+import org.odk.collect.naxa.generalforms.data.GeneralFormRepository;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class SiteRepository {
+public class SiteRepository implements BaseRepository<GeneralForm> {
 
-    private SiteDao mSiteDao;
+    private static SiteRepository INSTANCE = null;
+    private final SiteLocalSource localSource;
+    private final SiteRemoteSource remoteSource;
 
-    public SiteRepository() {
-        FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());
-        this.mSiteDao = database.getSiteDAO();
+
+
+    public static SiteRepository getInstance(SiteLocalSource localSource, SiteRemoteSource remoteSource) {
+        if (INSTANCE == null) {
+            synchronized (SiteRepository.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new SiteRepository(localSource, remoteSource);
+                }
+            }
+        }
+        return INSTANCE;
     }
 
 
+    private SiteRepository(@NonNull SiteLocalSource localSource, @NonNull SiteRemoteSource remoteSource) {
+        this.localSource = localSource;
+        this.remoteSource = remoteSource;
+    }
+
     public List<Site> searchSites(String searchQuery) {
-        return mSiteDao.searchSites(searchQuery);
+        return localSource.searchSites(searchQuery);
     }
 
     public LiveData<List<Site>> getAllSites() {
-        return mSiteDao.getSites();
+        return localSource.getAll();
     }
 
     public LiveData<List<Site>> getSiteByProjectId(String projectID) {
-        return mSiteDao.getSiteByProjectId(projectID);
+        return localSource.getById(projectID);
     }
 
-    public void insertSitesAsVerified(Site site, Project project) {
+    public void saveSitesAsVerified(Site site, Project project) {
         site.setIsSiteVerified(Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
         site.setProject(project.getId());
-        new insertAsyncTask(mSiteDao).execute(site);
+        AsyncTask.execute(() -> localSource.save(site));
+    }
+
+
+    @Override
+    public LiveData<List<GeneralForm>> getAll(boolean forceUpdate) {
+        return null;
+    }
+
+    @Override
+    public void save(GeneralForm... items) {
 
     }
 
-    private static class insertAsyncTask extends AsyncTask<Site, Void, Void> {
+    @Override
+    public void save(ArrayList<GeneralForm> items) {
 
-        private SiteDao mAsyncTaskDao;
+    }
 
-        insertAsyncTask(SiteDao dao) {
-            mAsyncTaskDao = dao;
-        }
+    @Override
+    public void updateAll(ArrayList<GeneralForm> items) {
 
-        @Override
-        protected Void doInBackground(final Site... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
+    }
+
+    public void saveSiteAsOffline(Site site, Project project) {
+        site.setIsSiteVerified(Constant.SiteStatus.IS_UNVERIFIED_SITE);
+        site.setProject(project.getId());
+        AsyncTask.execute(() -> localSource.save(site));
     }
 }

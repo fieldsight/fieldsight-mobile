@@ -6,7 +6,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 
@@ -19,16 +18,12 @@ public class SiteViewModel extends AndroidViewModel {
 
     public SiteViewModel(@NonNull Application application) {
         super(application);
-        this.mSiteRepository = new SiteRepository();
+        this.mSiteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
 
     }
 
     public List<Site> searchSites(String searchQuery) {
         return mSiteRepository.searchSites(searchQuery);
-    }
-
-    public LiveData<List<Site>> getmAllSites() {
-        return mSiteRepository.getAllSites();
     }
 
     public LiveData<List<Site>> getSiteByProject(Project project) {
@@ -37,6 +32,6 @@ public class SiteViewModel extends AndroidViewModel {
 
 
     public void insertSitesAsVerified(Site site, Project project) {
-        mSiteRepository.insertSitesAsVerified(site,project);
+        mSiteRepository.saveSitesAsVerified(site, project);
     }
 }

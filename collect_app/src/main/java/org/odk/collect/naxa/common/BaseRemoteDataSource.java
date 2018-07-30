@@ -10,4 +10,5 @@ public interface BaseRemoteDataSource<T> {
 
     void getAll();
 
-  }
+
+}
