@@ -1,19 +1,20 @@
 package org.odk.collect.naxa.site.db;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseLocalDataSource;
+import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.FieldSightDatabase;
-import org.odk.collect.naxa.login.model.Project;
+import org.odk.collect.naxa.common.SingleLiveEvent;
 import org.odk.collect.naxa.login.model.Site;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.odk.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED;
-import static org.odk.collect.naxa.common.Constant.SiteStatus.IS_UNVERIFIED_SITE;
+import timber.log.Timber;
 
 public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
@@ -46,6 +47,11 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteByProjectId(projectId);
     }
 
+    //todo return affected rows count
+    public void delete(Site site) {
+        AsyncTask.execute(() -> dao.delete(site));
+    }
+
 
     public List<Site> searchSites(String searchQuery) {
         return dao.searchSites(searchQuery);
@@ -63,6 +69,28 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     @Override
     public void updateAll(ArrayList<Site> items) {
+
+    }
+
+    public void setSiteAsNotFinalized(String siteId) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                long i = dao.update(siteId, Constant.SiteStatus.IS_UNVERIFIED_SITE);
+                Timber.i("Nishon %s", i);
+            }
+        });
+
+    }
+
+    public void setSiteAsFinalized(String siteId) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                long i = dao.update(siteId, Constant.SiteStatus.IS_FINALIZED);
+                Timber.i("Nishon %s", i);
+            }
+        });
 
     }
 }

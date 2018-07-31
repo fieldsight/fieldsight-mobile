@@ -9,6 +9,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseRepository;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.FieldSightDatabase;
+import org.odk.collect.naxa.common.SingleLiveEvent;
 import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.generalforms.data.GeneralFormLocalSource;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
@@ -84,8 +85,14 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
     }
 
     public void saveSiteAsOffline(Site site, Project project) {
-        site.setIsSiteVerified(Constant.SiteStatus.IS_UNVERIFIED_SITE);
+         site.setIsSiteVerified(Constant.SiteStatus.IS_UNVERIFIED_SITE);
         site.setProject(project.getId());
-        AsyncTask.execute(() -> localSource.save(site));
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                localSource.save(site);
+            }
+        });
+
     }
 }

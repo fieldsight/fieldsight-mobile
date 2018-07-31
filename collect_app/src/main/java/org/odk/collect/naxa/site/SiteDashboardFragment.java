@@ -1,5 +1,6 @@
 package org.odk.collect.naxa.site;
 
+import android.arch.lifecycle.Observer;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.generalforms.GeneralFormsFragment;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormsFragment;
+import org.odk.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.naxa.stages.StageListFragment;
 
 import java.io.File;
@@ -89,7 +91,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
         bindUI(rootView);
-        hideSendButtonIfMockedSite(rootView, loadedSite.getId());
+        hideSendButtonIfMockedSite(rootView);
         setupPopup();
         setupToolbar();
 
@@ -140,23 +142,22 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void deleteSite(Site loadedSite) {
-//        int affectedRows = DatabaseHelper.getInstance().deleteSite(loadedSite);
-        int affectedRows = -1;
+        int affectedRows = 1;
 
         switch (affectedRows) {
             case 1:
                 ToastUtils.showShortToast(getString(R.string.msg_delete_sucess, loadedSite.getName()));
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getActivity().onBackPressed();
-                    }
-                }, 500);
+                new Handler().postDelayed(() -> getActivity().onBackPressed(), 500);
                 break;
-            default:
+            case -1:
                 ToastUtils.showShortToast(getString(R.string.msg_delete_failed, loadedSite.getName()));
                 break;
+            default:
+                ToastUtils.showShortToast(getString(R.string.dialog_unexpected_error_title));
+                break;
         }
+
+
     }
 
 
@@ -212,10 +213,10 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     ToastUtils.showShortToast("Marked Finalized");
-                    //    DatabaseHelper.getInstance().setSiteAsFinalized(loadedSite.getId());
+                    SiteLocalSource.getInstance().setSiteAsFinalized(loadedSite.getId());
                 } else {
                     ToastUtils.showShortToast("Marked (Not) Finalized");
-                    //  DatabaseHelper.getInstance().setSiteAsNotFinalized(loadedSite.getId());
+                    SiteLocalSource.getInstance().setSiteAsNotFinalized(loadedSite.getId());
                 }
             }
         });
@@ -242,12 +243,11 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     }
 
-    private void hideSendButtonIfMockedSite(View rootView, String currentFormSiteId) {
+    private void hideSendButtonIfMockedSite(View rootView) {
 
-        Boolean isSiteMocked = false;
-        //Boolean isSiteMocked = DatabaseHelper.getInstance(getActivity().getApplicationContext()).isThisSiteOffline(currentFormSiteId);
+        Boolean isOfflineSite = loadedSite.getIsSiteVerified() != Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED;
 
-        if (isSiteMocked) {
+        if (isOfflineSite) {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(true);
             rootView.findViewById(R.id.site_option_btn_delete_site).setEnabled(true);

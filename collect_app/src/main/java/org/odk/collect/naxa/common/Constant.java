@@ -28,6 +28,7 @@ public class Constant {
         public static final int GEOPOINT_RESULT_CODE = 1994;
         public static final int SELECT_FILE = 1993;
 
+        public static int LOCATION_CAPTURE = 1995;
     }
 
     public final static class ANIM {

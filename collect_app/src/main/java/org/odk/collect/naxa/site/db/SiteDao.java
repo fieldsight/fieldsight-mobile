@@ -2,6 +2,7 @@ package org.odk.collect.naxa.site.db;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Dao
-public interface SiteDao  {
+public interface SiteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Site... sites);
@@ -27,8 +28,8 @@ public interface SiteDao  {
     @Query("SELECT * from sites WHERE project =  :projectID")
     LiveData<List<Site>> getSiteByProjectId(String projectID);
 
-    @Update
-    void update(Site site);
+    @Query("UPDATE sites SET isSiteVerified =:siteStatus WHERE id=:siteId")
+    long update(String siteId, int siteStatus);
 
     @Query("UPDATE sites SET generalFormDeployedFrom = :deployedFrom WHERE id = :siteId ")
     void updateGeneralFormDeployedFrom(String siteId, String deployedFrom);
@@ -40,4 +41,8 @@ public interface SiteDao  {
 
     @Query("UPDATE sites SET scheduleFormDeployedForm = :deployedFrom WHERE id = :siteId ")
     void updateScheduleFormDeployedFrom(String siteId, String deployedFrom);
+
+    @Delete
+    int delete(Site site);
+
 }

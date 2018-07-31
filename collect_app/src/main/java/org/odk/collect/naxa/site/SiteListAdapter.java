@@ -349,7 +349,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
 
-
     }
 
     private void resetCurrentIndex() {
@@ -390,7 +389,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 filteredModelList.add(model);
             }
         }
-        Timber.d("Found %s sites for search query ", filteredModelList.size(), query);
+        Timber.d("Found %s sites for search query %q", filteredModelList.size(), query);
         return filteredModelList;
     }
 

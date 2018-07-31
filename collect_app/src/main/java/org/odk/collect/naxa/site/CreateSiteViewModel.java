@@ -2,20 +2,26 @@ package org.odk.collect.naxa.site;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Log;
 
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.SingleLiveEvent;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.site.db.SiteRepository;
-import org.odk.collect.naxa.site.db.SiteViewModel;
 
-import java.util.Objects;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class CreateSiteViewModel extends ViewModel {
 
     private SiteRepository siteRepository;
-    private SingleLiveEvent<CreateSiteFormStatus> status = new SingleLiveEvent<CreateSiteFormStatus>();
+    private SingleLiveEvent<CreateSiteFormStatus> formStatus = new SingleLiveEvent<CreateSiteFormStatus>();
     private MutableLiveData<FormState> state = new MutableLiveData<FormState>();
     private MutableLiveData<Site> siteMutableLiveData = new MutableLiveData<Site>();
     private MutableLiveData<Project> projectMutableLiveData = new MutableLiveData<Project>();
@@ -24,8 +30,8 @@ public class CreateSiteViewModel extends ViewModel {
         this.siteRepository = siteRepository;
     }
 
-    public SingleLiveEvent<CreateSiteFormStatus> getStatus() {
-        return status;
+    public SingleLiveEvent<CreateSiteFormStatus> getFormStatus() {
+        return formStatus;
     }
 
     public MutableLiveData<FormState> getState() {
@@ -36,20 +42,38 @@ public class CreateSiteViewModel extends ViewModel {
         state.getValue().setProgressIndicatorShown(isProgressShow);
     }
 
-    public void setSiteType(Boolean show) {
-        state.getValue().setSiteTypeShown(show);
-    }
 
-    public void setSiteCluster(Boolean show) {
-        state.getValue().setSiteClusterShown(show);
-    }
+    public File generateImageFile(String imageName) {
 
+        String path = Collect.SITES_PATH +
+                File.separator +
+                imageName +
+                ".jpg";
+
+        int i = 2;
+        File f = new File(path);
+        while (f.exists()) {
+
+            path = Collect.SITES_PATH +
+                    File.separator +
+                    imageName +
+                    "_" +
+                    i +
+                    ".jpg";
+
+
+            f = new File(path);
+            i++;
+        }
+
+        return f;
+    }
 
     public void saveSite() {
         if (validateData()) {
-            //save site here
             siteRepository.saveSiteAsOffline(siteMutableLiveData.getValue(), projectMutableLiveData.getValue());
             ToastUtils.showShortToastInMiddle("Saving Site");
+            //todo check if saving site is faliling
 
         }
     }
@@ -63,18 +87,21 @@ public class CreateSiteViewModel extends ViewModel {
 
         String identifier = siteMutableLiveData.getValue().getIdentifier();
         String name = siteMutableLiveData.getValue().getName();
-        String siteId = siteMutableLiveData.getValue().getId();
+        String lat = siteMutableLiveData.getValue().getLatitude();
 
         if (identifier == null || identifier.length() <= 0) {
+            formStatus.setValue(CreateSiteFormStatus.EMPTY_SITE_IDENTIFIER);
             return false;
         }
 
-
-        if (siteId == null || siteId.length() <= 0) {
-            return false;
-        }
 
         if (name == null || name.length() <= 0) {
+            formStatus.setValue(CreateSiteFormStatus.EMPTY_SITE_NAME);
+            return false;
+        }
+
+        if (lat == null || lat.length() <= 0) {
+            formStatus.setValue(CreateSiteFormStatus.EMPTY_SITE_LOCATION);
             return false;
         }
 
@@ -90,7 +117,73 @@ public class CreateSiteViewModel extends ViewModel {
         return projectMutableLiveData;
     }
 
-    public void setSite(Site site) {
-        siteMutableLiveData.setValue(site);
+
+    public void setIdentifier(String identifier) {
+        if (siteMutableLiveData.getValue().getIdentifier() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setIdentifier(identifier);
     }
+
+    public void setSiteName(String name) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setName(name);
+    }
+
+    public void setSitePhone(String text) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setPhone(text);
+
+    }
+
+    public void setSiteAddress(String text) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setAddress(text);
+    }
+
+    public void setSitePublicDesc(String text) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setPublicDesc(text);
+
+    }
+
+    public void setLocation(String lat, String lon) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+        siteMutableLiveData.getValue().setLatitude(lat);
+        siteMutableLiveData.getValue().setLongitude(lon);
+
+    }
+
+    public void setPhoto(String path) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setLogo(path);
+    }
+
+    public void setId(String siteId) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setId(siteId);
+    }
+
+
 }
