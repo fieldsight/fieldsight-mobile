@@ -3,16 +3,17 @@ package org.odk.collect.naxa.project;
 
 import org.greenrobot.eventbus.EventBus;
 import org.odk.collect.android.application.Collect;
+
+import org.odk.collect.naxa.common.Constant;
+import org.odk.collect.naxa.common.event.DataSyncEvent;
+
 import org.odk.collect.naxa.login.model.MeResponse;
 import org.odk.collect.naxa.login.model.MySites;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
+
 import org.odk.collect.naxa.project.data.ProjectLocalSource;
-import org.odk.collect.naxa.project.data.ProjectViewModel;
-import org.odk.collect.naxa.project.event.PayloadEvent;
-import org.odk.collect.naxa.project.event.ProgressEvent;
-import org.odk.collect.naxa.project.event.SucessEvent;
 import org.odk.collect.naxa.site.db.SiteViewModel;
 
 import java.util.List;
@@ -58,13 +59,12 @@ public class ProjectModelImpl implements ProjectModel {
         return new SingleObserver<List<Project>>() {
             @Override
             public void onSubscribe(Disposable d) {
-                EventBus.getDefault().post(new ProgressEvent());
+                EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.PROJECT_SITES, DataSyncEvent.EventStatus.EVENT_START));
             }
 
             @Override
             public void onSuccess(List<Project> projects) {
-                EventBus.getDefault().post(new PayloadEvent(projects));
-                EventBus.getDefault().post(new SucessEvent());
+                EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.PROJECT_SITES, DataSyncEvent.EventStatus.EVENT_END));
 
 
             }
@@ -72,7 +72,7 @@ public class ProjectModelImpl implements ProjectModel {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-                EventBus.getDefault().post(new SucessEvent());
+                EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.PROJECT_SITES, DataSyncEvent.EventStatus.EVENT_ERROR));
             }
         };
     }

@@ -10,32 +10,17 @@ import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
-import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.generalforms.data.GeneralFormLocalSource;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRepository;
-import org.odk.collect.naxa.login.model.MeResponse;
-import org.odk.collect.naxa.login.model.MySites;
-import org.odk.collect.naxa.login.model.Project;
-import org.odk.collect.naxa.network.ApiInterface;
-import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.project.data.ProjectRepository;
 import org.odk.collect.naxa.project.data.ProjectSitesRemoteSource;
 import org.odk.collect.naxa.site.db.SiteRepository;
+import org.odk.collect.naxa.sync.SyncRepository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -53,15 +38,15 @@ public class DownloadModelImpl implements DownloadModel {
     private ArrayList<HashMap<String, String>> formList;
     private DownloadFormListTask downloadFormListTask;
 
-    DownloadModelImpl() {
+    public DownloadModelImpl() {
         this.generalFormRepository = GeneralFormRepository.getInstance(GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
         formList = new ArrayList<>();
 
     }
 
+    @Deprecated
     @Override
     public void fetchGeneralForms() {
-
         new GeneralFormRemoteSource().getAll();
     }
 
@@ -73,7 +58,7 @@ public class DownloadModelImpl implements DownloadModel {
 
 
     @Override
-    public void fetchODKForms() {
+    public void fetchODKForms(SyncRepository syncRepository) {
         int uid = Constant.DownloadUID.ODK_FORMS;
 
         XMLFormDownloadReceiver xmlFormDownloadReceiver = new XMLFormDownloadReceiver(new Handler());
@@ -89,9 +74,11 @@ public class DownloadModelImpl implements DownloadModel {
                     break;
                 case DownloadProgress.STATUS_ERROR:
                     EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_ERROR));
+                    syncRepository.setFailed(uid);
                     break;
                 case DownloadProgress.STATUS_FINISHED_FORM:
                     EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_END));
+                    syncRepository.setSuccess(uid);
                     break;
             }
         });
@@ -102,7 +89,6 @@ public class DownloadModelImpl implements DownloadModel {
     @Override
     public void fetchProjectContacts() {
         int uid = Constant.DownloadUID.PROJECT_CONTACTS;
-        ToastUtils.showShortToastInMiddle("Starting fetchProjectContacts");
     }
 
 }

@@ -56,12 +56,4 @@ public class DataSyncEvent {
         public static final String EVENT_UPDATE = "update";
     }
 
-    public static final class EventType {
-        public static final String GENERAL_FORM_DEPLOYED = "general_form_deployed";
-        public static final String SCHEDULE_FORM_DEPLOYED = "schedule_form_deployed";
-        public static final String STAGED_FORM_DEPLOYED = "staged_form_deployed";
-        public static final String ME_API_HIT = "me_api_hit";
-        public static final String ANY_DATA_SYNC = "any_api_hit";
-    }
-
 }

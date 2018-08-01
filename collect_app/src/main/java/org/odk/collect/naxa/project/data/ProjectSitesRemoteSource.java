@@ -1,6 +1,7 @@
 package org.odk.collect.naxa.project.data;
 
 import org.greenrobot.eventbus.EventBus;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseRemoteDataSource;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
@@ -12,6 +13,7 @@ import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.naxa.site.db.SiteRemoteSource;
 import org.odk.collect.naxa.site.db.SiteRepository;
+import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     private static ProjectSitesRemoteSource INSTANCE;
     private SiteRepository siteRepository;
     private ProjectLocalSource projectLocalSource;
+    private SyncRepository syncRepository;
 
     public static ProjectSitesRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -38,6 +41,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     public ProjectSitesRemoteSource() {
         siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
         projectLocalSource = ProjectLocalSource.getInstance();
+        syncRepository = new SyncRepository(Collect.getInstance());
     }
 
     @Override
@@ -66,13 +70,13 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public void onSuccess(List<Project> projects) {
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
-
+                        syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
-
+                        syncRepository.setFailed(Constant.DownloadUID.PROJECT_SITES);
                     }
                 });
 

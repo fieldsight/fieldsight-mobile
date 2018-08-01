@@ -1,5 +1,6 @@
 package org.odk.collect.naxa.generalforms.data;
 
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -17,6 +18,7 @@ import org.odk.collect.naxa.onboarding.XMLForm;
 import org.odk.collect.naxa.onboarding.XMLFormBuilder;
 import org.odk.collect.naxa.project.data.ProjectLocalSource;
 import org.odk.collect.naxa.project.data.ProjectRepository;
+import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -40,6 +42,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     private static GeneralFormRemoteSource INSTANCE;
     private ProjectLocalSource projectLocalSource;
+    private SyncRepository syncRepository;
 
     public static GeneralFormRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -51,6 +54,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     public GeneralFormRemoteSource() {
         this.projectLocalSource = ProjectLocalSource.getInstance();
+        this.syncRepository = new SyncRepository(Collect.getInstance());
     }
 
 
@@ -126,7 +130,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     return generalForms;
                 })
                 .toList()
-                .map(arrayLists -> {
+                .map((List<ArrayList<GeneralForm>> arrayLists) -> {
                     ArrayList<GeneralForm> generalForms = new ArrayList<>(0);
 
                     for (ArrayList<GeneralForm> generalFormList : arrayLists) {
@@ -146,13 +150,14 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     @Override
                     public void onSuccess(ArrayList<GeneralForm> generalForms) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
+                        syncRepository.setSuccess(Constant.DownloadUID.GENERAL_FORMS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_ERROR));
-
+                        syncRepository.setFailed(Constant.DownloadUID.GENERAL_FORMS);
                     }
                 });
 
