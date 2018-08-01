@@ -8,6 +8,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import org.odk.collect.naxa.common.Constant;
 
 @Entity(tableName = "sites")
@@ -52,14 +55,18 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "isSiteVerified")
     private int isSiteVerified;
 
+    @SerializedName("type")
+    @Expose
+    private String siteTypeError;
+
+
     //default values for  table
     private String generalFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
     private String stagedFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
     private String scheduleFormDeployedForm = Constant.FormDeploymentFrom.PROJECT;
 
 
-
-    public Site(){
+    public Site() {
 
     }
 
@@ -87,6 +94,10 @@ public class Site implements Parcelable {
         this.scheduleFormDeployedForm = scheduleFormDeployedForm;
     }
 
+
+    public void setSiteTypeError(String siteTypeError) {
+        this.siteTypeError = siteTypeError;
+    }
 
     public String getGeneralFormDeployedFrom() {
         return generalFormDeployedFrom;
@@ -256,6 +267,11 @@ public class Site implements Parcelable {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    @NonNull
+    public String getSiteTypeError() {
+        return siteTypeError;
     }
 
 

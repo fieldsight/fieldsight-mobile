@@ -4,6 +4,7 @@ package org.odk.collect.naxa.network;
 import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.login.model.AuthResponse;
 import org.odk.collect.naxa.login.model.MeResponse;
+import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.scheduled.data.ScheduleForm;
 import org.odk.collect.naxa.stages.data.Stage;
 
@@ -12,11 +13,16 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Single;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Url;
 
 import static org.odk.collect.naxa.network.APIEndpoint.GET_FORM_SCHEDULE;
 import static org.odk.collect.naxa.network.APIEndpoint.GET_GENERAL_FORM;
@@ -44,4 +50,21 @@ public interface ApiInterface {
 
     @GET(GET_STAGE_SUB_STAGE)
     Observable<ArrayList<Stage>> getStageSubStage(@Path(value = "is_project", encoded = true) String createdFromProject, @Path("id") String creatorsId);
+
+    @Multipart
+    @POST
+    Observable<Site> uploadSite(@Url String url,
+                                @Part MultipartBody.Part file,
+                                @Part("is_survey") RequestBody isSurvey,
+                                @Part("name") RequestBody name,
+                                @Part("latitude") RequestBody latitude,
+                                @Part("longitude") RequestBody longitude,
+                                @Part("identifier") RequestBody identifier,
+                                @Part("phone") RequestBody phone,
+                                @Part("address") RequestBody address,
+                                @Part("public_desc") RequestBody public_desc,
+                                @Part("project") RequestBody project,
+                                @Part("type") RequestBody type,
+                                @Part("region") RequestBody regionID,
+                                @Part("site_meta_attributes_ans") RequestBody metaAttrs);
 }

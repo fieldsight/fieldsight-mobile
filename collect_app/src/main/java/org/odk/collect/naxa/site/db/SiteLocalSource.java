@@ -93,4 +93,13 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         });
 
     }
+
+    public void setSiteAsVerified(String siteId){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                long i = dao.update(siteId,Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
+            }
+        });
+    }
 }

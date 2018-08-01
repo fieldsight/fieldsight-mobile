@@ -1,35 +1,47 @@
 package org.odk.collect.naxa.site;
 
 import android.app.ProgressDialog;
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.PaginationScrollListener;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.network.ApiInterface;
+import org.odk.collect.naxa.network.ServiceGenerator;
+import org.odk.collect.naxa.site.db.SiteRemoteSource;
 import org.odk.collect.naxa.site.db.SiteViewModel;
 
-import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import timber.log.Timber;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.odk.collect.naxa.common.Constant.SiteStatus.IS_UNVERIFIED_SITE;
+import static org.odk.collect.naxa.common.Constant.SiteStatus.IS_VERIFIED_BUT_UNSYNCED;
 
 public class SiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener {
 
@@ -40,7 +52,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private List<Site> sitelist = new ArrayList<>();
     private SiteListAdapter siteListAdapter;
 
-    private ActionModeCallback actionModeCallback;
+    private SiteUploadActionModeCallback siteUploadActionModeCallback;
     private android.support.v7.view.ActionMode actionMode;
     private String projectId;
 
@@ -73,6 +85,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
         setHasOptionsMenu(true);
         paginateSitesList();
+
+        siteUploadActionModeCallback = new SiteUploadActionModeCallback();
+
         return view;
     }
 
@@ -121,23 +136,97 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void onIconClicked(int position) {
-
+        enableActionMode(position);
     }
+
+    private void enableActionMode(int position) {
+        if (actionMode == null) {
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            actionMode = activity.startSupportActionMode(siteUploadActionModeCallback);
+        }
+
+        toggleSelection(position);
+    }
+
+    private void toggleSelection(int position) {
+        siteListAdapter.toggleSelection(position);
+        int count = siteListAdapter.getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
 
     @Override
     public void onRowLongClicked(int position) {
-
+        enableActionMode(position);
     }
 
     @Override
     public void onUselessLayoutClicked(Site site) {
-
-
-        FragmentHostActivity.start(getActivity(),site);
+        FragmentHostActivity.start(getActivity(), site);
     }
 
     @Override
     public void onSurveyFormClicked() {
 
     }
+
+    public class SiteUploadActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.menu_upload_items, menu);
+            return true;
+        }
+
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_delete_sites:
+                    return true;
+
+                case R.id.action_upload_sites:
+                    uploadSelectedSites();
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        private void uploadSelectedSites() {
+            SiteRemoteSource.getInstance().create(siteListAdapter.getAllItems());
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            disableActionMode();
+        }
+    }
+
+    public void disableActionMode() {
+        siteListAdapter.clearSelections();
+        actionMode.finish();
+
+        actionMode = null;
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                siteListAdapter.resetAnimationIndex();
+
+                //siteListAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
 }
