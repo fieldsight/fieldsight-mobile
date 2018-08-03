@@ -1,6 +1,5 @@
 package org.odk.collect.naxa.site;
 
-import android.arch.lifecycle.Observer;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -162,7 +161,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_general);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.toolbar_form_types);
         toolbar.setSubtitle(loadedSite.getName());
     }

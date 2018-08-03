@@ -25,9 +25,13 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.naxa.network.APIEndpoint;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.odk.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.odk.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 /**
  * This class is used to encapsulate all access to the {@link org.odk.collect.android.provider.InstanceProvider#DATABASE_NAME}
@@ -348,5 +352,57 @@ public class InstancesDao {
         values.put(InstanceProviderAPI.InstanceColumns.DELETED_DATE, instance.getDeletedDate());
 
         return values;
+    }
+
+    public static String generateSubmissionUrl(String formDeployedFrom, String creatorsId, String fsFormId) {
+        String submissionUrl = APIEndpoint.BASE_URL + APIEndpoint.FORM_SUBMISSION_PAGE;
+
+        switch (formDeployedFrom) {
+            case PROJECT:
+                submissionUrl += "project/" + fsFormId + "/" + creatorsId;
+                break;
+            case SITE:
+                submissionUrl += fsFormId + "/" + creatorsId;
+                break;
+            default:
+                throw new RuntimeException("Unknown form deployed");
+        }
+
+        return submissionUrl;
+
+    }
+
+    private String parseSiteId(String url) throws IndexOutOfBoundsException {
+        boolean isSiteUrl = !url.contains("project");
+        String[] pieces = url.split("/");
+
+        return "";
+    }
+
+    public CursorLoader getBySiteId(String siteId) {
+
+        CursorLoader cursorLoader;
+        String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and ("
+                + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
+                + InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + " = ?";
+
+        String[] selectionArgs = {
+                InstanceProviderAPI.STATUS_COMPLETE,
+                InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
+                InstanceProviderAPI.STATUS_SUBMITTED,
+                "%" + siteId + "%"};
+
+        cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, null);
+
+
+
+
+        return cursorLoader;
+    }
+
+    public void getByProjectId(String projectId) {
+
     }
 }

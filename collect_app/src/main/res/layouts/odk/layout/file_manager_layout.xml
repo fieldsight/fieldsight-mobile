@@ -31,7 +31,8 @@ limitations under the License.
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
@@ -40,13 +41,12 @@ limitations under the License.
             android:layout_weight="1" />
     </LinearLayout>
 
-    <!-- Toolbar -->
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/general_toolbar" />
 
     <include
         layout="@layout/toolbar_action_bar_shadow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar" />
+        android:layout_below="@id/appbar_general" />
 
 </RelativeLayout>

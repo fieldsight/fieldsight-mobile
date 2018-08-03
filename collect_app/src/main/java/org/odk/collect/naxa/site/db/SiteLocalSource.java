@@ -76,7 +76,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                long i = dao.update(siteId, Constant.SiteStatus.IS_UNVERIFIED_SITE);
+                long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_UNVERIFIED_SITE);
                 Timber.i("Nishon %s", i);
             }
         });
@@ -87,18 +87,27 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                long i = dao.update(siteId, Constant.SiteStatus.IS_FINALIZED);
+                long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_FINALIZED);
                 Timber.i("Nishon %s", i);
             }
         });
 
     }
 
-    public void setSiteAsVerified(String siteId){
+    public void setSiteAsVerified(String siteId) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                long i = dao.update(siteId,Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
+                long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
+            }
+        });
+    }
+
+    public void setSiteId(String oldSiteId, String newSiteId) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao.updateSiteId(oldSiteId, newSiteId);
             }
         });
     }

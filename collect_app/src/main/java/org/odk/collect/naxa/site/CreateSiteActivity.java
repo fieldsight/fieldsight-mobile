@@ -4,11 +4,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,7 +32,6 @@ import org.odk.collect.android.activities.GeoPointActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.DialogFactory;
-import org.odk.collect.naxa.common.ImageUtils;
 import org.odk.collect.naxa.common.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
@@ -52,7 +48,7 @@ import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class CreateSiteActivity extends CollectAbstractActivity {
 
-    @BindView(R.id.toolbar_general)
+    @BindView(R.id.toolbar)
     Toolbar toolbarGeneral;
     @BindView(R.id.tv_toolbar_message)
     TextView tvToolbarMessage;
@@ -140,6 +136,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     case EMPTY_SITE_IDENTIFIER:
                         tiSiteIdentifier.setError(getString(R.string.error_field_required));
                         tiSiteIdentifier.requestFocus();
+                        break;
+                    case VALIDATED:
+                        finish();
                         break;
 
                 }
@@ -254,7 +253,6 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 String mockedSiteId = String.valueOf(System.currentTimeMillis());
                 createSiteViewModel.setId(mockedSiteId);
                 createSiteViewModel.saveSite();
-                finish();
             }
         });
 
@@ -329,7 +327,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     @OnClick(R.id.btnCollectSiteRecordLocation)
     public void onBtnCollectSiteRecordLocationClicked() {
         Intent toGeoPointWidget = new Intent(this, GeoPointActivity.class);
-        startActivityForResult(toGeoPointWidget, Constant.Key.LOCATION_CAPTURE);
+        startActivityForResult(toGeoPointWidget, Constant.Key.GEOPOINT_RESULT_CODE);
 
     }
 

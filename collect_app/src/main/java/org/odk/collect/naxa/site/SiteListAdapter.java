@@ -321,9 +321,9 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public ArrayList<Site> getSelected() {
-        ArrayList<Site> items = new ArrayList<>(selectedItems.size());
+        ArrayList<Site> items = new ArrayList<>();
         for (int i = 0; i < selectedItems.size(); i++) {
-            items.add(siteList.get(i));
+            items.add(siteList.get(selectedItems.keyAt(i)));
         }
 
         return items;

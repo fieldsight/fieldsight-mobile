@@ -82,6 +82,7 @@
     <string name="btn_add_site_photo">Add Site photo</string>
     <string name="toolbar_title_offline_site">Create Site</string>
     <string name="msg_failed_to_load">Failed to load</string>
+    <string name="menu_filter">Filter</string>
 
 
 </resources>

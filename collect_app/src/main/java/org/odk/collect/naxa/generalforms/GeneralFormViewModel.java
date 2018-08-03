@@ -17,7 +17,8 @@ public class GeneralFormViewModel extends ViewModel {
     }
 
     public LiveData<List<GeneralForm>> getBySiteId(boolean forceUpdate, String siteId, String formDeployedFrom) {
-        return repository.getBySiteId(forceUpdate, siteId, formDeployedFrom);
+//        return repository.getBySiteId(forceUpdate, siteId, formDeployedFrom);
+        return repository.getAll(false);
     }
 
     public void deleteAll() {

@@ -196,16 +196,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     return true;
 
                 case R.id.action_upload_sites:
-                    uploadSelectedSites();
+                    SiteRemoteSource.getInstance().create(siteListAdapter.getSelected());
                     return true;
 
                 default:
                     return false;
             }
-        }
-
-        private void uploadSelectedSites() {
-            SiteRemoteSource.getInstance().create(siteListAdapter.getAllItems());
         }
 
         @Override

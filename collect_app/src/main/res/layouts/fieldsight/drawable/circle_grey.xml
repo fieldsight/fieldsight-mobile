@@ -4,7 +4,5 @@
     <size
         android:width="32dp"
         android:height="32dp" />
-    <stroke
-        android:width="2px"
-        android:color="#ffffff" />
+
 </shape>

@@ -207,6 +207,7 @@ dependencies {
     implementation 'com.andrognito.flashbar:flashbar:1.0.2'
     implementation 'com.github.matecode:Snacky:1.0.3'
     implementation 'com.github.pwittchen:reactivenetwork-rx2:2.0.0'
+    implementation "android.arch.lifecycle:reactivestreams:1.1.1"
     //naxa [ends]
 
 

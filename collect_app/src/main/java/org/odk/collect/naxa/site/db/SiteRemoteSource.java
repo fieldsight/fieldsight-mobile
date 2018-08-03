@@ -1,5 +1,6 @@
 package org.odk.collect.naxa.site.db;
 
+import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MediatorLiveData;
 
 import org.odk.collect.naxa.common.BaseRemoteDataSource;
@@ -21,6 +22,7 @@ import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import timber.log.Timber;
 
 import static org.odk.collect.naxa.common.Constant.SiteStatus.IS_UNVERIFIED_SITE;
 import static org.odk.collect.naxa.network.ServiceGenerator.*;
@@ -51,42 +53,50 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         Observable.just(sites)
                 .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
                 .filter(site -> site.getIsSiteVerified() == IS_UNVERIFIED_SITE)
-                .flatMap((Function<Site, ObservableSource<Site>>) this::uploadSite)
-                .map((Function<Site, Site>) site -> {
-                    String uploadError = site.getSiteTypeError();
-
-                    if ("identifier".contains(uploadError)) {
-                        throw new RuntimeException("Bad identifier");
-                    }
-
-                    if ("Invalid pk".contains(uploadError)) {
-                        throw new RuntimeException("Invalid pk");
-                    }
-
-                    return site;
-                })
-                .map(new Function<Site, Site>() {
+                .flatMap(new Function<Site, ObservableSource<Site>>() {
                     @Override
-                    public Site apply(Site site) throws Exception {
-                        return null;
+                    public ObservableSource<Site> apply(Site oldSite) throws Exception {
+                        return uploadSite(oldSite)
+                                .map(new Function<Site, Site>() {
+                                    @Override
+                                    public Site apply(Site newSite) throws Exception {
+                                        String uploadError = newSite.getSiteTypeError();
+                                        if ("identifier".contains(uploadError)) {
+                                            throw new RuntimeException("Bad identifier");
+                                        }
+
+                                        if ("Invalid pk".contains(uploadError)) {
+                                            throw new RuntimeException("Invalid pk");
+                                        }
+
+                                        SiteLocalSource.getInstance().setSiteAsVerified(newSite.getId());
+                                        SiteLocalSource.getInstance().setSiteId(oldSite.getId(), newSite.getId());
+
+
+                                        return newSite;
+                                    }
+                                });
+                    }
+                })
+                .toList()
+                .subscribe(new SingleObserver<List<Site>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        result.setValue(Resource.loading(null));
+                    }
+
+                    @Override
+                    public void onSuccess(List<Site> sites) {
+                        Timber.i("OnSucess");
+                        result.setValue(Resource.success(null));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        result.setValue(Resource.error(e.getMessage(), null));
                     }
                 });
-//                .subscribe(new SingleObserver<List<Site>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        result.setValue(Resource.loading(null));
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(List<Site> sites) {
-//                        result.setValue(Resource.success(null));
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        result.setValue(Resource.error(e.getMessage(), null));
-//                    }
-//                });
 
 
     }

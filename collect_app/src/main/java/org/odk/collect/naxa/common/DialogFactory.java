@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.view.Window;
 
 import org.odk.collect.android.R;
 
@@ -155,5 +156,15 @@ public final class DialogFactory {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.RiseUpDialog);
         builder.setTitle(title).setItems(items, onClickListener);
         return builder;
+    }
+
+
+    public static Dialog showCustomLayoutDialog(Context context, String msg) {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_site_project_filter);
+
+        return dialog;
     }
 }

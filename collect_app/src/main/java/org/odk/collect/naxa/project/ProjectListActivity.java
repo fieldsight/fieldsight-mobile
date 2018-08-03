@@ -51,7 +51,7 @@ import timber.log.Timber;
 
 public class ProjectListActivity extends CollectAbstractActivity implements MyProjectsAdapter.OnItemClickListener {
 
-    @BindView(R.id.toolbar_general)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.tv_toolbar_message)
     TextView tvToolbarMessage;

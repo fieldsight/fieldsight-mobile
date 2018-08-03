@@ -7,6 +7,12 @@
 
     <include layout="@layout/general_toolbar" />
 
+    <include
+        layout="@layout/toolbar_action_bar_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbar_general" />
+
     <org.odk.collect.naxa.common.RecyclerViewEmptySupport
         android:id="@+id/my_projects_list"
         android:layout_width="match_parent"

@@ -61,7 +61,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     }
 
     private void bindUI() {
-        toolbar = findViewById(R.id.toolbar_general);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
     }

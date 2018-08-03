@@ -105,6 +105,8 @@ public class CreateSiteViewModel extends ViewModel {
             return false;
         }
 
+        formStatus.setValue(CreateSiteFormStatus.VALIDATED);
+
         return true;
 
     }
@@ -119,7 +121,7 @@ public class CreateSiteViewModel extends ViewModel {
 
 
     public void setIdentifier(String identifier) {
-        if (siteMutableLiveData.getValue().getIdentifier() == null) {
+        if (siteMutableLiveData.getValue() == null) {
             siteMutableLiveData.setValue(new Site());
         }
 

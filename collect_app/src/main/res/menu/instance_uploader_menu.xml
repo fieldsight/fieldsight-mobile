@@ -18,11 +18,17 @@ limitations under the License.
     <item
         android:id="@+id/menu_preferences"
         android:title="@string/general_preferences"
+        android:visible="false"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_change_view"
         android:title="@string/change_view"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_filter_sites"
+        android:title="@string/menu_filter"
         app:showAsAction="never" />
 
 </menu>

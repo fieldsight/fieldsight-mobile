@@ -39,6 +39,7 @@ public class FileManagerTabs extends CollectAbstractActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setTitle(getString(R.string.manage_files));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -54,8 +55,7 @@ public class FileManagerTabs extends CollectAbstractActivity {
 
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(dataManagerList);
-        fragments.add(formManagerList);
-
+      
         viewPager.setAdapter(new ViewPagerAdapter(
                 getSupportFragmentManager(), tabNames, fragments));
 

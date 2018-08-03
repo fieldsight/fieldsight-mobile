@@ -58,6 +58,7 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import org.bcss.collect.android.fieldsight.utils.AppBarStateChangeListener;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.InstanceUploaderList;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.DataManagerList;
@@ -363,7 +364,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
             case R.id.nav_delete_saved_form:
                 Collect.getInstance().getActivityLogger()
                         .logAction(this, "deleteSavedInstances", "click");
-                startActivity(new Intent(getApplicationContext(), DataManagerList.class));
+                startActivity(new Intent(getApplicationContext(), FileManagerTabs.class));
                 break;
             case R.id.nav_edit_saved_form:
 //                Intent toEditSaved = new Intent(getApplicationContext(), EditSavedFormActivity.class);

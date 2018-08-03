@@ -15,7 +15,10 @@
 package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.LiveDataReactiveStreams;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -23,6 +26,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.Menu;
@@ -46,10 +50,15 @@ import org.odk.collect.android.receivers.NetworkReceiver;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.naxa.common.DialogFactory;
+import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.site.db.SiteLocalSource;
+import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
@@ -66,6 +75,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePe
 public class InstanceUploaderList extends InstanceListActivity implements
         OnLongClickListener, DiskSyncListener, AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final String SHOW_ALL_MODE = "showAllMode";
+    private static final String FILTER_BY_SITE_MODE = "filterBySiteMode";
     private static final String INSTANCE_UPLOADER_LIST_SORTING_ORDER = "instanceUploaderListSortingOrder";
 
     private static final int INSTANCE_UPLOADER = 0;
@@ -77,6 +87,7 @@ public class InstanceUploaderList extends InstanceListActivity implements
     private InstanceSyncTask instanceSyncTask;
 
     private boolean showAllMode;
+    private boolean filterBySite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,6 +99,7 @@ public class InstanceUploaderList extends InstanceListActivity implements
 
         if (savedInstanceState != null) {
             showAllMode = savedInstanceState.getBoolean(SHOW_ALL_MODE);
+            filterBySite = savedInstanceState.getBoolean(FILTER_BY_SITE_MODE);
         }
 
         requestStoragePermissions(this, new PermissionListener() {
@@ -262,8 +274,20 @@ public class InstanceUploaderList extends InstanceListActivity implements
                 logger.logAction(this, "onMenuItemSelected", "MENU_SHOW_UNSENT");
                 showSentAndUnsentChoices();
                 return true;
+            case R.id.menu_filter:
+                //todo logger
+                showSiteProjectChoices();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showSiteProjectChoices() {
+
+
+        Publisher<List<Site>> pub = LiveDataReactiveStreams.toPublisher(this, SiteLocalSource.getInstance().getAll());
+
+
     }
 
     private void createPreferencesMenu() {
@@ -290,6 +314,7 @@ public class InstanceUploaderList extends InstanceListActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SHOW_ALL_MODE, showAllMode);
+        outState.putBoolean(FILTER_BY_SITE_MODE, filterBySite);
     }
 
     @Override
@@ -340,11 +365,23 @@ public class InstanceUploaderList extends InstanceListActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
-        if (showAllMode) {
+
+
+        if (filterBySite) {
+            return instancesDao.getBySiteId("1");
+        }else {
             return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
-        } else {
-            return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
         }
+
+        //
+//        if (showAllMode) {
+//            return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
+//        } else {
+//            return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
+//        }
+//
+
+
     }
 
     @Override

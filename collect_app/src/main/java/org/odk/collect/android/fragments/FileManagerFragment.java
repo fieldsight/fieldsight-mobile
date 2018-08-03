@@ -51,7 +51,7 @@ public abstract class FileManagerFragment extends AppListFragment implements Loa
         deleteButton.setText(getString(R.string.delete_file));
         toggleButton = rootView.findViewById(R.id.toggle_button);
         llParent = rootView.findViewById(R.id.llParent);
-        progressBar = getActivity().findViewById(R.id.progressBar);
+        progressBar = getActivity().findViewById(R.id.toolbar_progress_bar);
 
         setHasOptionsMenu(true);
         return rootView;

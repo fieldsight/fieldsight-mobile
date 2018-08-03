@@ -5,5 +5,6 @@ public enum CreateSiteFormStatus {
     ERROR,
     EMPTY_SITE_NAME,
     EMPTY_SITE_IDENTIFIER,
-    EMPTY_SITE_LOCATION
+    EMPTY_SITE_LOCATION,
+    VALIDATED
 }

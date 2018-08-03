@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.naxa.network.APIEndpoint;
 
@@ -49,21 +50,7 @@ public class FieldSightFormListFragment extends Fragment {
     }
 
     protected String generateSubmissionUrl(String formDeployedFrom, String creatorsId, String fsFormId) {
-        String submissionUrl = APIEndpoint.BASE_URL + APIEndpoint.FORM_SUBMISSION_PAGE;
-
-        switch (formDeployedFrom) {
-            case PROJECT:
-                submissionUrl += "project/" + fsFormId + "/" + creatorsId;
-                break;
-            case SITE:
-                submissionUrl += fsFormId + "/" + creatorsId;
-                break;
-            default:
-                throw new RuntimeException("Unknown form deployed");
-        }
-
-        return submissionUrl;
-
+        return InstancesDao.generateSubmissionUrl(formDeployedFrom, creatorsId, fsFormId);
     }
 
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
@@ -84,7 +71,6 @@ public class FieldSightFormListFragment extends Fragment {
 
         return formId;
     }
-
 
 
 }
