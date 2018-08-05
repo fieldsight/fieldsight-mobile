@@ -19,10 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 import static org.odk.collect.naxa.common.Constant.DownloadStatus.PENDING;
-import static org.odk.collect.naxa.common.Constant.SyncableNames.GENERAL_FORMS;
-import static org.odk.collect.naxa.common.Constant.SyncableNames.ODK_FORMS;
-import static org.odk.collect.naxa.common.Constant.SyncableNames.PROJECT_AND_SITES;
-import static org.odk.collect.naxa.common.Constant.SyncableNames.PROJECT_CONTACTS;
+
 
 public class SyncRepository {
 
@@ -80,13 +77,13 @@ public class SyncRepository {
         updateField(uid, STATUS, false, String.valueOf(status));
     }
 
-    public void setSuccess(int uid){
+    public void setSuccess(int uid) {
         hideProgress(uid);
         updateDate(uid);
         updateStatus(uid, Constant.DownloadStatus.COMPLETED);
     }
 
-    public void setFailed(int uid){
+    public void setFailed(int uid) {
         hideProgress(uid);
         updateDate(uid);
         updateStatus(uid, Constant.DownloadStatus.FAILED);
@@ -161,14 +158,11 @@ public class SyncRepository {
 
     public void init() {
         SyncableItems[] syncableItems = new SyncableItems[]{
-                new SyncableItems(Constant.DownloadUID.PROJECT_SITES,
-                        PENDING, null, PROJECT_AND_SITES, "Downloads your assigned project and sites"),
-                new SyncableItems(Constant.DownloadUID.ODK_FORMS,
-                        PENDING, null, ODK_FORMS, "Downloads odk forms for your sites"),
-                new SyncableItems(Constant.DownloadUID.GENERAL_FORMS,
-                        PENDING, null, GENERAL_FORMS, "Downloads general forms for your sites"),
-                new SyncableItems(Constant.DownloadUID.PROJECT_CONTACTS,
-                        PENDING, null, PROJECT_CONTACTS, "Downloads contact information for personale in your project")
+                new SyncableItems(Constant.DownloadUID.PROJECT_SITES, PENDING, null, "Project and sites", "Downloads your assigned project and sites"),
+                new SyncableItems(Constant.DownloadUID.ODK_FORMS, PENDING, null, "ODK forms", "Downloads odk forms for your sites"),
+                new SyncableItems(Constant.DownloadUID.GENERAL_FORMS, PENDING, null, "General forms", "Downloads general forms for your sites"),
+                new SyncableItems(Constant.DownloadUID.STAGED_FORMS, PENDING, null, "Staged forms", "Downloads scheduled forms for your sites"),
+                new SyncableItems(Constant.DownloadUID.SCHEDULED_FORMS, PENDING, null, "Scheduled forms", "Download scheduled forms for your sites"),
         };
         insert(syncableItems);
     }

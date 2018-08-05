@@ -69,7 +69,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
         switch (item.getDownloadingStatus()) {
             case PENDING:
-                checkedItem.showFailureMessage("Not synced yet!!");
+                checkedItem.showFailureMessage("Not synced yet");
                 break;
             case COMPLETED:
                 checkedItem.showSucessMessage("Last synced at " + item.getLastSyncDateTime());

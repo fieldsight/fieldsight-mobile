@@ -16,6 +16,7 @@ import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.onboarding.XMLForm;
 import org.odk.collect.naxa.onboarding.XMLFormBuilder;
 import org.odk.collect.naxa.project.data.ProjectLocalSource;
+import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -39,6 +40,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
 
     private static ScheduledFormsRemoteSource INSTANCE;
     private ProjectLocalSource projectLocalSource;
+    private SyncRepository syncRepository;
 
 
     public static ScheduledFormsRemoteSource getInstance() {
@@ -50,6 +52,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
 
     private ScheduledFormsRemoteSource() {
         this.projectLocalSource = ProjectLocalSource.getInstance();
+        this.syncRepository = new SyncRepository(Collect.getInstance());
     }
 
 
@@ -131,10 +134,12 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                     @Override
                     public void onSuccess(ArrayList<ScheduleForm> scheduleForms) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.SCHEDULED_FORMS, EVENT_END));
+                        syncRepository.setSuccess(Constant.DownloadUID.SCHEDULED_FORMS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        syncRepository.setFailed(Constant.DownloadUID.SCHEDULED_FORMS);
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.SCHEDULED_FORMS, EVENT_ERROR));
                     }
                 });

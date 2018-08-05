@@ -13,6 +13,8 @@ import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.odk.collect.naxa.project.data.ProjectSitesRemoteSource;
+import org.odk.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
+import org.odk.collect.naxa.stages.data.StageRemoteSource;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
@@ -76,6 +78,12 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                 switch (syncableItem.getUid()) {
                     case Constant.DownloadUID.GENERAL_FORMS:
                         downloadModel.fetchGeneralForms();
+                        break;
+                    case Constant.DownloadUID.SCHEDULED_FORMS:
+                        ScheduledFormsRemoteSource.getInstance().getAll();
+                        break;
+                    case Constant.DownloadUID.STAGED_FORMS:
+                        StageRemoteSource.getInstance().getAll();
                         break;
                     case Constant.DownloadUID.ODK_FORMS:
                         downloadModel.fetchODKForms(syncRepository);

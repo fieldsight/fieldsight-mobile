@@ -17,6 +17,7 @@ import org.odk.collect.naxa.onboarding.XMLForm;
 import org.odk.collect.naxa.onboarding.XMLFormBuilder;
 import org.odk.collect.naxa.project.data.ProjectLocalSource;
 import org.odk.collect.naxa.substages.data.SubStageLocalSource;
+import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -34,6 +35,8 @@ import io.reactivex.schedulers.Schedulers;
 public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
 
     private static StageRemoteSource INSTANCE;
+    private SyncRepository syncRepository;
+
 
     public static StageRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -43,6 +46,7 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
     }
 
     public StageRemoteSource() {
+        this.syncRepository = new SyncRepository(Collect.getInstance());
     }
 
 
@@ -101,12 +105,14 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
                     @Override
                     public void onSuccess(ArrayList<Stage> stages) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.STAGED_FORMS, DataSyncEvent.EventStatus.EVENT_END));
+                        syncRepository.setSuccess(Constant.DownloadUID.STAGED_FORMS);
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.STAGED_FORMS, DataSyncEvent.EventStatus.EVENT_ERROR));
-
+                        syncRepository.setSuccess(Constant.DownloadUID.STAGED_FORMS);
                     }
                 });
     }
