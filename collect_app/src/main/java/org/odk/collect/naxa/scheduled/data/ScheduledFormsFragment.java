@@ -84,7 +84,7 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.getForms(true, loadedSite)
+        viewModel.getForms(false, loadedSite)
                 .observe(this, new Observer<List<ScheduleForm>>() {
                     @Override
                     public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {

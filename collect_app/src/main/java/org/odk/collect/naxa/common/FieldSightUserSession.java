@@ -71,16 +71,12 @@ public class FieldSightUserSession {
     }
 
     private static void logout(Context context) {
-        AsyncTask.execute(() -> FieldSightDatabase.getDatabase(context).clearAllTables());
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                FieldSightDatabase.getDatabase(context).clearAllTables();
-                FieldSightConfigDatabase.getDatabase(context).clearAllTables();
-            }
+
+        AsyncTask.execute(() -> {
+            FieldSightDatabase.getDatabase(context).clearAllTables();
+            FieldSightConfigDatabase.getDatabase(context).clearAllTables();
         });
         SharedPreferenceUtils.deleteAll(context);
-
 
 
         DeleteInstancesTask deleteInstancesTask = new DeleteInstancesTask();

@@ -232,6 +232,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         btnShowInfo.setOnClickListener(this);
 
 
+
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_send_form).setOnClickListener(this);
