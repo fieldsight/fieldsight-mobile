@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseLocalDataSource;
 import org.odk.collect.naxa.common.FieldSightDatabase;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,11 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
         AsyncTask.execute(() -> dao.updateAll(items));
     }
 
-    public LiveData<List<ScheduleForm>> getBySiteId(String siteId, String formDeployedFrom) {
-        return dao.getBySiteId(siteId, formDeployedFrom);
+    public LiveData<List<ScheduleForm>> getBySiteId(String siteId) {
+        return dao.getBySiteId(siteId);
+    }
+
+    public LiveData<List<ScheduleForm>> getByProjectId(String projectId) {
+        return dao.getByProjectId(projectId);
     }
 }

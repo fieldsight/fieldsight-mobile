@@ -84,22 +84,14 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.getBySiteId(true, loadedSite.getId(), loadedSite.getScheduleFormDeployedForm())
+        viewModel.getForms(true, loadedSite)
                 .observe(this, new Observer<List<ScheduleForm>>() {
                     @Override
                     public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
                         scheduledFormsAdapter.updateList(scheduleForms);
-
-                        if (!isAdded() || getActivity() == null) {
-                            //Fragment is not added
-                            return;
-                        }
-                        FlashBarUtils.showFlashbar(getActivity(),getString(R.string.msg_schedule_form_found, scheduleForms != null ? scheduleForms.size() : 0,loadedSite.getName()),false);
-
                     }
                 });
     }
-
 
 
     private void setupListAdapter() {
@@ -114,7 +106,7 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
                 new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {
-                        viewModel.getBySiteId(true, loadedSite.getId(), loadedSite.getGeneralFormDeployedFrom());
+                        viewModel.getForms(true, loadedSite);
                     }
                 });
         recyclerView.setAdapter(scheduledFormsAdapter);

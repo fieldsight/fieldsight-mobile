@@ -22,6 +22,7 @@ import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
+import org.odk.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.odk.collect.naxa.login.LoginActivity;
 import org.odk.collect.naxa.site.db.SiteDao;
 
@@ -37,7 +38,6 @@ public class FieldSightUserSession {
     }
 
     public static String getAuthToken() {
-        String demo = "Token 5091b915cd28e331c04056e402b85ecae7a3da7a";
         return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
     }
 
@@ -72,6 +72,13 @@ public class FieldSightUserSession {
 
     private static void logout(Context context) {
         AsyncTask.execute(() -> FieldSightDatabase.getDatabase(context).clearAllTables());
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                FieldSightDatabase.getDatabase(context).clearAllTables();
+                FieldSightConfigDatabase.getDatabase(context).clearAllTables();
+            }
+        });
         SharedPreferenceUtils.deleteAll(context);
 
 

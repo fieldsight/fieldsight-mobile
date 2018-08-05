@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import org.odk.collect.naxa.common.BaseLocalDataSource;
 import org.odk.collect.naxa.common.BaseRepository;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
 
     @Override
     public LiveData<List<ScheduleForm>> getAll(boolean forceUpdate) {
-        if(forceUpdate){
+        if (forceUpdate) {
             remoteSource.getAll();
         }
 
@@ -62,7 +63,7 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
         localSource.updateAll(items);
     }
 
-    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String siteId, String formDeployedFrom) {
+    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String siteId) {
 //        MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
 //        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
 //
@@ -84,6 +85,15 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
             remoteSource.getAll();
         }
 
-        return localSource.getBySiteId(siteId,formDeployedFrom);
+        return localSource.getBySiteId(siteId);
     }
+
+    public LiveData<List<ScheduleForm>> getByProjectId(boolean forcedUpdate, String project) {
+        if (forcedUpdate) {
+            remoteSource.getAll();
+        }
+
+        return localSource.getByProjectId(project);
+    }
+
 }
