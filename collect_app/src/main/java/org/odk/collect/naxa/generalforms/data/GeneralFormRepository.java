@@ -3,7 +3,6 @@ package org.odk.collect.naxa.generalforms.data;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import org.odk.collect.naxa.common.BaseLocalDataSource;
 import org.odk.collect.naxa.common.BaseRepository;
 
 import java.util.ArrayList;
@@ -35,17 +34,26 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
     }
 
 
-    public LiveData<List<GeneralForm>> getBySiteId(boolean forceUpdate, @NonNull String siteId, @NonNull String deployedForm) {
-        if(forceUpdate){
+    public LiveData<List<GeneralForm>> getBySiteId(boolean forcedUpdate, @NonNull String siteId) {
+        if (forcedUpdate) {
             remoteSource.getAll();
         }
 
-        return localSource.getBySiteId(siteId,deployedForm);
+        return localSource.getBySiteId(siteId);
+    }
+
+
+    public LiveData<List<GeneralForm>> getByProjectId(boolean forcedUpdate, String project) {
+        if (forcedUpdate) {
+            remoteSource.getAll();
+        }
+
+        return localSource.getByProjectId(project);
     }
 
     @Override
     public LiveData<List<GeneralForm>> getAll(boolean forceUpdate) {
-        if(forceUpdate){
+        if (forceUpdate) {
             remoteSource.getAll();
         }
 
@@ -72,4 +80,6 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
     public void deleteAll() {
         localSource.deleteAll();
     }
+
+
 }

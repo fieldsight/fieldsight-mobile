@@ -106,7 +106,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         setupListAdapter();
 
 
-        viewModel.getBySiteId(true, loadedSite.getId(), loadedSite.getGeneralFormDeployedFrom())
+        viewModel.getForms(false, loadedSite)
                 .observe(this, generalForms -> {
                     Timber.i("General forms data has been changed");
                     generalFormsAdapter.updateList(generalForms);
@@ -127,7 +127,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
                 new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {
-                        viewModel.getBySiteId(true, loadedSite.getId(), loadedSite.getGeneralFormDeployedFrom());
+                        viewModel.getForms(true, loadedSite);
                     }
                 });
         recyclerView.setAdapter(generalFormsAdapter);

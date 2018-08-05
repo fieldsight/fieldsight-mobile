@@ -13,8 +13,11 @@ import java.util.List;
 @Dao
 public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
 
-    @Query("SELECT * FROM general_forms")
-    public abstract LiveData<List<GeneralForm>> getProjectGeneralForms();
+    @Query("SELECT * FROM general_forms WHERE project =:projectId")
+    public abstract LiveData<List<GeneralForm>> getProjectGeneralForms(String projectId);
+
+    @Query("SELECT * FROM general_forms WHERE site =:siteId")
+    public abstract LiveData<List<GeneralForm>> getSiteGeneralForms(String siteId);
 
 
     @Query("DELETE FROM general_forms")
@@ -26,6 +29,7 @@ public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
         insert(items);
     }
 
-    @Query("SELECT * FROM general_forms WHERE site =:siteId AND formDeployedFrom = :formDeployedForm")
-    public abstract LiveData<List<GeneralForm>> getGeneralForms(String siteId, String formDeployedForm);
+
+    @Query("SELECT * FROM general_forms")
+    public abstract LiveData<List<GeneralForm>> getAll();
 }

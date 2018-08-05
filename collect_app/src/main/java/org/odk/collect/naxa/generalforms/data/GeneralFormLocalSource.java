@@ -40,13 +40,21 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
 
-    public LiveData<List<GeneralForm>> getBySiteId(@NonNull String siteId, @NonNull String formDeployedForm){
-        return dao.getGeneralForms(siteId,formDeployedForm);
+    public LiveData<List<GeneralForm>> getBySiteId(@NonNull String siteId) {
+
+        return dao.getProjectGeneralForms(siteId);
+
+
+    }
+
+
+    public LiveData<List<GeneralForm>> getByProjectId(String projectId) {
+        return dao.getProjectGeneralForms(projectId);
     }
 
     @Override
-    public LiveData<List<GeneralForm>> getAll( ) {
-        return dao.getProjectGeneralForms();
+    public LiveData<List<GeneralForm>> getAll() {
+        return dao.getAll();
     }
 
     @Override
@@ -170,4 +178,5 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     public void deleteAll() {
         AsyncTask.execute(() -> dao.deleteAll());
     }
+
 }

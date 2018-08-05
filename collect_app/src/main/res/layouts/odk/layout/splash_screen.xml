@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="@color/white"
+
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
     android:padding="10dip">
@@ -11,11 +12,12 @@
         android:id="@+id/splash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+
         android:contentDescription="@string/app_name"
         android:gravity="center"
         android:padding="0dip"
         android:visibility="gone" />
+
 
     <LinearLayout
         android:id="@+id/splash_default"
@@ -26,10 +28,11 @@
         android:paddingBottom="5dip">
 
         <ImageView
+            android:scaleType="centerInside"
             android:layout_width="72dip"
             android:layout_height="72dip"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/notes" />
+            android:src="@drawable/fieldsight_logo" />
 
         <LinearLayout
             android:layout_width="wrap_content"

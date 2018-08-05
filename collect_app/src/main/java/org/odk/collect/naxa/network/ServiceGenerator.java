@@ -21,7 +21,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ServiceGenerator {
-    public final static String BASE_API_URL = "http://app.fieldsight.org";
     private static Retrofit retrofit = null;
     private static Retrofit cacheablesRetrofit = null;
     private static Gson gson = new GsonBuilder().create();
@@ -91,7 +90,7 @@ public class ServiceGenerator {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .client(createOkHttpClient())
-                    .baseUrl(BASE_API_URL)
+                    .baseUrl(APIEndpoint.BASE_URL)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -104,7 +103,7 @@ public class ServiceGenerator {
         if (cacheablesRetrofit == null) {
             cacheablesRetrofit = new Retrofit.Builder()
                     .client(createCacheablesOkHttpClient())
-                    .baseUrl(BASE_API_URL)
+                    .baseUrl(APIEndpoint.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
@@ -118,7 +117,7 @@ public class ServiceGenerator {
         if (rxRetrofit == null) {
             rxRetrofit = new Retrofit.Builder()
                     .client(createOkHttpClient())
-                    .baseUrl(BASE_API_URL)
+                    .baseUrl(APIEndpoint.BASE_URL)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();

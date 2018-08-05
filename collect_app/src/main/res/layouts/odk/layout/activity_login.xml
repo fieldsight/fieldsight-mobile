@@ -24,6 +24,7 @@
 
 
     <ProgressBar
+
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
@@ -38,6 +39,7 @@
 
 
     <ImageView
+        android:focusableInTouchMode="true"
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -84,11 +86,12 @@
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="nishon.tan@gmail.com" />
+                    android:text="android" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                app:passwordToggleEnabled="true"
                 android:id="@+id/textInputLayout4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

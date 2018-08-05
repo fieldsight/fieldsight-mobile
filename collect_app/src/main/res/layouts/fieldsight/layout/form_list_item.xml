@@ -59,10 +59,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_form_status"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium"
-
             android:layout_marginBottom="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_medium"
+
+            android:layout_marginRight="@dimen/margin_medium"
             android:layout_toEndOf="@+id/icon_container"
             android:layout_toRightOf="@+id/icon_container"
             android:ellipsize="end"
@@ -86,7 +86,6 @@
             tools:text="Form Description" />
 
         <TextView
-            android:padding="@dimen/padding_small"
             android:id="@+id/tv_form_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,7 +93,9 @@
             android:layout_alignParentRight="true"
             android:layout_marginEnd="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium"
+            android:padding="@dimen/padding_small"
             android:textSize="@dimen/text_size_extra_small"
+            android:visibility="invisible"
             tools:text="Last Submitted 2 days ago" />
 
         <Button
