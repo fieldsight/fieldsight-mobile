@@ -65,6 +65,33 @@ public class Site implements Parcelable {
     private String stagedFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
     private String scheduleFormDeployedForm = Constant.FormDeploymentFrom.PROJECT;
 
+    @Override
+    public String toString() {
+        return "Site{" +
+                "id='" + id + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", identifier='" + identifier + '\'' +
+                ", name='" + name + '\'' +
+                ", typeId=" + typeId +
+                ", typeLabel='" + typeLabel + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", publicDesc='" + publicDesc + '\'' +
+                ", additionalDesc='" + additionalDesc + '\'' +
+                ", logo='" + logo + '\'' +
+                ", isActive=" + isActive +
+                ", location='" + location + '\'' +
+                ", isSurvey=" + isSurvey +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", project='" + project + '\'' +
+                ", isSiteVerified=" + isSiteVerified +
+                ", siteTypeError='" + siteTypeError + '\'' +
+                ", generalFormDeployedFrom='" + generalFormDeployedFrom + '\'' +
+                ", stagedFormDeployedFrom='" + stagedFormDeployedFrom + '\'' +
+                ", scheduleFormDeployedForm='" + scheduleFormDeployedForm + '\'' +
+                '}';
+    }
 
     public Site() {
 

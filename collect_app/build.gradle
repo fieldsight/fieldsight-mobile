@@ -110,6 +110,7 @@ android {
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
         }
         debug {
+
             debuggable(true)
             testCoverageEnabled(true)
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "false")

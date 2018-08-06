@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import org.odk.collect.naxa.common.BaseLocalDataSource;
 
 
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.stages.data.Stage;
 import org.odk.collect.naxa.stages.data.StageLocalSource;
 import org.odk.collect.naxa.stages.data.StageRemoteSource;
@@ -58,11 +59,20 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
         localSource.updateAll(items);
     }
 
-    public LiveData<List<Stage>> getBySiteId(boolean forceUpdate, String siteId, String formDeployedForm) {
+    public LiveData<List<Stage>> getBySiteId(boolean forceUpdate, String siteId) {
         if (forceUpdate) {
             remoteSource.getAll();
         }
 
-        return localSource.getBySiteId(siteId, formDeployedForm);
+        return localSource.getBySiteId(siteId);
+    }
+
+
+    public LiveData<List<Stage>> getByProjectId(boolean forcedUpdate, String projectId) {
+        if (forcedUpdate) {
+            remoteSource.getAll();
+        }
+
+        return localSource.getByProjectId(projectId);
     }
 }

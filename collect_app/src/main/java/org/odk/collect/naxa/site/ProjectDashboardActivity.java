@@ -663,8 +663,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 .switchMap(new Function<String, ObservableSource<List<Site>>>() {
                     @Override
                     public ObservableSource<List<Site>> apply(String userQuery) throws Exception {
-                        List<Site> filteredSites =
-                                new SiteViewModel(Collect.getInstance()).searchSites(userQuery.trim());
+                        List<Site> filteredSites = new SiteViewModel(Collect.getInstance()).searchSites(userQuery.trim());
                         return Observable.just(filteredSites);
                     }
                 })

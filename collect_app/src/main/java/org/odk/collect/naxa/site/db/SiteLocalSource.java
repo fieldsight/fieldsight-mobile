@@ -54,6 +54,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
 
     public List<Site> searchSites(String searchQuery) {
+
         return dao.searchSites(searchQuery);
     }
 

@@ -48,7 +48,12 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
         AsyncTask.execute(() -> dao.updateAll(items));
     }
 
-    public LiveData<List<Stage>> getBySiteId(String siteId, String formDeployedForm) {
-        return dao.getBySiteId(siteId,formDeployedForm);
+    public LiveData<List<Stage>> getBySiteId(String siteId) {
+        return dao.getBySiteId(siteId);
+    }
+
+
+    public LiveData<List<Stage>> getByProjectId(String siteId) {
+        return dao.getByProjectId(siteId);
     }
 }

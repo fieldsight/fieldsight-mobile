@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
@@ -31,6 +32,10 @@ import org.odk.collect.naxa.stages.StageListFragment;
 
 import java.io.File;
 
+
+import butterknife.ButterKnife;
+import butterknife.OnLongClick;
+import butterknife.Unbinder;
 
 import static org.odk.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
 import static org.odk.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
@@ -46,6 +51,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private TextView tvSiteName, tvSiteAddress;
     private ToggleButton btnToggleFinalized;
     private TextView tvSiteType;
+    private Unbinder unbinder;
 
     public SiteDashboardFragment() {
 
@@ -85,6 +91,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dashboard_site, container, false);
         //Constants.MY_FRAG = 1;
+        unbinder = ButterKnife.bind(this, rootView);
 
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
 
@@ -232,7 +239,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         btnShowInfo.setOnClickListener(this);
 
 
-
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_send_form).setOnClickListener(this);
@@ -259,6 +265,13 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -272,6 +285,16 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 toStageList();
                 break;
         }
+    }
+
+    @OnLongClick(R.id.site_option_frag_btn_info)
+    public boolean showSiteDebugInfo() {
+        if (BuildConfig.DEBUG) {
+            DialogFactory.createSimpleOkErrorDialog(getActivity(), "", loadedSite.toString()).show();
+            return true;
+        }
+
+        return false;
     }
 
 

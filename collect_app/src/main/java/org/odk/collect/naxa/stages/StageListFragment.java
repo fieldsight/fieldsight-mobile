@@ -1,6 +1,7 @@
 package org.odk.collect.naxa.stages;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,6 +32,7 @@ import org.odk.collect.naxa.stages.data.Stage;
 import org.odk.collect.naxa.substages.SubStageListFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -86,6 +88,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         View rootView =
                 inflater.inflate(R.layout.general_forms_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+
         ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
 
         viewModel = ViewModelProviders.of(getActivity(), factory).get(StageViewModel.class);
@@ -97,11 +100,12 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.getBySiteId(true, loadedSite.getId(), loadedSite.getStagedFormDeployedFrom())
-                .observe(this, stages -> {
-                    Timber.i("Stage forms data has been changed");
-                    listAdapter.updateList(stages);
-                });
+        viewModel.getForms(false, loadedSite).observe(this, new Observer<List<Stage>>() {
+            @Override
+            public void onChanged(@Nullable List<Stage> stages) {
+                listAdapter.updateList(stages);
+            }
+        });
     }
 
     @Override

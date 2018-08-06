@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
@@ -20,7 +19,7 @@
             android:id="@+id/img_tool_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/moreinfo_arrow_pressed"/>
+            app:srcCompat="@drawable/ic_navigate_back" />
 
         <EditText
             android:id="@+id/edt_tool_search"
@@ -28,22 +27,20 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@null"
-            android:textColorHint="@color/gray_deep"
-            android:textColor="@color/gray_deep"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:singleLine="true"
-            android:textSize="16sp"/>
+            android:textColor="@color/gray_deep"
+            android:textColorHint="@color/gray_deep"
+            android:textSize="16sp" />
 
         <ImageView
-            android:tint="@color/gray600"
             android:id="@+id/img_tool_mic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_close_white_24dp"/>
+            android:src="@drawable/ic_close_white_24dp"
+            android:tint="@color/gray600" />
     </LinearLayout>
-
-
 
 
 </LinearLayout>
