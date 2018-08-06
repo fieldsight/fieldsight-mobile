@@ -8,6 +8,7 @@ public class SharedPreferenceUtils {
 
     public static class PREF_KEY {
         public static final String FORM_SESSION = "form_id";
+        public static final String USER = "user";
     }
 
     public static class PREF_VALUE_KEY {

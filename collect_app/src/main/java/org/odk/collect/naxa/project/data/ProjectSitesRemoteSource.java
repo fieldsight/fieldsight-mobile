@@ -1,9 +1,12 @@
 package org.odk.collect.naxa.project.data;
 
+import com.google.gson.Gson;
+
 import org.greenrobot.eventbus.EventBus;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseRemoteDataSource;
 import org.odk.collect.naxa.common.Constant;
+import org.odk.collect.naxa.common.SharedPreferenceUtils;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.login.model.MeResponse;
 import org.odk.collect.naxa.login.model.MySites;
@@ -50,7 +53,14 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUserInformation()
-                .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> Observable.just(meResponse.getData().getMySitesModel()))
+                .flatMap(new Function<MeResponse, ObservableSource<List<MySites>>>() {
+                    @Override
+                    public ObservableSource<List<MySites>> apply(MeResponse meResponse) throws Exception {
+                        String user = new Gson().toJson(meResponse.getData());
+                        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(),SharedPreferenceUtils.PREF_KEY.USER,user);
+                        return Observable.just(meResponse.getData().getMySitesModel());
+                    }
+                })
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(mySites -> {
                     siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());

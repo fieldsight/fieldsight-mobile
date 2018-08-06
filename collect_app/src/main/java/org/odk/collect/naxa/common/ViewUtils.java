@@ -65,7 +65,7 @@ public final class ViewUtils {
 
         return Glide
                 .with(Collect.getInstance())
-                .load(BASE_URL + imagePath)
+                .load(imagePath)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .crossFade();

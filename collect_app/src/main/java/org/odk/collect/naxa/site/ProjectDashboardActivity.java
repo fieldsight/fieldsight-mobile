@@ -54,6 +54,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+import com.google.gson.Gson;
 
 import org.bcss.collect.android.fieldsight.utils.AppBarStateChangeListener;
 import org.odk.collect.android.R;
@@ -65,12 +66,15 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.DataManagerList;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.NonSwipeableViewPager;
 import org.odk.collect.naxa.common.RxSearchObservable;
+import org.odk.collect.naxa.common.SharedPreferenceUtils;
 import org.odk.collect.naxa.common.ViewUtils;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.login.model.User;
 import org.odk.collect.naxa.project.MapFragment;
 import org.odk.collect.naxa.project.ProjectContactsFragment;
 import org.odk.collect.naxa.project.ProjectListActivity;
@@ -223,36 +227,29 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
 
     private void setupNavigationHeader() {
-        SharedPreferences prefUser = getSharedPreferences(MyPREFERENCES_USER, Context.MODE_PRIVATE);
-        SharedPreferences prefUserInfo = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        String fullName = prefUser.getString("FIRST_NAME", "") + prefUser.getString("LAST_NAME", "");
 
-        //todo investigate with this if is needed - nishon
-        if (android.text.TextUtils.isEmpty(fullName)) {
-            fullName = prefUserInfo.getString("FULL_NAME", "");
+        String userString = SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_KEY.USER, null);
+        if (userString == null) {
+            return;
         }
 
-        String email = prefUserInfo.getString("EMAIL", "");
-        String profilePic = prefUserInfo.getString("PROFILE_PIC", "");
+        User user = new Gson().fromJson(userString, User.class);
+        ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFull_name());
+        ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
+        ViewUtils.loadImage(user.getProfilepic()).into((ImageView) navigationHeader.findViewById(R.id.image_profile));
+        navigationHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleNavDrawer();
 
-//        ViewUtils.loadImage(profilePic).into((ImageView) navigationHeader.findViewById(R.id.image_profile));
-//        ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(fullName);
-//        ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(email);
-//
-//
-//        navigationHeader.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                toggleNavDrawer();
-//
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        ToastUtils.showLongToast("Not implemented yet");
-//                    }
-//                }, 250);
-//            }
-//        });
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.showLongToast("Not implemented yet");
+                    }
+                }, 250);
+            }
+        });
     }
 
     private void setupMapMode() {

@@ -3,17 +3,18 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_create_offline_site"
-            android:icon="@drawable/ic_search"
+            android:icon="@drawable/ic_home"
             android:title="@string/nav_create_offline_site" />
 
         <item
+            android:visible="false"
             android:id="@+id/nav_view_finalized_offline_site"
-            android:icon="@drawable/ic_search"
+            android:icon="@drawable/ic_format_list_bulleted"
             android:title="@string/nav_finalized_offline_site" />
 
         <item
             android:id="@+id/nav_view_site_dashboard"
-            android:icon="@drawable/ic_search"
+            android:icon="@drawable/ic_format_list_bulleted"
             android:title="@string/nav_site_dashboard" />
     </group>
 
@@ -22,15 +23,15 @@
         <menu>
             <item
                 android:id="@+id/nav_delete_saved_form"
-                android:icon="@drawable/ic_search"
+                android:icon="@drawable/ic_delete"
                 android:title="@string/nav_delete_saved_form" />
             <item
                 android:id="@+id/nav_send_final_form"
-                android:icon="@drawable/ic_search"
+                android:icon="@drawable/ic_cloud_upload"
                 android:title="@string/nav_send_final_form" />
             <item
                 android:id="@+id/nav_edit_saved_form"
-                android:icon="@drawable/ic_search"
+                android:icon="@drawable/ic_edit"
                 android:title="@string/nav_edit_saved_form" />
         </menu>
     </item>
