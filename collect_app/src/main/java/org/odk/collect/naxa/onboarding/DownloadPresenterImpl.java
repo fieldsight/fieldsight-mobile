@@ -76,6 +76,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
             return;
         }
 
+        ProjectSitesRemoteSource.getInstance().getAll();
 
         for (SyncableItems syncableItem : syncableItemList) {
             if (syncableItem.isChecked()) {

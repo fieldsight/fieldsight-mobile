@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.ViewPagerAdapter;
@@ -49,13 +50,15 @@ public class FileManagerTabs extends CollectAbstractActivity {
         setContentView(R.layout.file_manager_layout);
         initToolbar();
 
-        String[] tabNames = {getString(R.string.data), getString(R.string.forms)};
+//        String[] tabNames = {getString(R.string.data), getString(R.string.forms)};
+        String[] tabNames = {getString(R.string.data)};
         // Get the ViewPager and set its PagerAdapter so that it can display items
         ViewPager viewPager = findViewById(R.id.pager);
 
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(dataManagerList);
-      
+//        fragments.add(formManagerList);
+
         viewPager.setAdapter(new ViewPagerAdapter(
                 getSupportFragmentManager(), tabNames, fragments));
 
@@ -66,6 +69,8 @@ public class FileManagerTabs extends CollectAbstractActivity {
         slidingTabLayout.setFontColor(android.R.color.white);
         slidingTabLayout.setBackgroundColor(Color.DKGRAY);
         slidingTabLayout.setViewPager(viewPager);
+
+        slidingTabLayout.setVisibility(View.GONE);
     }
 
     @Override
