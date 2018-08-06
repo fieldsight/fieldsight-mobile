@@ -42,6 +42,8 @@ import org.odk.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.odk.collect.naxa.common.database.SiteOveride;
 import org.odk.collect.naxa.common.database.SiteOverideDAO;
 import org.odk.collect.naxa.onboarding.XMLForm;
+import org.odk.collect.naxa.survey.SurveyForm;
+import org.odk.collect.naxa.survey.SurveyFormLocalSource;
 import org.opendatakit.httpclientandroidlib.client.HttpClient;
 import org.opendatakit.httpclientandroidlib.protocol.HttpContext;
 
@@ -65,6 +67,7 @@ public class FieldSightDownloadFormListUtils {
     private static LinkedList<String> overrideGeneralFormsIds = new LinkedList<>();
     private static LinkedList<String> overrideStageFormsIds = new LinkedList<>();
     private static LinkedList<String> overrideScheduledFormsIds = new LinkedList<>();
+    private static LinkedList<SurveyForm> surveyForms = new LinkedList<>();
 
     private static boolean isXformsListNamespacedElement(Element e) {
         return e.getNamespace().equalsIgnoreCase(NAMESPACE_OPENROSA_ORG_XFORMS_XFORMS_LIST);
@@ -264,10 +267,13 @@ public class FieldSightDownloadFormListUtils {
                             boolean isDeployedFromProject = !TextUtils.isEmpty(siteId);
                             if (isDeployedFromProject) {
                                 populateSiteOverideList(siteId, isScheduled, isStaged, isSurvey);
+                                SurveyFormLocalSource.getInstance().save(new SurveyForm(fsFormId, xmlForm.getFormCreatorsId(), formId, name));
                             }
                             break;
                     }
                 }
+
+
                 if (formId == null || downloadUrl == null || formName == null) {
                     String error =
                             "Forms list entry " + Integer.toString(i)

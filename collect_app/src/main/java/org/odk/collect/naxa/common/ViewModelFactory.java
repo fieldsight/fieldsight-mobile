@@ -29,6 +29,9 @@ import org.odk.collect.naxa.stages.data.StageRemoteSource;
 import org.odk.collect.naxa.substages.SubStageViewModel;
 import org.odk.collect.naxa.substages.data.SubStageLocalSource;
 import org.odk.collect.naxa.substages.data.SubStageRepository;
+import org.odk.collect.naxa.survey.SurveyFormLocalSource;
+import org.odk.collect.naxa.survey.SurveyFormRepository;
+import org.odk.collect.naxa.survey.SurveyFormViewModel;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
@@ -41,6 +44,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final SubStageRepository subStageRepository;
     private final ProjectRepository projectRepository;
     private final SiteRepository siteRepository;
+    private final SurveyFormRepository surveyFormRepository;
 
 
     private final Application application;
@@ -51,7 +55,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
                             StageFormRepository stageFormRepository,
                             SubStageRepository subStageRepository,
                             ProjectRepository projectRepository,
-                            SiteRepository siteRepository) {
+                            SiteRepository siteRepository,
+                            SurveyFormRepository surveyFormRepository
+    ) {
         this.application = application;
         this.generalFormRepository = repository;
         this.scheduledFormRepository = scheduledFormRepository;
@@ -59,6 +65,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         this.subStageRepository = subStageRepository;
         this.projectRepository = projectRepository;
         this.siteRepository = siteRepository;
+        this.surveyFormRepository = surveyFormRepository;
     }
 
     public static ViewModelFactory getInstance(Application application) {
@@ -75,8 +82,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
                     SubStageRepository subStageRepository = SubStageRepository.getInstance(SubStageLocalSource.getInstance(), StageRemoteSource.getInstance());
                     ProjectRepository projectRepository = ProjectRepository.getInstance(ProjectLocalSource.getInstance(), ProjectSitesRemoteSource.getInstance());
                     SiteRepository siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
+                    SurveyFormRepository surveyFormRepository = SurveyFormRepository.getInstance(SurveyFormLocalSource.getInstance());
 
-                    INSTANCE = new ViewModelFactory(application, generalFormRepository, scheduledFormRepository, stageFormRepository, subStageRepository, projectRepository, siteRepository);
+                    INSTANCE = new ViewModelFactory(application, generalFormRepository, scheduledFormRepository, stageFormRepository, subStageRepository, projectRepository, siteRepository, surveyFormRepository);
                 }
             }
         }
@@ -105,6 +113,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(CreateSiteViewModel.class)) {
             //noinspection unchecked
             return (T) new CreateSiteViewModel(siteRepository);
+        } else if (modelClass.isAssignableFrom(SurveyFormViewModel.class)) {
+            //noinspection unchecked
+            return (T) new SurveyFormViewModel(surveyFormRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());

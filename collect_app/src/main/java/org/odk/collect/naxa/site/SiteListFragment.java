@@ -26,6 +26,7 @@ import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.site.db.SiteRemoteSource;
 import org.odk.collect.naxa.site.db.SiteViewModel;
+import org.odk.collect.naxa.survey.SurveyFormsActivity;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -92,6 +93,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     private void setupRecycleView() {
+
         siteListAdapter = new SiteListAdapter(getActivity(), sitelist, this);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -122,7 +124,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         new SiteViewModel(Collect.getInstance())
                 .getSiteByProject(loadedProject)
                 .observe(this, sites -> {
-                    sitelist = sites;
+                    Site site = new Site();
+                    site.setName("survey");
+                    sitelist.add(site);
+                    if (sites != null) {
+                        sitelist.addAll(sites);
+                    }
                     setupRecycleView();
                 });
     }
@@ -173,7 +180,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void onSurveyFormClicked() {
-
+        SurveyFormsActivity.start(getActivity(),loadedProject);
     }
 
     public class SiteUploadActionModeCallback implements ActionMode.Callback {
