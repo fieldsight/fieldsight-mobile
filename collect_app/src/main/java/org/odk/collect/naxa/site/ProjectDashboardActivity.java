@@ -59,9 +59,11 @@ import org.bcss.collect.android.fieldsight.utils.AppBarStateChangeListener;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
+import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderList;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.DataManagerList;
+import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.naxa.common.NonSwipeableViewPager;
@@ -356,10 +358,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         switch (id) {
             case R.id.nav_create_offline_site:
                 CreateSiteActivity.start(this, loadedProject);
-
-//                Intent toCollectSite = new Intent(this, CreateOfflineSiteActivity.class);
-//                toCollectSite.putExtra(EXTRA_OBJECT, loadedProject);
-//                startActivity(toCollectSite);
                 break;
             case R.id.nav_delete_saved_form:
                 Collect.getInstance().getActivityLogger()
@@ -367,8 +365,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 startActivity(new Intent(getApplicationContext(), FileManagerTabs.class));
                 break;
             case R.id.nav_edit_saved_form:
-//                Intent toEditSaved = new Intent(getApplicationContext(), EditSavedFormActivity.class);
-//                startActivity(toEditSaved);
+                Collect.getInstance().getActivityLogger()
+                        .logAction(this, ApplicationConstants.FormModes.EDIT_SAVED, "click");
+                Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
+                        ApplicationConstants.FormModes.EDIT_SAVED);
+                startActivity(i);
                 break;
             case R.id.nav_send_final_form:
 

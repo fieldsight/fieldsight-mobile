@@ -1,6 +1,7 @@
 package org.odk.collect.naxa.site;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,6 +22,11 @@ import android.widget.ToggleButton;
 
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.FileManagerTabs;
+import org.odk.collect.android.activities.InstanceChooserList;
+import org.odk.collect.android.activities.InstanceUploaderList;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.DialogFactory;
@@ -274,6 +280,8 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        Intent intent = null;
+
         switch (view.getId()) {
             case R.id.site_option_frag_general_form:
                 toForms();
@@ -283,6 +291,25 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.site_option_frag_staged_form:
                 toStageList();
+                break;
+            case R.id.site_option_frag_btn_delete_form:
+
+                intent = new Intent(getActivity().getApplicationContext(), FileManagerTabs.class);
+                intent.putExtra(EXTRA_OBJECT, loadedSite);
+                startActivity(intent);
+
+                break;
+            case R.id.site_option_frag_btn_edit_saved_form:
+                Intent i = new Intent(getActivity().getApplicationContext(), InstanceChooserList.class);
+                i.putExtra(EXTRA_OBJECT, loadedSite);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
+                        ApplicationConstants.FormModes.EDIT_SAVED);
+                startActivity(i);
+                break;
+            case R.id.site_option_frag_btn_send_form:
+                intent = new Intent(getActivity().getApplicationContext(), InstanceUploaderList.class);
+                intent.putExtra(EXTRA_OBJECT, loadedSite);
+                startActivity(intent);
                 break;
         }
     }

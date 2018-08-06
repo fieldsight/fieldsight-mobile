@@ -50,6 +50,7 @@ import org.odk.collect.android.receivers.NetworkReceiver;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.site.db.SiteLocalSource;
@@ -63,6 +64,7 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePermissions;
+import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 /**
  * Responsible for displaying all the valid forms in the forms directory. Stores
@@ -87,7 +89,9 @@ public class InstanceUploaderList extends InstanceListActivity implements
     private InstanceSyncTask instanceSyncTask;
 
     private boolean showAllMode;
-    private boolean filterBySite;
+
+    private Site loadedSite;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,7 +103,7 @@ public class InstanceUploaderList extends InstanceListActivity implements
 
         if (savedInstanceState != null) {
             showAllMode = savedInstanceState.getBoolean(SHOW_ALL_MODE);
-            filterBySite = savedInstanceState.getBoolean(FILTER_BY_SITE_MODE);
+            loadedSite = savedInstanceState.getParcelable(EXTRA_OBJECT);
         }
 
         requestStoragePermissions(this, new PermissionListener() {
@@ -114,6 +118,11 @@ public class InstanceUploaderList extends InstanceListActivity implements
                 finishAllActivities(InstanceUploaderList.this);
             }
         });
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
+        }
     }
 
     private void init() {
@@ -314,7 +323,8 @@ public class InstanceUploaderList extends InstanceListActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SHOW_ALL_MODE, showAllMode);
-        outState.putBoolean(FILTER_BY_SITE_MODE, filterBySite);
+        outState.putParcelable(EXTRA_OBJECT, loadedSite);
+
     }
 
     @Override
@@ -366,22 +376,19 @@ public class InstanceUploaderList extends InstanceListActivity implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
 
-
-        if (filterBySite) {
-            return instancesDao.getBySiteId("1");
-        }else {
-            return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
+        if (showAllMode) {
+            if (loadedSite != null) {
+                return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
+            } else {
+                return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
+            }
+        } else {
+            if (loadedSite != null) {
+                return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
+            } else {
+                return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
+            }
         }
-
-        //
-//        if (showAllMode) {
-//            return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
-//        } else {
-//            return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
-//        }
-//
-
-
     }
 
     @Override
