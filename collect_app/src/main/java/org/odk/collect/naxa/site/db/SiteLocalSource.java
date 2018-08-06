@@ -10,6 +10,7 @@ import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.FieldSightDatabase;
 import org.odk.collect.naxa.common.SingleLiveEvent;
 import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.site.SiteType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,42 +75,28 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
     public void setSiteAsNotFinalized(String siteId) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_UNVERIFIED_SITE);
-                Timber.i("Nishon %s", i);
-            }
+        AsyncTask.execute(() -> {
+            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_UNVERIFIED_SITE);
         });
 
     }
 
     public void setSiteAsFinalized(String siteId) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_FINALIZED);
-                Timber.i("Nishon %s", i);
-            }
+        AsyncTask.execute(() -> {
+            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_FINALIZED);
         });
 
     }
 
     public void setSiteAsVerified(String siteId) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
-            }
+        AsyncTask.execute(() -> {
+            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
         });
     }
 
     public void setSiteId(String oldSiteId, String newSiteId) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                dao.updateSiteId(oldSiteId, newSiteId);
-            }
-        });
+        AsyncTask.execute(() -> dao.updateSiteId(oldSiteId, newSiteId));
     }
+
+
 }

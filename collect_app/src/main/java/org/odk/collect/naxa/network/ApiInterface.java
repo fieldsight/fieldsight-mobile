@@ -6,9 +6,11 @@ import org.odk.collect.naxa.login.model.AuthResponse;
 import org.odk.collect.naxa.login.model.MeResponse;
 import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.scheduled.data.ScheduleForm;
+import org.odk.collect.naxa.site.SiteType;
 import org.odk.collect.naxa.stages.data.Stage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -26,6 +28,7 @@ import retrofit2.http.Url;
 
 import static org.odk.collect.naxa.network.APIEndpoint.GET_FORM_SCHEDULE;
 import static org.odk.collect.naxa.network.APIEndpoint.GET_GENERAL_FORM;
+import static org.odk.collect.naxa.network.APIEndpoint.GET_SITE_TYPES;
 import static org.odk.collect.naxa.network.APIEndpoint.GET_STAGE_SUB_STAGE;
 
 public interface ApiInterface {
@@ -67,4 +70,7 @@ public interface ApiInterface {
                                 @Part("type") RequestBody type,
                                 @Part("region") RequestBody regionID,
                                 @Part("site_meta_attributes_ans") RequestBody metaAttrs);
+
+    @GET(GET_SITE_TYPES)
+    Observable<List<SiteType>> getSiteTypes();
 }

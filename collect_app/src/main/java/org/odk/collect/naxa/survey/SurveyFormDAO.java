@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public abstract class SurveyFormDAO implements BaseDaoFieldSight<SurveyForm> {
-    @Query("SELECT * FROM SubStage")
+    @Query("SELECT * FROM survey_forms")
     public abstract LiveData<List<SurveyForm>> getAllSurveyForms();
 
 

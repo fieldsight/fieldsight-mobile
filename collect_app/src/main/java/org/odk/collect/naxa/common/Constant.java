@@ -82,6 +82,7 @@ public class Constant {
         public static final int SCHEDULED_FORMS = 4;
         public static final int STAGED_FORMS = 5;
         public static final int PROJECT_CONTACTS = 6;
+        public static final int SITE_TYPES = 7;
     }
 
     public final static class DownloadStatus {
