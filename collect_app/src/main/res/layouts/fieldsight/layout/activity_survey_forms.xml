@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true"
-    tools:context="org.odk.collect.naxa.survey.SurveyFormsActivity">
+    tools:context="org.bcss.collect.naxa.survey.SurveyFormsActivity">
 
     <include
         layout="@layout/general_toolbar" />
