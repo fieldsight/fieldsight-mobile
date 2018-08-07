@@ -22,6 +22,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -47,17 +48,16 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         syncRepository = new SyncRepository(Collect.getInstance());
     }
 
-    @Override
-    public void getAll() {
-        int uid = Constant.DownloadUID.PROJECT_SITES;
-        ServiceGenerator.getRxClient()
+
+    public Single<List<Project>> fetchProjecSites() {
+        return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUserInformation()
                 .flatMap(new Function<MeResponse, ObservableSource<List<MySites>>>() {
                     @Override
                     public ObservableSource<List<MySites>> apply(MeResponse meResponse) throws Exception {
                         String user = new Gson().toJson(meResponse.getData());
-                        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(),SharedPreferenceUtils.PREF_KEY.USER,user);
+                        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
                         return Observable.just(meResponse.getData().getMySitesModel());
                     }
                 })
@@ -69,6 +69,13 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 })
                 .toList()
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public void getAll() {
+        int uid = Constant.DownloadUID.PROJECT_SITES;
+        fetchProjecSites()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<List<Project>>() {
                     @Override

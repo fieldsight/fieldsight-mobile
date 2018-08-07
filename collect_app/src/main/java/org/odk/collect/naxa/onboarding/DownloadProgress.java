@@ -27,6 +27,16 @@ public class DownloadProgress implements Serializable {
         return currentFile;
     }
 
+    @Override
+    public String toString() {
+        return "DownloadProgress{" +
+                "currentFile='" + currentFile + '\'' +
+                ", progress=" + progress +
+                ", total=" + total +
+                ", message='" + message + '\'' +
+                '}';
+    }
+
     public int getProgress() {
         return progress;
     }

@@ -1,6 +1,5 @@
 package org.odk.collect.naxa.generalforms.data;
 
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -17,7 +16,6 @@ import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.onboarding.XMLForm;
 import org.odk.collect.naxa.onboarding.XMLFormBuilder;
 import org.odk.collect.naxa.project.data.ProjectLocalSource;
-import org.odk.collect.naxa.project.data.ProjectRepository;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.io.IOException;
@@ -28,11 +26,13 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
 import static org.odk.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_ERROR;
@@ -58,7 +58,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
     }
 
 
-    private Observable<ArrayList<GeneralForm>> downloadGeneralForm(XMLForm xmlForm) {
+    private Observable<ArrayList<GeneralForm>> fetchGeneralFromOneUrl(XMLForm xmlForm) {
         String createdFromProject = XMLForm.toNumeralString(xmlForm.isCreatedFromProject());
         String creatorsId = xmlForm.getFormCreatorsId();
 
@@ -85,8 +85,8 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    @Override
-    public void getAll() {
+
+    public Single<ArrayList<GeneralForm>> fetchAllGeneralForms() {
         Observable<List<XMLForm>> siteODKForms = FieldSightConfigDatabase
                 .getDatabase(Collect.getInstance())
                 .getSiteOverideDAO()
@@ -104,8 +104,6 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .toObservable();
 
 
-
-
         Observable<List<XMLForm>> projectODKForms = projectLocalSource
                 .getProjectsMaybe()
                 .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
@@ -117,10 +115,10 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .toObservable();
 
 
-        Observable.merge(siteODKForms, projectODKForms)
+        return Observable.merge(siteODKForms, projectODKForms)
 
                 .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
-                .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::downloadGeneralForm)
+                .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::fetchGeneralFromOneUrl)
                 .map(generalForms -> {
                     for (GeneralForm generalForm : generalForms) {
                         String deployedFrom = generalForm.getProject() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
@@ -140,7 +138,14 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     return generalForms;
                 })
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
+
+    @Override
+    public void getAll() {
+
+        fetchAllGeneralForms()
                 .subscribe(new SingleObserver<ArrayList<GeneralForm>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -150,19 +155,17 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     @Override
                     public void onSuccess(ArrayList<GeneralForm> generalForms) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
-                        syncRepository.setSuccess(Constant.DownloadUID.GENERAL_FORMS);
+                        Timber.i("%s general forms downloaded successfully ", generalForms.size());
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_ERROR));
-                        syncRepository.setFailed(Constant.DownloadUID.GENERAL_FORMS);
                     }
                 });
 
     }
-
 
 
 }

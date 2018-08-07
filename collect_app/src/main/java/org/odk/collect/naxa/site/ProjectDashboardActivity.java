@@ -378,7 +378,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
                 break;
             case R.id.nav_view_finalized_offline_site:
-//                FinalizedSiteListActivity.start(this, loadedProject);
+
                 break;
             case R.id.nav_view_site_dashboard:
 

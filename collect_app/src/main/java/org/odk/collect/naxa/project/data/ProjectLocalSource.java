@@ -32,6 +32,11 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
         return INSTANCE;
     }
 
+
+    public Maybe<List<Project>> getAllMaybe(){
+        return dao.getProjectsMaybe();
+    }
+
     @Override
     public LiveData<List<Project>> getAll( ) {
         return dao.getProjectsLive();

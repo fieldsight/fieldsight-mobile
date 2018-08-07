@@ -7,12 +7,14 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
+import org.odk.collect.naxa.common.ODKFormRemoteSource;
 import org.odk.collect.naxa.common.event.DataSyncEvent;
+import org.odk.collect.naxa.generalforms.data.GeneralForm;
 import org.odk.collect.naxa.generalforms.data.GeneralFormLocalSource;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRepository;
+import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.project.data.ProjectRepository;
 import org.odk.collect.naxa.project.data.ProjectSitesRemoteSource;
 import org.odk.collect.naxa.site.db.SiteRepository;
@@ -20,7 +22,13 @@ import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import timber.log.Timber;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -47,7 +55,46 @@ public class DownloadModelImpl implements DownloadModel {
     @Deprecated
     @Override
     public void fetchGeneralForms() {
-        new GeneralFormRemoteSource().getAll();
+
+        ProjectSitesRemoteSource
+                .getInstance()
+                .fetchProjecSites()
+                .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
+                    /*note:
+                     *1. ignored projects from flat map
+                     *2. used tolist to wait to complete all odk forms download
+                     */
+                    return ODKFormRemoteSource.getInstance()
+                            .fetchODKForms()
+                            .map(downloadProgress -> {
+                                //todo: broadcast odk form progress
+                                Timber.i(downloadProgress.toString());
+                                return downloadProgress;
+                            })
+                            .toList();
+                })
+                .flatMap(new Function<List<DownloadProgress>, Single<ArrayList<GeneralForm>>>() {
+                    @Override
+                    public Single<ArrayList<GeneralForm>> apply(List<DownloadProgress> downloadProgresses) throws Exception {
+                        return GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
+                    }
+                })
+                .subscribe(new SingleObserver<ArrayList<GeneralForm>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.GENERAL_FORMS);
+                    }
+
+                    @Override
+                    public void onSuccess(ArrayList<GeneralForm> generalForms) {
+                        SyncRepository.getInstance().setSuccess(Constant.DownloadUID.GENERAL_FORMS);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        SyncRepository.getInstance().setFailed(Constant.DownloadUID.GENERAL_FORMS);
+                    }
+                });
     }
 
 

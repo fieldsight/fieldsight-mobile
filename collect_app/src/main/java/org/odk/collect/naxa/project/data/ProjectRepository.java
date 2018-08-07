@@ -48,10 +48,9 @@ public class ProjectRepository implements BaseRepository<Project> {
     @Override
     public LiveData<List<Project>> getAll(boolean forceUpdate) {
         if (forceUpdate) remoteSource.getAll();
-
-
         return localSource.getAll();
     }
+
 
 
     @Override

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.FieldSightDatabase;
 import org.odk.collect.naxa.onboarding.SyncableItems;
@@ -55,6 +56,10 @@ public class SyncRepository {
                     }
                 });
 
+    }
+
+    public static SyncRepository getInstance() {
+        return new SyncRepository(Collect.getInstance());
     }
 
     public void insert(SyncableItems... items) {
