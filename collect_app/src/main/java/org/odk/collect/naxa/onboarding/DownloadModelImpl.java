@@ -20,6 +20,8 @@ import org.odk.collect.naxa.project.data.ProjectSitesRemoteSource;
 import org.odk.collect.naxa.scheduled.data.ScheduleForm;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
 import org.odk.collect.naxa.site.db.SiteRepository;
+import org.odk.collect.naxa.stages.data.Stage;
+import org.odk.collect.naxa.stages.data.StageRemoteSource;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
@@ -143,7 +145,45 @@ public class DownloadModelImpl implements DownloadModel {
 
     @Override
     public void fetchStagedForms() {
+        ProjectSitesRemoteSource
+                .getInstance()
+                .fetchProjecSites()
+                .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
+                    /*note:
+                     *1. ignored projects from flat map
+                     *2. used tolist to wait to complete all odk forms download
+                     */
+                    return ODKFormRemoteSource.getInstance()
+                            .fetchODKForms()
+                            .map(downloadProgress -> {
+                                //todo: broadcast odk form progress
+                                Timber.i(downloadProgress.toString());
+                                return downloadProgress;
+                            })
+                            .toList();
+                })
+                .flatMap(new Function<List<DownloadProgress>, Single<ArrayList<Stage>>>() {
+                    @Override
+                    public Single<ArrayList<Stage>> apply(List<DownloadProgress> downloadProgresses) throws Exception {
+                        return StageRemoteSource.getInstance().fetchAllStages();
+                    }
+                })
+                .subscribe(new SingleObserver<ArrayList<Stage>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.STAGED_FORMS);
+                    }
 
+                    @Override
+                    public void onSuccess(ArrayList<Stage> scheduleForms) {
+                        SyncRepository.getInstance().setSuccess(Constant.DownloadUID.STAGED_FORMS);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        SyncRepository.getInstance().setFailed(Constant.DownloadUID.STAGED_FORMS);
+                    }
+                });
     }
 
 
