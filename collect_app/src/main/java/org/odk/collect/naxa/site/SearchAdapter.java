@@ -1,8 +1,6 @@
 package org.odk.collect.naxa.site;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +10,7 @@ import android.widget.TextView;
 import org.odk.collect.android.R;
 import org.odk.collect.naxa.common.ViewUtils;
 import org.odk.collect.naxa.login.model.Site;
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchAdapter extends BaseAdapter {

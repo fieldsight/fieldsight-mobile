@@ -1,19 +1,12 @@
 package org.odk.collect.naxa.site.db;
 
-import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseRepository;
 import org.odk.collect.naxa.common.Constant;
-import org.odk.collect.naxa.common.FieldSightDatabase;
-import org.odk.collect.naxa.common.SingleLiveEvent;
 import org.odk.collect.naxa.generalforms.data.GeneralForm;
-import org.odk.collect.naxa.generalforms.data.GeneralFormLocalSource;
-import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
-import org.odk.collect.naxa.generalforms.data.GeneralFormRepository;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
 

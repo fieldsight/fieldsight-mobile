@@ -13,6 +13,7 @@ import org.odk.collect.naxa.login.model.MySites;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.network.ApiInterface;
 import org.odk.collect.naxa.network.ServiceGenerator;
+import org.odk.collect.naxa.site.data.SiteCluster;
 import org.odk.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.naxa.site.db.SiteRemoteSource;
 import org.odk.collect.naxa.site.db.SiteRepository;
@@ -62,10 +63,23 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     }
                 })
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
-                .map(mySites -> {
-                    siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
-                    projectLocalSource.save(mySites.getProject());
-                    return mySites.getProject();
+                .flatMap(new Function<MySites, ObservableSource<Project>>() {
+                    @Override
+                    public ObservableSource<Project> apply(MySites mySites) throws Exception {
+                        Project project = mySites.getProject();
+                        siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
+                        projectLocalSource.save(project);
+                        return ServiceGenerator.createService(ApiInterface.class)
+                                .getClusterByProjectId(project.getId())
+                                .flatMap(new Function<List<SiteCluster>, ObservableSource<Project>>() {
+                                    @Override
+                                    public ObservableSource<Project> apply(List<SiteCluster> siteClusters) throws Exception {
+                                        String value = new Gson().toJson(siteClusters);
+                                        ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
+                                        return Observable.just(project);
+                                    }
+                                });
+                    }
                 })
                 .toList()
                 .subscribeOn(Schedulers.io())

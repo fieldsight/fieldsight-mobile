@@ -7,7 +7,6 @@ import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.List;
 
-import io.fabric.sdk.android.Fabric;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;

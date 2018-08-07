@@ -7,6 +7,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseLocalDataSource;
 import org.odk.collect.naxa.common.FieldSightDatabase;
 import org.odk.collect.naxa.login.model.Project;
+import org.odk.collect.naxa.site.data.SiteCluster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +34,12 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
     }
 
 
-    public Maybe<List<Project>> getAllMaybe(){
+    public Maybe<List<Project>> getAllMaybe() {
         return dao.getProjectsMaybe();
     }
 
     @Override
-    public LiveData<List<Project>> getAll( ) {
+    public LiveData<List<Project>> getAll() {
         return dao.getProjectsLive();
     }
 
@@ -59,5 +60,9 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
 
     public Maybe<List<Project>> getProjectsMaybe() {
         return dao.getProjectsMaybe();
+    }
+
+    public void updateSiteClusters(String projectId, String siteClusters) {
+        AsyncTask.execute(() -> dao.updateCluster(projectId, siteClusters));
     }
 }

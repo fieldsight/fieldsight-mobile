@@ -1,6 +1,5 @@
 package org.odk.collect.naxa.site.db;
 
-import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MediatorLiveData;
 
 import org.odk.collect.naxa.common.BaseRemoteDataSource;
@@ -10,12 +9,10 @@ import org.odk.collect.naxa.network.APIEndpoint;
 import org.odk.collect.naxa.network.ApiInterface;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -25,7 +22,7 @@ import okhttp3.RequestBody;
 import timber.log.Timber;
 
 import static org.odk.collect.naxa.common.Constant.SiteStatus.IS_UNVERIFIED_SITE;
-import static org.odk.collect.naxa.network.ServiceGenerator.*;
+import static org.odk.collect.naxa.network.ServiceGenerator.getRxClient;
 
 public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 

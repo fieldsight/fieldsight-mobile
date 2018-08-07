@@ -28,6 +28,8 @@ public class Project implements Parcelable {
     private String address;
     private String lat;
     private String lon;
+    private String siteClusters;
+
 
     @SerializedName("organization_name")
     private String organizationName;
@@ -36,6 +38,14 @@ public class Project implements Parcelable {
 
     @SerializedName("cluster_sites")
     private Boolean hasClusteredSites;
+
+    public String getSiteClusters() {
+        return siteClusters;
+    }
+
+    public void setSiteClusters(String siteClusters) {
+        this.siteClusters = siteClusters;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -127,7 +137,6 @@ public class Project implements Parcelable {
         phone = in.readString();
         siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
     }
-
 
 
     public String getOrganizationName() {

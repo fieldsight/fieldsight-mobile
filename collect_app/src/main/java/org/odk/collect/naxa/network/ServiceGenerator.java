@@ -92,7 +92,6 @@ public class ServiceGenerator {
                     .client(createOkHttpClient())
                     .baseUrl(APIEndpoint.BASE_URL)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }

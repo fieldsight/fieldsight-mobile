@@ -25,7 +25,6 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderList;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
@@ -37,7 +36,6 @@ import org.odk.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.naxa.stages.StageListFragment;
 
 import java.io.File;
-
 
 import butterknife.ButterKnife;
 import butterknife.OnLongClick;

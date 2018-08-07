@@ -24,8 +24,6 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import org.odk.collect.android.BuildConfig;
 import org.odk.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -36,11 +34,9 @@ import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.common.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
-import org.odk.collect.naxa.site.data.SiteCluster;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

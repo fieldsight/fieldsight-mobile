@@ -2,10 +2,6 @@ package org.odk.collect.naxa.site;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.util.Log;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -15,8 +11,6 @@ import org.odk.collect.naxa.login.model.Site;
 import org.odk.collect.naxa.site.db.SiteRepository;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class CreateSiteViewModel extends ViewModel {
 

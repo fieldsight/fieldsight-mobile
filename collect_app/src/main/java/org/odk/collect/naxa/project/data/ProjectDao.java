@@ -34,4 +34,7 @@ public abstract class ProjectDao implements BaseDaoFieldSight<Project> {
         deleteAll();
         insert(items);
     }
+
+    @Query("UPDATE project  SET siteClusters = :siteClusters WHERE id = :projectId")
+    public abstract void updateCluster(String projectId, String siteClusters);
 }

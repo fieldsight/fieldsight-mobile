@@ -1,21 +1,16 @@
 package org.odk.collect.naxa.site.db;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseLocalDataSource;
 import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.FieldSightDatabase;
-import org.odk.collect.naxa.common.SingleLiveEvent;
 import org.odk.collect.naxa.login.model.Site;
-import org.odk.collect.naxa.site.SiteType;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import timber.log.Timber;
 
 public class SiteLocalSource implements BaseLocalDataSource<Site> {
 

@@ -30,6 +30,7 @@ import java.util.List;
 
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import timber.log.Timber;
@@ -62,7 +63,7 @@ public class DownloadModelImpl implements DownloadModel {
         ProjectSitesRemoteSource
                 .getInstance()
                 .fetchProjecSites()
-                .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
+                .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
                      *2. used tolist to wait to complete all odk forms download
@@ -76,20 +77,20 @@ public class DownloadModelImpl implements DownloadModel {
                             })
                             .toList();
                 })
-                .flatMap(new Function<List<DownloadProgress>, Single<ArrayList<GeneralForm>>>() {
+                .flatMap(new Function<Object, SingleSource<?>>() {
                     @Override
-                    public Single<ArrayList<GeneralForm>> apply(List<DownloadProgress> downloadProgresses) throws Exception {
+                    public SingleSource<?> apply(Object o) throws Exception {
                         return GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
                     }
                 })
-                .subscribe(new SingleObserver<ArrayList<GeneralForm>>() {
+                .subscribe(new SingleObserver<Object>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         SyncRepository.getInstance().showProgress(Constant.DownloadUID.GENERAL_FORMS);
                     }
 
                     @Override
-                    public void onSuccess(ArrayList<GeneralForm> generalForms) {
+                    public void onSuccess(Object o) {
                         SyncRepository.getInstance().setSuccess(Constant.DownloadUID.GENERAL_FORMS);
                     }
 
@@ -98,6 +99,7 @@ public class DownloadModelImpl implements DownloadModel {
                         SyncRepository.getInstance().setError(Constant.DownloadUID.GENERAL_FORMS);
                     }
                 });
+
     }
 
     @Override
@@ -145,10 +147,11 @@ public class DownloadModelImpl implements DownloadModel {
 
     @Override
     public void fetchStagedForms() {
+
         ProjectSitesRemoteSource
                 .getInstance()
                 .fetchProjecSites()
-                .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
+                .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
                      *2. used tolist to wait to complete all odk forms download
@@ -162,26 +165,26 @@ public class DownloadModelImpl implements DownloadModel {
                             })
                             .toList();
                 })
-                .flatMap(new Function<List<DownloadProgress>, Single<ArrayList<Stage>>>() {
+                .flatMap(new Function<Object, SingleSource<ArrayList<Stage>>>() {
                     @Override
-                    public Single<ArrayList<Stage>> apply(List<DownloadProgress> downloadProgresses) throws Exception {
+                    public SingleSource<ArrayList<Stage>> apply(Object o) throws Exception {
                         return StageRemoteSource.getInstance().fetchAllStages();
                     }
                 })
                 .subscribe(new SingleObserver<ArrayList<Stage>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.STAGED_FORMS);
+                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.SCHEDULED_FORMS);
                     }
 
                     @Override
                     public void onSuccess(ArrayList<Stage> scheduleForms) {
-                        SyncRepository.getInstance().setSuccess(Constant.DownloadUID.STAGED_FORMS);
+                        SyncRepository.getInstance().setSuccess(Constant.DownloadUID.SCHEDULED_FORMS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(Constant.DownloadUID.STAGED_FORMS);
+                        SyncRepository.getInstance().setError(Constant.DownloadUID.SCHEDULED_FORMS);
                     }
                 });
     }

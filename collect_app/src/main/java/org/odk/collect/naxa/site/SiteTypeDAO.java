@@ -6,7 +6,6 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
 import org.odk.collect.naxa.common.database.BaseDaoFieldSight;
-import org.odk.collect.naxa.survey.SurveyForm;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,31 +18,21 @@ import android.view.ViewGroup;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.naxa.common.Constant;
 import org.odk.collect.naxa.common.PaginationScrollListener;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
-import org.odk.collect.naxa.network.ApiInterface;
-import org.odk.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.naxa.site.db.SiteRemoteSource;
 import org.odk.collect.naxa.site.db.SiteViewModel;
 import org.odk.collect.naxa.survey.SurveyFormsActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 
 import static org.odk.collect.naxa.common.Constant.EXTRA_OBJECT;
-import static org.odk.collect.naxa.common.Constant.SiteStatus.IS_UNVERIFIED_SITE;
-import static org.odk.collect.naxa.common.Constant.SiteStatus.IS_VERIFIED_BUT_UNSYNCED;
 
 public class SiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener {
 
