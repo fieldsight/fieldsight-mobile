@@ -76,13 +76,14 @@
     <string name="download_update_error_message">Failed to update latest %s information</string>
     <string name="msg_schedule_form_found"> %1$d schedules forms found in %2$s</string>
 
-    <string
-        translatable="false"
-        name="shared_transition_toolbar">toolbar_shared_transition</string>
+    <string name="shared_transition_toolbar" translatable="false">toolbar_shared_transition</string>
     <string name="btn_add_site_photo">Add Site photo</string>
     <string name="toolbar_title_offline_site">Create Site</string>
     <string name="msg_failed_to_load">Failed to load</string>
     <string name="menu_filter">Filter</string>
+    <string name="hint_choose_site_type">Choose an type</string>
+    <string name="hint_choose_site_cluster">Choose an cluster</string>
+    <string name="msg_location_recorded">Location Recorded(Accuracy: %s)</string>
 
 
 </resources>

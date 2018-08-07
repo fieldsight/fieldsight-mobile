@@ -95,7 +95,7 @@ public class DownloadModelImpl implements DownloadModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setFailed(Constant.DownloadUID.GENERAL_FORMS);
+                        SyncRepository.getInstance().setError(Constant.DownloadUID.GENERAL_FORMS);
                     }
                 });
     }
@@ -138,7 +138,7 @@ public class DownloadModelImpl implements DownloadModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setFailed(Constant.DownloadUID.SCHEDULED_FORMS);
+                        SyncRepository.getInstance().setError(Constant.DownloadUID.SCHEDULED_FORMS);
                     }
                 });
     }
@@ -181,7 +181,7 @@ public class DownloadModelImpl implements DownloadModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setFailed(Constant.DownloadUID.STAGED_FORMS);
+                        SyncRepository.getInstance().setError(Constant.DownloadUID.STAGED_FORMS);
                     }
                 });
     }
@@ -210,7 +210,7 @@ public class DownloadModelImpl implements DownloadModel {
                     break;
                 case DownloadProgress.STATUS_ERROR:
                     EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_ERROR));
-                    syncRepository.setFailed(uid);
+                    syncRepository.setError(uid);
                     break;
                 case DownloadProgress.STATUS_FINISHED_FORM:
                     EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_END));

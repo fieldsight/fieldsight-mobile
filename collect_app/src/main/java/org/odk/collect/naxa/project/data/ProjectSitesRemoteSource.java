@@ -93,7 +93,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public void onError(Throwable e) {
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
-                        syncRepository.setFailed(Constant.DownloadUID.PROJECT_SITES);
+                        syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
                     }
                 });
 

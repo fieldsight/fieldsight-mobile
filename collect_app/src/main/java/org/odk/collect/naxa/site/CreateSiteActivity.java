@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -35,8 +36,11 @@ import org.odk.collect.naxa.common.DialogFactory;
 import org.odk.collect.naxa.common.ViewModelFactory;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.login.model.Site;
+import org.odk.collect.naxa.site.data.SiteCluster;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,7 +90,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private Project project;
     private File photoToUpload;
 
-    private String latitude, longitude;
+    private String latitude, longitude, accurary;
     private Uri phototoUploadUri;
 
     public static void start(Context context, @NonNull Project project) {
@@ -137,19 +141,15 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                         tiSiteIdentifier.setError(getString(R.string.error_field_required));
                         tiSiteIdentifier.requestFocus();
                         break;
+                    case LOCATION_RECORDED:
+                        btnCollectSiteRecordLocation.setTextColor(ContextCompat.getColor(CreateSiteActivity.this, R.color.colorGreenPrimaryLight));
+                        btnCollectSiteRecordLocation.setText(getString(R.string.msg_location_recorded, accurary));
+                        break;
                     case VALIDATED:
                         finish();
                         break;
 
                 }
-            }
-        });
-
-        createSiteViewModel.getState().observe(this, new Observer<FormState>() {
-            @Override
-            public void onChanged(@Nullable FormState formState) {
-                if (formState == null) return;
-                handleViewState(formState);
             }
         });
 
@@ -162,15 +162,40 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     }
                 });
 
-        createSiteViewModel.getProjectMutableLiveData().setValue(project);
+
+        SiteTypeLocalSource.getInstance()
+                .getByProjectId(project.getId())
+                .observe(this, siteTypes -> {
+                    boolean isEmpty = siteTypes == null || siteTypes.isEmpty();
+                    createSiteViewModel.getShowSiteType().setValue(!isEmpty);
+                });
+
+        SiteClusterLocalSource.getInstance()
+                .getByProjectId(project.getId())
+                .observe(this, siteClusters -> {
+                    boolean isEmpty = siteClusters == null || siteClusters.isEmpty();
+                    createSiteViewModel.getShowSiteCluster().setValue(!isEmpty);
+
+                });
+
+
+        createSiteViewModel.getShowSiteCluster().observe(this, this::showSiteClusterSpinner);
+        createSiteViewModel.getShowSiteCluster().observe(this, this::showSiteTypeSpinner);
+        createSiteViewModel.getShowSiteCluster().observe(this, this::showProgress);
 
         watchText(tiSiteIdentifier);
         watchText(tiSiteName);
         watchText(tiSitePhone);
         watchText(tiSiteAddress);
         watchText(tiSitePublicDesc);
+
+        createSiteViewModel.getProjectMutableLiveData().setValue(project);
+
     }
 
+    private void showProgress(Boolean show) {
+
+    }
 
     public void watchText(TextInputLayout textInputLayout) {
 
@@ -221,21 +246,25 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     }
 
 
-    private void handleViewState(FormState formState) {
-        if (formState.isProgressIndicatorShown()) {
-            showProgress();
-        } else if (formState.isSiteClusterShown()) {
-            showSiteClusterSpinner();
-        } else if (formState.isSiteTypeShown()) {
-            showSiteTypeSpinner();
+    private void showSiteTypeSpinner(boolean show) {
+        spinnerSiteType.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (show) {
+            SiteTypeSpinnerAdapter spinnerAdapter = new SiteTypeSpinnerAdapter(this,
+                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_type), new ArrayList<>(0));
+            spinnerSiteType.setAdapter(spinnerAdapter);
+            spinnerSiteType.setSelection(spinnerAdapter.getCount());
         }
+
     }
 
-    private void showSiteTypeSpinner() {
-    }
-
-    private void showSiteClusterSpinner() {
-
+    private void showSiteClusterSpinner(boolean show) {
+        spinnerSiteCluster.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (show) {
+            SiteClusterSpinnerAdapter spinnerAdapter = new SiteClusterSpinnerAdapter(this,
+                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_cluster), new ArrayList<>(0));
+            spinnerSiteCluster.setAdapter(spinnerAdapter);
+            spinnerSiteCluster.setSelection(spinnerAdapter.getCount());
+        }
     }
 
     private void showProgress() {
@@ -306,19 +335,18 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
         switch (requestCode) {
             case Constant.Key.RC_CAMERA:
-                createSiteViewModel.setPhoto(photoToUpload.getAbsolutePath());
-                Glide.with(this).load(photoToUpload.getAbsoluteFile()).into(imageVideoThumb);
-                imageVideoThumb.setVisibility(View.VISIBLE);
-
-                break;
-            case Constant.Key.RC_STORAGE:
-                createSiteViewModel.setPhoto(photoToUpload.getAbsolutePath());
+            case Constant.Key.SELECT_FILE:
+                ToastUtils.showLongToast("Failed to load image");
+//                createSiteViewModel.setPhoto(photoToUpload.getAbsolutePath());
+//                Glide.with(this).load(photoToUpload.getAbsoluteFile()).into(imageVideoThumb);
+//                imageVideoThumb.setVisibility(View.VISIBLE);
                 break;
             case Constant.Key.GEOPOINT_RESULT_CODE:
                 String location = data.getStringExtra(LOCATION_RESULT);
                 String[] locationSplit = location.split(" ");
                 latitude = locationSplit[0];
                 longitude = locationSplit[1];
+                accurary = locationSplit[3];
                 createSiteViewModel.setLocation(latitude, longitude);
                 break;
         }

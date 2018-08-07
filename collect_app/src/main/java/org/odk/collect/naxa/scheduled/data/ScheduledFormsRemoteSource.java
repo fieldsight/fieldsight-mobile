@@ -76,7 +76,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
 
                     @Override
                     public void onError(Throwable e) {
-                        syncRepository.setFailed(Constant.DownloadUID.SCHEDULED_FORMS);
+                        syncRepository.setError(Constant.DownloadUID.SCHEDULED_FORMS);
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.SCHEDULED_FORMS, EVENT_ERROR));
                     }
                 });

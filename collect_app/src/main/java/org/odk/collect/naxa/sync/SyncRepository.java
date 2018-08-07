@@ -88,7 +88,7 @@ public class SyncRepository {
         updateStatus(uid, Constant.DownloadStatus.COMPLETED);
     }
 
-    public void setFailed(int uid) {
+    public void setError(int uid) {
         hideProgress(uid);
         updateDate(uid);
         updateStatus(uid, Constant.DownloadStatus.FAILED);

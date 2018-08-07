@@ -14,8 +14,10 @@ import org.odk.collect.naxa.onboarding.SyncableItems;
 import org.odk.collect.naxa.project.data.ProjectDao;
 import org.odk.collect.naxa.scheduled.data.ScheduleForm;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormDAO;
+import org.odk.collect.naxa.site.SiteClusterDAO;
 import org.odk.collect.naxa.site.SiteType;
 import org.odk.collect.naxa.site.SiteTypeDAO;
+import org.odk.collect.naxa.site.data.SiteCluster;
 import org.odk.collect.naxa.site.db.SiteDao;
 import org.odk.collect.naxa.stages.data.Stage;
 import org.odk.collect.naxa.stages.data.StageFormDAO;
@@ -37,7 +39,8 @@ import java.io.File;
                 Stage.class,
                 SubStage.class,
                 SurveyForm.class,
-                SiteType.class
+                SiteType.class,
+                SiteCluster.class
 
         },
         version = 1)
@@ -63,6 +66,9 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     public abstract SurveyFormDAO getSurveyDAO();
 
     public abstract SiteTypeDAO getSiteTypesDAO();
+
+
+    public abstract SiteClusterDAO getSiteClusterDAO();
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 

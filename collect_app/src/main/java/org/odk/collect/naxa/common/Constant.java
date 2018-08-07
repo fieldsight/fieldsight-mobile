@@ -75,6 +75,7 @@ public class Constant {
     public static final String EXTRA_MESSAGE = "extra_msg";
     public static final String EXTRA_PROJECT_ID = "extra_msg";
 
+    //todo: replace with enum
     public final static class DownloadUID {
         public static final int PROJECT_SITES = 1;
         public static final int ODK_FORMS = 2;
@@ -84,6 +85,8 @@ public class Constant {
         public static final int PROJECT_CONTACTS = 6;
         public static final int SITE_TYPES = 7;
     }
+
+
 
     public final static class DownloadStatus {
         public static final int PENDING = 1;

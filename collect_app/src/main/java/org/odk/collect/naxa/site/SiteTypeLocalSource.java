@@ -1,6 +1,7 @@
 package org.odk.collect.naxa.site;
 
 import android.arch.lifecycle.LiveData;
+import android.os.AsyncTask;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.naxa.common.BaseLocalDataSource;
@@ -33,14 +34,18 @@ public class SiteTypeLocalSource implements BaseLocalDataSource<SiteType> {
         return null;
     }
 
+    public LiveData<List<SiteType>> getByProjectId(String projectId) {
+        return dao.getByProjectId(projectId);
+    }
+
     @Override
     public void save(SiteType... items) {
-        dao.insert(items);
+        AsyncTask.execute(() -> dao.insert(items));
     }
 
     @Override
     public void save(ArrayList<SiteType> items) {
-        dao.insert(items);
+        AsyncTask.execute(() -> dao.insert(items));
     }
 
     @Override

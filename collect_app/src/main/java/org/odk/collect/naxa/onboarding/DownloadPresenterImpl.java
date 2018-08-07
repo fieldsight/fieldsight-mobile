@@ -17,6 +17,7 @@ import org.odk.collect.naxa.common.event.DataSyncEvent;
 import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.odk.collect.naxa.project.data.ProjectSitesRemoteSource;
 import org.odk.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
+import org.odk.collect.naxa.site.SiteTypeRemoteSource;
 import org.odk.collect.naxa.stages.data.StageRemoteSource;
 import org.odk.collect.naxa.sync.SyncRepository;
 
@@ -30,6 +31,8 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
+import static org.odk.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class DownloadPresenterImpl implements DownloadPresenter {
 
@@ -76,11 +79,9 @@ public class DownloadPresenterImpl implements DownloadPresenter {
             return;
         }
 
-        ProjectSitesRemoteSource.getInstance().getAll();
 
         for (SyncableItems syncableItem : syncableItemList) {
             if (syncableItem.isChecked()) {
-                syncRepository.showProgress(syncableItem.getUid());
                 switch (syncableItem.getUid()) {
                     case Constant.DownloadUID.GENERAL_FORMS:
                         downloadModel.fetchGeneralForms();
@@ -100,6 +101,9 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                     case Constant.DownloadUID.PROJECT_CONTACTS:
                         syncRepository.setSuccess(Constant.DownloadUID.PROJECT_CONTACTS);
                         downloadModel.fetchProjectContacts();
+                        break;
+                    case SITE_TYPES:
+                        SiteTypeRemoteSource.getINSTANCE().getAll();
                         break;
                 }
             }

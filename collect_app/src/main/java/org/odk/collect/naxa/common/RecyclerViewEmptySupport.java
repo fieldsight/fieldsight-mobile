@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.naxa.onboarding.DownloadActivity;
 
 import javax.annotation.Nullable;
 
@@ -123,7 +125,8 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onEmptyLayoutClickListener.onRetryButtonClick();
+                        DownloadActivity.start(Collect.getInstance().getApplicationContext());
+                        //onEmptyLayoutClickListener.onRetryButtonClick();
                     }
                 });
     }

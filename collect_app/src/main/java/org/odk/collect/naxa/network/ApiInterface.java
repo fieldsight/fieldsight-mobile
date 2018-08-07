@@ -72,5 +72,5 @@ public interface ApiInterface {
                                 @Part("site_meta_attributes_ans") RequestBody metaAttrs);
 
     @GET(GET_SITE_TYPES)
-    Observable<List<SiteType>> getSiteTypes();
+    Single<List<SiteType>> getSiteTypes();
 }

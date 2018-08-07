@@ -22,24 +22,31 @@ public class CreateSiteViewModel extends ViewModel {
 
     private SiteRepository siteRepository;
     private SingleLiveEvent<CreateSiteFormStatus> formStatus = new SingleLiveEvent<CreateSiteFormStatus>();
-    private MutableLiveData<FormState> state = new MutableLiveData<FormState>();
+    private MutableLiveData<Boolean> showSiteType = new MutableLiveData<Boolean>();
+    private MutableLiveData<Boolean> showSiteCluster = new MutableLiveData<Boolean>();
+    private MutableLiveData<Boolean> showProgress = new MutableLiveData<Boolean>();
     private MutableLiveData<Site> siteMutableLiveData = new MutableLiveData<Site>();
     private MutableLiveData<Project> projectMutableLiveData = new MutableLiveData<Project>();
 
+    public MutableLiveData<Boolean> getShowSiteType() {
+        return showSiteType;
+    }
+
+    public MutableLiveData<Boolean> getShowSiteCluster() {
+        return showSiteCluster;
+    }
+
+    public MutableLiveData<Boolean> getShowProgress() {
+        return showProgress;
+    }
+
     public CreateSiteViewModel(SiteRepository siteRepository) {
+
         this.siteRepository = siteRepository;
     }
 
     public SingleLiveEvent<CreateSiteFormStatus> getFormStatus() {
         return formStatus;
-    }
-
-    public MutableLiveData<FormState> getState() {
-        return state;
-    }
-
-    public void setProgressIndicator(Boolean isProgressShow) {
-        state.getValue().setProgressIndicatorShown(isProgressShow);
     }
 
 
