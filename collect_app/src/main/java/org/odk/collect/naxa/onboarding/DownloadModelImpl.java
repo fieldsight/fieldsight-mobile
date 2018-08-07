@@ -17,6 +17,8 @@ import org.odk.collect.naxa.generalforms.data.GeneralFormRepository;
 import org.odk.collect.naxa.login.model.Project;
 import org.odk.collect.naxa.project.data.ProjectRepository;
 import org.odk.collect.naxa.project.data.ProjectSitesRemoteSource;
+import org.odk.collect.naxa.scheduled.data.ScheduleForm;
+import org.odk.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
 import org.odk.collect.naxa.site.db.SiteRepository;
 import org.odk.collect.naxa.sync.SyncRepository;
 
@@ -24,7 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
@@ -95,6 +96,54 @@ public class DownloadModelImpl implements DownloadModel {
                         SyncRepository.getInstance().setFailed(Constant.DownloadUID.GENERAL_FORMS);
                     }
                 });
+    }
+
+    @Override
+    public void fetchScheduledForms() {
+        ProjectSitesRemoteSource
+                .getInstance()
+                .fetchProjecSites()
+                .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
+                    /*note:
+                     *1. ignored projects from flat map
+                     *2. used tolist to wait to complete all odk forms download
+                     */
+                    return ODKFormRemoteSource.getInstance()
+                            .fetchODKForms()
+                            .map(downloadProgress -> {
+                                //todo: broadcast odk form progress
+                                Timber.i(downloadProgress.toString());
+                                return downloadProgress;
+                            })
+                            .toList();
+                })
+                .flatMap(new Function<List<DownloadProgress>, Single<ArrayList<ScheduleForm>>>() {
+                    @Override
+                    public Single<ArrayList<ScheduleForm>> apply(List<DownloadProgress> downloadProgresses) throws Exception {
+                        return ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
+                    }
+                })
+                .subscribe(new SingleObserver<ArrayList<ScheduleForm>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.SCHEDULED_FORMS);
+                    }
+
+                    @Override
+                    public void onSuccess(ArrayList<ScheduleForm> scheduleForms) {
+                        SyncRepository.getInstance().setSuccess(Constant.DownloadUID.SCHEDULED_FORMS);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        SyncRepository.getInstance().setFailed(Constant.DownloadUID.SCHEDULED_FORMS);
+                    }
+                });
+    }
+
+    @Override
+    public void fetchStagedForms() {
+
     }
 
 

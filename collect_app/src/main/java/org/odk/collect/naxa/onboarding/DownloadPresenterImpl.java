@@ -86,10 +86,10 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                         downloadModel.fetchGeneralForms();
                         break;
                     case Constant.DownloadUID.SCHEDULED_FORMS:
-                        ScheduledFormsRemoteSource.getInstance().getAll();
+                        downloadModel.fetchScheduledForms();
                         break;
                     case Constant.DownloadUID.STAGED_FORMS:
-                        StageRemoteSource.getInstance().getAll();
+                        downloadModel.fetchStagedForms();
                         break;
                     case Constant.DownloadUID.ODK_FORMS:
                         downloadModel.fetchODKForms(syncRepository);

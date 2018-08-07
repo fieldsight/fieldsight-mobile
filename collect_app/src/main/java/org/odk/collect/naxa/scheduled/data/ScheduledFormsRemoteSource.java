@@ -26,6 +26,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -59,71 +60,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
     @Override
     public void getAll() {
 
-        Observable<List<XMLForm>> siteODKForms = FieldSightConfigDatabase
-                .getDatabase(Collect.getInstance())
-                .getSiteOverideDAO()
-                .getAll()
-                .map((Function<SiteOveride, LinkedList<String>>) siteOveride -> {
-                    Type type = new TypeToken<LinkedList<String>>() {
-                    }.getType();//todo use typeconvertor
-                    return new Gson().fromJson(siteOveride.getScheduleFormIds(), type);
-                }).flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
-                .map(siteId -> new XMLFormBuilder()
-                        .setFormCreatorsId(siteId)
-                        .setIsCreatedFromProject(false)
-                        .createXMLForm())
-                .toList()
-                .toObservable();
-
-
-        Observable<List<XMLForm>> projectODKForms = projectLocalSource
-                .getProjectsMaybe()
-                .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
-                .map(project -> new XMLFormBuilder()
-                        .setFormCreatorsId(project.getId())
-                        .setIsCreatedFromProject(true)
-                        .createXMLForm())
-                .toList()
-                .toObservable();
-
-
-        Observable.merge(siteODKForms, projectODKForms)
-
-                .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
-                .flatMap(new Function<XMLForm, Observable<ArrayList<ScheduleForm>>>() {
-                    @Override
-                    public Observable<ArrayList<ScheduleForm>> apply(XMLForm xmlForm) throws Exception {
-                        return downloadProjectSchedule(xmlForm);
-                    }
-                })
-                .map(new Function<ArrayList<ScheduleForm>, ArrayList<ScheduleForm>>() {
-                    @Override
-                    public ArrayList<ScheduleForm> apply(ArrayList<ScheduleForm> scheduleForms) throws Exception {
-                        for (ScheduleForm scheduleForm : scheduleForms) {
-                            String deployedFrom = scheduleForm.getProject() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
-                            scheduleForm.setFormDeployedFrom(deployedFrom);
-                        }
-
-                        return scheduleForms;
-
-                    }
-                })
-                .toList()
-                .map(new Function<List<ArrayList<ScheduleForm>>, ArrayList<ScheduleForm>>() {
-                    @Override
-                    public ArrayList<ScheduleForm> apply(List<ArrayList<ScheduleForm>> arrayLists) throws Exception {
-                        ArrayList<ScheduleForm> scheduleForms = new ArrayList<>(0);
-
-                        for (ArrayList<ScheduleForm> scheduleFormsList : arrayLists) {
-                            scheduleForms.addAll(scheduleFormsList);
-                        }
-
-                        ScheduledFormsLocalSource.getInstance().updateAll(scheduleForms);
-                        return scheduleForms;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        fetchAllScheduledForms()
                 .subscribe(new SingleObserver<ArrayList<ScheduleForm>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -170,5 +107,74 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                     }
                 });
 
+    }
+
+    public Single<ArrayList<ScheduleForm>> fetchAllScheduledForms() {
+
+        Observable<List<XMLForm>> siteODKForms = FieldSightConfigDatabase
+                .getDatabase(Collect.getInstance())
+                .getSiteOverideDAO()
+                .getAll()
+                .map((Function<SiteOveride, LinkedList<String>>) siteOveride -> {
+                    Type type = new TypeToken<LinkedList<String>>() {
+                    }.getType();//todo use typeconvertor
+                    return new Gson().fromJson(siteOveride.getScheduleFormIds(), type);
+                }).flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
+                .map(siteId -> new XMLFormBuilder()
+                        .setFormCreatorsId(siteId)
+                        .setIsCreatedFromProject(false)
+                        .createXMLForm())
+                .toList()
+                .toObservable();
+
+
+        Observable<List<XMLForm>> projectODKForms = projectLocalSource
+                .getProjectsMaybe()
+                .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
+                .map(project -> new XMLFormBuilder()
+                        .setFormCreatorsId(project.getId())
+                        .setIsCreatedFromProject(true)
+                        .createXMLForm())
+                .toList()
+                .toObservable();
+
+
+        return Observable.merge(siteODKForms, projectODKForms)
+
+                .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
+                .flatMap(new Function<XMLForm, Observable<ArrayList<ScheduleForm>>>() {
+                    @Override
+                    public Observable<ArrayList<ScheduleForm>> apply(XMLForm xmlForm) throws Exception {
+                        return downloadProjectSchedule(xmlForm);
+                    }
+                })
+                .map(new Function<ArrayList<ScheduleForm>, ArrayList<ScheduleForm>>() {
+                    @Override
+                    public ArrayList<ScheduleForm> apply(ArrayList<ScheduleForm> scheduleForms) throws Exception {
+                        for (ScheduleForm scheduleForm : scheduleForms) {
+                            String deployedFrom = scheduleForm.getProject() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+                            scheduleForm.setFormDeployedFrom(deployedFrom);
+                        }
+
+                        return scheduleForms;
+
+                    }
+                })
+                .toList()
+                .map(new Function<List<ArrayList<ScheduleForm>>, ArrayList<ScheduleForm>>() {
+                    @Override
+                    public ArrayList<ScheduleForm> apply(List<ArrayList<ScheduleForm>> arrayLists) throws Exception {
+                        ArrayList<ScheduleForm> scheduleForms = new ArrayList<>(0);
+
+                        for (ArrayList<ScheduleForm> scheduleFormsList : arrayLists) {
+                            scheduleForms.addAll(scheduleFormsList);
+                        }
+
+                        ScheduledFormsLocalSource.getInstance().updateAll(scheduleForms);
+                        return scheduleForms;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }
