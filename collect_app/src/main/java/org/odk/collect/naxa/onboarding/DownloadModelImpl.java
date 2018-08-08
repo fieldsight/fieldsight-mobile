@@ -199,7 +199,7 @@ public class DownloadModelImpl implements DownloadModel {
     @Override
     public void fetchODKForms(SyncRepository syncRepository) {
         int uid = Constant.DownloadUID.ODK_FORMS;
-
+        syncRepository.showProgress(uid);
         XMLFormDownloadReceiver xmlFormDownloadReceiver = new XMLFormDownloadReceiver(new Handler());
         xmlFormDownloadReceiver.setReceiver((resultCode, resultData) -> {
             switch (resultCode) {
