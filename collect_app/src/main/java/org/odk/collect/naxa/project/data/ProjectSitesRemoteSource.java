@@ -81,7 +81,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public void onSubscribe(Disposable d) {
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
-
+                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
                     }
 
                     @Override

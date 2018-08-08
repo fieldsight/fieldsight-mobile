@@ -4,33 +4,17 @@ import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.naxa.common.Constant;
-import org.odk.collect.naxa.common.event.DataSyncEvent;
-import org.odk.collect.naxa.generalforms.data.GeneralFormRemoteSource;
-import org.odk.collect.naxa.project.data.ProjectSitesRemoteSource;
-import org.odk.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
 import org.odk.collect.naxa.site.SiteTypeRemoteSource;
-import org.odk.collect.naxa.stages.data.StageRemoteSource;
 import org.odk.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.DisposableSingleObserver;
-import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 import static org.odk.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
@@ -78,7 +62,6 @@ public class DownloadPresenterImpl implements DownloadPresenter {
             ToastUtils.showShortToast(R.string.no_connection);
             return;
         }
-
 
         for (SyncableItems syncableItem : syncableItemList) {
             if (syncableItem.isChecked()) {
