@@ -9,6 +9,7 @@ import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.site.SiteType;
 import org.bcss.collect.naxa.site.data.SiteCluster;
 import org.bcss.collect.naxa.stages.data.Stage;
+import org.bcss.collect.naxa.submissions.FormHistoryResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -78,4 +80,7 @@ public interface ApiInterface {
 
     @GET(GET_CLUSTER_LIST)
     Observable<List<SiteCluster>> getClusterByProjectId(@Path(value = "project_id", encoded = true) String projectId);
+
+    @GET
+    Call<FormHistoryResponse> getFormHistory(@Url String urlNextPage);
 }

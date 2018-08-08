@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,6 +39,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class ScheduledFormsFragment extends FieldSightFormListFragment implements OnFormItemClickListener<ScheduleForm> {
 
@@ -159,7 +161,15 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
 
     @Override
     public void onFormHistoryButtonClicked(ScheduleForm scheduleForm) {
-
+        PreviousSubmissionListActivity.start(getActivity(),
+                scheduleForm.getFsFormId(),
+                scheduleForm.getScheduleName(),
+                scheduleForm.getFormName(),
+                null,
+                loadedSite.getId(),
+                null,
+                TABLE_GENERAL_FORM
+        );
     }
 
 

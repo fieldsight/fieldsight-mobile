@@ -17,6 +17,7 @@
 package org.bcss.collect.naxa.common;
 
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
@@ -415,7 +416,12 @@ public class FieldSightDownloadFormListUtils {
 
 
     private static boolean isThisFormAlreadyDownloaded(String formId) {
-        return new FormsDao().getFormsCursorForFormId(formId).getCount() > 0;
+
+        try {
+            return new FormsDao().getFormsCursorForFormId(formId).getCount() > 0;
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     private static ManifestFile getManifestFile(String manifestUrl) {

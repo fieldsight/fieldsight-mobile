@@ -67,6 +67,18 @@ public class Constant {
 
     public final static class BundleKey {
         public static final String IS_DEPLOYED_FROM_PROJECT = "is_project";
+        public static final String KEY_FS_FORM_ID = "fsFormId";
+        public static final String KEY_FS_FORM_NAME = "fsFormName";
+        public static final String KEY_FS_FORM_RECORD_NAME = "fsFormRecordName";
+        public static final String KEY_SITE_ID = "siteId";
+        public static final String KEY_TABLE_NAME = "table_name";
+        public static final String FORM_STATUS_OUTSTANDING = "Outstanding";
+        public static final String FORM_STATUS_NOT_SENT = "Not Sent";
+        public static final String FORM_STATUS_PENDING_REVIEW = "Pending Review";
+        public static final String FORM_STATUS_SENDING_FAILED = "Sending Failed";
+        public static final String FORM_STATUS_FLAGGED = "Flagged";
+        public static final String FORM_STATUS_APPROVED = "Approved";
+        public static final String FORM_STATUS_REJECTED = "Rejected";
     }
 
 

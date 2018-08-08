@@ -84,6 +84,20 @@
     <string name="hint_choose_site_type">Choose an type</string>
     <string name="hint_choose_site_cluster">Choose an cluster</string>
     <string name="msg_location_recorded">Location Recorded(Accuracy: %s)</string>
+    <string name="msg_no_form_submission">This form has no previous submissions</string>
+    <string name="info">Info</string>
+    <string name="title_previous_submission">Previous Submissions</string>
+    <string name="download_now">Download Now</string>
+    <string name="btn_load_previous_submissions">Load Latest Submissions</string>
 
+    <plurals name="msg_total_submission_info_offline">
+        <item quantity="one">This form has only 1 previous submission</item>
+        <item quantity="other">This form has %s previous submission</item>
+    </plurals>
+
+    <plurals name="msg_total_submission_info">
+        <item quantity="one">This form has %s previous submission</item>
+        <item quantity="other">This form has %s previous submissions</item>
+    </plurals>
 
 </resources>
