@@ -7,6 +7,8 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 
+import timber.log.Timber;
+
 public class FieldSightFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     @Override
@@ -14,6 +16,6 @@ public class FieldSightFirebaseInstanceIDService extends FirebaseInstanceIdServi
         super.onTokenRefresh();
         String fcmToken = FirebaseInstanceId.getInstance().getToken();
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcmToken);
-
+        Timber.i("firebase %s",fcmToken);
     }
 }

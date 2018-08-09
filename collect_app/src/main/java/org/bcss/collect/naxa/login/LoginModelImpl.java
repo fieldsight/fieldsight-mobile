@@ -20,6 +20,7 @@ import org.bcss.collect.naxa.network.ServiceGenerator;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -41,31 +42,48 @@ public class LoginModelImpl implements LoginModel {
 
         ServiceGenerator.createService(ApiInterface.class)
                 .getAuthToken(username, password)
-                .map((Function<AuthResponse, ObservableSource<FCMParameter>>) authResponse -> {
-                    FieldSightUserSession.saveAuthToken(authResponse.getToken());
+                .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
+                    @Override
+                    public ObservableSource<FCMParameter> apply(AuthResponse authResponse) throws Exception {
+                        return ServiceGenerator
+                                .createService(ApiInterface.class)
+                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true))
+                                .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
+                                    @Override
+                                    public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
+                                        if ("false".equals(fcmParameter.getIs_active())) {
+                                            throw new RuntimeException("FieldSight failed to add token");
+                                        }
 
-                    return ServiceGenerator
-                            .createService(ApiInterface.class)
-                            .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true));
+                                        FieldSightUserSession.saveAuthToken(authResponse.getToken());
+                                        return Observable.empty();
+                                    }
+                                })
+                                ;
+                    }
                 })
-                .retry(3)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableSingleObserver<ObservableSource<FCMParameter>>() {
+                .subscribe(new DisposableObserver<FCMParameter>() {
                     @Override
-                    public void onSuccess(ObservableSource<FCMParameter> meResponseObservableSource) {
+                    public void onNext(FCMParameter fcmParameter) {
                         onLoginFinishedListener.onSuccess();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        if(e instanceof RuntimeException){
+                        if (e instanceof RuntimeException) {
                             //thrown from getFCM method
                             onLoginFinishedListener.fcmTokenError();
-                        }else {
+                        } else {
                             onLoginFinishedListener.onError();
                         }
                         e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }

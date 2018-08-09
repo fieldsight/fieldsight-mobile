@@ -23,10 +23,16 @@ import org.bcss.collect.android.tasks.DeleteInstancesTask;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.LoginActivity;
+import org.bcss.collect.naxa.network.ApiInterface;
+import org.bcss.collect.naxa.network.ServiceGenerator;
 
 import java.util.ArrayList;
 
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import timber.log.Timber;
+
+import static org.bcss.collect.naxa.network.APIEndpoint.REMOVE_FCM;
 
 public class FieldSightUserSession {
 
@@ -48,16 +54,15 @@ public class FieldSightUserSession {
         String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
         String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
 
-        if (true) {
+        if (fcmToken == null) {
             throw new RuntimeException("firebase token is null");
         }
 
-        FCMParameter fcmParameter = new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
-        return fcmParameter;
+        return new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
     }
 
     private static String getLogoutMessage() {
-        int offlineSitesNumber = 12;
+        int offlineSitesNumber = 0;
         int unsentFormCount = new InstancesDao().getUnsentInstancesCursor().getCount();
 
         String msg;
@@ -105,6 +110,31 @@ public class FieldSightUserSession {
         });
 
         deleteInstancesTask.execute(getAllInstancedsIds());
+
+        ServiceGenerator
+                .createService(ApiInterface.class)
+                .postFCMUserParameter(REMOVE_FCM, getFCM("android", false))
+                .subscribe(new Observer<FCMParameter>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(FCMParameter fcmParameter) {
+                        Timber.i(fcmParameter.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private static void deleteAllForms(Context context) {

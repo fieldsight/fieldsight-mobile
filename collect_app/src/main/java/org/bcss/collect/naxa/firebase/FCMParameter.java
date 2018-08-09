@@ -15,7 +15,15 @@ public class FCMParameter {
     @SerializedName("is_active")
     String is_active;
 
-
+    @Override
+    public String toString() {
+        return "FCMParameter{" +
+                "dev_id='" + dev_id + '\'' +
+                ", reg_id='" + reg_id + '\'' +
+                ", name='" + name + '\'' +
+                ", is_active='" + is_active + '\'' +
+                '}';
+    }
 
     public FCMParameter(String deviceId, String deviceToken, String deviceName, String deviceStatus) {
         this.dev_id = deviceId;

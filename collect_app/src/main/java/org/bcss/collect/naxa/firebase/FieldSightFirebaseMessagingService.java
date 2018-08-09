@@ -11,7 +11,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         Timber.i("firebase message Id: %s",remoteMessage.getMessageId());
-        Timber.i("firebase message Id: %s",remoteMessage.getMessageId());
+        Timber.i("firebase data%s",remoteMessage.getData().toString());
     }
 
 

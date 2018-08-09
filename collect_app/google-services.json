@@ -1,35 +1,55 @@
 {
   "project_info": {
-    "project_number": "322300403941",
-    "project_id": "api-project-322300403941"
+    "project_number": "1035621646272",
+    "firebase_url": "https://fieldsight-2906f.firebaseio.com",
+    "project_id": "fieldsight-2906f",
+    "storage_bucket": "fieldsight-2906f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:322300403941:android:5e1d7c3c296329e8",
+        "mobilesdk_app_id": "1:1035621646272:android:bd837b5786fbedce",
         "android_client_info": {
           "package_name": "org.bcss.collect.android"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1035621646272-ueuvepgjolr5qpmie9g2t6ldo9971b33.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.bcss.collect.android",
+            "certificate_hash": "d1b74be07f754aaac4d9ce0666dfb3b6dafcc2ea"
+          }
+        },
+        {
+          "client_id": "1035621646272-mtohkf34hl1g4ub0nj3k40u39pmjrbgj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDzdzuFvfI_BgaMAbIOBpfrVG3AIwhGIP8"
+          "current_key": "AIzaSyANyZs4LTVEj-VDUc_UlPxo5w6gHxqo5v8"
         }
       ],
       "services": {
         "analytics_service": {
           "status": 2,
           "analytics_property": {
-            "tracking_id": "UA-91951913-1"
+            "tracking_id": "UA-111083836-2"
           }
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1035621646272-mtohkf34hl1g4ub0nj3k40u39pmjrbgj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

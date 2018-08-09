@@ -45,7 +45,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("/users/api/get-auth-token/")
-    Single<AuthResponse> getAuthToken(
+    Observable<AuthResponse> getAuthToken(
             @Field("email_or_username") String username,
             @Field("password") String password
     );
