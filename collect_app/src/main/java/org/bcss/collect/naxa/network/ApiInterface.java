@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.network;
 
 
+import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.login.model.AuthResponse;
 import org.bcss.collect.naxa.login.model.MeResponse;
@@ -20,6 +21,7 @@ import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -83,4 +85,8 @@ public interface ApiInterface {
 
     @GET
     Call<FormHistoryResponse> getFormHistory(@Url String urlNextPage);
+
+    @POST()
+    Observable<FCMParameter> postFCMUserParameter(@Url String url, @Body FCMParameter fcmParameter);
+
 }

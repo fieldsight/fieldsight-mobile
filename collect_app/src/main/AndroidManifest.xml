@@ -257,6 +257,16 @@ the specific language governing permissions and limitations under the License.
         <service android:name="org.bcss.collect.naxa.onboarding.XMLFormDownloadService" />
         <!-- ... -->
 
+        <service android:name="org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name="org.bcss.collect.naxa.firebase.FieldSightFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBS-JQ-dnaZ_8qsbvSyr_I3rTPFd5fJsYI" />

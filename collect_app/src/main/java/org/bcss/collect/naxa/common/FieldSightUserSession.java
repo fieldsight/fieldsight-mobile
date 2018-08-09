@@ -1,6 +1,5 @@
 package org.bcss.collect.naxa.common;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,17 +13,16 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.FormsDao;
 import org.bcss.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.database.helpers.FormsDatabaseHelper;
 import org.bcss.collect.android.listeners.DeleteFormsListener;
 import org.bcss.collect.android.listeners.DeleteInstancesListener;
+import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.tasks.DeleteFormsTask;
 import org.bcss.collect.android.tasks.DeleteInstancesTask;
-import org.bcss.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
+import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.LoginActivity;
-import org.bcss.collect.naxa.site.db.SiteDao;
 
 import java.util.ArrayList;
 
@@ -43,6 +41,19 @@ public class FieldSightUserSession {
 
     public static void saveAuthToken(String token) {
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), Constant.PrefKey.token, "Token " + token);
+    }
+
+
+    public static FCMParameter getFCM(String username, boolean deviceStatus) {
+        String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
+        String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
+
+        if (true) {
+            throw new RuntimeException("firebase token is null");
+        }
+
+        FCMParameter fcmParameter = new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
+        return fcmParameter;
     }
 
     private static String getLogoutMessage() {

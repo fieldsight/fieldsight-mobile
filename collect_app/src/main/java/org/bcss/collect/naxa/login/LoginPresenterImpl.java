@@ -72,17 +72,15 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
     }
 
-
     @Override
-    public void onPasswordError() {
-        loginView.showProgress(false);
-        loginView.showPasswordError(R.string.error_incorrect_password);
+    public void fcmTokenError() {
+        loginView.showError("Could not load token,try again in a minute or two");
     }
+
 
     @Override
     public void onSuccess() {
         loginView.showProgress(false);
-
         loginView.successAction();
     }
 }

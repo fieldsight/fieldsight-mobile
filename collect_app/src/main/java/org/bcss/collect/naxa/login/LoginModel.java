@@ -7,7 +7,7 @@ public interface LoginModel {
     interface OnLoginFinishedListener {
         void onError();
 
-        void onPasswordError();
+        void fcmTokenError();
 
         void onSuccess();
     }
