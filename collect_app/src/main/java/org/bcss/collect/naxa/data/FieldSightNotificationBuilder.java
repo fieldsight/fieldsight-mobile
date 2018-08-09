@@ -1,4 +1,5 @@
-package org.bcss.collect.naxa.notification;
+package org.bcss.collect.naxa.data;
+
 
 public class FieldSightNotificationBuilder {
     private String id;

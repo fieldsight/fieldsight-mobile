@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.notification;
+package org.bcss.collect.naxa.notificationslist;
 
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
@@ -10,7 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
+
 import org.bcss.collect.naxa.OnItemClickListener;
+import org.bcss.collect.naxa.data.FieldSightNotification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_title_desc, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, null);
         return new ViewHolder(view);
 
 

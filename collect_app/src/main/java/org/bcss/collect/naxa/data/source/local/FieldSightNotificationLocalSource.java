@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.notification;
+package org.bcss.collect.naxa.data.source.local;
 
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
@@ -6,9 +6,12 @@ import android.os.AsyncTask;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
+import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class FieldSightNotificationLocalSource implements BaseLocalDataSource<FieldSightNotification> {
 

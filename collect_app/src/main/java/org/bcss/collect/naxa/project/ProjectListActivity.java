@@ -34,7 +34,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
-import org.bcss.collect.naxa.notification.NotificationListActivity;
+import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

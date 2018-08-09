@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.notification;
+package org.bcss.collect.naxa.firebase;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;

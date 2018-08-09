@@ -6,13 +6,14 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
+
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormLocalSource;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormRepository;
-import org.bcss.collect.naxa.notification.FieldSightNotificationLocalSource;
-import org.bcss.collect.naxa.notification.FieldSightNotificationRepository;
-import org.bcss.collect.naxa.notification.NotificationListViewModel;
+import org.bcss.collect.naxa.notificationslist.FieldSightNotificationRepository;
+import org.bcss.collect.naxa.notificationslist.NotificationListViewModel;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.project.data.ProjectRepository;
 import org.bcss.collect.naxa.project.data.ProjectSitesRemoteSource;

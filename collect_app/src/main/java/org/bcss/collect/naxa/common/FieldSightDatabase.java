@@ -6,12 +6,13 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormDAO;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.notification.FieldSightNotification;
-import org.bcss.collect.naxa.notification.FieldSightNotificationDAO;
+
+import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
 import org.bcss.collect.naxa.onboarding.SyncableItems;
 import org.bcss.collect.naxa.project.data.ProjectDao;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
