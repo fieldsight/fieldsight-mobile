@@ -9,7 +9,7 @@ the specific language governing permissions and limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.odk.collect.android">
+    package="org.bcss.collect.android">
 
     <uses-feature
         android:name="android.hardware.location"
@@ -64,7 +64,7 @@ the specific language governing permissions and limitations under the License.
     -->
 
     <permission
-        android:name="org.odk.collect.android.permission.MAPS_RECEIVE"
+        android:name="org.bcss.collect.android.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="org.odk.collect.android.permission.MAPS_RECEIVE" />
@@ -87,11 +87,11 @@ the specific language governing permissions and limitations under the License.
         android:supportsRtl="true">
         <provider
             android:name=".provider.FormsProvider"
-            android:authorities="org.odk.collect.android.provider.odk.forms"
+            android:authorities="org.bcss.collect.android.provider.odk.forms"
             android:exported="true" />
         <provider
             android:name=".provider.InstanceProvider"
-            android:authorities="org.odk.collect.android.provider.odk.instances"
+            android:authorities="org.bcss.collect.android.provider.odk.instances"
             android:exported="true" />
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -254,7 +254,7 @@ the specific language governing permissions and limitations under the License.
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
             android:exported="false" />
-        <service android:name="org.odk.collect.naxa.onboarding.XMLFormDownloadService" />
+        <service android:name="org.bcss.collect.naxa.onboarding.XMLFormDownloadService" />
         <!-- ... -->
 
         <meta-data
@@ -281,26 +281,29 @@ the specific language governing permissions and limitations under the License.
         <activity android:name=".activities.CaptureSelfieVideoActivity" />
         <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
         <activity
-            android:name="org.odk.collect.naxa.login.LoginActivity"
+            android:name="org.bcss.collect.naxa.login.LoginActivity"
             android:noHistory="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="org.odk.collect.naxa.onboarding.DownloadActivity"
+            android:name="org.bcss.collect.naxa.onboarding.DownloadActivity"
             android:exported="true" />
         <activity
-            android:name="org.odk.collect.naxa.project.ProjectListActivity"
+            android:name="org.bcss.collect.naxa.project.ProjectListActivity"
             android:exported="true"
             android:theme="@style/AppTheme.Light" />
         <activity
-            android:name="org.odk.collect.naxa.site.FragmentHostActivity"
+            android:name="org.bcss.collect.naxa.site.FragmentHostActivity"
             android:exported="true" />
-        <activity android:name="org.odk.collect.naxa.site.ProjectDashboardActivity" />
+        <activity android:name="org.bcss.collect.naxa.site.ProjectDashboardActivity" />
         <activity
             android:exported="true"
-            android:name="org.odk.collect.naxa.site.CreateSiteActivity" />
+            android:name="org.bcss.collect.naxa.site.CreateSiteActivity" />
         <activity
             android:exported="true"
-            android:name="org.odk.collect.naxa.survey.SurveyFormsActivity" />
+            android:name="org.bcss.collect.naxa.survey.SurveyFormsActivity" />
+        <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity" />
+        <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionDetailActivity" />
+        <activity android:name="org.bcss.collect.naxa.notification.NotificationListActivity" />
     </application>
 
 </manifest>

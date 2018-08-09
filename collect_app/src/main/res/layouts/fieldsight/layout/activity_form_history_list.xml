@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    >
+
+    <include
+
+        layout="@layout/general_toolbar" />
+
+
+    <include
+        android:id="@+id/card_info"
+        layout="@layout/card_previous_submission_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appbar_general"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/card_info"
+        android:paddingTop="@dimen/margin_large"
+        android:paddingLeft="@dimen/margin_large"
+        android:paddingRight="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:text="@string/title_previous_submission"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_form_history_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_list_title"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/margin_large"
+        android:paddingTop="@dimen/margin_large" />
+
+    <ProgressBar
+        android:id="@+id/main_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center" />
+
+    <TextView
+
+        android:id="@+id/no_message"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:paddingEnd="20dip"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/forms_msg_none_available"
+        android:textColor="@drawable/black"
+        android:textSize="@dimen/text_size_large"
+        android:visibility="gone" />
+
+</RelativeLayout>
+

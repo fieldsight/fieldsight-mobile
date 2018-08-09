@@ -27,7 +27,7 @@ limitations under the License.
         android:layout_below="@id/toolbar"
         android:orientation="vertical">
 
-        <org.odk.collect.android.views.SlidingTabLayout
+        <org.bcss.collect.android.views.SlidingTabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="48dp"

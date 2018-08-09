@@ -5,7 +5,7 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
-    <org.odk.collect.naxa.common.RecyclerViewEmptySupport
+    <org.bcss.collect.naxa.common.RecyclerViewEmptySupport
         android:id="@+id/android_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
