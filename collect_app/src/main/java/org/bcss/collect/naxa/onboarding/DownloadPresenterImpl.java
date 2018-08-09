@@ -42,7 +42,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
     @Override
     public void onToggleButtonClick(ArrayList<SyncableItems> syncableItemList) {
         for (SyncableItems items : syncableItemList) {
-            if (items.getIsSelected()) {
+            if (items.isChecked()) {
                 syncRepository.setChecked(items.getUid(), false);
             } else {
                 syncRepository.setChecked(items.getUid(), true);
