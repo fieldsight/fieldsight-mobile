@@ -1,7 +1,7 @@
 package org.bcss.collect.naxa.data;
 
 public class FieldSightNotificationBuilder {
-    private String id;
+    private int id;
     private String notificationType;
     private String notifiedDate;
     private String notifiedTime;
@@ -20,7 +20,7 @@ public class FieldSightNotificationBuilder {
     private String comment;
     private String formType;
 
-    public FieldSightNotificationBuilder setId(String id) {
+    public FieldSightNotificationBuilder setId(int id) {
         this.id = id;
         return this;
     }

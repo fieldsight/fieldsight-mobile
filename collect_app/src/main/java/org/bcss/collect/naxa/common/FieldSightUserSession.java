@@ -158,7 +158,7 @@ public class FieldSightUserSession {
     }
 
 
-    private static User getUser(){
+    public static User getUser(){
         String userString = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, null);
         return new Gson().fromJson(userString, User.class);
     }

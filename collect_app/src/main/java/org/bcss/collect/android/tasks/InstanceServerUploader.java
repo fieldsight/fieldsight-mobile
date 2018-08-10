@@ -31,6 +31,7 @@ import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.ResponseMessageParser;
 import org.bcss.collect.android.utilities.WebUtils;
+import org.bcss.collect.naxa.ResponseUtils;
 import org.opendatakit.httpclientandroidlib.Header;
 import org.opendatakit.httpclientandroidlib.HttpEntity;
 import org.opendatakit.httpclientandroidlib.HttpResponse;
@@ -433,6 +434,7 @@ public class InstanceServerUploader extends InstanceUploader {
                 Timber.i("Issuing POST request for %s to: %s", id, submissionUri.toString());
                 response = httpclient.execute(httppost, localContext);
                 int responseCode = response.getStatusLine().getStatusCode();
+                ResponseUtils.saveHttpResponseToFile(response,"Daily Site Diary");
                 HttpEntity httpEntity = response.getEntity();
                 messageParser = new ResponseMessageParser(httpEntity);
                 WebUtils.discardEntityBytes(response);

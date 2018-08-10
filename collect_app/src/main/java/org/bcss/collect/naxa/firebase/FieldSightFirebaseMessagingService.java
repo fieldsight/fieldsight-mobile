@@ -40,10 +40,11 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     public static final String REJECTED_FORM = "Rejected";
     public static final String APPROVED_FORM = "Approved";
     public static final String FLAGGED_FORM = "Flagged";
+    public static final String FORM = "Form";
 
     public final String NEW_STAGES = "Stages Ready";
     public final String FORM_ALTERED = "Form Altered";
-    public final String FORM = "Form";
+
     public static final String FORM_TYPE_GENERAL = "General";
     private final String FORM_TYPE_SCHEDULE = "Scheduled";
 
@@ -123,7 +124,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setFsFormId(fsFormIdProject)
                     .createFieldSightNotification();
 
-            FieldSightNotificationLocalSource.getInstance();
+            FieldSightNotificationLocalSource.getInstance().save(builder.createFieldSightNotification());
 
             switch (notifyType) {
                 case SINGLE_STAGE_DEPLOYED:

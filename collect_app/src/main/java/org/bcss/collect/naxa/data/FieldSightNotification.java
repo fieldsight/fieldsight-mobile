@@ -8,9 +8,9 @@ import android.support.annotation.NonNull;
 @Entity
 public class FieldSightNotification {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
-    private String id;
+    private int id;
     private String notificationType;
     private String notifiedDate;
     private String notifiedTime;
@@ -32,7 +32,7 @@ public class FieldSightNotification {
 
 
 
-    public FieldSightNotification(@NonNull String id, String notificationType, String notifiedDate, String notifiedTime, String idString, String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId, String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment, String formType) {
+    public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString, String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId, String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment, String formType) {
         this.id = id;
         this.notificationType = notificationType;
         this.notifiedDate = notifiedDate;
@@ -78,11 +78,11 @@ public class FieldSightNotification {
     }
 
     @NonNull
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(@NonNull String id) {
+    public void setId(@NonNull int id) {
         this.id = id;
     }
 

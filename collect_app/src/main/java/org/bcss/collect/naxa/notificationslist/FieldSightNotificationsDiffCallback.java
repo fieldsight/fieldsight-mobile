@@ -29,9 +29,9 @@ public class FieldSightNotificationsDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        String oldId = oldList.get(oldItemPosition).getId();
-        String newId = newList.get(newItemPosition).getId();
-        return oldId.equals(newId);
+        int oldId = oldList.get(oldItemPosition).getId();
+        int newId = newList.get(newItemPosition).getId();
+        return oldId == newId;
     }
 
     @Override

@@ -38,6 +38,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
 import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class GeneralFormsFragment extends FieldSightFormListFragment implements OnFormItemClickListener<GeneralForm> {
@@ -143,7 +144,9 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     @Override
     public void onFormItemClicked(GeneralForm generalForm) {
 
-        String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), loadedSite.getProject(), generalForm.getFsFormId());
+
+        String id = PROJECT.equals(generalForm.getFormDeployedFrom()) ? loadedSite.getProject() : loadedSite.getId();
+        String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), id, generalForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
 
         fillODKForm(generalForm.getIdString());

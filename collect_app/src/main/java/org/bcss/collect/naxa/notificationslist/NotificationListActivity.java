@@ -19,6 +19,7 @@ import android.widget.TextView;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.OnItemClickListener;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
@@ -65,9 +66,6 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         setupRecyclerView();
 
 
-      // FieldSightNotificationLocalSource.getInstance().clear();
-        count = 0;
-        //addItem();
 
 
         viewModel.getAll()
@@ -84,20 +82,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
     }
 
-    private void addItem() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                count++;
-                FieldSightNotificationBuilder obj = new FieldSightNotificationBuilder().setId(String.valueOf(count)).setNotificationType(count + ": notification");
 
-                FieldSightNotificationLocalSource.getInstance().save(obj.createFieldSightNotification());
-                addItem();
-
-
-            }
-        }, 3000);
-    }
 
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
@@ -124,7 +109,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     private void setupToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.toolbar_notification));
-        getSupportActionBar().setSubtitle("Site Supervisor");
+        getSupportActionBar().setSubtitle(FieldSightUserSession.getUser().getFull_name());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
