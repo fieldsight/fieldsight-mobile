@@ -13,6 +13,8 @@ public class FieldSightNotification {
     private String id;
     private String notificationType;
     private String notifiedDate;
+    private String notifiedTime;
+    private String idString;
     private String fsFormId;
     private String fsFormIdProject;
     private String formName;
@@ -25,17 +27,17 @@ public class FieldSightNotification {
     private String isFormDeployed;
     private String details_url;
     private String comment;
+    private String formType;
 
 
-    public FieldSightNotification() {
 
-    }
 
-    @Ignore
-    public FieldSightNotification(@NonNull String id, String notificationType, String notifiedDate, String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId, String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment) {
+    public FieldSightNotification(@NonNull String id, String notificationType, String notifiedDate, String notifiedTime, String idString, String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId, String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment, String formType) {
         this.id = id;
         this.notificationType = notificationType;
         this.notifiedDate = notifiedDate;
+        this.notifiedTime = notifiedTime;
+        this.idString = idString;
         this.fsFormId = fsFormId;
         this.fsFormIdProject = fsFormIdProject;
         this.formName = formName;
@@ -48,6 +50,31 @@ public class FieldSightNotification {
         this.isFormDeployed = isFormDeployed;
         this.details_url = details_url;
         this.comment = comment;
+        this.formType = formType;
+    }
+
+    public String getNotifiedTime() {
+        return notifiedTime;
+    }
+
+    public void setNotifiedTime(String notifiedTime) {
+        this.notifiedTime = notifiedTime;
+    }
+
+    public String getIdString() {
+        return idString;
+    }
+
+    public void setIdString(String idString) {
+        this.idString = idString;
+    }
+
+    public String getFormType() {
+        return formType;
+    }
+
+    public void setFormType(String formType) {
+        this.formType = formType;
     }
 
     @NonNull

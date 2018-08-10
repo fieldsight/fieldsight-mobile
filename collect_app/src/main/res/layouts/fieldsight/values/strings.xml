@@ -45,7 +45,7 @@
     <string name="dialog_warning_logout_pos">Delete and logout</string>
     <string name="dialog_warning_logout_neg">Dismiss</string>
     <string name="dialog_title_error_register">Error Registering.</string>
-    <string name="dialog_error_register">Could not register to sever.\n • Try again in a few minutes \n • If error persists contact Web Admin.</string>
+    <string name="dialog_error_register">Could not register to sever.\n • Try again in a few minutes \n • If error persists reinstall app</string>
     <string name="dialog_title_delete_sites">Delete %1$d sites</string>
     <string name="dialog_msg_delete_site">%s will be permanently deleted</string>
     <string name="dialog_action_delete">Delete</string>
@@ -100,5 +100,45 @@
         <item quantity="one">This form has %s previous submission</item>
         <item quantity="other">This form has %s previous submissions</item>
     </plurals>
+
+    <!--Notification sitelist starts here-->
+
+    <string name="notify_title_submission_result">Submission Review</string>
+    <string name="notify_submission_result"> %1$s form on %2$s has been marked %3$s </string>
+
+    <string name="notify_title_new_stages">New Stages</string>
+    <string name="notify_new_Stages"> New Stages has been deployed on site  %1$s</string>
+
+
+    <string name="notify_title_new_form_assigned">New Form Assigned</string>
+    <string name="notify_new_form_assigned">You have a new %1$s form %2$s assigned on site %3$s </string>
+
+
+    <string name="notify_title_role_result">Role Assigned</string>
+    <string name="notify_role_assigned">You have been assigned as %1$s on %2$s of %3$s</string>
+
+    <string name="notify_title_assign_site">Site Assigned</string>
+    <string name="notify_assign_site">You have been assigned to %1$s site</string>
+
+    <string name="notify_title_assign_project">Project Assigned</string>
+    <string name="notify_assign_project">You have been assigned to %1$s project</string>
+    <string name="title_flagged_forms">Flagged Forms</string>
+    <string name="title_stage_forms_act">Stage Forms</string>
+
+    <string name="notify_form_outstanding">Outstanding</string>
+    <string name="notify_form_flagged">Flagged.</string>
+    <string name="notify_form_approved">Approved</string>
+    <string name="notify_form_rejected">Rejected</string>
+
+    <string name="notification_cleared">%1$s notifications has been cleared.</string>
+
+
+    <string name="notify_form_removed_title">Form removed</string>
+    <string name="notify_form_removed">%1$s Form has been removed.</string>
+
+    <string name="notify_title_form_altered">%1$s Form %2$s </string>
+    <string name="notify_form_altered">A %1$s form from %2$s site has been %3$s </string>
+
+    <!--Notification sitelist ends here-->
 
 </resources>

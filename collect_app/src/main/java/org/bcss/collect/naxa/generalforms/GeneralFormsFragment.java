@@ -142,7 +142,8 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
 
     @Override
     public void onFormItemClicked(GeneralForm generalForm) {
-        String submissionUrl = generateSubmissionUrl(PROJECT, loadedSite.getProject(), generalForm.getFsFormId());
+
+        String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), loadedSite.getProject(), generalForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
 
         fillODKForm(generalForm.getIdString());

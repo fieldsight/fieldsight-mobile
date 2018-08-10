@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 
 import java.util.logging.Handler;
 
@@ -74,7 +75,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
     @Override
     public void fcmTokenError() {
-        loginView.showError("Could not load token,try again in a minute or two");
+        loginView.showError(Collect.getInstance().getString(R.string.dialog_error_register));
     }
 
 

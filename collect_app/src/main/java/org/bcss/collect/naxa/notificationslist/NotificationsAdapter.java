@@ -1,8 +1,10 @@
 package org.bcss.collect.naxa.notificationslist;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,11 @@ import org.bcss.collect.naxa.data.FieldSightNotification;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.bcss.collect.naxa.common.Truss.makeSectionOfTextBold;
+import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.APPROVED_FORM;
+import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.FLAGGED_FORM;
+import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.REJECTED_FORM;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
 
@@ -49,9 +56,56 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        FieldSightNotification FieldSightNotification = FieldSightNotifications.get(viewHolder.getAdapterPosition());
-        viewHolder.tvTitle.setText(FieldSightNotification.getNotificationType());
-        viewHolder.tvDesc.setText(FieldSightNotification.getId());
+        FieldSightNotification fieldSightNotification = FieldSightNotifications.get(viewHolder.getAdapterPosition());
+        Context context = viewHolder.rootLayout.getContext().getApplicationContext();
+        String desc;
+        SpannableStringBuilder formattedDesc = null;
+
+        switch (fieldSightNotification.getNotificationType()) {
+            case (FLAGGED_FORM):
+                viewHolder.tvTitle.setText(context.getResources().getString(R.string.notify_title_submission_result));
+                desc = context.getResources().getString(R.string.notify_submission_result,
+                        fieldSightNotification.getFormName(),
+                        fieldSightNotification.getSiteName(),
+                        context.getResources().getString(R.string.notify_form_flagged));
+
+                formattedDesc = makeSectionOfTextBold(desc,
+                        fieldSightNotification.getFormName(),
+                        fieldSightNotification.getSiteName(),
+                        context.getResources().getString(R.string.notify_form_flagged));
+                break;
+
+            case APPROVED_FORM:
+                viewHolder.tvTitle.setText(context.getResources().getString(R.string.notify_title_submission_result));
+                desc = context.getResources().getString(R.string.notify_submission_result,
+                        fieldSightNotification.getFormName(),
+                        fieldSightNotification.getSiteName(),
+                        context.getResources().getString(R.string.notify_form_approved) + ".");
+
+                formattedDesc = makeSectionOfTextBold(desc,
+                        fieldSightNotification.getSiteName(),
+                        fieldSightNotification.getFormName(), context.getResources().getString(R.string.notify_form_approved));
+                break;
+            case REJECTED_FORM:
+
+                viewHolder.tvTitle.setText(context.getResources().getString(R.string.notify_title_submission_result));
+                String form_rejected_response = context.getResources().getString(R.string.notify_submission_result,
+                        fieldSightNotification.getFormName(),
+                        fieldSightNotification.getSiteName(),
+                        context.getResources().getString(R.string.notify_form_rejected) + ".");
+
+                formattedDesc = makeSectionOfTextBold(form_rejected_response,
+                        fieldSightNotification.getFormName(),
+                        fieldSightNotification.getSiteName(),
+                        context.getResources().getString(R.string.notify_form_rejected));
+                break;
+        }
+
+
+        if (formattedDesc != null) {
+            viewHolder.tvDesc.setText(formattedDesc.toString());
+        }
+
     }
 
 
@@ -77,7 +131,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         @Override
         public void onClick(View v) {
             FieldSightNotification FieldSightNotification = FieldSightNotifications.get(getAdapterPosition());
-
             switch (v.getId()) {
                 case R.id.rl_form_list_item:
                     listener.onClickPrimaryAction(FieldSightNotification);

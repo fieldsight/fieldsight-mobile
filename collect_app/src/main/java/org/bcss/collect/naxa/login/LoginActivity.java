@@ -161,7 +161,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
     private void showErrorDialog(String msg) {
         Dialog dialog = DialogFactory.createMessageDialog(LoginActivity.this, "Login Failed", msg);
-        new Handler().postDelayed(() -> dialog.show(), 500);
+        new Handler().postDelayed(dialog::show, 500);
 
     }
 

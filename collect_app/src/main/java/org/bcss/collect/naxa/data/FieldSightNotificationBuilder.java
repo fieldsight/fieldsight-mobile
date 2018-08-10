@@ -1,10 +1,11 @@
 package org.bcss.collect.naxa.data;
 
-
 public class FieldSightNotificationBuilder {
     private String id;
     private String notificationType;
     private String notifiedDate;
+    private String notifiedTime;
+    private String idString;
     private String fsFormId;
     private String fsFormIdProject;
     private String formName;
@@ -17,6 +18,7 @@ public class FieldSightNotificationBuilder {
     private String isFormDeployed;
     private String details_url;
     private String comment;
+    private String formType;
 
     public FieldSightNotificationBuilder setId(String id) {
         this.id = id;
@@ -30,6 +32,16 @@ public class FieldSightNotificationBuilder {
 
     public FieldSightNotificationBuilder setNotifiedDate(String notifiedDate) {
         this.notifiedDate = notifiedDate;
+        return this;
+    }
+
+    public FieldSightNotificationBuilder setNotifiedTime(String notifiedTime) {
+        this.notifiedTime = notifiedTime;
+        return this;
+    }
+
+    public FieldSightNotificationBuilder setIdString(String idString) {
+        this.idString = idString;
         return this;
     }
 
@@ -93,7 +105,12 @@ public class FieldSightNotificationBuilder {
         return this;
     }
 
+    public FieldSightNotificationBuilder setFormType(String formType) {
+        this.formType = formType;
+        return this;
+    }
+
     public FieldSightNotification createFieldSightNotification() {
-        return new FieldSightNotification(id, notificationType, notifiedDate, fsFormId, fsFormIdProject, formName, siteId, siteName, projectId, projectName, formStatus, role, isFormDeployed, details_url, comment);
+        return new FieldSightNotification(id, notificationType, notifiedDate, notifiedTime, idString, fsFormId, fsFormIdProject, formName, siteId, siteName, projectId, projectName, formStatus, role, isFormDeployed, details_url, comment, formType);
     }
 }

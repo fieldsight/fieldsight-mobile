@@ -9,6 +9,10 @@ import android.os.AsyncTask;
 import android.support.annotation.ColorInt;
 import android.support.v4.graphics.drawable.DrawableCompat;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.google.gson.Gson;
+
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.FormsDao;
@@ -23,9 +27,11 @@ import org.bcss.collect.android.tasks.DeleteInstancesTask;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.LoginActivity;
+import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import io.reactivex.Observer;
@@ -53,6 +59,10 @@ public class FieldSightUserSession {
     public static FCMParameter getFCM(String username, boolean deviceStatus) {
         String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
         String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
+
+        if(fcmToken == null){
+            FirebaseInstanceId.getInstance().getToken();
+        }
 
         if (fcmToken == null) {
             throw new RuntimeException("firebase token is null");
@@ -92,7 +102,6 @@ public class FieldSightUserSession {
             FieldSightDatabase.getDatabase(context).clearAllTables();
             FieldSightConfigDatabase.getDatabase(context).clearAllTables();
         });
-        SharedPreferenceUtils.deleteAll(context);
 
 
         DeleteInstancesTask deleteInstancesTask = new DeleteInstancesTask();
@@ -111,9 +120,11 @@ public class FieldSightUserSession {
 
         deleteInstancesTask.execute(getAllInstancedsIds());
 
+
+
         ServiceGenerator
                 .createService(ApiInterface.class)
-                .postFCMUserParameter(REMOVE_FCM, getFCM("android", false))
+                .postFCMUserParameter(REMOVE_FCM, getFCM(getUser().getUser_name(), false))
                 .subscribe(new Observer<FCMParameter>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -135,6 +146,21 @@ public class FieldSightUserSession {
 
                     }
                 });
+
+        SharedPreferenceUtils.deleteAll(context);
+        try {
+            FirebaseInstanceId.getInstance().deleteInstanceId();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    private static User getUser(){
+        String userString = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, null);
+        return new Gson().fromJson(userString, User.class);
     }
 
     private static void deleteAllForms(Context context) {

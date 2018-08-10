@@ -148,7 +148,7 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
 
     @Override
     public void onFormItemClicked(ScheduleForm scheduleForm) {
-        String submissionUrl = generateSubmissionUrl(PROJECT, loadedSite.getProject(), scheduleForm.getFsFormId());
+        String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), loadedSite.getProject(), scheduleForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
 
         fillODKForm(scheduleForm.getIdString());
