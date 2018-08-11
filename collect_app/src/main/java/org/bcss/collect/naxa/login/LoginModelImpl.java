@@ -56,7 +56,7 @@ public class LoginModelImpl implements LoginModel {
                                         }
 
                                         FieldSightUserSession.saveAuthToken(authResponse.getToken());
-                                        return Observable.empty();
+                                        return Observable.just(fcmParameter);
                                     }
                                 })
                                 ;

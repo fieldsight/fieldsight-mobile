@@ -6,6 +6,7 @@ import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.login.model.AuthResponse;
 import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.notificationslist.NotificationDetail;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.site.SiteType;
 import org.bcss.collect.naxa.site.data.SiteCluster;
@@ -88,5 +89,10 @@ public interface ApiInterface {
 
     @POST()
     Observable<FCMParameter> postFCMUserParameter(@Url String url, @Body FCMParameter fcmParameter);
+
+
+
+    @GET
+    Call<NotificationDetail> getNotificationDetail(@Url String url);
 
 }

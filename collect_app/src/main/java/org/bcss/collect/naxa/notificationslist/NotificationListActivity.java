@@ -117,7 +117,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
     @Override
     public void onClickPrimaryAction(FieldSightNotification fieldSightNotification) {
-
+        FlagResposneActivity.start(this,fieldSightNotification);
     }
 
     @Override

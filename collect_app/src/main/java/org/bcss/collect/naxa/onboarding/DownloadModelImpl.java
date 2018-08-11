@@ -174,17 +174,17 @@ public class DownloadModelImpl implements DownloadModel {
                 .subscribe(new SingleObserver<ArrayList<Stage>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.SCHEDULED_FORMS);
+                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.STAGED_FORMS);
                     }
 
                     @Override
                     public void onSuccess(ArrayList<Stage> scheduleForms) {
-                        SyncRepository.getInstance().setSuccess(Constant.DownloadUID.SCHEDULED_FORMS);
+                        SyncRepository.getInstance().setSuccess(Constant.DownloadUID.STAGED_FORMS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(Constant.DownloadUID.SCHEDULED_FORMS);
+                        SyncRepository.getInstance().setError(Constant.DownloadUID.STAGED_FORMS);
                     }
                 });
     }

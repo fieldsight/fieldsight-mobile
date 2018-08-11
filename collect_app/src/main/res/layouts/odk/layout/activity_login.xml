@@ -86,7 +86,7 @@
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="android" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -109,7 +109,7 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="12345678" />
+                     />
 
             </android.support.design.widget.TextInputLayout>
 

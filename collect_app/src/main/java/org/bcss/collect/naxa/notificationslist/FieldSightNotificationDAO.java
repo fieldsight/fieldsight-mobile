@@ -29,4 +29,7 @@ public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<Fie
         insert(items);
     }
 
+    @Query("SELECT * FROM fieldsightnotification  ORDER BY id DESC")
+    public abstract LiveData<FieldSightNotification> getById();
+
 }

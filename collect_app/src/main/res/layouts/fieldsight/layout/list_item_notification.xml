@@ -33,21 +33,22 @@
                 android:layout_height="@dimen/icon_width_height"
                 android:src="@drawable/circle_blue" />
 
-
-            <TextView
-
-                android:id="@+id/title_desc_tv_icon_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:scaleType="centerInside"
+                android:src="@drawable/fieldsight_logo"
+                android:id="@+id/iv_notification_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_centerInParent="true"
-                android:text=""
-                android:textColor="@android:color/white"
+                android:tint="@color/white"
                 android:textSize="@dimen/text_size_medium" />
 
         </RelativeLayout>
 
 
         <TextView
+            android:layout_toLeftOf="@+id/tv_notification_date"
+            android:layout_toStartOf="@+id/tv_notification_date"
             android:id="@+id/tv_list_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,8 +59,7 @@
             android:textColor="@color/black" />
 
         <TextView
-            android:layout_toLeftOf="@+id/tv_notification_date"
-            android:layout_toStartOf="@+id/tv_notification_date"
+
             android:id="@+id/tv_list_item_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,7 +77,6 @@
             android:id="@+id/tv_notification_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_list_item_title"
             android:layout_marginTop="@dimen/margin_small"
             android:text="2019/22/12" />
 

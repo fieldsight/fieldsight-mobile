@@ -54,4 +54,8 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
         AsyncTask.execute(() -> dao.deleteAll());
 
     }
+
+    public LiveData<FieldSightNotification> getById(int loadedId) {
+       return dao.getById();
+    }
 }

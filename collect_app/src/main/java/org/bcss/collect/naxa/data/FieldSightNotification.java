@@ -3,10 +3,12 @@ package org.bcss.collect.naxa.data;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 @Entity
-public class FieldSightNotification {
+public class FieldSightNotification implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -197,4 +199,64 @@ public class FieldSightNotification {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.notificationType);
+        dest.writeString(this.notifiedDate);
+        dest.writeString(this.notifiedTime);
+        dest.writeString(this.idString);
+        dest.writeString(this.fsFormId);
+        dest.writeString(this.fsFormIdProject);
+        dest.writeString(this.formName);
+        dest.writeString(this.siteId);
+        dest.writeString(this.siteName);
+        dest.writeString(this.projectId);
+        dest.writeString(this.projectName);
+        dest.writeString(this.formStatus);
+        dest.writeString(this.role);
+        dest.writeString(this.isFormDeployed);
+        dest.writeString(this.details_url);
+        dest.writeString(this.comment);
+        dest.writeString(this.formType);
+    }
+
+    protected FieldSightNotification(Parcel in) {
+        this.id = in.readInt();
+        this.notificationType = in.readString();
+        this.notifiedDate = in.readString();
+        this.notifiedTime = in.readString();
+        this.idString = in.readString();
+        this.fsFormId = in.readString();
+        this.fsFormIdProject = in.readString();
+        this.formName = in.readString();
+        this.siteId = in.readString();
+        this.siteName = in.readString();
+        this.projectId = in.readString();
+        this.projectName = in.readString();
+        this.formStatus = in.readString();
+        this.role = in.readString();
+        this.isFormDeployed = in.readString();
+        this.details_url = in.readString();
+        this.comment = in.readString();
+        this.formType = in.readString();
+    }
+
+    public static final Parcelable.Creator<FieldSightNotification> CREATOR = new Parcelable.Creator<FieldSightNotification>() {
+        @Override
+        public FieldSightNotification createFromParcel(Parcel source) {
+            return new FieldSightNotification(source);
+        }
+
+        @Override
+        public FieldSightNotification[] newArray(int size) {
+            return new FieldSightNotification[size];
+        }
+    };
 }
