@@ -1,11 +1,12 @@
 package org.bcss.collect.naxa.project;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,9 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.spatial.MapHelper;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.login.model.Project;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.util.GeoPoint;
@@ -58,6 +64,7 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
     }
 
 
+    @SuppressLint("CheckResult")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,11 +74,15 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
 
         marker = new Marker(map);
-        marker.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_place_black));
-        map.getOverlays().add(marker);
-        latLng = new GeoPoint(Double.parseDouble(loadedProject.getLat()), Double.parseDouble(loadedProject.getLon()));
-        zoomToPoint();
+        marker.setSnippet(loadedProject.getName());
+        marker.setTitle(loadedProject.getOrganizationName());
 
+        marker.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.circle_blue));
+        latLng = new GeoPoint(Double.parseDouble(loadedProject.getLat()), Double.parseDouble(loadedProject.getLon()));
+        marker.setPosition(latLng);
+
+        map.getOverlays().add(marker);
+        zoomToPoint();
 
 
         if (helper == null) {
@@ -122,6 +133,7 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
     public void onViewClicked() {
         helper.showLayersDialog(this.getContext());
     }
+
     private void zoomToPoint() {
         if (latLng != null) {
             handler.postDelayed(new Runnable() {
