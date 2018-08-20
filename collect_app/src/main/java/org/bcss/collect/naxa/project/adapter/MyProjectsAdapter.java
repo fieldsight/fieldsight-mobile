@@ -17,6 +17,8 @@ import org.bcss.collect.naxa.project.ProjectsDiffCallback;
 
 import java.util.List;
 
+import static org.bcss.collect.naxa.common.ViewUtils.loadRemoteImage;
+
 
 public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.MyViewHolder> {
 
@@ -87,8 +89,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
 
         holder.title.setText(project.getName());
 
-//        loadImage(context, project.getOrganizationlogourl()).into(holder.ivLogo);
-
+        loadRemoteImage(context, project.getOrganizationlogourl()).into(holder.ivLogo);
 
 
         holder.organizationName.setText(formatOrganizationName(project.getOrganizationName()));
@@ -104,8 +105,6 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
     private String formatOrganizationName(String name) {
         return "A Project by " + name;
     }
-
-
 
 
     public interface OnItemClickListener {

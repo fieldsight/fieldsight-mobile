@@ -2,7 +2,9 @@ package org.bcss.collect.naxa.common;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.TypedValue;
 import android.view.View;
@@ -12,8 +14,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -81,7 +90,19 @@ public final class ViewUtils {
                 .centerInside()
                 .skipMemoryCache(false)
                 .priority(Priority.LOW)
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC );
+    }
+
+
+    static Drawable getProgressBarIndeterminate() {
+        final int[] attrs = {android.R.attr.indeterminateDrawable};
+        final int attrs_indeterminateDrawable_index = 0;
+        TypedArray a = Collect.getInstance().obtainStyledAttributes(android.R.style.Widget_ProgressBar, attrs);
+        try {
+            return a.getDrawable(attrs_indeterminateDrawable_index);
+        } finally {
+            a.recycle();
+        }
     }
 
 
