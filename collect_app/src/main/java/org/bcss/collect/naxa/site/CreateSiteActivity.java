@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -34,15 +36,26 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
@@ -86,6 +99,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     private CreateSiteViewModel createSiteViewModel;
 
+
     private Project project;
     private File photoToUpload;
 
@@ -118,7 +132,13 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
         setupToolbar();
         setupViewModel();
-        setupSaveBtn();
+
+        SiteMetaAttribute siteMetaAttribute = new SiteMetaAttribute("Demo", "Demo", "Text");
+        ArrayList<SiteMetaAttribute> list = new ArrayList<>();
+        list.add(siteMetaAttribute);
+
+        createSiteViewModel.setMetaAttributes(list);
+
 
         createSiteViewModel.getFormStatus().observe(this, createSiteFormStatus -> {
             if (createSiteFormStatus == null) return;
@@ -127,6 +147,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     ToastUtils.showShortToastInMiddle("Offline Site Created");
                     break;
                 case ERROR:
+                    DialogFactory.createGenericErrorDialog(this, "").show();
                     break;
                 case EMPTY_SITE_NAME:
                     tiSiteName.setError(getString(R.string.error_field_required));
@@ -157,6 +178,42 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
             }
         });
+
+
+        createSiteViewModel.getMetaAttributesMutableLiveData().observe(this,
+                metaAttributes -> {
+                    if (metaAttributes != null) {
+                        Observable.just(metaAttributes)
+                                .flatMapIterable((Function<ArrayList<SiteMetaAttribute>, Iterable<SiteMetaAttribute>>) metaAttributes1 -> metaAttributes1)
+                                .subscribeOn(Schedulers.computation())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new DisposableObserver<SiteMetaAttribute>() {
+                                    @Override
+                                    public void onNext(SiteMetaAttribute metaAttribute) {
+                                        String question = metaAttribute.getQuestionText();
+                                        String submissionTag = metaAttribute.getQuestionName();
+                                        String questionType = metaAttribute.getQuestionType();//todo: introduce different widget using type
+
+                                        View view = getTextInputLayout(question, submissionTag, questionType);
+                                        linearLayoutForm.addView(view);
+
+                                        createSiteViewModel.appendMetaAttributeViewIds(view.getId());
+
+
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        createSiteViewModel.getFormStatus().setValue(CreateSiteFormStatus.ERROR);
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        setupSaveBtn();
+                                    }
+                                });
+                    }
+                });
 
         createSiteViewModel.getSite()
                 .observe(this, new Observer<Site>() {
@@ -202,6 +259,42 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private void showProgress(Boolean show) {
 
     }
+
+
+    public View getTextInputLayout(String question, String tag, String type) {
+
+        View view = getLayoutInflater().inflate(R.layout.layout_text_input, null);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(16, 16, 16, 16);
+        view.setLayoutParams(lp);
+
+
+        TextInputLayout textInputLayout = ((TextInputLayout) view);
+
+        textInputLayout.setHint(question);
+        textInputLayout.getEditText().setInputType(typeToInputType(type));
+        textInputLayout.setTag(tag);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            view.setId(ViewUtils.generateViewId());
+        } else {
+            view.setId(View.generateViewId());
+        }
+
+
+        return view;
+    }
+
+    private int typeToInputType(String type) {
+        switch (type) {
+            case "Number":
+                return InputType.TYPE_CLASS_NUMBER;
+
+            default:
+                return InputType.TYPE_CLASS_TEXT;
+        }
+    }
+
 
     public void watchText(TextInputLayout textInputLayout) {
 
@@ -287,12 +380,49 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             public void onClick(View view) {
                 String mockedSiteId = String.valueOf(System.currentTimeMillis());
                 createSiteViewModel.setId(mockedSiteId);
+
+                collectMetaAtrributes(createSiteViewModel.getMetaAttributesViewIds().getValue());
                 createSiteViewModel.saveSite();
             }
         });
 
         linearLayoutForm.addView(view);
 
+    }
+
+    private void collectMetaAtrributes(ArrayList<Integer> ids) {
+
+        JSONObject jsonObject = new JSONObject();
+        Observable.just(ids)
+                .flatMapIterable((Function<ArrayList<Integer>, Iterable<Integer>>) viewIds -> viewIds)
+                .filter(new Predicate<Integer>() {
+                    @Override
+                    public boolean test(Integer layoutId) throws Exception {
+                        return findViewById(layoutId) instanceof TextInputLayout;
+                    }
+                })
+                .map(new Function<Integer, JSONObject>() {
+                    @Override
+                    public JSONObject apply(Integer layoutId) throws Exception {
+                        TextInputLayout textInput = findViewById(layoutId);
+                        String answer = textInput.getEditText().getText().toString().trim();
+                        String submissionKey = (String) textInput.getTag();
+                        return jsonObject.put(submissionKey, answer);
+                    }
+                })
+                .toList()
+                .subscribe(new DisposableSingleObserver<List<JSONObject>>() {
+                    @Override
+                    public void onSuccess(List<JSONObject> jsonObjects) {
+                        String serializedString = jsonObject.toString();
+                        createSiteViewModel.setMetaAttributesAnswer(serializedString);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
     private void setupViewModel() {

@@ -8,9 +8,11 @@ import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.site.db.SiteRepository;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class CreateSiteViewModel extends ViewModel {
 
@@ -21,9 +23,20 @@ public class CreateSiteViewModel extends ViewModel {
     private MutableLiveData<Boolean> showProgress = new MutableLiveData<Boolean>();
     private MutableLiveData<Site> siteMutableLiveData = new MutableLiveData<Site>();
     private MutableLiveData<Project> projectMutableLiveData = new MutableLiveData<Project>();
+    private MutableLiveData<ArrayList<SiteMetaAttribute>> metaAttributes = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<Integer>> metaAttributesViewIds = new MutableLiveData<>();
+    private MutableLiveData<String> metaAttributesAnswer = new MutableLiveData<>();
 
     public MutableLiveData<Boolean> getShowSiteType() {
         return showSiteType;
+    }
+
+    public MutableLiveData<ArrayList<Integer>> getMetaAttributesViewIds() {
+        return metaAttributesViewIds;
+    }
+
+    public void appendMetaAttributeViewIds(Integer integer) {
+        this.metaAttributesViewIds.getValue().add(integer);
     }
 
     public MutableLiveData<Boolean> getShowSiteCluster() {
@@ -37,6 +50,7 @@ public class CreateSiteViewModel extends ViewModel {
     public CreateSiteViewModel(SiteRepository siteRepository) {
 
         this.siteRepository = siteRepository;
+        this.metaAttributesViewIds.setValue(new ArrayList<>(0));
     }
 
     public SingleLiveEvent<CreateSiteFormStatus> getFormStatus() {
@@ -72,6 +86,8 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void saveSite() {
         if (validateData()) {
+
+
             siteRepository.saveSiteAsOffline(siteMutableLiveData.getValue(), projectMutableLiveData.getValue());
             ToastUtils.showShortToastInMiddle("Saving Site");
             //todo check if saving site is faliling
@@ -79,6 +95,14 @@ public class CreateSiteViewModel extends ViewModel {
         }
     }
 
+
+    public void setMetaAttributes(ArrayList<SiteMetaAttribute> siteMetaAttributes) {
+        metaAttributes.setValue(siteMetaAttributes);
+    }
+
+    public MutableLiveData<ArrayList<SiteMetaAttribute>> getMetaAttributesMutableLiveData() {
+        return metaAttributes;
+    }
 
     private boolean validateData() {
 
@@ -193,4 +217,16 @@ public class CreateSiteViewModel extends ViewModel {
 
 
 
+    public void setMetaAttributesAnswer(String metaAttributesAnswer) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setMetaAttributes(metaAttributesAnswer);
+
+    }
+
+    public String getMetaAttributesAnswer(){
+        return metaAttributesAnswer.getValue();
+    }
 }

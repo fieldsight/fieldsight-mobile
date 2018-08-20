@@ -51,14 +51,14 @@ public class Site implements Parcelable {
     private String dateCreated;
     @ColumnInfo(name = "project")
     private String project;
-
     @ColumnInfo(name = "isSiteVerified")
     private int isSiteVerified;
-
     @SerializedName("type")
     @Expose
     private String siteTypeError;
 
+
+    private String metaAttributes;
 
     //default values for  table
     private String generalFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
@@ -97,7 +97,11 @@ public class Site implements Parcelable {
 
     }
 
-    public Site(@NonNull String id, String latitude, String longitude, String identifier, String name, Integer typeId, String typeLabel, String phone, String address, String publicDesc, String additionalDesc, String logo, Boolean isActive, String location, Boolean isSurvey, String dateCreated, String project, int isSiteVerified, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm) {
+    public Site(@NonNull String id, String latitude, String longitude, String identifier, String name,
+                Integer typeId, String typeLabel, String phone, String address, String publicDesc, String additionalDesc,
+                String logo, Boolean isActive, String location, Boolean isSurvey, String dateCreated, String project,
+                int isSiteVerified, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm,
+                String metaAttributes) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -119,6 +123,16 @@ public class Site implements Parcelable {
         this.generalFormDeployedFrom = generalFormDeployedFrom;
         this.stagedFormDeployedFrom = stagedFormDeployedFrom;
         this.scheduleFormDeployedForm = scheduleFormDeployedForm;
+        this.metaAttributes = metaAttributes;
+    }
+
+
+    public String getMetaAttributes() {
+        return metaAttributes;
+    }
+
+    public void setMetaAttributes(String metaAttributes) {
+        this.metaAttributes = metaAttributes;
     }
 
 

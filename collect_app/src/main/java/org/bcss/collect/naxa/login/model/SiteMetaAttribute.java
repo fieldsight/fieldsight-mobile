@@ -22,6 +22,13 @@ public class SiteMetaAttribute implements Parcelable {
     @Expose
     private String questionType;
 
+
+    public SiteMetaAttribute(String questionName, String questionText, String questionType) {
+        this.questionName = questionName;
+        this.questionText = questionText;
+        this.questionType = questionType;
+    }
+
     protected SiteMetaAttribute(Parcel in) {
         questionName = in.readString();
         byte tmpIsDeleted = in.readByte();
