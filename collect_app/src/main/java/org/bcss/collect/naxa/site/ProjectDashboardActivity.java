@@ -223,7 +223,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         User user = new Gson().fromJson(userString, User.class);
         ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFull_name());
         ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
-        ViewUtils.loadImage(user.getProfilepic()).into((ImageView) navigationHeader.findViewById(R.id.image_profile));
+//        ViewUtils.loadImage(user.getProfilepic()).into((ImageView) navigationHeader.findViewById(R.id.image_profile));
         navigationHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

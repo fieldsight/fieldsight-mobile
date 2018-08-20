@@ -38,14 +38,16 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
             return;
         }
 
+        loginView.showProgress(true);
+
         ReactiveNetwork.checkInternetConnectivity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableSingleObserver<Boolean>() {
                     @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        if (aBoolean) {
-                            loginView.showProgress(true);
+                    public void onSuccess(Boolean isConnected) {
+                        if (isConnected) {
+
                             loginModel.login(username, password, LoginPresenterImpl.this);
                         } else {
                             loginView.showError("No Network Connectivity");
@@ -75,6 +77,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
     @Override
     public void fcmTokenError() {
+        loginView.showProgress(false);
         loginView.showError(Collect.getInstance().getString(R.string.dialog_error_register));
     }
 

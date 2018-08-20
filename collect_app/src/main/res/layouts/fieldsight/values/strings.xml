@@ -139,6 +139,7 @@
     <string name="notify_title_form_altered">%1$s Form %2$s </string>
     <string name="notify_form_altered">A %1$s form from %2$s site has been %3$s </string>
     <string name="comments_default_comment">No comments availiable</string>
+    <string name="msg_photo_taken">Change Photo</string>
 
     <!--Notification sitelist ends here-->
 

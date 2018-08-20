@@ -7,6 +7,7 @@ import com.google.android.gms.auth.api.Auth;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.logic.PropertyManager;
+import org.bcss.collect.naxa.FirebaseTokenException;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
@@ -28,6 +29,7 @@ import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 
 public class LoginModelImpl implements LoginModel {
 
@@ -52,7 +54,7 @@ public class LoginModelImpl implements LoginModel {
                                     @Override
                                     public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
                                         if ("false".equals(fcmParameter.getIs_active())) {
-                                            throw new RuntimeException("FieldSight failed to add token");
+                                            throw new FirebaseTokenException("FieldSight failed to add token");
                                         }
 
                                         FieldSightUserSession.saveAuthToken(authResponse.getToken());
@@ -72,13 +74,12 @@ public class LoginModelImpl implements LoginModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        if (e instanceof RuntimeException) {
-                            //thrown from getFCM method
-                            onLoginFinishedListener.fcmTokenError();
-                        } else {
+                        if (e instanceof HttpException) {
                             onLoginFinishedListener.onError();
+                        } else if (e instanceof FirebaseTokenException) {
+                            onLoginFinishedListener.fcmTokenError();
                         }
-                        e.printStackTrace();
+
                     }
 
                     @Override

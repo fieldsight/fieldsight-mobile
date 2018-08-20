@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.utilities.PermissionUtils.finishAllActivities;
@@ -295,7 +296,6 @@ public class InstanceUploaderList extends InstanceListActivity implements
 
 
         Publisher<List<Site>> pub = LiveDataReactiveStreams.toPublisher(this, SiteLocalSource.getInstance().getAll());
-
 
     }
 

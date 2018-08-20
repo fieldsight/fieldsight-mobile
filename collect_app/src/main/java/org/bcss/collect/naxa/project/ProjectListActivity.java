@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.project;
 
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -117,6 +120,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 .observe(ProjectListActivity.this, projects -> {
                     Timber.i("Projects data changing %s", projects.size());
                     projectlistAdapter.updateList(projects);
+
                 });
     }
 
@@ -184,10 +188,11 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
         rvProjects.setItemAnimator(new DefaultItemAnimator());
         rvProjects.setAdapter(projectlistAdapter);
 
+
     }
 
-    public void loadToolBarSearch() {
 
+    public void loadToolBarSearch() {
 
         //  ArrayList<String> sitesStored = SharedPreference.loadList(this, Utils.PREFS_NAME, Utils.KEY_SITES);
         ArrayList<Site> sitesStored = new ArrayList<>();

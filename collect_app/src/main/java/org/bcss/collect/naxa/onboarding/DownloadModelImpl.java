@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.onboarding;
 
+import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.os.Handler;
 
 import org.greenrobot.eventbus.EventBus;
@@ -220,6 +221,9 @@ public class DownloadModelImpl implements DownloadModel {
                     syncRepository.setSuccess(uid);
                     break;
             }
+
+
+
         });
         XMLFormDownloadService.start(Collect.getInstance(), xmlFormDownloadReceiver);
 

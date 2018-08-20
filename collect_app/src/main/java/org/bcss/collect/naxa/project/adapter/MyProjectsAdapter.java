@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.project.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -12,20 +11,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.DrawableRequestBuilder;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import org.bcss.collect.android.R;
-import org.bcss.collect.naxa.generalforms.GeneralFormsDiffCallback;
-import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.project.ProjectsDiffCallback;
-import org.bcss.collect.naxa.site.ProjectDashboardActivity;
 
 import java.util.List;
-
-import static org.bcss.collect.naxa.network.APIEndpoint.BASE_URL;
 
 
 public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.MyViewHolder> {
@@ -97,7 +87,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
 
         holder.title.setText(project.getName());
 
-        loadImage(context, project.getOrganizationlogourl()).into(holder.ivLogo);
+//        loadImage(context, project.getOrganizationlogourl()).into(holder.ivLogo);
 
 
 
@@ -115,15 +105,7 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
         return "A Project by " + name;
     }
 
-    private DrawableRequestBuilder<String> loadImage(Context context, @NonNull String imagePath) {
 
-        return Glide
-                .with(context)
-                .load(imagePath)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .fitCenter()
-                .crossFade();
-    }
 
 
     public interface OnItemClickListener {

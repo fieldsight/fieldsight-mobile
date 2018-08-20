@@ -170,6 +170,7 @@ public class CreateSiteViewModel extends ViewModel {
         siteMutableLiveData.getValue().setLatitude(lat);
         siteMutableLiveData.getValue().setLongitude(lon);
 
+        formStatus.setValue(CreateSiteFormStatus.LOCATION_RECORDED);
     }
 
     public void setPhoto(String path) {
@@ -178,6 +179,8 @@ public class CreateSiteViewModel extends ViewModel {
         }
 
         siteMutableLiveData.getValue().setLogo(path);
+
+        formStatus.setValue(CreateSiteFormStatus.PHOTO_TAKEN);
     }
 
     public void setId(String siteId) {
@@ -187,6 +190,7 @@ public class CreateSiteViewModel extends ViewModel {
 
         siteMutableLiveData.getValue().setId(siteId);
     }
+
 
 
 }

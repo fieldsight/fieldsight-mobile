@@ -9,6 +9,7 @@ the specific language governing permissions and limitations under the License. -
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
     android:paddingBottom="8dip"

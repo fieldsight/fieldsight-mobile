@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,6 +32,7 @@ import org.bcss.collect.android.activities.GeoPointActivity;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
@@ -45,6 +47,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.bcss.collect.naxa.common.ViewUtils.loadLocalImage;
 
 public class CreateSiteActivity extends CollectAbstractActivity {
 
@@ -111,41 +114,47 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         }
 
 
+        int sucessColor = ContextCompat.getColor(CreateSiteActivity.this, R.color.colorGreenPrimaryLight);
+
         setupToolbar();
         setupViewModel();
         setupSaveBtn();
 
-        createSiteViewModel.getFormStatus().observe(this, new Observer<CreateSiteFormStatus>() {
-            @Override
-            public void onChanged(@Nullable CreateSiteFormStatus createSiteFormStatus) {
-                if (createSiteFormStatus == null) return;
-                switch (createSiteFormStatus) {
-                    case SUCCESS:
-                        ToastUtils.showShortToastInMiddle("Offline Site Created");
-                        break;
-                    case ERROR:
-                        break;
-                    case EMPTY_SITE_NAME:
-                        tiSiteName.setError(getString(R.string.error_field_required));
-                        btnCollectSiteRecordLocation.requestFocus();
-                        break;
-                    case EMPTY_SITE_LOCATION:
-                        btnCollectSiteRecordLocation.setError(getString(R.string.error_field_required));
-                        btnCollectSiteRecordLocation.requestFocus();
-                        break;
-                    case EMPTY_SITE_IDENTIFIER:
-                        tiSiteIdentifier.setError(getString(R.string.error_field_required));
-                        tiSiteIdentifier.requestFocus();
-                        break;
-                    case LOCATION_RECORDED:
-                        btnCollectSiteRecordLocation.setTextColor(ContextCompat.getColor(CreateSiteActivity.this, R.color.colorGreenPrimaryLight));
-                        btnCollectSiteRecordLocation.setText(getString(R.string.msg_location_recorded, accurary));
-                        break;
-                    case VALIDATED:
-                        finish();
-                        break;
+        createSiteViewModel.getFormStatus().observe(this, createSiteFormStatus -> {
+            if (createSiteFormStatus == null) return;
+            switch (createSiteFormStatus) {
+                case SUCCESS:
+                    ToastUtils.showShortToastInMiddle("Offline Site Created");
+                    break;
+                case ERROR:
+                    break;
+                case EMPTY_SITE_NAME:
+                    tiSiteName.setError(getString(R.string.error_field_required));
+                    btnCollectSiteRecordLocation.requestFocus();
+                    break;
+                case EMPTY_SITE_LOCATION:
+                    btnCollectSiteRecordLocation.setError(getString(R.string.error_field_required));
+                    btnCollectSiteRecordLocation.requestFocus();
+                    break;
+                case EMPTY_SITE_IDENTIFIER:
+                    tiSiteIdentifier.setError(getString(R.string.error_field_required));
+                    tiSiteIdentifier.requestFocus();
+                    break;
+                case LOCATION_RECORDED:
+                    btnCollectSiteRecordLocation.setTextColor(sucessColor);
+                    btnCollectSiteRecordLocation.setText(getString(R.string.msg_location_recorded, accurary));
+                    break;
+                case PHOTO_TAKEN:
+                    btnCollectSiteAddPhoto.setTextColor(sucessColor);
+                    btnCollectSiteAddPhoto.setText(getString(R.string.msg_photo_taken));
+                    String path = createSiteViewModel.getSite().getValue().getLogo();
+                    loadLocalImage(this, path).into(imageVideoThumb);
+                    imageVideoThumb.setVisibility(View.VISIBLE);
+                    break;
+                case VALIDATED:
+                    finish();
+                    break;
 
-                }
             }
         });
 
@@ -154,6 +163,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     @Override
                     public void onChanged(@Nullable Site site) {
                         if (site != null) {
+
                         }
                     }
                 });
@@ -305,7 +315,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             switch (which) {
                 case 0:
                     photoToUpload = createSiteViewModel.generateImageFile("site");
-                    phototoUploadUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID.concat(".provider"), photoToUpload);
+                    phototoUploadUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photoToUpload);
 
 
                     Intent toCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -314,8 +324,10 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     break;
                 case 1:
                     Intent intent = new Intent();
-                    intent.setType("image/*");
+
                     intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
                     startActivityForResult(Intent.createChooser(intent, "Select site image"), Constant.Key.SELECT_FILE);
                     break;
                 default:
@@ -324,6 +336,25 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         }).show();
     }
 
+    public String getPathFromURI(Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = getContentResolver().query(contentUri, proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } catch (Exception e) {
+            Timber.e("getPathFromURI Exception : %s ", e.toString());
+            return "";
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -331,11 +362,13 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
         switch (requestCode) {
             case Constant.Key.RC_CAMERA:
+                createSiteViewModel.setPhoto(photoToUpload.getAbsolutePath());
+                break;
             case Constant.Key.SELECT_FILE:
-                ToastUtils.showLongToast("Failed to load image");
-//                createSiteViewModel.setPhoto(photoToUpload.getAbsolutePath());
-//                Glide.with(this).load(photoToUpload.getAbsoluteFile()).into(imageVideoThumb);
-//                imageVideoThumb.setVisibility(View.VISIBLE);
+                Uri uri = data.getData();
+                String path = ImageFileUtils.getPath(this, uri);
+                createSiteViewModel.setPhoto(path);
+
                 break;
             case Constant.Key.GEOPOINT_RESULT_CODE:
                 String location = data.getStringExtra(LOCATION_RESULT);

@@ -2,7 +2,7 @@ package org.bcss.collect.naxa.common;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.support.annotation.NonNull;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.TypedValue;
 import android.view.View;
@@ -11,13 +11,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.DrawableRequestBuilder;
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
-import org.bcss.collect.android.application.Collect;
-
-import static org.bcss.collect.naxa.network.APIEndpoint.BASE_URL;
+import org.bcss.collect.android.R;
 
 public final class ViewUtils {
     public static int dp2px(Context context, int dp) {
@@ -61,15 +59,27 @@ public final class ViewUtils {
         listView.requestLayout();
     }
 
-    public static DrawableRequestBuilder<String> loadImage(@NonNull String imagePath) {
 
-        return Glide
-                .with(Collect.getInstance())
-                .load(imagePath)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
-                .crossFade();
+    public static GlideRequest<Drawable> loadLocalImage(Context context, String path) {
+        return GlideApp.with(context)
+                .load(path)
+                .centerInside()
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE);
     }
+
+
+    public static GlideRequest<Drawable> loadRemoteImage(Context context, String path) {
+        return GlideApp.with(context)
+                .load(path)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .centerInside()
+                .skipMemoryCache(false)
+                .priority(Priority.LOW)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+    }
+
 
 }
 

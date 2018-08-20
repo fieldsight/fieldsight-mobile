@@ -71,8 +71,10 @@ android {
         applicationId('org.bcss.collect.android')
         minSdkVersion(16)
         targetSdkVersion(22)
-        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
-        versionName getVersionName()
+//        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
+        versionCode 27
+        versionName '2.3.5-b'
+//        versionName getVersionName()
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -90,15 +92,20 @@ android {
         }
     }
 
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
     buildTypes {
         // Release build for all forks
         release {
-            if (secrets.getProperty('RELEASE_STORE_FILE')) {
-                signingConfig signingConfigs.release
-            }
-            minifyEnabled(true)
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "false")
+            debuggable false
+            minifyEnabled false
+            shrinkResources false
+            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
         }
         // Release build for the original ODK Collect app
         odkCollectRelease {
@@ -210,6 +217,13 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork-rx2:2.0.0'
     implementation "android.arch.lifecycle:reactivestreams:1.1.1"
     implementation "com.google.firebase:firebase-messaging:${rootProject.playServicesVersion}"
+    //debug dependecies - fieldsight
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+
+    //for image - fieldsight
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
     //naxa [ends]
 
 
@@ -309,12 +323,6 @@ dependencies {
     // Used to generate documentation screenshots.
     androidTestImplementation "tools.fastlane:screengrab:1.1.0"
 
-    //debug dependecies - fieldsight
-    implementation 'com.facebook.stetho:stetho:1.5.0'
-    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
-
-    //for image - fieldsight
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
 
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"

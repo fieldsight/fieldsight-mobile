@@ -24,6 +24,7 @@ import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.tasks.DeleteFormsTask;
 import org.bcss.collect.android.tasks.DeleteInstancesTask;
+import org.bcss.collect.naxa.FirebaseTokenException;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.LoginActivity;
@@ -65,7 +66,7 @@ public class FieldSightUserSession {
         }
 
         if (fcmToken == null) {
-            throw new RuntimeException("firebase token is null");
+            throw new FirebaseTokenException("firebase token is null");
         }
 
         return new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
