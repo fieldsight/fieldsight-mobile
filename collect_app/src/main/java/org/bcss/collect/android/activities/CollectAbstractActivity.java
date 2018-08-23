@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.utilities.ThemeUtils;
@@ -75,5 +77,12 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
 
     public boolean isInstanceStateSaved() {
         return isInstanceStateSaved;
+    }
+
+    protected void showProgress(boolean show) {
+
+        ProgressBar progressBar = findViewById(R.id.toolbar_progress_bar);
+        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+
     }
 }

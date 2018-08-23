@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.common;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
@@ -12,6 +13,7 @@ import org.bcss.collect.naxa.generalforms.data.GeneralFormDAO;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 
+import org.bcss.collect.naxa.login.model.SiteMetaAttributesTypeConverter;
 import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
 import org.bcss.collect.naxa.onboarding.SyncableItems;
 import org.bcss.collect.naxa.project.data.ProjectDao;
@@ -48,6 +50,7 @@ import java.io.File;
 
         },
         version = 1)
+@TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
 

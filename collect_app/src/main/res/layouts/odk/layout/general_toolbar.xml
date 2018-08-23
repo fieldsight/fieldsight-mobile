@@ -5,16 +5,35 @@
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:elevation="@dimen/elevation_appbar"
-    android:transitionName="@string/shared_transition_toolbar"
-    android:background="@drawable/toolbar_gradient"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:transitionName="@string/shared_transition_toolbar">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toolbar_gradient"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+
+
+        <ProgressBar
+            android:id="@+id/toolbar_progress_bar"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-6.75dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/white"
+            android:indeterminateTintMode="src_atop"
+            android:visibility="gone" />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/tv_toolbar_message"
@@ -25,17 +44,6 @@
         android:text="@string/refresh"
         android:textAlignment="center"
         android:visibility="gone" />
-
-    <ProgressBar
-        android:visibility="gone"
-        android:id="@+id/toolbar_progress_bar"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="-7dp"
-        android:layout_marginTop="-4dp"
-        android:background="@drawable/toolbar_gradient"
-        android:indeterminate="true" />
 
 
 </android.support.design.widget.AppBarLayout>

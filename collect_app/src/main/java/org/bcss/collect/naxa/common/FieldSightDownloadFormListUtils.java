@@ -396,10 +396,8 @@ public class FieldSightDownloadFormListUtils {
     private static void populateSiteOverideList(String siteId, String isScheduled, String isStaged, String isSurvey) {
         if (isScheduled.equalsIgnoreCase("true")) {
             overrideScheduledFormsIds.add(siteId);
-
         } else if (isStaged.equalsIgnoreCase("true")) {
             overrideStageFormsIds.add(siteId);
-
         } else if (isSurvey.equalsIgnoreCase("false")
                 && isScheduled.equalsIgnoreCase("false")
                 && isStaged.equalsIgnoreCase("false")) {

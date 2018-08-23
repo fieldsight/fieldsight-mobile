@@ -27,6 +27,9 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
@@ -40,10 +43,13 @@ import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
+import org.bcss.collect.naxa.site.data.SiteCluster;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -133,12 +139,23 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         setupToolbar();
         setupViewModel();
 
-        SiteMetaAttribute siteMetaAttribute = new SiteMetaAttribute("Demo", "Demo", "Text");
-        ArrayList<SiteMetaAttribute> list = new ArrayList<>();
-        list.add(siteMetaAttribute);
 
-        createSiteViewModel.setMetaAttributes(list);
+        boolean isClusterIsEmpty = project.getSiteClusters() == null || project.getSiteClusters().isEmpty();
+        if (!isClusterIsEmpty) {
+            Type type = new TypeToken<ArrayList<SiteCluster>>() {
+            }.getType();
+            ArrayList<SiteCluster> siteClusters = new ArrayList<>(new Gson().fromJson(project.getSiteClusters(), type));
+            createSiteViewModel.setSiteClusterMutableLiveData(siteClusters);
+        }
 
+        createSiteViewModel.setMetaAttributes(project.getSiteMetaAttributes());
+
+        createSiteViewModel
+                .getSiteClusterMutableLiveData()
+                .observe(this, this::showSiteClusterSpinner);
+
+        createSiteViewModel.getSiteTypesMutableLiveData()
+                .observe(this, this::showSiteTypeSpinner);
 
         createSiteViewModel.getFormStatus().observe(this, createSiteFormStatus -> {
             if (createSiteFormStatus == null) return;
@@ -180,40 +197,42 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         });
 
 
-        createSiteViewModel.getMetaAttributesMutableLiveData().observe(this,
-                metaAttributes -> {
-                    if (metaAttributes != null) {
-                        Observable.just(metaAttributes)
-                                .flatMapIterable((Function<ArrayList<SiteMetaAttribute>, Iterable<SiteMetaAttribute>>) metaAttributes1 -> metaAttributes1)
-                                .subscribeOn(Schedulers.computation())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new DisposableObserver<SiteMetaAttribute>() {
-                                    @Override
-                                    public void onNext(SiteMetaAttribute metaAttribute) {
-                                        String question = metaAttribute.getQuestionText();
-                                        String submissionTag = metaAttribute.getQuestionName();
-                                        String questionType = metaAttribute.getQuestionType();//todo: introduce different widget using type
+        createSiteViewModel.getMetaAttributesMutableLiveData()
+                .observe(this,
+                        metaAttributes -> {
+                            if (metaAttributes != null) {
+                                Observable.just(metaAttributes)
+                                        .flatMapIterable((Function<List<SiteMetaAttribute>, Iterable<SiteMetaAttribute>>) metaAttributes1 -> metaAttributes1)
+                                        .subscribeOn(Schedulers.computation())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new DisposableObserver<SiteMetaAttribute>() {
+                                            @Override
+                                            public void onNext(SiteMetaAttribute metaAttribute) {
+                                                String question = metaAttribute.getQuestionText();
+                                                String submissionTag = metaAttribute.getQuestionName();
+                                                String questionType = metaAttribute.getQuestionType();//todo: introduce different widget using type
 
-                                        View view = getTextInputLayout(question, submissionTag, questionType);
-                                        linearLayoutForm.addView(view);
+                                                View view = getTextInputLayout(question, submissionTag, questionType);
+                                                linearLayoutForm.addView(view);
 
-                                        createSiteViewModel.appendMetaAttributeViewIds(view.getId());
+                                                createSiteViewModel.appendMetaAttributeViewIds(view.getId());
 
 
-                                    }
+                                            }
 
-                                    @Override
-                                    public void onError(Throwable e) {
-                                        createSiteViewModel.getFormStatus().setValue(CreateSiteFormStatus.ERROR);
-                                    }
+                                            @Override
+                                            public void onError(Throwable e) {
+                                                e.printStackTrace();
+                                                createSiteViewModel.getFormStatus().setValue(CreateSiteFormStatus.ERROR);
+                                            }
 
-                                    @Override
-                                    public void onComplete() {
-                                        setupSaveBtn();
-                                    }
-                                });
-                    }
-                });
+                                            @Override
+                                            public void onComplete() {
+                                                setupSaveBtn();
+                                            }
+                                        });
+                            }
+                        });
 
         createSiteViewModel.getSite()
                 .observe(this, new Observer<Site>() {
@@ -229,22 +248,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         SiteTypeLocalSource.getInstance()
                 .getByProjectId(project.getId())
                 .observe(this, siteTypes -> {
-                    boolean isEmpty = siteTypes == null || siteTypes.isEmpty();
-                    createSiteViewModel.getShowSiteType().setValue(!isEmpty);
+                    createSiteViewModel.setSiteTypes(siteTypes);
                 });
 
-        SiteClusterLocalSource.getInstance()
-                .getByProjectId(project.getId())
-                .observe(this, siteClusters -> {
-                    boolean isEmpty = siteClusters == null || siteClusters.isEmpty();
-                    createSiteViewModel.getShowSiteCluster().setValue(!isEmpty);
-
-                });
-
-
-        createSiteViewModel.getShowSiteCluster().observe(this, this::showSiteClusterSpinner);
-        createSiteViewModel.getShowSiteCluster().observe(this, this::showSiteTypeSpinner);
-        createSiteViewModel.getShowSiteCluster().observe(this, this::showProgress);
 
         watchText(tiSiteIdentifier);
         watchText(tiSiteName);
@@ -253,10 +259,6 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         watchText(tiSitePublicDesc);
 
         createSiteViewModel.getProjectMutableLiveData().setValue(project);
-
-    }
-
-    private void showProgress(Boolean show) {
 
     }
 
@@ -345,30 +347,29 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     }
 
 
-    private void showSiteTypeSpinner(boolean show) {
+    private void showSiteTypeSpinner(List<SiteType> siteTypes) {
+        boolean show = siteTypes != null && !siteTypes.isEmpty();
         spinnerSiteType.setVisibility(show ? View.VISIBLE : View.GONE);
         if (show) {
             SiteTypeSpinnerAdapter spinnerAdapter = new SiteTypeSpinnerAdapter(this,
-                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_type), new ArrayList<>(0));
+                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_type), siteTypes);
             spinnerSiteType.setAdapter(spinnerAdapter);
             spinnerSiteType.setSelection(spinnerAdapter.getCount());
         }
 
     }
 
-    private void showSiteClusterSpinner(boolean show) {
+    private void showSiteClusterSpinner(ArrayList<SiteCluster> clusters) {
+        boolean show = clusters != null && !clusters.isEmpty();
         spinnerSiteCluster.setVisibility(show ? View.VISIBLE : View.GONE);
         if (show) {
             SiteClusterSpinnerAdapter spinnerAdapter = new SiteClusterSpinnerAdapter(this,
-                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_cluster), new ArrayList<>(0));
+                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_cluster), clusters);
             spinnerSiteCluster.setAdapter(spinnerAdapter);
             spinnerSiteCluster.setSelection(spinnerAdapter.getCount());
         }
     }
 
-    private void showProgress() {
-
-    }
 
     private void setupSaveBtn() {
         View view = getLayoutInflater().inflate(R.layout.btn_save, null);
@@ -380,13 +381,30 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             public void onClick(View view) {
                 String mockedSiteId = String.valueOf(System.currentTimeMillis());
                 createSiteViewModel.setId(mockedSiteId);
-
                 collectMetaAtrributes(createSiteViewModel.getMetaAttributesViewIds().getValue());
+                collectSpinnerOptions();
+
                 createSiteViewModel.saveSite();
             }
         });
 
         linearLayoutForm.addView(view);
+
+    }
+
+
+    private void collectSpinnerOptions() {
+        if (spinnerSiteCluster.getVisibility() == View.VISIBLE) {
+            String selectedCluster = ((SiteCluster) spinnerSiteCluster.getSelectedItem()).getId();
+
+        }
+
+        if (spinnerSiteType.getVisibility() == View.VISIBLE) {
+            SiteType siteType = (SiteType) spinnerSiteType.getSelectedItem();
+            String siteTypeId = siteType.getId();
+            String siteTypeLabel = siteType.getName();
+            createSiteViewModel.setSiteType(siteTypeId, siteTypeLabel);
+        }
 
     }
 

@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 
 import org.bcss.collect.android.R;
@@ -82,76 +84,28 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        EventBus.getDefault().register(this);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        EventBus.getDefault().unregister(this);
-//    }
-//
-//
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onDataSyncEvent(DataSyncEvent syncEvent) {
-//        switch (syncEvent.getUid()) {
-//            case ODK_FORMS:
-//                updateODKDownloadItem(syncEvent);
-//                break;
-//        }
-//    }
-//
-//    private void updateODKDownloadItem(DataSyncEvent syncEvent) {
-//        switch (syncEvent.getEvent()) {
-//            case EVENT_START:
-//                Observable
-//                        .just(downloadListAdapter.getList())
-//                        .flatMapIterable((Function<ArrayList<SyncableItems>, Iterable<SyncableItems>>) downloadableItems -> downloadableItems)
-//                        .map(downloadableItem -> {
-//                            if (syncEvent.getUid() == downloadableItem.getUid()) {
-//                            }
-//                            return downloadableItem;
-//                        })
-//                        .toList()
-//                        .subscribe(new SingleObserver<List<SyncableItems>>() {
-//                            @Override
-//                            public void onSubscribe(Disposable d) {
-//                            }
-//
-//                            @Override
-//                            public void onSuccess(List<SyncableItems> syncableItems) {
-//                                downloadListAdapter.updateList(syncableItems);
-//                            }
-//
-//                            @Override
-//                            public void onError(Throwable e) {
-//                                e.printStackTrace();
-//                            }
-//                        });
-//                break;
-//            case EVENT_UPDATE:
-//                break;
-//            case EVENT_END:
-//                break;
-//            case EVENT_ERROR:
-//                break;
-//        }
-//    }
-
 
     @Override
     public void setUpRecyclerView(List<SyncableItems> syncableItems) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setItemAnimator(new ScaleUpAndDownItemAnimator());
-
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
         downloadListAdapter = new DownloadListAdapter((ArrayList<SyncableItems>) syncableItems);
         recyclerView.setAdapter(downloadListAdapter);
+
+
+    }
+
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     @Override

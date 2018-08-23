@@ -152,12 +152,15 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 NotificationListActivity.start(this);
                 break;
             case R.id.action_logout:
+                showProgress(true);
                 ReactiveNetwork.checkInternetConnectivity()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new DisposableSingleObserver<Boolean>() {
                             @Override
                             public void onSuccess(Boolean aBoolean) {
+                                showProgress(false);
+
                                 if (aBoolean) {
                                     FieldSightUserSession.createLogoutDialog(ProjectListActivity.this);
                                 } else {
@@ -167,7 +170,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
                             @Override
                             public void onError(Throwable e) {
-
+                                showProgress(false);
                             }
                         });
                 break;

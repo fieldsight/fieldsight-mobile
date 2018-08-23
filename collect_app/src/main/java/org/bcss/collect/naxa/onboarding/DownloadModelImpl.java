@@ -43,17 +43,10 @@ import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT
 
 public class DownloadModelImpl implements DownloadModel {
 
-    private SiteRepository siteRepository;
-    private GeneralFormRepository generalFormRepository;
-    private ProjectRepository projectRepository;
-    private DownloadFormsTask downloadFormsTask;
-    private HashMap<String, FormDetails> formNamesAndURLs;
-    private ArrayList<HashMap<String, String>> formList;
-    private DownloadFormListTask downloadFormListTask;
+
 
     public DownloadModelImpl() {
-        this.generalFormRepository = GeneralFormRepository.getInstance(GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
-        formList = new ArrayList<>();
+
 
     }
 
@@ -67,7 +60,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist() to wait to complete all odk forms download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()

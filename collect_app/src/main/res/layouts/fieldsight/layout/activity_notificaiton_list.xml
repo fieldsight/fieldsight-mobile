@@ -5,10 +5,14 @@
 
     <include layout="@layout/general_toolbar" />
 
+
     <org.bcss.collect.naxa.common.RecyclerViewEmptySupport
         android:id="@+id/rv_notification_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar_general" />
+
+
+
 
 </RelativeLayout>

@@ -1,6 +1,5 @@
 package org.bcss.collect.naxa.login.model;
 
-
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -12,7 +11,9 @@ import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by Susan on 11/24/2016.
@@ -23,93 +24,82 @@ public class Project implements Parcelable {
     @PrimaryKey
     @NonNull
     private String id;
-    private String name;
-    private String description;
-    private String address;
-    private String lat;
-    private String lon;
-    private String siteClusters;
 
+    @Expose
+    private String name;
+
+    @Expose
+    private String description;
+
+    @Expose
+    private String address;
+
+    @Expose
+    private String lat;
+
+    @Expose
+    private String lon;
+
+    @Expose
+    private String siteClusters;
 
     @SerializedName("organization_name")
     private String organizationName;
+
     @SerializedName("organization_url")
     private String organizationlogourl;
 
     @SerializedName("cluster_sites")
     private Boolean hasClusteredSites;
 
-    public String getSiteClusters() {
-        return siteClusters;
+    @Expose
+    private Integer typeId;
+
+    @Expose
+    private String typeLabel;
+
+    @Expose
+    private String phone;
+
+
+    @SerializedName("site_meta_attributes")
+    private List<SiteMetaAttribute> siteMetaAttributes ;
+
+    public Project() {
+
     }
 
-    public void setSiteClusters(String siteClusters) {
-        this.siteClusters = siteClusters;
+    @Ignore
+    public Project(@NonNull String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Project)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Project project = (Project) o;
-        return Objects.equal(getId(), project.getId()) &&
-                Objects.equal(getName(), project.getName()) &&
-                Objects.equal(getDescription(), project.getDescription()) &&
-                Objects.equal(getAddress(), project.getAddress()) &&
-                Objects.equal(getLat(), project.getLat()) &&
-                Objects.equal(getLon(), project.getLon()) &&
-                Objects.equal(getOrganizationName(), project.getOrganizationName()) &&
-                Objects.equal(getOrganizationlogourl(), project.getOrganizationlogourl()) &&
-                Objects.equal(getHasClusteredSites(), project.getHasClusteredSites()) &&
-                Objects.equal(getTypeId(), project.getTypeId()) &&
-                Objects.equal(getTypeLabel(), project.getTypeLabel()) &&
-                Objects.equal(getPhone(), project.getPhone()) &&
-                Objects.equal(getSiteMetaAttributes(), project.getSiteMetaAttributes());
+        return Objects.equal(id, project.id) &&
+                Objects.equal(name, project.name) &&
+                Objects.equal(description, project.description) &&
+                Objects.equal(address, project.address) &&
+                Objects.equal(lat, project.lat) &&
+                Objects.equal(lon, project.lon) &&
+                Objects.equal(siteClusters, project.siteClusters) &&
+                Objects.equal(organizationName, project.organizationName) &&
+                Objects.equal(organizationlogourl, project.organizationlogourl) &&
+                Objects.equal(hasClusteredSites, project.hasClusteredSites) &&
+                Objects.equal(typeId, project.typeId) &&
+                Objects.equal(typeLabel, project.typeLabel) &&
+                Objects.equal(phone, project.phone) &&
+                Objects.equal(siteMetaAttributes, project.siteMetaAttributes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getId(), getName(), getDescription(), getAddress(), getLat(), getLon(), getOrganizationName(), getOrganizationlogourl(), getHasClusteredSites(), getTypeId(), getTypeLabel(), getPhone(), getSiteMetaAttributes());
+        return Objects.hashCode(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, siteMetaAttributes);
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeString(description);
-        dest.writeString(address);
-        dest.writeString(lat);
-        dest.writeString(lon);
-        dest.writeString(organizationName);
-        dest.writeString(organizationlogourl);
-//        dest.writeByte((byte) (hasClusteredSites == null ? 0 : hasClusteredSites ? 1 : 2));
-        if (typeId == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(typeId);
-        }
-        dest.writeString(typeLabel);
-        dest.writeString(phone);
-        dest.writeTypedList(siteMetaAttributes);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<Project> CREATOR = new Creator<Project>() {
-        @Override
-        public Project createFromParcel(Parcel in) {
-            return new Project(in);
-        }
-
-        @Override
-        public Project[] newArray(int size) {
-            return new Project[size];
-        }
-    };
 
     public Boolean getHasClusteredSites() {
         return hasClusteredSites;
@@ -118,26 +108,6 @@ public class Project implements Parcelable {
     public void setHasClusteredSites(Boolean hasClusteredSites) {
         this.hasClusteredSites = hasClusteredSites;
     }
-
-    protected Project(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        description = in.readString();
-        address = in.readString();
-        lat = in.readString();
-        lon = in.readString();
-        organizationName = in.readString();
-        organizationlogourl = in.readString();
-        if (in.readByte() == 0) {
-            typeId = null;
-        } else {
-            typeId = in.readInt();
-        }
-        typeLabel = in.readString();
-        phone = in.readString();
-        siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
-    }
-
 
     public String getOrganizationName() {
         return organizationName;
@@ -155,39 +125,6 @@ public class Project implements Parcelable {
         this.organizationlogourl = organizationlogourl;
     }
 
-    @SerializedName("type_id")
-    @Expose
-    private Integer typeId;
-    @SerializedName("type_label")
-    @Expose
-    private String typeLabel;
-    @SerializedName("phone")
-    @Expose
-    private String phone;
-
-    @Ignore
-    @SerializedName("site_meta_attributes")
-    @Expose
-    private List<SiteMetaAttribute> siteMetaAttributes = null;
-
-    public List<SiteMetaAttribute> getSiteMetaAttributes() {
-        return siteMetaAttributes;
-    }
-
-    @Ignore
-    public Project(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public void setSiteMetaAttributes(List<SiteMetaAttribute> siteMetaAttributes) {
-        this.siteMetaAttributes = siteMetaAttributes;
-    }
-
-    public Project() {
-
-    }
-
     public String getId() {
         return id;
     }
@@ -196,16 +133,18 @@ public class Project implements Parcelable {
         this.id = id;
     }
 
-    /**
-     * @return The name
-     */
+    public void setSiteMetaAttributes(List<SiteMetaAttribute> siteMetaAttributes) {
+        this.siteMetaAttributes = siteMetaAttributes;
+    }
+
+    public List<SiteMetaAttribute>  getSiteMetaAttributes() {
+        return siteMetaAttributes;
+    }
+
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name The name
-     */
     public void setName(String name) {
         this.name = name;
     }
@@ -266,5 +205,63 @@ public class Project implements Parcelable {
         this.phone = phone;
     }
 
+    public String getSiteClusters() {
+        return siteClusters;
+    }
 
+    public void setSiteClusters(String siteClusters) {
+        this.siteClusters = siteClusters;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeString(this.address);
+        dest.writeString(this.lat);
+        dest.writeString(this.lon);
+        dest.writeString(this.siteClusters);
+        dest.writeString(this.organizationName);
+        dest.writeString(this.organizationlogourl);
+        dest.writeValue(this.hasClusteredSites);
+        dest.writeValue(this.typeId);
+        dest.writeString(this.typeLabel);
+        dest.writeString(this.phone);
+        dest.writeTypedList(this.siteMetaAttributes);
+    }
+
+    protected Project(Parcel in) {
+        this.id = in.readString();
+        this.name = in.readString();
+        this.description = in.readString();
+        this.address = in.readString();
+        this.lat = in.readString();
+        this.lon = in.readString();
+        this.siteClusters = in.readString();
+        this.organizationName = in.readString();
+        this.organizationlogourl = in.readString();
+        this.hasClusteredSites = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.typeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.typeLabel = in.readString();
+        this.phone = in.readString();
+        this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
+    }
+
+    public static final Creator<Project> CREATOR = new Creator<Project>() {
+        @Override
+        public Project createFromParcel(Parcel source) {
+            return new Project(source);
+        }
+
+        @Override
+        public Project[] newArray(int size) {
+            return new Project[size];
+        }
+    };
 }

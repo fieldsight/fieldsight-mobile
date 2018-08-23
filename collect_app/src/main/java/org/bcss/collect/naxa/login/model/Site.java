@@ -19,89 +19,85 @@ public class Site implements Parcelable {
     @NonNull
     @ColumnInfo(name = "id")
     private String id;
+
+    @SerializedName("lat")
     @ColumnInfo(name = "latitude")
     private String latitude;
+
+    @SerializedName("lon")
     @ColumnInfo(name = "longitude")
     private String longitude;
+
+    @SerializedName("identifier")
     @ColumnInfo(name = "identifier")
     private String identifier;
+
+    @SerializedName("name")
     @ColumnInfo(name = "name")
     private String name;
+
+    @SerializedName("type_id")
     @ColumnInfo(name = "typeId")
-    private Integer typeId;
+    private String typeId;
+
+    @SerializedName("type_label")
     @ColumnInfo(name = "typeLabel")
     private String typeLabel;
+
+    @SerializedName("phone")
     @ColumnInfo(name = "phone")
     private String phone;
+
+    @SerializedName("address")
     @ColumnInfo(name = "address")
     private String address;
+
     @ColumnInfo(name = "publicDesc")
     private String publicDesc;
+
+    @SerializedName("add_desc")
     @ColumnInfo(name = "additionalDesc")
     private String additionalDesc;
+
     @ColumnInfo(name = "logo")
     private String logo;
+
     @ColumnInfo(name = "isActive")
     private Boolean isActive;
+
     @ColumnInfo(name = "location")
     private String location;
+
     @ColumnInfo(name = "isSurvey")
     private Boolean isSurvey;
+
     @ColumnInfo(name = "dateCreated")
     private String dateCreated;
+
     @ColumnInfo(name = "project")
     private String project;
+
     @ColumnInfo(name = "isSiteVerified")
     private int isSiteVerified;
+
     @SerializedName("type")
     @Expose
     private String siteTypeError;
 
 
     private String metaAttributes;
+    private String region;
 
     //default values for  table
     private String generalFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
     private String stagedFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
     private String scheduleFormDeployedForm = Constant.FormDeploymentFrom.PROJECT;
 
-    @Override
-    public String toString() {
-        return "Site{" +
-                "id='" + id + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", identifier='" + identifier + '\'' +
-                ", name='" + name + '\'' +
-                ", typeId=" + typeId +
-                ", typeLabel='" + typeLabel + '\'' +
-                ", phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", publicDesc='" + publicDesc + '\'' +
-                ", additionalDesc='" + additionalDesc + '\'' +
-                ", logo='" + logo + '\'' +
-                ", isActive=" + isActive +
-                ", location='" + location + '\'' +
-                ", isSurvey=" + isSurvey +
-                ", dateCreated='" + dateCreated + '\'' +
-                ", project='" + project + '\'' +
-                ", isSiteVerified=" + isSiteVerified +
-                ", siteTypeError='" + siteTypeError + '\'' +
-                ", generalFormDeployedFrom='" + generalFormDeployedFrom + '\'' +
-                ", stagedFormDeployedFrom='" + stagedFormDeployedFrom + '\'' +
-                ", scheduleFormDeployedForm='" + scheduleFormDeployedForm + '\'' +
-                '}';
-    }
-
-    public Site() {
+    public Site(){
 
     }
 
-    public Site(@NonNull String id, String latitude, String longitude, String identifier, String name,
-                Integer typeId, String typeLabel, String phone, String address, String publicDesc, String additionalDesc,
-                String logo, Boolean isActive, String location, Boolean isSurvey, String dateCreated, String project,
-                int isSiteVerified, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm,
-                String metaAttributes) {
+    public Site(@NonNull String id, String latitude, String longitude, String identifier, String name, String typeId, String typeLabel, String phone, String address, String publicDesc, String additionalDesc, String logo, Boolean isActive, String location, Boolean isSurvey, String dateCreated, String project, int isSiteVerified, String siteTypeError, String metaAttributes, String region, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -120,12 +116,13 @@ public class Site implements Parcelable {
         this.dateCreated = dateCreated;
         this.project = project;
         this.isSiteVerified = isSiteVerified;
+        this.siteTypeError = siteTypeError;
+        this.metaAttributes = metaAttributes;
+        this.region = region;
         this.generalFormDeployedFrom = generalFormDeployedFrom;
         this.stagedFormDeployedFrom = stagedFormDeployedFrom;
         this.scheduleFormDeployedForm = scheduleFormDeployedForm;
-        this.metaAttributes = metaAttributes;
     }
-
 
     public String getMetaAttributes() {
         return metaAttributes;
@@ -214,13 +211,23 @@ public class Site implements Parcelable {
         this.name = name;
     }
 
-    public Integer getTypeId() {
+    public String getTypeId() {
         return typeId;
     }
 
-    public void setTypeId(Integer typeId) {
+    public void setTypeId(String typeId) {
         this.typeId = typeId;
     }
+
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
 
     public String getTypeLabel() {
         return typeLabel;
@@ -328,7 +335,7 @@ public class Site implements Parcelable {
         dest.writeString(this.longitude);
         dest.writeString(this.identifier);
         dest.writeString(this.name);
-        dest.writeValue(this.typeId);
+        dest.writeString(this.typeId);
         dest.writeString(this.typeLabel);
         dest.writeString(this.phone);
         dest.writeString(this.address);
@@ -341,6 +348,9 @@ public class Site implements Parcelable {
         dest.writeString(this.dateCreated);
         dest.writeString(this.project);
         dest.writeInt(this.isSiteVerified);
+        dest.writeString(this.siteTypeError);
+        dest.writeString(this.metaAttributes);
+        dest.writeString(this.region);
         dest.writeString(this.generalFormDeployedFrom);
         dest.writeString(this.stagedFormDeployedFrom);
         dest.writeString(this.scheduleFormDeployedForm);
@@ -352,7 +362,7 @@ public class Site implements Parcelable {
         this.longitude = in.readString();
         this.identifier = in.readString();
         this.name = in.readString();
-        this.typeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.typeId = in.readString();
         this.typeLabel = in.readString();
         this.phone = in.readString();
         this.address = in.readString();
@@ -365,12 +375,15 @@ public class Site implements Parcelable {
         this.dateCreated = in.readString();
         this.project = in.readString();
         this.isSiteVerified = in.readInt();
+        this.siteTypeError = in.readString();
+        this.metaAttributes = in.readString();
+        this.region = in.readString();
         this.generalFormDeployedFrom = in.readString();
         this.stagedFormDeployedFrom = in.readString();
         this.scheduleFormDeployedForm = in.readString();
     }
 
-    public static final Parcelable.Creator<Site> CREATOR = new Parcelable.Creator<Site>() {
+    public static final Creator<Site> CREATOR = new Creator<Site>() {
         @Override
         public Site createFromParcel(Parcel source) {
             return new Site(source);

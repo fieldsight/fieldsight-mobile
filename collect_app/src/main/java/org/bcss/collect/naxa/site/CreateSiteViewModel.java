@@ -9,27 +9,49 @@ import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
+import org.bcss.collect.naxa.site.data.SiteCluster;
 import org.bcss.collect.naxa.site.db.SiteRepository;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CreateSiteViewModel extends ViewModel {
 
     private SiteRepository siteRepository;
     private SingleLiveEvent<CreateSiteFormStatus> formStatus = new SingleLiveEvent<CreateSiteFormStatus>();
-    private MutableLiveData<Boolean> showSiteType = new MutableLiveData<Boolean>();
-    private MutableLiveData<Boolean> showSiteCluster = new MutableLiveData<Boolean>();
-    private MutableLiveData<Boolean> showProgress = new MutableLiveData<Boolean>();
     private MutableLiveData<Site> siteMutableLiveData = new MutableLiveData<Site>();
     private MutableLiveData<Project> projectMutableLiveData = new MutableLiveData<Project>();
-    private MutableLiveData<ArrayList<SiteMetaAttribute>> metaAttributes = new MutableLiveData<>();
+    private MutableLiveData<List<SiteMetaAttribute>> metaAttributes = new MutableLiveData<>();
     private MutableLiveData<ArrayList<Integer>> metaAttributesViewIds = new MutableLiveData<>();
     private MutableLiveData<String> metaAttributesAnswer = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<SiteCluster>> siteClusterMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<SiteType>> siteTypesMutableLiveData = new MutableLiveData<>();
 
-    public MutableLiveData<Boolean> getShowSiteType() {
-        return showSiteType;
+
+    public CreateSiteViewModel(SiteRepository siteRepository) {
+
+        this.siteRepository = siteRepository;
+        this.metaAttributesViewIds.setValue(new ArrayList<>(0));
     }
+
+
+    public MutableLiveData<List<SiteType>> getSiteTypesMutableLiveData() {
+        return siteTypesMutableLiveData;
+    }
+
+    public void setSiteTypes(List<SiteType> siteTypes) {
+        siteTypesMutableLiveData.setValue(siteTypes);
+    }
+
+    public MutableLiveData<ArrayList<SiteCluster>> getSiteClusterMutableLiveData() {
+        return siteClusterMutableLiveData;
+    }
+
+    public void setSiteClusterMutableLiveData(ArrayList<SiteCluster> siteCluster) {
+        this.siteClusterMutableLiveData.setValue(siteCluster);
+    }
+
 
     public MutableLiveData<ArrayList<Integer>> getMetaAttributesViewIds() {
         return metaAttributesViewIds;
@@ -39,19 +61,9 @@ public class CreateSiteViewModel extends ViewModel {
         this.metaAttributesViewIds.getValue().add(integer);
     }
 
-    public MutableLiveData<Boolean> getShowSiteCluster() {
-        return showSiteCluster;
-    }
 
-    public MutableLiveData<Boolean> getShowProgress() {
-        return showProgress;
-    }
 
-    public CreateSiteViewModel(SiteRepository siteRepository) {
 
-        this.siteRepository = siteRepository;
-        this.metaAttributesViewIds.setValue(new ArrayList<>(0));
-    }
 
     public SingleLiveEvent<CreateSiteFormStatus> getFormStatus() {
         return formStatus;
@@ -86,8 +98,6 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void saveSite() {
         if (validateData()) {
-
-
             siteRepository.saveSiteAsOffline(siteMutableLiveData.getValue(), projectMutableLiveData.getValue());
             ToastUtils.showShortToastInMiddle("Saving Site");
             //todo check if saving site is faliling
@@ -96,11 +106,11 @@ public class CreateSiteViewModel extends ViewModel {
     }
 
 
-    public void setMetaAttributes(ArrayList<SiteMetaAttribute> siteMetaAttributes) {
+    public void setMetaAttributes(List<SiteMetaAttribute> siteMetaAttributes) {
         metaAttributes.setValue(siteMetaAttributes);
     }
 
-    public MutableLiveData<ArrayList<SiteMetaAttribute>> getMetaAttributesMutableLiveData() {
+    public MutableLiveData<List<SiteMetaAttribute>> getMetaAttributesMutableLiveData() {
         return metaAttributes;
     }
 
@@ -129,6 +139,8 @@ public class CreateSiteViewModel extends ViewModel {
             formStatus.setValue(CreateSiteFormStatus.EMPTY_SITE_LOCATION);
             return false;
         }
+
+
 
         formStatus.setValue(CreateSiteFormStatus.VALIDATED);
 
@@ -167,6 +179,26 @@ public class CreateSiteViewModel extends ViewModel {
         }
 
         siteMutableLiveData.getValue().setPhone(text);
+
+    }
+
+    public void setSiteType(String typeId,String typeLabel) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setTypeId(typeId);
+        siteMutableLiveData.getValue().setTypeLabel(typeLabel);
+
+    }
+
+
+    public void setSiteCluster(String regionLabel) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new Site());
+        }
+
+        siteMutableLiveData.getValue().setRegion(regionLabel);
 
     }
 
@@ -216,7 +248,6 @@ public class CreateSiteViewModel extends ViewModel {
     }
 
 
-
     public void setMetaAttributesAnswer(String metaAttributesAnswer) {
         if (siteMutableLiveData.getValue() == null) {
             siteMutableLiveData.setValue(new Site());
@@ -226,7 +257,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     }
 
-    public String getMetaAttributesAnswer(){
+    public String getMetaAttributesAnswer() {
         return metaAttributesAnswer.getValue();
     }
 }

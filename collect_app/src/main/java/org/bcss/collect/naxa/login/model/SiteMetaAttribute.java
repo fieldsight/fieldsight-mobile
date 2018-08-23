@@ -7,6 +7,8 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.bcss.collect.naxa.common.GSONInstance;
+
 public class SiteMetaAttribute implements Parcelable {
 
     @SerializedName("question_name")
@@ -35,6 +37,15 @@ public class SiteMetaAttribute implements Parcelable {
         isDeleted = tmpIsDeleted == 0 ? null : tmpIsDeleted == 1;
         questionText = in.readString();
         questionType = in.readString();
+    }
+
+
+    public SiteMetaAttribute toSiteMetaAttribute(String json) {
+        return GSONInstance.getInstance().fromJson(json, SiteMetaAttribute.class);
+    }
+
+    public String toJson(SiteMetaAttribute siteMetaAttribute) {
+        return GSONInstance.getInstance().toJson(siteMetaAttribute);
     }
 
     @Override
