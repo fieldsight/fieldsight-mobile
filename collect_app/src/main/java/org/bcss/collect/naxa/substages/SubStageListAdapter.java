@@ -42,8 +42,9 @@ public class SubStageListAdapter extends
     private int stagePosition;
 
 
-    public SubStageListAdapter(List<SubStage> subStages) {
+    public SubStageListAdapter(List<SubStage> subStages,String stageOrder) {
         this.subStages = subStages;
+        this.stageOrder = stageOrder;
     }
 
     public void updateList(List<SubStage> newList) {

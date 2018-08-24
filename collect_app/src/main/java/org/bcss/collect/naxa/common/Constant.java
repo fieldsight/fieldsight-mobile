@@ -4,6 +4,7 @@ import org.bcss.collect.android.R;
 
 public class Constant {
 
+    public static final String EXTRA_POSITION = "extra_position";
     public static int selectedFragmentId;
     public static String EXTRA_RECEIVER = "extra_receiver";
     public static final String KEY_ANIM_TYPE = "anim_type";

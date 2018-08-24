@@ -107,7 +107,7 @@ public class StageListAdapter extends
             Stage stage = totalList.get(getAdapterPosition());
             switch (v.getId()) {
                 case R.id.rl_form_list_item:
-                    onFormItemClickListener.onFormItemClicked(stage);
+                    onFormItemClickListener.onFormItemClicked(stage,getAdapterPosition());
                     break;
                 case R.id.btn_form_edu:
                     onFormItemClickListener.onGuideBookButtonClicked(stage, getAdapterPosition());

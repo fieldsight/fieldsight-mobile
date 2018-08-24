@@ -335,7 +335,7 @@ public class Site implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
         dest.writeString(this.latitude);
-        dest.writeString(this.longitude);":F""Fasdaasdaasdasd
+        dest.writeString(this.longitude);
         dest.writeString(this.identifier);
         dest.writeString(this.name);
         dest.writeString(this.typeId);

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,6 +39,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_ID;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.bcss.collect.naxa.common.Constant.EXTRA_POSITION;
 import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class SubStageListFragment extends FieldSightFormListFragment implements OnFormItemClickListener<SubStage> {
@@ -57,15 +59,17 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
     private SubStageListAdapter listAdapter;
     private Site loadedSite;
     private String stageId;
+    private String stagePosition;
 
     private Unbinder unbinder;
 
     private SubStageViewModel viewModel;
 
-    public static SubStageListFragment newInstance(@NonNull Site loadedSite, @NonNull String stageId) {
+    public static SubStageListFragment newInstance(@NonNull Site loadedSite, @NonNull String stageId, @NonNull String stagePosition) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_OBJECT, loadedSite);
         bundle.putString(EXTRA_ID, stageId);
+        bundle.putString(EXTRA_POSITION,stagePosition);
         SubStageListFragment subStageListFragment = new SubStageListFragment();
         subStageListFragment.setArguments(bundle);
         return subStageListFragment;
@@ -81,6 +85,7 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         super.onCreate(savedInstanceState);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
         stageId = getArguments().getString(EXTRA_ID);
+        stagePosition = getArguments().getString(EXTRA_POSITION);
     }
 
     @Nullable
@@ -117,9 +122,9 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged forms"), () -> {
-            viewModel.loadSubStages(true,loadedSite.getId(),loadedSite.getProject(),stageId);
+            viewModel.loadSubStages(true, loadedSite.getId(), loadedSite.getProject(), stageId);
         });
-        listAdapter = new SubStageListAdapter(new ArrayList<>(0));
+        listAdapter = new SubStageListAdapter(new ArrayList<>(0),stagePosition);
         recyclerView.setAdapter(listAdapter);
     }
 
@@ -130,13 +135,13 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
     }
 
     @Override
-    public void onFormItemClicked(SubStage subStage) {
+    public void onFormItemClicked(SubStage subStage, int position) {
 
     }
 
     @Override
     public void onFormItemLongClicked(SubStage subStage) {
-        ToastUtils.showShortToastInMiddle("Not implmeneted");
+        ToastUtils.showShortToastInMiddle("Not implemented");
     }
 
     @Override

@@ -100,7 +100,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
             switch (v.getId()) {
                 case R.id.rl_form_list_item:
-                    listener.onFormItemClicked(generalForm);
+                    listener.onFormItemClicked(generalForm, getAdapterPosition());
                     break;
                 case R.id.btn_form_edu:
                     listener.onGuideBookButtonClicked(generalForm, getAdapterPosition());

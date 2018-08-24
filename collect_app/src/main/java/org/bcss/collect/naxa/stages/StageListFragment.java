@@ -138,11 +138,8 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
     }
 
     @Override
-    public void onFormItemClicked(Stage stage) {
-        Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getId());
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(EXTRA_OBJECT, loadedSite);
-        fragment.setArguments(bundle);
+    public void onFormItemClicked(Stage stage, int position) {
+        Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getId(), String.valueOf(position));
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(Constant.ANIM.fragmentEnterAnimation

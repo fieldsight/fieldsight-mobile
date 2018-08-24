@@ -142,7 +142,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     }
 
     @Override
-    public void onFormItemClicked(GeneralForm generalForm) {
+    public void onFormItemClicked(GeneralForm generalForm, int position) {
 
 
         String id = PROJECT.equals(generalForm.getFormDeployedFrom()) ? loadedSite.getProject() : loadedSite.getId();

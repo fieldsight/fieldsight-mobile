@@ -42,15 +42,15 @@
 
             <ImageView
                 android:id="@+id/iv_stage_badge"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_gravity="bottom|end"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="90dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/circle_grey"
                 android:src="@drawable/ic_check"
-                android:visibility="gone" />
+               />
 
         </RelativeLayout>
 

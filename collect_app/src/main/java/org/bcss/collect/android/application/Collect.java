@@ -55,6 +55,8 @@ import org.bcss.collect.android.utilities.AuthDialogUtility;
 import org.bcss.collect.android.utilities.LocaleHelper;
 import org.bcss.collect.android.utilities.PRNGFixes;
 import org.bcss.collect.android.utilities.ServerPollingJobCreator;
+import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.firebase.NotificationUtils;
 import org.opendatakit.httpclientandroidlib.client.CookieStore;
 import org.opendatakit.httpclientandroidlib.client.CredentialsProvider;
 import org.opendatakit.httpclientandroidlib.client.protocol.HttpClientContext;
@@ -261,6 +263,7 @@ public class Collect extends Application implements HasActivityInjector {
         singleton = this;
 
         Stetho.initializeWithDefaults(this);
+
 
         DaggerAppComponent.builder()
                 .application(this)
