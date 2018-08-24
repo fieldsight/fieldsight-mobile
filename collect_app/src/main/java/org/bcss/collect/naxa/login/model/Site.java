@@ -335,7 +335,7 @@ public class Site implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.id);
         dest.writeString(this.latitude);
-        dest.writeString(this.longitude);
+        dest.writeString(this.longitude);":F""Fasdaasdaasdasd
         dest.writeString(this.identifier);
         dest.writeString(this.name);
         dest.writeString(this.typeId);
@@ -389,7 +389,7 @@ public class Site implements Parcelable {
     public static final Creator<Site> CREATOR = new Creator<Site>() {
         @Override
         public Site createFromParcel(Parcel source) {
-            return new SiteBuilder().setIn(source).createSite();
+            return new Site(source);
         }
 
         @Override

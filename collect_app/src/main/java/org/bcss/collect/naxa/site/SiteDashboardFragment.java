@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -62,19 +63,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     }
 
 
-    public static void start(AppCompatActivity context, Site site) {
-        SiteDashboardFragment SiteDashboardFragment = getInstance(site);
-
-        FragmentManager fragmentManager = context.getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation,
-                fragmentEnterAnimation, fragmentExitAnimation);
-        fragmentTransaction.replace(R.id.fragment_container, SiteDashboardFragment);
-        fragmentTransaction.addToBackStack("myfrag0");
-        fragmentTransaction.commit();
-    }
-
-
     public static SiteDashboardFragment getInstance(Site site) {
         SiteDashboardFragment fragment = new SiteDashboardFragment();
         Bundle bundle = new Bundle();
@@ -91,14 +79,13 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dashboard_site, container, false);
         //Constants.MY_FRAG = 1;
         unbinder = ButterKnife.bind(this, rootView);
 
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
-
 
         bindUI(rootView);
         hideSendButtonIfMockedSite(rootView);
