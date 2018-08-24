@@ -43,6 +43,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteByProjectId(projectId);
     }
 
+    public LiveData<List<Site>> getBySiteId(String siteId) {
+        return dao.getSiteById(siteId);
+    }
+
     //todo return affected rows count
     public void delete(Site site) {
         AsyncTask.execute(() -> dao.delete(site));

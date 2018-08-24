@@ -1,4 +1,4 @@
-package org.bcss.collect.android.fieldsight.utils;
+package org.bcss.collect.naxa.common;
 
 import android.support.design.widget.AppBarLayout;
 

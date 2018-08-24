@@ -8,6 +8,7 @@ import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.site.data.SiteCluster;
 import org.bcss.collect.naxa.site.db.SiteRepository;
@@ -159,7 +160,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setIdentifier(String identifier) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setIdentifier(identifier);
@@ -167,7 +168,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setSiteName(String name) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setName(name);
@@ -175,7 +176,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setSitePhone(String text) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setPhone(text);
@@ -184,7 +185,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setSiteType(String typeId,String typeLabel) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setTypeId(typeId);
@@ -195,7 +196,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setSiteCluster(String regionLabel) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setRegion(regionLabel);
@@ -204,7 +205,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setSiteAddress(String text) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setAddress(text);
@@ -212,7 +213,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setSitePublicDesc(String text) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setPublicDesc(text);
@@ -221,7 +222,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setLocation(String lat, String lon) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
         siteMutableLiveData.getValue().setLatitude(lat);
         siteMutableLiveData.getValue().setLongitude(lon);
@@ -231,7 +232,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setPhoto(String path) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setLogo(path);
@@ -241,7 +242,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setId(String siteId) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setId(siteId);
@@ -250,7 +251,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void setMetaAttributesAnswer(String metaAttributesAnswer) {
         if (siteMutableLiveData.getValue() == null) {
-            siteMutableLiveData.setValue(new Site());
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
         siteMutableLiveData.getValue().setMetaAttributes(metaAttributesAnswer);

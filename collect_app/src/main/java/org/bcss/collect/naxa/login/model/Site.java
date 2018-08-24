@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.login.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -93,10 +94,12 @@ public class Site implements Parcelable {
     private String stagedFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
     private String scheduleFormDeployedForm = Constant.FormDeploymentFrom.PROJECT;
 
+
     public Site(){
 
     }
 
+    @Ignore
     public Site(@NonNull String id, String latitude, String longitude, String identifier, String name, String typeId, String typeLabel, String phone, String address, String publicDesc, String additionalDesc, String logo, Boolean isActive, String location, Boolean isSurvey, String dateCreated, String project, int isSiteVerified, String siteTypeError, String metaAttributes, String region, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm) {
         this.id = id;
         this.latitude = latitude;
@@ -386,7 +389,7 @@ public class Site implements Parcelable {
     public static final Creator<Site> CREATOR = new Creator<Site>() {
         @Override
         public Site createFromParcel(Parcel source) {
-            return new Site(source);
+            return new SiteBuilder().setIn(source).createSite();
         }
 
         @Override

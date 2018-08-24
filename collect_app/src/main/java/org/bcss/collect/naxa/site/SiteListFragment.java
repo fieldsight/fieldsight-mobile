@@ -21,6 +21,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.PaginationScrollListener;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
 import org.bcss.collect.naxa.survey.SurveyFormsActivity;
@@ -114,7 +115,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         new SiteViewModel(Collect.getInstance())
                 .getSiteByProject(loadedProject)
                 .observe(this, sites -> {
-                    Site site = new Site();
+                    Site site = new SiteBuilder().createSite();
                     site.setName("survey");
                     sitelist.add(site);
                     if (sites != null) {

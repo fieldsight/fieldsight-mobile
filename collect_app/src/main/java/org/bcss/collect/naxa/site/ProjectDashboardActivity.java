@@ -47,7 +47,6 @@ import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 
-import org.bcss.collect.android.fieldsight.utils.AppBarStateChangeListener;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.activities.FileManagerTabs;
@@ -56,6 +55,7 @@ import org.bcss.collect.android.activities.InstanceUploaderList;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.common.AppBarStateChangeListener;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.NonSwipeableViewPager;
 import org.bcss.collect.naxa.common.RxSearchObservable;
