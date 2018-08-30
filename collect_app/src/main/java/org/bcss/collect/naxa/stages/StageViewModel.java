@@ -28,7 +28,7 @@ public class StageViewModel extends ViewModel {
                 return repository.getBySiteId(forcedUpdate, loadedSite.getId(),loadedSite.getTypeId());
             case PROJECT:
             default:
-                return repository.getByProjectId(forcedUpdate, loadedSite.getProject());
+                return repository.getByProjectId(forcedUpdate, loadedSite.getProject(),loadedSite.getTypeId());
 
         }
     }

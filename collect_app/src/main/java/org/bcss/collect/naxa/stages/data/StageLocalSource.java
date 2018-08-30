@@ -89,7 +89,37 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
     }
 
 
-    public LiveData<List<Stage>> getByProjectId(String siteId) {
-        return dao.getByProjectId(siteId);
+    public LiveData<List<Stage>> getByProjectId(String projectId,String siteTypeId) {
+        MediatorLiveData<List<Stage>> mediatorLiveData = new MediatorLiveData<>();
+        LiveData<List<Stage>> stagesliveData = dao.getByProjectId(projectId);
+
+        mediatorLiveData.addSource(stagesliveData, new Observer<List<Stage>>() {
+            @Override
+            public void onChanged(@Nullable List<Stage> stages) {
+                if (stages == null) {
+                    return;
+                }
+
+                List<Stage> filteredStages = new ArrayList<>();
+                for (Stage stage : stages) {
+                    LiveData<List<SubStage>> substages = SubStageLocalSource.getInstance().getByStageId(stage.getId(), siteTypeId);
+                    substages.observeForever(new Observer<List<SubStage>>() {
+                        @Override
+                        public void onChanged(@Nullable List<SubStage> subStages) {
+                            substages.removeObserver(this);
+                            if (subStages != null && subStages.size() > 0) {
+                                filteredStages.add(stage);
+                            }
+                        }
+                    });
+                }
+
+                mediatorLiveData.removeSource(stagesliveData);
+                mediatorLiveData.setValue(filteredStages);
+
+            }
+        });
+
+        return mediatorLiveData;
     }
 }
