@@ -141,6 +141,18 @@
     <string name="comments_default_comment">No comments availiable</string>
     <string name="msg_photo_taken">Change Photo</string>
 
+    <string name="notify_title_site_assigned">Assigned to %s</string>
+    <string name="notify_message_site_assigned">You have been assigned as site supervisor in %s</string>
+    <string name="notify_title_site_unassigned">Unassigned from %s</string>
+    <string name="notify_message_site_unassigned">You have been unassigned from %s</string>
+    <string name="notify_title_form_undeployed">Undeployed %s form</string>
+    <string name="notify_message_form_undeployed">%s has been undeployed in %s</string>
+
+    <string name="notify_title_form_deployed">Deployed %s form</string>
+    <string name="notify_message_form_deployed">%s has been deployed in %s</string>
+    <string name="notify_title_stage_deployed">Staged deployed</string>
+    <string name="notify_message_stage_deployed">A stage has been deployed in %s site</string>
+
     <!--Notification sitelist ends here-->
 
 </resources>

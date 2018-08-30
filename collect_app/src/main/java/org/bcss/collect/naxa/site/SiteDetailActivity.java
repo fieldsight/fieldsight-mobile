@@ -102,7 +102,7 @@
 //        setContentView(R.layout.activity_site_detail_change);
 //        layoutIdsEditable = new ArrayList<>();
 //        String siteId = getIntent().getExtras().getString(Constant.EXTRA_ID);
-//        SiteLocalSource.getInstance().getById()
+//        SiteLocalSource.getInstance().getById();
 //
 //        bindUI();
 //        setupToolbar();

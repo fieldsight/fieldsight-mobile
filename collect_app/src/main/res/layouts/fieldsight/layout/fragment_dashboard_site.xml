@@ -34,6 +34,7 @@
 
         <TextView
             android:gravity="center"
+
             android:drawableLeft="@drawable/ic_store_mall_directory_black_24dp"
             android:drawableStart="@drawable/ic_store_mall_directory_black_24dp"
             android:layout_alignParentRight="true"

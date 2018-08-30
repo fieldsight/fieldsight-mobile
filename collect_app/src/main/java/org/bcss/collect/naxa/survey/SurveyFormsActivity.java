@@ -30,6 +30,7 @@ import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.login.model.Project;
@@ -59,7 +60,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     AppBarLayout appbarGeneral;
 
     @BindView(R.id.recycler_survey_form_list)
-    RecyclerView recyclerSurveyFormList;
+    RecyclerViewEmptySupport recyclerSurveyFormList;
 
     private ActionBar actionBar;
 
@@ -141,6 +142,9 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
         adapter = new TitleDescAdapter();
         adapter.setOnCardClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerSurveyFormList.setEmptyView(findViewById(R.id.root_layout_empty_layout), getString(R.string.empty_message,"survey form(s)"), () -> {
+
+        });
         recyclerSurveyFormList.setLayoutManager(linearLayoutManager);
         recyclerSurveyFormList.setAdapter(adapter);
         recyclerSurveyFormList.setItemAnimator(new DefaultItemAnimator());

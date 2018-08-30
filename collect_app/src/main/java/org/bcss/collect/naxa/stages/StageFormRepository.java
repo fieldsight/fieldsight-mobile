@@ -59,12 +59,12 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
         localSource.updateAll(items);
     }
 
-    public LiveData<List<Stage>> getBySiteId(boolean forceUpdate, String siteId) {
+    public LiveData<List<Stage>> getBySiteId(boolean forceUpdate, String siteId,String siteIdType) {
         if (forceUpdate) {
             remoteSource.getAll();
         }
 
-        return localSource.getBySiteId(siteId);
+        return localSource.getBySiteId(siteId,siteIdType);
     }
 
 

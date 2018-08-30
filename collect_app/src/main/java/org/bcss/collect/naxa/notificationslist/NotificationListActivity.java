@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.OnItemClickListener;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
@@ -43,13 +45,17 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     AppBarLayout appbarGeneral;
     @BindView(R.id.rv_notification_list)
     RecyclerViewEmptySupport rvNotificationList;
+    @BindView(R.id.tv_info_box_new_notification)
+    TextView infoBox;
+
+
     private NotificationListViewModel viewModel;
     private NotificationsAdapter adapter;
     private int count;
 
 
-    public static void start(Context context){
-        Intent intent = new Intent(context,NotificationListActivity.class);
+    public static void start(Context context) {
+        Intent intent = new Intent(context, NotificationListActivity.class);
         context.startActivity(intent);
     }
 
@@ -66,23 +72,16 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         setupRecyclerView();
 
 
-
-
         viewModel.getAll()
                 .observe(this, fieldSightNotifications -> {
-                    if(adapter.getItemCount() == 0){
+                    if (adapter.getItemCount() == 0) {
                         adapter.updateList(fieldSightNotifications);
                         runLayoutAnimation(rvNotificationList);
                     }
+
                     adapter.updateList(fieldSightNotifications);
-
                 });
-
-
-
     }
-
-
 
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
@@ -117,7 +116,11 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
     @Override
     public void onClickPrimaryAction(FieldSightNotification fieldSightNotification) {
-        FlagResposneActivity.start(this,fieldSightNotification);
+        switch (fieldSightNotification.getNotificationType()) {
+            case Constant.NotificationType.FORM:
+                FlagResposneActivity.start(this, fieldSightNotification);
+                break;
+        }
     }
 
     @Override

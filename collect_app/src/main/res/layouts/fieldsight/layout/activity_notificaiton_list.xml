@@ -5,14 +5,24 @@
 
     <include layout="@layout/general_toolbar" />
 
+    <TextView
+        android:id="@+id/tv_info_box_new_notification"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_large"
+        android:background="@drawable/shape_chip_drawable"
+        android:text="New Notifications"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_extra_small"
+        android:visibility="gone" />
 
     <org.bcss.collect.naxa.common.RecyclerViewEmptySupport
         android:id="@+id/rv_notification_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar_general" />
-
-
 
 
 </RelativeLayout>

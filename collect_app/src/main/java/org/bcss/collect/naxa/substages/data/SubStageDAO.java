@@ -11,6 +11,8 @@ import org.bcss.collect.naxa.stages.data.SubStage;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Maybe;
+
 @Dao
 
 public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
@@ -29,4 +31,7 @@ public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
 
     @Query("SELECT * FROM substage WHERE stageId= :stageId")
     public abstract LiveData<List<SubStage>> getByStageId(String stageId);
+
+    @Query("SELECT * FROM substage WHERE stageId= :stageId")
+    public abstract Maybe<List<SubStage>> getByStageIdMaybe(String stageId);
 }

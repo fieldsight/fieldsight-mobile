@@ -1,9 +1,14 @@
 package org.bcss.collect.naxa.substages.data;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.stages.data.SubStage;
 
@@ -11,6 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
 
@@ -31,8 +42,60 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
     }
 
     @Override
-    public LiveData<List<SubStage>> getAll( ) {
+    public LiveData<List<SubStage>> getAll() {
         return dao.getAllSubStages();
+    }
+
+    public LiveData<List<SubStage>> getByStageId(String stageId, String siteTypeId) {
+        MediatorLiveData<List<SubStage>> mediatorLiveData = new MediatorLiveData<>();
+        LiveData<List<SubStage>> forms = dao.getByStageId(stageId);
+
+
+        mediatorLiveData.addSource(forms, new Observer<List<SubStage>>() {
+            @Override
+            public void onChanged(@Nullable List<SubStage> subStages) {
+                if (subStages != null) {
+
+                    Observable.just(subStages)
+                            .map(new Function<List<SubStage>, List<SubStage>>() {
+                                @Override
+                                public List<SubStage> apply(List<SubStage> subStages) throws Exception {
+                                    for (SubStage subStage : subStages) {
+                                        if (TextUtils.isEmpty(siteTypeId)
+                                                || Constant.DEFAULT_SITE_TYPE.equals(siteTypeId)
+                                                || subStage.getTagIds().contains(siteTypeId)
+                                                || subStage.getTagIds().size() == 0) {
+
+                                            subStages.add(subStage);
+                                        }
+                                    }
+                                    return subStages;
+                                }
+                            })
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new DisposableObserver<List<SubStage>>() {
+                                @Override
+                                public void onNext(List<SubStage> subStages) {
+                                    mediatorLiveData.removeSource(forms);
+                                    mediatorLiveData.setValue(subStages);
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                }
+            }
+        });
+
+        return mediatorLiveData;
     }
 
     @Override

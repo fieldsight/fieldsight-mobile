@@ -104,7 +104,7 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.loadSubStages(true, loadedSite.getId(), loadedSite.getProject(), stageId)
+        viewModel.loadSubStages(loadedSite.getId(), loadedSite.getProject(), stageId,loadedSite.getTypeId())
                 .observe(this, substages -> {
                     Timber.i("SubStage forms data has been changed");
                     listAdapter.updateList(substages);
@@ -122,10 +122,12 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged forms"), () -> {
-            viewModel.loadSubStages(true, loadedSite.getId(), loadedSite.getProject(), stageId);
+            viewModel.loadSubStages(loadedSite.getId(), loadedSite.getProject(), stageId,loadedSite.getTypeId());
         });
         listAdapter = new SubStageListAdapter(new ArrayList<>(0),stagePosition);
         recyclerView.setAdapter(listAdapter);
+
+
     }
 
 

@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<FieldSightNotification> {
 
 
-    @Query("SELECT * FROM fieldsightnotification")
+    @Query("SELECT * FROM fieldsightnotification ORDER BY id DESC")
     public abstract LiveData<List<FieldSightNotification>> getAll();
 
 

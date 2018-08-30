@@ -157,44 +157,47 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         createSiteViewModel.getSiteTypesMutableLiveData()
                 .observe(this, this::showSiteTypeSpinner);
 
-        createSiteViewModel.getFormStatus().observe(this, createSiteFormStatus -> {
-            if (createSiteFormStatus == null) return;
-            switch (createSiteFormStatus) {
-                case SUCCESS:
-                    ToastUtils.showShortToastInMiddle("Offline Site Created");
-                    break;
-                case ERROR:
-                    DialogFactory.createGenericErrorDialog(this, "").show();
-                    break;
-                case EMPTY_SITE_NAME:
-                    tiSiteName.setError(getString(R.string.error_field_required));
-                    btnCollectSiteRecordLocation.requestFocus();
-                    break;
-                case EMPTY_SITE_LOCATION:
-                    btnCollectSiteRecordLocation.setError(getString(R.string.error_field_required));
-                    btnCollectSiteRecordLocation.requestFocus();
-                    break;
-                case EMPTY_SITE_IDENTIFIER:
-                    tiSiteIdentifier.setError(getString(R.string.error_field_required));
-                    tiSiteIdentifier.requestFocus();
-                    break;
-                case LOCATION_RECORDED:
-                    btnCollectSiteRecordLocation.setTextColor(sucessColor);
-                    btnCollectSiteRecordLocation.setText(getString(R.string.msg_location_recorded, accurary));
-                    break;
-                case PHOTO_TAKEN:
-                    btnCollectSiteAddPhoto.setTextColor(sucessColor);
-                    btnCollectSiteAddPhoto.setText(getString(R.string.msg_photo_taken));
-                    String path = createSiteViewModel.getSite().getValue().getLogo();
-                    loadLocalImage(this, path).into(imageVideoThumb);
-                    imageVideoThumb.setVisibility(View.VISIBLE);
-                    break;
-                case VALIDATED:
-                    finish();
-                    break;
+        createSiteViewModel
+                .getFormStatus()
+                .observe(this, createSiteFormStatus -> {
+                    if (createSiteFormStatus == null) return;
+                    switch (createSiteFormStatus) {
+                        case SUCCESS:
+                            ToastUtils.showShortToastInMiddle("Offline Site Created");
+                            finish();
+                            break;
+                        case ERROR:
+                            DialogFactory.createGenericErrorDialog(this, "").show();
+                            break;
+                        case EMPTY_SITE_NAME:
+                            tiSiteName.setError(getString(R.string.error_field_required));
+                            btnCollectSiteRecordLocation.requestFocus();
+                            break;
+                        case EMPTY_SITE_LOCATION:
+                            btnCollectSiteRecordLocation.setError(getString(R.string.error_field_required));
+                            btnCollectSiteRecordLocation.requestFocus();
+                            break;
+                        case EMPTY_SITE_IDENTIFIER:
+                            tiSiteIdentifier.setError(getString(R.string.error_field_required));
+                            tiSiteIdentifier.requestFocus();
+                            break;
+                        case LOCATION_RECORDED:
+                            btnCollectSiteRecordLocation.setTextColor(sucessColor);
+                            btnCollectSiteRecordLocation.setText(getString(R.string.msg_location_recorded, accurary));
+                            break;
+                        case PHOTO_TAKEN:
+                            btnCollectSiteAddPhoto.setTextColor(sucessColor);
+                            btnCollectSiteAddPhoto.setText(getString(R.string.msg_photo_taken));
+                            String path = createSiteViewModel.getSite().getValue().getLogo();
+                            loadLocalImage(this, path).into(imageVideoThumb);
+                            imageVideoThumb.setVisibility(View.VISIBLE);
+                            break;
+                        case VALIDATED:
 
-            }
-        });
+                            break;
+
+                    }
+                });
 
 
         createSiteViewModel.getMetaAttributesMutableLiveData()

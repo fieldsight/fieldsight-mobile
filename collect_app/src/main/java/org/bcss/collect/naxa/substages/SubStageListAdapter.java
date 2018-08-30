@@ -36,13 +36,13 @@ public class SubStageListAdapter extends
     private OnSubStageClickListener listener;
 
     private final String TAG = "SubStageAdapter";
-  
+
     private String stageOrder;
     public String idFormsTable;
     private int stagePosition;
 
 
-    public SubStageListAdapter(List<SubStage> subStages,String stageOrder) {
+    public SubStageListAdapter(List<SubStage> subStages, String stageOrder) {
         this.subStages = subStages;
         this.stageOrder = stageOrder;
     }
@@ -73,7 +73,7 @@ public class SubStageListAdapter extends
 //        viewHolder.substageBadge.setVisibility(subStage.isSubStageComplete() ? View.VISIBLE : View.GONE);
         viewHolder.btnViewFormHistory.setOnClickListener(view -> listener.onPreviousSubmissionButtonClicked(subStage));
 
-        int substageNumber = position + 1;
+        int substageNumber = position;
         String iconText = stageOrder + "." + substageNumber;
 
         viewHolder.tvSubStageIconText.setText(iconText);

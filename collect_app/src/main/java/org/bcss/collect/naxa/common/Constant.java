@@ -5,6 +5,7 @@ import org.bcss.collect.android.R;
 public class Constant {
 
     public static final String EXTRA_POSITION = "extra_position";
+    public static final String DEFAULT_SITE_TYPE = "0";
     public static int selectedFragmentId;
     public static String EXTRA_RECEIVER = "extra_receiver";
     public static final String KEY_ANIM_TYPE = "anim_type";
@@ -41,6 +42,14 @@ public class Constant {
         public static final String SINGLE_STAGE_DEPLOYED = "deploy_ms";
         public static final String SINGLE_STAGED_FORM_DEPLOYED = "deploy_ss";
         public static final String ALL_STAGE_DEPLOYED = "deploy_all";
+    }
+
+    public static final class NotificationType {
+        public static final String ASSIGNED_SITE = "Assign Site";
+        public static final String UNASSIGNED_SITE = "UnAssign Site";
+        public static final String NEW_STAGES = "Stages Ready";
+        public static final String FORM_ALTERED = "Form Altered";
+        public static final String FORM = "Form";
     }
 
     public static final class FormType {

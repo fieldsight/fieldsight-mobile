@@ -25,7 +25,7 @@ public class StageViewModel extends ViewModel {
     public LiveData<List<Stage>> getForms(boolean forcedUpdate, Site loadedSite) {
         switch (loadedSite.getGeneralFormDeployedFrom()) {
             case SITE:
-                return repository.getBySiteId(forcedUpdate, loadedSite.getId());
+                return repository.getBySiteId(forcedUpdate, loadedSite.getId(),loadedSite.getTypeId());
             case PROJECT:
             default:
                 return repository.getByProjectId(forcedUpdate, loadedSite.getProject());

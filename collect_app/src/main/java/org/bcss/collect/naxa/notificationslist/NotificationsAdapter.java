@@ -1,12 +1,14 @@
 package org.bcss.collect.naxa.notificationslist;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +17,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.data.FieldSightNotification;
-import org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.bcss.collect.naxa.common.Truss.makeSectionOfTextBold;
-import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.APPROVED_FORM;
-import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.FLAGGED_FORM;
-import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.FORM;
-import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.REJECTED_FORM;
+import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
+
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
 
@@ -65,26 +67,26 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         FieldSightNotification fieldSightNotification = FieldSightNotifications.get(viewHolder.getAdapterPosition());
         Context context = viewHolder.rootLayout.getContext().getApplicationContext();
         viewHolder.ivNotificationIcon.setImageDrawable(getNotificationImage(fieldSightNotification.getNotificationType()));
-
-        switch (fieldSightNotification.getNotificationType()) {
-            case (FieldSightFirebaseMessagingService.FORM):
-                viewHolder.tvTitle.setText(context.getResources().getString(R.string. notify_title_submission_result));
-                viewHolder.tvDesc.setText(generateFormStatusChangeMsg(fieldSightNotification));
-                break;
-            default:
-                viewHolder.tvTitle.setText(fieldSightNotification.getFormType());
-                viewHolder.tvDesc.setText(fieldSightNotification.getFormType());
-        }
-
-
+        Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance().generateNotificationContent(fieldSightNotification);
+        String title = titleContent.first;
+        String content = titleContent.second;
+        viewHolder.tvTitle.setText(title);
+        viewHolder.tvDesc.setText(content);
     }
 
     private Drawable getNotificationImage(String notificationType) {
         Drawable icon = null;
         Context context = Collect.getInstance().getApplicationContext();
         switch (notificationType) {
+            case ASSIGNED_SITE:
+            case UNASSIGNED_SITE:
+                icon = ContextCompat.getDrawable(context, R.drawable.ic_people);
+                break;
             case FORM:
-                icon = ContextCompat.getDrawable(context, R.drawable.ic_format_list_bulleted);
+            case FORM_ALTERED:
+            case SINGLE_STAGE_DEPLOYED:
+                icon = ContextCompat.getDrawable(context,R.drawable.ic_form_white);
+//                icon = ContextCompat.getDrawable(context, R.drawable.ic_format_list_bulleted);
                 break;
             default:
                 icon = ContextCompat.getDrawable(context, R.drawable.ic_notification_icon);
@@ -92,54 +94,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         }
 
         return icon;
-    }
-
-
-    private SpannableStringBuilder generateFormStatusChangeMsg(FieldSightNotification fieldSightNotification) {
-        Context context = Collect.getInstance().getApplicationContext();
-        String desc;
-        SpannableStringBuilder formattedDesc = null;
-
-        switch (fieldSightNotification.getFormStatus()) {
-            case (FLAGGED_FORM):
-                desc = context.getResources().getString(R.string.notify_submission_result,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_flagged));
-
-                formattedDesc = makeSectionOfTextBold(desc,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_flagged));
-                break;
-
-            case APPROVED_FORM:
-
-                desc = context.getResources().getString(R.string.notify_submission_result,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_approved) + ".");
-
-                formattedDesc = makeSectionOfTextBold(desc,
-                        fieldSightNotification.getSiteName(),
-                        fieldSightNotification.getFormName(), context.getResources().getString(R.string.notify_form_approved));
-                break;
-            case REJECTED_FORM:
-                String form_rejected_response = context.getResources().getString(R.string.notify_submission_result,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_rejected) + ".");
-
-                formattedDesc = makeSectionOfTextBold(form_rejected_response,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_rejected));
-                break;
-            default:
-                formattedDesc = SpannableStringBuilder.valueOf("Unknown deployment");
-                break;
-        }
-        return formattedDesc;
     }
 
 

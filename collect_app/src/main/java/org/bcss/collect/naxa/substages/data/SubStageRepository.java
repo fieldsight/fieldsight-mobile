@@ -55,7 +55,7 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
         localSource.updateAll(items);
     }
 
-    public LiveData<List<SubStage>> getBySiteId(boolean forceUpdate, String stageId) {
-        return localSource.getAll();
+    public LiveData<List<SubStage>> getByStageId( String stageId,String siteTypeId) {
+        return localSource.getByStageId(stageId,siteTypeId);
     }
 }

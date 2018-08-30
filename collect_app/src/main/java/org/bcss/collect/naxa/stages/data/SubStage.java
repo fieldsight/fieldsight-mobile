@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 
 import com.google.gson.annotations.Expose;
@@ -12,6 +13,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.bcss.collect.naxa.generalforms.data.Em;
 import org.bcss.collect.naxa.generalforms.data.FormResponse;
+import org.bcss.collect.naxa.stages.StringListTypeConvertor;
 
 import java.util.List;
 
@@ -55,7 +57,7 @@ public class SubStage {
     @Expose
     private Integer order;
 
-    @Ignore
+    @TypeConverters(StringListTypeConvertor.class)
     @SerializedName("tags")
     @Expose
     private List<String> tagIds;

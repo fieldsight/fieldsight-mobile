@@ -64,8 +64,6 @@ public class CreateSiteViewModel extends ViewModel {
 
 
 
-
-
     public SingleLiveEvent<CreateSiteFormStatus> getFormStatus() {
         return formStatus;
     }

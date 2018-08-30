@@ -9,15 +9,16 @@
     <!--https://stackoverflow.com/questions/27484126/adjust-icon-size-of-floating-action-button-fab-->
 
     <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_list"
         android:id="@+id/tab_site_list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:elevation="0dp"
-
         app:backgroundTint="@color/primaryColor"
         app:useCompatPadding="true" />
 
     <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_local_phone"
         android:id="@+id/tab_contacts"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -27,6 +28,7 @@
         app:useCompatPadding="true" />
 
     <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_map"
         android:id="@+id/tab_map"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

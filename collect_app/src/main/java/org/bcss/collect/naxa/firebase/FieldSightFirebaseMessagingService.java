@@ -1,8 +1,10 @@
 package org.bcss.collect.naxa.firebase;
 
+import android.content.Context;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.v4.util.Pair;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -28,6 +30,8 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
 import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyNormal;
 
 public class FieldSightFirebaseMessagingService extends FirebaseMessagingService {
@@ -40,13 +44,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     public static final String REJECTED_FORM = "Rejected";
     public static final String APPROVED_FORM = "Approved";
     public static final String FLAGGED_FORM = "Flagged";
-    public static final String FORM = "Form";
-
-    public final String NEW_STAGES = "Stages Ready";
-    public final String FORM_ALTERED = "Form Altered";
-
-    public static final String FORM_TYPE_GENERAL = "General";
-    private final String FORM_TYPE_SCHEDULE = "Scheduled";
 
 
     String notifyType;
@@ -86,12 +83,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-
-    }
-
-    @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -100,6 +91,9 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
         FieldSightNotificationBuilder builder = new FieldSightNotificationBuilder();
 
         String msg = remoteMessage.getData().toString();
+        Context context = getApplicationContext();
+
+        Timber.i(msg);
 
         if (remoteMessage.getData().size() > 0) {
             Map<String, String> notificationData = remoteMessage.getData();
@@ -122,30 +116,16 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setFormType(formType)
                     .setIsFormDeployed(isFormDeployed)
                     .setFsFormId(fsFormIdProject)
+                    .setIsFormDeployed(isDeployed)
                     .createFieldSightNotification();
 
             FieldSightNotificationLocalSource.getInstance().save(builder.createFieldSightNotification());
+            Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance().generateNotificationContent(builder.createFieldSightNotification());
 
-            switch (notifyType) {
-                case SINGLE_STAGE_DEPLOYED:
-                    break;
-                case SINGLE_STAGED_FORM_DEPLOYED:
-                    break;
-                case ALL_STAGE_DEPLOYED:
-                    break;
-                case FORM:
-                    handleFormStatus(formStatus);
-                    break;
-                case NEW_STAGES:
-                    break;
-                case FORM_ALTERED:
-                    break;
-            }
-        }
+            String title = titleContent.first;
+            String content = titleContent.second;
 
-
-        if (remoteMessage.getData().containsValue("Assign Site")) {
-
+            notifyNormal(context, title, content);
         }
 
         if (remoteMessage.getData().containsValue("Flag")) {
@@ -156,57 +136,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
         if (remoteMessage.getData().containsValue("FormDeleted")) {
             //hello
         }
-    }
-
-
-    private void handleFormStatus(String formStatus) {
-        switch (formStatus) {
-            case NEW_FORM:
-                NotificationUtils.notifyNormal
-                        (getApplicationContext(),
-                                getString(R.string.app_name),
-                                getString(R.string.notify_new_form_assigned, formType, formName, siteName)
-                        );
-                handleNewForm(fsFormId, formType);
-                break;
-            case OUTSTANDING_FORM:
-                notifyNormal(getApplicationContext(),
-                        getString(R.string.notify_title_submission_result)
-                        , getString(R.string.notify_submission_result, formName, siteName, formStatus));
-                break;
-            case APPROVED_FORM:
-                notifyNormal(getApplicationContext(),
-                        getString(R.string.notify_title_submission_result)
-                        , getString(R.string.notify_submission_result, formName, siteName, formStatus));
-
-
-                break;
-            case FLAGGED_FORM:
-                notifyNormal(getApplicationContext(),
-                        getString(R.string.notify_title_submission_result)
-                        , getString(R.string.notify_submission_result, formName, siteName, formStatus));
-                break;
-            case REJECTED_FORM:
-                NotificationUtils.notifyNormal(getApplicationContext(),
-                        getString(R.string.notify_title_submission_result)
-                        , getString(R.string.notify_submission_result, formName, siteName, formStatus));
-
-                break;
-
-        }
-    }
-
-    //staged form are handled separately
-    private void handleNewForm(String fsFormId, String formType) {
-        switch (formType) {
-            case "General":
-                //  formsRecordsHelper.deleteGeneralForm(fsFormId);
-                break;
-            case "Scheduled":
-                break;
-
-        }
-
     }
 
 
@@ -239,7 +168,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.e("parseNotificaton", "JSONException while parsing site" + e);
+
             }
         }
         if (notificationData.containsKey("project")) {
@@ -254,7 +183,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.e("parseNotificaton", "JSONException while parsing site" + e);
+
             }
         }
         if (notificationData.containsKey("xfid")) {
