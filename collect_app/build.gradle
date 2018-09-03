@@ -217,6 +217,7 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork-rx2:2.0.0'
     implementation "android.arch.lifecycle:reactivestreams:1.1.1"
     implementation "com.google.firebase:firebase-messaging:${rootProject.playServicesVersion}"
+    implementation 'com.github.naman14:Spider:1.0'
     //debug dependecies - fieldsight
     implementation 'com.facebook.stetho:stetho:1.5.0'
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'

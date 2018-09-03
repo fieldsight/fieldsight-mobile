@@ -28,7 +28,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
     public DownloadListAdapter(ArrayList<SyncableItems> syncableItems) {
         this.syncableItems = syncableItems;
-        syncRepository = new SyncRepository(Collect.getInstance());
+        syncRepository = SyncRepository.getInstance();
     }
 
     public ArrayList<SyncableItems> getList() {

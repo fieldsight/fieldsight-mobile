@@ -15,4 +15,6 @@ public interface DownloadModel {
 
     void fetchProjectContacts();
 
+    void fetchAllForms();
+
 }

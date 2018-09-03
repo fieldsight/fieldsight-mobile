@@ -54,7 +54,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     public GeneralFormRemoteSource() {
         this.projectLocalSource = ProjectLocalSource.getInstance();
-        this.syncRepository = new SyncRepository(Collect.getInstance());
+        this.syncRepository = SyncRepository.getInstance();
     }
 
 

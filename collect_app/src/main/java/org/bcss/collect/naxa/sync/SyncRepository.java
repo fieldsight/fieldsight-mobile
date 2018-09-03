@@ -25,6 +25,7 @@ import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 public class SyncRepository {
 
     private SyncDao syncDao;
+    private static SyncRepository INSTANCE;
     private final String CHECKED = "checked";
     private final String PROGRESS = "progress";
     private final String DATE = "date";
@@ -34,32 +35,15 @@ public class SyncRepository {
     public SyncRepository(Application application) {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(application);
         this.syncDao = database.getSyncDAO();
-
-        syncDao.getItemCount()
-                .subscribeOn(Schedulers.io())
-                .subscribe(new DisposableSubscriber<Integer>() {
-                    @Override
-                    public void onNext(Integer count) {
-                        if (count == 0) {
-                            init();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        t.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
+        init();
     }
 
     public static SyncRepository getInstance() {
-        return new SyncRepository(Collect.getInstance());
+        if (INSTANCE == null) {
+            INSTANCE = new SyncRepository(Collect.getInstance());
+        }
+
+        return INSTANCE;
     }
 
     public void insert(SyncableItems... items) {
@@ -156,6 +140,7 @@ public class SyncRepository {
 
         @Override
         protected Void doInBackground(final SyncableItems... items) {
+            syncDao.deleteAll();
             syncDao.insert(items);
             return null;
         }
@@ -164,12 +149,14 @@ public class SyncRepository {
     public void init() {
         SyncableItems[] syncableItems = new SyncableItems[]{
                 new SyncableItems(Constant.DownloadUID.PROJECT_SITES, PENDING, null, "Project and sites", "Downloads your assigned project and sites"),
+                new SyncableItems(Constant.DownloadUID.ALL_FORMS, PENDING, null, "Forms", "Downloads all forms for your assigned sites"),
 //                new SyncableItems(Constant.DownloadUID.ODK_FORMS, PENDING, null, "ODK forms", "Downloads odk forms for your sites"),
-                new SyncableItems(Constant.DownloadUID.GENERAL_FORMS, PENDING, null, "General forms", "Downloads general forms for your sites"),
-                new SyncableItems(Constant.DownloadUID.STAGED_FORMS, PENDING, null, "Staged forms", "Downloads scheduled forms for your sites"),
-                new SyncableItems(Constant.DownloadUID.SCHEDULED_FORMS, PENDING, null, "Scheduled forms", "Download scheduled forms for your sites"),
+//                new SyncableItems(Constant.DownloadUID.GENERAL_FORMS, PENDING, null, "General forms", "Downloads general forms for your sites"),
+//                new SyncableItems(Constant.DownloadUID.STAGED_FORMS, PENDING, null, "Staged forms", "Downloads scheduled forms for your sites"),
+//                new SyncableItems(Constant.DownloadUID.SCHEDULED_FORMS, PENDING, null, "Scheduled forms", "Download scheduled forms for your sites"),
                 new SyncableItems(Constant.DownloadUID.SITE_TYPES, PENDING, null, "Site type(s)", "Download site types to filter staged forms"),
         };
+
 
         insert(syncableItems);
     }

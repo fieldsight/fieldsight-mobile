@@ -16,8 +16,8 @@ import org.bcss.collect.naxa.sync.SyncRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
-
 
 
 public class DownloadPresenterImpl implements DownloadPresenter {
@@ -29,7 +29,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
     public DownloadPresenterImpl(DownloadView downloadView) {
         this.downloadView = downloadView;
         this.downloadModel = new DownloadModelImpl();
-        syncRepository = new SyncRepository(Collect.getInstance());
+        syncRepository = SyncRepository.getInstance();
         syncRepository.setAllCheckedTrue();
         syncRepository.getAllSyncItems().observe(downloadView.getLifeCycleOwner(), new Observer<List<SyncableItems>>() {
             @Override
@@ -89,6 +89,9 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                         break;
                     case SITE_TYPES:
                         SiteTypeRemoteSource.getINSTANCE().getAll();
+                        break;
+                    case ALL_FORMS:
+                        downloadModel.fetchAllForms();
                         break;
                 }
             }

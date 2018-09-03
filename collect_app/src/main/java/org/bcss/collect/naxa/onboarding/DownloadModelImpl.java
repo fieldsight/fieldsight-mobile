@@ -29,20 +29,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_ERROR;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_START;
 
 public class DownloadModelImpl implements DownloadModel {
-
 
 
     public DownloadModelImpl() {
@@ -216,7 +219,6 @@ public class DownloadModelImpl implements DownloadModel {
             }
 
 
-
         });
         XMLFormDownloadService.start(Collect.getInstance(), xmlFormDownloadReceiver);
 
@@ -225,6 +227,44 @@ public class DownloadModelImpl implements DownloadModel {
     @Override
     public void fetchProjectContacts() {
         int uid = Constant.DownloadUID.PROJECT_CONTACTS;
+    }
+
+    @Override
+    public void fetchAllForms() {
+        ProjectSitesRemoteSource
+                .getInstance()
+                .fetchProjecSites()
+                .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
+                    /*note:
+                     *1. ignored projects from flat map
+                     *2. used tolist to wait to complete all odk forms download
+                     */
+                    return ODKFormRemoteSource.getInstance()
+                            .fetchODKForms()
+                            .map(downloadProgress -> {
+                                //todo: broadcast odk form progress
+                                Timber.i(downloadProgress.toString());
+                                return downloadProgress;
+                            })
+                            .toList();
+                }).subscribe();
+
+
+        Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
+        Single<ArrayList<ScheduleForm>> scheduled = ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
+        Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();
+
+        Observable.zip(general.toObservable(), scheduled.toObservable(), stage.toObservable(),
+                (generalForms, scheduleForms, stages) -> {
+                    Timber.i("All forms have completed their downloads");
+                    //we do not combine, hence null
+                    return null;
+                })
+                .doOnSubscribe(disposable -> {
+
+                })
+                .blockingSubscribe();
+
     }
 
 }

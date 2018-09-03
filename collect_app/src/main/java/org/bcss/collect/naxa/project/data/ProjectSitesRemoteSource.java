@@ -46,7 +46,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     public ProjectSitesRemoteSource() {
         siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
         projectLocalSource = ProjectLocalSource.getInstance();
-        syncRepository = new SyncRepository(Collect.getInstance());
+        syncRepository = SyncRepository.getInstance();
     }
 
 

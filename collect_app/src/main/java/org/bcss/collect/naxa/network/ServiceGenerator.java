@@ -2,10 +2,11 @@ package org.bcss.collect.naxa.network;
 
 import android.text.TextUtils;
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.naman14.spider.SpiderInterceptor;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
@@ -18,6 +19,7 @@ import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import timber.log.Timber;
 
 
 public class ServiceGenerator {
@@ -50,8 +52,14 @@ public class ServiceGenerator {
         if (!TextUtils.isEmpty(token)) {
             okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
         }
-
-        okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
+        if (BuildConfig.DEBUG) {
+            SpiderInterceptor spider = SpiderInterceptor.Companion.getInstance(Collect.getInstance().getApplicationContext());
+            if (spider != null) {
+                Timber.i("Spider added to OkHTTP");
+                okHttpClientBuilder.addInterceptor(spider);
+            }
+        }
+        //okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
 
         return okHttpClientBuilder
                 .build();

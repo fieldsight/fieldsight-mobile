@@ -43,9 +43,6 @@ public interface ApiInterface {
     @GET("/users/me/")
     Observable<MeResponse> getUserInformation();
 
-
-
-
     @FormUrlEncoded
     @POST("/users/api/get-auth-token/")
     Observable<AuthResponse> getAuthToken(

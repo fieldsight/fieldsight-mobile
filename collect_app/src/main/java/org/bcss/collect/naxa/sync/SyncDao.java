@@ -43,4 +43,7 @@ public interface SyncDao {
     @Query("UPDATE sync SET downloadingStatus=:status WHERE uid=:key")
     void updateStatus(int key, int status);
 
+
+    @Query("DELETE FROM sync")
+    void deleteAll();
 }

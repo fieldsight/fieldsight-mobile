@@ -47,7 +47,7 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
     }
 
     public StageRemoteSource() {
-        this.syncRepository = new SyncRepository(Collect.getInstance());
+        this.syncRepository = SyncRepository.getInstance();
     }
 
 

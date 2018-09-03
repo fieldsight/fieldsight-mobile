@@ -53,7 +53,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
 
     private ScheduledFormsRemoteSource() {
         this.projectLocalSource = ProjectLocalSource.getInstance();
-        this.syncRepository = new SyncRepository(Collect.getInstance());
+        this.syncRepository = SyncRepository.getInstance();
     }
 
 
