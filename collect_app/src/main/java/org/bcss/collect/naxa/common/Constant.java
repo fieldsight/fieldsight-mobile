@@ -4,7 +4,9 @@ import org.bcss.collect.android.R;
 
 public class Constant {
 
+
     public static final String EXTRA_POSITION = "extra_position";
+    public static final String EXTRA_FORM_DEPLOYED_FORM = "deployed_from";
     public static final String DEFAULT_SITE_TYPE = "0";
     public static int selectedFragmentId;
     public static String EXTRA_RECEIVER = "extra_receiver";

@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.stages;
 
 
+import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import org.bcss.collect.naxa.stages.data.SubStage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -39,6 +41,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -100,12 +105,35 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.getForms(false, loadedSite).observe(this, new Observer<List<Stage>>() {
-            @Override
-            public void onChanged(@Nullable List<Stage> stages) {
-                listAdapter.updateList(stages);
-            }
-        });
+
+        viewModel.getStages(false, loadedSite)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<List<Stage>>() {
+                    @Override
+                    public void onNext(List<Stage> stages) {
+                        listAdapter.updateList(stages);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+//        viewModel
+//                .getForms(false, loadedSite)
+//                .observe(this, new Observer<List<Stage>>() {
+//                    @Override
+//                    public void onChanged(@Nullable List<Stage> stages) {
+//                        listAdapter.updateList(stages);
+//                    }
+//                });
     }
 
     @Override
@@ -139,7 +167,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
 
     @Override
     public void onFormItemClicked(Stage stage, int position) {
-        Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getId(), String.valueOf(position));
+        Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getId(), String.valueOf(position),stage.getFormDeployedFrom());
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(Constant.ANIM.fragmentEnterAnimation

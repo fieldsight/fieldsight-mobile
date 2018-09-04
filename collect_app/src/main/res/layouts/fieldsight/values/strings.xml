@@ -152,6 +152,8 @@
     <string name="notify_message_form_deployed">%s has been deployed in %s</string>
     <string name="notify_title_stage_deployed">Staged deployed</string>
     <string name="notify_message_stage_deployed">A stage has been deployed in %s site</string>
+    <string name="dialog_title_upload_forms">Upload forms</string>
+    <string name="dialog_action_upload">Upload</string>
 
     <!--Notification sitelist ends here-->
 

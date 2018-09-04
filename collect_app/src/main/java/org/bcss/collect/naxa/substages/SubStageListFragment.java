@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,9 +39,11 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.EXTRA_FORM_DEPLOYED_FORM;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_ID;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_POSITION;
+import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class SubStageListFragment extends FieldSightFormListFragment implements OnFormItemClickListener<SubStage> {
@@ -60,16 +64,18 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
     private Site loadedSite;
     private String stageId;
     private String stagePosition;
+    private String formDeployedFrom;
 
     private Unbinder unbinder;
 
     private SubStageViewModel viewModel;
 
-    public static SubStageListFragment newInstance(@NonNull Site loadedSite, @NonNull String stageId, @NonNull String stagePosition) {
+    public static SubStageListFragment newInstance(@NonNull Site loadedSite, @NonNull String stageId, @NonNull String stagePosition, @NonNull String deployedFrom) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_OBJECT, loadedSite);
         bundle.putString(EXTRA_ID, stageId);
-        bundle.putString(EXTRA_POSITION,stagePosition);
+        bundle.putString(EXTRA_POSITION, stagePosition);
+        bundle.putString(EXTRA_FORM_DEPLOYED_FORM, deployedFrom);
         SubStageListFragment subStageListFragment = new SubStageListFragment();
         subStageListFragment.setArguments(bundle);
         return subStageListFragment;
@@ -86,6 +92,8 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
         stageId = getArguments().getString(EXTRA_ID);
         stagePosition = getArguments().getString(EXTRA_POSITION);
+        formDeployedFrom = getArguments().getString(EXTRA_FORM_DEPLOYED_FORM);
+
     }
 
     @Nullable
@@ -104,7 +112,7 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.loadSubStages(loadedSite.getId(), loadedSite.getProject(), stageId,loadedSite.getTypeId())
+        viewModel.loadSubStages(loadedSite.getId(), loadedSite.getProject(), stageId, loadedSite.getTypeId())
                 .observe(this, substages -> {
                     Timber.i("SubStage forms data has been changed");
                     listAdapter.updateList(substages);
@@ -122,9 +130,9 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged forms"), () -> {
-            viewModel.loadSubStages(loadedSite.getId(), loadedSite.getProject(), stageId,loadedSite.getTypeId());
+            viewModel.loadSubStages(loadedSite.getId(), loadedSite.getProject(), stageId, loadedSite.getTypeId());
         });
-        listAdapter = new SubStageListAdapter(new ArrayList<>(0),stagePosition);
+        listAdapter = new SubStageListAdapter(new ArrayList<>(0), stagePosition, this);
         recyclerView.setAdapter(listAdapter);
 
 
@@ -138,7 +146,12 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
 
     @Override
     public void onFormItemClicked(SubStage subStage, int position) {
+        String id = PROJECT.equals(formDeployedFrom) ? loadedSite.getProject() : loadedSite.getId();
+        String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), id, subStage.getFsFormId());
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 
+        fillODKForm(subStage.getJrFormId());
     }
 
     @Override

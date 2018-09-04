@@ -20,6 +20,8 @@ import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.OnFormItemClickListener;
+import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.stages.data.SubStage;
 
 import java.util.ArrayList;
@@ -33,7 +35,9 @@ public class SubStageListAdapter extends
 
 
     private List<SubStage> subStages;
-    private OnSubStageClickListener listener;
+//    private OnSubStageClickListener listener;
+
+    OnFormItemClickListener<SubStage> listener;
 
     private final String TAG = "SubStageAdapter";
 
@@ -42,9 +46,10 @@ public class SubStageListAdapter extends
     private int stagePosition;
 
 
-    public SubStageListAdapter(List<SubStage> subStages, String stageOrder) {
+    public SubStageListAdapter(List<SubStage> subStages, String stageOrder, OnFormItemClickListener<SubStage> listener) {
         this.subStages = subStages;
         this.stageOrder = stageOrder;
+        this.listener = listener;
     }
 
     public void updateList(List<SubStage> newList) {
@@ -71,7 +76,7 @@ public class SubStageListAdapter extends
         viewHolder.tvSubTitle.setText(subStages.get(position).getName());
 //        viewHolder.tvLastFilledDateTime.setText(subStage.getLastFilledDateTime());
 //        viewHolder.substageBadge.setVisibility(subStage.isSubStageComplete() ? View.VISIBLE : View.GONE);
-        viewHolder.btnViewFormHistory.setOnClickListener(view -> listener.onPreviousSubmissionButtonClicked(subStage));
+        viewHolder.btnViewFormHistory.setOnClickListener(view -> listener.onFormHistoryButtonClicked(subStage));
 
         int substageNumber = position;
         String iconText = stageOrder + "." + substageNumber;
@@ -81,7 +86,7 @@ public class SubStageListAdapter extends
         viewHolder.rootlayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onFormItemClicked(subStage);
+                listener.onFormItemClicked(subStage, viewHolder.getAdapterPosition());
             }
         });
 
@@ -159,14 +164,5 @@ public class SubStageListAdapter extends
         }
     }
 
-    public interface OnSubStageClickListener {
 
-        void onGuideBookButtonClicked(SubStage subStage, int position);
-
-        void onFormItemClicked(SubStage subStage);
-
-        void onFormStatusClicked();
-
-        void onPreviousSubmissionButtonClicked(SubStage subStage);
-    }
 }

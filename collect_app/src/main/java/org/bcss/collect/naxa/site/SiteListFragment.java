@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.site;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,6 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.activities.InstanceUploaderActivity;
@@ -30,7 +31,6 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.DialogFactory;
-import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.PaginationScrollListener;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
@@ -45,6 +45,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 import static org.bcss.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -175,82 +181,29 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     public void createFormsUploadDialog(String siteId) {
 
-////        String dialogTitle = context.getApplicationContext().getString(R.string.dialog_title_warning_logout);
-////        String dialogMsg;
-////        String posMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_pos);
-////        String negMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_neg);
-//        @ColorInt int color =getResources().getColor(R.color.primaryColor);
-//        Drawable drawable = getResources().getDrawable(android.R.drawable.ic_dialog_alert);
-//        Drawable wrapped = DrawableCompat.wrap(drawable);
-//        DrawableCompat.setTint(wrapped, color);
-//
-//
-//        DialogFactory.createActionDialog(getActivity(), dialogTitle, dialogMsg).setPositiveButton(posMsg, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//            }
-//        }).setNegativeButton(negMsg, null).setIcon(wrapped).show();
+        String dialogTitle = getString(R.string.dialog_title_upload_forms);
+        String dialogMsg = "Upload completed forms for offline sites";
+        String posMsg = getString(R.string.dialog_action_upload);
+        String negMsg = getString(R.string.dialog_action_dismiss);
+        @ColorInt int color = getResources().getColor(R.color.primaryColor);
+        Drawable drawable = getResources().getDrawable(android.R.drawable.ic_menu_upload);
+        Drawable wrapped = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(wrapped, color);
+
+
+        DialogFactory.createActionDialog(getActivity(), dialogTitle, dialogMsg).setPositiveButton(posMsg, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        }).setNegativeButton(negMsg, null).setIcon(wrapped).show();
 
     }
 
-
-    public void prepareToSendUnSentForms(String siteIdForFilter) {
-
-        String selection = null;
-        String[] selectionArgs = null;
-
-
-        selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=? and (" +
-                InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                + InstanceProviderAPI.InstanceColumns.STATUS + "=? )";
-
-        selectionArgs = new String[]{
-                siteIdForFilter,
-                InstanceProviderAPI.STATUS_COMPLETE,
-                InstanceProviderAPI.STATUS_SUBMISSION_FAILED
-        };
-
-
-        String sortOrder = InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC";
-
-        Cursor c = getContext().getContentResolver().query(InstanceProviderAPI.InstanceColumns.CONTENT_URI, null, selection,
-                selectionArgs, sortOrder);
-
-
-        try {
-
-            long[] instanceIDs = new long[c.getCount()];
-            int i = 0;
-
-            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-                instanceIDs[i] = c.getInt(c.getColumnIndex(FormsProviderAPI.FormsColumns._ID));
-                i = i + 1;
-            }
-
-            uploadSelectedFiles(instanceIDs);
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-
-        } finally {
-            if (c != null) {
-                c.close();
-            }
-        }
-
-    }
 
     private void uploadSelectedFiles(long[] instanceIDs) {
 
 
-        Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
-        i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs);
-
-
-        startActivityForResult(i, INSTANCE_UPLOADER);
     }
 
 
@@ -289,7 +242,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     return true;
 
                 case R.id.action_upload_sites:
-                    SiteRemoteSource.getInstance().create(siteListAdapter.getSelected());
+                    uploadSelectedSites(siteListAdapter.getSelected());
                     return true;
 
                 default:
@@ -301,6 +254,71 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         public void onDestroyActionMode(ActionMode mode) {
             disableActionMode();
         }
+    }
+
+    private void uploadSelectedSites(ArrayList<Site> selected) {
+        SiteRemoteSource.getInstance()
+                .uploadMultipleSites(selected)
+                .flattenAsObservable((Function<List<Site>, Iterable<Site>>) sites -> sites)
+                .map(site -> getNotUploadedFormForSite(site.getId()))
+                .flatMapIterable((Function<ArrayList<Long>, Iterable<Long>>) longs -> longs)
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Long>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Long> instanceIDs) {
+
+                        Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
+                        i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs.toArray(new Long[instanceIDs.size()]));
+                        startActivityForResult(i, INSTANCE_UPLOADER);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        DialogFactory.createGenericErrorDialog(getActivity(), e.getMessage()).show();
+                    }
+                });
+    }
+
+    private ArrayList<Long> getNotUploadedFormForSite(String siteId) {
+        String selection;
+        String[] selectionArgs;
+
+        selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=? and (" +
+                InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                + InstanceProviderAPI.InstanceColumns.STATUS + "=? )";
+
+        selectionArgs = new String[]{
+                siteId,
+                InstanceProviderAPI.STATUS_COMPLETE,
+                InstanceProviderAPI.STATUS_SUBMISSION_FAILED
+        };
+
+
+        String sortOrder = InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC";
+
+        Cursor c = getContext().getContentResolver().query(InstanceProviderAPI.InstanceColumns.CONTENT_URI, null, selection,
+                selectionArgs, sortOrder);
+
+        ArrayList<Long> instanceIDs = new ArrayList<>();
+
+        int i = 0;
+
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            int id = c.getInt(c.getColumnIndex(FormsProviderAPI.FormsColumns._ID));
+            instanceIDs.add((long) id);
+            i = i + 1;
+        }
+
+        return instanceIDs;
+
     }
 
     public void disableActionMode() {

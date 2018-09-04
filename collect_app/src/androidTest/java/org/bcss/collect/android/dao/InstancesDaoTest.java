@@ -196,6 +196,7 @@ public class InstancesDaoTest {
                 .jrFormId("N_Biggest")
                 .status(InstanceProviderAPI.STATUS_SUBMITTED)
                 .lastStatusChangeDate(1487597090653L)
+                .fieldSightSiteId("0")
                 .displaySubtext("Finalized on Mon, Feb 20, 2017 at 14:24")
                 .build();
 
@@ -213,6 +214,13 @@ public class InstancesDaoTest {
         assertEquals(InstanceProviderAPI.STATUS_SUBMITTED, instances.get(0).getStatus());
     }
 
+
+    @Test
+    public void updateSiteIdTest() {
+        int rowsUpdated = instancesDao.updateSiteId("123", "12901");
+        assertEquals(2, rowsUpdated);
+    }
+
     private void fillDatabase() {
         Instance instance1 = new Instance.Builder()
                 .displayName("Hypertension Screening")
@@ -221,6 +229,7 @@ public class InstancesDaoTest {
                 .status(InstanceProviderAPI.STATUS_INCOMPLETE)
                 .lastStatusChangeDate(1487595836793L)
                 .displaySubtext("Saved on Mon, Feb 20, 2017 at 14:03")
+                .fieldSightSiteId("0")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance1));
 
@@ -231,6 +240,7 @@ public class InstancesDaoTest {
                 .status(InstanceProviderAPI.STATUS_INCOMPLETE)
                 .lastStatusChangeDate(1487596015000L)
                 .displaySubtext("Saved on Mon, Feb 20, 2017 at 14:06")
+                .fieldSightSiteId("0")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance2));
 
@@ -241,6 +251,7 @@ public class InstancesDaoTest {
                 .status(InstanceProviderAPI.STATUS_SUBMITTED)
                 .lastStatusChangeDate(1487596015100L)
                 .displaySubtext("Saved on Mon, Feb 20, 2017 at 14:06")
+                .fieldSightSiteId("0")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance3));
 
@@ -252,6 +263,7 @@ public class InstancesDaoTest {
                 .lastStatusChangeDate(1487596020803L)
                 .displaySubtext("Saved on Mon, Feb 20, 2017 at 14:07")
                 .deletedDate(1487596020803L)
+                .fieldSightSiteId("0")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance4));
 
@@ -262,6 +274,7 @@ public class InstancesDaoTest {
                 .status(InstanceProviderAPI.STATUS_INCOMPLETE)
                 .lastStatusChangeDate(1487596026373L)
                 .displaySubtext("Saved on Mon, Feb 20, 2017 at 14:07")
+                .fieldSightSiteId("0")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance5));
 
@@ -272,6 +285,7 @@ public class InstancesDaoTest {
                 .status(InstanceProviderAPI.STATUS_COMPLETE)
                 .lastStatusChangeDate(1487597090653L)
                 .displaySubtext("Finalized on Mon, Feb 20, 2017 at 14:24")
+                .fieldSightSiteId("0")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance6));
 
@@ -282,6 +296,7 @@ public class InstancesDaoTest {
                 .submissionUri("http://fieldsight.naxa.com.np/forms/submission/project/297461/129")
                 .status(InstanceProviderAPI.STATUS_COMPLETE)
                 .lastStatusChangeDate(1487597090653L)
+                .fieldSightSiteId("12901")
                 .displaySubtext("Finalized on Mon, Feb 20, 2018 at 14:24")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance7));
@@ -293,6 +308,7 @@ public class InstancesDaoTest {
                 .submissionUri("http://fieldsight.naxa.com.np/forms/submission/297461/12901")
                 .status(InstanceProviderAPI.STATUS_COMPLETE)
                 .lastStatusChangeDate(1487597090653L)
+                .fieldSightSiteId("12901")
                 .displaySubtext("Finalized on Mon, Feb 21, 2018 at 14:24")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance8));

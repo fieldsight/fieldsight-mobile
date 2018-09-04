@@ -10,6 +10,8 @@ import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Maybe;
+
 @Dao
 public abstract class StageFormDAO implements BaseDaoFieldSight<Stage> {
     @Query("SELECT * FROM stages")
@@ -30,6 +32,7 @@ public abstract class StageFormDAO implements BaseDaoFieldSight<Stage> {
     @Query("SELECT * FROM stages WHERE project =:projectId ")
     public abstract LiveData<List<Stage>> getByProjectId(String projectId);
 
-
+    @Query("SELECT * FROM stages WHERE project =:projectId ")
+    public abstract Maybe<List<Stage>> getByProjectIdMaybe(String projectId);
 
 }

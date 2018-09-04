@@ -6,13 +6,14 @@ import android.support.annotation.NonNull;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 
 
-import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.StageLocalSource;
 import org.bcss.collect.naxa.stages.data.StageRemoteSource;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
 
 public class StageFormRepository implements BaseLocalDataSource<Stage> {
 
@@ -74,5 +75,9 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
         }
 
         return localSource.getByProjectId(projectId, siteTypeId);
+    }
+
+    public Observable<List<Stage>> getByProjectIdMaybe(String projectId, String siteTypeId) {
+        return localSource.getByProjectIdMaybe(projectId, siteTypeId);
     }
 }

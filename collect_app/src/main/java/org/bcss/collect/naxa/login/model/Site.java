@@ -95,7 +95,7 @@ public class Site implements Parcelable {
     private String scheduleFormDeployedForm = Constant.FormDeploymentFrom.PROJECT;
 
 
-    public Site(){
+    public Site() {
 
     }
 
@@ -128,7 +128,7 @@ public class Site implements Parcelable {
     }
 
     public String getMetaAttributes() {
-        return metaAttributes;
+        return metaAttributes == null ? "" : metaAttributes;
     }
 
     public void setMetaAttributes(String metaAttributes) {
@@ -183,7 +183,7 @@ public class Site implements Parcelable {
     }
 
     public String getLatitude() {
-        return latitude;
+        return latitude == null ? "" : latitude;
     }
 
     public void setLatitude(String latitude) {
@@ -191,7 +191,7 @@ public class Site implements Parcelable {
     }
 
     public String getLongitude() {
-        return longitude;
+        return longitude == null ? "" : longitude;
     }
 
     public void setLongitude(String longitude) {
@@ -199,7 +199,7 @@ public class Site implements Parcelable {
     }
 
     public String getIdentifier() {
-        return identifier;
+        return identifier == null ? "" : identifier;
     }
 
     public void setIdentifier(String identifier) {
@@ -207,7 +207,7 @@ public class Site implements Parcelable {
     }
 
     public String getName() {
-        return name;
+        return name == null ? "" : name;
     }
 
     public void setName(String name) {
@@ -215,7 +215,7 @@ public class Site implements Parcelable {
     }
 
     public String getTypeId() {
-        return typeId;
+        return typeId == null ? "" : typeId;
     }
 
     public void setTypeId(String typeId) {
@@ -224,7 +224,7 @@ public class Site implements Parcelable {
 
 
     public String getRegion() {
-        return region;
+        return region == null ? "" : region;
     }
 
     public void setRegion(String region) {
@@ -241,7 +241,7 @@ public class Site implements Parcelable {
     }
 
     public String getPhone() {
-        return phone;
+        return phone == null ? "" : phone;
     }
 
     public void setPhone(String phone) {
@@ -249,7 +249,7 @@ public class Site implements Parcelable {
     }
 
     public String getAddress() {
-        return address;
+        return address == null ? "" : address;
     }
 
     public void setAddress(String address) {
@@ -257,7 +257,7 @@ public class Site implements Parcelable {
     }
 
     public String getPublicDesc() {
-        return publicDesc;
+        return publicDesc == null ? "" : publicDesc;
     }
 
     public void setPublicDesc(String publicDesc) {
@@ -313,7 +313,7 @@ public class Site implements Parcelable {
     }
 
     public String getProject() {
-        return project;
+        return project == null ? "" : project;
     }
 
     public void setProject(String project) {
@@ -322,7 +322,7 @@ public class Site implements Parcelable {
 
     @NonNull
     public String getSiteTypeError() {
-        return siteTypeError;
+        return siteTypeError == null ? "" : siteTypeError;
     }
 
 

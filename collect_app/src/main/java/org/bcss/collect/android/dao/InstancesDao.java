@@ -265,6 +265,20 @@ public class InstancesDao {
         Collect.getInstance().getContentResolver().delete(InstanceProviderAPI.InstanceColumns.CONTENT_URI, null, null);
     }
 
+    public int updateSiteId(String newSiteId, String oldSiteId) {
+
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, newSiteId);
+        String where = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?";
+
+        String[] whereArgs = {
+                oldSiteId
+        };
+
+        return updateInstance(contentValues, where, whereArgs);
+    }
+
     public void deleteInstancesFromIDs(List<String> ids) {
         int count = ids.size();
         int counter = 0;
@@ -381,6 +395,7 @@ public class InstancesDao {
 
         return "";
     }
+
 
     public List<Instance> getBySiteId(String siteId) {
 

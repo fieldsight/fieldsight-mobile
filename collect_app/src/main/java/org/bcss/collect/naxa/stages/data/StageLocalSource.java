@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 
 public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
@@ -89,9 +91,37 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
     }
 
 
-    public LiveData<List<Stage>> getByProjectId(String projectId,String siteTypeId) {
+    public Observable<List<Stage>> getByProjectIdMaybe(String projectId, String siteTypeId) {
+        return dao.getByProjectIdMaybe(projectId)
+                .toObservable()
+                .flatMapIterable((Function<List<Stage>, Iterable<Stage>>) stages -> stages)
+                .flatMap(new Function<Stage, Observable<List<Stage>>>() {
+                    @Override
+                    public Observable<List<Stage>> apply(Stage stage) throws Exception {
+                        return SubStageLocalSource.getInstance().getByStageIdMaybe(stage.getId(), siteTypeId)
+                                .filter(new Predicate<List<SubStage>>() {
+                                    @Override
+                                    public boolean test(List<SubStage> subStages) throws Exception {
+                                        return subStages.size() > 0;
+                                    }
+                                }).map(new Function<List<SubStage>, Stage>() {
+                                    @Override
+                                    public Stage apply(List<SubStage> subStages) throws Exception {
+                                        return stage;
+                                    }
+                                })
+                                .toList()
+                                .toObservable();
+                    }
+                });
+
+
+    }
+
+    public LiveData<List<Stage>> getByProjectId(String projectId, String siteTypeId) {
         MediatorLiveData<List<Stage>> mediatorLiveData = new MediatorLiveData<>();
         LiveData<List<Stage>> stagesliveData = dao.getByProjectId(projectId);
+
 
         mediatorLiveData.addSource(stagesliveData, new Observer<List<Stage>>() {
             @Override
@@ -103,6 +133,7 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
                 List<Stage> filteredStages = new ArrayList<>();
                 for (Stage stage : stages) {
                     LiveData<List<SubStage>> substages = SubStageLocalSource.getInstance().getByStageId(stage.getId(), siteTypeId);
+
                     substages.observeForever(new Observer<List<SubStage>>() {
                         @Override
                         public void onChanged(@Nullable List<SubStage> subStages) {
@@ -113,10 +144,8 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
                         }
                     });
                 }
-
                 mediatorLiveData.removeSource(stagesliveData);
                 mediatorLiveData.setValue(filteredStages);
-
             }
         });
 

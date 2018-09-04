@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
@@ -60,16 +60,18 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
                             .map(new Function<List<SubStage>, List<SubStage>>() {
                                 @Override
                                 public List<SubStage> apply(List<SubStage> subStages) throws Exception {
+                                    ArrayList<SubStage> filteredSubstages = new ArrayList<>();
+
                                     for (SubStage subStage : subStages) {
                                         if (TextUtils.isEmpty(siteTypeId)
                                                 || Constant.DEFAULT_SITE_TYPE.equals(siteTypeId)
                                                 || subStage.getTagIds().contains(siteTypeId)
                                                 || subStage.getTagIds().size() == 0) {
 
-                                            subStages.add(subStage);
+                                            filteredSubstages.add(subStage);
                                         }
                                     }
-                                    return subStages;
+                                    return filteredSubstages;
                                 }
                             })
                             .subscribeOn(Schedulers.computation())
@@ -77,13 +79,14 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
                             .subscribe(new DisposableObserver<List<SubStage>>() {
                                 @Override
                                 public void onNext(List<SubStage> subStages) {
-                                    mediatorLiveData.removeSource(forms);
                                     mediatorLiveData.setValue(subStages);
+                                    mediatorLiveData.removeSource(forms);
+
                                 }
 
                                 @Override
                                 public void onError(Throwable e) {
-
+                                    e.printStackTrace();
                                 }
 
                                 @Override
@@ -111,5 +114,26 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
     @Override
     public void updateAll(ArrayList<SubStage> items) {
         AsyncTask.execute(() -> dao.updateAll(items));
+    }
+
+    public Observable<List<SubStage>> getByStageIdMaybe(String id, String siteTypeId ) {
+         return dao.getByStageIdMaybe(id).toObservable()
+         .flatMap(new Function<List<SubStage>, ObservableSource<List<SubStage>>>() {
+             @Override
+             public ObservableSource<List<SubStage>> apply(List<SubStage> subStages) throws Exception {
+                 ArrayList<SubStage> filteredSubstages = new ArrayList<>();
+
+                 for (SubStage subStage : subStages) {
+                     if (TextUtils.isEmpty(siteTypeId)
+                             || Constant.DEFAULT_SITE_TYPE.equals(siteTypeId)
+                             || subStage.getTagIds().contains(siteTypeId)
+                             || subStage.getTagIds().size() == 0) {
+
+                         filteredSubstages.add(subStage);
+                     }
+                 }
+                 return Observable.just(filteredSubstages);
+             }
+         });
     }
 }

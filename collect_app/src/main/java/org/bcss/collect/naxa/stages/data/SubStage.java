@@ -101,7 +101,7 @@ public class SubStage {
     }
 
     public String getFsFormId() {
-        return stageForms.getId();
+        return fsFormId;
     }
 
     public void setFsFormId(String fsFormId) {
@@ -109,7 +109,7 @@ public class SubStage {
     }
 
     public String getJrFormId() {
-        return stageForms.getXf().getJrFormId();
+        return jrFormId;
     }
 
     public void setJrFormId(String jrFormId) {
