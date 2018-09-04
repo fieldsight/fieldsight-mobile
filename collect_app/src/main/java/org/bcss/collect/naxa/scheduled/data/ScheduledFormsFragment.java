@@ -151,6 +151,7 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
         String id = PROJECT.equals(scheduleForm.getFormDeployedFrom()) ? loadedSite.getProject() : loadedSite.getId();
         String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), id, scheduleForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 
         fillODKForm(scheduleForm.getIdString());
     }

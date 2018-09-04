@@ -123,7 +123,8 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 message = context.getString(R.string.notify_message_site_assigned, notification.getSiteName());
                 break;
             case UNASSIGNED_SITE:
-                //todo: delete site ? Show message ?
+                //todo: you have been unassigned please upload data those sites to prevent loss
+                //todo: do not remove unassinged site's if they have data
                 title = context.getString(R.string.notify_title_site_unassigned, notification.getSiteName());
                 message = context.getString(R.string.notify_message_site_unassigned, notification.getSiteName());
                 break;

@@ -33,6 +33,7 @@ import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColu
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.DELETED_DATE;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.DISPLAY_NAME;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT;
+import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.FS_SITE_ID;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.JR_FORM_ID;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.JR_VERSION;
@@ -49,7 +50,7 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 4;
 
-    private final String[] instancesTableColumnsInVersion4 = new String[] {_ID, DISPLAY_NAME, SUBMISSION_URI, CAN_EDIT_WHEN_COMPLETE,
+    private final String[] instancesTableColumnsInVersion4 = new String[]{_ID, DISPLAY_NAME, SUBMISSION_URI, CAN_EDIT_WHEN_COMPLETE,
             INSTANCE_FILE_PATH, JR_FORM_ID, JR_VERSION, STATUS, LAST_STATUS_CHANGE_DATE, DISPLAY_SUBTEXT, DELETED_DATE};
 
     public InstancesDatabaseHelper() {
@@ -190,6 +191,7 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
     private void createInstancesTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + INSTANCES_TABLE_NAME + " ("
                 + _ID + " integer primary key, "
+                + FS_SITE_ID + " text not null, "
                 + DISPLAY_NAME + " text not null, "
                 + SUBMISSION_URI + " text, "
                 + CAN_EDIT_WHEN_COMPLETE + " text, "

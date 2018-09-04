@@ -98,7 +98,7 @@ public class CreateSiteViewModel extends ViewModel {
     public void saveSite() {
         if (validateData()) {
             siteRepository.saveSiteAsOffline(siteMutableLiveData.getValue(), projectMutableLiveData.getValue());
-            ToastUtils.showShortToastInMiddle("Saving Site");
+            formStatus.setValue(CreateSiteFormStatus.SUCCESS);
             //todo check if saving site is faliling
 
         }

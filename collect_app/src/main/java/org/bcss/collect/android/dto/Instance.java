@@ -34,6 +34,7 @@ public class Instance {
     private final Long lastStatusChangeDate;
     private final String displaySubtext;
     private final Long deletedDate;
+    private final String fieldSightSiteId;
 
     private Instance(Builder builder) {
         displayName = builder.displayName;
@@ -46,6 +47,7 @@ public class Instance {
         lastStatusChangeDate = builder.lastStatusChangeDate;
         displaySubtext = builder.displaySubtext;
         deletedDate = builder.deletedDate;
+        fieldSightSiteId = builder.fieldSightSiteId;
     }
 
     public static class Builder {
@@ -59,6 +61,7 @@ public class Instance {
         private Long lastStatusChangeDate;
         private String displaySubtext;
         private Long deletedDate;
+        private String fieldSightSiteId;
 
         public Builder displayName(String displayName) {
             this.displayName = displayName;
@@ -110,6 +113,11 @@ public class Instance {
             return this;
         }
 
+        public Builder fieldSightSiteId(String fieldSightSiteId) {
+            this.fieldSightSiteId = fieldSightSiteId;
+            return this;
+        }
+
         public Instance build() {
             return new Instance(this);
         }
@@ -153,5 +161,9 @@ public class Instance {
 
     public Long getDeletedDate() {
         return deletedDate;
+    }
+
+    public String getFieldSightSiteId() {
+        return fieldSightSiteId;
     }
 }

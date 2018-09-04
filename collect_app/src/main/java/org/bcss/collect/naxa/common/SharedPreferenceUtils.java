@@ -14,6 +14,7 @@ public class SharedPreferenceUtils {
     public static class PREF_VALUE_KEY {
         public static final String KEY_FCM = "fcm";
         public static String KEY_URL = "url";
+        public static String KEY_SITE_ID = "site_id";
         public String KEY_FORM_TYPE = "form_type";
         public String KEY_PROJECT_ID = "project_id";
         public String KEY_FORM_DEPLOYED_FROM = "form_deployed_from";

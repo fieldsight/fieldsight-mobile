@@ -148,6 +148,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         String id = PROJECT.equals(generalForm.getFormDeployedFrom()) ? loadedSite.getProject() : loadedSite.getId();
         String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), id, generalForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 
         fillODKForm(generalForm.getIdString());
     }

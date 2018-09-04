@@ -81,7 +81,7 @@ public class InstanceUploaderList extends InstanceListActivity implements
     private static final String FILTER_BY_SITE_MODE = "filterBySiteMode";
     private static final String INSTANCE_UPLOADER_LIST_SORTING_ORDER = "instanceUploaderListSortingOrder";
 
-    private static final int INSTANCE_UPLOADER = 0;
+    public static final int INSTANCE_UPLOADER = 0;
 
     private Button uploadButton;
 

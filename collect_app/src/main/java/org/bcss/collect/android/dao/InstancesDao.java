@@ -315,6 +315,7 @@ public class InstancesDao {
                     int lastStatusChangeDateColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.LAST_STATUS_CHANGE_DATE);
                     int displaySubtextColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT);
                     int deletedDateColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DELETED_DATE);
+                    int fsSiteColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.FS_SITE_ID);
 
                     Instance instance = new Instance.Builder()
                             .displayName(cursor.getString(displayNameColumnIndex))
@@ -327,6 +328,7 @@ public class InstancesDao {
                             .lastStatusChangeDate(cursor.getLong(lastStatusChangeDateColumnIndex))
                             .displaySubtext(cursor.getString(displaySubtextColumnIndex))
                             .deletedDate(cursor.getLong(deletedDateColumnIndex))
+                            .fieldSightSiteId(cursor.getString(fsSiteColumnIndex))
                             .build();
 
                     instances.add(instance);
@@ -350,6 +352,7 @@ public class InstancesDao {
         values.put(InstanceProviderAPI.InstanceColumns.LAST_STATUS_CHANGE_DATE, instance.getLastStatusChangeDate());
         values.put(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT, instance.getDisplaySubtext());
         values.put(InstanceProviderAPI.InstanceColumns.DELETED_DATE, instance.getDeletedDate());
+        values.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, instance.getFieldSightSiteId());
 
         return values;
     }
@@ -379,9 +382,9 @@ public class InstancesDao {
         return "";
     }
 
-    public CursorLoader getBySiteId(String siteId) {
+    public List<Instance> getBySiteId(String siteId) {
 
-        CursorLoader cursorLoader;
+        Cursor cursor;
         String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and ("
                 + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                 + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
@@ -394,12 +397,8 @@ public class InstancesDao {
                 InstanceProviderAPI.STATUS_SUBMITTED,
                 "%" + siteId + "%"};
 
-        cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, null);
-
-
-
-
-        return cursorLoader;
+        cursor = getInstancesCursor(selection, selectionArgs);
+        return getInstancesFromCursor(cursor);
     }
 
     public void getByProjectId(String projectId) {

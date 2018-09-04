@@ -39,6 +39,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
@@ -247,23 +248,43 @@ public class DownloadModelImpl implements DownloadModel {
                                 return downloadProgress;
                             })
                             .toList();
-                }).subscribe();
-
-
-        Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
-        Single<ArrayList<ScheduleForm>> scheduled = ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
-        Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();
-
-        Observable.zip(general.toObservable(), scheduled.toObservable(), stage.toObservable(),
-                (generalForms, scheduleForms, stages) -> {
-                    Timber.i("All forms have completed their downloads");
-                    //we do not combine, hence null
-                    return null;
                 })
-                .doOnSubscribe(disposable -> {
+                .subscribe(new SingleObserver<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
+                        Single<ArrayList<ScheduleForm>> scheduled = ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
+                        Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();
 
-                })
-                .blockingSubscribe();
+                        Observable.zip(general.toObservable(), scheduled.toObservable(), stage.toObservable(),
+                                (generalForms, scheduleForms, stages) -> {
+                                    Timber.i("All forms have completed their downloads");
+                                    SyncRepository.getInstance().setSuccess(ALL_FORMS);
+                                    //we do not combine, hence null
+                                    return null;
+                                })
+                                .doOnError(new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(Throwable throwable) throws Exception {
+                                        SyncRepository.getInstance().setError(ALL_FORMS);
+                                    }
+                                })
+                                .doOnSubscribe(disposable -> {
+                                    SyncRepository.getInstance().showProgress(ALL_FORMS);
+                                })
+                                .blockingSubscribe();
+                    }
+
+                    @Override
+                    public void onSuccess(Object o) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
 
     }
 

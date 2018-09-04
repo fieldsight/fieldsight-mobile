@@ -213,9 +213,13 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
                     submissionUri = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
                             SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, "");
 
+                    String fsSiteId = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
+                            SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, "");
+
                     // add missing fields into values
                     values.put(InstanceColumns.INSTANCE_FILE_PATH, instancePath);
                     values.put(InstanceColumns.SUBMISSION_URI, submissionUri);
+                    values.put(InstanceColumns.FS_SITE_ID, fsSiteId);
                     if (instanceName != null) {
                         values.put(InstanceColumns.DISPLAY_NAME, instanceName);
                     } else {

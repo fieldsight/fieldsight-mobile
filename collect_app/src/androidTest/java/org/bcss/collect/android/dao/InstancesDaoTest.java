@@ -19,6 +19,7 @@ package org.bcss.collect.android.dao;
 import android.database.Cursor;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.bcss.collect.naxa.common.Constant;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,7 @@ import org.bcss.collect.android.provider.InstanceProviderAPI;
 
 import java.util.List;
 
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -50,7 +52,7 @@ public class InstancesDaoTest {
     public void getUnsentInstancesCursorTest() {
         Cursor cursor = instancesDao.getUnsentInstancesCursor();
         List<Instance> instances = instancesDao.getInstancesFromCursor(cursor);
-        assertEquals(4, instances.size());
+        assertEquals(6, instances.size());
 
         assertEquals("Cascading Select Form", instances.get(0).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_INCOMPLETE, instances.get(0).getStatus());
@@ -63,6 +65,12 @@ public class InstancesDaoTest {
 
         assertEquals("Biggest N of Set", instances.get(3).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
+
+        assertEquals("Project Form", instances.get(4).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(4).getStatus());
+
+        assertEquals("Site Form", instances.get(5).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(5).getStatus());
     }
 
     @Test
@@ -82,7 +90,7 @@ public class InstancesDaoTest {
     public void getSavedInstancesCursorTest() {
         Cursor cursor = instancesDao.getSavedInstancesCursor(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC");
         List<Instance> instances = instancesDao.getInstancesFromCursor(cursor);
-        assertEquals(5, instances.size());
+        assertEquals(7, instances.size());
 
         assertEquals("Biggest N of Set", instances.get(0).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_SUBMITTED, instances.get(0).getStatus());
@@ -96,18 +104,41 @@ public class InstancesDaoTest {
         assertEquals("Hypertension Screening", instances.get(3).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_INCOMPLETE, instances.get(3).getStatus());
 
-        assertEquals("sample", instances.get(4).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_INCOMPLETE, instances.get(4).getStatus());
+        assertEquals("Project Form", instances.get(4).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(4).getStatus());
+
+        assertEquals("Site Form", instances.get(5).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(5).getStatus());
+
+        assertEquals("sample", instances.get(6).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_INCOMPLETE, instances.get(6).getStatus());
+    }
+
+    @Test()
+    public void generateSubmissionUrl() {
+        String projectUrl = InstancesDao.generateSubmissionUrl(Constant.FormDeploymentFrom.PROJECT, "123", "98765");
+        String siteUrl = InstancesDao.generateSubmissionUrl(Constant.FormDeploymentFrom.SITE, "7876", "90871");
+
+        assertEquals("http://fieldsight.naxa.com.np/forms/submission/project/98765/123", projectUrl);
+        assertEquals("http://fieldsight.naxa.com.np/forms/submission/90871/7876", siteUrl);
+
+
     }
 
     @Test
     public void getFinalizedInstancesCursorTest() {
         Cursor cursor = instancesDao.getFinalizedInstancesCursor();
         List<Instance> instances = instancesDao.getInstancesFromCursor(cursor);
-        assertEquals(1, instances.size());
+        assertEquals(3, instances.size());
 
         assertEquals("Biggest N of Set", instances.get(0).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(0).getStatus());
+
+        assertEquals("Project Form", instances.get(1).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(1).getStatus());
+
+        assertEquals("Site Form", instances.get(2).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(2).getStatus());
     }
 
     @Test
@@ -124,13 +155,19 @@ public class InstancesDaoTest {
     public void getAllCompletedUndeletedInstancesCursorTest() {
         Cursor cursor = instancesDao.getAllCompletedUndeletedInstancesCursor();
         List<Instance> instances = instancesDao.getInstancesFromCursor(cursor);
-        assertEquals(2, instances.size());
+        assertEquals(4, instances.size());
 
         assertEquals("Biggest N of Set", instances.get(0).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_SUBMITTED, instances.get(0).getStatus());
 
         assertEquals("Biggest N of Set", instances.get(1).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(1).getStatus());
+
+        assertEquals("Project Form", instances.get(2).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(2).getStatus());
+
+        assertEquals("Site Form", instances.get(3).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
     }
 
     @Test
@@ -237,6 +274,28 @@ public class InstancesDaoTest {
                 .displaySubtext("Finalized on Mon, Feb 20, 2017 at 14:24")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance6));
+
+        Instance instance7 = new Instance.Builder()
+                .displayName("Project Form")
+                .instanceFilePath(Collect.INSTANCES_PATH + "/Project Form_2018-02-20_14-24-46/Project Form__2018-02-20_14-24-46.xml")
+                .jrFormId("FS_PROJECT")
+                .submissionUri("http://fieldsight.naxa.com.np/forms/submission/project/297461/129")
+                .status(InstanceProviderAPI.STATUS_COMPLETE)
+                .lastStatusChangeDate(1487597090653L)
+                .displaySubtext("Finalized on Mon, Feb 20, 2018 at 14:24")
+                .build();
+        instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance7));
+
+        Instance instance8 = new Instance.Builder()
+                .displayName("Site Form")
+                .instanceFilePath(Collect.INSTANCES_PATH + "/Site Form_2018-02-21_14-24-46/Site Form__2018-02-21_14-24-46.xml")
+                .jrFormId("FS_SITE")
+                .submissionUri("http://fieldsight.naxa.com.np/forms/submission/297461/12901")
+                .status(InstanceProviderAPI.STATUS_COMPLETE)
+                .lastStatusChangeDate(1487597090653L)
+                .displaySubtext("Finalized on Mon, Feb 21, 2018 at 14:24")
+                .build();
+        instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance8));
     }
 
     @After

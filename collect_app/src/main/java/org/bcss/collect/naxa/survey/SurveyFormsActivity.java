@@ -154,6 +154,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     public void onCardClicked(SurveyForm surveyForm) {
         String submissionUrl = generateSubmissionUrl(PROJECT, surveyForm.getProjectId(), surveyForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, "0");
 
         fillODKForm(surveyForm.getIdString());
     }

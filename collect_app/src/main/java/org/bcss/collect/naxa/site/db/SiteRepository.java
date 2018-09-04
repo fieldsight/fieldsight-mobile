@@ -13,6 +13,8 @@ import org.bcss.collect.naxa.login.model.Site;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+
 public class SiteRepository implements BaseRepository<GeneralForm> {
 
     private static SiteRepository INSTANCE = null;
@@ -78,14 +80,12 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
     }
 
     public void saveSiteAsOffline(Site site, Project project) {
-         site.setIsSiteVerified(Constant.SiteStatus.IS_UNVERIFIED_SITE);
+        site.setIsSiteVerified(Constant.SiteStatus.IS_UNVERIFIED_SITE);
         site.setProject(project.getId());
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                localSource.save(site);
-            }
-        });
+        site.setGeneralFormDeployedFrom(PROJECT);
+        site.setScheduleFormDeployedForm(PROJECT);
+        site.setStagedFormDeployedFrom(PROJECT);
+        AsyncTask.execute(() -> localSource.save(site));
 
     }
 }
