@@ -21,6 +21,7 @@ import java.util.List;
 
 public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.MyViewHolder> {
 
+    private final int VIEW_TYPE_SURVEY_FORM = 0, VIEW_TYPE_SITE = 1;
 
     private final List<Site> siteList;
     private final List<Site> filetredsitelist;
@@ -49,7 +50,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.MyView
         Site site = siteList.get(holder.getAdapterPosition());
         holder.from.setText(site.getName());
         holder.iconText.setText(site.getName().substring(0, 1));
-        setCardBackground(holder.getAdapterPosition(),holder.rooTLayout);
+        setCardBackground(holder.getAdapterPosition(), holder.rooTLayout);
 
     }
 
@@ -77,6 +78,11 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.MyView
     @Override
     public int getItemCount() {
         return siteList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {

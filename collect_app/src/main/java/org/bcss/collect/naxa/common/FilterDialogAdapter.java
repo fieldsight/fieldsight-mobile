@@ -26,17 +26,23 @@ import android.widget.TextView;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.ThemeUtils;
+import org.bcss.collect.naxa.common.FilterOption.FilterType;
 
 import java.util.ArrayList;
 
-public class FilterDialogAdapter extends RecyclerView.Adapter<FilterDialogAdapter.ViewHolder> {
+import static org.bcss.collect.naxa.common.FilterOption.FilterType.ALL_SITES;
+import static org.bcss.collect.naxa.common.FilterOption.FilterType.OFFLINE_SITES;
+import static org.bcss.collect.naxa.common.FilterOption.FilterType.SELECTED_REGION;
+
+public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_SPINNER = 1;
     private final FilterDialogAdapter.RecyclerViewClickListener listener;
-    private final FilterOption.FilterType selectedSortingOrder;
+    private final FilterType selectedSortingOrder;
     private final RecyclerView recyclerView;
     private final ThemeUtils themeUtils;
     private final ArrayList<FilterOption> sortList;
 
-    public FilterDialogAdapter(Context context, RecyclerView recyclerView, ArrayList<FilterOption> sortList, FilterOption.FilterType selectedSortingOrder, RecyclerViewClickListener recyclerViewClickListener) {
+    public FilterDialogAdapter(Context context, RecyclerView recyclerView, ArrayList<FilterOption> sortList, FilterType selectedSortingOrder, RecyclerViewClickListener recyclerViewClickListener) {
         themeUtils = new ThemeUtils(context);
         this.recyclerView = recyclerView;
         this.sortList = sortList;
@@ -46,22 +52,46 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<FilterDialogAdapte
 
     @NonNull
     @Override
-    public FilterDialogAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemLayoutView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.sort_item_layout, parent, false);
-        return new ViewHolder(itemLayoutView);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View itemLayoutView;
+        switch (viewType) {
+            case VIEW_TYPE_SPINNER:
+                itemLayoutView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.filter_item_layout, parent, false);
+                return new ViewHolderSpinner(itemLayoutView);
+            case VIEW_TYPE_TEXT:
+            default:
+                itemLayoutView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.sort_item_layout, parent, false);
+                return new ViewHolderText(itemLayoutView);
+
+        }
     }
+
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        viewHolder.txtViewTitle.setText(sortList.get(viewHolder.getAdapterPosition()).getLabel());
-        viewHolder.imgViewIcon.setImageResource(R.drawable.ic_sort_by_alpha);
-        viewHolder.imgViewIcon.setImageDrawable(DrawableCompat.wrap(viewHolder.imgViewIcon.getDrawable()).mutate());
-
-//        int color = position == selectedSortingOrder ? themeUtils.getAccentColor() : themeUtils.getPrimaryTextColor();
-//        viewHolder.txtViewTitle.setTextColor(color);
-//        DrawableCompat.setTintList(viewHolder.imgViewIcon.getDrawable(), position == selectedSortingOrder ? ColorStateList.valueOf(color) : null);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int viewType = holder.getItemViewType();
+        switch (viewType) {
+            case VIEW_TYPE_SPINNER:
+                ViewHolderSpinner viewHolderSpinner = (ViewHolderSpinner) holder;
+                viewHolderSpinner.imgViewIcon.setImageResource(R.drawable.ic_sort_by_alpha);
+                viewHolderSpinner.txtViewTitle.setText(sortList.get(viewHolderSpinner.getAdapterPosition()).getLabel());
+                break;
+            case VIEW_TYPE_TEXT:
+            default:
+                ViewHolderText viewHolder = (ViewHolderText) holder;
+                viewHolder.txtViewTitle.setText(sortList.get(viewHolder.getAdapterPosition()).getLabel());
+                viewHolder.imgViewIcon.setImageResource(R.drawable.ic_sort_by_alpha);
+                viewHolder.imgViewIcon.setImageDrawable(DrawableCompat.wrap(viewHolder.imgViewIcon.getDrawable()).mutate());
+                //        int color = position == selectedSortingOrder ? themeUtils.getAccentColor() : themeUtils.getPrimaryTextColor();
+                //        viewHolder.txtViewTitle.setTextColor(color);
+                //        DrawableCompat.setTintList(viewHolder.imgViewIcon.getDrawable(), position == selectedSortingOrder ? ColorStateList.valueOf(color) : null);
+                break;
+        }
     }
+
 
     // Return the size of your itemsData (invoked by the layout manager)
     @Override
@@ -69,13 +99,26 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<FilterDialogAdapte
         return sortList.size();
     }
 
-    // inner class to hold a reference to each item of RecyclerView
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+
+        switch (sortList.get(position).getType()) {
+            case SELECTED_REGION:
+                return VIEW_TYPE_SPINNER;
+            case ALL_SITES:
+            case OFFLINE_SITES:
+            default:
+                return VIEW_TYPE_TEXT;
+        }
+
+    }
+
+    public class ViewHolderSpinner extends RecyclerView.ViewHolder {
 
         TextView txtViewTitle;
         ImageView imgViewIcon;
 
-        ViewHolder(final View itemLayoutView) {
+        ViewHolderSpinner(final View itemLayoutView) {
             super(itemLayoutView);
             txtViewTitle = itemLayoutView.findViewById(R.id.title);
             imgViewIcon = itemLayoutView.findViewById(R.id.icon);
@@ -83,13 +126,42 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<FilterDialogAdapte
             itemLayoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onItemClicked(ViewHolder.this, getLayoutPosition(), sortList.get(getLayoutPosition()));
+//                    listener.onItemClicked(ViewHolderSpinner.this, getLayoutPosition(), sortList.get(getLayoutPosition()));
                 }
             });
         }
 
         public void updateItemColor(int selectedSortingOrder) {
-            ViewHolder previousHolder = (ViewHolder) recyclerView.findViewHolderForAdapterPosition(selectedSortingOrder);
+            ViewHolderText previousHolder = (ViewHolderText) recyclerView.findViewHolderForAdapterPosition(selectedSortingOrder);
+            previousHolder.txtViewTitle.setTextColor(themeUtils.getPrimaryTextColor());
+            DrawableCompat.setTintList(previousHolder.imgViewIcon.getDrawable(), null);
+
+            txtViewTitle.setTextColor(themeUtils.getAccentColor());
+            DrawableCompat.setTint(imgViewIcon.getDrawable(), themeUtils.getAccentColor());
+        }
+    }
+
+
+    public class ViewHolderText extends RecyclerView.ViewHolder {
+
+        TextView txtViewTitle;
+        ImageView imgViewIcon;
+
+        ViewHolderText(final View itemLayoutView) {
+            super(itemLayoutView);
+            txtViewTitle = itemLayoutView.findViewById(R.id.title);
+            imgViewIcon = itemLayoutView.findViewById(R.id.icon);
+
+            itemLayoutView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClicked(ViewHolderText.this, getLayoutPosition(), sortList.get(getLayoutPosition()));
+                }
+            });
+        }
+
+        public void updateItemColor(int selectedSortingOrder) {
+            ViewHolderText previousHolder = (ViewHolderText) recyclerView.findViewHolderForAdapterPosition(selectedSortingOrder);
             previousHolder.txtViewTitle.setTextColor(themeUtils.getPrimaryTextColor());
             DrawableCompat.setTintList(previousHolder.imgViewIcon.getDrawable(), null);
 
@@ -100,6 +172,6 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<FilterDialogAdapte
 
     public interface RecyclerViewClickListener {
 
-        void onItemClicked(ViewHolder holder, int position, FilterOption filterOption);
+        void onItemClicked(ViewHolderText holder, int position, FilterOption filterOption);
     }
 }
