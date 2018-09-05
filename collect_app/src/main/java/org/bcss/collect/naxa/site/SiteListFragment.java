@@ -1,22 +1,26 @@
 package org.bcss.collect.naxa.site;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.bcss.collect.android.utilities.ThemeUtils;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.FilterDialogAdapter;
+import org.bcss.collect.naxa.common.FilterOption;
+import org.bcss.collect.naxa.common.LinearLayoutManagerWrapper;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
@@ -27,6 +31,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -39,11 +44,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private SiteListAdapter siteListAdapter;
     private LiveData<List<Site>> allSitesLiveData;
     private LiveData<List<Site>> offlineSitesLiveData;
+    private BottomSheetDialog bottomSheetDialog;
+    private FilterOption.FilterType selectedFilter;
 
-    private enum FilterType {
-        OFFLINE_SITES,
-        ALL_SITES
-    }
 
     public static SiteListFragment getInstance(Project project) {
 
@@ -69,7 +72,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         offlineSitesLiveData = SiteLocalSource.getInstance()
                 .getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_UNVERIFIED_SITE);
 
-        assignFilterToList(FilterType.ALL_SITES);
+        assignFilterToList(FilterOption.FilterType.ALL_SITES);
         return view;
     }
 
@@ -81,11 +84,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     private void setupRecycleView() {
         siteListAdapter = new SiteListAdapter(new ArrayList<>(0), this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManagerWrapper(getActivity()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);
     }
 
-    private void assignFilterToList(FilterType type) {
+    private void assignFilterToList(FilterOption.FilterType type) {
         LiveData<List<Site>> source;
 
         switch (type) {
@@ -98,7 +102,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 break;
         }
         source.observe(this, sites -> {
-            ToastUtils.showLongToast("Applying filter");
             siteListAdapter.updateList(sites);
         });
 
@@ -106,9 +109,64 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (bottomSheetDialog == null) {
+            setupBottomSheet();
+        }
+    }
+
+    private void setupBottomSheet() {
+        CollectAbstractActivity activity = (CollectAbstractActivity) getActivity();
+        if (activity == null) {
+            Timber.e("Activity is null");
+            return;
+        }
+
+
+        bottomSheetDialog = new BottomSheetDialog(activity, new ThemeUtils(getContext()).getBottomDialogTheme());
+        View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
+        final RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
+
+        ArrayList<FilterOption> filterOptions = getFilterOptionForSites();
+
+
+        final FilterDialogAdapter adapter = new FilterDialogAdapter(getActivity(), recyclerView, filterOptions, getSelectedFilter(), (holder, position, filterOption) -> {
+            bottomSheetDialog.dismiss();
+            assignFilterToList(filterOption.getType());
+        });
+
+        recyclerView.setAdapter(adapter);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        bottomSheetDialog.setContentView(sheetView);
+    }
+
+    public ArrayList<FilterOption> getFilterOptionForSites() {
+
+        ArrayList<FilterOption> sortingOptions = new ArrayList<>();
+        sortingOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Site Region", new ArrayList<>(0)));
+        sortingOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline sites only", new ArrayList<>(0)));
+        sortingOptions.add(new FilterOption(FilterOption.FilterType.ALL_SITES, "All sites", new ArrayList<>(0)));
+
+        return sortingOptions;
+
+
+    }
+
+    protected FilterOption.FilterType getSelectedFilter() {
+        if (selectedFilter == null) {
+            return FilterOption.FilterType.ALL_SITES;
+        }
+        return selectedFilter;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_filter) {
-            assignFilterToList(FilterType.OFFLINE_SITES);
+            bottomSheetDialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
