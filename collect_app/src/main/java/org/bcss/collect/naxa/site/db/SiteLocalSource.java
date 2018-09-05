@@ -43,6 +43,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteByProjectId(projectId);
     }
 
+    public LiveData<List<Site>> getByIdAndSiteStatus(String projectId, int status) {
+        return dao.getByIdOfflineSites(projectId, status);
+    }
+
     public LiveData<List<Site>> getBySiteId(String siteId) {
         return dao.getSiteById(siteId);
     }

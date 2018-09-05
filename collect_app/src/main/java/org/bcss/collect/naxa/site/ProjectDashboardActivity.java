@@ -460,10 +460,10 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        SiteListFragment siteListFragment = SiteListFragment.getInstance(projectId, loadedProject);
+        SiteListFragment siteListFragment = SiteListFragment.getInstance(loadedProject);
         ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.getInstance();
-        MapFragment mapFragment = MapFragment.getInstance(loadedProject);
 
+        MapFragment mapFragment = MapFragment.getInstance(loadedProject);
         fragments.add(siteListFragment);
         fragments.add(projectContactsFragment);
         fragments.add(mapFragment);

@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.site;
 
+import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
 import org.bcss.collect.naxa.login.model.Site;
@@ -44,10 +45,14 @@ public class SiteListDiffCallback extends DiffUtil.Callback {
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         Site oldSite = oldList.get(oldItemPosition);
         Site newSite = newList.get(newItemPosition);
-
         return newSite.equals(oldSite);
+    }
 
 
+    @Nullable
+    @Override
+    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+        return super.getChangePayload(oldItemPosition, newItemPosition);
     }
 
 }

@@ -28,4 +28,12 @@
         app:showAsAction="never" />
 
 
+    <item
+        android:visible="true"
+        android:id="@+id/action_filter"
+        android:icon="@drawable/ic_filter_list"
+        android:title="Filter"
+        app:showAsAction="ifRoom" />
+
+
 </menu>
