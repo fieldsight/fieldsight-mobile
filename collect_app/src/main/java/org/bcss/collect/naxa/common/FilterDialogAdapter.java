@@ -1,5 +1,5 @@
 package org.bcss.collect.naxa.common;/*
- * Copyright (C) 2017 Shobhit
+ * Copyright (C) 2017 Nishon
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,23 +17,29 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.utilities.ThemeUtils;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.FilterOption.FilterType;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_SPINNER = 1;
+    private final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_SPINNER = 1, VIEW_TYPE_BUTTON = 2;
     private final FilterDialogAdapter.RecyclerViewClickListener listener;
     private final FilterType selectedSortingOrder;
     private final RecyclerView recyclerView;
@@ -68,6 +74,11 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 itemLayoutView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.filter_item_layout, parent, false);
                 return new ViewHolderSpinner(itemLayoutView);
+
+            case VIEW_TYPE_BUTTON:
+                itemLayoutView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.filter_item_button, parent, false);
+                return new ViewHolderButton(itemLayoutView);
             case VIEW_TYPE_TEXT:
             default:
                 itemLayoutView = LayoutInflater.from(parent.getContext())
@@ -89,10 +100,28 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 FilterOption filterOption = sortList.get(viewHolderSpinner.getAdapterPosition());
                 if (filterOption.getOptions() != null) {
-                    PairSpinnerAdapter pairSpinnerAdapter = new PairSpinnerAdapter(((ViewHolderSpinner) holder).spinnerSiteCluster.getContext(),android.R.layout.simple_spinner_dropdown_item,filterOption.getOptions());
+                    PairSpinnerAdapter pairSpinnerAdapter = new PairSpinnerAdapter(((ViewHolderSpinner) holder).spinnerSiteCluster.getContext(), android.R.layout.simple_spinner_dropdown_item, filterOption.getOptions());
                     viewHolderSpinner.spinnerSiteCluster.setAdapter(pairSpinnerAdapter);
                 }
 
+                Pair intialIdLabelPair = (Pair) ((ViewHolderSpinner) holder).spinnerSiteCluster.getSelectedItem();
+                filterOption.setSelection(String.valueOf(intialIdLabelPair.first));
+
+                viewHolderSpinner.spinnerSiteCluster.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Pair tappedIdLabelPair = filterOption.getOptions().get(position);
+                        filterOption.setSelection(String.valueOf(tappedIdLabelPair.first));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                break;
+            case VIEW_TYPE_BUTTON:
                 break;
             case VIEW_TYPE_TEXT:
             default:
@@ -108,13 +137,12 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    // Return the size of your itemsData (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return sortList.size();
     }
 
-    public ArrayList<FilterOption> getAll(){
+    public ArrayList<FilterOption> getAll() {
         return sortList;
     }
 
@@ -125,6 +153,8 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case SELECTED_REGION:
             case SITE:
                 return VIEW_TYPE_SPINNER;
+            case CONFIRM_BUTTON:
+                return VIEW_TYPE_BUTTON;
             case ALL_SITES:
             case OFFLINE_SITES:
             default:
@@ -133,24 +163,6 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
-
-    public void toggleSelection(int pos) {
-        currentSelectedIndex = pos;
-        if (selectedItems.get(pos, false)) {
-            selectedItems.delete(pos);
-            animationItemsIndex.delete(pos);
-        } else {
-            selectedItems.put(pos, true);
-            animationItemsIndex.put(pos, true);
-        }
-        notifyItemChanged(pos);
-    }
-
-    public void clearSelections() {
-        reverseAllAnimations = true;
-        selectedItems.clear();
-        notifyDataSetChanged();
-    }
 
     public class ViewHolderSpinner extends RecyclerView.ViewHolder {
 
@@ -163,14 +175,6 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             txtViewTitle = itemLayoutView.findViewById(R.id.title);
             imgViewIcon = itemLayoutView.findViewById(R.id.icon);
             spinnerSiteCluster = itemLayoutView.findViewById(R.id.filter_item_layout_spinner);
-
-
-            itemLayoutView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    listener.onItemClicked(ViewHolderSpinner.this, getLayoutPosition(), sortList.get(getLayoutPosition()));
-                }
-            });
         }
 
         public void updateItemColor(int selectedSortingOrder) {
@@ -212,8 +216,27 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public interface RecyclerViewClickListener {
+    public class ViewHolderButton extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        Button button;
+
+
+        ViewHolderButton(final View itemLayoutView) {
+            super(itemLayoutView);
+            button = itemLayoutView.findViewById(R.id.filter_apply);
+            button.setOnClickListener(this);
+        }
+
+
+        @Override
+        public void onClick(View v) {
+
+            listener.onFilterButtonClicked(sortList);
+        }
+    }
+
+    public interface RecyclerViewClickListener {
+        void onFilterButtonClicked(ArrayList<FilterOption> sortList);
         void onItemClicked(ViewHolderText holder, int position, FilterOption filterOption);
     }
 }

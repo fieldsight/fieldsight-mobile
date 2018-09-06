@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import org.bcss.collect.android.activities.InstanceUploaderActivity;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ThemeUtils;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
@@ -75,6 +77,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     private ActionMode actionMode;
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
+    private LiveData<List<Site>> filteredSiteLiveData;
 
 
     public static SiteListFragment getInstance(Project project) {
@@ -98,9 +101,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
         allSitesLiveData = SiteLocalSource.getInstance().getById(loadedProject.getId());
-
-        offlineSitesLiveData = SiteLocalSource.getInstance()
-                .getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_UNVERIFIED_SITE);
+        offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_UNVERIFIED_SITE);
 
 
         assignFilterToList(FilterOption.FilterType.ALL_SITES);
@@ -141,6 +142,32 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     }
 
+    private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                String selectedRegion = "";
+                String site = "";
+
+                for (FilterOption filterOption : sortList) {
+                    switch (filterOption.getType()) {
+                        case SITE:
+                            selectedRegion = filterOption.getSelection();
+                            break;
+                        case SELECTED_REGION:
+                            site = filterOption.getSelection();
+                            break;
+                    }
+                }
+
+                filteredSiteLiveData = SiteLocalSource.getInstance().getByIdStatusAndCluster(loadedProject.getId(),site,selectedRegion);
+
+
+
+            }
+        });
+    }
+
 
     @Override
     public void onResume() {
@@ -166,10 +193,19 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         filterOptions.observe(this, new Observer<ArrayList<FilterOption>>() {
             @Override
             public void onChanged(@Nullable ArrayList<FilterOption> filterOptions) {
-                final FilterDialogAdapter adapter = new FilterDialogAdapter(getActivity(), recyclerView, filterOptions, getSelectedFilter(), (holder, position, filterOption) -> {
-                    bottomSheetDialog.dismiss();
-                    assignFilterToList(filterOption.getType());
+                final FilterDialogAdapter adapter = new FilterDialogAdapter(getActivity(), recyclerView, filterOptions, getSelectedFilter(), new FilterDialogAdapter.RecyclerViewClickListener() {
+                    @Override
+                    public void onFilterButtonClicked(ArrayList<FilterOption> sortList) {
+                        bottomSheetDialog.dismiss();
+                        ToastUtils.showShortToast("Not Implemented yet");
+                        collectFilterAndApply(sortList);
+                    }
 
+                    @Override
+                    public void onItemClicked(FilterDialogAdapter.ViewHolderText holder, int position, FilterOption filterOption) {
+                        bottomSheetDialog.dismiss();
+                        assignFilterToList(filterOption.getType());
+                    }
                 });
 
                 recyclerView.setAdapter(adapter);
@@ -209,6 +245,8 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         ArrayList<FilterOption> filterOptions = new ArrayList<>();
 
                         filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Site Region", pairs));
+                        filterOptions.add(new FilterOption(FilterOption.FilterType.SITE, "Site ", sites));
+                        filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline Site(s)", new ArrayList<>(0)));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.ALL_SITES, "All Site(s)", new ArrayList<>(0)));
 
