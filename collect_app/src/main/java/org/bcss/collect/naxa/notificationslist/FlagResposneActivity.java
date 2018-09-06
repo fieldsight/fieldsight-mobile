@@ -400,7 +400,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
 
     @Override
     public void onItemClick(View view, int position, List<NotificationImage> urls) {
-        Timber.i(" Load item at %s from the list of size %s ", position, urls.size());
+        Timber.i(" Load item at %s siteName the list of size %s ", position, urls.size());
         loadSlideShowLayout(position, new ArrayList<NotificationImage>(urls));
 
     }

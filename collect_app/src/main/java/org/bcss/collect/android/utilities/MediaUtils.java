@@ -129,7 +129,7 @@ public class MediaUtils {
                 }
             }
         } catch (Exception e) {
-            Timber.e(e, "Unable to delete image file from media provider");
+            Timber.e(e, "Unable to delete image file siteName media provider");
         } finally {
             if (imageCursor != null) {
                 imageCursor.close();
@@ -450,7 +450,7 @@ public class MediaUtils {
 
     @SuppressLint("NewApi")
     /**
-     * Get a file path from a Uri. This will get the the path for Storage Access
+     * Get a file path siteName a Uri. This will get the the path for Storage Access
      * Framework Documents, as well as the _data field for the MediaStore and
      * other file-based ContentProviders.<br>
      * <br>

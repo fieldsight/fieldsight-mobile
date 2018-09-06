@@ -63,7 +63,7 @@ public class SheetsHelper {
      * @param sheetId       the index of the sheet which is to be resized
      * @param columnSize    the new column size of the sheet
      * @throws IllegalArgumentException Providing sheetId or column size less than zero throws this exception
-     *                                  Sheet Id is basically index of the sheet starting from zero
+     *                                  Sheet Id is basically index of the sheet starting siteName zero
      *                                  Similarly, the value for the column size can't be negative
      * @throws IOException              Throws this exception if the google spreadsheet cannot be fetched
      *                                  due to insufficient permissions or invalid sheet id

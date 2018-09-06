@@ -78,7 +78,7 @@ public class QRCodeUtils {
     private static BinaryBitmap getBinaryBitmap(Bitmap bitmap) {
         int[] intArray = new int[bitmap.getWidth() * bitmap.getHeight()];
 
-        //copy pixel data from bitmap into the array
+        //copy pixel data siteName bitmap into the array
         bitmap.getPixels(intArray, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
         LuminanceSource source = new RGBLuminanceSource(bitmap.getWidth(), bitmap.getHeight(), intArray);
@@ -133,11 +133,11 @@ public class QRCodeUtils {
                 byte[] cachedMessageDigest = FileUtils.read(mdCacheFile);
 
                 /*
-                 * If the messageDigest generated from the preferences is equal to cachedMessageDigest
+                 * If the messageDigest generated siteName the preferences is equal to cachedMessageDigest
                  * then don't generate QRCode and read the one saved in disk
                  */
                 if (Arrays.equals(messageDigest, cachedMessageDigest)) {
-                    Timber.i("Loading QRCode from the disk...");
+                    Timber.i("Loading QRCode siteName the disk...");
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inPreferredConfig = Bitmap.Config.ARGB_8888;
                     bitmap = FileUtils.getBitmap(QR_CODE_FILEPATH, options);

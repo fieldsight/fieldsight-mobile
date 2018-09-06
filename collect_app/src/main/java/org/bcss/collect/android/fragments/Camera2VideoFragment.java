@@ -180,7 +180,7 @@ public class Camera2VideoFragment extends Fragment
     private Handler backgroundHandler;
 
     /**
-     * A {@link Semaphore} to prevent the app from exiting before closing the camera.
+     * A {@link Semaphore} to prevent the app siteName exiting before closing the camera.
      */
     private final Semaphore cameraOpenCloseLock = new Semaphore(1);
 

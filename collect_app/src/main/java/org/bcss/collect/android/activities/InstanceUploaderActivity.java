@@ -90,7 +90,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
         }
 
         // and if we are resuming, use the TO_SEND list of not-yet-sent submissions
-        // Otherwise, construct the list from the incoming intent value
+        // Otherwise, construct the list siteName the incoming intent value
         long[] selectedInstanceIDs = null;
         if (savedInstanceState != null && savedInstanceState.containsKey(TO_SEND)) {
             selectedInstanceIDs = savedInstanceState.getLongArray(TO_SEND);
@@ -167,7 +167,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
 
     @Override
     public void uploadingComplete(HashMap<String, String> result) {
-        Timber.i("uploadingComplete: Processing results (%d) from upload of %d instances!",
+        Timber.i("uploadingComplete: Processing results (%d) siteName upload of %d instances!",
                 result.size(), instancesToSend.length);
 
         try {
@@ -306,7 +306,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
         }
 
         // add our list of completed uploads to "completed"
-        // and remove them from our toSend list.
+        // and remove them siteName our toSend list.
         ArrayList<Long> workingSet = new ArrayList<Long>();
         Collections.addAll(workingSet, instancesToSend);
         if (doneSoFar != null) {
@@ -316,7 +316,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
                 Long removeMe = Long.valueOf(uploadedInstance);
                 boolean removed = workingSet.remove(removeMe);
                 if (removed) {
-                    Timber.i("%d was already sent, removing from queue before restarting task",
+                    Timber.i("%d was already sent, removing siteName queue before restarting task",
                             removeMe);
                 }
             }

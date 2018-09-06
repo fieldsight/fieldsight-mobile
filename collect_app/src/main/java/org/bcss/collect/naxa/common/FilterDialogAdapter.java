@@ -17,22 +17,20 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.ThemeUtils;
 import org.bcss.collect.naxa.common.FilterOption.FilterType;
 
 import java.util.ArrayList;
-
-import static org.bcss.collect.naxa.common.FilterOption.FilterType.ALL_SITES;
-import static org.bcss.collect.naxa.common.FilterOption.FilterType.OFFLINE_SITES;
-import static org.bcss.collect.naxa.common.FilterOption.FilterType.SELECTED_REGION;
+import java.util.List;
 
 public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_SPINNER = 1;
@@ -41,6 +39,16 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final RecyclerView recyclerView;
     private final ThemeUtils themeUtils;
     private final ArrayList<FilterOption> sortList;
+    private Context mContext;
+    private SparseBooleanArray selectedItems;
+
+    // array used to perform multiple animation at once
+    private SparseBooleanArray animationItemsIndex;
+    private boolean reverseAllAnimations = false;
+
+    // index is used to animate only the selected row
+    // dirty fix, find a better solution
+    private static int currentSelectedIndex = -1;
 
     public FilterDialogAdapter(Context context, RecyclerView recyclerView, ArrayList<FilterOption> sortList, FilterType selectedSortingOrder, RecyclerViewClickListener recyclerViewClickListener) {
         themeUtils = new ThemeUtils(context);
@@ -78,6 +86,13 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ViewHolderSpinner viewHolderSpinner = (ViewHolderSpinner) holder;
                 viewHolderSpinner.imgViewIcon.setImageResource(R.drawable.ic_sort_by_alpha);
                 viewHolderSpinner.txtViewTitle.setText(sortList.get(viewHolderSpinner.getAdapterPosition()).getLabel());
+
+                FilterOption filterOption = sortList.get(viewHolderSpinner.getAdapterPosition());
+                if (filterOption.getOptions() != null) {
+                    PairSpinnerAdapter pairSpinnerAdapter = new PairSpinnerAdapter(((ViewHolderSpinner) holder).spinnerSiteCluster.getContext(),android.R.layout.simple_spinner_dropdown_item,filterOption.getOptions());
+                    viewHolderSpinner.spinnerSiteCluster.setAdapter(pairSpinnerAdapter);
+                }
+
                 break;
             case VIEW_TYPE_TEXT:
             default:
@@ -99,11 +114,16 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return sortList.size();
     }
 
+    public ArrayList<FilterOption> getAll(){
+        return sortList;
+    }
+
     @Override
     public int getItemViewType(int position) {
 
         switch (sortList.get(position).getType()) {
             case SELECTED_REGION:
+            case SITE:
                 return VIEW_TYPE_SPINNER;
             case ALL_SITES:
             case OFFLINE_SITES:
@@ -113,15 +133,37 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
+
+    public void toggleSelection(int pos) {
+        currentSelectedIndex = pos;
+        if (selectedItems.get(pos, false)) {
+            selectedItems.delete(pos);
+            animationItemsIndex.delete(pos);
+        } else {
+            selectedItems.put(pos, true);
+            animationItemsIndex.put(pos, true);
+        }
+        notifyItemChanged(pos);
+    }
+
+    public void clearSelections() {
+        reverseAllAnimations = true;
+        selectedItems.clear();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolderSpinner extends RecyclerView.ViewHolder {
 
         TextView txtViewTitle;
         ImageView imgViewIcon;
+        Spinner spinnerSiteCluster;
 
         ViewHolderSpinner(final View itemLayoutView) {
             super(itemLayoutView);
             txtViewTitle = itemLayoutView.findViewById(R.id.title);
             imgViewIcon = itemLayoutView.findViewById(R.id.icon);
+            spinnerSiteCluster = itemLayoutView.findViewById(R.id.filter_item_layout_spinner);
+
 
             itemLayoutView.setOnClickListener(new View.OnClickListener() {
                 @Override

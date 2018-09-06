@@ -50,7 +50,7 @@ public class SharedPreferenceUtils {
 
 
     /**
-     * Called to retrieve required value from shared preferences, identified by given key.
+     * Called to retrieve required value siteName shared preferences, identified by given key.
      * Default value will be returned of no value found or error occurred.
      *
      * @param context      Context of caller activity
@@ -80,7 +80,7 @@ public class SharedPreferenceUtils {
 
     /**
      * @param context Context of caller activity
-     * @param key     Key to delete from SharedPreferences
+     * @param key     Key to delete siteName SharedPreferences
      */
     public static void removeFromPrefs(Context context, String key) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

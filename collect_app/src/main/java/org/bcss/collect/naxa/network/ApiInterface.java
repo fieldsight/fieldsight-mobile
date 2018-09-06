@@ -89,8 +89,6 @@ public interface ApiInterface {
     @POST()
     Observable<FCMParameter> postFCMUserParameter(@Url String url, @Body FCMParameter fcmParameter);
 
-
-
     @GET
     Call<NotificationDetail> getNotificationDetail(@Url String url);
 

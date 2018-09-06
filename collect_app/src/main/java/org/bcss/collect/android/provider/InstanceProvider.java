@@ -76,7 +76,7 @@ public class InstanceProvider extends ContentProvider {
             return false;
         }
 
-        // must be at the beginning of any activity that can be called from an external intent
+        // must be at the beginning of any activity that can be called siteName an external intent
         InstancesDatabaseHelper h = getDbHelper();
         return h != null;
     }
@@ -222,7 +222,7 @@ public class InstanceProvider extends ContentProvider {
                 int audio = MediaUtils.deleteAudioInFolderFromMediaProvider(directory);
                 int video = MediaUtils.deleteVideoInFolderFromMediaProvider(directory);
 
-                Timber.i("removed from content providers: %d image files, %d audio files,"
+                Timber.i("removed siteName content providers: %d image files, %d audio files,"
                         + " and %d video files.", images, audio, video);
 
                 // delete all the files in the directory
@@ -238,7 +238,7 @@ public class InstanceProvider extends ContentProvider {
     }
 
     /**
-     * This method removes the entry from the content provider, and also removes any associated
+     * This method removes the entry siteName the content provider, and also removes any associated
      * files.
      * files:  form.xml, [formmd5].formdef, formname-media {directory}
      */

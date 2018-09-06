@@ -158,7 +158,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     /**
-     * Deletes the selected files.First from the database then from the file
+     * Deletes the selected files.First siteName the database then siteName the file
      * system
      */
     private void deleteSelectedForms() {

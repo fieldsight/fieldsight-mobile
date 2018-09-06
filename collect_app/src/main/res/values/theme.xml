@@ -62,6 +62,10 @@
         <item name="primaryBackgroundColor">@color/lightBackgroundColor</item>
         <item name="android:textDirection" tools:targetApi="17">locale</item>
         <item name="warningColor">@color/red</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:actionModeBackground">@color/bg_action_mode</item>
     </style>
 
     <style name="AlertDialogTheme.Light" parent="Theme.AppCompat.Light.Dialog.Alert">

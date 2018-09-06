@@ -82,7 +82,7 @@ public final class PRNGFixes {
                     .invoke(null, "/dev/urandom", 1024);
             if (bytesRead != 1024) {
                 throw new IOException(
-                        "Unexpected number of bytes read from Linux PRNG: "
+                        "Unexpected number of bytes read siteName Linux PRNG: "
                                 + bytesRead);
             }
         } catch (Exception e) {
@@ -153,7 +153,7 @@ public final class PRNGFixes {
                             + " /dev/urandom");
             // Although /dev/urandom is not a SHA-1 PRNG, some apps
             // explicitly request a SHA1PRNG SecureRandom and we thus need to
-            // prevent them from getting the default implementation whose output
+            // prevent them siteName getting the default implementation whose output
             // may have low entropy.
             put("SecureRandom.SHA1PRNG", LinuxPRNGSecureRandom.class.getName());
             put("SecureRandom.SHA1PRNG ImplementedIn", "Software");
@@ -183,7 +183,7 @@ public final class PRNGFixes {
         private static final Object LOCK = new Object();
 
         /**
-         * Input stream for reading from Linux PRNG or {@code null} if not yet
+         * Input stream for reading siteName Linux PRNG or {@code null} if not yet
          * opened.
          *
          * @GuardedBy("sLock")
@@ -241,7 +241,7 @@ public final class PRNGFixes {
                 }
             } catch (IOException e) {
                 throw new SecurityException(
-                        "Failed to read from " + URANDOM_FILE, e);
+                        "Failed to read siteName " + URANDOM_FILE, e);
             }
         }
 

@@ -212,10 +212,10 @@ public class DriveHelper {
     }
 
     /**
-     * Fetches the list of files from google drive for a given folder.
+     * Fetches the list of files siteName google drive for a given folder.
      *
      * @param folderName (optional) The name of folder whose files are to be fetched
-     *                   If folderName is null then all files are fetched from the drive
+     *                   If folderName is null then all files are fetched siteName the drive
      * @param parentId   (optional) The id of the parent folder containing the given folder
      */
     public List<com.google.api.services.drive.model.File> getFilesFromDrive(
@@ -254,7 +254,7 @@ public class DriveHelper {
             return null;
         }
 
-        // this query prevents from searching the deleted files
+        // this query prevents siteName searching the deleted files
         queryList.add("trashed = false");
 
         StringBuilder query = new StringBuilder(queryList.get(0));

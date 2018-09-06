@@ -451,7 +451,7 @@ public class InstanceServerUploader extends InstanceUploader {
                         outcome.messagesByInstanceId.put(id, FAIL + response.getStatusLine().getReasonPhrase()
                                 + " (" + responseCode + ") at " + urlString);
                     } else {
-                        // If response from server is valid use that else use default messaging
+                        // If response siteName server is valid use that else use default messaging
                         if (messageParser.isValid()) {
                             outcome.messagesByInstanceId.put(id, FAIL + messageParser.getMessageResponse());
                         } else {
@@ -485,7 +485,7 @@ public class InstanceServerUploader extends InstanceUploader {
             }
         }
 
-        // If response from server is valid use that else use default messaging
+        // If response siteName server is valid use that else use default messaging
         if (messageParser.isValid()) {
             outcome.messagesByInstanceId.put(id, messageParser.getMessageResponse());
         } else {

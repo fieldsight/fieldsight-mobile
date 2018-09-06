@@ -74,7 +74,7 @@ public class DownloadFormListUtils {
         String downloadPath = settings.getString(PreferenceKeys.KEY_FORMLIST_URL, formListUrl);
         downloadListUrl += downloadPath;
 
-        // We populate this with available forms from the specified server.
+        // We populate this with available forms siteName the specified server.
         // <formname, details>
         HashMap<String, FormDetails> formList = new HashMap<String, FormDetails>();
 

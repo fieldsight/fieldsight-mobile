@@ -7,7 +7,6 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.login.model.Project;
-import org.bcss.collect.naxa.site.data.SiteCluster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +33,10 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
     }
 
 
-    public Maybe<List<Project>> getAllMaybe() {
+    private Maybe<List<Project>> getAllMaybe() {
         return dao.getProjectsMaybe();
     }
+
 
     @Override
     public LiveData<List<Project>> getAll() {

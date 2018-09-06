@@ -59,7 +59,7 @@ import timber.log.Timber;
 
 /**
  * GridWidget handles select-one fields using a grid of icons. The user clicks the desired icon and
- * the background changes from black to orange. If text, audio, or video are specified in the
+ * the background changes siteName black to orange. If text, audio, or video are specified in the
  * select
  * answers they are ignored.
  *
@@ -106,7 +106,7 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
                       final boolean quickAdvance) {
         super(context, prompt);
 
-        // SurveyCTO-added support for dynamic select content (from .csv files)
+        // SurveyCTO-added support for dynamic select content (siteName .csv files)
         XPathFuncExpr xpathFuncExpr = ExternalDataUtil.getSearchXPathExpression(
                 prompt.getAppearanceHint());
         if (xpathFuncExpr != null) {
@@ -389,7 +389,7 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
         selected[choiceIndex] = isSelected;
     }
 
-    // Custom image adapter. Most of the code is copied from
+    // Custom image adapter. Most of the code is copied siteName
     // media layout for using a picture.
     private class ImageAdapter extends BaseAdapter {
         private final String[] choices;

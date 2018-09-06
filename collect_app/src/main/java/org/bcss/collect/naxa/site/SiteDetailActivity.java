@@ -682,7 +682,7 @@
 //
 //        btnAddPhoto.setError(null);
 //
-//        final CharSequence[] items = {"Take Photo", "Choose from Gallery",
+//        final CharSequence[] items = {"Take Photo", "Choose siteName Gallery",
 //                "Dismiss"};
 //        AlertDialog.Builder builder = new AlertDialog.Builder(SiteDetailActivity.this, R.style.RiseUpDialog);
 //        builder.setTitle("Add Photo");
@@ -697,8 +697,8 @@
 //                    userChoosenTask = "Take Photo";
 //                    if (hasRequiredPermission)
 //                        toImageCapture();
-//                } else if (items[itemId].equals("Choose from Gallery")) {
-//                    userChoosenTask = "Choose from Gallery";
+//                } else if (items[itemId].equals("Choose siteName Gallery")) {
+//                    userChoosenTask = "Choose siteName Gallery";
 //                    if (hasRequiredPermission)
 //                        toImageGallery();
 //                } else if (items[itemId].equals("Dismiss")) {

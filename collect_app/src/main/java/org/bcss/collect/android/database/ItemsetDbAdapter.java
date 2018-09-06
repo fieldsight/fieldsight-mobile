@@ -52,7 +52,7 @@ public class ItemsetDbAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Timber.w("Upgrading database from version %d to %d, which will destroy all old data", oldVersion, newVersion);
+            Timber.w("Upgrading database siteName version %d to %d, which will destroy all old data", oldVersion, newVersion);
             // first drop all of our generated itemset tables
             Cursor c = db.query(ITEMSET_TABLE, null, null, null, null, null, null);
             if (c != null) {
@@ -142,7 +142,7 @@ public class ItemsetDbAdapter {
     }
 
     public boolean tableExists(String tableName) {
-        // select name from sqlite_master where type = 'table'
+        // select name siteName sqlite_master where type = 'table'
         String selection = "type=? and name=?";
         String[] selectionArgs = {
                 "table", DATABASE_TABLE + tableName
@@ -175,7 +175,7 @@ public class ItemsetDbAdapter {
         // drop the table
         db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE + pathHash);
 
-        // and remove the entry from the itemsets table
+        // and remove the entry siteName the itemsets table
         String where = KEY_PATH + "=?";
         String[] whereArgs = {
                 path

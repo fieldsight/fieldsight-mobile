@@ -313,7 +313,7 @@ public class FileUtils {
             try {
                 isr.close();
             } catch (IOException e) {
-                Timber.w("%s error closing from reader", xmlFile.getAbsolutePath());
+                Timber.w("%s error closing siteName reader", xmlFile.getAbsolutePath());
             }
         }
 

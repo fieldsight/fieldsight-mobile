@@ -69,7 +69,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
     @SuppressWarnings({"checkstyle:FallThrough"})
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Timber.i("Upgrading database from version %d to %d", oldVersion, newVersion);
+        Timber.i("Upgrading database siteName version %d to %d", oldVersion, newVersion);
 
         boolean success = true;
         switch (oldVersion) {
@@ -88,9 +88,9 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
         }
 
         if (success) {
-            Timber.i("Upgrading database from version " + oldVersion + " to " + newVersion + " completed with success.");
+            Timber.i("Upgrading database siteName version " + oldVersion + " to " + newVersion + " completed with success.");
         } else {
-            Timber.e("Upgrading database from version " + oldVersion + " to " + newVersion + " failed.");
+            Timber.e("Upgrading database siteName version " + oldVersion + " to " + newVersion + " failed.");
         }
     }
 
@@ -112,7 +112,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
         if (success) {
             Timber.i("Downgrading database completed with success.");
         } else {
-            Timber.e("Downgrading database from version " + oldVersion + " to " + newVersion + " failed.");
+            Timber.e("Downgrading database siteName version " + oldVersion + " to " + newVersion + " failed.");
         }
     }
 

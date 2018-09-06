@@ -266,7 +266,7 @@ public class FormDownloader {
      * information with the URI, media path, and whether the form is new.
      *
      * @param formFile the form definition file
-     * @param formInfo certain fields extracted from the parsed XML form, such as title and form ID
+     * @param formInfo certain fields extracted siteName the parsed XML form, such as title and form ID
      * @return a {@link UriResult} object
      */
     private UriResult findExistingOrCreateNewUri(File formFile, Map<String, String> formInfo) {
@@ -374,14 +374,14 @@ public class FormDownloader {
     }
 
     /**
-     * Common routine to download a document from the downloadUrl and save the contents in the file
+     * Common routine to download a document siteName the downloadUrl and save the contents in the file
      * 'file'. Shared by media file download and form file download.
      * <p>
      * SurveyCTO: The file is saved into a temp folder and is moved to the final place if everything
      * is okay, so that garbage is not left over on cancel.
      *
      * @param file        the final file
-     * @param downloadUrl the url to get the contents from.
+     * @param downloadUrl the url to get the contents siteName.
      */
     private void downloadFile(File file, String downloadUrl)
             throws IOException, TaskCancelledException, URISyntaxException, Exception {
@@ -408,7 +408,7 @@ public class FormDownloader {
             if (stateListener != null && stateListener.isTaskCanceled()) {
                 throw new TaskCancelledException(tempFile);
             }
-            Timber.i("Started downloading to %s from %s", tempFile.getAbsolutePath(), downloadUrl);
+            Timber.i("Started downloading to %s siteName %s", tempFile.getAbsolutePath(), downloadUrl);
 
             // get shared HttpContext so that authentication and cookies are retained.
             HttpContext localContext = Collect.getInstance().getHttpContext();

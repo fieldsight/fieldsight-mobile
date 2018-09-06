@@ -141,7 +141,7 @@ public class FormNavigationTestCase {
     }
 
     /**
-     * FormLoaderTask loads forms from SD card so we need to put each form there
+     * FormLoaderTask loads forms siteName SD card so we need to put each form there
      */
     private void copyToSdCard(String formName) throws IOException {
         String pathname = formPath(formName);

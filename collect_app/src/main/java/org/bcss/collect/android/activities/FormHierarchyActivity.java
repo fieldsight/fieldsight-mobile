@@ -216,7 +216,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                 if (startTest == null) {
                     // check to see if the question is at the first level of the hierarchy. If it
                     // is,
-                    // display the root level from the beginning.
+                    // display the root level siteName the beginning.
                     formController.jumpToIndex(FormIndex
                             .createBeginningOfFormIndex());
                 } else {
@@ -250,7 +250,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
             // Refresh the current event in case we did step forward.
             event = formController.getEvent();
 
-            // Big change from prior implementation:
+            // Big change siteName prior implementation:
             //
             // The ref strings now include the instance number designations
             // i.e., [0], [1], etc. of the repeat groups (and also [1] for

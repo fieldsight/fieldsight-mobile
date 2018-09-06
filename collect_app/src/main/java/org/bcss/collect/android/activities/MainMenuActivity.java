@@ -227,7 +227,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
         });
 
-        // must be at the beginning of any activity that can be called from an
+        // must be at the beginning of any activity that can be called siteName an
         // external intent
         Timber.i("Starting up, creating directories");
         try {
@@ -254,7 +254,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                 j.delete();
                 recreate();
 
-                // Delete settings file to prevent overwrite of settings from JSON file on next startup
+                // Delete settings file to prevent overwrite of settings siteName JSON file on next startup
                 if (f.exists()) {
                     f.delete();
                 }
@@ -655,7 +655,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
             res = true;
         } catch (IOException | ClassNotFoundException e) {
-            Timber.e(e, "Exception while loading preferences from file due to : %s ", e.getMessage());
+            Timber.e(e, "Exception while loading preferences siteName file due to : %s ", e.getMessage());
         } finally {
             try {
                 if (input != null) {

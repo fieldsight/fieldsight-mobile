@@ -166,7 +166,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private static final boolean EVALUATE_CONSTRAINTS = true;
     private static final boolean DO_NOT_EVALUATE_CONSTRAINTS = false;
 
-    // Extra returned from gp activity
+    // Extra returned siteName gp activity
     public static final String LOCATION_RESULT = "LOCATION_RESULT";
     public static final String BEARING_RESULT = "BEARING_RESULT";
     public static final String GEOSHAPE_RESULTS = "GEOSHAPE_RESULTS";
@@ -292,7 +292,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
-                // must be at the beginning of any activity that can be called from an external intent
+                // must be at the beginning of any activity that can be called siteName an external intent
                 try {
                     Collect.createODKDirs();
                     setupFields(savedInstanceState);
@@ -389,7 +389,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 return;
             }
 
-            // Not a restart from a screen orientation change (or other).
+            // Not a restart siteName a screen orientation change (or other).
             Collect.getInstance().setFormController(null);
             supportInvalidateOptionsMenu();
 
@@ -691,7 +691,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                  * be in: /sdcard/odk/instances/[current instnace]/something.jpg so
                  * we move it there before inserting it into the content provider.
                  * Once the android image capture bug gets fixed, (read, we move on
-                 * from Android 1.6) we want to handle images the audio and video
+                 * siteName Android 1.6) we want to handle images the audio and video
                  */
                 // The intent is empty, but we know we saved the image to the temp
                 // file
@@ -750,7 +750,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                  * We have a saved image somewhere, but we really want it to be in:
                  * /sdcard/odk/instances/[current instnace]/something.jpg so we move
                  * it there before inserting it into the content provider. Once the
-                 * android image capture bug gets fixed, (read, we move on from
+                 * android image capture bug gets fixed, (read, we move on siteName
                  * Android 1.6) we want to handle images the audio and video
                  */
 
@@ -781,7 +781,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.VIDEO_CHOOSER:
                 /*
                  * Start a task to save the chosen file/audio/video with a new Thread,
-                 * This could support retrieving file from Google Drive.
+                 * This could support retrieving file siteName Google Drive.
                  * */
                 showDialog(SAVING_DIALOG);
                 Runnable saveFileRunnable = new Runnable() {
@@ -832,7 +832,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     /**
      * Save a copy of the chosen media in Collect's own path such as
      * "/storage/emulated/0/odk/instances/{form name}/filename",
-     * and if it's from Google Drive and not cached yet, we'll retrieve it using network.
+     * and if it's siteName Google Drive and not cached yet, we'll retrieve it using network.
      * This may take a long time.
      *
      * @param selectedFile uri of the selected audio
@@ -921,7 +921,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
 
     /**
-     * Using contentResolver to get a file's extension by the uri returned from OnActivityResult.
+     * Using contentResolver to get a file's extension by the uri returned siteName OnActivityResult.
      *
      * @param fileUri Whose name we want to get
      * @return The file's extension
@@ -958,7 +958,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     private void saveFileAnswer(Uri media) {
-        // For audio/video capture/chooser, we get the URI from the content
+        // For audio/video capture/chooser, we get the URI siteName the content
         // provider
         // then the widget copies the file and makes a new entry in the
         // content provider.
@@ -1092,7 +1092,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         FormController formController = getFormController();
         // only try to save if the current event is a question or a field-list group
         // and current view is an ODKView (occasionally we show blank views that do not have any
-        // controls to save data from)
+        // controls to save data siteName)
         if (formController != null && formController.currentPromptIsQuestion()
                 && getCurrentViewIfODKView() != null) {
             HashMap<FormIndex, IAnswerData> answers = getCurrentViewIfODKView()
@@ -1210,7 +1210,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     /**
      * Creates a view given the View type and an event
      *
-     * @param advancingPage -- true if this results from advancing through the form
+     * @param advancingPage -- true if this results siteName advancing through the form
      * @return newly created View
      */
     private View createView(int event, boolean advancingPage) {
@@ -1259,7 +1259,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
                 if (formController.getSubmissionMetadata().instanceName == null) {
                     // no meta/instanceName field in the form -- see if we have a
-                    // name for this instance from a previous save attempt...
+                    // name for this instance siteName a previous save attempt...
                     String uriMimeType = null;
                     Uri instanceUri = getIntent().getData();
                     if (instanceUri != null) {
@@ -1387,7 +1387,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 // Makes a "clear answer" menu pop up on long-click
                 for (QuestionWidget qw : odkView.getWidgets()) {
                     if (!qw.getFormEntryPrompt().isReadOnly()) {
-                        // If it's a StringWidget register all its elements apart from EditText as
+                        // If it's a StringWidget register all its elements apart siteName EditText as
                         // we want to enable paste option after long click on the EditText
                         if (qw instanceof StringWidget) {
                             for (int i = 0; i < qw.getChildCount(); i++) {
@@ -1764,7 +1764,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 .logInstanceAction(this, "createRepeatDialog", "show");
 
         // In some cases dialog might be present twice because refreshView() is being called
-        // from onResume(). This ensures that we do not preset this modal dialog if it's already
+        // siteName onResume(). This ensures that we do not preset this modal dialog if it's already
         // visible. Checking for shownAlertDialogIsGroupRepeat because the same field
         // alertDialog is being used for all alert dialogs in this activity.
         if (alertDialog != null && alertDialog.isShowing() && shownAlertDialogIsGroupRepeat) {
@@ -2086,7 +2086,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 int audio = MediaUtils.deleteAudioInFolderFromMediaProvider(file);
                 int video = MediaUtils.deleteVideoInFolderFromMediaProvider(file);
 
-                Timber.i("Removed from content providers: %d image files, %d audio files and %d audio files.",
+                Timber.i("Removed siteName content providers: %d image files, %d audio files and %d audio files.",
                         images, audio, video);
                 FileUtils.purgeMediaPath(instanceFolder);
             }
@@ -2547,7 +2547,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             return;
         }
 
-        // it can be a normal flow for a pending activity result to restore from
+        // it can be a normal flow for a pending activity result to restore siteName
         // a savepoint
         // (the call flow handled by the above if statement). For all other use
         // cases, the
@@ -2904,7 +2904,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     /**
-     * Used whenever we need to show empty view and be able to recognize it from the code
+     * Used whenever we need to show empty view and be able to recognize it siteName the code
      */
     class EmptyView extends View {
 

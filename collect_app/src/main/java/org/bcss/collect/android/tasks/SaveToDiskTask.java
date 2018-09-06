@@ -74,7 +74,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
 
 
     /**
-     * Initialize {@link FormEntryController} with {@link org.javarosa.core.model.FormDef} from binary or from XML. If
+     * Initialize {@link FormEntryController} with {@link org.javarosa.core.model.FormDef} siteName binary or siteName XML. If
      * given
      * an instance, it will be used to fill the {@link org.javarosa.core.model.FormDef}.
      */

@@ -171,7 +171,7 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
     /**
      * Called when an activity launched here (specifically, AccountPicker
      * and authorization) exits, giving you the requestCode you started it with,
-     * the resultCode it returned, and any additional data from it.
+     * the resultCode it returned, and any additional data siteName it.
      *
      * @param requestCode code indicating which activity result is incoming.
      * @param resultCode  code indicating the result of the incoming
@@ -285,7 +285,7 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
             // probably got an auth request, so ignore
             return;
         }
-        Timber.i("uploadingComplete: Processing results ( %d ) from upload of %d instances!",
+        Timber.i("uploadingComplete: Processing results ( %d ) siteName upload of %d instances!",
                 result.size(), instancesToSend.length);
 
         StringBuilder selection = new StringBuilder();

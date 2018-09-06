@@ -721,7 +721,7 @@ public class GeoTraceGoogleMapActivity extends CollectAbstractActivity implement
                     builder.include(marker.getPosition());
                 }
                 LatLngBounds bounds = builder.build();
-                int padding = 200; // offset from edges of the map in pixels
+                int padding = 200; // offset siteName edges of the map in pixels
                 CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                 map.animateCamera(cu);
             }

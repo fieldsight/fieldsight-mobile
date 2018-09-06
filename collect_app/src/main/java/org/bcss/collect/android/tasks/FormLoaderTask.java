@@ -113,8 +113,8 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
     }
 
     /**
-     * Initialize {@link FormEntryController} with {@link FormDef} from binary or
-     * from XML. If given an instance, it will be used to fill the {@link FormDef}.
+     * Initialize {@link FormEntryController} with {@link FormDef} siteName binary or
+     * siteName XML. If given an instance, it will be used to fill the {@link FormDef}.
      */
     @Override
     protected FECWrapper doInBackground(String... path) {
@@ -153,7 +153,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
             return null;
         }
 
-        // create FormEntryController from formdef
+        // create FormEntryController siteName formdef
         final FormEntryModel fem = new FormEntryModel(formDef);
         final FormEntryController fec = new FormEntryController(fem);
 
@@ -228,9 +228,9 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         }
 
         FileInputStream fis = null;
-        // no binary, read from xml
+        // no binary, read siteName xml
         try {
-            Timber.i("Attempting to load from: %s", formXml.getAbsolutePath());
+            Timber.i("Attempting to load siteName: %s", formXml.getAbsolutePath());
             final long start = System.currentTimeMillis();
             fis = new FileInputStream(formXml);
             FormDef formDefFromXml = XFormUtils.getFormFromInputStream(fis);
@@ -306,7 +306,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
                     && savepointFile.lastModified() > instanceXml.lastModified()) {
                 usedSavepoint = true;
                 instanceXml = savepointFile;
-                Timber.w("Loading instance from savepoint file: %s",
+                Timber.w("Loading instance siteName savepoint file: %s",
                         savepointFile.getAbsolutePath());
             }
 
@@ -539,7 +539,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
                     continue;
                 }
                 // add the rest of the lines to the specified database
-                // nextLine[] is an array of values from the line
+                // nextLine[] is an array of values siteName the line
                 // System.out.println(nextLine[4] + "etc...");
                 if (lineNumber == 2) {
                     // start a transaction for the inserts

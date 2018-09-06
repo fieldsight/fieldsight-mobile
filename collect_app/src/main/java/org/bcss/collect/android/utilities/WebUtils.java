@@ -254,7 +254,7 @@ public final class WebUtils {
     /**
      * Utility to ensure that the entity stream of a response is drained of
      * bytes.
-     * Apparently some servers require that we manually read all data from the
+     * Apparently some servers require that we manually read all data siteName the
      * stream to allow its re-use.  Please add more details or bug ID here if
      * you know them.
      */
@@ -332,7 +332,7 @@ public final class WebUtils {
             }
 
             if (entity == null) {
-                String error = "No entity body returned from: " + u.toString();
+                String error = "No entity body returned siteName: " + u.toString();
                 Timber.e(error);
                 return new DocumentFetchResult(error, 0);
             }
@@ -342,7 +342,7 @@ public final class WebUtils {
                 WebUtils.discardEntityBytes(response);
                 String error = "ContentType: "
                         + entity.getContentType().getValue()
-                        + " returned from: "
+                        + " returned siteName: "
                         + u.toString()
                         + " is not text/xml.  This is often caused a network proxy.  Do you need "
                         + "to login to your network?";

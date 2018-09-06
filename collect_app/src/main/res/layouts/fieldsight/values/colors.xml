@@ -6,6 +6,7 @@
     <color name="colorPrimary">#00628e</color>
     <color name="colorPrimaryDark">#003860</color>
     <color name="colorAccent">#4b8fbe</color>
+    <color name="colorAccentTransparent">#5b4b8fbe</color>
     <color name="colorTransparentBlueTop">#f000628e</color>
     <color name="colorTransparentBlue">#DE00628e</color>
     <color name="transparent">#00ffffff</color>
@@ -20,7 +21,7 @@
     <color name="aluminum">#999999</color>
     <color name="base">#AAAAAA</color>
     <color name="timestamp">#4285f4</color>
-    <color name="bg_action_mode">#757575</color>
+    <color name="bg_action_mode">@color/colorPrimary</color>
     <color name="iron">#CCCCCC</color>
     <color name="odd_color">#EBEBEB</color>
     <color name="even_color">#ffffff</color>
@@ -50,4 +51,7 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="material_grey">#fffafafa</color>
+    <color name="from">#000000</color>
+    <color name="subject">#111111</color>
+    <color name="message">#7a7a7a</color>
 </resources>

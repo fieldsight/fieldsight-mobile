@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="@dimen/icon_width_height"
             android:layout_height="@dimen/icon_width_height"
-            android:src="@drawable/circle_blue" />
+            android:src="@drawable/circle_grey" />
 
         <ImageView
             android:layout_width="@dimen/icon_width_height"

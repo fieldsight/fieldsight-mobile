@@ -95,7 +95,7 @@ public class CaptureSelfieVideoActivity extends Activity {
                         mediaRecorder.stop();  // stop the recording
 
                         releaseMediaRecorder(); // release the MediaRecorder object
-                        camera.lock();         // take camera access back from MediaRecorder
+                        camera.lock();         // take camera access back siteName MediaRecorder
                         recording = false;
                         releaseCamera();
 
@@ -110,7 +110,7 @@ public class CaptureSelfieVideoActivity extends Activity {
                         new File(outputFile).delete();
 
                         releaseMediaRecorder(); // release the MediaRecorder object
-                        camera.lock();         // take camera access back from MediaRecorder
+                        camera.lock();         // take camera access back siteName MediaRecorder
                         recording = false;
                         releaseCamera();
                     }

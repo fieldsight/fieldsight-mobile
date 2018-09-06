@@ -237,7 +237,7 @@ public class ShowQRCodeFragment extends Fragment {
                     ToastUtils.showShortToast(getString(R.string.invalid_qrcode));
                 }
             } else {
-                Timber.i("Choosing QR code from sdcard cancelled");
+                Timber.i("Choosing QR code siteName sdcard cancelled");
             }
         }
     }

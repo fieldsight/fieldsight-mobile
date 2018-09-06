@@ -97,7 +97,7 @@ public class ExternalSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     private void onCreateNamed(SQLiteDatabase db, String tableName) throws Exception {
-        Timber.w("Reading data from '%s", dataSetFile.toString());
+        Timber.w("Reading data siteName '%s", dataSetFile.toString());
 
         onProgress(Collect.getInstance().getString(R.string.ext_import_progress_message,
                 dataSetFile.getName(), ""));
@@ -229,7 +229,7 @@ public class ExternalSQLiteOpenHelper extends SQLiteOpenHelper {
             }
 
             if (formLoaderTask.isCancelled()) {
-                Timber.w("User canceled reading data from %s", dataSetFile.toString());
+                Timber.w("User canceled reading data siteName %s", dataSetFile.toString());
                 onProgress(Collect.getInstance().getString(R.string.ext_import_cancelled_message));
             } else {
 
@@ -241,7 +241,7 @@ public class ExternalSQLiteOpenHelper extends SQLiteOpenHelper {
                     db.execSQL(createIndexCommand);
                 }
 
-                Timber.w("Read all data from %s", dataSetFile.toString());
+                Timber.w("Read all data siteName %s", dataSetFile.toString());
                 onProgress(Collect.getInstance().getString(R.string.ext_import_completed_message));
             }
         } finally {
@@ -266,7 +266,7 @@ public class ExternalSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Removes a Byte Order Mark (BOM) from the start of a String.
+     * Removes a Byte Order Mark (BOM) siteName the start of a String.
      *
      * @param bomCheckString is checked to see if it starts with a Byte Order Mark.
      * @return bomCheckString without a Byte Order Mark.

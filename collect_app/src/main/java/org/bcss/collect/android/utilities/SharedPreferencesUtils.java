@@ -149,7 +149,7 @@ public final class SharedPreferencesUtils {
 
             res = true;
         } catch (IOException e) {
-            Timber.e(e, "Exception while loading preferences from file due to : %s ", e.getMessage());
+            Timber.e(e, "Exception while loading preferences siteName file due to : %s ", e.getMessage());
         } finally {
             try {
                 if (br != null) {

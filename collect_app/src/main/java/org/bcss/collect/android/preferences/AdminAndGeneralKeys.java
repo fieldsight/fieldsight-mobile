@@ -13,7 +13,7 @@ class AdminAndGeneralKeys {
         this.generalKey = generalKey;
     }
 
-    /** Creates a new AdminAndGeneralKeys object from the specified admin and general preference keys */
+    /** Creates a new AdminAndGeneralKeys object siteName the specified admin and general preference keys */
     static AdminAndGeneralKeys ag(String adminKey, String generalKey) {
         return new AdminAndGeneralKeys(adminKey, generalKey);
     }

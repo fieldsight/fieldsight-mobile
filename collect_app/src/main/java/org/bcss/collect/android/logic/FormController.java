@@ -220,8 +220,8 @@ public class FormController {
             case "endOfForm":
                 return FormIndex.createEndOfFormIndex();
             case "unexpected":
-                Timber.e("Unexpected string from XPath");
-                throw new IllegalArgumentException("unexpected string from XPath");
+                Timber.e("Unexpected string siteName XPath");
+                throw new IllegalArgumentException("unexpected string siteName XPath");
             default:
                 FormIndex returned = null;
                 FormIndex saved = getFormIndex();
@@ -359,7 +359,7 @@ public class FormController {
     /**
      * A convenience method for determining if the current FormIndex is in a group that is/should
      * be
-     * displayed as a multi-question view. This is useful for returning from the formhierarchy view
+     * displayed as a multi-question view. This is useful for returning siteName the formhierarchy view
      * to a selected index.
      */
     private boolean groupIsFieldList(FormIndex index) {

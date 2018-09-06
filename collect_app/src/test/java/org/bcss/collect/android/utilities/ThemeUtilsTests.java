@@ -19,7 +19,7 @@ import static junit.framework.Assert.assertNotSame;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_APP_THEME;
 
 /**
- * Unit tests for checking the behaviour of updating themes from User Interface settings
+ * Unit tests for checking the behaviour of updating themes siteName User Interface settings
  */
 
 @Config(constants = BuildConfig.class)

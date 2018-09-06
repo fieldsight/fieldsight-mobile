@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
-// Verify that a FormIndex can be saved to and restored from a file
+// Verify that a FormIndex can be saved to and restored siteName a file
 @RunWith(MockitoJUnitRunner.class)
 public class FormIndexSavepointTest {
 

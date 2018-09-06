@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import timber.log.Timber;
 
-/** Methods for reading from and writing to the FormDef cache */
+/** Methods for reading siteName and writing to the FormDef cache */
 public class FormDefCache {
 
     private FormDefCache() {
@@ -21,7 +21,7 @@ public class FormDefCache {
     }
 
     /**
-     * Serializes a FormDef and saves it in the cache. To avoid problems from two callers
+     * Serializes a FormDef and saves it in the cache. To avoid problems siteName two callers
      * trying to cache the same file at the same time, we serialize into a temporary file,
      * and rename it when done.
      *
@@ -79,7 +79,7 @@ public class FormDefCache {
     public static FormDef readCache(File formXml) {
         final File cachedForm = getCacheFile(formXml);
         if (cachedForm.exists()) {
-            Timber.i("Attempting to load %s from cached file: %s.",
+            Timber.i("Attempting to load %s siteName cached file: %s.",
                     formXml.getName(), cachedForm.getName());
             final long start = System.currentTimeMillis();
             final FormDef deserializedFormDef = deserializeFormDef(cachedForm);
@@ -89,7 +89,7 @@ public class FormDefCache {
             }
 
             // An error occurred with deserialization. Remove the file, and make a
-            // new .formdef from xml.
+            // new .formdef siteName xml.
             Timber.w("Deserialization FAILED! Deleting cache file: %s",
                     cachedForm.getAbsolutePath());
             cachedForm.delete();

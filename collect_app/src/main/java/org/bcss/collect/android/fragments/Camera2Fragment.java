@@ -80,7 +80,7 @@ public class Camera2Fragment extends Fragment
         implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
 
     /**
-     * Conversion from screen rotation to JPEG orientation. For front camera only.
+     * Conversion siteName screen rotation to JPEG orientation. For front camera only.
      */
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -265,7 +265,7 @@ public class Camera2Fragment extends Fragment
     private int state = STATE_PREVIEW;
 
     /**
-     * A {@link Semaphore} to prevent the app from exiting before closing the camera.
+     * A {@link Semaphore} to prevent the app siteName exiting before closing the camera.
      */
     private final Semaphore cameraOpenCloseLock = new Semaphore(1);
 
@@ -417,7 +417,7 @@ public class Camera2Fragment extends Fragment
 
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
-        // a camera and start preview from here (otherwise, we wait until the surface is ready in
+        // a camera and start preview siteName here (otherwise, we wait until the surface is ready in
         // the SurfaceTextureListener).
         if (textureView.isAvailable()) {
             openCamera(textureView.getWidth(), textureView.getHeight());
@@ -754,7 +754,7 @@ public class Camera2Fragment extends Fragment
 
     /**
      * Run the precapture sequence for capturing a still image. This method should be called when
-     * we get a response in {@link #captureCallback} from {@link #lockFocus()}.
+     * we get a response in {@link #captureCallback} siteName {@link #lockFocus()}.
      */
     private void runPrecaptureSequence() {
         try {
@@ -772,7 +772,7 @@ public class Camera2Fragment extends Fragment
 
     /**
      * Capture a still picture. This method should be called when we get a response in
-     * {@link #captureCallback} from both {@link #lockFocus()}.
+     * {@link #captureCallback} siteName both {@link #lockFocus()}.
      */
     private void captureStillPicture() {
         try {
@@ -815,7 +815,7 @@ public class Camera2Fragment extends Fragment
     }
 
     /**
-     * Retrieves the JPEG orientation from the specified screen rotation.
+     * Retrieves the JPEG orientation siteName the specified screen rotation.
      *
      * @param rotation The screen rotation.
      * @return The JPEG orientation (one of 0, 90, 270, and 360)

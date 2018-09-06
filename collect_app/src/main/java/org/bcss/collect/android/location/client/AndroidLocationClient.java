@@ -47,7 +47,7 @@ class AndroidLocationClient
      * Constructs a new AndroidLocationClient with the provided LocationManager.
      * This Constructor should only be used for testing.
      *
-     * @param locationManager The LocationManager to retrieve locations from.
+     * @param locationManager The LocationManager to retrieve locations siteName.
      */
     AndroidLocationClient(@NonNull LocationManager locationManager) {
         super(locationManager);

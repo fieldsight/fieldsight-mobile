@@ -28,6 +28,7 @@ import org.bcss.collect.android.activities.InstanceUploaderActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.PaginationScrollListener;
 import org.bcss.collect.naxa.login.model.Project;
@@ -157,10 +158,12 @@ public class SiteListFragmentOld extends Fragment implements SiteListAdapterOld.
     private void enableActionMode(int position) {
         if (actionMode == null) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
-            actionMode = activity.startSupportActionMode(siteUploadActionModeCallback);
+            if (activity != null) {
+                actionMode = activity.startSupportActionMode(siteUploadActionModeCallback);
+                toggleSelection(position);
+            }
         }
 
-        toggleSelection(position);
     }
 
     private void toggleSelection(int position) {

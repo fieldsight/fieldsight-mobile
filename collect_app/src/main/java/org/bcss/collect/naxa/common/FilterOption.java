@@ -1,47 +1,47 @@
 package org.bcss.collect.naxa.common;
 
-import java.util.ArrayList;
+import android.util.Pair;
+
+import java.util.List;
 
 public class FilterOption {
 
     public enum FilterType {
         SELECTED_REGION,
+        SITE,
+        ALL_SITES,
         OFFLINE_SITES,
-        ALL_SITES
     }
 
     private FilterType type;
     private String label;
-    private ArrayList<String> options;
+    private List<Pair> options;
+    private String selection;
 
-    public FilterOption(FilterType type, String label, ArrayList<String> options) {
+    public FilterOption(FilterType type, String label,List<Pair> site) {
         this.type = type;
         this.label = label;
-        this.options = options;
+        this.options = site;
     }
 
     public FilterType getType() {
         return type;
     }
 
-    public void setType(FilterType type) {
-        this.type = type;
-    }
-
     public String getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setSelection(String selection) {
+        this.selection = selection;
     }
 
-    public ArrayList<String> getOptions() {
+    public String getSelection() {
+        return selection;
+    }
+
+    public List<Pair> getOptions() {
         return options;
-    }
-
-    public void setOptions(ArrayList<String> options) {
-        this.options = options;
     }
 
 

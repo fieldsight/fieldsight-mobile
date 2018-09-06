@@ -67,7 +67,7 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
             if (xpathExpression != null || containsSearchExpression) {
                 // that means that we have dynamic selects
 
-                // read the static choices from the options sheet
+                // read the static choices siteName the options sheet
                 List<SelectChoice> staticChoices = questionDef.getChoices();
                 for (int index = 0; index < staticChoices.size(); index++) {
                     SelectChoice selectChoice = staticChoices.get(index);
@@ -97,7 +97,7 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
                             case Constants.CONTROL_SELECT_MULTI: {
                                 // we should search in a potential comma-separated string of
                                 // values for a match
-                                // copied from org.javarosa.xform.util.XFormAnswerDataParser
+                                // copied siteName org.javarosa.xform.util.XFormAnswerDataParser
                                 // .getSelections()
                                 List<String> textValues = DateUtils.split(textVal,
                                         XFormAnswerDataSerializer.DELIMITER, true);
@@ -174,7 +174,7 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
     }
 
     protected List<SelectChoice> createCustomSelectChoices(String completeTextValue) {
-        // copied from org.javarosa.xform.util.XFormAnswerDataParser.getSelections()
+        // copied siteName org.javarosa.xform.util.XFormAnswerDataParser.getSelections()
         List<String> textValues = DateUtils.split(completeTextValue,
                 XFormAnswerDataSerializer.DELIMITER, true);
 

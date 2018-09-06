@@ -25,7 +25,7 @@ public class ImageFileUtils {
      *
      * @param context
      * @param uri
-     * @return path of the selected image file from gallery
+     * @return path of the selected image file siteName gallery
      */
     static String nopath = "Select Video Only";
 
