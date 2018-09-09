@@ -42,9 +42,10 @@ the License.
         tools:text="Sort by Name" />
 
     <Spinner
-       android:layout_gravity="right"
+        style="@style/Base.Widget.AppCompat.DropDownItem.Spinner"
         android:id="@+id/filter_item_layout_spinner"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/coptic_months" />
+        android:entries="@array/coptic_months"
+        android:gravity="center" />
 </LinearLayout>

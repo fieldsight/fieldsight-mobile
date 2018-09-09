@@ -76,8 +76,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                 .observe(this, fieldSightNotifications -> {
                     if (adapter.getItemCount() == 0) {
                         adapter.updateList(fieldSightNotifications);
-                        runLayoutAnimation(rvNotificationList);
-                    }
+                      }
 
                     adapter.updateList(fieldSightNotifications);
                 });

@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.common;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +44,9 @@ public class PairSpinnerAdapter extends ArrayAdapter<Pair> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView label = new TextView(context);
-        label.setTextColor(Color.BLACK);
+//        label.setTextColor(Color.BLACK);
 
-
+        label.setTextSize(16);
         label.setPadding(18, 16, 16, 16);
         label.setText((String) values.get(position).second);
 
@@ -57,7 +58,8 @@ public class PairSpinnerAdapter extends ArrayAdapter<Pair> {
     public View getDropDownView(int position, View convertView,
                                 ViewGroup parent) {
         TextView label = new TextView(context);
-        label.setTextColor(Color.BLACK);
+//        label.setTextColor(Color.BLACK);
+        label.setTextSize(16);
         label.setPadding(18, 16, 16, 16);
         label.setText((String) values.get(position).second);
 

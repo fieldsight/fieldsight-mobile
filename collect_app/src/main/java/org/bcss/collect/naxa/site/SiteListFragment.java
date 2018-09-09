@@ -3,9 +3,12 @@ package org.bcss.collect.naxa.site;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -21,6 +24,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -31,17 +36,20 @@ import org.bcss.collect.android.activities.InstanceUploaderActivity;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ThemeUtils;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
 import org.bcss.collect.naxa.common.FilterOption;
 import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.LinearLayoutManagerWrapper;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.data.SiteCluster;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -56,6 +64,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
@@ -75,6 +85,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     private ActionMode actionMode;
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
+    private LiveData<List<Site>> filteredSiteLiveData;
 
 
     public static SiteListFragment getInstance(Project project) {
@@ -98,9 +109,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
         allSitesLiveData = SiteLocalSource.getInstance().getById(loadedProject.getId());
-
-        offlineSitesLiveData = SiteLocalSource.getInstance()
-                .getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_UNVERIFIED_SITE);
+        offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_UNVERIFIED_SITE);
 
 
         assignFilterToList(FilterOption.FilterType.ALL_SITES);
@@ -135,10 +144,39 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 break;
         }
         source.observe(this, sites -> {
-            siteListAdapter.updateList(sites);
+
+                siteListAdapter.updateList(sites);
+
+
+
         });
 
 
+    }
+
+    private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                String selectedRegion = "";
+                String site = "";
+
+                for (FilterOption filterOption : sortList) {
+                    switch (filterOption.getType()) {
+                        case SITE:
+                            selectedRegion = filterOption.getSelection();
+                            break;
+                        case SELECTED_REGION:
+                            site = filterOption.getSelection();
+                            break;
+                    }
+                }
+
+                filteredSiteLiveData = SiteLocalSource.getInstance().getByIdStatusAndCluster(loadedProject.getId(), site, selectedRegion);
+
+
+            }
+        });
     }
 
 
@@ -166,10 +204,19 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         filterOptions.observe(this, new Observer<ArrayList<FilterOption>>() {
             @Override
             public void onChanged(@Nullable ArrayList<FilterOption> filterOptions) {
-                final FilterDialogAdapter adapter = new FilterDialogAdapter(getActivity(), recyclerView, filterOptions, getSelectedFilter(), (holder, position, filterOption) -> {
-                    bottomSheetDialog.dismiss();
-                    assignFilterToList(filterOption.getType());
+                final FilterDialogAdapter adapter = new FilterDialogAdapter(getActivity(), recyclerView, filterOptions, getSelectedFilter(), new FilterDialogAdapter.RecyclerViewClickListener() {
+                    @Override
+                    public void onFilterButtonClicked(ArrayList<FilterOption> sortList) {
+                        bottomSheetDialog.dismiss();
+                        ToastUtils.showShortToast("Not Implemented yet");
+                        collectFilterAndApply(sortList);
+                    }
 
+                    @Override
+                    public void onItemClicked(FilterDialogAdapter.ViewHolderText holder, int position, FilterOption filterOption) {
+                        bottomSheetDialog.dismiss();
+                        assignFilterToList(filterOption.getType());
+                    }
                 });
 
                 recyclerView.setAdapter(adapter);
@@ -209,6 +256,8 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         ArrayList<FilterOption> filterOptions = new ArrayList<>();
 
                         filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Site Region", pairs));
+                        filterOptions.add(new FilterOption(FilterOption.FilterType.SITE, "Site ", sites));
+                        filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline Site(s)", new ArrayList<>(0)));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.ALL_SITES, "All Site(s)", new ArrayList<>(0)));
 
@@ -255,12 +304,23 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void onUselessLayoutClicked(Site site) {
-        FragmentHostActivity.start(getActivity(), site);
+        if (siteListAdapter.getSelectedItemCount() == 0) {
+            FragmentHostActivity.start(getActivity(), site);
+        }
     }
 
     @Override
     public void onSurveyFormClicked() {
 
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     private void enableActionMode(int position) {
@@ -329,7 +389,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 .subscribe(new SingleObserver<List<Long>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        FlashBarUtils.showFlashbar(getActivity(), "Uploading site(s)", true);
                     }
 
                     @Override
@@ -342,10 +402,26 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
                     @Override
                     public void onError(Throwable e) {
+                        String errorMessage = e.getMessage();
+
+                        if (e instanceof HttpException) {
+                            ResponseBody responseBody = ((HttpException) e).response().errorBody();
+                            errorMessage = getErrorMessage(responseBody);
+                        }
+
                         e.printStackTrace();
-                        DialogFactory.createGenericErrorDialog(getActivity(), e.getMessage()).show();
+                        DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
                     }
                 });
+    }
+
+    private String getErrorMessage(ResponseBody responseBody) {
+        try {
+            JSONObject jsonObject = new JSONObject(responseBody.string());
+            return jsonObject.getString("non_field_errors");
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
     private ArrayList<Long> getNotUploadedFormForSite(String siteId) {

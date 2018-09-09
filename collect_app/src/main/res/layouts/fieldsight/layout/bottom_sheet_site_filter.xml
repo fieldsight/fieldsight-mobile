@@ -38,17 +38,5 @@ the License.
         android:layout_below="@+id/label" />
 
 
-    <Button
-        android:id="@+id/bottom_sheet_site_filter_apply"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/recyclerView"
-        android:drawableLeft="@drawable/ic_check"
-        android:drawableStart="@drawable/ic_check"
-        android:text="@string/btn_text_apply"
-        android:textAllCaps="true" />
 
 </RelativeLayout>

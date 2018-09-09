@@ -11,6 +11,7 @@ public class FilterOption {
         SITE,
         ALL_SITES,
         OFFLINE_SITES,
+        CONFIRM_BUTTON,
     }
 
     private FilterType type;

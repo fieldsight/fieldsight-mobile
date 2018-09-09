@@ -119,11 +119,26 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 .getAll(false)
                 .observe(ProjectListActivity.this, projects -> {
                     Timber.i("Projects data changing %s", projects.size());
+
+
+
                     projectlistAdapter.updateList(projects);
+
+                    runLayoutAnimation(rvProjects);
 
                 });
     }
 
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
+    }
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
