@@ -63,7 +63,7 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
         localSource.updateAll(items);
     }
 
-    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String siteId) {
+    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String siteId,String projectId) {
 //        MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
 //        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
 //
@@ -85,7 +85,7 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
             remoteSource.getAll();
         }
 
-        return localSource.getBySiteId(siteId);
+        return localSource.getBySiteId(siteId,projectId);
     }
 
     public LiveData<List<ScheduleForm>> getByProjectId(boolean forcedUpdate, String project) {

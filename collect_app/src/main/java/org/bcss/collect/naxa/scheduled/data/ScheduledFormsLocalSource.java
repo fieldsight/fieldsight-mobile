@@ -49,8 +49,8 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
         AsyncTask.execute(() -> dao.updateAll(items));
     }
 
-    public LiveData<List<ScheduleForm>> getBySiteId(String siteId) {
-        return dao.getBySiteId(siteId);
+    public LiveData<List<ScheduleForm>> getBySiteId(String siteId,String projectId) {
+        return dao.getBySiteId(siteId,projectId);
     }
 
     public LiveData<List<ScheduleForm>> getByProjectId(String projectId) {

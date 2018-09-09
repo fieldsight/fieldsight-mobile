@@ -17,8 +17,8 @@ public abstract class ScheduledFormDAO implements BaseDaoFieldSight<ScheduleForm
     @Query("SELECT * FROM scheduled_form")
     public abstract LiveData<List<ScheduleForm>> getAll();
 
-    @Query("SELECT * FROM scheduled_form WHERE siteId =:id ")
-    public abstract LiveData<List<ScheduleForm>> getBySiteId(String id);
+    @Query("SELECT * FROM scheduled_form WHERE siteId =:id OR project =:projectId")
+    public abstract LiveData<List<ScheduleForm>> getBySiteId(String id,String projectId);
 
 
     @Query("DELETE FROM scheduled_form")
