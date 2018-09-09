@@ -155,6 +155,7 @@
     <string name="dialog_title_upload_forms">Upload forms</string>
     <string name="dialog_action_upload">Upload</string>
     <string name="btn_text_apply">apply</string>
+    <string name="msg_site_upload_fail">Failed to upload </string>
 
     <!--Notification sitelist ends here-->
 

@@ -40,6 +40,8 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
         loginView.showProgress(true);
 
+        loginModel.login(username, password, LoginPresenterImpl.this);
+        if(true)return;
         ReactiveNetwork.checkInternetConnectivity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

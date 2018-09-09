@@ -86,6 +86,10 @@ public class Site implements Parcelable {
     @Expose
     private String siteTypeError;
 
+    @SerializedName("non_field_errors")
+    @Ignore
+    private String siteUploadError;
+
 
     private String metaAttributes;
     private String region;
@@ -324,6 +328,14 @@ public class Site implements Parcelable {
     @NonNull
     public String getSiteTypeError() {
         return siteTypeError == null ? "" : siteTypeError;
+    }
+
+    public String getSiteUploadError() {
+        return siteUploadError;
+    }
+
+    public void setSiteUploadError(String siteUploadError) {
+        this.siteUploadError = siteUploadError;
     }
 
 
