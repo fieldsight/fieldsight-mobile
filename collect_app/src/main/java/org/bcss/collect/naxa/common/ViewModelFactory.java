@@ -22,6 +22,7 @@ import org.bcss.collect.naxa.scheduled.data.ScheduledFormRepository;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormViewModel;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsLocalSource;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
+import org.bcss.collect.naxa.site.CreateSiteDetailViewModel;
 import org.bcss.collect.naxa.site.CreateSiteViewModel;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
@@ -130,6 +131,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(NotificationListViewModel.class)) {
             //noinspection unchecked
             return (T) new NotificationListViewModel(notificationRepository);
+        } else if (modelClass.isAssignableFrom(CreateSiteDetailViewModel.class)) {
+            //noinspection unchecked
+            return (T) new CreateSiteDetailViewModel(siteRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());
