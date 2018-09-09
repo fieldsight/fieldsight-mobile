@@ -47,7 +47,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 .flatMap((Function<Site, ObservableSource<Site>>) oldSite -> uploadSite(oldSite)
                         .map(newSite -> {
 
-                            SiteLocalSource.getInstance().setSiteAsVerified(newSite.getId());
+                            SiteLocalSource.getInstance().setSiteAsVerified(oldSite.getId());
                             SiteLocalSource.getInstance().setSiteId(oldSite.getId(), newSite.getId());
 
                             return newSite;

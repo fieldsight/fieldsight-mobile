@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.onboarding;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.os.Handler;
 
+import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.logic.FormDetails;
@@ -33,10 +34,12 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Function3;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
@@ -58,9 +61,14 @@ public class DownloadModelImpl implements DownloadModel {
     @Override
     public void fetchGeneralForms() {
 
-        ProjectSitesRemoteSource
-                .getInstance()
-                .fetchProjecSites()
+        ProjectLocalSource.getInstance()
+                .getProjectsMaybe()
+                .toSingle()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+//                        ProjectSitesRemoteSource
+//                                .getInstance()
+//                                .fetchProjecSites()
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
@@ -94,6 +102,7 @@ public class DownloadModelImpl implements DownloadModel {
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         SyncRepository.getInstance().setError(Constant.DownloadUID.GENERAL_FORMS);
                     }
                 });
@@ -102,9 +111,14 @@ public class DownloadModelImpl implements DownloadModel {
 
     @Override
     public void fetchScheduledForms() {
-        ProjectSitesRemoteSource
-                .getInstance()
-                .fetchProjecSites()
+        ProjectLocalSource.getInstance()
+                .getProjectsMaybe()
+                .toSingle()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+//        ProjectSitesRemoteSource
+//                .getInstance()
+//                .fetchProjecSites()
                 .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
@@ -146,9 +160,14 @@ public class DownloadModelImpl implements DownloadModel {
     @Override
     public void fetchStagedForms() {
 
-        ProjectSitesRemoteSource
-                .getInstance()
-                .fetchProjecSites()
+//        ProjectSitesRemoteSource
+//                .getInstance()
+//                .fetchProjecSites()
+        ProjectLocalSource.getInstance()
+                .getProjectsMaybe()
+                .toSingle()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map

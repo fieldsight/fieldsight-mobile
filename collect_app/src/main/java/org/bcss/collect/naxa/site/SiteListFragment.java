@@ -145,8 +145,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }
         source.observe(this, sites -> {
 
-                siteListAdapter.updateList(sites);
-
+            siteListAdapter.updateList(sites);
 
 
         });
@@ -256,10 +255,10 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         ArrayList<FilterOption> filterOptions = new ArrayList<>();
 
                         filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Site Region", pairs));
-                        filterOptions.add(new FilterOption(FilterOption.FilterType.SITE, "Site ", sites));
-                        filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
-                        filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline Site(s)", new ArrayList<>(0)));
-                        filterOptions.add(new FilterOption(FilterOption.FilterType.ALL_SITES, "All Site(s)", new ArrayList<>(0)));
+//                        filterOptions.add(new FilterOption(FilterOption.FilterType.SITE, "Site ", sites));
+//                        filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
+//                        filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline Site(s)", new ArrayList<>(0)));
+//                        filterOptions.add(new FilterOption(FilterOption.FilterType.ALL_SITES, "All Site(s)", new ArrayList<>(0)));
 
                         sortingOptionsMutableLive.setValue(filterOptions);
                     }

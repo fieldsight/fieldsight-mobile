@@ -34,12 +34,12 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
     }
 
 
-    public LiveData<List<GeneralForm>> getBySiteId(boolean forcedUpdate, @NonNull String siteId) {
+    public LiveData<List<GeneralForm>> getBySiteId(boolean forcedUpdate, @NonNull String siteId,String projectId) {
         if (forcedUpdate) {
             remoteSource.getAll();
         }
 
-        return localSource.getBySiteId(siteId);
+        return localSource.getBySiteId(siteId,projectId);
     }
 
 

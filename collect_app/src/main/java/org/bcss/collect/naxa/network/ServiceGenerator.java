@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.network;
 
 import android.text.TextUtils;
 
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.naman14.spider.SpiderInterceptor;
@@ -59,7 +60,7 @@ public class ServiceGenerator {
                 okHttpClientBuilder.addInterceptor(spider);
             }
         }
-        //okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
+        okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
 
         return okHttpClientBuilder
                 .build();

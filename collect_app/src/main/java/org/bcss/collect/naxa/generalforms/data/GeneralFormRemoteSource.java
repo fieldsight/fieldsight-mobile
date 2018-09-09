@@ -92,8 +92,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .getSiteOverideDAO()
                 .getAll()
                 .map((Function<SiteOveride, LinkedList<String>>) siteOveride -> {
-                    Type type = new TypeToken<LinkedList<String>>() {
-                    }.getType();//todo use typeconvertor
+                    Type type = new TypeToken<LinkedList<String>>() {}.getType();//todo use typeconvertor
                     return new Gson().fromJson(siteOveride.getGeneralFormIds(), type);
                 }).flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
                 .map(siteId -> new XMLFormBuilder()
