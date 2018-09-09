@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
@@ -251,10 +253,15 @@ public class DownloadModelImpl implements DownloadModel {
 
     @Override
     public void fetchAllForms() {
-        ProjectSitesRemoteSource
-                .getInstance()
-                .fetchProjecSites()
-                .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
+        ProjectLocalSource.getInstance()
+                .getProjectsMaybe()
+                .toSingle()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+//        ProjectSitesRemoteSource
+//                .getInstance()
+//                .fetchProjecSites()
+                .flatMap((Function<List<Project>, SingleSource<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
                      *2. used tolist to wait to complete all odk forms download
@@ -268,39 +275,35 @@ public class DownloadModelImpl implements DownloadModel {
                             })
                             .toList();
                 })
-                .subscribe(new SingleObserver<Object>() {
+                .toObservable()
+                .flatMap(new Function<List<DownloadProgress>, ObservableSource<?>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
+                    public ObservableSource<?> apply(List<DownloadProgress> downloadProgresses) throws Exception {
                         Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
                         Single<ArrayList<ScheduleForm>> scheduled = ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
                         Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();
 
-                        Observable.zip(general.toObservable(), scheduled.toObservable(), stage.toObservable(),
-                                (generalForms, scheduleForms, stages) -> {
-                                    Timber.i("All forms have completed their downloads");
-                                    SyncRepository.getInstance().setSuccess(ALL_FORMS);
-                                    //we do not combine, hence null
-                                    return null;
-                                })
-                                .doOnError(new Consumer<Throwable>() {
-                                    @Override
-                                    public void accept(Throwable throwable) throws Exception {
-                                        SyncRepository.getInstance().setError(ALL_FORMS);
-                                    }
-                                })
-                                .doOnSubscribe(disposable -> {
-                                    SyncRepository.getInstance().showProgress(ALL_FORMS);
-                                })
-                                .blockingSubscribe();
+                        return Observable.merge(general.toObservable(), scheduled.toObservable(), stage.toObservable());
+                    }
+                })
+                .subscribe(new Observer<Object>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        SyncRepository.getInstance().showProgress(ALL_FORMS);
                     }
 
                     @Override
-                    public void onSuccess(Object o) {
-
+                    public void onNext(Object o) {
+                        SyncRepository.getInstance().setSuccess(ALL_FORMS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        SyncRepository.getInstance().setError(ALL_FORMS);
+                    }
+
+                    @Override
+                    public void onComplete() {
 
                     }
                 });

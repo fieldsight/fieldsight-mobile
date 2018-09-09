@@ -56,9 +56,9 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
         AsyncTask.execute(() -> dao.updateAll(items));
     }
 
-    public LiveData<List<Stage>> getBySiteId(String siteId, String siteTypeId) {
+    public LiveData<List<Stage>> getBySiteId(String siteId, String siteTypeId,String projectId) {
         MediatorLiveData<List<Stage>> mediatorLiveData = new MediatorLiveData<>();
-        LiveData<List<Stage>> stagesliveData = dao.getBySiteId(siteId);
+        LiveData<List<Stage>> stagesliveData = dao.getBySiteId(siteId,projectId);
 
         mediatorLiveData.addSource(stagesliveData, new Observer<List<Stage>>() {
             @Override

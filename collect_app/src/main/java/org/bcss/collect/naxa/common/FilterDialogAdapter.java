@@ -45,16 +45,7 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final RecyclerView recyclerView;
     private final ThemeUtils themeUtils;
     private final ArrayList<FilterOption> sortList;
-    private Context mContext;
-    private SparseBooleanArray selectedItems;
 
-    // array used to perform multiple animation at once
-    private SparseBooleanArray animationItemsIndex;
-    private boolean reverseAllAnimations = false;
-
-    // index is used to animate only the selected row
-    // dirty fix, find a better solution
-    private static int currentSelectedIndex = -1;
 
     public FilterDialogAdapter(Context context, RecyclerView recyclerView, ArrayList<FilterOption> sortList, FilterType selectedSortingOrder, RecyclerViewClickListener recyclerViewClickListener) {
         themeUtils = new ThemeUtils(context);

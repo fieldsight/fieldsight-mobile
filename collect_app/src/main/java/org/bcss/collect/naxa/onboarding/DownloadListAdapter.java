@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.onboarding;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,12 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.COMPLETED;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.FAILED;
@@ -51,7 +56,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final DownloadListAdapter.ViewHolder viewHolder, int position) {
-        SyncableItems item = this.syncableItems.get(position);
+        SyncableItems item = this.syncableItems.get(viewHolder.getAdapterPosition());
         CheckedItem checkedItem = viewHolder.checkedItem;
         checkedItem.setText(item.getTitle(), item.getDetail());
 
@@ -72,15 +77,36 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
                 checkedItem.showFailureMessage("Not synced yet");
                 break;
             case COMPLETED:
-                checkedItem.showSucessMessage("Last synced at " + item.getLastSyncDateTime());
+                checkedItem.showSucessMessage(viewHolder.checkedItem.getContext().getString(R.string.msg_last_sync, getRelativeTime(item.getLastSyncDateTime())));
                 break;
             case FAILED:
-                checkedItem.showFailureMessage("Last failed at " + item.getLastSyncDateTime());
+                checkedItem.showFailureMessage(viewHolder.checkedItem.getContext().getString(R.string.msg_last_fail, getRelativeTime(item.getLastSyncDateTime())));
                 break;
             case RUNNING:
                 break;
         }
 
+    }
+
+    private String getRelativeTime(String dateTime) {
+
+        String relativeTime;
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa", Locale.US);
+            sdf.setTimeZone(TimeZone.getDefault());
+            long time = 0;
+            time = sdf.parse(dateTime).getTime();
+            long now = System.currentTimeMillis();
+            CharSequence ago =
+                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+            relativeTime = ago.toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            relativeTime = dateTime;
+        }
+
+        return relativeTime;
     }
 
     @Override

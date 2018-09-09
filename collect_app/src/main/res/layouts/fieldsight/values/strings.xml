@@ -66,7 +66,7 @@
     <string name="logout_message_only_offline_sites">If you logout all your account data including %d offline site(s) would be deleted.</string>
     <string name="logout_message_none">If you logout all your account data would be deleted.</string>
     <string name="empty_message">Once you are assigned %s, you\'ll see them listed here</string>
-    <string name="toolbar_downloads">Downloads</string>
+    <string name="toolbar_downloads">Sync</string>
     <string name="forms_update_start_message">Updating form(s) information</string>
     <string name="forms_update_end_message">Form(s) information updated just now</string>
     <string name="forms_update_error_message">Failed to update latest form(s) information</string>
@@ -156,6 +156,9 @@
     <string name="dialog_action_upload">Upload</string>
     <string name="btn_text_apply">apply</string>
     <string name="msg_site_upload_fail">Failed to upload </string>
+    <string name="msg_last_sync">Last synced %s </string>
+    <string name="msg_last_fail">Last failed %s </string>
+
 
     <!--Notification sitelist ends here-->
 

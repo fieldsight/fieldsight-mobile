@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
@@ -36,6 +37,7 @@ public class SyncRepository {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(application);
         this.syncDao = database.getSyncDAO();
         init();
+
     }
 
     public static SyncRepository getInstance() {
@@ -84,7 +86,7 @@ public class SyncRepository {
 
     private void updateDate(int uid) {
         Date date = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa", Locale.US);
         String formattedDate = df.format(date);
         updateField(uid, DATE, false, formattedDate);
         hideProgress(uid);
@@ -149,12 +151,14 @@ public class SyncRepository {
     public void init() {
         SyncableItems[] syncableItems = new SyncableItems[]{
                 new SyncableItems(Constant.DownloadUID.PROJECT_SITES, PENDING, null, "Project and sites", "Downloads your assigned project and sites"),
-                new SyncableItems(Constant.DownloadUID.ALL_FORMS, PENDING, null, "Forms", "Downloads all forms for your assigned sites"),
+                new SyncableItems(Constant.DownloadUID.ALL_FORMS, PENDING, null, "Forms", "Downloads all forms for assigned sites"),
 //                new SyncableItems(Constant.DownloadUID.ODK_FORMS, PENDING, null, "ODK forms", "Downloads odk forms for your sites"),
-                new SyncableItems(Constant.DownloadUID.GENERAL_FORMS, PENDING, null, "General forms", "Downloads general forms for your sites"),
-                new SyncableItems(Constant.DownloadUID.STAGED_FORMS, PENDING, null, "Staged forms", "Downloads scheduled forms for your sites"),
-                new SyncableItems(Constant.DownloadUID.SCHEDULED_FORMS, PENDING, null, "Scheduled forms", "Download scheduled forms for your sites"),
+//                new SyncableItems(Constant.DownloadUID.GENERAL_FORMS, PENDING, null, "General forms", "Downloads general forms for your sites"),
+//                new SyncableItems(Constant.DownloadUID.STAGED_FORMS, PENDING, null, "Staged forms", "Downloads scheduled forms for your sites"),
+//                new SyncableItems(Constant.DownloadUID.SCHEDULED_FORMS, PENDING, null, "Scheduled forms", "Download scheduled forms for your sites"),
                 new SyncableItems(Constant.DownloadUID.SITE_TYPES, PENDING, null, "Site type(s)", "Download site types to filter staged forms"),
+                new SyncableItems(Constant.DownloadUID.EDU_MATERIALS, PENDING, null, "Educational Materials", "Download educational attached for form(s)"),
+                new SyncableItems(Constant.DownloadUID.PREV_SUBMISSION, PENDING, null, "Previous Submissions", "Download previous submission(s) for forms"),
         };
 
 

@@ -52,6 +52,6 @@ public interface SiteDao {
     @Query("SELECT * from sites where isSiteVerified =:status and project =:projectId")
     LiveData<List<Site>> getByIdOfflineSites(String projectId, int status);
 
-    @Query("SELECT * from sites where project =:projectId AND (isSiteVerified =:status || region=:cluster)")
-    LiveData<List<Site>> getSiteFromFilter(String projectId, String status, String cluster);
+    @Query("SELECT * from sites where project =:projectId || region=:cluster ")
+    LiveData<List<Site>> getSiteFromFilter(String projectId, String cluster);
 }

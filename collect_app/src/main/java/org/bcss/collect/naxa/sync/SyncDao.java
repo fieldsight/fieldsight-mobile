@@ -16,7 +16,7 @@ import io.reactivex.Flowable;
 @Dao
 public interface SyncDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(SyncableItems... items);
 
     @Query("SELECT * FROM sync")

@@ -11,7 +11,7 @@
         android:visible="false"
         android:id="@+id/action_refresh"
         android:icon="@drawable/ic_refresh_white"
-        android:title="Refresh"
+        android:title="Sync"
         app:showAsAction="never" />
 
 

@@ -111,9 +111,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         allSitesLiveData = SiteLocalSource.getInstance().getById(loadedProject.getId());
         offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_UNVERIFIED_SITE);
 
-
-        assignFilterToList(FilterOption.FilterType.ALL_SITES);
-
+        collectFilterAndApply(new ArrayList<>(0));
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
         return view;
     }
@@ -150,32 +148,40 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
         });
 
-
     }
 
+
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
-        AsyncTask.execute(new Runnable() {
+
+        String selectedRegion = "";
+        String site = "";
+
+        for (FilterOption filterOption : sortList) {
+            switch (filterOption.getType()) {
+                case SITE:
+                    site = filterOption.getSelection();
+                    break;
+                case SELECTED_REGION:
+                    selectedRegion = filterOption.getSelection();
+                    break;
+            }
+        }
+
+        LiveData<List<Site>> source;
+        if(sortList.isEmpty()){
+            source = allSitesLiveData;
+        }else {
+            source = SiteLocalSource.getInstance().getByIdStatusAndCluster(loadedProject.getId(), selectedRegion);
+        }
+
+        source.observe(this, new Observer<List<Site>>() {
             @Override
-            public void run() {
-                String selectedRegion = "";
-                String site = "";
-
-                for (FilterOption filterOption : sortList) {
-                    switch (filterOption.getType()) {
-                        case SITE:
-                            selectedRegion = filterOption.getSelection();
-                            break;
-                        case SELECTED_REGION:
-                            site = filterOption.getSelection();
-                            break;
-                    }
-                }
-
-                filteredSiteLiveData = SiteLocalSource.getInstance().getByIdStatusAndCluster(loadedProject.getId(), site, selectedRegion);
-
-
+            public void onChanged(@Nullable List<Site> sites) {
+                siteListAdapter.updateList(sites);
             }
         });
+
+
     }
 
 
@@ -207,14 +213,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     @Override
                     public void onFilterButtonClicked(ArrayList<FilterOption> sortList) {
                         bottomSheetDialog.dismiss();
-                        ToastUtils.showShortToast("Not Implemented yet");
                         collectFilterAndApply(sortList);
                     }
 
                     @Override
                     public void onItemClicked(FilterDialogAdapter.ViewHolderText holder, int position, FilterOption filterOption) {
                         bottomSheetDialog.dismiss();
-                        assignFilterToList(filterOption.getType());
                     }
                 });
 
@@ -255,8 +259,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         ArrayList<FilterOption> filterOptions = new ArrayList<>();
 
                         filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Site Region", pairs));
+                        filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
 //                        filterOptions.add(new FilterOption(FilterOption.FilterType.SITE, "Site ", sites));
-//                        filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
+
 //                        filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline Site(s)", new ArrayList<>(0)));
 //                        filterOptions.add(new FilterOption(FilterOption.FilterType.ALL_SITES, "All Site(s)", new ArrayList<>(0)));
 
