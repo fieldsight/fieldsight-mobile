@@ -297,8 +297,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.site_option_frag_btn_info:
-                intent=new Intent(getActivity().getApplicationContext(), CreateSiteDetailActivity.class);
-                startActivity(intent);
+                CreateSiteDetailActivity.start(getActivity().getApplicationContext(), loadedSite);
                 break;
         }
     }
