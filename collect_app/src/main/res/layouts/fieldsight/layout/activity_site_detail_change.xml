@@ -35,6 +35,7 @@
 
             <include
                 android:id="@+id/layout_site_data_display"
+                android:visibility="visible"
                 layout="@layout/site_data_display_form" />
 
             <include
