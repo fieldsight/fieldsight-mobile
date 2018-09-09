@@ -115,6 +115,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
         setupToolbar();
         setupViewModel();
+        setupSaveBtn();
 
         try {
             site = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
@@ -133,7 +134,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                             layoutSiteDataDisplay.setVisibility(View.GONE);
                             layoutSiteDataEdit.setVisibility(View.VISIBLE);
                             fabActivateEditMode.setVisibility(View.GONE);
-                            setupSaveBtn();
+
                         } else {
                             fabActivateEditMode.setVisibility(View.VISIBLE);
                             layoutSiteDataDisplay.setVisibility(View.VISIBLE);
@@ -184,6 +185,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                 break;
             case R.id.fab_activate_edit_mode:
                 createSiteDetailViewModel.setEditSite(true);
+
                 break;
         }
     }
@@ -196,11 +198,10 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                createSiteDetailViewModel.setEditSite(false);
             }
         });
-
         layoutSiteDataEdit.addView(view);
-
     }
+
 }
