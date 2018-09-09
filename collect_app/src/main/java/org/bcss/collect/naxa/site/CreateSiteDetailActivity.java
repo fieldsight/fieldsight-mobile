@@ -41,11 +41,8 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbarGeneral;
-    @BindView(R.id.toolbar_progress_bar)
-    ProgressBar toolbarProgressBar;
-    @BindView(R.id.tv_toolbar_message)
-    TextView tvToolbarMessage;
-    @BindView(R.id.appbar_general)
+
+    @BindView(R.id.appbar_flexible)
     AppBarLayout appbarGeneral;
     @BindView(R.id.il_site_identifier)
     TextInputLayout ilSiteIdentifier;

@@ -12,8 +12,8 @@
     <!--<include layout="@layout/flexible_toolbar" />-->
 
     <include
-        android:id="@+id/appbar_general"
-        layout="@layout/general_toolbar" />
+
+        layout="@layout/flexible_toolbar" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
