@@ -6,9 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -36,7 +34,6 @@ import org.bcss.collect.android.activities.InstanceUploaderActivity;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ThemeUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
@@ -46,7 +43,7 @@ import org.bcss.collect.naxa.common.LinearLayoutManagerWrapper;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.site.data.SiteCluster;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.json.JSONObject;
@@ -238,15 +235,15 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         sites.add(Pair.create(Constant.SiteStatus.IS_UNVERIFIED_SITE, "Offline site(s)"));
         sites.add(Pair.create(Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED, "All site(s)"));
 
-        Type type = new TypeToken<ArrayList<SiteCluster>>() {
+        Type type = new TypeToken<ArrayList<SiteRegion>>() {
         }.getType();
-        ArrayList<SiteCluster> siteClusters = GSONInstance.getInstance().fromJson(loadedProject.getSiteClusters(), type);
+        ArrayList<SiteRegion> siteRegions = GSONInstance.getInstance().fromJson(loadedProject.getSiteClusters(), type);
         MutableLiveData<ArrayList<FilterOption>> sortingOptionsMutableLive = new MutableLiveData<>();
 
 
-        Observable.just(siteClusters)
-                .flatMapIterable((Function<List<SiteCluster>, Iterable<SiteCluster>>) siteClusters1 -> siteClusters1)
-                .map((Function<SiteCluster, Pair>) siteCluster -> Pair.create(siteCluster.getId(), siteCluster.getName()))
+        Observable.just(siteRegions)
+                .flatMapIterable((Function<List<SiteRegion>, Iterable<SiteRegion>>) siteClusters1 -> siteClusters1)
+                .map((Function<SiteRegion, Pair>) siteCluster -> Pair.create(siteCluster.getId(), siteCluster.getName()))
                 .toList()
                 .subscribe(new SingleObserver<List<Pair>>() {
                     @Override

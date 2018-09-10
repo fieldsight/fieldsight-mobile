@@ -1,5 +1,8 @@
 package org.bcss.collect.naxa.onboarding;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.LiveDataReactiveStreams;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -16,6 +19,11 @@ import org.bcss.collect.naxa.sync.SyncRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
@@ -25,18 +33,48 @@ public class DownloadPresenterImpl implements DownloadPresenter {
     private DownloadView downloadView;
     private DownloadModel downloadModel;
     private SyncRepository syncRepository;
+    private MutableLiveData<Boolean> isDownloading = new MutableLiveData<>();
 
     public DownloadPresenterImpl(DownloadView downloadView) {
         this.downloadView = downloadView;
         this.downloadModel = new DownloadModelImpl();
         syncRepository = SyncRepository.getInstance();
         syncRepository.setAllCheckedTrue();
-        syncRepository.getAllSyncItems().observe(downloadView.getLifeCycleOwner(), new Observer<List<SyncableItems>>() {
+
+        LiveData<List<SyncableItems>> livedata = syncRepository.getAllSyncItems();
+        livedata.observe(downloadView.getLifeCycleOwner(), new Observer<List<SyncableItems>>() {
             @Override
             public void onChanged(@Nullable List<SyncableItems> syncableItemsList) {
                 downloadView.setUpRecyclerView(syncableItemsList);
             }
         });
+
+
+        Observable.fromPublisher(LiveDataReactiveStreams.toPublisher(downloadView.getLifeCycleOwner(), livedata))
+                .flatMapIterable((Function<List<SyncableItems>, Iterable<SyncableItems>>) syncableItems -> syncableItems)
+                .filter(syncableItems -> syncableItems.getDownloadingStatus() == Constant.DownloadStatus.PENDING)
+                .subscribe(new io.reactivex.Observer<SyncableItems>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(SyncableItems syncableItems) {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     @Override

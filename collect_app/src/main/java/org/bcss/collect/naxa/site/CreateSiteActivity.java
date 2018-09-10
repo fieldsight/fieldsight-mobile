@@ -43,13 +43,12 @@ import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
-import org.bcss.collect.naxa.site.data.SiteCluster;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -142,10 +141,10 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
         boolean isClusterIsEmpty = project.getSiteClusters() == null || project.getSiteClusters().isEmpty();
         if (!isClusterIsEmpty) {
-            Type type = new TypeToken<ArrayList<SiteCluster>>() {
+            Type type = new TypeToken<ArrayList<SiteRegion>>() {
             }.getType();
-            ArrayList<SiteCluster> siteClusters = new ArrayList<>(new Gson().fromJson(project.getSiteClusters(), type));
-            createSiteViewModel.setSiteClusterMutableLiveData(siteClusters);
+            ArrayList<SiteRegion> siteRegions = new ArrayList<>(new Gson().fromJson(project.getSiteClusters(), type));
+            createSiteViewModel.setSiteClusterMutableLiveData(siteRegions);
         }
 
         createSiteViewModel.setMetaAttributes(project.getSiteMetaAttributes());
@@ -362,7 +361,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     }
 
-    private void showSiteClusterSpinner(ArrayList<SiteCluster> clusters) {
+    private void showSiteClusterSpinner(ArrayList<SiteRegion> clusters) {
         boolean show = clusters != null && !clusters.isEmpty();
         spinnerSiteCluster.setVisibility(show ? View.VISIBLE : View.GONE);
         if (show) {
@@ -398,7 +397,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     private void collectSpinnerOptions() {
         if (spinnerSiteCluster.getVisibility() == View.VISIBLE) {
-            String selectedCluster = ((SiteCluster) spinnerSiteCluster.getSelectedItem()).getId();
+            String selectedCluster = ((SiteRegion) spinnerSiteCluster.getSelectedItem()).getId();
 
         }
 

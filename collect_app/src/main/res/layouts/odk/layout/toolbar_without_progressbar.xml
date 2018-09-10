@@ -4,10 +4,12 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
     app:contentInsetEnd="0dp"
     app:contentInsetStart="0dp"
     app:contentInsetStartWithNavigation="0dp"
-    app:navigationIcon="@drawable/notes"
-    app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+    app:navigationIcon="@drawable/ic_arrow_back"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    style="@style/BlueGradientBackground"
+    app:theme="@style/WhiteText"
+/>

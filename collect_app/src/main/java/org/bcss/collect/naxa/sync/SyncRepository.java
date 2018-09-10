@@ -37,7 +37,6 @@ public class SyncRepository {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(application);
         this.syncDao = database.getSyncDAO();
         init();
-
     }
 
     public static SyncRepository getInstance() {
@@ -142,7 +141,6 @@ public class SyncRepository {
 
         @Override
         protected Void doInBackground(final SyncableItems... items) {
-            syncDao.deleteAll();
             syncDao.insert(items);
             return null;
         }

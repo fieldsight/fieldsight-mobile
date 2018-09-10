@@ -5,12 +5,12 @@ import android.arch.lifecycle.LiveData;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
-import org.bcss.collect.naxa.site.data.SiteCluster;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SiteClusterLocalSource implements BaseLocalDataSource<SiteCluster> {
+public class SiteClusterLocalSource implements BaseLocalDataSource<SiteRegion> {
     private static SiteClusterLocalSource INSTANCE;
     private SiteClusterDAO dao;
 
@@ -29,26 +29,26 @@ public class SiteClusterLocalSource implements BaseLocalDataSource<SiteCluster> 
     }
 
     @Override
-    public LiveData<List<SiteCluster>> getAll() {
+    public LiveData<List<SiteRegion>> getAll() {
         return null;
     }
 
-    public LiveData<List<SiteCluster>> getByProjectId(String projectId) {
+    public LiveData<List<SiteRegion>> getByProjectId(String projectId) {
         return dao.getByProjectId(projectId);
     }
 
     @Override
-    public void save(SiteCluster... items) {
+    public void save(SiteRegion... items) {
 
     }
 
     @Override
-    public void save(ArrayList<SiteCluster> items) {
+    public void save(ArrayList<SiteRegion> items) {
 
     }
 
     @Override
-    public void updateAll(ArrayList<SiteCluster> items) {
+    public void updateAll(ArrayList<SiteRegion> items) {
 
     }
 }

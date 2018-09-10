@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import org.bcss.collect.naxa.site.data.SiteCluster;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 
 import java.util.List;
 
@@ -16,17 +16,17 @@ import java.util.List;
  * by nishon.tan@gmail.com
  */
 
-public class SiteClusterSpinnerAdapter extends ArrayAdapter<SiteCluster> {
+public class SiteClusterSpinnerAdapter extends ArrayAdapter<SiteRegion> {
 
     private Context context;
 
-    private List<SiteCluster> values;
+    private List<SiteRegion> values;
 
-    public SiteClusterSpinnerAdapter(Context context, int textViewResourceId, String hint, List<SiteCluster> values) {
+    public SiteClusterSpinnerAdapter(Context context, int textViewResourceId, String hint, List<SiteRegion> values) {
         super(context, textViewResourceId, values);
         this.context = context;
 
-        SiteCluster dummy = new SiteCluster(hint, hint, hint);
+        SiteRegion dummy = new SiteRegion(hint, hint, hint);
         values.add(dummy);
 
         this.values = values;
@@ -38,7 +38,7 @@ public class SiteClusterSpinnerAdapter extends ArrayAdapter<SiteCluster> {
     }
 
 
-    public SiteCluster getItem(int position) {
+    public SiteRegion getItem(int position) {
         return values.get(position);
     }
 

@@ -22,7 +22,7 @@ import org.bcss.collect.naxa.scheduled.data.ScheduledFormDAO;
 import org.bcss.collect.naxa.site.SiteClusterDAO;
 import org.bcss.collect.naxa.site.SiteType;
 import org.bcss.collect.naxa.site.SiteTypeDAO;
-import org.bcss.collect.naxa.site.data.SiteCluster;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteDao;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.StageFormDAO;
@@ -45,11 +45,11 @@ import java.io.File;
                 SubStage.class,
                 SurveyForm.class,
                 SiteType.class,
-                SiteCluster.class,
+                SiteRegion.class,
                 FieldSightNotification.class
 
         },
-        version = 1)
+        version = 2)
 @TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {

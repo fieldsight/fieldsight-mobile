@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "site_clusters")
-public class SiteCluster {
+@Entity(tableName = "site_region")
+public class SiteRegion {
     @PrimaryKey
     @NonNull
     @SerializedName("id")
@@ -45,7 +45,7 @@ public class SiteCluster {
         this.identifier = identifier;
     }
 
-    public SiteCluster(String id, String name, String identifier) {
+    public SiteRegion(String id, String name, String identifier) {
         this.id = id;
         this.name = name;
         this.identifier = identifier;

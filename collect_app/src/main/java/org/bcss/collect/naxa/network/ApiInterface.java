@@ -9,7 +9,7 @@ import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationDetail;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.site.SiteType;
-import org.bcss.collect.naxa.site.data.SiteCluster;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.submissions.FormHistoryResponse;
 
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -81,7 +80,7 @@ public interface ApiInterface {
     Single<List<SiteType>> getSiteTypes();
 
     @GET(GET_CLUSTER_LIST)
-    Observable<List<SiteCluster>> getClusterByProjectId(@Path(value = "project_id", encoded = true) String projectId);
+    Observable<List<SiteRegion>> getRegionsByProjectId(@Path(value = "project_id", encoded = true) String projectId);
 
     @GET
     Call<FormHistoryResponse> getFormHistory(@Url String urlNextPage);

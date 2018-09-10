@@ -4,13 +4,12 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
-import org.bcss.collect.naxa.site.data.SiteCluster;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteRepository;
 
 import java.io.File;
@@ -26,7 +25,7 @@ public class CreateSiteViewModel extends ViewModel {
     private MutableLiveData<List<SiteMetaAttribute>> metaAttributes = new MutableLiveData<>();
     private MutableLiveData<ArrayList<Integer>> metaAttributesViewIds = new MutableLiveData<>();
     private MutableLiveData<String> metaAttributesAnswer = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<SiteCluster>> siteClusterMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<SiteRegion>> siteClusterMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<List<SiteType>> siteTypesMutableLiveData = new MutableLiveData<>();
 
 
@@ -45,12 +44,12 @@ public class CreateSiteViewModel extends ViewModel {
         siteTypesMutableLiveData.setValue(siteTypes);
     }
 
-    public MutableLiveData<ArrayList<SiteCluster>> getSiteClusterMutableLiveData() {
+    public MutableLiveData<ArrayList<SiteRegion>> getSiteClusterMutableLiveData() {
         return siteClusterMutableLiveData;
     }
 
-    public void setSiteClusterMutableLiveData(ArrayList<SiteCluster> siteCluster) {
-        this.siteClusterMutableLiveData.setValue(siteCluster);
+    public void setSiteClusterMutableLiveData(ArrayList<SiteRegion> siteRegion) {
+        this.siteClusterMutableLiveData.setValue(siteRegion);
     }
 
 

@@ -41,7 +41,7 @@
 //import org.bcss.collect.naxa.common.ViewUtils;
 //import org.bcss.collect.naxa.login.model.Site;
 //import org.bcss.collect.naxa.login.model.SiteBuilder;
-//import org.bcss.collect.naxa.site.data.SiteCluster;
+//import org.bcss.collect.naxa.site.data.SiteRegion;
 //import org.bcss.collect.naxa.site.db.SiteLocalSource;
 //import org.json.JSONException;
 //import org.json.JSONObject;
@@ -81,7 +81,7 @@
 //    private ArrayList<Integer> layoutIds = new ArrayList<>();
 //    private Spinner spinnerSiteCluster, spinnerSiteType;
 //    private String projectId;
-//    private ArrayList<SiteCluster> regionList;
+//    private ArrayList<SiteRegion> regionList;
 //    private String lat = "0";
 //    private String lon = "0";
 //    private AppBarLayout appbar;
@@ -301,7 +301,7 @@
 //        }
 //
 //        if (spinnerSiteType.getVisibility() == View.VISIBLE) {
-//            SiteCluster siteCluster = (SiteCluster) spinnerSiteCluster.getSelectedItem();
+//            SiteRegion siteCluster = (SiteRegion) spinnerSiteCluster.getSelectedItem();
 //            if (siteCluster != null) {
 //                siteClusterId = siteCluster.getId();
 //            }

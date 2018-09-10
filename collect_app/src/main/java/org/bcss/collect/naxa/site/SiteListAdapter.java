@@ -23,7 +23,7 @@ import org.bcss.collect.naxa.login.model.Site;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.MyViewHolder> {
+public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.SiteViewHolder> {
 
     private final int VIEW_TYPE_SURVEY_FORM = 0, VIEW_TYPE_SITE = 1;
 
@@ -45,29 +45,29 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.MyView
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SiteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.message_list_row, parent, false);
-        return new MyViewHolder(itemView);
+        return new SiteViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SiteViewHolder holder, int position) {
         Site site = siteList.get(holder.getAdapterPosition());
         holder.siteName.setText(site.getName());
         holder.iconText.setText(site.getName().substring(0, 1));
-        holder.subject.setText(site.getIdentifier());
+        holder.identifier.setText(site.getIdentifier());
         holder.message.setText(site.getAddress());
-        holder.timestamp.setText(site.getRegion());
+        holder.offlinetag.setText(site.getRegion());
         holder.imgProfile.setImageResource(R.drawable.circle_blue);
 
         applyIconAnimation(holder, position);
-        applyReadStatus(holder);
+        applyOffilineSiteTag(holder);
 
     }
 
 
-    private void applyIconAnimation(MyViewHolder holder, int position) {
+    private void applyIconAnimation(SiteViewHolder holder, int position) {
         if (selectedItems.get(position, false)) {
             holder.iconFront.setVisibility(View.GONE);
             resetIconYAxis(holder.iconBack);
@@ -125,20 +125,20 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.MyView
         notifyDataSetChanged();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
-        public TextView siteName, subject, message, iconText, timestamp;
-        public ImageView iconImp, imgProfile;
-        public LinearLayout messageContainer;
-        public RelativeLayout iconContainer, iconBack, iconFront;
+    public class SiteViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
+        private TextView siteName, identifier, message, iconText, offlinetag;
+        private ImageView iconImp, imgProfile;
+        private LinearLayout messageContainer;
+        private RelativeLayout iconContainer, iconBack, iconFront;
         private View rooTLayout;
 
-        public MyViewHolder(View view) {
+        public SiteViewHolder(View view) {
             super(view);
             siteName = (TextView) view.findViewById(R.id.tv_site_name);
-            subject = (TextView) view.findViewById(R.id.txt_primary);
+            identifier = (TextView) view.findViewById(R.id.tv_identifier);
             message = (TextView) view.findViewById(R.id.txt_secondary);
             iconText = (TextView) view.findViewById(R.id.icon_text);
-            timestamp = (TextView) view.findViewById(R.id.timestamp);
+            offlinetag = (TextView) view.findViewById(R.id.timestamp);
             iconBack = (RelativeLayout) view.findViewById(R.id.icon_back);
             iconFront = (RelativeLayout) view.findViewById(R.id.icon_front);
             iconImp = (ImageView) view.findViewById(R.id.icon_star);
@@ -169,7 +169,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.MyView
     }
 
 
-    private void applyReadStatus(MyViewHolder holder) {
+    private void applyOffilineSiteTag(SiteViewHolder holder) {
 
 
         Site siteLocationPojo = siteList.get(holder.getAdapterPosition());
@@ -182,18 +182,18 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.MyView
 
         if (isChecked) {
             holder.siteName.setTypeface(null, Typeface.BOLD);
-            holder.subject.setTypeface(null, Typeface.BOLD);
+            holder.identifier.setTypeface(null, Typeface.BOLD);
             holder.siteName.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.from));
-            holder.subject.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
+            holder.identifier.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
         }
 
         if (isUnVerifiedSite || isUnsycned || isFinalized) {
 
-            holder.timestamp.setText("Offline Site");
+            holder.offlinetag.setText("Offline Site");
             holder.siteName.setTypeface(null, Typeface.NORMAL);
-            holder.subject.setTypeface(null, Typeface.NORMAL);
+            holder.identifier.setTypeface(null, Typeface.NORMAL);
             holder.siteName.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
-            holder.subject.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.message));
+            holder.identifier.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.message));
         }
 
 

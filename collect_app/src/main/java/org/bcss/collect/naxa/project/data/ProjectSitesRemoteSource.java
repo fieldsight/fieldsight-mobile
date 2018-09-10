@@ -13,7 +13,7 @@ import org.bcss.collect.naxa.login.model.MySites;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
-import org.bcss.collect.naxa.site.data.SiteCluster;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.site.db.SiteRepository;
@@ -70,11 +70,11 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
                         projectLocalSource.save(project);
                         return ServiceGenerator.createService(ApiInterface.class)
-                                .getClusterByProjectId(project.getId())
-                                .flatMap(new Function<List<SiteCluster>, ObservableSource<Project>>() {
+                                .getRegionsByProjectId(project.getId())
+                                .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
                                     @Override
-                                    public ObservableSource<Project> apply(List<SiteCluster> siteClusters) throws Exception {
-                                        String value = new Gson().toJson(siteClusters);
+                                    public ObservableSource<Project> apply(List<SiteRegion> siteRegions) throws Exception {
+                                        String value = new Gson().toJson(siteRegions);
                                         ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
                                         return Observable.just(project);
                                     }
