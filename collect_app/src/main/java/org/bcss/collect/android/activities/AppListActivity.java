@@ -219,6 +219,9 @@ abstract class AppListActivity extends CollectAbstractActivity {
                 bottomSheetDialog.show();
                 isBottomDialogShown = true;
                 return true;
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

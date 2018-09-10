@@ -288,6 +288,9 @@ public class InstanceUploaderList extends InstanceListActivity implements
                 //todo logger
                 showSiteProjectChoices();
                 return true;
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
