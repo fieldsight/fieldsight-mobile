@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -43,14 +44,18 @@ import org.bcss.collect.naxa.common.LinearLayoutManagerWrapper;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -164,12 +169,48 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
             }
         }
 
+//        Observable.timer(5, TimeUnit.SECONDS)
+//                .map(new Function<Long, Site>() {
+//                    @Override
+//                    public Site apply(Long aLong) throws Exception {
+//                        return new SiteBuilder()
+//                                .setId(randomNumberString())
+//                                .setName(randomString())
+//                                .setIdentifier(randomString())
+//                                .setAddress(randomString())
+//                                .createSite();
+//                    }
+//                })
+//                .repeat()
+//                .subscribe(new io.reactivex.Observer<Site>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(Site site) {
+//                        SiteLocalSource.getInstance().save(site);
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//
+//                    }
+//                });
+
         LiveData<List<Site>> source;
-        if(sortList.isEmpty()){
+        if (sortList.isEmpty()) {
             source = allSitesLiveData;
-        }else {
+        } else {
             source = SiteLocalSource.getInstance().getByIdStatusAndCluster(loadedProject.getId(), selectedRegion);
         }
+
 
         source.observe(this, new Observer<List<Site>>() {
             @Override
@@ -181,6 +222,22 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     }
 
+    public String randomString() {
+        byte[] array = new byte[7]; // length is bounded by 7
+        new Random().nextBytes(array);
+        String generatedString = new String(array, Charset.forName("UTF-8"));
+
+        return generatedString;
+    }
+
+    public String randomNumberString() {
+
+
+        Random rand = new Random();
+
+        int n = rand.nextInt(9000) + 1;
+        return String.valueOf(n);
+    }
 
     @Override
     public void onResume() {

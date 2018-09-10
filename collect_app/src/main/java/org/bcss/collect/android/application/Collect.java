@@ -100,6 +100,8 @@ public class Collect extends Application implements HasActivityInjector {
     public static final int DEFAULT_FONTSIZE_INT = 21;
     public static final String OFFLINE_LAYERS = ODK_ROOT + File.separator + "layers";
     public static final String SETTINGS = ODK_ROOT + File.separator + "settings";
+    public static String PDF = ODK_ROOT +File.separator + "educational" + File.separator + "pdf" + File.separator;
+    public static String IMAGES = ODK_ROOT + File.separator + "educational" + File.separator + "images" + File.separator;
 
     public static String defaultSysLanguage;
     private static Collect singleton = null;
@@ -147,7 +149,7 @@ public class Collect extends Application implements HasActivityInjector {
         }
 
         String[] dirs = {
-                ODK_ROOT, FORMS_PATH, INSTANCES_PATH, CACHE_PATH, METADATA_PATH, OFFLINE_LAYERS
+                ODK_ROOT, FORMS_PATH, INSTANCES_PATH, CACHE_PATH, METADATA_PATH, OFFLINE_LAYERS, PDF, IMAGES
         };
 
         for (String dirName : dirs) {

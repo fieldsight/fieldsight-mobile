@@ -203,9 +203,9 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.SiteVi
     public void updateList(List<Site> newList) {
 
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SiteListDiffCallback(newList, siteList));
+        diffResult.dispatchUpdatesTo(this);
         siteList.clear();
         siteList.addAll(newList);
-        diffResult.dispatchUpdatesTo(this);
 
     }
 

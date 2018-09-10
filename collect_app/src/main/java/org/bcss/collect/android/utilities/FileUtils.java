@@ -572,4 +572,41 @@ public class FileUtils {
             context.revokeUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
     }
+
+    public static boolean isFileExists(File file) {
+        return file != null && file.exists();
+    }
+
+    public static boolean isFileExists(String filePath) {
+        return isFileExists(getFileByPath(filePath));
+    }
+
+    public static File getFileByPath(String filePath) {
+        return isSpace(filePath) ? null : new File(filePath);
+    }
+
+
+    private static boolean isSpace(String s) {
+        if (s == null) return true;
+        for (int i = 0, len = s.length(); i < len; ++i) {
+            if (!Character.isWhitespace(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static String getFileExtension(File file) {
+        if (file == null) return null;
+        return getFileExtension(file.getPath());
+    }
+
+    public static String getFileExtension(String filePath) {
+        if (isSpace(filePath)) return filePath;
+        int lastPoi = filePath.lastIndexOf('.');
+        int lastSep = filePath.lastIndexOf(File.separator);
+        if (lastPoi == -1 || lastSep >= lastPoi) return "";
+        return filePath.substring(lastPoi + 1);
+    }
+
 }

@@ -1,8 +1,13 @@
 package org.bcss.collect.naxa.education_materials;
 
+import android.os.Environment;
+
+import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
+import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.generalforms.data.Em;
 import org.bcss.collect.naxa.generalforms.data.EmImage;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
@@ -13,19 +18,27 @@ import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.SubStage;
+import org.bcss.collect.naxa.sync.SyncRepository;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<EducationalMaterial> {
 
@@ -68,28 +81,80 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Ed
                     }
                 })
                 .flatMapIterable((Function<ArrayList<String>, Iterable<String>>) urls -> urls)
-                .toList()
+                .filter(new Predicate<String>() {
+                    @Override
+                    public boolean test(String s) throws Exception {
+                        String fileName = FilenameUtils.getName(s);
+                        String extension = FilenameUtils.getExtension(s);
+                        boolean isFileAlreadyDownloaded;
+
+                        switch (extension) {
+                            case "pdf":
+                                Timber.i("%s already exists skipping download", s);
+                                isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.PDF + File.separator + fileName);
+                                break;
+                            default:
+                                Timber.i("%s already exists skipping download", s);
+                                isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.IMAGES + File.separator + fileName);
+                                break;
+                        }
+
+                        return !isFileAlreadyDownloaded;
+                    }
+                })
+                .flatMap((Function<String, Observable<String>>) url -> {
+                    Timber.i("Looking for file on %s", url);
+
+                    final String fileName = FilenameUtils.getName(url);
+                    String savePath = getSavePath(url);
+
+                    return new RxDownloader(Collect.getInstance())
+                            .download(url, fileName, savePath, "*/*", true);
+
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<String>>() {
+                .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        SyncRepository.getInstance().showProgress(EDU_MATERIALS);
                     }
 
                     @Override
-                    public void onSuccess(List<String> strings) {
-                        Timber.i("Downloading %s files as education materials", strings.size());
+                    public void onNext(String s) {
+
+                        Timber.i("%s has been downloaded", s);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        SyncRepository.getInstance().setError(EDU_MATERIALS);
                         e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        SyncRepository.getInstance().setSuccess(EDU_MATERIALS);
                     }
                 });
 
-        ;
+    }
 
+
+    private String getSavePath(String url) {
+
+        //todo bug RxDownloadmanager is adding /storage/emulated so remove it before we send path
+        String savePath = "";
+        switch (FileUtils.getFileExtension(url).toLowerCase()) {
+            case "pdf":
+                savePath = Collect.PDF.replace(Environment.getExternalStorageDirectory().toString(), "");
+                break;
+            default:
+                savePath = Collect.IMAGES.replace(Environment.getExternalStorageDirectory().toString(), "");
+                break;
+        }
+
+        return savePath;
     }
 
     private Observable<Em> scheduledFormEducational() {
