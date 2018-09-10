@@ -40,9 +40,9 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
 
-    public LiveData<List<GeneralForm>> getBySiteId(@NonNull String siteId,String projectId) {
+    public LiveData<List<GeneralForm>> getBySiteId(@NonNull String siteId, String projectId) {
 
-        return dao.getSiteGeneralForms(siteId,projectId);
+        return dao.getSiteGeneralForms(siteId, projectId);
 
 
     }
@@ -114,33 +114,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     @Override
     public void updateAll(ArrayList<GeneralForm> items) {
 
-        Observable.just(items)
-                .map(new Function<ArrayList<GeneralForm>, Object>() {
-                    @Override
-                    public Object apply(ArrayList<GeneralForm> generalForms) throws Exception {
-                        dao.updateAll(generalForms);
-                        return Observable.empty();
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<Object>() {
-                    @Override
-                    public void onNext(Object o) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
+        AsyncTask.execute(() -> dao.updateAll(items));
 
     }
 

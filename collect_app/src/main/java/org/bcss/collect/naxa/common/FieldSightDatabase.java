@@ -8,6 +8,8 @@ import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.education_materials.EducationalMaterial;
+import org.bcss.collect.naxa.education_materials.EducationalMaterialsDao;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormDAO;
 import org.bcss.collect.naxa.login.model.Project;
@@ -46,7 +48,8 @@ import java.io.File;
                 SurveyForm.class,
                 SiteType.class,
                 SiteRegion.class,
-                FieldSightNotification.class
+                FieldSightNotification.class,
+                EducationalMaterial.class
 
         },
         version = 2)
@@ -77,6 +80,8 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     public abstract SiteClusterDAO getSiteClusterDAO();
 
     public abstract FieldSightNotificationDAO getFieldSightNotificationDAO();
+
+    public abstract EducationalMaterialsDao getEducationalMaterialDAO();
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 

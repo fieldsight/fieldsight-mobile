@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.generalforms;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,12 +54,21 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         GeneralForm generalForm = generalForms.get(viewHolder.getAdapterPosition());
         viewHolder.tvFormName.setText(generalForm.getName());
         viewHolder.tvLastFilledDateTime.setText(generalForm.getName());
+        viewHolder.tvDesc.setVisibility(View.GONE);
+
 
         if (generalForm.getName() != null) {
             viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1));
         }
 
-        viewHolder.badge.setVisibility(View.GONE);
+        Integer count = generalForm.getResponsesCount();
+        viewHolder.badge.setVisibility(count != null && count > 0 ? View.VISIBLE : View.GONE);
+
+    }
+
+    private void showOrHide(TextView textView, String text) {
+        textView.setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
+        textView.setText(text);
     }
 
 
