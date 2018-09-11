@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
@@ -57,12 +58,12 @@ public class TitleDescAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     protected class TitleDescVH extends RecyclerView.ViewHolder {
-        public final CardView rootLayout;
+        public final RelativeLayout rootLayout;
         public TextView tvTitle, tvDesc, tvIconText;
 
         public TitleDescVH(View itemView) {
             super(itemView);
-            rootLayout = (CardView) itemView.findViewById(R.id.card_view_list_item_title_desc);
+            rootLayout = (RelativeLayout) itemView.findViewById(R.id.card_view_list_item_title_desc);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_list_item_title);
             tvDesc = (TextView) itemView.findViewById(R.id.tv_list_item_desc);
             tvIconText = (TextView) itemView.findViewById(R.id.title_desc_tv_icon_text);

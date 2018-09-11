@@ -48,6 +48,7 @@ import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
+import org.bcss.collect.naxa.survey.SurveyFormsActivity;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
@@ -169,40 +170,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
             }
         }
 
-//        Observable.timer(5, TimeUnit.SECONDS)
-//                .map(new Function<Long, Site>() {
-//                    @Override
-//                    public Site apply(Long aLong) throws Exception {
-//                        return new SiteBuilder()
-//                                .setId(randomNumberString())
-//                                .setName(randomString())
-//                                .setIdentifier(randomString())
-//                                .setAddress(randomString())
-//                                .createSite();
-//                    }
-//                })
-//                .repeat()
-//                .subscribe(new io.reactivex.Observer<Site>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Site site) {
-//                        SiteLocalSource.getInstance().save(site);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
 
         LiveData<List<Site>> source;
         if (sortList.isEmpty()) {
@@ -215,6 +182,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         source.observe(this, new Observer<List<Site>>() {
             @Override
             public void onChanged(@Nullable List<Site> sites) {
+                Timber.i("Site list is mutating");
                 siteListAdapter.updateList(sites);
             }
         });
@@ -369,7 +337,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void onSurveyFormClicked() {
-
+        SurveyFormsActivity.start(getActivity(),loadedProject);
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {

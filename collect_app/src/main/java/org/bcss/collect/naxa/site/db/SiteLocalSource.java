@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.site.db;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
 
 import org.bcss.collect.android.application.Collect;
@@ -8,6 +9,7 @@ import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.stages.data.SubStage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
     public LiveData<List<Site>> getByIdStatusAndCluster(String projectId,String cluster){
+
         return dao.getSiteFromFilter(projectId,cluster);
     }
 

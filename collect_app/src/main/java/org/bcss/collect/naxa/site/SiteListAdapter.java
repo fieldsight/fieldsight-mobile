@@ -19,11 +19,12 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.anim.FlipAnimator;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.SiteBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.SiteViewHolder> {
+public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int VIEW_TYPE_SURVEY_FORM = 0, VIEW_TYPE_SITE = 1;
 
@@ -36,33 +37,58 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.SiteVi
     private boolean reverseAllAnimations = false;
 
     SiteListAdapter(List<Site> sitelist, SiteListAdapter.SiteListAdapterListener listener) {
-        this.siteList = sitelist;
-        this.filetredsitelist = sitelist;
+
         this.listener = listener;
         this.selectedItems = new SparseBooleanArray();
         this.animationItemsIndex = new SparseBooleanArray();
+
+        ArrayList<Site> surveyFormAndSites = new ArrayList<>();
+        surveyFormAndSites.add(new SiteBuilder().setName("project_survey").createSite());
+        surveyFormAndSites.addAll(sitelist);
+
+        this.siteList = surveyFormAndSites;
+        this.filetredsitelist = surveyFormAndSites;
     }
 
     @NonNull
     @Override
-    public SiteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_list_row, parent, false);
-        return new SiteViewHolder(itemView);
+    public RecyclerView.ViewHolder  onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder holder = null;
+
+        if (viewType == VIEW_TYPE_SURVEY_FORM) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.open_survey_from, parent, false);
+            holder = new SurveyViewHolder(itemView);
+        } else if (viewType == VIEW_TYPE_SITE) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_list_row, parent, false);
+            holder = new SiteViewHolder(itemView);
+        }
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SiteViewHolder holder, int position) {
-        Site site = siteList.get(holder.getAdapterPosition());
-        holder.siteName.setText(site.getName());
-        holder.iconText.setText(site.getName().substring(0, 1));
-        holder.identifier.setText(site.getIdentifier());
-        holder.message.setText(site.getAddress());
-        holder.offlinetag.setText(site.getRegion());
-        holder.imgProfile.setImageResource(R.drawable.circle_blue);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        applyIconAnimation(holder, position);
-        applyOffilineSiteTag(holder);
+        switch (holder.getItemViewType()) {
+            case VIEW_TYPE_SURVEY_FORM:
+                SurveyViewHolder surveyViewHolder = (SurveyViewHolder) holder;
+                break;
+            default:
+                final SiteViewHolder siteViewHolder = (SiteViewHolder) holder;
+                Site site = siteList.get(holder.getAdapterPosition());
+                siteViewHolder.siteName.setText(site.getName());
+                siteViewHolder.iconText.setText(site.getName().substring(0, 1));
+                siteViewHolder.identifier.setText(site.getIdentifier());
+                siteViewHolder.message.setText(site.getAddress());
+                siteViewHolder.offlinetag.setText(site.getRegion());
+                siteViewHolder.imgProfile.setImageResource(R.drawable.circle_blue);
+
+                applyIconAnimation(siteViewHolder, position);
+                applyOffilineSiteTag(siteViewHolder);
+                break;
+        }
+
 
     }
 
@@ -109,9 +135,15 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.SiteVi
         return siteList.size();
     }
 
+
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        switch (position) {
+            case 0:
+                return VIEW_TYPE_SURVEY_FORM;
+            default:
+                return VIEW_TYPE_SITE;
+        }
     }
 
     public void resetAnimationIndex() {
@@ -123,6 +155,23 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.SiteVi
         reverseAllAnimations = true;
         selectedItems.clear();
         notifyDataSetChanged();
+    }
+
+    public class SurveyViewHolder extends RecyclerView.ViewHolder {
+
+        private RelativeLayout rootLayout;
+
+        public SurveyViewHolder(View itemView) {
+            super(itemView);
+            rootLayout = itemView.findViewById(R.id.root_layout_survey_form_list_item);
+            rootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onSurveyFormClicked();
+                }
+            });
+
+        }
     }
 
     public class SiteViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
@@ -205,7 +254,12 @@ public class SiteListAdapter extends RecyclerView.Adapter<SiteListAdapter.SiteVi
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SiteListDiffCallback(newList, siteList));
         diffResult.dispatchUpdatesTo(this);
         siteList.clear();
-        siteList.addAll(newList);
+
+        ArrayList<Site> surveyFormAndSites = new ArrayList<>();
+        surveyFormAndSites.add(new SiteBuilder().setName("project_survey").createSite());
+        surveyFormAndSites.addAll(newList);
+
+        siteList.addAll(surveyFormAndSites);
 
     }
 
