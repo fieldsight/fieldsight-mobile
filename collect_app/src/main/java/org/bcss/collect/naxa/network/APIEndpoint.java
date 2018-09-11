@@ -3,8 +3,8 @@ package org.bcss.collect.naxa.network;
 public class APIEndpoint {
 
     public final static int NEW_RECORD_CREATED = 201;
-//  public static final String BASE_URL = "http://app.fieldsight.org";
- public static final String BASE_URL = "http://fieldsight.naxa.com.np";
+    //  public static final String BASE_URL = "http://app.fieldsight.org";
+    public static final String BASE_URL = "http://fieldsight.naxa.com.np";
 
     public static final String PASSWORD_RESET = BASE_URL + "/accounts/password/reset/";
     public static final String USER_LOGIN = BASE_URL + "/users/api/get-auth-token/";
@@ -23,6 +23,8 @@ public class APIEndpoint {
     public static final String GET_LOCATION_URL = BASE_URL + "/fieldsight/api/project-sites/";
     public static final String GET_FORM_SCHEDULE = BASE_URL + "/forms/api/schedules/{is_project}/{id}";
     public static final String GET_GENERAL_FORM = BASE_URL + "/forms/api/general/{is_project}/{id}";
+    public static final String GET_PROJECT_SITES = BASE_URL + "/users/metwo/";
+
 
     public static final String GET_FS_FORM_DETAIL = BASE_URL + "/forms/api/form-detail/{fs_form_id}";
     public static final String ASSIGNED_FORM_LIST_PROJECT = BASE_URL + "/forms/assignedFormList/project/";
@@ -36,6 +38,7 @@ public class APIEndpoint {
 
     public static final String GET_CLUSTER_LIST = BASE_URL + "/fieldsight/project/region-list/{project_id}/";
     public static final String GET_ALL_SUBMISSION = BASE_URL + "/forms/last-submissions/";
+    public static final String GET_MY_SITES = BASE_URL + "/users/mysites";
 
 
 }

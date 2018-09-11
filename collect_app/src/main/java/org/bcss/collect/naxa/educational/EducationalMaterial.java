@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.education_materials;/*
+package org.bcss.collect.naxa.educational;/*
  * Copyright 2017 Nafundi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@ package org.bcss.collect.naxa.education_materials;/*
  */
 
 
-import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
@@ -25,18 +24,18 @@ import android.support.annotation.NonNull;
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_transfer_object
  * Objects of this class are created using builder pattern: https://en.wikipedia.org/wiki/Builder_pattern
  */
-@Entity(tableName = "educational_materials")
+
 public class EducationalMaterial {
-    private String title;
-    private String description;
     @PrimaryKey
     @NonNull
     private String fsFormId;
+
+    private String title;
+    private String description;
     private String pdfFilePath;
     private String imageFilesPaths;
     private String siteId;
     private String formType;
-
 
     public EducationalMaterial(){
 

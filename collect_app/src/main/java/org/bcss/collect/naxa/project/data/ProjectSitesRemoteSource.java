@@ -2,6 +2,8 @@ package org.bcss.collect.naxa.project.data;
 
 import com.google.gson.Gson;
 
+import org.bcss.collect.naxa.common.GSONInstance;
+import org.bcss.collect.naxa.network.APIEndpoint;
 import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
@@ -19,7 +21,9 @@ import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.site.db.SiteRepository;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
+import java.net.SocketTimeoutException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -49,7 +53,106 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         syncRepository = SyncRepository.getInstance();
     }
 
+    public Single<List<Project>> fetchProjectAndSites() {
+        return ServiceGenerator.getRxClient()
+                .create(ApiInterface.class)
+                .getUser()
+                .flatMap(new Function<MeResponse, ObservableSource<MySiteResponse>>() {
+                    @Override
+                    public ObservableSource<MySiteResponse> apply(MeResponse meResponse) throws Exception {
 
+                        if (!meResponse.getData().getIsSupervisor()) {
+                            throw new BadUserException(meResponse.getData().getFull_name() + " has not been assigned as a site supervisor.");
+                        }
+
+                        String user = GSONInstance.getInstance().toJson(meResponse.getData());
+                        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
+                        return getPageAndNext(APIEndpoint.GET_MY_SITES);
+
+                    }
+                })
+                .concatMap(new Function<MySiteResponse, Observable<MySiteResponse>>() {
+                    @Override
+                    public Observable<MySiteResponse> apply(MySiteResponse mySiteResponse) throws Exception {
+                        return Observable.just(mySiteResponse);
+                    }
+                })
+                .map(new Function<MySiteResponse, List<MySites>>() {
+                    @Override
+                    public List<MySites> apply(MySiteResponse mySiteResponse) throws Exception {
+                        return mySiteResponse.getResult();
+                    }
+                })
+                .flatMapIterable(new Function<List<MySites>, Iterable<MySites>>() {
+                    @Override
+                    public Iterable<MySites> apply(List<MySites> mySites) throws Exception {
+                        return mySites;
+                    }
+                })
+                .flatMap(new Function<MySites, Observable<Project>>() {
+                    @Override
+                    public Observable<Project> apply(MySites mySites) throws Exception {
+                        Project project = mySites.getProject();
+                        siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
+                        projectLocalSource.save(project);
+
+                        return ServiceGenerator.getRxClient().create(ApiInterface.class)
+                                .getRegionsByProjectId(project.getId())
+                                .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
+                                    @Override
+                                    public ObservableSource<Project> apply(List<SiteRegion> siteRegions) throws Exception {
+                                        siteRegions.add(new SiteRegion("-1", "All sites", "-1"));
+                                        siteRegions.add(new SiteRegion("0", "Unassigned Sites", "0"));
+                                        String value = GSONInstance.getInstance().toJson(siteRegions);
+
+                                        ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
+                                        return Observable.just(project);
+                                    }
+                                });
+                    }
+                })
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+
+    }
+
+
+    private Observable<MySiteResponse> getPageAndNext(String url) {
+        return ServiceGenerator.getRxClient().create(ApiInterface.class)
+                .getAssignedSites(url)
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                if (throwable instanceof SocketTimeoutException) {
+                                    return throwableObservable.delay(10, TimeUnit.SECONDS);
+                                }
+
+                                return Observable.error(throwable);
+                            }
+                        });
+                    }
+                })
+                .concatMap(new Function<MySiteResponse, ObservableSource<MySiteResponse>>() {
+                    @Override
+                    public ObservableSource<MySiteResponse> apply(MySiteResponse mySiteResponse) throws Exception {
+                        if (mySiteResponse.getNext() == null) {
+                            return Observable.just(mySiteResponse);
+                        }
+
+                        return Observable.just(mySiteResponse)
+                                .delay(5, TimeUnit.SECONDS)
+                                .concatWith(getPageAndNext(mySiteResponse.getNext()));
+                    }
+                });
+    }
+
+    @Deprecated
+    //old sites and project api
     public Single<List<Project>> fetchProjecSites() {
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
@@ -93,7 +196,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     @Override
     public void getAll() {
         int uid = Constant.DownloadUID.PROJECT_SITES;
-        fetchProjecSites()
+        fetchProjectAndSites()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<List<Project>>() {
                     @Override
@@ -110,6 +213,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
                         syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
                     }

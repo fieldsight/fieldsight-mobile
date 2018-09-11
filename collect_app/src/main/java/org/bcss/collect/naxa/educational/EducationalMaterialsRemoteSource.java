@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.education_materials;
+package org.bcss.collect.naxa.educational;
 
 import android.os.Environment;
 
@@ -23,24 +23,20 @@ import org.bcss.collect.naxa.sync.SyncRepository;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
-public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<EducationalMaterial> {
+public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em> {
 
     private static EducationalMaterialsRemoteSource INSTANCE;
     private final EducationalMaterialsDao dao;
@@ -99,7 +95,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Ed
                                 break;
                         }
 
-                        return !isFileAlreadyDownloaded;
+                        return true;
                     }
                 })
                 .flatMap((Function<String, Observable<String>>) url -> {
@@ -109,7 +105,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Ed
                     String savePath = getSavePath(url);
 
                     return new RxDownloader(Collect.getInstance())
-                            .download(url, fileName, savePath, "*/*", true);
+                            .download(url, fileName, savePath, "*/*", false);
 
                 })
                 .subscribeOn(Schedulers.io())
@@ -164,7 +160,16 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Ed
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<ScheduleForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms("1", project.getId()))
                 .flatMapIterable((Function<ArrayList<ScheduleForm>, Iterable<ScheduleForm>>) scheduleForms -> scheduleForms)
-                .map(ScheduleForm::getEm);
+                .map(new Function<ScheduleForm, Em>() {
+                    @Override
+                    public Em apply(ScheduleForm scheduleForm) throws Exception {
+                        Em em = scheduleForm.getEm();
+                        em.setFsFormId(scheduleForm.getFsFormId());
+                        EducationalMaterialsLocalSource.getInstance().save(em);
+
+                        return em;
+                    }
+                });
     }
 
     private Observable<Em> substageFormEducational() {
@@ -179,7 +184,11 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Ed
                 .map(new Function<SubStage, Em>() {
                     @Override
                     public Em apply(SubStage subStage) throws Exception {
-                        return subStage.getEm();
+                        Em em = subStage.getEm();
+                        em.setFsFormId(subStage.getFsFormId());
+//                        EducationalMaterialsLocalSource.getInstance().save(em);
+
+                        return em;
                     }
                 });
     }
@@ -192,8 +201,27 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Ed
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable("1", project.getId()))
                 .flatMapIterable((Function<ArrayList<GeneralForm>, Iterable<GeneralForm>>) generalForms -> generalForms)
-                .map(GeneralForm::getEm);
+                .map(new Function<GeneralForm, Em>() {
+                    @Override
+                    public Em apply(GeneralForm generalForm) throws Exception {
+                        Em em = generalForm.getEm();
+                        em.setFsFormId(generalForm.getFsFormId());
+                        EducationalMaterialsLocalSource.getInstance().save(em);
+
+                        return em;
+                    }
+                });
 
 
     }
+
+
+    public static String getSafeString(String string, String defaultValue) {
+        if (string != null && string.length() > 0) {
+            return string;
+        }
+
+        return defaultValue;
+    }
+
 }

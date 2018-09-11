@@ -7,6 +7,7 @@ import org.bcss.collect.naxa.login.model.AuthResponse;
 import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationDetail;
+import org.bcss.collect.naxa.project.data.MySiteResponse;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.site.SiteType;
 import org.bcss.collect.naxa.site.data.SiteRegion;
@@ -34,6 +35,7 @@ import retrofit2.http.Url;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_CLUSTER_LIST;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_FORM_SCHEDULE;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_GENERAL_FORM;
+import static org.bcss.collect.naxa.network.APIEndpoint.GET_PROJECT_SITES;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_SITE_TYPES;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_STAGE_SUB_STAGE;
 
@@ -41,6 +43,14 @@ public interface ApiInterface {
 
     @GET("/users/me/")
     Observable<MeResponse> getUserInformation();
+
+
+    @GET(GET_PROJECT_SITES)
+    Observable<MeResponse> getUser();
+
+    @GET
+    Observable<MySiteResponse> getAssignedSites(@Url String url);
+
 
     @FormUrlEncoded
     @POST("/users/api/get-auth-token/")

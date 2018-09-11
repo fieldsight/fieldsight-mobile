@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.education_materials;
+package org.bcss.collect.naxa.educational;
 
 import org.bcss.collect.naxa.submissions.ViewModel;
 

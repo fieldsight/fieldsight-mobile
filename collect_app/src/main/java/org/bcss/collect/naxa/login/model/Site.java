@@ -14,6 +14,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 
 @Entity(tableName = "sites")
 public class Site implements Parcelable {
@@ -92,7 +93,12 @@ public class Site implements Parcelable {
 
 
     private String metaAttributes;
-    private String region;
+
+    private String regionId;
+
+    @Ignore
+    @SerializedName("region")
+    private SiteRegion region;
 
     //default values for  table
     private String generalFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
@@ -104,8 +110,20 @@ public class Site implements Parcelable {
 
     }
 
+    public String getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(String regionId) {
+        this.regionId = regionId;
+    }
+
+    public void setRegion(SiteRegion region) {
+        this.region = region;
+    }
+
     @Ignore
-    public Site(@NonNull String id, String latitude, String longitude, String identifier, String name, String typeId, String typeLabel, String phone, String address, String publicDesc, String additionalDesc, String logo, Boolean isActive, String location, Boolean isSurvey, String dateCreated, String project, int isSiteVerified, String siteTypeError, String metaAttributes, String region, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm) {
+    public Site(@NonNull String id, String latitude, String longitude, String identifier, String name, String typeId, String typeLabel, String phone, String address, String publicDesc, String additionalDesc, String logo, Boolean isActive, String location, Boolean isSurvey, String dateCreated, String project, int isSiteVerified, String siteTypeError, String metaAttributes, String regionId, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -126,7 +144,7 @@ public class Site implements Parcelable {
         this.isSiteVerified = isSiteVerified;
         this.siteTypeError = siteTypeError;
         this.metaAttributes = metaAttributes;
-        this.region = region;
+        this.regionId = regionId;
         this.generalFormDeployedFrom = generalFormDeployedFrom;
         this.stagedFormDeployedFrom = stagedFormDeployedFrom;
         this.scheduleFormDeployedForm = scheduleFormDeployedForm;
@@ -229,11 +247,11 @@ public class Site implements Parcelable {
 
 
     public String getRegion() {
-        return region == null ? "" : region;
+        return regionId == null ? "" : regionId;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public void setRegion(String regionId) {
+        this.regionId = regionId;
     }
 
 
@@ -366,7 +384,7 @@ public class Site implements Parcelable {
         dest.writeInt(this.isSiteVerified);
         dest.writeString(this.siteTypeError);
         dest.writeString(this.metaAttributes);
-        dest.writeString(this.region);
+        dest.writeString(this.regionId);
         dest.writeString(this.generalFormDeployedFrom);
         dest.writeString(this.stagedFormDeployedFrom);
         dest.writeString(this.scheduleFormDeployedForm);
@@ -397,7 +415,7 @@ public class Site implements Parcelable {
                 Objects.equal(project, site.project) &&
                 Objects.equal(siteTypeError, site.siteTypeError) &&
                 Objects.equal(metaAttributes, site.metaAttributes) &&
-                Objects.equal(region, site.region) &&
+                Objects.equal(regionId, site.regionId) &&
                 Objects.equal(generalFormDeployedFrom, site.generalFormDeployedFrom) &&
                 Objects.equal(stagedFormDeployedFrom, site.stagedFormDeployedFrom) &&
                 Objects.equal(scheduleFormDeployedForm, site.scheduleFormDeployedForm);
@@ -405,7 +423,7 @@ public class Site implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, metaAttributes, region, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
+        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, metaAttributes, regionId, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
     }
 
     protected Site(Parcel in) {
@@ -429,7 +447,7 @@ public class Site implements Parcelable {
         this.isSiteVerified = in.readInt();
         this.siteTypeError = in.readString();
         this.metaAttributes = in.readString();
-        this.region = in.readString();
+        this.regionId = in.readString();
 
         this.generalFormDeployedFrom = in.readString();
         this.stagedFormDeployedFrom = in.readString();

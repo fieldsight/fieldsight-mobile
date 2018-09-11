@@ -8,8 +8,8 @@ import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.data.FieldSightNotification;
-import org.bcss.collect.naxa.education_materials.EducationalMaterial;
-import org.bcss.collect.naxa.education_materials.EducationalMaterialsDao;
+import org.bcss.collect.naxa.educational.EducationalMaterialsDao;
+import org.bcss.collect.naxa.generalforms.data.Em;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormDAO;
 import org.bcss.collect.naxa.login.model.Project;
@@ -49,7 +49,7 @@ import java.io.File;
                 SiteType.class,
                 SiteRegion.class,
                 FieldSightNotification.class,
-                EducationalMaterial.class
+                Em.class
 
         },
         version = 2)

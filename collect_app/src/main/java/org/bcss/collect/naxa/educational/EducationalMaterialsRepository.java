@@ -1,17 +1,16 @@
-package org.bcss.collect.naxa.education_materials;
+package org.bcss.collect.naxa.educational;
 
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import org.bcss.collect.naxa.common.BaseRepository;
-import org.bcss.collect.naxa.generalforms.data.GeneralFormLocalSource;
-import org.bcss.collect.naxa.generalforms.data.GeneralFormRemoteSource;
+import org.bcss.collect.naxa.generalforms.data.Em;
 
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EducationalMaterialsRepository implements BaseRepository<EducationalMaterial> {
+public class EducationalMaterialsRepository implements BaseRepository<Em> {
 
     private static EducationalMaterialsRepository INSTANCE = null;
     private final EducationalMaterialsLocalSource localSource;
@@ -36,22 +35,22 @@ public class EducationalMaterialsRepository implements BaseRepository<Educationa
 
 
     @Override
-    public LiveData<List<EducationalMaterial>> getAll(boolean forceUpdate) {
+    public LiveData<List<Em>> getAll(boolean forceUpdate) {
         return null;
     }
 
     @Override
-    public void save(EducationalMaterial... items) {
+    public void save(Em... items) {
         localSource.save(items);
     }
 
     @Override
-    public void save(ArrayList<EducationalMaterial> items) {
+    public void save(ArrayList<Em> items) {
         localSource.save(items);
     }
 
     @Override
-    public void updateAll(ArrayList<EducationalMaterial> items) {
+    public void updateAll(ArrayList<Em> items) {
 
     }
 

@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.education_materials;
+package org.bcss.collect.naxa.educational;
 
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
@@ -6,11 +6,12 @@ import android.os.AsyncTask;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
+import org.bcss.collect.naxa.generalforms.data.Em;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EducationalMaterialsLocalSource implements BaseLocalDataSource<EducationalMaterial> {
+public class EducationalMaterialsLocalSource implements BaseLocalDataSource<Em> {
 
     private static EducationalMaterialsLocalSource INSTANCE;
     private final EducationalMaterialsDao dao;
@@ -29,22 +30,22 @@ public class EducationalMaterialsLocalSource implements BaseLocalDataSource<Educ
 
 
     @Override
-    public LiveData<List<EducationalMaterial>> getAll() {
+    public LiveData<List<Em>> getAll() {
         return null;
     }
 
     @Override
-    public void save(EducationalMaterial... items) {
+    public void save(Em... items) {
         AsyncTask.execute(() -> dao.insert(items));
     }
 
     @Override
-    public void save(ArrayList<EducationalMaterial> items) {
+    public void save(ArrayList<Em> items) {
         AsyncTask.execute(() -> dao.insert(items));
     }
 
     @Override
-    public void updateAll(ArrayList<EducationalMaterial> items) {
+    public void updateAll(ArrayList<Em> items) {
 
     }
 }
