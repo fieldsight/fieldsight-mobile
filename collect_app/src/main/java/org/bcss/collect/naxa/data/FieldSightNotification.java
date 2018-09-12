@@ -16,6 +16,7 @@ public class FieldSightNotification implements Parcelable {
     private String notificationType;
     private String notifiedDate;
     private String notifiedTime;
+
     private String idString;
     private String fsFormId;
     private String fsFormIdProject;
@@ -30,11 +31,14 @@ public class FieldSightNotification implements Parcelable {
     private String details_url;
     private String comment;
     private String formType;
+    private boolean isRead;
 
 
 
-
-    public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString, String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId, String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment, String formType) {
+    public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString,
+                                  String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId,
+                                  String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment,
+                                  String formType,boolean isRead) {
         this.id = id;
         this.notificationType = notificationType;
         this.notifiedDate = notifiedDate;
@@ -53,6 +57,7 @@ public class FieldSightNotification implements Parcelable {
         this.details_url = details_url;
         this.comment = comment;
         this.formType = formType;
+        this.isRead = isRead;
     }
 
     public String getNotifiedTime() {
@@ -82,6 +87,14 @@ public class FieldSightNotification implements Parcelable {
     @NonNull
     public int getId() {
         return id;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        isRead = read;
     }
 
     public void setId(@NonNull int id) {
@@ -225,6 +238,7 @@ public class FieldSightNotification implements Parcelable {
         dest.writeString(this.details_url);
         dest.writeString(this.comment);
         dest.writeString(this.formType);
+        dest.writeByte(this.isRead ? (byte) 1 : (byte) 0);
     }
 
     protected FieldSightNotification(Parcel in) {
@@ -246,9 +260,10 @@ public class FieldSightNotification implements Parcelable {
         this.details_url = in.readString();
         this.comment = in.readString();
         this.formType = in.readString();
+        this.isRead = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<FieldSightNotification> CREATOR = new Parcelable.Creator<FieldSightNotification>() {
+    public static final Creator<FieldSightNotification> CREATOR = new Creator<FieldSightNotification>() {
         @Override
         public FieldSightNotification createFromParcel(Parcel source) {
             return new FieldSightNotification(source);

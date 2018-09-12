@@ -117,6 +117,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setIsFormDeployed(isFormDeployed)
                     .setFsFormId(fsFormIdProject)
                     .setIsFormDeployed(isDeployed)
+                    .isRead(false)
                     .createFieldSightNotification();
 
             FieldSightNotificationLocalSource.getInstance().save(builder.createFieldSightNotification());
