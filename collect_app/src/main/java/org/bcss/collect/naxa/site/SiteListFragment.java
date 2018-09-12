@@ -274,6 +274,8 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     }
 
+
+
     public MutableLiveData<ArrayList<FilterOption>> getFilterOptionForSites() {
 
         ArrayList<Pair> sites = new ArrayList<>();

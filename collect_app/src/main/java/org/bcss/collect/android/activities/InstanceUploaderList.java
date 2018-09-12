@@ -107,6 +107,11 @@ public class InstanceUploaderList extends InstanceListActivity implements
             loadedSite = savedInstanceState.getParcelable(EXTRA_OBJECT);
         }
 
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
+        }
+
         requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
@@ -120,10 +125,7 @@ public class InstanceUploaderList extends InstanceListActivity implements
             }
         });
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
-        }
+
     }
 
     private void init() {
@@ -381,13 +383,13 @@ public class InstanceUploaderList extends InstanceListActivity implements
 
         if (showAllMode) {
             if (loadedSite != null) {
-                return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
+                return instancesDao.getCompletedUndeletedInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
             } else {
                 return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
             }
         } else {
             if (loadedSite != null) {
-                return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
+                return instancesDao.getFinalizedInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
             } else {
                 return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
             }

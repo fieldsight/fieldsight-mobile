@@ -167,6 +167,27 @@ public class InstancesDao {
         return cursorLoader;
     }
 
+    public CursorLoader getFinalizedInstancesCursorLoaderBySite(String siteId, String sortOrder) {
+        CursorLoader cursorLoader;
+        if (siteId.length() == 0) {
+            cursorLoader = getFinalizedInstancesCursorLoader(sortOrder);
+        } else {
+            String selection =
+                    "(" + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                            + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
+                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
+            String[] selectionArgs = {
+                    InstanceProviderAPI.STATUS_COMPLETE,
+                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
+                    siteId};
+
+            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
+        }
+
+        return cursorLoader;
+    }
+
+
     public Cursor getInstancesCursorForFilePath(String path) {
         String selection = InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH + "=?";
         String[] selectionArgs = {path};
@@ -222,6 +243,29 @@ public class InstancesDao {
         }
         return cursorLoader;
     }
+
+    public CursorLoader getCompletedUndeletedInstancesCursorLoaderBySite(String siteId, String sortOrder) {
+        CursorLoader cursorLoader;
+        if (siteId.length() == 0) {
+            cursorLoader = getAllCompletedUndeletedInstancesCursorLoader(sortOrder);
+        } else {
+            String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and ("
+                    + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                    + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                    + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
+                    + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
+
+            String[] selectionArgs = {
+                    InstanceProviderAPI.STATUS_COMPLETE,
+                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
+                    InstanceProviderAPI.STATUS_SUBMITTED,
+                    siteId};
+
+            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
+        }
+        return cursorLoader;
+    }
+
 
     public Cursor getInstancesCursorForId(String id) {
         String selection = InstanceProviderAPI.InstanceColumns._ID + "=?";

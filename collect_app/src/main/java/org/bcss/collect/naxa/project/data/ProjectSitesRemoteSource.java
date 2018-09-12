@@ -101,8 +101,8 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                                 .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
                                     @Override
                                     public ObservableSource<Project> apply(List<SiteRegion> siteRegions) throws Exception {
-                                        siteRegions.add(new SiteRegion("0", "All sites", "0"));
                                         siteRegions.add(new SiteRegion("", "Unassigned Sites", ""));
+                                        siteRegions.add(new SiteRegion("0", "All sites", "0"));
                                         String value = GSONInstance.getInstance().toJson(siteRegions);
 
                                         ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
