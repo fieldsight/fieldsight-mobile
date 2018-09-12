@@ -159,6 +159,8 @@
     <string name="msg_site_upload_fail">Failed to upload </string>
     <string name="msg_last_sync">Last synced %s </string>
     <string name="msg_last_fail">Last failed %s </string>
+    <string  translatable="false" name="scroll_aware_fab_behaviour" >org.bcss.collect.naxa.common.ScrollAwareFABBehavior</string>
+    <string  translatable="false" name="scroll_fab_behaviour" >org.bcss.collect.naxa.common.ScrollBehavior</string>
 
 
     <!--Notification sitelist ends here-->

@@ -81,7 +81,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 siteViewHolder.iconText.setText(site.getName().substring(0, 1));
                 siteViewHolder.identifier.setText(site.getIdentifier());
                 siteViewHolder.message.setText(site.getAddress());
-                siteViewHolder.offlinetag.setText(site.getRegion());
                 siteViewHolder.imgProfile.setImageResource(R.drawable.circle_blue);
 
                 applyIconAnimation(siteViewHolder, position);

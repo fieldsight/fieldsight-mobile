@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_download_list_item"
+
+
+<org.bcss.collect.naxa.onboarding.CheckedItem
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/checked_item"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content" />
 
-    <org.bcss.collect.naxa.onboarding.CheckedItem
-        android:id="@+id/checked_item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-</RelativeLayout>

@@ -4,14 +4,14 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
@@ -25,13 +25,12 @@ import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
-import org.bcss.collect.naxa.data.FieldSightNotificationBuilder;
-import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class NotificationListActivity extends CollectAbstractActivity implements OnItemClickListener<FieldSightNotification> {
 
@@ -76,9 +75,12 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                 .observe(this, fieldSightNotifications -> {
                     if (adapter.getItemCount() == 0) {
                         adapter.updateList(fieldSightNotifications);
-                      }
+                        runLayoutAnimation(rvNotificationList);
+                    }else {
+                        adapter.updateList(fieldSightNotifications);
+                    }
 
-                    adapter.updateList(fieldSightNotifications);
+
                 });
     }
 
@@ -97,9 +99,16 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     private void setupRecyclerView() {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-        rvNotificationList.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvNotificationList.getContext(),
+                layoutManager.getOrientation());
+
+        rvNotificationList.addItemDecoration(dividerItemDecoration);
+        rvNotificationList.setLayoutManager(layoutManager);
         rvNotificationList.setItemAnimator(new DefaultItemAnimator());
         adapter = new NotificationsAdapter(new ArrayList<>(0), this);
+
+
 
         rvNotificationList.setAdapter(adapter);
     }
@@ -107,16 +116,25 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     private void setupToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.toolbar_notification));
-        getSupportActionBar().setSubtitle(FieldSightUserSession.getUser().getFull_name());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onClickPrimaryAction(FieldSightNotification fieldSightNotification) {
         switch (fieldSightNotification.getNotificationType()) {
-            case Constant.NotificationType.FORM:
+            case Constant.NotificationType.SITE_FORM:
                 FlagResposneActivity.start(this, fieldSightNotification);
                 break;
         }
@@ -125,5 +143,10 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     @Override
     public void onClickSecondaryAction(FieldSightNotification fieldSightNotification) {
 
+    }
+
+    @OnClick(R.id.fab_scroll_to_top)
+    public void scrollToTop() {
+        rvNotificationList.smoothScrollToPosition(0);
     }
 }

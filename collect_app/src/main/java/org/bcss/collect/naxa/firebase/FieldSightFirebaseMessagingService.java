@@ -126,6 +126,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
             String content = titleContent.second;
 
             notifyNormal(context, title, content);
+
         }
 
         if (remoteMessage.getData().containsValue("Flag")) {

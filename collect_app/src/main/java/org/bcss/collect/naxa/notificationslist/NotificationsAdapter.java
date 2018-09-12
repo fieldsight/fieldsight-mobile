@@ -1,8 +1,6 @@
 package org.bcss.collect.naxa.notificationslist;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -27,8 +25,10 @@ import java.util.List;
 
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
-import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM;
-import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_PROJECT;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
 
 
@@ -82,10 +82,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             case UNASSIGNED_SITE:
                 icon = ContextCompat.getDrawable(context, R.drawable.ic_people);
                 break;
-            case FORM:
-            case FORM_ALTERED:
+            case SITE_FORM:
+            case PROJECT_FORM:
+            case FORM_ALTERED_SITE:
             case SINGLE_STAGE_DEPLOYED:
-                icon = ContextCompat.getDrawable(context,R.drawable.ic_form_white);
+            case FORM_ALTERED_PROJECT:
+
+                icon = ContextCompat.getDrawable(context, R.drawable.ic_form_white);
 //                icon = ContextCompat.getDrawable(context, R.drawable.ic_format_list_bulleted);
                 break;
             default:

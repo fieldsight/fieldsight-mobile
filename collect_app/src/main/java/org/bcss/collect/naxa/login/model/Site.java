@@ -94,11 +94,9 @@ public class Site implements Parcelable {
 
     private String metaAttributes;
 
+    @SerializedName("region")
     private String regionId;
 
-    @Ignore
-    @SerializedName("region")
-    private SiteRegion siteRegion;
 
     //default values for  table
     private String generalFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
@@ -345,14 +343,7 @@ public class Site implements Parcelable {
         this.siteUploadError = siteUploadError;
     }
 
-    public SiteRegion getSiteRegion() {
-        return siteRegion;
-    }
 
-    public void setSiteRegion(SiteRegion siteRegion) {
-        this.regionId = siteRegion.getId();
-        this.siteRegion = siteRegion;
-    }
 
     public String getRegionId() {
         return regionId;

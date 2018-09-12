@@ -12,6 +12,7 @@ import java.io.File;
 @Database(entities =
         {
                 SiteOveride.class,
+                ProjectFilter.class
 
         },
         version = 1)
@@ -21,6 +22,8 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
     private static FieldSightConfigDatabase INSTANCE;
 
     public abstract SiteOverideDAO getSiteOverideDAO();
+
+    public abstract ProjectFilterDAO getProjectFilterDAO();
 
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_cofig";

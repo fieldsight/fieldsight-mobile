@@ -46,7 +46,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
         livedata.observe(downloadView.getLifeCycleOwner(), new Observer<List<SyncableItems>>() {
             @Override
             public void onChanged(@Nullable List<SyncableItems> syncableItemsList) {
-                downloadView.setUpRecyclerView(syncableItemsList);
+                downloadView.addAdapter(syncableItemsList);
             }
         });
 

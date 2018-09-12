@@ -10,21 +10,27 @@ the specific language governing permissions and limitations under the License. -
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
+    android:clickable="true"
+    android:focusable="true"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
-    android:paddingBottom="8dip"
-    android:paddingEnd="8dip"
-    android:paddingLeft="8dip"
-    android:paddingRight="8dip"
-    android:paddingStart="8dip"
-    android:paddingTop="4dip">
+  >
 
     <RelativeLayout
+        android:paddingBottom="8dip"
+        android:paddingEnd="8dip"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:paddingStart="8dip"
+        android:paddingTop="4dip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/checkbox"
         android:layout_centerHorizontal="true"
-        android:background="?selectableItemBackground">
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@color/white">
 
         <TextView
             android:id="@+id/text1"

@@ -32,4 +32,10 @@ public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<Fie
     @Query("SELECT * FROM fieldsightnotification  ORDER BY id DESC")
     public abstract LiveData<FieldSightNotification> getById();
 
+
+    @Query("SELECT COUNT(notificationType) FROM fieldsightnotification " +
+            "WHERE notificationType in (:strings) " +
+            "and (siteId =:siteId or projectId =:projectId)")
+    public abstract LiveData<Integer> notificationCount(String siteId, String projectId, String... strings);
+
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 interface DownloadView {
 
-    void setUpRecyclerView(List<SyncableItems> syncableItems);
+    void addAdapter(List<SyncableItems> syncableItems);
 
     LifecycleOwner getLifeCycleOwner();
 }

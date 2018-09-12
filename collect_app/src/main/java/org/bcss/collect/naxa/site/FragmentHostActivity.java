@@ -1,9 +1,11 @@
 package org.bcss.collect.naxa.site;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,6 +18,8 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.login.model.Site;
 
@@ -50,6 +54,18 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 .beginTransaction()
                 .add(R.id.fragment_container, SiteDashboardFragment.getInstance(loadedSite), "frag0")
                 .commit();
+
+
+        FieldSightNotificationLocalSource.getInstance()
+                .isSiteNotSynced(loadedSite.getId(), loadedSite.getProject())
+                .observe(this, new Observer<Integer>() {
+                    @Override
+                    public void onChanged(@Nullable Integer integer) {
+                        if (integer != null && integer > 0) {
+                            FlashBarUtils.showOutOfSyncMsg(FragmentHostActivity.this, "Form(s) information is out of sync");
+                        }
+                    }
+                });
 
 
     }
@@ -118,7 +134,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
 
         GeneralFormViewModel viewModel =
-                ViewModelProviders.of(activity,factory).get(GeneralFormViewModel.class);
+                ViewModelProviders.of(activity, factory).get(GeneralFormViewModel.class);
 
         return viewModel;
     }

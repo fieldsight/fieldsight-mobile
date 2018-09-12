@@ -50,8 +50,11 @@ public class Constant {
         public static final String ASSIGNED_SITE = "Assign Site";
         public static final String UNASSIGNED_SITE = "UnAssign Site";
         public static final String NEW_STAGES = "Stages Ready";
-        public static final String FORM_ALTERED = "Form Altered";
-        public static final String FORM = "Form";
+        public static final String FORM_ALTERED_SITE = "Form Altered";
+        public static final String FORM_ALTERED_PROJECT = "Form Altered Project";
+
+        public static final String SITE_FORM = "Form";
+        public static final String PROJECT_FORM = "ProjectForm";
     }
 
     public static final class FormType {

@@ -3,9 +3,11 @@ package org.bcss.collect.naxa.site;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -61,9 +64,12 @@ import org.bcss.collect.naxa.common.NonSwipeableViewPager;
 import org.bcss.collect.naxa.common.RxSearchObservable;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewUtils;
+import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
+import org.bcss.collect.naxa.common.database.ProjectFilter;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
+import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.project.MapFragment;
 import org.bcss.collect.naxa.project.ProjectContactsFragment;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
@@ -251,7 +257,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 switch (position) {
                     case 0:
                         mapExistReachesPosition = position;
-                        setToolbalText("My Sites");
+                        setToolbalText(SharedPreferenceUtils.getSiteLisTitle(ProjectDashboardActivity.this, loadedProject.getId()));
                         deactivateMapMode();
                         break;
                     case 1:
@@ -417,12 +423,30 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+
         setToolbalText("My Sites");
+
+        FieldSightConfigDatabase.getDatabase(Collect.getInstance())
+                .getProjectFilterDAO()
+                .getById(loadedProject.getId())
+                .observe(this, new Observer<ProjectFilter>() {
+                    @Override
+                    public void onChanged(@Nullable ProjectFilter projectFilter) {
+                        ToastUtils.showShortToast(projectFilter != null ? projectFilter.getSelectedRegionLabel() : "My Sites");
+                    }
+                });
     }
 
     public void setToolbalText(String title) {
         collapsingToolbarLayout.setTitle(title);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
 
 
     private void bindUI() {
@@ -518,8 +542,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 }
                 break;
             case R.id.action_notificaiton:
-                ToastUtils.showLongToast("Not implemented yet");
-                //startActivity(new Intent(this, NotificationListActivity.class));
+                NotificationListActivity.start(this);
 
                 break;
             case R.id.action_app_settings:
@@ -685,10 +708,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
             }
         });
     }
-
-
-
-
 
 
 }

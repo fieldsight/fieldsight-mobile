@@ -5,12 +5,14 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -26,12 +28,14 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.activities.InstanceUploaderActivity;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ThemeUtils;
@@ -41,10 +45,14 @@ import org.bcss.collect.naxa.common.FilterDialogAdapter;
 import org.bcss.collect.naxa.common.FilterOption;
 import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.LinearLayoutManagerWrapper;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
+import org.bcss.collect.naxa.common.database.ProjectFilter;
+import org.bcss.collect.naxa.common.database.ProjectFilterLocalSource;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
@@ -56,7 +64,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,6 +80,8 @@ import timber.log.Timber;
 
 import static org.bcss.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.bcss.collect.naxa.common.SharedPreferenceUtils.keySelectedRegionId;
+import static org.bcss.collect.naxa.common.SharedPreferenceUtils.keySelectedRegionLabel;
 
 public class SiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener {
 
@@ -116,6 +125,19 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
         collectFilterAndApply(new ArrayList<>(0));
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
+
+
+        FieldSightNotificationLocalSource.getInstance()
+                .isProjectNotSynced(loadedProject.getId())
+                .observe(this, new Observer<Integer>() {
+                    @Override
+                    public void onChanged(@Nullable Integer integer) {
+                        if (integer != null && integer > 0) {
+                            FlashBarUtils.showOutOfSyncMsg(getActivity(), "Site(s) data is out of sync");
+                        }
+                    }
+                });
+
         return view;
     }
 
@@ -156,56 +178,54 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
 
-        String selectedRegion = "";
-        String site = "";
+//        String selectedRegion = ProjectFilterLocalSource.getInstance()
+//                .getById(loadedProject.getId())
+//                .toObservable()
+//                .
+//                .getSelectedRegionLabel();
+//
+//        String regionLabel = ProjectFilterLocalSource.getInstance()
+//                .getById(loadedProject.getId())
+//                .getSelectedRegionId();
+
+        String site = "", selectedRegion = "", regionLabel = "";
+
 
         for (FilterOption filterOption : sortList) {
             switch (filterOption.getType()) {
                 case SITE:
-                    site = filterOption.getSelection();
+                    site = filterOption.getSelectionId();
                     break;
                 case SELECTED_REGION:
-                    selectedRegion = filterOption.getSelection();
+                    selectedRegion = filterOption.getSelectionId();
+                    regionLabel = filterOption.getSelectionLabel();
+
                     break;
             }
         }
 
 
         LiveData<List<Site>> source;
-        if (sortList.isEmpty()) {
-            source = allSitesLiveData;
-        } else {
-            source = SiteLocalSource.getInstance().getByIdStatusAndCluster(loadedProject.getId(), selectedRegion);
+        switch (selectedRegion) {
+            case "0":
+                source = allSitesLiveData;
+                break;
+            default:
+                source = SiteLocalSource.getInstance()
+                        .getByIdStatusAndCluster(loadedProject.getId(), selectedRegion);
+                break;
         }
 
-
-        source.observe(this, new Observer<List<Site>>() {
-            @Override
-            public void onChanged(@Nullable List<Site> sites) {
-                Timber.i("Site list is mutating");
-                siteListAdapter.updateList(sites);
-            }
+        source.observe(this, sites -> {
+            Timber.i("Site list is mutating");
+            siteListAdapter.updateList(sites);
         });
 
+//        ProjectFilter projectFilter = new ProjectFilter(loadedProject.getId(), selectedRegion, regionLabel);
+//        AsyncTask.execute(() -> FieldSightConfigDatabase.getDatabase(Collect.getInstance()).getProjectFilterDAO().insert(projectFilter));
 
     }
 
-    public String randomString() {
-        byte[] array = new byte[7]; // length is bounded by 7
-        new Random().nextBytes(array);
-        String generatedString = new String(array, Charset.forName("UTF-8"));
-
-        return generatedString;
-    }
-
-    public String randomNumberString() {
-
-
-        Random rand = new Random();
-
-        int n = rand.nextInt(9000) + 1;
-        return String.valueOf(n);
-    }
 
     @Override
     public void onResume() {
@@ -337,7 +357,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void onSurveyFormClicked() {
-        SurveyFormsActivity.start(getActivity(),loadedProject);
+        SurveyFormsActivity.start(getActivity(), loadedProject);
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -20,8 +21,10 @@ import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
-import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM;
-import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_PROJECT;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.NEW_STAGES;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
 import static org.bcss.collect.naxa.common.Truss.makeSectionOfTextBold;
@@ -46,6 +49,29 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     private FieldSightNotificationLocalSource() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
         this.dao = database.getFieldSightNotificationDAO();
+    }
+
+    public LiveData<Integer> isProjectNotSynced(String siteId, String projectId) {
+
+
+
+        return dao.notificationCount(siteId,projectId,
+                ASSIGNED_SITE,
+                UNASSIGNED_SITE);
+    }
+
+    public LiveData<Integer> isSiteNotSynced(String siteId, String projectId) {
+        return dao.notificationCount(siteId, projectId,
+                NEW_STAGES,
+                SINGLE_STAGE_DEPLOYED,
+                SINGLE_STAGED_FORM_DEPLOYED,
+                ALL_STAGE_DEPLOYED,
+                NEW_STAGES,
+                FORM_ALTERED_SITE,
+                FORM_ALTERED_PROJECT,
+                SITE_FORM,
+                PROJECT_FORM
+        );
     }
 
     @Override
@@ -91,11 +117,12 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 break;
             case ALL_STAGE_DEPLOYED:
                 break;
-            case FORM:
+            case SITE_FORM:
                 boolean isNewForm = NEW_FORM.equalsIgnoreCase(notification.getFormStatus());
                 if (isNewForm) {
+                    String siteOrProjectName = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
                     title = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
-                    message = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), notification.getSiteName());
+                    message = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName);
                     //todo: download form?
                 } else {
                     title = context.getString(R.string.notify_title_submission_result);
@@ -104,14 +131,17 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 break;
             case NEW_STAGES:
                 break;
-            case FORM_ALTERED:
+            case FORM_ALTERED_SITE:
+            case FORM_ALTERED_PROJECT:
+            case PROJECT_FORM:
                 boolean isDeployed = "true".equalsIgnoreCase(notification.getIsFormDeployed());
+                String siteOrProjectName = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
 
                 String undeployedTitle = context.getString(R.string.notify_title_form_undeployed, notification.getFormType());
-                String undeployedContent = context.getString(R.string.notify_message_form_undeployed, notification.getFormName(), notification.getSiteName());
+                String undeployedContent = context.getString(R.string.notify_message_form_undeployed, notification.getFormName(), siteOrProjectName);
 
                 String deployedTitle = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
-                String deployedContent = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), notification.getSiteName());
+                String deployedContent = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName);
 
                 title = isDeployed ? deployedTitle : undeployedTitle;
                 message = isDeployed ? deployedContent : undeployedContent;
@@ -128,6 +158,9 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 title = context.getString(R.string.notify_title_site_unassigned, notification.getSiteName());
                 message = context.getString(R.string.notify_message_site_unassigned, notification.getSiteName());
                 break;
+            default:
+                title = notification.getNotificationType();
+
 
         }
 

@@ -94,15 +94,18 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     PairSpinnerAdapter pairSpinnerAdapter = new PairSpinnerAdapter(((ViewHolderSpinner) holder).spinnerSiteCluster.getContext(), android.R.layout.simple_spinner_dropdown_item, filterOption.getOptions());
                     viewHolderSpinner.spinnerSiteCluster.setAdapter(pairSpinnerAdapter);
+
+                    ((ViewHolderSpinner) holder).spinnerSiteCluster.setSelection(filterOption.getOptions().size() - 1);
                     Pair intialIdLabelPair = (Pair) ((ViewHolderSpinner) holder).spinnerSiteCluster.getSelectedItem();
-                    if(intialIdLabelPair != null) filterOption.setSelection(String.valueOf(intialIdLabelPair.first));
+                    if (intialIdLabelPair != null) filterOption.setSelection(intialIdLabelPair);
 
 
                     viewHolderSpinner.spinnerSiteCluster.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             Pair tappedIdLabelPair = filterOption.getOptions().get(position);
-                            if(tappedIdLabelPair != null) filterOption.setSelection(String.valueOf(tappedIdLabelPair.first));
+                            if (tappedIdLabelPair != null)
+                                filterOption.setSelection(tappedIdLabelPair);
 
                         }
 
@@ -231,6 +234,7 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public interface RecyclerViewClickListener {
         void onFilterButtonClicked(ArrayList<FilterOption> sortList);
+
         void onItemClicked(ViewHolderText holder, int position, FilterOption filterOption);
     }
 }

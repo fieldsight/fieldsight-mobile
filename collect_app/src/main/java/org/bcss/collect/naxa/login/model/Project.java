@@ -61,6 +61,8 @@ public class Project implements Parcelable {
     @Expose
     private String phone;
 
+    private boolean isSyncedWithRemote;
+
 
     @SerializedName("site_meta_attributes")
     private List<SiteMetaAttribute> siteMetaAttributes ;
@@ -80,7 +82,8 @@ public class Project implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Project project = (Project) o;
-        return Objects.equal(id, project.id) &&
+        return isSyncedWithRemote == project.isSyncedWithRemote &&
+                Objects.equal(id, project.id) &&
                 Objects.equal(name, project.name) &&
                 Objects.equal(description, project.description) &&
                 Objects.equal(address, project.address) &&
@@ -98,7 +101,7 @@ public class Project implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, siteMetaAttributes);
+        return Objects.hashCode(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, siteMetaAttributes);
     }
 
     public Boolean getHasClusteredSites() {
@@ -213,6 +216,15 @@ public class Project implements Parcelable {
         this.siteClusters = siteClusters;
     }
 
+    public boolean isSyncedWithRemote() {
+        return isSyncedWithRemote;
+    }
+
+    public void setSyncedWithRemote(boolean syncedWithRemote) {
+        isSyncedWithRemote = syncedWithRemote;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -233,6 +245,7 @@ public class Project implements Parcelable {
         dest.writeValue(this.typeId);
         dest.writeString(this.typeLabel);
         dest.writeString(this.phone);
+        dest.writeByte(this.isSyncedWithRemote ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.siteMetaAttributes);
     }
 
@@ -250,6 +263,7 @@ public class Project implements Parcelable {
         this.typeId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.typeLabel = in.readString();
         this.phone = in.readString();
+        this.isSyncedWithRemote = in.readByte() != 0;
         this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
     }
 

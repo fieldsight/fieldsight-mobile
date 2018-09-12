@@ -49,6 +49,12 @@ public class SharedPreferenceUtils {
     }
 
 
+    public static void setChangeListener(Context context, SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+    }
+
+
     /**
      * Called to retrieve required value siteName shared preferences, identified by given key.
      * Default value will be returned of no value found or error occurred.
@@ -88,4 +94,17 @@ public class SharedPreferenceUtils {
         editor.remove(key);
         editor.commit();
     }
+
+    public static String keySelectedRegionId(String projectId) {
+        return String.format("project-id-%s", projectId);
+    }
+
+    public static String keySelectedRegionLabel(String label) {
+        return String.format("project-label-%s", label);
+    }
+
+    public static String getSiteLisTitle(Context context, String projectId) {
+        return getFromPrefs(context, keySelectedRegionLabel(projectId), "My Sites");
+    }
+
 }

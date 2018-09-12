@@ -74,7 +74,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
         switch (item.getDownloadingStatus()) {
             case PENDING:
-                checkedItem.showFailureMessage("Not synced yet");
+//                checkedItem.showFailureMessage("Not synced yet");
                 break;
             case COMPLETED:
                 checkedItem.showSucessMessage(viewHolder.checkedItem.getContext().getString(R.string.msg_last_sync, getRelativeTime(item.getLastSyncDateTime())));
@@ -125,10 +125,11 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
-            rootLayout = itemLayoutView.findViewById(R.id.layout_download_list_item);
+
             checkedItem = itemLayoutView.findViewById(R.id.checked_item);
 
-            rootLayout.setOnClickListener(v -> {
+
+            checkedItem.setOnClickListener(v -> {
                 SyncableItems syncableItem = syncableItems.get(getAdapterPosition());
                 if (checkedItem.isChecked()) {
                     syncRepository.setChecked(syncableItem.getUid(), false);

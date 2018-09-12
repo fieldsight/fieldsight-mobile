@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,12 +25,14 @@ import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 
@@ -64,6 +67,17 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         ButterKnife.bind(this);
         downloadPresenter = new DownloadPresenterImpl(this);
         setupToolbar();
+        setupRecyclerView();
+    }
+
+    private void setupRecyclerView() {
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     private void setupToolbar() {
@@ -86,12 +100,13 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
 
     @Override
-    public void setUpRecyclerView(List<SyncableItems> syncableItems) {
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+    public void addAdapter(List<SyncableItems> syncableItems) {
+
+
+
         downloadListAdapter = new DownloadListAdapter((ArrayList<SyncableItems>) syncableItems);
         recyclerView.setAdapter(downloadListAdapter);
+
 
 
     }

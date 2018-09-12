@@ -17,7 +17,7 @@ public class FilterOption {
     private FilterType type;
     private String label;
     private List<Pair> options;
-    private String selection;
+    private Pair selection;
 
     public FilterOption(FilterType type, String label,List<Pair> site) {
         this.type = type;
@@ -33,12 +33,17 @@ public class FilterOption {
         return label;
     }
 
-    public void setSelection(String selection) {
+    public void setSelection(Pair selection) {
         this.selection = selection;
     }
 
-    public String getSelection() {
-        return selection;
+    public String getSelectionId() {
+        return String.valueOf(selection.first);
+    }
+
+
+    public String getSelectionLabel() {
+        return String.valueOf(selection.second);
     }
 
     public List<Pair> getOptions() {
