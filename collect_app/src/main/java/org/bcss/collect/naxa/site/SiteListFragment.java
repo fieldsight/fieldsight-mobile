@@ -128,7 +128,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
         FieldSightNotificationLocalSource.getInstance()
-                .isProjectNotSynced(loadedProject.getId())
+                .isProjectNotSynced(loadedProject.getId(),loadedProject.getId())
                 .observe(this, new Observer<Integer>() {
                     @Override
                     public void onChanged(@Nullable Integer integer) {
@@ -188,7 +188,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 //                .getById(loadedProject.getId())
 //                .getSelectedRegionId();
 
-        String site = "", selectedRegion = "", regionLabel = "";
+        String site = "", selectedRegion = "0", regionLabel = "";
 
 
         for (FilterOption filterOption : sortList) {

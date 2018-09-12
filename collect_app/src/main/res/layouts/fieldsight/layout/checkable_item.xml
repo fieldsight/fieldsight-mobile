@@ -10,8 +10,7 @@ the specific language governing permissions and limitations under the License. -
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:clickable="true"
-    android:focusable="true"
+
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:orientation="horizontal"
   >
@@ -27,10 +26,7 @@ the specific language governing permissions and limitations under the License. -
         android:layout_height="wrap_content"
         android:layout_above="@+id/checkbox"
         android:layout_centerHorizontal="true"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="@color/white">
+  >
 
         <TextView
             android:id="@+id/text1"

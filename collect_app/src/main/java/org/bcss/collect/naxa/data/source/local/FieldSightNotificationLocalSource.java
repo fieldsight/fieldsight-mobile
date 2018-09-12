@@ -52,9 +52,6 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     }
 
     public LiveData<Integer> isProjectNotSynced(String siteId, String projectId) {
-
-
-
         return dao.notificationCount(siteId,projectId,
                 ASSIGNED_SITE,
                 UNASSIGNED_SITE);

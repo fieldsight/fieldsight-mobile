@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.text.ParseException;
@@ -127,10 +128,19 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             super(itemLayoutView);
 
             checkedItem = itemLayoutView.findViewById(R.id.checked_item);
+            rootLayout = itemLayoutView.findViewById(R.id.root_layout_download_list_item);
 
 
-            checkedItem.setOnClickListener(v -> {
+            rootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ToastUtils.showShortToast("FUck you");
+                }
+            });
+
+            rootLayout.setOnClickListener(v -> {
                 SyncableItems syncableItem = syncableItems.get(getAdapterPosition());
+
                 if (checkedItem.isChecked()) {
                     syncRepository.setChecked(syncableItem.getUid(), false);
                 } else {

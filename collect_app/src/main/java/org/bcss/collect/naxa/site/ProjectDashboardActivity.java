@@ -426,25 +426,11 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
         setToolbalText("My Sites");
 
-        FieldSightConfigDatabase.getDatabase(Collect.getInstance())
-                .getProjectFilterDAO()
-                .getById(loadedProject.getId())
-                .observe(this, new Observer<ProjectFilter>() {
-                    @Override
-                    public void onChanged(@Nullable ProjectFilter projectFilter) {
-                        ToastUtils.showShortToast(projectFilter != null ? projectFilter.getSelectedRegionLabel() : "My Sites");
-                    }
-                });
+
     }
 
     public void setToolbalText(String title) {
         collapsingToolbarLayout.setTitle(title);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
 
