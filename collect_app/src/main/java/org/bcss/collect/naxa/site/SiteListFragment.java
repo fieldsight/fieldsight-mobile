@@ -149,7 +149,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     private void setupRecycleView() {
         siteListAdapter = new SiteListAdapter(new ArrayList<>(0), this);
-        recyclerView.setLayoutManager(new LinearLayoutManagerWrapper(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);
     }

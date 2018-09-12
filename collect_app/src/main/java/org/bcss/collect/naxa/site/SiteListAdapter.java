@@ -43,11 +43,16 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.animationItemsIndex = new SparseBooleanArray();
 
         ArrayList<Site> surveyFormAndSites = new ArrayList<>();
-        surveyFormAndSites.add(new SiteBuilder().setName("project_survey").createSite());
+        surveyFormAndSites.add(new SiteBuilder()
+                .setName("project_survey")
+                .setId("0")
+                .createSite());
         surveyFormAndSites.addAll(sitelist);
 
         this.siteList = surveyFormAndSites;
         this.filetredsitelist = surveyFormAndSites;
+
+
     }
 
     @NonNull
@@ -65,6 +70,14 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder = new SiteViewHolder(itemView);
         }
         return holder;
+    }
+
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if(payloads.isEmpty()){
+            super.onBindViewHolder(holder, position, payloads);
+        }
     }
 
     @Override
@@ -250,15 +263,19 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void updateList(List<Site> newList) {
 
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SiteListDiffCallback(newList, siteList));
-        diffResult.dispatchUpdatesTo(this);
-        siteList.clear();
-
         ArrayList<Site> surveyFormAndSites = new ArrayList<>();
-        surveyFormAndSites.add(new SiteBuilder().setName("project_survey").createSite());
+        surveyFormAndSites.add(new SiteBuilder()
+                .setName("project_survey")
+                .setId("0")
+                .createSite());
         surveyFormAndSites.addAll(newList);
 
-        siteList.addAll(surveyFormAndSites);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SiteListDiffCallback(this.siteList, surveyFormAndSites));
+
+        this.siteList.clear();
+        this.siteList.addAll(surveyFormAndSites);
+
+        diffResult.dispatchUpdatesTo(this);
 
     }
 

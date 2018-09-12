@@ -1,11 +1,14 @@
 package org.bcss.collect.naxa.site;
 
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
 import org.bcss.collect.naxa.login.model.Site;
 
 import java.util.List;
+
+import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 /**
  * Created on 12/21/17
@@ -52,7 +55,16 @@ public class SiteListDiffCallback extends DiffUtil.Callback {
     @Nullable
     @Override
     public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-        return super.getChangePayload(oldItemPosition, newItemPosition);
+        Site oldSite = oldList.get(oldItemPosition);
+        Site newSite = newList.get(newItemPosition);
+
+        Bundle bundle = new Bundle();
+        if(!oldSite.equals(newSite)){
+            bundle.putParcelable(EXTRA_OBJECT,newSite);
+
+        }
+
+        return super.getChangePayload(oldItemPosition,newItemPosition);
     }
 
 }
