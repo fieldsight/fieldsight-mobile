@@ -29,13 +29,18 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.fragments.DataManagerList;
 import org.bcss.collect.android.fragments.FormManagerList;
 import org.bcss.collect.android.views.SlidingTabLayout;
+import org.bcss.collect.naxa.login.model.Site;
 
 import java.util.ArrayList;
 
+import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+
 public class FileManagerTabs extends CollectAbstractActivity {
 
-    private final DataManagerList dataManagerList = DataManagerList.newInstance();
+//    private final DataManagerList dataManagerList = DataManagerList.newInstance();
     private final FormManagerList formManagerList = FormManagerList.newInstance();
+
+    private Site loadedSite;
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -51,13 +56,21 @@ public class FileManagerTabs extends CollectAbstractActivity {
         setContentView(R.layout.file_manager_layout);
         initToolbar();
 
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
+        }
+
+
+
+
 //        String[] tabNames = {getString(R.string.data), getString(R.string.forms)};
         String[] tabNames = {getString(R.string.data)};
         // Get the ViewPager and set its PagerAdapter so that it can display items
         ViewPager viewPager = findViewById(R.id.pager);
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(dataManagerList);
+        fragments.add(DataManagerList.newInstance(loadedSite));
 //        fragments.add(formManagerList);
 
         viewPager.setAdapter(new ViewPagerAdapter(
@@ -84,7 +97,7 @@ public class FileManagerTabs extends CollectAbstractActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 super.onBackPressed();
                 break;

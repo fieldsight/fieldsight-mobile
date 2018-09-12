@@ -36,8 +36,11 @@ import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.bcss.collect.android.tasks.DeleteInstancesTask;
 import org.bcss.collect.android.tasks.InstanceSyncTask;
 import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.login.model.Site;
 
 import timber.log.Timber;
+
+import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 /**
  * Responsible for displaying and deleting all the saved form instances
@@ -54,15 +57,24 @@ public class DataManagerList extends InstanceListFragment
     private AlertDialog alertDialog;
     private InstanceSyncTask instanceSyncTask;
     private ProgressDialog progressDialog;
+    private Site loadedSite;
 
-    public static DataManagerList newInstance() {
-        return new DataManagerList();
+    public static DataManagerList newInstance(Site loadedSite) {
+        DataManagerList dataManagerList = new DataManagerList();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(EXTRA_OBJECT, loadedSite);
+        dataManagerList.setArguments(bundle);
+        return dataManagerList;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
+        }
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -135,7 +147,11 @@ public class DataManagerList extends InstanceListFragment
 
     @Override
     protected CursorLoader getCursorLoader() {
-        return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
+        if(loadedSite != null){
+            return new InstancesDao().getSavedInstancesCursorLoaderSite(loadedSite.getId(), getSortingOrder());
+        }else {
+            return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
+        }
     }
 
     /**

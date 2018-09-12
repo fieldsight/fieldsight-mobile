@@ -40,10 +40,13 @@ import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.bcss.collect.android.tasks.InstanceSyncTask;
 import org.bcss.collect.android.utilities.ApplicationConstants;
+import org.bcss.collect.naxa.login.model.Site;
+
 import timber.log.Timber;
 
 import static org.bcss.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.bcss.collect.android.utilities.PermissionUtils.requestStoragePermissions;
+import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 /**
  * Responsible for displaying all the valid instances in the instance directory.
@@ -63,10 +66,17 @@ public class InstanceChooserList extends InstanceListActivity implements
 
     private boolean editMode;
 
+    private Site loadedSite;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chooser_list_layout);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
+        }
 
         String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
@@ -237,10 +247,19 @@ public class InstanceChooserList extends InstanceListActivity implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
+        InstancesDao instancesDao = new InstancesDao();
         if (editMode) {
-            return new InstancesDao().getUnsentInstancesCursorLoader(getFilterText(), getSortingOrder());
+            if (loadedSite != null) {
+                return instancesDao.getUnsentInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
+            } else {
+                return instancesDao.getUnsentInstancesCursorLoader(getFilterText(), getSortingOrder());
+            }
         } else {
-            return new InstancesDao().getSentInstancesCursorLoader(getFilterText(), getSortingOrder());
+            if (loadedSite != null) {
+                return instancesDao.getSentInstancesCursorLoaderSite(loadedSite.getId(), getSortingOrder());
+            } else {
+                return instancesDao.getSentInstancesCursorLoader(getFilterText(), getSortingOrder());
+            }
         }
     }
 

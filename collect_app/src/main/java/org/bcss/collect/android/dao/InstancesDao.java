@@ -65,6 +65,24 @@ public class InstancesDao {
         return cursorLoader;
     }
 
+    public CursorLoader getSentInstancesCursorLoaderSite(String siteId, String sortOrder) {
+        CursorLoader cursorLoader;
+        if (siteId.length() == 0) {
+            cursorLoader = getSentInstancesCursorLoader(sortOrder);
+        } else {
+            String selection =
+                    InstanceProviderAPI.InstanceColumns.STATUS + " =? and "
+                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "  =";
+            String[] selectionArgs = {
+                    InstanceProviderAPI.STATUS_SUBMITTED,
+                    siteId};
+
+            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
+        }
+
+        return cursorLoader;
+    }
+
     public CursorLoader getSentInstancesCursorLoader(String sortOrder) {
         String selection = InstanceProviderAPI.InstanceColumns.STATUS + " =? ";
         String[] selectionArgs = {InstanceProviderAPI.STATUS_SUBMITTED};
@@ -105,6 +123,24 @@ public class InstancesDao {
         return cursorLoader;
     }
 
+    public CursorLoader getUnsentInstancesCursorLoaderBySite(String siteId, String sortOrder) {
+        CursorLoader cursorLoader;
+        if (siteId.length() == 0) {
+            cursorLoader = getUnsentInstancesCursorLoader(sortOrder);
+        } else {
+            String selection =
+                    InstanceProviderAPI.InstanceColumns.STATUS + " !=? and "
+                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
+            String[] selectionArgs = {
+                    InstanceProviderAPI.STATUS_SUBMITTED,
+                    siteId};
+
+            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
+        }
+
+        return cursorLoader;
+    }
+
     public Cursor getSavedInstancesCursor(String sortOrder) {
         String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL ";
 
@@ -126,6 +162,21 @@ public class InstancesDao {
                     InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and "
                             + InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " LIKE ?";
             String[] selectionArgs = {"%" + charSequence + "%"};
+            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
+        }
+
+        return cursorLoader;
+    }
+
+    public CursorLoader getSavedInstancesCursorLoaderSite(String siteId, String sortOrder) {
+        CursorLoader cursorLoader;
+        if (siteId.length() == 0) {
+            cursorLoader = getSavedInstancesCursorLoader(sortOrder);
+        } else {
+            String selection =
+                    InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and "
+                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
+            String[] selectionArgs = {siteId};
             cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
         }
 
