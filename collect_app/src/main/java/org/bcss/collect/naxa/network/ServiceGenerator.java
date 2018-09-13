@@ -34,6 +34,12 @@ public class ServiceGenerator {
         if (retrofit != null) {
             retrofit = null;
         }
+        if (cacheablesRetrofit != null) {
+            cacheablesRetrofit = null;
+        }
+        if (rxRetrofit != null) {
+            rxRetrofit = null;
+        }
     }
 
     private static Interceptor createAuthInterceptor(final String token) {

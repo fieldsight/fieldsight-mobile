@@ -275,8 +275,8 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
 
     }
 
-    protected String generateSubmissionUrl(String formDeployedFrom, String creatorsId, String fsFormId) {
-        return InstancesDao.generateSubmissionUrl(formDeployedFrom, creatorsId, fsFormId);
+    protected String generateSubmissionUrl(String formDeployedFrom, String siteId, String fsFormId) {
+        return InstancesDao.generateSubmissionUrl(formDeployedFrom, siteId, fsFormId);
     }
 
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {

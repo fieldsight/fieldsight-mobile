@@ -466,15 +466,15 @@ public class InstancesDao {
         return values;
     }
 
-    public static String generateSubmissionUrl(String formDeployedFrom, String creatorsId, String fsFormId) {
+    public static String generateSubmissionUrl(String formDeployedFrom, String siteId, String fsFormId) {
         String submissionUrl = APIEndpoint.BASE_URL + APIEndpoint.FORM_SUBMISSION_PAGE;
 
         switch (formDeployedFrom) {
             case PROJECT:
-                submissionUrl += "project/" + fsFormId + "/" + creatorsId;
+                submissionUrl += "project/" + fsFormId + "/" + siteId;
                 break;
             case SITE:
-                submissionUrl += fsFormId + "/" + creatorsId;
+                submissionUrl += fsFormId + "/" + siteId;
                 break;
             default:
                 throw new RuntimeException("Unknown form deployed");

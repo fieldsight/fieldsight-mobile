@@ -123,6 +123,8 @@ public class FieldSightUserSession {
 
 
 
+
+
         ServiceGenerator
                 .createService(ApiInterface.class)
                 .postFCMUserParameter(REMOVE_FCM, getFCM(getUser().getUser_name(), false))
@@ -149,6 +151,8 @@ public class FieldSightUserSession {
                 });
 
         SharedPreferenceUtils.deleteAll(context);
+        ServiceGenerator.clearInstance();
+
         try {
             FirebaseInstanceId.getInstance().deleteInstanceId();
         } catch (IOException e) {

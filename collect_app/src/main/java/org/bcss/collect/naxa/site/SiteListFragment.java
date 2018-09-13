@@ -62,12 +62,14 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.github.benas.randombeans.api.EnhancedRandom;
 import io.reactivex.Observable;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -128,7 +130,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
         FieldSightNotificationLocalSource.getInstance()
-                .isProjectNotSynced(loadedProject.getId(),loadedProject.getId())
+                .isProjectNotSynced(loadedProject.getId(), loadedProject.getId())
                 .observe(this, new Observer<Integer>() {
                     @Override
                     public void onChanged(@Nullable Integer integer) {
@@ -137,6 +139,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         }
                     }
                 });
+
 
         return view;
     }
@@ -275,7 +278,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
 
-
     public MutableLiveData<ArrayList<FilterOption>> getFilterOptionForSites() {
 
         ArrayList<Pair> sites = new ArrayList<>();
@@ -284,9 +286,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
         Type type = new TypeToken<ArrayList<SiteRegion>>() {
         }.getType();
-        ArrayList<SiteRegion> siteRegions = GSONInstance.getInstance().fromJson(loadedProject.getSiteClusters(), type);
+
+        ArrayList<SiteRegion> siteRegions;
+        siteRegions = GSONInstance.getInstance().fromJson(loadedProject.getSiteClusters(), type);
         MutableLiveData<ArrayList<FilterOption>> sortingOptionsMutableLive = new MutableLiveData<>();
 
+        if (siteRegions == null) siteRegions = new ArrayList<>(0);
 
         Observable.just(siteRegions)
                 .flatMapIterable((Function<List<SiteRegion>, Iterable<SiteRegion>>) siteClusters1 -> siteClusters1)
@@ -305,7 +310,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Site Region", pairs));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
 //                        filterOptions.add(new FilterOption(FilterOption.FilterType.SITE, "Site ", sites));
-
 //                        filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline Site(s)", new ArrayList<>(0)));
 //                        filterOptions.add(new FilterOption(FilterOption.FilterType.ALL_SITES, "All Site(s)", new ArrayList<>(0)));
 
