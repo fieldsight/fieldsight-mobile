@@ -27,6 +27,7 @@ the specific language governing permissions and limitations under the License.
         android:name="android.hardware.wifi"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -323,6 +324,7 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name="org.bcss.collect.naxa.site.SiteDetailActivity"
             android:exported="true" />
+        <activity android:name="org.bcss.collect.naxa.project.MapActivity" />
     </application>
 
 </manifest>

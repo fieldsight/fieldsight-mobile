@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,6 +101,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private ActionMode actionMode;
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
     private LiveData<List<Site>> filteredSiteLiveData;
+    private MenuItem filterMenuItem;
 
 
     public static SiteListFragment getInstance(Project project) {
@@ -148,6 +150,19 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+
+        super.setMenuVisibility(menuVisible);
     }
 
     private void setupRecycleView() {

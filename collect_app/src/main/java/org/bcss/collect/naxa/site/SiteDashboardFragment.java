@@ -32,6 +32,7 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.project.MapActivity;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsFragment;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.stages.StageListFragment;
@@ -175,23 +176,15 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 switch (item.getItemId()) {
 
                     case R.id.popup_open_edit:
-
-//                        SiteDetailActivity.start(getActivity(), loadedSite);
-//                        getActivity().finish();
+                        CreateSiteDetailActivity.start(getActivity(), loadedSite);
 
                         break;
                     case R.id.popup_open_in_map:
-//                        Intent intent = new Intent(getContext(), MapBoxActivity.class);
-//                        intent.putExtra(EXTRA_OBJECT, loadedSite);
-//                        startActivity(intent);
+                        MapActivity.start(getActivity(),loadedSite);
+
                         break;
                     case R.id.popup_view_blue_prints:
-//                        Intent intent1 = new Intent(getContext(), SiteDocumentsActivity.class);
-//
-//                        bundle.putString("SiteId", loadedSite.getSiteId());
-//                        bundle.putString("SiteBluePrint", loadedSite.getSiteBluePrintListStr());
-//                        intent1.putExtras(bundle);
-//                        startActivity(intent1);
+                        ToastUtils.showShortToast("Not implemented yet");
                         break;
                     case R.id.popup_view_metadata:
                         break;
@@ -297,7 +290,8 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.site_option_frag_btn_info:
-                CreateSiteDetailActivity.start(getActivity().getApplicationContext(), loadedSite);
+                popup.show();
+
                 break;
         }
     }

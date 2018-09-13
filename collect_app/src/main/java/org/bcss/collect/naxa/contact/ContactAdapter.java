@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.common.GlideApp;
 
 
 import java.util.List;
@@ -168,8 +169,9 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         String Img_Thumb_Url = contact.getProfilePicture();
 
         if (Img_Thumb_Url != null) {
-            Glide.with(context)
+            GlideApp.with(context)
                     .load(Img_Thumb_Url)
+                    .circleCrop()
                     .thumbnail(0.5f)
                     .into(holder.ivProfilePicture);
         }

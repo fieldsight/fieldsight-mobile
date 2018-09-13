@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.common.Phone;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;
 import org.bcss.collect.naxa.stages.StageViewModel;
@@ -26,6 +27,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     private ContactAdapter contactAdapter;
 
     private ProjectContactViewModel viewModel;
+    Phone phone;
 
     public static ProjectContactsFragment getInstance() {
         return new ProjectContactsFragment();
@@ -38,7 +40,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
         bindUI(view);
         setupRecycleView();
 
-
+        phone = new Phone(getActivity());
         ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
         viewModel = ViewModelProviders.of(getActivity(), factory).get(ProjectContactViewModel.class);
         viewModel.getContacts()
@@ -68,11 +70,13 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
 
     @Override
     public void onContactClicked(FieldSightContactModel contactModel) {
-
+        ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.getInstance();
+        contactDetailsBottomSheetFragmentDialog.setContact(contactModel);
+        contactDetailsBottomSheetFragmentDialog.show(getFragmentManager(), "Custom Bottom Sheet");
     }
 
     @Override
     public void onPhoneButtonClick(FieldSightContactModel contactModel) {
-
+        phone.ringNumber(contactModel.getFull_name(),contactModel.getPhone());
     }
 }
