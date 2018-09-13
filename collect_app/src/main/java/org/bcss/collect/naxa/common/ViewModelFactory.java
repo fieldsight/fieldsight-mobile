@@ -7,6 +7,10 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 
+import org.bcss.collect.naxa.contact.ContactLocalSource;
+import org.bcss.collect.naxa.contact.ContactRemoteSource;
+import org.bcss.collect.naxa.contact.ContactRepository;
+import org.bcss.collect.naxa.contact.ProjectContactViewModel;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormLocalSource;
@@ -51,6 +55,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final SiteRepository siteRepository;
     private final SurveyFormRepository surveyFormRepository;
     private final FieldSightNotificationRepository notificationRepository;
+    private final ContactRepository contactRepository;
 
 
     private final Application application;
@@ -63,7 +68,8 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
                             ProjectRepository projectRepository,
                             SiteRepository siteRepository,
                             SurveyFormRepository surveyFormRepository,
-                            FieldSightNotificationRepository notificationRepository
+                            FieldSightNotificationRepository notificationRepository,
+                            ContactRepository contactRepository
     ) {
         this.application = application;
         this.generalFormRepository = repository;
@@ -74,6 +80,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         this.siteRepository = siteRepository;
         this.surveyFormRepository = surveyFormRepository;
         this.notificationRepository = notificationRepository;
+        this.contactRepository = contactRepository;
     }
 
     public static ViewModelFactory getInstance(Application application) {
@@ -92,11 +99,12 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
                     SiteRepository siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
                     SurveyFormRepository surveyFormRepository = SurveyFormRepository.getInstance(SurveyFormLocalSource.getInstance());
                     FieldSightNotificationRepository notificationRepository = FieldSightNotificationRepository.getInstance(FieldSightNotificationLocalSource.getInstance());
+                    ContactRepository contactRepository = ContactRepository.getInstance(ContactLocalSource.getInstance(), ContactRemoteSource.getInstance());
 
 
                     INSTANCE = new ViewModelFactory(application, generalFormRepository, scheduledFormRepository,
                             stageFormRepository, subStageRepository, projectRepository, siteRepository,
-                            surveyFormRepository, notificationRepository);
+                            surveyFormRepository, notificationRepository, contactRepository);
                 }
             }
         }
@@ -134,6 +142,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(CreateSiteDetailViewModel.class)) {
             //noinspection unchecked
             return (T) new CreateSiteDetailViewModel(siteRepository);
+        } else if (modelClass.isAssignableFrom(ProjectContactViewModel.class)) {
+            //noinspection unchecked
+            return (T) new ProjectContactViewModel(contactRepository);
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());

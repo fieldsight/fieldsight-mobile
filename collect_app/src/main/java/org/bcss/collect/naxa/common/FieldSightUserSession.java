@@ -150,15 +150,13 @@ public class FieldSightUserSession {
                     }
                 });
 
+
+        //bug: fcm token is not generating when issued getToken() hence we exclude it from deletion here
+        String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
         SharedPreferenceUtils.deleteAll(context);
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcmToken);
+
         ServiceGenerator.clearInstance();
-
-        try {
-            FirebaseInstanceId.getInstance().deleteInstanceId();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
 
     }
 

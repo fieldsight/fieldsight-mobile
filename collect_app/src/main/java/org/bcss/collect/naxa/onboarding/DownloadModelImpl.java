@@ -246,10 +246,6 @@ public class DownloadModelImpl implements DownloadModel {
 
     }
 
-    @Override
-    public void fetchProjectContacts() {
-        int uid = Constant.DownloadUID.PROJECT_CONTACTS;
-    }
 
     @Override
     public void fetchAllForms() {

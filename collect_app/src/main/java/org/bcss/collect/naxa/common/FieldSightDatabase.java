@@ -7,6 +7,8 @@ import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.contact.ContacstDao;
+import org.bcss.collect.naxa.contact.FieldSightContactModel;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.educational.EducationalMaterialsDao;
 import org.bcss.collect.naxa.generalforms.data.Em;
@@ -49,7 +51,8 @@ import java.io.File;
                 SiteType.class,
                 SiteRegion.class,
                 FieldSightNotification.class,
-                Em.class
+                Em.class,
+                FieldSightContactModel.class
 
         },
         version = 2)
@@ -82,6 +85,8 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     public abstract FieldSightNotificationDAO getFieldSightNotificationDAO();
 
     public abstract EducationalMaterialsDao getEducationalMaterialDAO();
+
+    public abstract ContacstDao getContactsDao();
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 

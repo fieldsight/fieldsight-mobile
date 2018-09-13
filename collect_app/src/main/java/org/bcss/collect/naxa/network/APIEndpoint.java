@@ -14,6 +14,7 @@ public class APIEndpoint {
     public static final String GET_SITE_TYPES = BASE_URL + "/fieldsight/api/site-types/";
     public static final String GET_PROJECT_STAGES = BASE_URL + "/forms/api/stage/1/{project_id}";
     public static final String GET_PROJECT_STAGES_NEW = BASE_URL + "/forms/api/stage/{is_project}/{id}";
+    public static final String GET_ALL_CONTACTS = BASE_URL + "/users/contacts/";
 
     public static final String GET_SITE_STAGES = BASE_URL + "/forms/api/stage/0/{site_id}";
     public static final String GET_STAGE_SUB_STAGE = BASE_URL + "/forms/api/stage/{is_project}/{id}";

@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.network;
 
 
+import org.bcss.collect.naxa.contact.FieldSightContactModel;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.login.model.AuthResponse;
@@ -32,6 +33,7 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 
+import static org.bcss.collect.naxa.network.APIEndpoint.GET_ALL_CONTACTS;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_CLUSTER_LIST;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_FORM_SCHEDULE;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_GENERAL_FORM;
@@ -101,4 +103,6 @@ public interface ApiInterface {
     @GET
     Call<NotificationDetail> getNotificationDetail(@Url String url);
 
+    @GET(GET_ALL_CONTACTS)
+    Observable<ArrayList<FieldSightContactModel>> getAllContacts();
 }

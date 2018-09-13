@@ -13,6 +13,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.contact.ContactRemoteSource;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
 import org.bcss.collect.naxa.site.SiteTypeRemoteSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
@@ -123,8 +124,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                         downloadModel.fetchProjectSites();
                         break;
                     case Constant.DownloadUID.PROJECT_CONTACTS:
-                        syncRepository.setSuccess(Constant.DownloadUID.PROJECT_CONTACTS);
-                        downloadModel.fetchProjectContacts();
+                        ContactRemoteSource.getInstance().getAll();
                         break;
                     case SITE_TYPES:
                         SiteTypeRemoteSource.getINSTANCE().getAll();
@@ -135,6 +135,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                     case EDU_MATERIALS:
                         EducationalMaterialsRemoteSource.getInstance().getAll();
                         break;
+
                 }
             }
         }

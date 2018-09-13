@@ -13,8 +13,6 @@ public interface DownloadModel {
 
     void fetchODKForms(SyncRepository syncRepository);
 
-    void fetchProjectContacts();
-
     void fetchAllForms();
 
 }

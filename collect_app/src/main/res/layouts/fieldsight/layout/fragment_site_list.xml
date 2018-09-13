@@ -3,7 +3,7 @@
     android:layout_height="match_parent">
 
 
-    <android.support.v7.widget.RecyclerView
+    <org.bcss.collect.naxa.common.RecyclerViewEmptySupport
         android:scrollbars="none"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"

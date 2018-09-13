@@ -156,7 +156,9 @@ public class SyncRepository {
 //                new SyncableItems(Constant.DownloadUID.SCHEDULED_FORMS, PENDING, null, "Scheduled forms", "Download scheduled forms for your sites"),
                 new SyncableItems(Constant.DownloadUID.SITE_TYPES, PENDING, null, "Site type(s)", "Download site types to filter staged forms"),
                 new SyncableItems(Constant.DownloadUID.EDU_MATERIALS, PENDING, null, "Educational Materials", "Download educational attached for form(s)"),
-                new SyncableItems(Constant.DownloadUID.PREV_SUBMISSION, PENDING, null, "Previous Submissions", "Download previous submission(s) for forms"),
+                new SyncableItems(Constant.DownloadUID.EDU_MATERIALS, PENDING, null, "Educational Materials", "Download educational attached for form(s)"),
+                new SyncableItems(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, null, "Project Contact(s)", "Download contact information for people associated with your project"),
+//                new SyncableItems(Constant.DownloadUID.PREV_SUBMISSION, PENDING, null, "Previous Submissions", "Download previous submission(s) for forms"),
         };
 
 

@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.login;
 import android.text.TextUtils;
 
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -40,8 +41,6 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
         loginView.showProgress(true);
 
-        loginModel.login(username, password, LoginPresenterImpl.this);
-        if(true)return;
         ReactiveNetwork.checkInternetConnectivity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,7 +48,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
                     @Override
                     public void onSuccess(Boolean isConnected) {
                         if (isConnected) {
-
+                            FirebaseInstanceId.getInstance().getToken();
                             loginModel.login(username, password, LoginPresenterImpl.this);
                         } else {
                             loginView.showError("No Network Connectivity");
