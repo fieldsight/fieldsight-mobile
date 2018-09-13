@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.project;
 
 import android.app.Dialog;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -101,6 +103,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     private ProjectViewModel viewModel;
 
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -120,13 +123,12 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 .observe(ProjectListActivity.this, projects -> {
                     Timber.i("Projects data changing %s", projects.size());
 
-
-
                     projectlistAdapter.updateList(projects);
 
                     runLayoutAnimation(rvProjects);
 
                 });
+
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {

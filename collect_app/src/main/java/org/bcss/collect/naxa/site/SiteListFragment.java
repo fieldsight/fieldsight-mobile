@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
@@ -137,6 +138,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     @Override
                     public void onChanged(@Nullable Integer integer) {
                         if (integer != null && integer > 0) {
+
                             FlashBarUtils.showOutOfSyncMsg(getActivity(), "Site(s) data is out of sync");
                         }
                     }
@@ -235,7 +237,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }
 
         source.observe(this, sites -> {
-            Timber.i("Site list is mutating");
+
             siteListAdapter.updateList(sites);
         });
 

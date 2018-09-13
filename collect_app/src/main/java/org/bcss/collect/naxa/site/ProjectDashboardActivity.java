@@ -118,15 +118,15 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         ActivityOptions activityOptions = null;
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
+        context.startActivity(intent);
 
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
-        }
-
-        if (activityOptions != null) {
-            context.startActivity(intent, activityOptions.toBundle());
-        }
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
+//        }
+//
+//        if (activityOptions != null) {
+//            context.startActivity(intent, activityOptions.toBundle());
+//        }
 
     }
 
@@ -166,7 +166,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     private void setupAnimation() {
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false) {
             Transition sharedElementEnterTransition = getWindow().getSharedElementEnterTransition();
 
             sharedElementEnterTransition.addListener(new Transition.TransitionListener() {

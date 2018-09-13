@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.common.utilities;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.andrognito.flashbar.Flashbar;
@@ -52,7 +53,8 @@ public class FlashBarUtils {
                         .accelerateDecelerate());
 
 
-        bar.build().show();
+        new Handler().postDelayed(() -> bar.build().show(),2000);
+
 
     }
 
