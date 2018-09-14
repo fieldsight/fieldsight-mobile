@@ -54,37 +54,17 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     }
 
     public LiveData<Integer> isProjectNotSynced(String siteId, String projectId) {
-        return dao.notificationCount(siteId, projectId,
+        return dao.notificationCount(false, siteId, projectId,
                 ASSIGNED_SITE,
                 UNASSIGNED_SITE);
     }
 
     public LiveData<Integer> isProjectListNotSynced(String... projectIds) {
-        return dao.countNonExistentProjectInNotification(ASSIGNED_SITE, projectIds);
+        return dao.countNonExistentProjectInNotification(false, ASSIGNED_SITE, projectIds);
     }
 
     public LiveData<Integer> isSiteNotSynced(String siteId, String projectId) {
-        return dao.notificationCount(siteId, projectId,
-                NEW_STAGES,
-                SINGLE_STAGE_DEPLOYED,
-                SINGLE_STAGED_FORM_DEPLOYED,
-                ALL_STAGE_DEPLOYED,
-                NEW_STAGES,
-                FORM_ALTERED_SITE,
-                FORM_ALTERED_PROJECT,
-                SITE_FORM,
-                PROJECT_FORM
-        );
-    }
-
-    public LiveData<Integer> notificationCountSites() {
-        return dao.notificationCountWithoutIds(
-                ASSIGNED_SITE,
-                UNASSIGNED_SITE);
-    }
-
-    public LiveData<Integer> notificationCountForm() {
-        return dao.notificationCountWithoutIds(
+        return dao.notificationCount(false, siteId, projectId,
                 NEW_STAGES,
                 SINGLE_STAGE_DEPLOYED,
                 SINGLE_STAGED_FORM_DEPLOYED,
@@ -99,11 +79,12 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
 
     public Maybe<Integer> anyProjectSitesOutOfSync() {
-        return dao.countForNotificationType(ASSIGNED_SITE, UNASSIGNED_SITE);
+        return dao.countForNotificationType(false, ASSIGNED_SITE, UNASSIGNED_SITE);
     }
 
     public Maybe<Integer> anyFormsOutOfSync() {
         return dao.countForNotificationType(
+                false,
                 NEW_STAGES,
                 SINGLE_STAGE_DEPLOYED,
                 SINGLE_STAGED_FORM_DEPLOYED,
@@ -114,6 +95,26 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 SITE_FORM,
                 PROJECT_FORM);
     }
+
+    public void markSitesAsRead() {
+        AsyncTask.execute(() -> dao.applyReadToNotificationType(true,
+                ASSIGNED_SITE,
+                UNASSIGNED_SITE));
+    }
+
+    public void markFormsAsRead() {
+        AsyncTask.execute(() -> dao.applyReadToNotificationType(true,
+                NEW_STAGES,
+                SINGLE_STAGE_DEPLOYED,
+                SINGLE_STAGED_FORM_DEPLOYED,
+                ALL_STAGE_DEPLOYED,
+                NEW_STAGES,
+                FORM_ALTERED_SITE,
+                FORM_ALTERED_PROJECT,
+                SITE_FORM,
+                PROJECT_FORM));
+    }
+
 
     @Override
     public LiveData<List<FieldSightNotification>> getAll() {
@@ -138,11 +139,6 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     public void clear() {
         AsyncTask.execute(dao::deleteAll);
 
-    }
-
-
-    public LiveData<FieldSightNotification> getById(int loadedId) {
-        return dao.getById();
     }
 
 

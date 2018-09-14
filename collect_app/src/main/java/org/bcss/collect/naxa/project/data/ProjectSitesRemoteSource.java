@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.project.data;
 import com.google.gson.Gson;
 
 import org.bcss.collect.naxa.common.GSONInstance;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
@@ -210,6 +211,8 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public void onSuccess(List<Project> projects) {
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
+
+                        FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
                         syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
                     }
 

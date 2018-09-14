@@ -44,8 +44,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     AppBarLayout appbarGeneral;
     @BindView(R.id.rv_notification_list)
     RecyclerViewEmptySupport rvNotificationList;
-    @BindView(R.id.tv_info_box_new_notification)
-    TextView infoBox;
+
 
 
     private NotificationListViewModel viewModel;

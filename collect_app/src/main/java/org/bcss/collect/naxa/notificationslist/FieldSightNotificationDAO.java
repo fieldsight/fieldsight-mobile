@@ -31,35 +31,27 @@ public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<Fie
         insert(items);
     }
 
-    @Query("SELECT * FROM fieldsightnotification  ORDER BY id DESC")
-    public abstract LiveData<FieldSightNotification> getById();
-
-
     @Query("SELECT COUNT(notificationType) FROM fieldsightnotification " +
             "WHERE notificationType in (:strings) " +
-            "and (siteId =:siteId or projectId =:projectId)")
-    public abstract LiveData<Integer> notificationCount(String siteId, String projectId, String... strings);
+            "and (siteId =:siteId or projectId =:projectId)  and isRead =:read ")
+    public abstract LiveData<Integer> notificationCount(Boolean read, String siteId, String projectId, String... strings);
+
+    @Query("SELECT COUNT(notificationType) FROM fieldsightnotification WHERE notificationType in (:notificationTypes) and isRead =:read ")
+    public abstract Maybe<Integer> countForNotificationType(Boolean read, String... notificationTypes);
+
+    @Query("UPDATE fieldsightnotification SET isRead=:read WHERE notificationType in (:notificationTypes)")
+    public abstract void applyReadToNotificationType(Boolean read, String... notificationTypes);
+
+    @Query("SELECT " +
+            "(SELECT COUNT(DISTINCT projectId) FROM fieldsightnotification WHERE notificationType =:assign and isRead =:read ) " +
+            " - " +
+            "(SELECT COUNT(DISTINCT projectId) FROM fieldsightnotification WHERE notificationType =:assign AND projectId in(:projectIds) and isRead =:read )")
+    public abstract LiveData<Integer> countNonExistentProjectInNotification(Boolean read,String assign, String... projectIds);
 
 
-    @Query("SELECT COUNT(notificationType) FROM fieldsightnotification " +
-            "WHERE notificationType in (:strings) ")
-    public abstract LiveData<Integer> notificationCountWithoutIds(String... strings);
-
-
-    @Query("SELECT COUNT(notificationType) FROM fieldsightnotification WHERE notificationType in (:notificationTypes) ")
-    public abstract Maybe<Integer> countForNotificationType(String... notificationTypes);
-
-    /*
+        /*
     *
  SELECT ( SELECT count(DISTINCT projectId) FROM fieldsightnotification WHERE notificationType = "Assign Site") -
  ( SELECT count(DISTINCT projectId) FROM fieldsightnotification WHERE notificationType = "Assign Site" AND projectId in(183))
      */
-
-
-    @Query("SELECT " +
-            "(SELECT COUNT(DISTINCT projectId) FROM fieldsightnotification WHERE notificationType =:assign) " +
-            " - " +
-            "(SELECT COUNT(DISTINCT projectId) FROM fieldsightnotification WHERE notificationType =:assign AND projectId in(:projectIds))")
-
-    public abstract LiveData<Integer> countNonExistentProjectInNotification(String assign, String... projectIds);
 }

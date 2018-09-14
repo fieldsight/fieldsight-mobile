@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.onboarding;
 import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.os.Handler;
 
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
@@ -291,6 +292,7 @@ public class DownloadModelImpl implements DownloadModel {
                     @Override
                     public void onNext(Object o) {
                         SyncRepository.getInstance().setSuccess(ALL_FORMS);
+                        FieldSightNotificationLocalSource.getInstance().markFormsAsRead();
                     }
 
                     @Override
