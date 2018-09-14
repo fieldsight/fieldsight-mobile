@@ -27,6 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class FragmentHostActivity extends CollectAbstractActivity {
@@ -62,7 +63,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                     @Override
                     public void onChanged(@Nullable Integer integer) {
                         if (integer != null && integer > 0) {
-                            FlashBarUtils.showOutOfSyncMsg(FragmentHostActivity.this, "Form(s) information is out of sync");
+                            FlashBarUtils.showOutOfSyncMsg(ALL_FORMS, FragmentHostActivity.this, "Form(s) information is out of sync");
                         }
                     }
                 });

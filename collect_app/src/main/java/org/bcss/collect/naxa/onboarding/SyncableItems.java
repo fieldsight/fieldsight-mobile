@@ -20,6 +20,9 @@ public class SyncableItems {
     private boolean progressStatus;
 
     @Ignore
+    private boolean isOutOfSync;
+
+    @Ignore
     private boolean isSelected;
 
     public SyncableItems() {
@@ -36,8 +39,16 @@ public class SyncableItems {
         this.isSelected = false;
         this.checked = true;
         this.progressStatus = false;
+
     }
 
+    public boolean isOutOfSync() {
+        return isOutOfSync;
+    }
+
+    public void setOutOfSync(boolean outOfSync) {
+        isOutOfSync = outOfSync;
+    }
 
     public void setChecked(boolean checked) {
         this.checked = checked;
@@ -106,18 +117,22 @@ public class SyncableItems {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SyncableItems)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         SyncableItems that = (SyncableItems) o;
-        return Objects.equal(getUid(), that.getUid()) &&
-                Objects.equal(getDownloadingStatus(), that.getDownloadingStatus()) &&
-                Objects.equal(getLastSyncDateTime(), that.getLastSyncDateTime()) &&
-                Objects.equal(getTitle(), that.getTitle()) &&
-                Objects.equal(getDetail(), that.getDetail());
+        return uid == that.uid &&
+                downloadingStatus == that.downloadingStatus &&
+                checked == that.checked &&
+                progressStatus == that.progressStatus &&
+                isOutOfSync == that.isOutOfSync &&
+                isSelected == that.isSelected &&
+                Objects.equal(lastSyncDateTime, that.lastSyncDateTime) &&
+                Objects.equal(title, that.title) &&
+                Objects.equal(detail, that.detail);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getUid(), getDownloadingStatus(), getLastSyncDateTime(), getTitle(), getDetail());
+        return Objects.hashCode(uid, downloadingStatus, lastSyncDateTime, title, detail, checked, progressStatus, isOutOfSync, isSelected);
     }
 
     public static void init() {

@@ -22,7 +22,7 @@ public class FlashBarUtils {
     private static final int LONG_DURATION_MS = (int) TimeUnit.SECONDS.toMillis(5);
 
 
-    public static void showOutOfSyncMsg(@NonNull Activity context, @NonNull String message) {
+    public static void showOutOfSyncMsg(@NonNull int outOfSyncUid, @NonNull Activity context, @NonNull String message) {
         if (message.isEmpty()) {
             return;
         }
@@ -41,7 +41,12 @@ public class FlashBarUtils {
                 .showIcon()
                 .positiveActionTextColorRes(R.color.colorGreenPrimaryLight)
                 .positiveActionText("Resolve")
-                .positiveActionTapListener(flashbar -> DownloadActivity.start(context))
+                .positiveActionTapListener(new Flashbar.OnActionTapListener() {
+                    @Override
+                    public void onActionTapped(Flashbar flashbar) {
+                        DownloadActivity.start(context, outOfSyncUid);
+                    }
+                })
                 .enterAnimation(FlashAnim.with(context)
                         .animateBar()
                         .duration(400)
@@ -53,7 +58,7 @@ public class FlashBarUtils {
                         .accelerateDecelerate());
 
 
-        new Handler().postDelayed(() -> bar.build().show(),2000);
+        new Handler().postDelayed(() -> bar.build().show(), 2000);
 
 
     }

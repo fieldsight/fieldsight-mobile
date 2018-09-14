@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.text.ParseException;
@@ -25,6 +26,8 @@ import static org.bcss.collect.naxa.common.Constant.DownloadStatus.COMPLETED;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.FAILED;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.RUNNING;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapter.ViewHolder> {
 
@@ -86,6 +89,11 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             case RUNNING:
                 break;
         }
+
+        if(item.isOutOfSync()){
+            checkedItem.showProgressMessage("Out of sync");
+        }
+
 
     }
 

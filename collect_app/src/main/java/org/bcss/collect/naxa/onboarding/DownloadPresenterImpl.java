@@ -52,31 +52,6 @@ public class DownloadPresenterImpl implements DownloadPresenter {
         });
 
 
-        Observable.fromPublisher(LiveDataReactiveStreams.toPublisher(downloadView.getLifeCycleOwner(), livedata))
-                .flatMapIterable((Function<List<SyncableItems>, Iterable<SyncableItems>>) syncableItems -> syncableItems)
-                .filter(syncableItems -> syncableItems.getDownloadingStatus() == Constant.DownloadStatus.PENDING)
-                .subscribe(new io.reactivex.Observer<SyncableItems>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(SyncableItems syncableItems) {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
     }
 
     @Override
@@ -107,39 +82,48 @@ public class DownloadPresenterImpl implements DownloadPresenter {
 
         for (SyncableItems syncableItem : syncableItemList) {
             if (syncableItem.isChecked()) {
-                switch (syncableItem.getUid()) {
-                    case Constant.DownloadUID.GENERAL_FORMS:
-                        downloadModel.fetchGeneralForms();
-                        break;
-                    case Constant.DownloadUID.SCHEDULED_FORMS:
-                        downloadModel.fetchScheduledForms();
-                        break;
-                    case Constant.DownloadUID.STAGED_FORMS:
-                        downloadModel.fetchStagedForms();
-                        break;
-                    case Constant.DownloadUID.ODK_FORMS:
-                        downloadModel.fetchODKForms(syncRepository);
-                        break;
-                    case Constant.DownloadUID.PROJECT_SITES:
-                        downloadModel.fetchProjectSites();
-                        break;
-                    case Constant.DownloadUID.PROJECT_CONTACTS:
-                        ContactRemoteSource.getInstance().getAll();
-                        break;
-                    case SITE_TYPES:
-                        SiteTypeRemoteSource.getINSTANCE().getAll();
-                        break;
-                    case ALL_FORMS:
-                        downloadModel.fetchAllForms();
-                        break;
-                    case EDU_MATERIALS:
-                        EducationalMaterialsRemoteSource.getInstance().getAll();
-                        break;
-
-                }
+                downloadOneItem(syncableItem.getUid());
             }
         }
 
+    }
+
+    @Override
+    public void startDownload(int uid) {
+        downloadOneItem(uid);
+    }
+
+    private void downloadOneItem(int syncableItem) {
+        switch (syncableItem) {
+            case Constant.DownloadUID.GENERAL_FORMS:
+                downloadModel.fetchGeneralForms();
+                break;
+            case Constant.DownloadUID.SCHEDULED_FORMS:
+                downloadModel.fetchScheduledForms();
+                break;
+            case Constant.DownloadUID.STAGED_FORMS:
+                downloadModel.fetchStagedForms();
+                break;
+            case Constant.DownloadUID.ODK_FORMS:
+                downloadModel.fetchODKForms(syncRepository);
+                break;
+            case Constant.DownloadUID.PROJECT_SITES:
+                downloadModel.fetchProjectSites();
+                break;
+            case Constant.DownloadUID.PROJECT_CONTACTS:
+                ContactRemoteSource.getInstance().getAll();
+                break;
+            case SITE_TYPES:
+                SiteTypeRemoteSource.getINSTANCE().getAll();
+                break;
+            case ALL_FORMS:
+                downloadModel.fetchAllForms();
+                break;
+            case EDU_MATERIALS:
+                EducationalMaterialsRemoteSource.getInstance().getAll();
+                break;
+
+        }
     }
 
 

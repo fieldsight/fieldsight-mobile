@@ -46,4 +46,7 @@ public interface SyncDao {
 
     @Query("DELETE FROM sync")
     void deleteAll();
+
+    @Query("UPDATE sync SET checked=:value WHERE uid =:syncItemType")
+    void setIsDataOutOfSync(String syncItemType, boolean value);
 }

@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.onboarding;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;
@@ -12,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 
 public class CheckedItem extends RelativeLayout implements Checkable {
 
@@ -20,7 +22,7 @@ public class CheckedItem extends RelativeLayout implements Checkable {
     private TextView title;
     private TextView tvSubtitle;
     private ProgressBar progressBar;
-    private int sucessColor, failureColor;
+    private int sucessColor, failureColor,progressColor;
 
 
     public CheckedItem(Context context, AttributeSet attrs, int defStyle) {
@@ -58,6 +60,7 @@ public class CheckedItem extends RelativeLayout implements Checkable {
         tvSubtitle = rootView.findViewById(R.id.text3);
         sucessColor = Color.parseColor("#4CAF50");
         failureColor = Color.RED;
+        progressColor = Color.parseColor("#FF5722");
         progressBar = rootView.findViewById(R.id.update_progress);
     }
 
@@ -74,11 +77,19 @@ public class CheckedItem extends RelativeLayout implements Checkable {
 
     public void showSucessMessage(String message) {
         tvUpdateInfo.setTextColor(sucessColor);
+
+        tvUpdateInfo.setText(message);
+    }
+
+    public void showProgressMessage(String message) {
+        tvUpdateInfo.setTextColor(progressColor);
+
         tvUpdateInfo.setText(message);
     }
 
     public void showProgress() {
         progressBar.setVisibility(View.VISIBLE);
+        showProgressMessage(Collect.getInstance().getString(R.string.please_wait_long));
     }
 
     public void hideProgress() {

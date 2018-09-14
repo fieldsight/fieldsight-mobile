@@ -1,6 +1,8 @@
 package org.bcss.collect.naxa.onboarding;
 
+import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
@@ -19,9 +21,12 @@ import android.widget.Button;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.anim.ScaleUpAndDownItemAnimator;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +37,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DefaultObserver;
 import io.reactivex.observers.DisposableSingleObserver;
+import timber.log.Timber;
+
+import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class DownloadActivity extends CollectAbstractActivity implements DownloadView {
 
@@ -54,6 +65,12 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     private DownloadListAdapter downloadListAdapter;
     private DownloadPresenter downloadPresenter;
 
+    public static void start(Activity context, int outOfSyncUid) {
+        Intent intent = new Intent(context, DownloadActivity.class);
+        intent.putExtra(EXTRA_OBJECT, outOfSyncUid);
+        context.startActivity(intent);
+    }
+
 
     public static void start(Context context) {
         Intent intent = new Intent(context, DownloadActivity.class);
@@ -66,6 +83,13 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         setContentView(R.layout.activity_download);
         ButterKnife.bind(this);
         downloadPresenter = new DownloadPresenterImpl(this);
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            int uid = bundle.getInt(EXTRA_OBJECT);
+            downloadPresenter.startDownload(uid);
+        }
+
         setupToolbar();
         setupRecyclerView();
     }
@@ -103,9 +127,86 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     public void addAdapter(List<SyncableItems> syncableItems) {
 
 
+        Publisher<Integer> notificaitonCountForm = LiveDataReactiveStreams.toPublisher(this, FieldSightNotificationLocalSource.getInstance().notificationCountForm());
+        Publisher<Integer> notificaitonCountSites = LiveDataReactiveStreams.toPublisher(this, FieldSightNotificationLocalSource.getInstance().notificationCountSites());
 
-        downloadListAdapter = new DownloadListAdapter((ArrayList<SyncableItems>) syncableItems);
-        recyclerView.setAdapter(downloadListAdapter);
+
+
+        Observable.just(syncableItems)
+                .flatMapIterable((Function<List<SyncableItems>, Iterable<SyncableItems>>) syncableItems1 -> syncableItems1)
+                .flatMap(new Function<SyncableItems, ObservableSource<SyncableItems>>() {
+                    @Override
+                    public ObservableSource<SyncableItems> apply(SyncableItems syncableItems) throws Exception {
+                        return Observable.just(1)
+                                .map(new Function<Integer, SyncableItems>() {
+                                    @Override
+                                    public SyncableItems apply(Integer integer) throws Exception {
+                                        Timber.i("Calculating ALL_FORMS");
+                                        switch (syncableItems.getUid()) {
+                                            case Constant.DownloadUID.ALL_FORMS:
+                                                Timber.i("ALL_FORMS");
+                                                syncableItems.setOutOfSync(integer > 0);
+                                                break;
+                                        }
+
+                                        return syncableItems;
+                                    }
+                                });
+                    }
+                })
+                .flatMap(new Function<SyncableItems, ObservableSource<SyncableItems>>() {
+                    @Override
+                    public ObservableSource<SyncableItems> apply(SyncableItems syncableItems) throws Exception {
+                        return Observable.just(1)
+                                .map(new Function<Integer, SyncableItems>() {
+                                    @Override
+                                    public SyncableItems apply(Integer integer) throws Exception {
+                                        Timber.i("Calculating PROJECT_CONTACTS");
+                                        switch (syncableItems.getUid()) {
+
+                                            case Constant.DownloadUID.PROJECT_CONTACTS:
+                                                Timber.i("PROJECT_CONTACTS");
+                                                syncableItems.setOutOfSync(integer > 0);
+                                                break;
+                                        }
+
+                                        return syncableItems;
+                                    }
+                                });
+                    }
+                })
+                .toList()
+                .subscribe(new SingleObserver<List<SyncableItems>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        Timber.i("OnSubscribe");
+                    }
+
+                    @Override
+                    public void onSuccess(List<SyncableItems> syncableItems) {
+                        downloadListAdapter = new DownloadListAdapter((ArrayList<SyncableItems>) syncableItems);
+                        recyclerView.setAdapter(downloadListAdapter);
+                        Timber.i("onSuccess");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        Timber.i("onError");
+                    }
+                });
+
+
+//        Observable.fromPublisher(notificaitonCountForm)
+//                .flatMapIterable(new Function<Integer, Iterable<SyncableItems>>() {
+//                    @Override
+//                    public Iterable<SyncableItems> apply(Integer integer) throws Exception {
+//
+//                        return null;
+//                    }
+//                });
+//
+//
 
 
 
@@ -140,5 +241,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 break;
         }
     }
+
 
 }

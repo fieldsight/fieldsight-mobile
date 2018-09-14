@@ -129,6 +129,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
                 });
 
+
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {

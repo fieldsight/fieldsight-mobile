@@ -38,6 +38,9 @@ public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<Fie
             "and (siteId =:siteId or projectId =:projectId)")
     public abstract LiveData<Integer> notificationCount(String siteId, String projectId, String... strings);
 
+    @Query("SELECT COUNT(notificationType) FROM fieldsightnotification " +
+            "WHERE notificationType in (:strings) ")
+    public abstract LiveData<Integer> notificationCountWithoutIds(String...strings);
 
     /*
     *

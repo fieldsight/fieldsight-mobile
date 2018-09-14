@@ -77,6 +77,8 @@ the specific language governing permissions and limitations under the License. -
             android:clickable="false"
             android:focusable="false" />
 
+
+
         <ProgressBar
             android:id="@+id/update_progress"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"

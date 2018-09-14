@@ -83,6 +83,7 @@ import retrofit2.HttpException;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.SharedPreferenceUtils.keySelectedRegionId;
 import static org.bcss.collect.naxa.common.SharedPreferenceUtils.keySelectedRegionLabel;
@@ -139,7 +140,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     public void onChanged(@Nullable Integer integer) {
                         if (integer != null && integer > 0) {
 
-                            FlashBarUtils.showOutOfSyncMsg(getActivity(), "Site(s) data is out of sync");
+                            FlashBarUtils.showOutOfSyncMsg(PROJECT_SITES, getActivity(), "Site(s) data is out of sync");
                         }
                     }
                 });

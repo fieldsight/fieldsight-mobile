@@ -15,7 +15,7 @@ import java.io.File;
                 ProjectFilter.class
 
         },
-        version = 1)
+        version = 2)
 
 public abstract class FieldSightConfigDatabase extends RoomDatabase {
 

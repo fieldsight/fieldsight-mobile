@@ -7,4 +7,6 @@ public interface DownloadPresenter {
     void onToggleButtonClick(ArrayList<SyncableItems> list);
 
     void onDownloadButtonClick(ArrayList<SyncableItems> list);
+
+    void startDownload(int uid);
 }
