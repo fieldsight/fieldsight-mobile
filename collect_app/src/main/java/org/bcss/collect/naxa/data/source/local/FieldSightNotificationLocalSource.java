@@ -17,6 +17,8 @@ import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Maybe;
+
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
@@ -52,13 +54,13 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     }
 
     public LiveData<Integer> isProjectNotSynced(String siteId, String projectId) {
-        return dao.notificationCount(siteId,projectId,
+        return dao.notificationCount(siteId, projectId,
                 ASSIGNED_SITE,
                 UNASSIGNED_SITE);
     }
 
-    public LiveData<Integer> isProjectListNotSynced(String...projectIds){
-        return dao.countNonExistentProjectInNotification(ASSIGNED_SITE,projectIds);
+    public LiveData<Integer> isProjectListNotSynced(String... projectIds) {
+        return dao.countNonExistentProjectInNotification(ASSIGNED_SITE, projectIds);
     }
 
     public LiveData<Integer> isSiteNotSynced(String siteId, String projectId) {
@@ -93,6 +95,24 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 SITE_FORM,
                 PROJECT_FORM
         );
+    }
+
+
+    public Maybe<Integer> anyProjectSitesOutOfSync() {
+        return dao.countForNotificationType(ASSIGNED_SITE, UNASSIGNED_SITE);
+    }
+
+    public Maybe<Integer> anyFormsOutOfSync() {
+        return dao.countForNotificationType(
+                NEW_STAGES,
+                SINGLE_STAGE_DEPLOYED,
+                SINGLE_STAGED_FORM_DEPLOYED,
+                ALL_STAGE_DEPLOYED,
+                NEW_STAGES,
+                FORM_ALTERED_SITE,
+                FORM_ALTERED_PROJECT,
+                SITE_FORM,
+                PROJECT_FORM);
     }
 
     @Override

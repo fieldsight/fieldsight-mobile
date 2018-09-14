@@ -38,11 +38,13 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DefaultObserver;
 import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -127,9 +129,8 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     public void addAdapter(List<SyncableItems> syncableItems) {
 
 
-        Publisher<Integer> notificaitonCountForm = LiveDataReactiveStreams.toPublisher(this, FieldSightNotificationLocalSource.getInstance().notificationCountForm());
-        Publisher<Integer> notificaitonCountSites = LiveDataReactiveStreams.toPublisher(this, FieldSightNotificationLocalSource.getInstance().notificationCountSites());
-
+        Observable<Integer> notificaitonCountForm = FieldSightNotificationLocalSource.getInstance().anyFormsOutOfSync().toObservable();
+        Observable<Integer> notificaitonCountSites = FieldSightNotificationLocalSource.getInstance().anyProjectSitesOutOfSync().toObservable();
 
 
         Observable.just(syncableItems)
@@ -137,14 +138,12 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 .flatMap(new Function<SyncableItems, ObservableSource<SyncableItems>>() {
                     @Override
                     public ObservableSource<SyncableItems> apply(SyncableItems syncableItems) throws Exception {
-                        return Observable.just(1)
+                        return notificaitonCountForm
                                 .map(new Function<Integer, SyncableItems>() {
                                     @Override
                                     public SyncableItems apply(Integer integer) throws Exception {
-                                        Timber.i("Calculating ALL_FORMS");
                                         switch (syncableItems.getUid()) {
                                             case Constant.DownloadUID.ALL_FORMS:
-                                                Timber.i("ALL_FORMS");
                                                 syncableItems.setOutOfSync(integer > 0);
                                                 break;
                                         }
@@ -157,15 +156,12 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 .flatMap(new Function<SyncableItems, ObservableSource<SyncableItems>>() {
                     @Override
                     public ObservableSource<SyncableItems> apply(SyncableItems syncableItems) throws Exception {
-                        return Observable.just(1)
+                        return notificaitonCountSites
                                 .map(new Function<Integer, SyncableItems>() {
                                     @Override
                                     public SyncableItems apply(Integer integer) throws Exception {
-                                        Timber.i("Calculating PROJECT_CONTACTS");
                                         switch (syncableItems.getUid()) {
-
-                                            case Constant.DownloadUID.PROJECT_CONTACTS:
-                                                Timber.i("PROJECT_CONTACTS");
+                                            case Constant.DownloadUID.PROJECT_SITES:
                                                 syncableItems.setOutOfSync(integer > 0);
                                                 break;
                                         }
@@ -176,6 +172,8 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                     }
                 })
                 .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<List<SyncableItems>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -207,7 +205,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 //                });
 //
 //
-
 
 
     }

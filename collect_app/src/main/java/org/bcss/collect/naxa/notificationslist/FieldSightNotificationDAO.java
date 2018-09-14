@@ -11,6 +11,8 @@ import org.bcss.collect.naxa.data.FieldSightNotification;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Maybe;
+
 
 @Dao
 public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<FieldSightNotification> {
@@ -38,9 +40,14 @@ public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<Fie
             "and (siteId =:siteId or projectId =:projectId)")
     public abstract LiveData<Integer> notificationCount(String siteId, String projectId, String... strings);
 
+
     @Query("SELECT COUNT(notificationType) FROM fieldsightnotification " +
             "WHERE notificationType in (:strings) ")
-    public abstract LiveData<Integer> notificationCountWithoutIds(String...strings);
+    public abstract LiveData<Integer> notificationCountWithoutIds(String... strings);
+
+
+    @Query("SELECT COUNT(notificationType) FROM fieldsightnotification WHERE notificationType in (:notificationTypes) ")
+    public abstract Maybe<Integer> countForNotificationType(String... notificationTypes);
 
     /*
     *
