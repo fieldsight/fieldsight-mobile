@@ -66,7 +66,6 @@ public class DownloadModelImpl implements DownloadModel {
 
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
-                .toSingle()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //                        ProjectSitesRemoteSource
@@ -116,7 +115,6 @@ public class DownloadModelImpl implements DownloadModel {
     public void fetchScheduledForms() {
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
-                .toSingle()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //        ProjectSitesRemoteSource
@@ -168,7 +166,6 @@ public class DownloadModelImpl implements DownloadModel {
 //                .fetchProjecSites()
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
-                .toSingle()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
@@ -250,9 +247,9 @@ public class DownloadModelImpl implements DownloadModel {
 
     @Override
     public void fetchAllForms() {
+
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
-                .toSingle()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //        ProjectSitesRemoteSource
@@ -272,6 +269,7 @@ public class DownloadModelImpl implements DownloadModel {
                             })
                             .toList();
                 })
+
                 .toObservable()
                 .flatMap(new Function<List<DownloadProgress>, ObservableSource<?>>() {
                     @Override
@@ -291,7 +289,7 @@ public class DownloadModelImpl implements DownloadModel {
 
                     @Override
                     public void onNext(Object o) {
-                        SyncRepository.getInstance().setSuccess(ALL_FORMS);
+//                        SyncRepository.getInstance().setSuccess(ALL_FORMS);
                         FieldSightNotificationLocalSource.getInstance().markFormsAsRead();
                     }
 
@@ -302,7 +300,7 @@ public class DownloadModelImpl implements DownloadModel {
 
                     @Override
                     public void onComplete() {
-
+                        SyncRepository.getInstance().setSuccess(ALL_FORMS);
                     }
                 });
 

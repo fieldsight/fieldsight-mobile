@@ -11,7 +11,7 @@ import org.bcss.collect.naxa.login.model.Project;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 public class ProjectLocalSource implements BaseLocalDataSource<Project> {
 
@@ -33,9 +33,11 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
     }
 
 
-    private Maybe<List<Project>> getAllMaybe() {
-        return dao.getProjectsMaybe();
+    public void deleteAll() {
+        AsyncTask.execute(() -> dao.deleteAll());
     }
+
+
 
 
     @Override
@@ -45,7 +47,7 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
 
     @Override
     public void save(Project... items) {
-        AsyncTask.execute(() -> dao.insert(items));
+        AsyncTask.execute(() -> dao.insertWithIgnore(items));
     }
 
     @Override
@@ -58,7 +60,7 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
         AsyncTask.execute(() -> dao.updateAll(items));
     }
 
-    public Maybe<List<Project>> getProjectsMaybe() {
+    public Single<List<Project>> getProjectsMaybe() {
         return dao.getProjectsMaybe();
     }
 

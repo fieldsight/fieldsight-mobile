@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.project;
 
+import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
@@ -39,5 +40,11 @@ public class ProjectsDiffCallback extends DiffUtil.Callback {
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         return oldProjects.get(oldItemPosition).equals(newProjects.get(newItemPosition));
 
+    }
+
+    @Nullable
+    @Override
+    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+        return super.getChangePayload(oldItemPosition, newItemPosition);
     }
 }

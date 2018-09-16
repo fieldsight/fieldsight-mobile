@@ -27,6 +27,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
@@ -82,12 +87,18 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
 
 
-        ProjectLocalSource
-                .getInstance()
-                .getAll()
-                .observeForever(new Observer<List<Project>>() {
+        ProjectLocalSource.getInstance()
+                .getProjectsMaybe()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<Project>>() {
                     @Override
-                    public void onChanged(@Nullable List<Project> projects) {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<Project> projects) {
                         ArrayList<String> projectIds = new ArrayList<>();
 
                         for (Project project : projects) {
@@ -111,13 +122,55 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                         }
 
                         if (formsToDownlaod == null || formsToDownlaod.isEmpty()) {
-                            return;
+                            broadcastDownloadError("No project id provided to donwload forms");
+                        }else {
+                            downloadFormList(getApplicationContext(), XMLFormDownloadService.this, XMLFormDownloadService.this, formsToDownlaod.get(0));
+                            broadcastDownloadStarted();
                         }
+                    }
 
-                        downloadFormList(getApplicationContext(), XMLFormDownloadService.this, XMLFormDownloadService.this, formsToDownlaod.get(0));
-                        broadcastDownloadStarted();
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
                 });
+
+//        ProjectLocalSource
+//                .getInstance()
+//                .getAll()
+//                .observeForever(new Observer<List<Project>>() {
+//                    @Override
+//                    public void onChanged(@Nullable List<Project> projects) {
+//                        ArrayList<String> projectIds = new ArrayList<>();
+//
+//                        for (Project project : projects) {
+//                            projectIds.add(project.getId());
+//                        }
+//
+//                        for (String projectId : projectIds) {
+//                            XMLForm XMLForm;
+//
+//                            XMLForm = new XMLFormBuilder()
+//                                    .setFormCreatorsId(projectId)
+//                                    .setIsCreatedFromProject(false)
+//                                    .setDownloadUrl(APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(projectId))
+//                                    .createXMLForm();
+//
+//                            formsToDownlaod.add(XMLForm);
+//
+//                            XMLForm = new XMLFormBuilder().setFormCreatorsId(projectId).setIsCreatedFromProject(true).setDownloadUrl(APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(projectId)).createXMLForm();
+//                            formsToDownlaod.add(XMLForm);
+//
+//                        }
+//
+//                        if (formsToDownlaod == null || formsToDownlaod.isEmpty()) {
+//                            return;
+//                        }
+//
+//                        downloadFormList(getApplicationContext(), XMLFormDownloadService.this, XMLFormDownloadService.this, formsToDownlaod.get(0));
+//                        broadcastDownloadStarted();
+//                    }
+//                });
 
 
     }

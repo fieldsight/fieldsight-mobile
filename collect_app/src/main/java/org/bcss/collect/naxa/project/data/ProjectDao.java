@@ -15,12 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 @Dao
 public abstract class ProjectDao implements BaseDaoFieldSight<Project> {
 
     @Query("SELECT * FROM project")
-    public abstract Maybe<List<Project>> getProjectsMaybe();
+    public abstract Single<List<Project>> getProjectsMaybe();
 
     @Query("SELECT * FROM project")
     public abstract LiveData<List<Project>> getProjectsLive();
@@ -34,6 +35,9 @@ public abstract class ProjectDao implements BaseDaoFieldSight<Project> {
         deleteAll();
         insert(items);
     }
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    public abstract void insertWithIgnore(Project[] project);
 
     @Query("UPDATE project  SET siteClusters = :siteClusters WHERE id = :projectId")
     public abstract void updateCluster(String projectId, String siteClusters);

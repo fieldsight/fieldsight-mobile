@@ -122,10 +122,12 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 .getAll(false)
                 .observe(ProjectListActivity.this, projects -> {
                     Timber.i("Projects data changing %s", projects.size());
-
-                    projectlistAdapter.updateList(projects);
-
-                    runLayoutAnimation(rvProjects);
+                    if(projectlistAdapter.getItemCount() == 0){
+                        projectlistAdapter.updateList(projects);
+                        runLayoutAnimation(rvProjects);
+                    }else {
+                        projectlistAdapter.updateList(projects);
+                    }
 
                 });
 

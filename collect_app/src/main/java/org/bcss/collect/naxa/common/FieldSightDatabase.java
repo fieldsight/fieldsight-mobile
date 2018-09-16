@@ -55,7 +55,7 @@ import java.io.File;
                 FieldSightContactModel.class
 
         },
-        version = 2)
+        version = 3)
 @TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {

@@ -72,7 +72,7 @@ android {
         minSdkVersion(16)
         targetSdkVersion(22)
 //        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
-        versionCode 31
+        versionCode 32
         versionName '3.0-beta'
 //        versionName getVersionName()
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')

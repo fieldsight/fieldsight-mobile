@@ -227,6 +227,7 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         });
 
         zoomPointButton = zoomDialogView.findViewById(R.id.zoom_saved_location);
+        zoomPointButton.setText("Zoom to site");
         zoomPointButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
