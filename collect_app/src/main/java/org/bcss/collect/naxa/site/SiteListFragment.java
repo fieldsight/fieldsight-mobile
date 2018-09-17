@@ -325,7 +325,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     public void onSuccess(List<Pair> pairs) {
                         ArrayList<FilterOption> filterOptions = new ArrayList<>();
 
-                        filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Site Region", pairs));
+                        filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Region", pairs));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
 //                        filterOptions.add(new FilterOption(FilterOption.FilterType.SITE, "Site ", sites));
 //                        filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline Site(s)", new ArrayList<>(0)));

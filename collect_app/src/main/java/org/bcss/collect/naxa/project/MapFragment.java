@@ -120,6 +120,7 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         marker.setTitle(loadedProject.getOrganizationName());
 
         marker.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.circle_blue));
+        //todo: remove project lat lon
         latLng = new GeoPoint(Double.parseDouble(loadedProject.getLat()), Double.parseDouble(loadedProject.getLon()));
         marker.setPosition(latLng);
 

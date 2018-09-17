@@ -99,10 +99,7 @@ public class FieldSightUserSession {
 
     private static void logout(Context context) {
 
-        AsyncTask.execute(() -> {
-            FieldSightDatabase.getDatabase(context).clearAllTables();
-            FieldSightConfigDatabase.getDatabase(context).clearAllTables();
-        });
+
 
 
         DeleteInstancesTask deleteInstancesTask = new DeleteInstancesTask();
@@ -150,6 +147,11 @@ public class FieldSightUserSession {
                     }
                 });
 
+
+        AsyncTask.execute(() -> {
+            FieldSightDatabase.getDatabase(context).clearAllTables();
+            FieldSightConfigDatabase.getDatabase(context).clearAllTables();
+        });
 
         //bug: fcm token is not generating when issued getToken() hence we exclude it from deletion here
         String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);

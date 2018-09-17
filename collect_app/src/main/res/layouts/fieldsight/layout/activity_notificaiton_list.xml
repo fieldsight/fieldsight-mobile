@@ -6,25 +6,25 @@
 
     <include layout="@layout/general_toolbar" />
 
-
-
     <org.bcss.collect.naxa.common.RecyclerViewEmptySupport
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/rv_notification_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/appbar_general" />
+        android:layout_below="@id/appbar_general"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <include layout="@layout/empty_layout_with_icon" />
 
 
     <android.support.design.widget.FloatingActionButton
-        app:layout_behavior="@string/scroll_fab_behaviour"
         android:id="@+id/fab_scroll_to_top"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
+        android:layout_gravity="end|bottom"
         android:layout_margin="@dimen/margin_medium"
         android:rotation="90"
         app:backgroundTint="@color/primaryColor"
+        app:layout_behavior="@string/scroll_fab_behaviour"
         app:srcCompat="@drawable/ic_arrow_back"
         app:useCompatPadding="true" />
 

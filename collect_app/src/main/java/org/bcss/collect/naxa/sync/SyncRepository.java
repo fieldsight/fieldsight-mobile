@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.DisposableSubscriber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 
@@ -89,6 +89,10 @@ public class SyncRepository {
         String formattedDate = df.format(date);
         updateField(uid, DATE, false, formattedDate);
         hideProgress(uid);
+    }
+
+    public Single<SyncableItems> getStatusById(String uid) {
+        return syncDao.getById(uid);
     }
 
     private void updateField(int uid, String code, boolean value, String stringValue) {

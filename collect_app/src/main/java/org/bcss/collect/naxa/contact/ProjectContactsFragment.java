@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Phone;
+import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;
 import org.bcss.collect.naxa.stages.StageViewModel;
@@ -22,12 +23,23 @@ import org.bcss.collect.naxa.stages.StageViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class ProjectContactsFragment extends Fragment implements ContactAdapter.ContactDetailListener {
-    private RecyclerView recyclerView;
+
     private ContactAdapter contactAdapter;
 
     private ProjectContactViewModel viewModel;
     Phone phone;
+
+    @BindView(R.id.root_layout_empty_layout)
+    View emptyLayout;
+    private Unbinder unbinder;
+
+    @BindView(R.id.recycler_view)
+    RecyclerViewEmptySupport recyclerView;
 
     public static ProjectContactsFragment getInstance() {
         return new ProjectContactsFragment();
@@ -37,7 +49,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_site_list, container, false);
-        bindUI(view);
+        unbinder = ButterKnife.bind(this, view);
         setupRecycleView();
 
         phone = new Phone(getActivity());
@@ -57,14 +69,18 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
         return view;
     }
 
-    private void bindUI(View view) {
-        recyclerView = view.findViewById(R.id.recycler_view);
-    }
-
     private void setupRecycleView() {
         contactAdapter = new ContactAdapter(new ArrayList<>(0), ProjectContactsFragment.this, getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setEmptyView(emptyLayout,
+//                getString(R.string.empty_message_contact),
+//                new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
+//                    @Override
+//                    public void onRetryButtonClick() {
+//
+//                    }
+//                });
         recyclerView.setAdapter(contactAdapter);
     }
 
@@ -77,6 +93,12 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
 
     @Override
     public void onPhoneButtonClick(FieldSightContactModel contactModel) {
-        phone.ringNumber(contactModel.getFull_name(),contactModel.getPhone());
+        phone.ringNumber(contactModel.getFull_name(), contactModel.getPhone());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

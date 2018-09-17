@@ -138,14 +138,6 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
             checkedItem = itemLayoutView.findViewById(R.id.checked_item);
             rootLayout = itemLayoutView.findViewById(R.id.root_layout_download_list_item);
 
-
-            rootLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ToastUtils.showShortToast("FUck you");
-                }
-            });
-
             rootLayout.setOnClickListener(v -> {
                 SyncableItems syncableItem = syncableItems.get(getAdapterPosition());
 

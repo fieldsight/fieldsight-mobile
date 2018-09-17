@@ -103,6 +103,8 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
+        downloadListAdapter = new DownloadListAdapter(new ArrayList<>(0));
+        recyclerView.setAdapter(downloadListAdapter);
         recyclerView.setLayoutManager(layoutManager);
     }
 
@@ -128,6 +130,8 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     @Override
     public void addAdapter(List<SyncableItems> syncableItems) {
 
+
+//        downloadButton.setEnabled(areCheckedItems());
 
         Observable<Integer> notificaitonCountForm = FieldSightNotificationLocalSource.getInstance().anyFormsOutOfSync().toObservable();
         Observable<Integer> notificaitonCountSites = FieldSightNotificationLocalSource.getInstance().anyProjectSitesOutOfSync().toObservable();
@@ -177,20 +181,17 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 .subscribe(new SingleObserver<List<SyncableItems>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        Timber.i("OnSubscribe");
+
                     }
 
                     @Override
                     public void onSuccess(List<SyncableItems> syncableItems) {
-                        downloadListAdapter = new DownloadListAdapter((ArrayList<SyncableItems>) syncableItems);
-                        recyclerView.setAdapter(downloadListAdapter);
-                        Timber.i("onSuccess");
+                        downloadListAdapter.updateList(syncableItems);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        Timber.i("onError");
                     }
                 });
 
@@ -237,6 +238,14 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 downloadPresenter.onDownloadButtonClick(downloadListAdapter.getList());
                 break;
         }
+    }
+
+    protected boolean areCheckedItems() {
+        return getCheckedCount() > 0;
+    }
+
+    protected int getCheckedCount() {
+        return downloadListAdapter.getSelectedItemsCount();
     }
 
 

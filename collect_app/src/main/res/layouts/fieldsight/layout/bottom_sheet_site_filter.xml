@@ -28,7 +28,7 @@ the License.
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="8dp"
-        android:text="@string/filter_the_list"
+        android:text="Filter by"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
     <android.support.v7.widget.RecyclerView

@@ -10,8 +10,10 @@ import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.onboarding.SyncableItems;
 
 import java.util.List;
+import java.util.Observable;
 
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 @Dao
 public interface SyncDao {
@@ -49,4 +51,7 @@ public interface SyncDao {
 
     @Query("UPDATE sync SET checked=:value WHERE uid =:syncItemType")
     void setIsDataOutOfSync(String syncItemType, boolean value);
+
+    @Query("SELECT * from sync WHERE uid=:uid")
+    Single<SyncableItems> getById(String uid);
 }
