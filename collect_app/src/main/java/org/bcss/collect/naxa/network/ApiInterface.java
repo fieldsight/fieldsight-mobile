@@ -105,4 +105,7 @@ public interface ApiInterface {
 
     @GET(GET_ALL_CONTACTS)
     Observable<ArrayList<FieldSightContactModel>> getAllContacts();
+
+    @GET
+    Observable<FormHistoryResponse> getFormResponse(@Url String url);
 }

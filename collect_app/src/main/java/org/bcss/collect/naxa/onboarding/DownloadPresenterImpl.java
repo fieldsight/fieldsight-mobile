@@ -15,6 +15,7 @@ import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.contact.ContactRemoteSource;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
+import org.bcss.collect.naxa.previoussubmission.LastSubmissionRemoteSource;
 import org.bcss.collect.naxa.site.SiteTypeRemoteSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
@@ -27,6 +28,7 @@ import io.reactivex.functions.Function;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 
@@ -121,6 +123,9 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                 break;
             case EDU_MATERIALS:
                 EducationalMaterialsRemoteSource.getInstance().getAll();
+                break;
+            case PREV_SUBMISSION:
+                LastSubmissionRemoteSource.getInstance().getAll();
                 break;
 
         }
