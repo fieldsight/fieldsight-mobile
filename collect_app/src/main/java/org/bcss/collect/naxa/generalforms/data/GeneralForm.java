@@ -40,10 +40,11 @@ public class GeneralForm {
     @Expose
     private Integer responsesCount;
 
+    @SerializedName("date_created")
     @Expose
     private String dateCreated;
-    @SerializedName("date_modified")
 
+    @SerializedName("date_modified")
     @Expose
     private String dateModified;
     @SerializedName("form_status")

@@ -43,7 +43,7 @@ public class ScheduledFormsAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item, null);
+        View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_small, null);
         return new ViewHolder(itemLayoutView);
     }
 
@@ -53,11 +53,11 @@ public class ScheduledFormsAdapter extends
         final ScheduleForm scheduleForm = totalList.get(position);
 
 
-            viewHolder.tvFormName.setText(scheduleForm.getScheduleName());
-            viewHolder.tvDesc.setText(scheduleForm.getFormName());
+            viewHolder.tvFormName.setText(scheduleForm.getFormName());
+            viewHolder.tvDesc.setText(scheduleForm.getScheduleName());
             viewHolder.tvLastFilledAt.setText(scheduleForm.getLastFilledDateTime());
-            viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1));
-            viewHolder.tvScheduleLevel.setText(scheduleForm.getScheduleLevel());
+            viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1).toUpperCase());
+//            viewHolder.tvScheduleLevel.setText(scheduleForm.getScheduleLevel());
 
 
     }
@@ -90,7 +90,7 @@ public class ScheduledFormsAdapter extends
             btnOpenEdu = itemLayoutView.findViewById(R.id.btn_form_edu);
             rootLayout = itemLayoutView.findViewById(R.id.rl_form_list_item);
             tvIconText = itemLayoutView.findViewById(R.id.form_icon_text);
-            // tvScheduleLevel = itemLayoutView.findViewById(R.id.tv_schedule_level);
+//             tvScheduleLevel = itemLayoutView.findViewById(R.id.tv_schedule_level);
 
 
             rootLayout.setOnClickListener(this);

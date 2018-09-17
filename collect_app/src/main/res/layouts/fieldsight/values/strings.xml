@@ -165,6 +165,7 @@
     <string name="empty_message_contact">Once contacts information become available they will be show up here.</string>
     <string name="empty_message">Once you are assigned %s, you\'ll see them listed here</string>
     <string name="empty_message_notification">Once you receive notifications they will be listed here</string>
+    <string name="msg_created_on">Created %s</string>
 
     <!--Notification sitelist ends here-->
 
