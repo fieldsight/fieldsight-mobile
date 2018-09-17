@@ -46,7 +46,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_small, null);
         return new ViewHolder(view);
 
 
@@ -58,7 +58,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         GeneralForm generalForm = generalForms.get(viewHolder.getAdapterPosition());
         viewHolder.tvFormName.setText(generalForm.getName());
         viewHolder.tvLastFilledDateTime.setText(generalForm.getName());
-        viewHolder.tvDesc.setVisibility(View.GONE);
+//        viewHolder.tvDesc.setVisibility(View.GONE);
 
 
         if (generalForm.getName() != null) {

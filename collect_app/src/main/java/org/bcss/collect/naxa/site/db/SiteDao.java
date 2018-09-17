@@ -11,6 +11,8 @@ import org.bcss.collect.naxa.login.model.Site;
 
 import java.util.List;
 
+import io.reactivex.Single;
+
 @Dao
 public interface SiteDao {
 
@@ -25,6 +27,9 @@ public interface SiteDao {
 
     @Query("SELECT * from sites WHERE project =  :projectID")
     LiveData<List<Site>> getSiteByProjectId(String projectID);
+
+    @Query("SELECT * from sites WHERE project = :projectID")
+    Single<List<Site>> getSiteByProjectIdAsSingle(String projectID);
 
     @Query("SELECT * from sites WHERE id= :siteId")
     LiveData<List<Site>> getSiteById(String siteId);

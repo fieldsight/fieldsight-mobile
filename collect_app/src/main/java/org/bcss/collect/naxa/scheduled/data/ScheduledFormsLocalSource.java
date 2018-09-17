@@ -56,4 +56,9 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
     public LiveData<List<ScheduleForm>> getByProjectId(String projectId) {
         return dao.getByProjectId(projectId);
     }
+
+    public LiveData<List<ScheduleForm>> getById(String fsFormId) {
+        return dao.getById(fsFormId);
+    }
+
 }

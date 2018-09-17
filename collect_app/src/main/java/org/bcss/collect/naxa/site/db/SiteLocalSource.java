@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.site.db;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
 
 import org.bcss.collect.android.application.Collect;
@@ -9,10 +8,11 @@ import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.stages.data.SubStage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Single;
 
 public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
@@ -44,6 +44,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     public LiveData<List<Site>> getById(String projectId) {
         return dao.getSiteByProjectId(projectId);
     }
+
+
+
+
 
     public LiveData<List<Site>> getByIdAndSiteStatus(String projectId, int status) {
         return dao.getByIdOfflineSites(projectId, status);

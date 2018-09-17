@@ -68,6 +68,9 @@ public class ScheduleForm {
     @SerializedName("id_string")
     private String idString;
 
+    private String lastSubmissionBy;
+    private String lastSubmissionDateTime;
+
     public void setScheduleId(String scheduleId) {
         this.scheduleId = scheduleId;
     }
@@ -337,5 +340,20 @@ public class ScheduleForm {
                 Objects.equal(formDeployedFrom, that.formDeployedFrom);
     }
 
+    public String getLastSubmissionBy() {
+        return lastSubmissionBy;
+    }
+
+    public void setLastSubmissionBy(String lastSubmissionBy) {
+        this.lastSubmissionBy = lastSubmissionBy;
+    }
+
+    public String getLastSubmissionDateTime() {
+        return lastSubmissionDateTime;
+    }
+
+    public void setLastSubmissionDateTime(String lastSubmissionDateTime) {
+        this.lastSubmissionDateTime = lastSubmissionDateTime;
+    }
 
 }

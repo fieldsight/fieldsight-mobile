@@ -84,6 +84,9 @@ public class GeneralForm {
     @Expose
     private String fsform;
 
+    private String lastSubmissionBy;
+    private String lastSubmissionDateTime;
+
     //@SerializedName("latest_submission")
     @Expose
     @Ignore
@@ -245,5 +248,21 @@ public class GeneralForm {
 
     public void setManifestUrl(String manifestUrl) {
         this.manifestUrl = manifestUrl;
+    }
+
+    public String getLastSubmissionBy() {
+        return lastSubmissionBy;
+    }
+
+    public void setLastSubmissionBy(String lastSubmissionBy) {
+        this.lastSubmissionBy = lastSubmissionBy;
+    }
+
+    public String getLastSubmissionDateTime() {
+        return lastSubmissionDateTime;
+    }
+
+    public void setLastSubmissionDateTime(String lastSubmissionDateTime) {
+        this.lastSubmissionDateTime = lastSubmissionDateTime;
     }
 }

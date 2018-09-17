@@ -81,6 +81,8 @@ public class SubStage {
     @Expose
     private List<FormResponse> latestSubmission = null;
 
+    private String lastSubmissionBy;
+    private String lastSubmissionDateTime;
 
     public SubStage() {
 
@@ -203,6 +205,22 @@ public class SubStage {
 
     public void setResponseCount(String responseCount) {
         this.responseCount = responseCount;
+    }
+
+    public String getLastSubmissionBy() {
+        return lastSubmissionBy;
+    }
+
+    public void setLastSubmissionBy(String lastSubmissionBy) {
+        this.lastSubmissionBy = lastSubmissionBy;
+    }
+
+    public String getLastSubmissionDateTime() {
+        return lastSubmissionDateTime;
+    }
+
+    public void setLastSubmissionDateTime(String lastSubmissionDateTime) {
+        this.lastSubmissionDateTime = lastSubmissionDateTime;
     }
 
 }

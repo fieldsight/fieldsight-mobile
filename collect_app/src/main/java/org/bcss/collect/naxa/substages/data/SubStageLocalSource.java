@@ -10,6 +10,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
+import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.stages.data.SubStage;
 
 import java.util.ArrayList;
@@ -135,5 +136,10 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
                  return Observable.just(filteredSubstages);
              }
          });
+    }
+
+
+    public LiveData<List<SubStage>> getById(String fsFormId) {
+        return dao.getById(fsFormId);
     }
 }

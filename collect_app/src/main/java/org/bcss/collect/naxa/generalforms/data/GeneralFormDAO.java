@@ -6,6 +6,7 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
+import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,4 +33,7 @@ public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
 
     @Query("SELECT * FROM general_forms")
     public abstract LiveData<List<GeneralForm>> getAll();
+
+    @Query("SELECT * FROM general_forms WHERE fsFormId =:fsFormId")
+    public abstract LiveData<List<GeneralForm>> getById(String fsFormId);
 }

@@ -11,12 +11,10 @@ import org.bcss.collect.naxa.common.FieldSightDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
 import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -153,4 +151,8 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
         AsyncTask.execute(() -> dao.deleteAll());
     }
 
+
+    public LiveData<List<GeneralForm>> getById(String fsFormId) {
+        return dao.getById(fsFormId);
+    }
 }

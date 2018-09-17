@@ -52,16 +52,14 @@ public class ScheduledFormsAdapter extends
 
         final ScheduleForm scheduleForm = totalList.get(position);
 
-        try {
+
             viewHolder.tvFormName.setText(scheduleForm.getScheduleName());
             viewHolder.tvDesc.setText(scheduleForm.getFormName());
             viewHolder.tvLastFilledAt.setText(scheduleForm.getLastFilledDateTime());
             viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1));
             viewHolder.tvScheduleLevel.setText(scheduleForm.getScheduleLevel());
 
-        } catch (NullPointerException e) {
-            Timber.e(e.getMessage());
-        }
+
     }
 
     @Override
