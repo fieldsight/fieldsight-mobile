@@ -321,10 +321,12 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="org.bcss.collect.naxa.flagform.FlaggedFormDetailActivity" />
         <activity android:name="org.bcss.collect.naxa.notificationslist.FlagResposneActivity" />
 
+
         <activity
             android:name="org.bcss.collect.naxa.site.SiteDetailActivity"
             android:exported="true" />
         <activity android:name="org.bcss.collect.naxa.project.MapActivity" />
+
     </application>
 
 </manifest>

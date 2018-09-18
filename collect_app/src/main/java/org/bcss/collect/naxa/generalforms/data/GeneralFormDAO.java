@@ -51,9 +51,4 @@ public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
     @Query("SELECT * FROM general_forms WHERE fsFormId =:fsFormId")
     public abstract LiveData<List<GeneralForm>> getById(String fsFormId);
 
-    @Query("select * from general_forms " +
-            "left join submission_detail " +
-            "on general_forms.fsFormId = submission_detail.siteFsFormId " +
-            "where general_forms.fsFormId=:fsFormId")
-    public abstract LiveData<List<GeneralFormAndSubmission>> getGeneralFormAndSubmissionById(String fsFormId);
 }

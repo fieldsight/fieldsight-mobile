@@ -152,7 +152,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                     @Override
                     public ArrayList<ScheduleForm> apply(ArrayList<ScheduleForm> scheduleForms) throws Exception {
                         for (ScheduleForm scheduleForm : scheduleForms) {
-                            String deployedFrom = scheduleForm.getProject() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+                            String deployedFrom = scheduleForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
                             scheduleForm.setFormDeployedFrom(deployedFrom);
                         }
 

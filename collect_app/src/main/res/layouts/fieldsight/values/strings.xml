@@ -122,7 +122,7 @@
     <string name="notify_assign_site">You have been assigned to %1$s site</string>
 
     <string name="notify_title_assign_project">Project Assigned</string>
-    <string name="notify_assign_project">You have been assigned to %1$s project</string>
+    <string name="notify_assign_project">You have been assigned to %1$s projectId</string>
     <string name="title_flagged_forms">Flagged Forms</string>
     <string name="title_stage_forms_act">Stage Forms</string>
 

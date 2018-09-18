@@ -169,9 +169,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
     }
 
-    public LiveData<List<GeneralFormAndSubmission>> getGeneralFormAndSubmissionById(String fsFormId) {
-        return dao.getGeneralFormAndSubmissionById(fsFormId);
-    }
+
 
 
 }

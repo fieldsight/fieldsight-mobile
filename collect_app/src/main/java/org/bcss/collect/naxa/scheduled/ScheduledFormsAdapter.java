@@ -16,6 +16,8 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
+import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
+import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 
 import java.util.ArrayList;
@@ -30,11 +32,11 @@ import timber.log.Timber;
 public class ScheduledFormsAdapter extends
         RecyclerView.Adapter<ScheduledFormsAdapter.ViewHolder> {
 
-    private ArrayList<ScheduleForm> totalList;
+    private ArrayList<ScheduledFormAndSubmission> totalList;
 
     private OnFormItemClickListener<ScheduleForm> listener;
 
-    public ScheduledFormsAdapter(ArrayList<ScheduleForm> totalList, OnFormItemClickListener<ScheduleForm> listener) {
+    public ScheduledFormsAdapter(ArrayList<ScheduledFormAndSubmission> totalList, OnFormItemClickListener<ScheduleForm> listener) {
         this.totalList = totalList;
         this.listener = listener;
     }
@@ -50,7 +52,7 @@ public class ScheduledFormsAdapter extends
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position) {
 
-        final ScheduleForm scheduleForm = totalList.get(position);
+        final ScheduleForm scheduleForm = totalList.get(position).getScheduleForm();
 
 
             viewHolder.tvFormName.setText(scheduleForm.getFormName());
@@ -67,7 +69,7 @@ public class ScheduledFormsAdapter extends
         return totalList.size();
     }
 
-    public void updateList(List<ScheduleForm> newList) {
+    public void updateList(List<ScheduledFormAndSubmission> newList) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ScheduleFormsDiffCallback(totalList, newList));
         totalList.clear();
         totalList.addAll(newList);
@@ -100,7 +102,7 @@ public class ScheduledFormsAdapter extends
 
         @Override
         public void onClick(View v) {
-            ScheduleForm scheduleForm = totalList.get(getAdapterPosition());
+            ScheduleForm scheduleForm = totalList.get(getAdapterPosition()).getScheduleForm();
 
             switch (v.getId()) {
                 case R.id.rl_form_list_item:
