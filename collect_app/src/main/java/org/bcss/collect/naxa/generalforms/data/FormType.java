@@ -20,6 +20,17 @@ public class FormType {
     @SerializedName("is_scheduled")
     private boolean isScheduled;
 
+    public boolean isStaged() {
+        return isStaged;
+    }
+
+    public boolean isSurvey() {
+        return isSurvey;
+    }
+
+    public boolean isScheduled() {
+        return isScheduled;
+    }
 
     public FormType(boolean isStaged, boolean isSurvey, boolean isScheduled) {
         this.isStaged = isStaged;

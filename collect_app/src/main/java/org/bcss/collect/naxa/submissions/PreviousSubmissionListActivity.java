@@ -180,7 +180,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
                 tvListTitle.setVisibility(View.VISIBLE);
 
 //                long updated = FormsRecordsHelper.getInstance()
-//                        .updateFormWithLatestResponse(formHistoryResponse.getResults().get(0),
+//                        .updateFormWithLatestResponse(formHistoryResponse.getSubmissionDetails().get(0),
 //                                fsFormId,
 //                                formHistoryResponse.getCount(),
 //                                tableName);

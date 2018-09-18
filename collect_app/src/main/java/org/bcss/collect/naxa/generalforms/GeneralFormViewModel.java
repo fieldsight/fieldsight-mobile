@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormRepository;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 
 import java.util.List;
 
@@ -25,13 +26,25 @@ public class GeneralFormViewModel extends ViewModel {
         repository.deleteAll();
     }
 
+    @Deprecated
     public LiveData<List<GeneralForm>> getForms(boolean forcedUpdate, Site loadedSite) {
         switch (loadedSite.getGeneralFormDeployedFrom()) {
             case SITE:
-                return repository.getBySiteId(forcedUpdate, loadedSite.getId(),loadedSite.getProject());
+                return repository.getBySiteId(forcedUpdate, loadedSite.getId(), loadedSite.getProject());
             case PROJECT:
             default:
                 return repository.getByProjectId(forcedUpdate, loadedSite.getProject());
+
+        }
+    }
+
+    public LiveData<List<GeneralFormAndSubmission>> getFormsAndSubmission(Site loadedSite) {
+        switch (loadedSite.getGeneralFormDeployedFrom()) {
+            case SITE:
+                return repository.getFormsBySiteId(loadedSite.getId(),loadedSite.getProject());
+            case PROJECT:
+            default:
+                return repository.getFormsByProjectIdId(loadedSite.getProject());
 
         }
     }

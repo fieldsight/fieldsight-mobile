@@ -17,7 +17,8 @@
     <RelativeLayout
         android:id="@+id/rl_form_list_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
 
         <RelativeLayout
             android:id="@+id/rela_round"
@@ -99,7 +100,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_form_responses"
@@ -112,7 +114,7 @@
             android:minWidth="0dp"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
-            android:text="FUCK you" />
+            android:text="@string/btn_previous_submissions" />
 
         <Button
             android:id="@+id/btn_form_edu"
@@ -122,9 +124,30 @@
             android:layout_below="@id/tv_form_secondary"
             android:layout_toEndOf="@id/btn_form_responses"
             android:layout_toRightOf="@id/btn_form_responses"
-            android:text="FUCK YOU" />
+            android:text="@string/btn_education_materials" />
 
+        <ImageButton
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="@dimen/margin_large"
+            android:id="@+id/btn_expand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
 
+            app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp" />
+
+        <TextView
+            android:id="@+id/tv_form_sub_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_form_edu"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            android:text="last submitted on 9th sept by nishondotan"
+            android:visibility="gone" />
 
 
     </RelativeLayout>

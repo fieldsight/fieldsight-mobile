@@ -1,7 +1,7 @@
 package org.bcss.collect.android.listeners;
 
 /**
- * Generic Result interface that returns a result of type T
+ * Generic SubmissionDetail interface that returns a result of type T
  * from another thread or function.
  *
  */

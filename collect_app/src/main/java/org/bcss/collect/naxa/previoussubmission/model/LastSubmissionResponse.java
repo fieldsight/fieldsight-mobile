@@ -1,7 +1,8 @@
 
-package org.bcss.collect.naxa.previoussubmission;
+package org.bcss.collect.naxa.previoussubmission.model;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,10 +16,11 @@ public class LastSubmissionResponse {
     private String next;
     @SerializedName("previous")
     @Expose
-    private Object previous;
+    private String previous;
+
     @SerializedName("results")
     @Expose
-    private List<Result> results = null;
+    private List<SubmissionDetail> submissionDetails = null;
 
     public Integer getCount() {
         return count;
@@ -40,16 +42,16 @@ public class LastSubmissionResponse {
         return previous;
     }
 
-    public void setPrevious(Object previous) {
+    public void setPrevious(String previous) {
         this.previous = previous;
     }
 
-    public List<Result> getResults() {
-        return results;
+    public List<SubmissionDetail> getSubmissionDetails() {
+        return submissionDetails;
     }
 
-    public void setResults(List<Result> results) {
-        this.results = results;
+    public void setSubmissionDetails(List<SubmissionDetail> submissionDetails) {
+        this.submissionDetails = submissionDetails;
     }
 
 }

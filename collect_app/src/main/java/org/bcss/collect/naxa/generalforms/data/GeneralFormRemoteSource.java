@@ -120,7 +120,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::fetchGeneralFromOneUrl)
                 .map(generalForms -> {
                     for (GeneralForm generalForm : generalForms) {
-                        String deployedFrom = generalForm.getProject() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+                        String deployedFrom = generalForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
                         generalForm.setFormDeployedFrom(deployedFrom);
                     }
 

@@ -8,6 +8,7 @@ import org.bcss.collect.naxa.login.model.AuthResponse;
 import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationDetail;
+import org.bcss.collect.naxa.previoussubmission.model.LastSubmissionResponse;
 import org.bcss.collect.naxa.project.data.MySiteResponse;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.site.SiteType;
@@ -108,4 +109,7 @@ public interface ApiInterface {
 
     @GET
     Observable<FormHistoryResponse> getFormResponse(@Url String url);
+
+    @GET
+    Observable<LastSubmissionResponse> getAllFormResponses(@Url String url);
 }

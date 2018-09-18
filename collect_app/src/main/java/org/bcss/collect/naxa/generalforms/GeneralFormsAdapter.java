@@ -19,26 +19,25 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.utilities.DateTimeUtils;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
+import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapter.ViewHolder> {
 
-    private ArrayList<GeneralForm> generalForms;
+    private ArrayList<GeneralFormAndSubmission> generalForms;
     private OnFormItemClickListener<GeneralForm> listener;
 
-
-    public GeneralFormsAdapter(ArrayList<GeneralForm> totalList, OnFormItemClickListener<GeneralForm> listener) {
+    public GeneralFormsAdapter(ArrayList<GeneralFormAndSubmission> totalList, OnFormItemClickListener<GeneralForm> listener) {
         this.generalForms = totalList;
         this.listener = listener;
     }
 
-
-    public void updateList(List<GeneralForm> newList) {
-
+    public void updateList(List<GeneralFormAndSubmission> newList) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new GeneralFormsDiffCallback(newList, generalForms));
         generalForms.clear();
         generalForms.addAll(newList);
@@ -58,12 +57,12 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        GeneralForm generalForm = generalForms.get(viewHolder.getAdapterPosition());
+        GeneralForm generalForm = generalForms.get(viewHolder.getAdapterPosition()).getGeneralForm();
         viewHolder.tvFormName.setText(generalForm.getName());
         viewHolder.tvLastFilledDateTime.setText(generalForm.getName());
 
         String relativeDateTime = DateTimeUtils.getRelativeTime(generalForm.getDateCreated(), true);
-        viewHolder.tvDesc.setText(viewHolder.tvFormName.getContext().getString(R.string.msg_created_on,relativeDateTime));
+        viewHolder.tvDesc.setText(viewHolder.tvFormName.getContext().getString(R.string.msg_created_on, relativeDateTime));
 
 
         if (generalForm.getName() != null) {
@@ -87,14 +86,14 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         return generalForms.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        TextView tvFormName, tvDesc, tvLastFilledDateTime, tvIconText;
+        TextView tvFormName, tvDesc, tvLastFilledDateTime, tvIconText, tvSubtext;
         Button btnOpenEdu, btnOpenHistory;
         RelativeLayout rootLayout;
         View badge;
         CardView cardView;
-        ImageButton btnCardMenu;
+        ImageButton btnCardMenu, btnExpandCard;
         private PopupMenu popup;
 
 
@@ -111,6 +110,8 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             badge = view.findViewById(R.id.iv_stage_badge);
             cardView = view.findViewById(R.id.card_view_form_list_item);
             btnCardMenu = view.findViewById(R.id.btn_card_menu);
+            tvSubtext = view.findViewById(R.id.tv_form_sub_text);
+            btnExpandCard = view.findViewById(R.id.btn_expand);
 
 
             cardView.setOnClickListener(this);
@@ -118,15 +119,18 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             btnOpenEdu.setOnClickListener(this);
             btnOpenHistory.setOnClickListener(this);
             btnCardMenu.setOnClickListener(this);
+            cardView.setOnLongClickListener(this);
+            btnExpandCard.setOnClickListener(this);
 
             setupPopup(cardView.getContext(), btnCardMenu);
+
 
         }
 
 
         @Override
         public void onClick(View v) {
-            GeneralForm generalForm = generalForms.get(getAdapterPosition());
+            GeneralForm generalForm = generalForms.get(getAdapterPosition()).getGeneralForm();
 
             switch (v.getId()) {
                 case R.id.rl_form_list_item:
@@ -143,6 +147,9 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
                 case R.id.btn_card_menu:
                     popup.show();
                     break;
+                case R.id.btn_expand:
+                    tvSubtext.setVisibility(tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    break;
             }
         }
 
@@ -157,6 +164,17 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
                     return true;
                 }
             });
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+
+            switch (v.getId()) {
+                case R.id.card_view_form_list_item:
+                    tvSubtext.setVisibility(tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    break;
+            }
+            return false;
         }
     }
 

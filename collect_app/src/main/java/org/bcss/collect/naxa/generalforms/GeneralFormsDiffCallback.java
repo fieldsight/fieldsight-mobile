@@ -4,16 +4,17 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
+import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 
 import java.util.List;
 
 
 public class GeneralFormsDiffCallback extends DiffUtil.Callback {
 
-    private List<GeneralForm> oldGeneralForms;
-    private List<GeneralForm> newGeneralForms;
+    private List<GeneralFormAndSubmission> oldGeneralForms;
+    private List<GeneralFormAndSubmission> newGeneralForms;
 
-    public GeneralFormsDiffCallback(List<GeneralForm> newGeneralForms, List<GeneralForm> oldGeneralForms) {
+    public GeneralFormsDiffCallback(List<GeneralFormAndSubmission> newGeneralForms, List<GeneralFormAndSubmission> oldGeneralForms) {
         this.newGeneralForms = newGeneralForms;
         this.oldGeneralForms = oldGeneralForms;
     }
@@ -32,8 +33,8 @@ public class GeneralFormsDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldGeneralForms.get(oldItemPosition).getFsFormId()
-                .equals(newGeneralForms.get(newItemPosition).getFsFormId());
+        return oldGeneralForms.get(oldItemPosition).getGeneralForm().getFsFormId()
+                .equals(newGeneralForms.get(newItemPosition).getGeneralForm().getFsFormId());
     }
 
     @Override

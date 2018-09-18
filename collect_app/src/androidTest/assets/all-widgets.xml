@@ -374,16 +374,16 @@
       <bind nodeset="/all-widgets/media_widgets/video_widget" type="binary"/>
       <bind nodeset="/all-widgets/media_widgets/selfie_video_widget" type="binary"/>
       <bind nodeset="/all-widgets/media_widgets/file_widget" type="binary"/>
-      <bind nodeset="/all-widgets/date_time_widgets/date_widget" type="date"/>
-      <bind nodeset="/all-widgets/date_time_widgets/date_widget_nocalendar" type="date"/>
-      <bind nodeset="/all-widgets/date_time_widgets/date_widget_month_year" type="date"/>
-      <bind nodeset="/all-widgets/date_time_widgets/date_widget_year" type="date"/>
+      <bind nodeset="/all-widgets/date_time_widgets/date_widget" type="submissionDateTime"/>
+      <bind nodeset="/all-widgets/date_time_widgets/date_widget_nocalendar" type="submissionDateTime"/>
+      <bind nodeset="/all-widgets/date_time_widgets/date_widget_month_year" type="submissionDateTime"/>
+      <bind nodeset="/all-widgets/date_time_widgets/date_widget_year" type="submissionDateTime"/>
       <bind nodeset="/all-widgets/date_time_widgets/time_widget" type="time"/>
       <bind nodeset="/all-widgets/date_time_widgets/date_time_widget" type="dateTime"/>
       <bind nodeset="/all-widgets/date_time_widgets/date_time_widget_nocalendar" type="dateTime"/>
-      <bind nodeset="/all-widgets/date_time_widgets/ethiopian_date_widget" type="date"/>
-      <bind nodeset="/all-widgets/date_time_widgets/coptic_date_widget" type="date"/>
-      <bind nodeset="/all-widgets/date_time_widgets/islamic_date_widget" type="date"/>
+      <bind nodeset="/all-widgets/date_time_widgets/ethiopian_date_widget" type="submissionDateTime"/>
+      <bind nodeset="/all-widgets/date_time_widgets/coptic_date_widget" type="submissionDateTime"/>
+      <bind nodeset="/all-widgets/date_time_widgets/islamic_date_widget" type="submissionDateTime"/>
       <bind nodeset="/all-widgets/geopoint_widgets/geopoint_widget" type="geopoint"/>
       <bind nodeset="/all-widgets/geopoint_widgets/geopoint_widget_placementmap" type="geopoint"/>
       <bind nodeset="/all-widgets/geopoint_widgets/geopoint_widget_maps" type="geopoint"/>
@@ -566,19 +566,19 @@ Version 2017121301 added:
       <label>Date and time widgets</label>
       <input ref="/all-widgets/date_time_widgets/date_widget">
         <label>Date widget</label>
-        <hint>date type with no appearance</hint>
+        <hint>submissionDateTime type with no appearance</hint>
       </input>
       <input appearance="no-calendar" ref="/all-widgets/date_time_widgets/date_widget_nocalendar">
         <label>Date Widget</label>
-        <hint>date type with no-calendar appearance</hint>
+        <hint>submissionDateTime type with no-calendar appearance</hint>
       </input>
       <input appearance="month-year" ref="/all-widgets/date_time_widgets/date_widget_month_year">
         <label>Date widget</label>
-        <hint>date type with month-year appearance</hint>
+        <hint>submissionDateTime type with month-year appearance</hint>
       </input>
       <input appearance="year" ref="/all-widgets/date_time_widgets/date_widget_year">
         <label>Date widget</label>
-        <hint>date type with year appearance</hint>
+        <hint>submissionDateTime type with year appearance</hint>
       </input>
       <input ref="/all-widgets/date_time_widgets/time_widget">
         <label>Time widget</label>
@@ -593,16 +593,16 @@ Version 2017121301 added:
         <hint>dateTime type with no-calendar appearance</hint>
       </input>
       <input appearance="ethiopian" ref="/all-widgets/date_time_widgets/ethiopian_date_widget">
-        <label>Ethiopian date widget</label>
-        <hint>date type ethiopian appearance</hint>
+        <label>Ethiopian submissionDateTime widget</label>
+        <hint>submissionDateTime type ethiopian appearance</hint>
       </input>
       <input appearance="coptic" ref="/all-widgets/date_time_widgets/coptic_date_widget">
-        <label>Coptic date widget</label>
-        <hint>date type coptic appearance</hint>
+        <label>Coptic submissionDateTime widget</label>
+        <hint>submissionDateTime type coptic appearance</hint>
       </input>
       <input appearance="islamic" ref="/all-widgets/date_time_widgets/islamic_date_widget">
-        <label>Islamic date widget</label>
-        <hint>date type islamic appearance</hint>
+        <label>Islamic submissionDateTime widget</label>
+        <hint>submissionDateTime type islamic appearance</hint>
       </input>
     </group>
     <group ref="/all-widgets/geopoint_widgets">

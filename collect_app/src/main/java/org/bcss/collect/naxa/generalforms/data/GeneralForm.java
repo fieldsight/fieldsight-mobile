@@ -69,10 +69,10 @@ public class GeneralForm {
 
     @SerializedName("site")
     @Expose
-    private String site;
+    private String siteId;
     @SerializedName("project")
     @Expose
-    private String project;
+    private String projectId;
 
     @SerializedName("downloadUrl")
     private String downloadUrl;
@@ -87,6 +87,7 @@ public class GeneralForm {
 
     private String lastSubmissionBy;
     private String lastSubmissionDateTime;
+
 
     //@SerializedName("latest_submission")
     @Expose
@@ -210,21 +211,21 @@ public class GeneralForm {
         this.xf = xf;
     }
 
-    public String getSite() {
-        return site;
+    public String getSiteId() {
+        return siteId;
     }
 
-    public void setSite(String site) {
-        this.site = site;
+    public void setSiteId(String siteId) {
+        this.siteId = siteId;
     }
 
-    public String getProject() {
-        return project;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject(String project) {
-        this.project = project;
-        formDeployedFrom = project != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
+        formDeployedFrom = projectId != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
     }
 
     public String getFsform() {
