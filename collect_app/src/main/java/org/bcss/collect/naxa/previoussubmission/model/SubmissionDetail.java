@@ -33,7 +33,7 @@ public class SubmissionDetail {
     @Expose
     private String projectFsFormId;
 
-    @SerializedName("submissionDateTime")
+    @SerializedName("date")
     @Expose
     private String submissionDateTime;
 

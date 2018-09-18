@@ -1,8 +1,10 @@
 package org.bcss.collect.naxa.generalforms;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -14,15 +16,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.DateTimeUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
+import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +63,8 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         GeneralForm generalForm = generalForms.get(viewHolder.getAdapterPosition()).getGeneralForm();
+        SubmissionDetail submissionDetail = generalForms.get(viewHolder.getAdapterPosition()).getSubmissionDetail();
+
         viewHolder.tvFormName.setText(generalForm.getName());
         viewHolder.tvLastFilledDateTime.setText(generalForm.getName());
 
@@ -71,9 +78,45 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
 
         Integer count = generalForm.getResponsesCount();
-        viewHolder.badge.setVisibility(count != null && count > 0 ? View.VISIBLE : View.VISIBLE);
+        viewHolder.badge.setVisibility(count != null && count > 0 ? View.GONE : View.GONE);
+
+        if (submissionDetail != null) {
+            viewHolder.tvSubtext.setText(getSubText(submissionDetail));
+            viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
+        }
 
     }
+
+
+    private Drawable getCircleDrawableBackground(String status) {
+
+        Drawable drawable;
+        switch (status) {
+            case Constant.FormStatus.Approved:
+                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
+                break;
+            case Constant.FormStatus.Flagged:
+                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_yellow);
+                break;
+            case Constant.FormStatus.Rejected:
+                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
+                break;
+            case Constant.FormStatus.Pending:
+                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
+                break;
+            default:
+                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
+                break;
+        }
+
+        return drawable;
+    }
+
+    private String getSubText(SubmissionDetail submissionDetail) {
+        String formattedDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
+        return Collect.getInstance().getString(R.string.last_submitted_by, submissionDetail.getSubmittedBy(), formattedDateTime);
+    }
+
 
     private void showOrHide(TextView textView, String text) {
         textView.setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
@@ -91,7 +134,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         TextView tvFormName, tvDesc, tvLastFilledDateTime, tvIconText, tvSubtext;
         Button btnOpenEdu, btnOpenHistory;
         RelativeLayout rootLayout;
-        View badge;
+        ImageView badge, ivCardCircle;
         CardView cardView;
         ImageButton btnCardMenu, btnExpandCard;
         private PopupMenu popup;
@@ -112,6 +155,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             btnCardMenu = view.findViewById(R.id.btn_card_menu);
             tvSubtext = view.findViewById(R.id.tv_form_sub_text);
             btnExpandCard = view.findViewById(R.id.btn_expand);
+            ivCardCircle = view.findViewById(R.id.iv_form_circle);
 
 
             cardView.setOnClickListener(this);
