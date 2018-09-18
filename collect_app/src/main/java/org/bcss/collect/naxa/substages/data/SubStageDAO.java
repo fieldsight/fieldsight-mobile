@@ -6,6 +6,7 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
+import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.stages.data.SubStage;
 
@@ -38,4 +39,5 @@ public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
 
     @Query("SELECT * FROM substage WHERE fsFormId =:fsFormId")
     public abstract LiveData<List<SubStage>> getById(String fsFormId);
+
 }

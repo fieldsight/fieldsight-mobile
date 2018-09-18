@@ -14,6 +14,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -66,24 +69,40 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         SubmissionDetail submissionDetail = generalForms.get(viewHolder.getAdapterPosition()).getSubmissionDetail();
 
         viewHolder.tvFormName.setText(generalForm.getName());
-        viewHolder.tvLastFilledDateTime.setText(generalForm.getName());
 
         String relativeDateTime = DateTimeUtils.getRelativeTime(generalForm.getDateCreated(), true);
         viewHolder.tvDesc.setText(viewHolder.tvFormName.getContext().getString(R.string.msg_created_on, relativeDateTime));
-
-
         if (generalForm.getName() != null) {
             viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1).toUpperCase());
         }
 
-
         Integer count = generalForm.getResponsesCount();
         viewHolder.badge.setVisibility(count != null && count > 0 ? View.GONE : View.GONE);
 
+
+        setSubmissionText(viewHolder, submissionDetail);
+
+
+    }
+
+    private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail) {
+
+        String submittedBy = "";
+        String submissionDateTime = "";
+        String submissionStatus = "";
+        Context context = viewHolder.cardView.getContext();
+
         if (submissionDetail != null) {
-            viewHolder.tvSubtext.setText(getSubText(submissionDetail));
+            submittedBy = submissionDetail.getSubmittedBy();
+            submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
+            submissionStatus = submissionDetail.getStatusDisplay();
             viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
         }
+
+        viewHolder.tvSubtext.setText(context.getString(R.string.form_last_submitted_by, submittedBy));
+        viewHolder.tvLastSubmissionDateTime.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
+        viewHolder.tvLastSubmissionStatus.setText(context.getString(R.string.form_last_submission_status, submissionStatus));
+
 
     }
 
@@ -112,11 +131,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         return drawable;
     }
 
-    private String getSubText(SubmissionDetail submissionDetail) {
-        String formattedDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
-        return Collect.getInstance().getString(R.string.last_submitted_by, submissionDetail.getSubmittedBy(), formattedDateTime);
-    }
-
 
     private void showOrHide(TextView textView, String text) {
         textView.setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
@@ -131,7 +145,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        TextView tvFormName, tvDesc, tvLastFilledDateTime, tvIconText, tvSubtext;
+        TextView tvFormName, tvDesc, tvLastFilledDateTime, tvIconText, tvSubtext, tvLastSubmissionDateTime, tvLastSubmissionStatus;
         Button btnOpenEdu, btnOpenHistory;
         RelativeLayout rootLayout;
         ImageView badge, ivCardCircle;
@@ -145,7 +159,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
             tvFormName = view.findViewById(R.id.tv_form_primary);
             tvDesc = view.findViewById(R.id.tv_form_secondary);
-            tvLastFilledDateTime = view.findViewById(R.id.tv_form_status);
             btnOpenHistory = view.findViewById(R.id.btn_form_responses);
             btnOpenEdu = view.findViewById(R.id.btn_form_edu);
             rootLayout = view.findViewById(R.id.rl_form_list_item);
@@ -156,6 +169,8 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             tvSubtext = view.findViewById(R.id.tv_form_sub_text);
             btnExpandCard = view.findViewById(R.id.btn_expand);
             ivCardCircle = view.findViewById(R.id.iv_form_circle);
+            tvLastSubmissionDateTime = view.findViewById(R.id.tv_form_last_submitted_date);
+            tvLastSubmissionStatus = view.findViewById(R.id.tv_form_status);
 
 
             cardView.setOnClickListener(this);
@@ -192,7 +207,21 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
                     popup.show();
                     break;
                 case R.id.btn_expand:
+
+                    boolean isCollapsed = tvSubtext.getVisibility() == View.GONE;
+                    if (isCollapsed) {
+                        btnExpandCard.startAnimation(getRotation(0, 180));
+                        btnExpandCard.setRotation(180);
+                    }else {
+                        btnExpandCard.startAnimation(getRotation(180, 360));
+                        btnExpandCard.setRotation(360);
+
+                    }
+
                     tvSubtext.setVisibility(tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    tvLastSubmissionStatus.setVisibility(tvLastSubmissionStatus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    tvLastSubmissionDateTime.setVisibility(tvLastSubmissionDateTime.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+
                     break;
             }
         }
@@ -216,10 +245,20 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             switch (v.getId()) {
                 case R.id.card_view_form_list_item:
                     tvSubtext.setVisibility(tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    tvLastSubmissionStatus.setVisibility(tvLastSubmissionStatus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    tvLastSubmissionDateTime.setVisibility(tvLastSubmissionDateTime.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                     break;
             }
             return false;
         }
+    }
+
+    private RotateAnimation getRotation(float from, float to) {
+        RotateAnimation rotate = new RotateAnimation(from, to, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(200);
+        rotate.setInterpolator(new LinearInterpolator());
+
+        return rotate;
     }
 
 }
