@@ -4,29 +4,38 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.bcss.collect.android.activities.GeoPointActivity;
 import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.login.model.Site;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -34,6 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
+import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class CreateSiteDetailActivity extends CollectAbstractActivity {
@@ -96,7 +106,11 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
     LinearLayout layoutSiteDataEdit;
 
     private CreateSiteDetailViewModel createSiteDetailViewModel;
-    private Site site;
+    private Site site, nSite;
+    private File photoToUpload;
+
+    private String latitude, longitude, accurary;
+    private Uri phototoUploadUri;
 
     public static void start(Context context, @NonNull Site site) {
         Intent intent = new Intent(context, CreateSiteDetailActivity.class);
@@ -112,7 +126,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
         setupToolbar();
         setupViewModel();
-        setupSaveBtn();
+//        setupSaveBtn();
 
         try {
             site = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
@@ -122,6 +136,8 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
             finish();
         }
 
+        createSiteDetailViewModel.setSiteMutableLiveData(site);
+
         createSiteDetailViewModel
                 .getEditSite()
                 .observe(this, new Observer<Boolean>() {
@@ -130,12 +146,14 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         if (aBoolean) {
                             layoutSiteDataDisplay.setVisibility(View.GONE);
                             layoutSiteDataEdit.setVisibility(View.VISIBLE);
-                            fabActivateEditMode.setVisibility(View.GONE);
 
+                            ilSiteIdentifierEditable.getEditText().setText(nSite.getIdentifier());
+                            ilSiteNameEditable.getEditText().setText(nSite.getName());
+                            ilPhoneEditable.getEditText().setText(nSite.getPhone());
+                            ilAddressEditable.getEditText().setText(nSite.getAddress());
                         } else {
-                            fabActivateEditMode.setVisibility(View.VISIBLE);
-                            layoutSiteDataDisplay.setVisibility(View.VISIBLE);
                             layoutSiteDataEdit.setVisibility(View.GONE);
+                            layoutSiteDataDisplay.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -146,15 +164,22 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                 .observe(this, new Observer<List<Site>>() {
                     @Override
                     public void onChanged(@Nullable List<Site> sites) {
-                        Site tSite = sites.get(0);
-                        ilSiteIdentifier.getEditText().setText(site.getIdentifier());
-                        ilSiteName.getEditText().setText(site.getName());
-                        ilPhone.getEditText().setText(site.getPhone());
-                        ilAddress.getEditText().setText(site.getAddress());
-                        ilRegion.getEditText().setText(site.getRegion());
-                        ilSiteType.getEditText().setText(site.getTypeId());
+                        nSite = sites.get(0);
+                        ilSiteIdentifier.getEditText().setText(nSite.getIdentifier());
+                        ilSiteName.getEditText().setText(nSite.getName());
+                        ilPhone.getEditText().setText(nSite.getPhone());
+                        ilAddress.getEditText().setText(nSite.getAddress());
+                        ilRegion.getEditText().setText(nSite.getRegion());
+                        ilSiteType.getEditText().setText(nSite.getTypeId());
+
                     }
                 });
+
+        watchText(ilSiteIdentifierEditable);
+        watchText(ilSiteNameEditable);
+        watchText(ilPhoneEditable);
+        watchText(ilAddressEditable);
+
     }
 
     private void setupToolbar() {
@@ -175,14 +200,44 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
             case R.id.btn_view_site_on_map:
                 break;
             case R.id.btn_site_edit_add_photo:
+                final CharSequence[] items = {"Take Photo", "Choose siteName Gallery", "Dismiss"};
+                DialogFactory.createListActionDialog(this, "Add photo", items, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            photoToUpload = createSiteDetailViewModel.generateImageFile("site");
+                            phototoUploadUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photoToUpload);
+                            Intent toCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            toCamera.putExtra(MediaStore.EXTRA_OUTPUT, phototoUploadUri);
+                            startActivityForResult(toCamera, Constant.Key.RC_CAMERA);
+                            break;
+                        case 1:
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+                            intent.setType("image/*");
+                            startActivityForResult(Intent.createChooser(intent, "Select site image"), Constant.Key.SELECT_FILE);
+                            break;
+                        default:
+                            break;
+                    }
+                }).show();
                 break;
             case R.id.btn_site_records_location:
-                break;
-            case R.id.btnCollectSiteSendForm:
+                Intent toGeoPointWidget = new Intent(this, GeoPointActivity.class);
+                startActivityForResult(toGeoPointWidget, Constant.Key.GEOPOINT_RESULT_CODE);
                 break;
             case R.id.fab_activate_edit_mode:
-                createSiteDetailViewModel.setEditSite(true);
-
+                switch (layoutSiteDataEdit.getVisibility()) {
+                    case View.GONE:
+                        createSiteDetailViewModel.setEditSite(true);
+                        break;
+                    case View.VISIBLE:
+                        createSiteDetailViewModel.saveSite();
+                        createSiteDetailViewModel.setEditSite(false);
+                        break;
+                }
+                break;
+            case R.id.btnCollectSiteSendForm:
                 break;
         }
     }
@@ -201,4 +256,71 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
         layoutSiteDataEdit.addView(view);
     }
 
+    public void watchText(TextInputLayout textInputLayout) {
+        textInputLayout
+                .getEditText()
+                .addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                        String text = s.toString();
+                        if (textInputLayout.getError() != null)
+                            textInputLayout.setError(null);
+
+                        switch (textInputLayout.getId()) {
+                            case R.id.il_site_identifier_editable:
+                                createSiteDetailViewModel.setIdentifier(text);
+                                break;
+                            case R.id.il_site_name_editable:
+                                createSiteDetailViewModel.setSiteName(text);
+                                break;
+                            case R.id.il_phone_editable:
+                                createSiteDetailViewModel.setSitePhone(text);
+                                break;
+                            case R.id.il_address_editable:
+                                createSiteDetailViewModel.setSiteAddress(text);
+                                break;
+//                            case R.id.collect_site_ti_public_desc:
+//                                createSiteDetailViewModel.setSitePublicDesc(text);
+//                                break;
+
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) return;
+
+        switch (requestCode) {
+            case Constant.Key.RC_CAMERA:
+                createSiteDetailViewModel.setPhoto(photoToUpload.getAbsolutePath());
+                break;
+            case Constant.Key.SELECT_FILE:
+                Uri uri = data.getData();
+                String path = ImageFileUtils.getPath(this, uri);
+                createSiteDetailViewModel.setPhoto(path);
+                break;
+            case Constant.Key.GEOPOINT_RESULT_CODE:
+                String location = data.getStringExtra(LOCATION_RESULT);
+                String[] locationSplit = location.split(" ");
+                latitude = locationSplit[0];
+                longitude = locationSplit[1];
+                accurary = locationSplit[3];
+                createSiteDetailViewModel.setLocation(latitude, longitude);
+                break;
+        }
+    }
 }
