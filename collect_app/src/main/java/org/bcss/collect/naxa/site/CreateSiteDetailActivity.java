@@ -51,7 +51,6 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbarGeneral;
-
     @BindView(R.id.appbar_flexible)
     AppBarLayout appbarGeneral;
     @BindView(R.id.il_site_identifier)
@@ -126,7 +125,6 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
         setupToolbar();
         setupViewModel();
-//        setupSaveBtn();
 
         try {
             site = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
@@ -175,6 +173,33 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                     }
                 });
 
+        createSiteDetailViewModel
+                .getFormStatus()
+                .observe(this, new Observer<CreateSiteDetailFormStatus>() {
+                    @Override
+                    public void onChanged(@Nullable CreateSiteDetailFormStatus createSiteDetailFormStatus) {
+                        if (createSiteDetailFormStatus == null) return;
+                        switch (createSiteDetailFormStatus) {
+                            case EMPTY_SITE_IDENTIFIER:
+                                ilSiteIdentifierEditable.setError(getString(R.string.error_field_required));
+                                ilSiteIdentifierEditable.requestFocus();
+                                break;
+                            case EMPTY_SITE_NAME:
+                                ilSiteNameEditable.setError(getString(R.string.error_field_required));
+                                ilSiteNameEditable.requestFocus();
+                                break;
+                            case EMPTY_ADDRESS:
+                                ilAddressEditable.setError(getString(R.string.error_field_required));
+                                ilAddressEditable.requestFocus();
+                                break;
+                            case EMPTY_PHONE:
+                                ilPhoneEditable.setError(getString(R.string.error_field_required));
+                                ilPhoneEditable.requestFocus();
+                                break;
+                        }
+                    }
+                });
+
         watchText(ilSiteIdentifierEditable);
         watchText(ilSiteNameEditable);
         watchText(ilPhoneEditable);
@@ -194,11 +219,9 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
         createSiteDetailViewModel = ViewModelProviders.of(this, factory).get(CreateSiteDetailViewModel.class);
     }
 
-    @OnClick({R.id.btn_view_site_on_map, R.id.btn_site_edit_add_photo, R.id.btn_site_records_location, R.id.btnCollectSiteSendForm, R.id.fab_activate_edit_mode})
+    @OnClick({R.id.btn_site_edit_add_photo, R.id.btn_site_records_location, R.id.fab_activate_edit_mode})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.btn_view_site_on_map:
-                break;
             case R.id.btn_site_edit_add_photo:
                 final CharSequence[] items = {"Take Photo", "Choose siteName Gallery", "Dismiss"};
                 DialogFactory.createListActionDialog(this, "Add photo", items, (dialog, which) -> {
@@ -233,28 +256,12 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         break;
                     case View.VISIBLE:
                         createSiteDetailViewModel.saveSite();
-                        createSiteDetailViewModel.setEditSite(false);
                         break;
                 }
-                break;
-            case R.id.btnCollectSiteSendForm:
                 break;
         }
     }
 
-    private void setupSaveBtn() {
-        View view = getLayoutInflater().inflate(R.layout.btn_save, null);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(16, 16, 16, 16);
-        view.setLayoutParams(lp);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createSiteDetailViewModel.setEditSite(false);
-            }
-        });
-        layoutSiteDataEdit.addView(view);
-    }
 
     public void watchText(TextInputLayout textInputLayout) {
         textInputLayout
@@ -290,10 +297,6 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                             case R.id.il_address_editable:
                                 createSiteDetailViewModel.setSiteAddress(text);
                                 break;
-//                            case R.id.collect_site_ti_public_desc:
-//                                createSiteDetailViewModel.setSitePublicDesc(text);
-//                                break;
-
                         }
                     }
                 });

@@ -4,8 +4,8 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.site.db.SiteRepository;
 
 import java.io.File;
@@ -14,6 +14,7 @@ public class CreateSiteDetailViewModel extends ViewModel {
 
     private SiteRepository siteRepository;
     private MutableLiveData<Site> siteMutableLiveData = new MutableLiveData<Site>();
+    private SingleLiveEvent<CreateSiteDetailFormStatus> formStatus = new SingleLiveEvent<CreateSiteDetailFormStatus>();
     private MutableLiveData<Boolean> editSite = new MutableLiveData<>();
 
 
@@ -64,8 +65,11 @@ public class CreateSiteDetailViewModel extends ViewModel {
         siteMutableLiveData.getValue().setLongitude(lon);
     }
 
-    public File generateImageFile(String imageName) {
+    public SingleLiveEvent<CreateSiteDetailFormStatus> getFormStatus() {
+        return formStatus;
+    }
 
+    public File generateImageFile(String imageName) {
         String path = Collect.SITES_PATH +
                 File.separator +
                 imageName +
@@ -86,17 +90,44 @@ public class CreateSiteDetailViewModel extends ViewModel {
             f = new File(path);
             i++;
         }
-
         return f;
     }
 
-    public void saveSite() {
-//        if (validateData()) {
-            siteRepository.saveSiteModified(siteMutableLiveData.getValue());
-//            formStatus.setValue(CreateSiteFormStatus.SUCCESS);
-            //todo check if saving site is faliling
+    private boolean validateData() {
 
-//        }
+        if (siteMutableLiveData.getValue() == null) {
+            return false;
+        }
+
+        String identifier = siteMutableLiveData.getValue().getIdentifier();
+        String name = siteMutableLiveData.getValue().getName();
+        String lat = siteMutableLiveData.getValue().getLatitude();
+
+        if (identifier == null || identifier.length() <= 0) {
+            formStatus.setValue(CreateSiteDetailFormStatus.EMPTY_SITE_IDENTIFIER);
+            return false;
+        }
+
+        if (name == null || name.length() <= 0) {
+            formStatus.setValue(CreateSiteDetailFormStatus.EMPTY_SITE_NAME);
+            return false;
+        }
+
+        if (lat == null || lat.length() <= 0) {
+            formStatus.setValue(CreateSiteDetailFormStatus.EMPTY_ADDRESS);
+            return false;
+        }
+//        formStatus.setValue(CreateSiteFormStatus.VALIDATED);
+        return true;
+
+    }
+
+    public void saveSite() {
+        if (validateData()) {
+            siteRepository.saveSiteModified(siteMutableLiveData.getValue());
+            setEditSite(false);
+//            formStatus.setValue(CreateSiteFormStatus.SUCCESS);
+        }
     }
 
 }
