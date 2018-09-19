@@ -121,14 +121,16 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         if (message != null) {
             tvMsg.setText(message);
         }
-        this.emptyView.findViewById(R.id.btn_retry)
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        DownloadActivity.start(Collect.getInstance().getApplicationContext());
-                        //onEmptyLayoutClickListener.onRetryButtonClick();
-                    }
-                });
+        if (onEmptyLayoutClickListener!= null) {
+            this.emptyView.findViewById(R.id.btn_retry)
+                    .setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            DownloadActivity.start(Collect.getInstance().getApplicationContext());
+                            //onEmptyLayoutClickListener.onRetryButtonClick();
+                        }
+                    });
+        }
     }
 
 

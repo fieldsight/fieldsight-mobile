@@ -22,7 +22,7 @@
     <color name="base">#AAAAAA</color>
     <color name="timestamp">#4285f4</color>
     <color name="bg_action_mode">@color/colorPrimary</color>
-    <color name="iron">#CCCCCC</color>
+    <color name="iron">#a1a1a1</color>
     <color name="odd_color">#EBEBEB</color>
     <color name="even_color">#ffffff</color>
     <color name="note_text">#BFBFBF</color>

@@ -7,16 +7,16 @@ import android.support.annotation.NonNull;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
+import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
+import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
 import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -40,16 +40,23 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
 
+    @Deprecated
     public LiveData<List<GeneralForm>> getBySiteId(@NonNull String siteId, String projectId) {
 
         return dao.getSiteGeneralForms(siteId, projectId);
-
-
     }
 
-
+    @Deprecated
     public LiveData<List<GeneralForm>> getByProjectId(String projectId) {
         return dao.getProjectGeneralForms(projectId);
+    }
+
+    public LiveData<List<GeneralFormAndSubmission>> getFormsBySiteId(@NonNull String siteId, @NonNull String projectId) {
+        return dao.getSiteGeneralFormAndSubmission(siteId, projectId);
+    }
+
+    public LiveData<List<GeneralFormAndSubmission>> getFormsByProjectId(@NonNull String projectId) {
+        return dao.getProjectGeneralFormAndSubmission(projectId);
     }
 
     @Override
@@ -152,5 +159,17 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     public void deleteAll() {
         AsyncTask.execute(() -> dao.deleteAll());
     }
+
+
+    public LiveData<List<GeneralForm>> getById(String fsFormId) {
+        return dao.getById(fsFormId);
+    }
+
+    public void updateLastSubmission(SubmissionDetail formResponse) {
+
+    }
+
+
+
 
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,13 +16,13 @@ import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
@@ -45,6 +46,8 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     @BindView(R.id.rv_notification_list)
     RecyclerViewEmptySupport rvNotificationList;
 
+    @BindView(R.id.root_layout_empty_layout)
+    RelativeLayout emptyLayout;
 
 
     private NotificationListViewModel viewModel;
@@ -75,7 +78,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                     if (adapter.getItemCount() == 0) {
                         adapter.updateList(fieldSightNotifications);
                         runLayoutAnimation(rvNotificationList);
-                    }else {
+                    } else {
                         adapter.updateList(fieldSightNotifications);
                     }
 
@@ -108,8 +111,9 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         adapter = new NotificationsAdapter(new ArrayList<>(0), this);
 
 
-
         rvNotificationList.setAdapter(adapter);
+        rvNotificationList.setEmptyView(emptyLayout, getString(R.string.empty_message_notification), null);
+
     }
 
     private void setupToolbar() {

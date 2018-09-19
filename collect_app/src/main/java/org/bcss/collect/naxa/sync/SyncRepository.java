@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.DisposableSubscriber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 
@@ -91,6 +91,10 @@ public class SyncRepository {
         hideProgress(uid);
     }
 
+    public Single<SyncableItems> getStatusById(String uid) {
+        return syncDao.getById(uid);
+    }
+
     private void updateField(int uid, String code, boolean value, String stringValue) {
         Observable.just(uid)
                 .subscribeOn(Schedulers.io())
@@ -158,7 +162,7 @@ public class SyncRepository {
                 new SyncableItems(Constant.DownloadUID.EDU_MATERIALS, PENDING, null, "Educational Materials", "Download educational attached for form(s)"),
                 new SyncableItems(Constant.DownloadUID.EDU_MATERIALS, PENDING, null, "Educational Materials", "Download educational attached for form(s)"),
                 new SyncableItems(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, null, "Project Contact(s)", "Download contact information for people associated with your project"),
-//                new SyncableItems(Constant.DownloadUID.PREV_SUBMISSION, PENDING, null, "Previous Submissions", "Download previous submission(s) for forms"),
+                new SyncableItems(Constant.DownloadUID.PREV_SUBMISSION, PENDING, null, "Previous Submissions", "Download previous submission(s) for forms"),
         };
 
 

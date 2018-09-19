@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popup_open_materials"
+        android:title="Open Materials" />
+
+    <item
+        android:id="@+id/popup_prev_submission"
+        android:title="Previous Submission" />
+
+</menu>

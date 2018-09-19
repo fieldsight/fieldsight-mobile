@@ -3,11 +3,13 @@ package org.bcss.collect.naxa.scheduled.data;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.BaseRepository;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
+import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +65,8 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
         localSource.updateAll(items);
     }
 
-    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String siteId,String projectId) {
+    @Deprecated
+    public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String siteId, String projectId) {
 //        MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
 //        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
 //
@@ -85,15 +88,24 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
             remoteSource.getAll();
         }
 
-        return localSource.getBySiteId(siteId,projectId);
+        return localSource.getBySiteId(siteId, projectId);
     }
 
+    @Deprecated
     public LiveData<List<ScheduleForm>> getByProjectId(boolean forcedUpdate, String project) {
         if (forcedUpdate) {
             remoteSource.getAll();
         }
 
         return localSource.getByProjectId(project);
+    }
+
+    public LiveData<List<ScheduledFormAndSubmission>> getFormsByProjectId(@NonNull String project) {
+        return localSource.getFormsByProjectId(project);
+    }
+
+    public LiveData<List<ScheduledFormAndSubmission>> getFormsBySiteId(@NonNull String siteId, @NonNull String projectId) {
+        return localSource.getFormsBySiteId(siteId, projectId);
     }
 
 }

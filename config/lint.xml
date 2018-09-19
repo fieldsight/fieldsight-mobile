@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <lint>
     <!-- suppress newly failing checks -->
-    <!-- make sure classes referenced in the manifest or in a layout file are in the project -->
+    <!-- make sure classes referenced in the manifest or in a layout file are in the projectId -->
     <issue id="MissingRegistered" severity="warning"/>
     <issue id="AppCompatResource" severity="warning"/>
     <issue id="StaticFieldLeak" severity="warning"/>

@@ -20,6 +20,8 @@ import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttributesTypeConverter;
 import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
 import org.bcss.collect.naxa.onboarding.SyncableItems;
+import org.bcss.collect.naxa.previoussubmission.SubmissionDetailDAO;
+import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.project.data.ProjectDao;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormDAO;
@@ -52,10 +54,11 @@ import java.io.File;
                 SiteRegion.class,
                 FieldSightNotification.class,
                 Em.class,
-                FieldSightContactModel.class
+                FieldSightContactModel.class,
+                SubmissionDetail.class
 
         },
-        version = 3)
+        version = 4)
 @TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
@@ -104,4 +107,5 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     }
 
 
+    public abstract SubmissionDetailDAO getSubmissionDetailDAO();
 }

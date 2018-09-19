@@ -34,6 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
     private static ProjectSitesRemoteSource INSTANCE;
@@ -199,31 +200,33 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     @Override
     public void getAll() {
         int uid = Constant.DownloadUID.PROJECT_SITES;
-        fetchProjectAndSites()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Project>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        ProjectLocalSource.getInstance().deleteAll();
-                        EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
-                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
-                    }
 
-                    @Override
-                    public void onSuccess(List<Project> projects) {
-                        EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
+        Single<List<Project>> observable = fetchProjectAndSites()
+                .observeOn(AndroidSchedulers.mainThread());
 
-                        FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
-                        syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
-                    }
+        observable.subscribe(new SingleObserver<List<Project>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Timber.i("getAll() has been subscribed");
+                ProjectLocalSource.getInstance().deleteAll();
+                EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
+                SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
-                        syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
-                    }
-                });
+            @Override
+            public void onSuccess(List<Project> projects) {
+                EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
+                FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
+                syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
+                syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
+            }
+        });
 
     }
 

@@ -1,4 +1,4 @@
-# Testing result templates
+# Testing submissionDetail templates
 
 ## Tested with success!
 #### Verified on: [List of devices/os versions]

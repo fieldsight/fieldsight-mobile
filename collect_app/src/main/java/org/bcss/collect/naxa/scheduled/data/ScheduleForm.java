@@ -2,7 +2,6 @@ package org.bcss.collect.naxa.scheduled.data;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.common.base.Objects;
@@ -68,6 +67,9 @@ public class ScheduleForm {
     @SerializedName("id_string")
     private String idString;
 
+    private String lastSubmissionBy;
+    private String lastSubmissionDateTime;
+
     public void setScheduleId(String scheduleId) {
         this.scheduleId = scheduleId;
     }
@@ -98,14 +100,14 @@ public class ScheduleForm {
 
     @SerializedName("project")
     @Expose
-    private String project;
+    private String projectId;
 
-    public String getProject() {
-        return project;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setProject(String project) {
-        this.project = project;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public List<FormResponse> getLatestSubmission() {
@@ -324,7 +326,7 @@ public class ScheduleForm {
                 Objects.equal(scheduleId, that.scheduleId) &&
                 Objects.equal(siteId, that.siteId) &&
                 Objects.equal(idString, that.idString) &&
-                Objects.equal(project, that.project) &&
+                Objects.equal(projectId, that.projectId) &&
                 Objects.equal(isFormDeployed, that.isFormDeployed) &&
                 Objects.equal(frequencyArrayInString, that.frequencyArrayInString) &&
                 Objects.equal(formDetails, that.formDetails) &&
@@ -337,5 +339,20 @@ public class ScheduleForm {
                 Objects.equal(formDeployedFrom, that.formDeployedFrom);
     }
 
+    public String getLastSubmissionBy() {
+        return lastSubmissionBy;
+    }
+
+    public void setLastSubmissionBy(String lastSubmissionBy) {
+        this.lastSubmissionBy = lastSubmissionBy;
+    }
+
+    public String getLastSubmissionDateTime() {
+        return lastSubmissionDateTime;
+    }
+
+    public void setLastSubmissionDateTime(String lastSubmissionDateTime) {
+        this.lastSubmissionDateTime = lastSubmissionDateTime;
+    }
 
 }

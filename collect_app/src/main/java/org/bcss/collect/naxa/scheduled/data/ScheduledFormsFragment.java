@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,13 +87,15 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        viewModel.getForms(false, loadedSite)
-                .observe(this, new Observer<List<ScheduleForm>>() {
+
+        viewModel.getForms(loadedSite)
+                .observe(this, new Observer<List<ScheduledFormAndSubmission>>() {
                     @Override
-                    public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
-                        scheduledFormsAdapter.updateList(scheduleForms);
+                    public void onChanged(@Nullable List<ScheduledFormAndSubmission> scheduledFormAndSubmissions) {
+                        scheduledFormsAdapter.updateList(scheduledFormAndSubmissions);
                     }
                 });
+
     }
 
 

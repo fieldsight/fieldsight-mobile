@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/card_view_form_list_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardElevation="2dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    card_view:cardCornerRadius="4dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_form_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
+
+        <RelativeLayout
+            android:id="@+id/rela_round"
+            android:layout_width="@dimen/icon_width_height"
+            android:layout_height="@dimen/icon_width_height"
+
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginTop="21dp">
+
+
+            <ImageView
+                android:id="@+id/iv_form_circle"
+                android:layout_width="@dimen/icon_width_height"
+                android:layout_height="@dimen/icon_width_height"
+                android:src="@drawable/circle_blue" />
+
+            <TextView
+                android:id="@+id/form_icon_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="T"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_small" />
+
+            <ImageView
+                android:id="@+id/iv_stage_badge"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"
+                android:background="@drawable/circle_green"
+                android:src="@drawable/ic_check" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_form_primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            android:text="Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+        <TextView
+
+            android:id="@+id/tv_form_secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_form_primary"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            android:text="Assigned 2 days ago"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+
+        <ImageButton
+            android:rotation="0"
+            android:id="@+id/btn_card_menu"
+            style="?android:attr/actionOverflowButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_form_responses"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_form_secondary"
+            android:layout_marginLeft="65dp"
+            android:layout_marginStart="65dp"
+            android:minWidth="0dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            android:text="@string/btn_previous_submissions" />
+
+        <Button
+            android:id="@+id/btn_form_edu"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_form_secondary"
+            android:layout_toEndOf="@id/btn_form_responses"
+            android:layout_toRightOf="@id/btn_form_responses"
+            android:text="@string/btn_education_materials" />
+
+
+        <ImageButton
+
+            android:id="@+id/btn_expand"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_below="@id/tv_form_secondary"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="#00FFFFFF"
+            android:padding="6dp"
+            app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp" />
+
+
+        <TextView
+            android:id="@+id/tv_form_sub_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_form_edu"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            android:text="@string/form_last_submitted_by"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_form_last_submitted_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_form_sub_text"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            android:text="@string/form_last_submission_datetime"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_form_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_form_last_submitted_date"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_toEndOf="@id/rela_round"
+            android:layout_toRightOf="@id/rela_round"
+            android:text="@string/form_last_submission_status"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

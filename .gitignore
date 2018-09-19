@@ -4,7 +4,7 @@ build
 local.properties
 *.iml
 .DS_Store
-*.sublime-project
+*.sublime-projectId
 
 # emacs backup files
 *.*~

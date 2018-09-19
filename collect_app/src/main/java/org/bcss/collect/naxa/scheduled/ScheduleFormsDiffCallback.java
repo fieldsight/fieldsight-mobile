@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.scheduled;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
+import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 
 import java.util.List;
@@ -13,10 +14,10 @@ import java.util.List;
 
 public class ScheduleFormsDiffCallback extends DiffUtil.Callback {
 
-    private List<ScheduleForm> oldScheduleForm;
-    private List<ScheduleForm> newScheduleForm;
+    private List<ScheduledFormAndSubmission> oldScheduleForm;
+    private List<ScheduledFormAndSubmission> newScheduleForm;
 
-    public ScheduleFormsDiffCallback(List<ScheduleForm> oldScheduleForm, List<ScheduleForm> newScheduleForm) {
+    public ScheduleFormsDiffCallback(List<ScheduledFormAndSubmission> oldScheduleForm, List<ScheduledFormAndSubmission> newScheduleForm) {
         this.oldScheduleForm = oldScheduleForm;
         this.newScheduleForm = newScheduleForm;
     }
@@ -33,8 +34,8 @@ public class ScheduleFormsDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldScheduleForm.get(oldItemPosition).getFsFormId()
-                .equals(newScheduleForm.get(newItemPosition).getFsFormId());
+        return oldScheduleForm.get(oldItemPosition).getScheduleForm().getFsFormId()
+                .equals(newScheduleForm.get(newItemPosition).getScheduleForm().getFsFormId());
     }
 
     @Override

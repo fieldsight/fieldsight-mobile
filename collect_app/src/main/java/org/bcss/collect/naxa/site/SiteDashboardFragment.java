@@ -186,8 +186,8 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                     case R.id.popup_view_blue_prints:
                         ToastUtils.showShortToast("Not implemented yet");
                         break;
-                    case R.id.popup_view_metadata:
-                        break;
+
+                        
                 }
                 return true;
             }

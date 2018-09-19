@@ -211,15 +211,15 @@
   <string name="getting_bearing">Încărcare poziție</string>
   <string name="accept_bearing">Înregistrare poziție</string>
   <string name="sdcard_unmounted">Collect nu poate accesa SD card-ul. Poate este montat via USB? (Starea curentă este: %s)</string>
-  <string name="ext_file_no_data_error">Fișierul nu conține date!</string>
+  <string name="ext_file_no_data_error">Fișierul nu conține submissionDateTime!</string>
   <string name="ext_conflicting_columns_error">%s coloane se potrivesc!</string>
   <string name="ext_sortBy_numeric_error">Coloana de sortare trebuie să conțină doar valori numerice. Valoarea care a generat conflictul a fost \'%s\'.</string>
   <string name="ext_search_wrong_arguments_error">Eroare de sintaxă în funcția search(): Funcția necesită 1, 4 sau 6 argumente.</string>
   <string name="ext_search_wrong_function_error">Eroare de sintaxă în funcția search(): Funcția \'%s\' nerecunoscută.</string>
   <string name="ext_search_bad_function_error">Eroare de sintaxă în funcția search(): \'%s\' nu a fost evaluată ca funcție.</string>
   <string name="ext_search_return_error">Search handler a returnat un obiect de tip \'%s\'.</string>
-  <string name="ext_import_generic_error">Nu am putut importa date din %1$s. Motiv: %2$s</string>
-  <string name="ext_import_progress_message">Preîncarc date din \'%1$s\', vă rugăm să așteptați… %2$s</string>
+  <string name="ext_import_generic_error">Nu am putut importa submissionDateTime din %1$s. Motiv: %2$s</string>
+  <string name="ext_import_progress_message">Preîncarc submissionDateTime din \'%1$s\', vă rugăm să așteptați… %2$s</string>
   <string name="ext_import_finalizing_message">Finalizez preîncărcarea datelor…</string>
   <string name="ext_import_completed_message">Citirea datelor a fost finalizată!</string>
   <string name="ext_not_initialized_error">ExternalDataManager nu a fost inițializat.</string>
@@ -235,7 +235,7 @@
   <string name="survey_loading_reading_data_message">Citesc datele chestionarului…</string>
   <string name="survey_loading_reading_csv_message">Citesc fișierele CSV…</string>
   <string name="survey_saving_validating_message">Validez răspunsurile…</string>
-  <string name="survey_saving_collecting_message">Colectez date…</string>
+  <string name="survey_saving_collecting_message">Colectez submissionDateTime…</string>
   <string name="survey_saving_saving_message">Salvez pe SD card…</string>
   <string name="survey_saving_finalizing_message">Fizalizez pe SD card…</string>
   <string name="survey_saving_encrypting_message">Criptez datele…</string>

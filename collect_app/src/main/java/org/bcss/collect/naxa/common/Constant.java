@@ -127,4 +127,10 @@ public class Constant {
         public static final int COMPLETED = 4;
     }
 
+    public final static class FormStatus {
+        public final static String Approved = "Approved";
+        public final static String Flagged = "Flagged";
+        public final static String Rejected = "Rejected";
+        public final static String Pending = "Pending";
+    }
 }

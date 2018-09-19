@@ -37,8 +37,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -55,8 +58,7 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
 
     private MapHelper helper;
     private final Handler handler = new Handler();
-    private Marker marker;
-    private GeoPoint latLng;
+
     private ArrayList<GeoPoint> plottedSites = new ArrayList<>(0);
 
     public static MapFragment getInstance(Project loadedProject) {
@@ -73,6 +75,7 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         marker.setSnippet(snippet);
         marker.setTitle(title);
         marker.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_place));
+
         marker.setPosition(geoPoint);
         return marker;
     }
@@ -82,6 +85,7 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         Marker marker = getMarker(geoPoint, site.getName(), site.getAddress());
         plottedSites.add(geoPoint);
         map.getOverlays().add(marker);
+
     }
 
     private BoundingBox generateSitesBoundingBox(ArrayList<GeoPoint> geoPoints) {
@@ -115,17 +119,6 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         unbinder = ButterKnife.bind(this, view);
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
 
-        marker = new Marker(map);
-        marker.setSnippet(loadedProject.getName());
-        marker.setTitle(loadedProject.getOrganizationName());
-
-        marker.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.circle_blue));
-        latLng = new GeoPoint(Double.parseDouble(loadedProject.getLat()), Double.parseDouble(loadedProject.getLon()));
-        marker.setPosition(latLng);
-
-        map.getOverlays().add(marker);
-        zoomToPoint();
-
 
         if (helper == null) {
             // For testing:
@@ -136,13 +129,13 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
             map.setTilesScaledToDpi(true);
         }
 
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                GeoPoint point = new GeoPoint(34.08145, -39.85007);
-                map.getController().setZoom(4);
-                map.getController().setCenter(point);
-            }
-        }, 100);
+//        handler.postDelayed(new Runnable() {
+//            public void run() {
+//                GeoPoint point = new GeoPoint(34.08145, -39.85007);
+//                map.getController().setZoom(4);
+//                map.getController().setCenter(point);
+//            }
+//        }, 100);
 
 
         myLocationOverlay = new MyLocationNewOverlay(map);
@@ -151,22 +144,28 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
                 .getSiteByProject(loadedProject);
 
         Publisher<List<Site>> pub = LiveDataReactiveStreams.toPublisher(this, livedata);
-        io.reactivex.Observable.fromPublisher(pub)
+        Observable.fromPublisher(pub)
                 .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites -> sites)
-                .subscribe(new DisposableObserver<Site>() {
+                .doOnNext(this::plotSite)
+                .map(site -> new GeoPoint(Double.parseDouble(site.getLatitude()), Double.parseDouble(site.getLongitude())))
+                .toList()
+                .doOnSuccess(new Consumer<List<GeoPoint>>() {
                     @Override
-                    public void onNext(Site site) {
-                        plotSite(site);
+                    public void accept(List<GeoPoint> geoPoints) throws Exception {
+                        BoundingBox box = generateSitesBoundingBox((ArrayList<GeoPoint>) geoPoints);
+                        if(map != null){
+                            map.zoomToBoundingBox(box,true);
+                        }
                     }
+                })
+                .subscribe(new DisposableSingleObserver<List<GeoPoint>>() {
+                    @Override
+                    public void onSuccess(List<GeoPoint> geoPoints) {
 
+                    }
                     @Override
                     public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
+                        e.printStackTrace();
                     }
                 });
 
@@ -198,19 +197,6 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
     @OnClick(R.id.layer_menu)
     public void onViewClicked() {
         helper.showLayersDialog(this.getContext());
-    }
-
-    private void zoomToPoint() {
-        if (latLng != null) {
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    map.getController().setZoom(16);
-                    map.getController().setCenter(latLng);
-                    map.invalidate();
-                }
-            }, 200);
-        }
-
     }
 
 

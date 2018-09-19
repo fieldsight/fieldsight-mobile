@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.generalforms;
 
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.LinearLayout;
 
+import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,6 +34,7 @@ import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -112,12 +115,12 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
 
-
-        viewModel.getForms(false, loadedSite)
-                .observe(this, generalForms -> {
-                    Timber.i("General forms data has been changed");
-
-                    generalFormsAdapter.updateList(generalForms);
+        viewModel.getFormsAndSubmission(loadedSite)
+                .observe(this, new Observer<List<GeneralFormAndSubmission>>() {
+                    @Override
+                    public void onChanged(@Nullable List<GeneralFormAndSubmission> generalFormAndSubmissions) {
+                        generalFormsAdapter.updateList(generalFormAndSubmissions);
+                    }
                 });
     }
 
@@ -145,7 +148,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
                 new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {
-                        viewModel.getForms(true, loadedSite);
+                        viewModel.getFormsAndSubmission(loadedSite);
                     }
                 });
         recyclerView.setAdapter(generalFormsAdapter);

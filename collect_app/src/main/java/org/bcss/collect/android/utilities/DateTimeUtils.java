@@ -2,6 +2,7 @@ package org.bcss.collect.android.utilities;
 
 import android.content.Context;
 import android.os.Build;
+import android.text.format.DateUtils;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -13,9 +14,11 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.logic.DatePickerDetails;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DateTimeUtils {
 
@@ -125,4 +128,36 @@ public class DateTimeUtils {
 
         return new DatePickerDetails(datePickerType, datePickerMode);
     }
+
+
+    public static String getRelativeTime(String dateTime, Boolean dateTimeFromServer) {
+
+        String relativeTime;
+
+        try {
+            SimpleDateFormat sdf;
+            String format;
+            if (dateTimeFromServer) {
+                format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+            } else {
+                format = "yyyy-MM-dd, hh:mm aa";
+
+            }
+            sdf = new SimpleDateFormat(format, Locale.US);
+            sdf.setTimeZone(TimeZone.getDefault());
+            long time = 0;
+            time = sdf.parse(dateTime).getTime();
+            long now = System.currentTimeMillis();
+            CharSequence ago =
+                    DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+            relativeTime = ago.toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            relativeTime = dateTime;
+        }
+
+        return relativeTime;
+    }
+
+
 }

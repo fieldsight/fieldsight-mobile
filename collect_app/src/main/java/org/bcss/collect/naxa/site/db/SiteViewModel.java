@@ -34,4 +34,6 @@ public class SiteViewModel extends AndroidViewModel {
     public void insertSitesAsVerified(Site site, Project project) {
         mSiteRepository.saveSitesAsVerified(site, project);
     }
+
+
 }

@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import org.bcss.collect.naxa.common.BaseRepository;
+import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +35,17 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
     }
 
 
-    public LiveData<List<GeneralForm>> getBySiteId(boolean forcedUpdate, @NonNull String siteId,String projectId) {
+    @Deprecated
+    public LiveData<List<GeneralForm>> getBySiteId(boolean forcedUpdate, @NonNull String siteId, String projectId) {
         if (forcedUpdate) {
             remoteSource.getAll();
         }
 
-        return localSource.getBySiteId(siteId,projectId);
+        return localSource.getBySiteId(siteId, projectId);
     }
 
 
+    @Deprecated
     public LiveData<List<GeneralForm>> getByProjectId(boolean forcedUpdate, String project) {
         if (forcedUpdate) {
             remoteSource.getAll();
@@ -50,6 +53,15 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
 
         return localSource.getByProjectId(project);
     }
+
+    public LiveData<List<GeneralFormAndSubmission>> getFormsBySiteId(@NonNull String siteId,@NonNull String projectId) {
+        return localSource.getFormsBySiteId(siteId,projectId);
+    }
+
+    public LiveData<List<GeneralFormAndSubmission>> getFormsByProjectIdId(@NonNull String projectId) {
+        return localSource.getFormsByProjectId(projectId);
+    }
+
 
     @Override
     public LiveData<List<GeneralForm>> getAll(boolean forceUpdate) {

@@ -14,7 +14,6 @@ import java.util.List;
 import io.reactivex.Maybe;
 
 @Dao
-
 public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
     @Query("SELECT * FROM SubStage")
     public abstract LiveData<List<SubStage>> getAllSubStages();
@@ -34,4 +33,8 @@ public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
 
     @Query("SELECT * FROM substage WHERE stageId= :stageId")
     public abstract Maybe<List<SubStage>> getByStageIdMaybe(String stageId);
+
+    @Query("SELECT * FROM substage WHERE fsFormId =:fsFormId")
+    public abstract LiveData<List<SubStage>> getById(String fsFormId);
+
 }

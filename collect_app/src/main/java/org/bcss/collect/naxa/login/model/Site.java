@@ -91,8 +91,9 @@ public class Site implements Parcelable {
     @Ignore
     private String siteUploadError;
 
-
     private String metaAttributes;
+
+
 
     @SerializedName("region")
     private String regionId;

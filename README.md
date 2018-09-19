@@ -5,7 +5,7 @@
 [![codecov.io](https://codecov.io/github/opendatakit/collect/branch/master/graph/badge.svg)](https://codecov.io/github/opendatakit/collect)
 [![Slack status](http://slack.opendatakit.org/badge.svg)](http://slack.opendatakit.org)
 
-ODK Collect is an Android app for filling out forms. It is designed to be used in resource-constrained environments with challenges such as unreliable connectivity or power infrastructure. ODK Collect is part of Open Data Kit (ODK), a free and open-source set of tools which help organizations author, field, and manage mobile data collection solutions. Learn more about the Open Data Kit project and its history [here](https://opendatakit.org/about/) and read about example ODK deployments [here](https://opendatakit.org/about/deployments/).
+ODK Collect is an Android app for filling out forms. It is designed to be used in resource-constrained environments with challenges such as unreliable connectivity or power infrastructure. ODK Collect is part of Open Data Kit (ODK), a free and open-source set of tools which help organizations author, field, and manage mobile data collection solutions. Learn more about the Open Data Kit projectId and its history [here](https://opendatakit.org/about/) and read about example ODK deployments [here](https://opendatakit.org/about/deployments/).
 
 ODK Collect renders forms that are compliant with the [ODK XForms standard](http://opendatakit.github.io/xforms-spec/), a subset of the [XForms 1.1 standard](https://www.w3.org/TR/xforms/) with some extensions. The form parsing is done by the [JavaRosa library](https://github.com/opendatakit/javarosa) which Collect includes as a dependency.
 
@@ -39,15 +39,15 @@ New versions of ODK Collect are generally released on the last Sunday of a month
 
 1. Download and install [Android Studio](https://developer.android.com/studio/index.html) 
 
-1. Fork the collect project ([why and how to fork](https://help.github.com/articles/fork-a-repo/))
+1. Fork the collect projectId ([why and how to fork](https://help.github.com/articles/fork-a-repo/))
 
-1. Clone your fork of the project locally. At the command line:
+1. Clone your fork of the projectId locally. At the command line:
 
         git clone https://github.com/YOUR-GITHUB-USERNAME/collect
 
- If you prefer not to use the command line, you can use Android Studio to create a new project from version control using `https://github.com/YOUR-GITHUB-USERNAME/collect`. 
+ If you prefer not to use the command line, you can use Android Studio to create a new projectId from version control using `https://github.com/YOUR-GITHUB-USERNAME/collect`.
 
-1. Open the project in the folder of your clone from Android Studio. To run the project, click on the green arrow at the top of the screen. The emulator is very slow so we generally recommend using a physical device when possible.
+1. Open the projectId in the folder of your clone from Android Studio. To run the projectId, click on the green arrow at the top of the screen. The emulator is very slow so we generally recommend using a physical device when possible.
 
 ## Testing a form without a server
 When you first run Collect, it is set to download forms from [https://opendatakit.appspot.com/](https://opendatakit.appspot.com/), the demo server. You can sometimes verify your changes with those forms but it can also be helpful to put a specific test form on your device. Here are some options for that:
@@ -79,7 +79,7 @@ JavaRosa is the form engine that powers Collect. If you want to debug or change 
 **Source tree**
 
 1. Get the code from the [JavaRosa repo](https://github.com/opendatakit/javarosa)
-1. In Android Studio, select `File` -> `New` -> `New Module` -> `Import Gradle Project` and choose the project
+1. In Android Studio, select `File` -> `New` -> `New Module` -> `Import Gradle Project` and choose the projectId
 1. In Collect's `build.gradle` file, find the JavaRosa section:
 ```gradle
 implementation(group: 'org.opendatakit', name: 'opendatakit-javarosa', version: 'x.y.z') {
@@ -88,7 +88,7 @@ implementation(group: 'org.opendatakit', name: 'opendatakit-javarosa', version: 
 ```
 1. Replace the JavaRosa section with this: 
 ```gradle
-implementation (project(path: ':javarosa-master')) {
+implementation (projectId(path: ':javarosa-master')) {
 	exclude module: 'joda-time'
 }
 ```
@@ -108,7 +108,7 @@ implementation (project(path: ':javarosa-master')) {
 	```	
  
 ## Contributing code
-Any and all contributions to the project are welcome. ODK Collect is used across the world primarily by organizations with a social purpose so you can have real impact!
+Any and all contributions to the projectId are welcome. ODK Collect is used across the world primarily by organizations with a social purpose so you can have real impact!
 
 Issues tagged as [good first issue](https://github.com/opendatakit/collect/labels/good%20first%20issue) should be a good place to start. There are also currently many issues tagged as [needs reproduction](https://github.com/opendatakit/collect/labels/needs%20reproduction) which need someone to try to reproduce them with the current version of ODK Collect and comment on the issue with their findings.
 
@@ -117,7 +117,7 @@ If you're ready to contribute code, see [the contribution guide](CONTRIBUTING.md
 ## Contributing translations
 If you know a language other than English, consider contributing translations through [Transifex](https://www.transifex.com/opendatakit/collect/). 
 
-Translations are updated right before the first beta for a release and before the release itself. To update translations, download the zip from https://www.transifex.com/opendatakit/collect/strings/. The contents of each folder then need to be moved to the Android project folders. A quick script like [the one in this gist](https://gist.github.com/lognaturel/9974fab4e7579fac034511cd4944176b) can help.
+Translations are updated right before the first beta for a release and before the release itself. To update translations, download the zip from https://www.transifex.com/opendatakit/collect/strings/. The contents of each folder then need to be moved to the Android projectId folders. A quick script like [the one in this gist](https://gist.github.com/lognaturel/9974fab4e7579fac034511cd4944176b) can help.
 
 ## Contributing testing
 All releases are verified on the following devices (ordered by Android version):
@@ -140,7 +140,7 @@ The best way to help us test is to build from source! If you aren't a developer 
 
 Testing checklists can be found on the [Collect testing plan](https://docs.google.com/spreadsheets/d/1ITmOW2MFs_8-VM6MTwganTRWDjpctz9CI8QKojXrnjE/edit?usp=sharing).
 
-If you have finished testing a pull request, please use a template from [Testing result templates](.github/TESTING_RESULT_TEMPLATES.md) to report your insights.
+If you have finished testing a pull request, please use a template from [Testing submissionDetail templates](.github/TESTING_RESULT_TEMPLATES.md) to report your insights.
 
 ## Downloading builds
 Per-commit debug builds can be found on [CircleCI](https://circleci.com/gh/opendatakit/collect). Login with your GitHub account, click the build you'd like, then find the APK in the Artifacts tab.
@@ -167,7 +167,7 @@ To generate official signed releases, you'll need the keystore file, the keystor
 > Source: [Robolectric Wiki](https://github.com/robolectric/robolectric/wiki/Running-tests-in-Android-Studio#notes-for-mac).
 
 #### Android Studio Error: `SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.`
-When cloning the project from Android Studio, click "No" when prompted to open the `build.gradle` file and then open project.
+When cloning the projectId from Android Studio, click "No" when prompted to open the `build.gradle` file and then open projectId.
 
 #### Moving to the main view if user minimizes the app
 If you build the app on your own using Android Studio `(Build -> Build APK)` and then install it (from an `.apk` file), you might notice this strange behaviour thoroughly described: [#1280](https://github.com/opendatakit/collect/issues/1280) and [#1142](https://github.com/opendatakit/collect/issues/1142).
@@ -182,8 +182,8 @@ If you encounter an error similar to this when running `gradlew`:
 FAILURE: Build failed with an exception
 
 What went wrong:
-A problem occurred configuring project ':collect_app'.
-> Failed to notify project evaluation listener.
+A problem occurred configuring projectId ':collect_app'.
+> Failed to notify projectId evaluation listener.
    > Could not initialize class com.android.sdklib.repository.AndroidSdkHandler
 ```
 
