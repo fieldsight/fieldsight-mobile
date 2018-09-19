@@ -98,7 +98,7 @@ public class ScheduleForm {
         this.lastFilledDateTime = lastFilledDateTime;
     }
 
-    @SerializedName("projectId")
+    @SerializedName("project")
     @Expose
     private String projectId;
 

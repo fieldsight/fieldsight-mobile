@@ -54,7 +54,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-
+                android:visibility="gone"
                 android:background="@drawable/circle_green"
                 android:src="@drawable/ic_check" />
 
@@ -129,8 +129,6 @@
             android:layout_marginRight="8dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@id/btn_form_edu"
-            android:layout_toRightOf="@id/btn_form_edu"
             android:background="#00FFFFFF"
             android:padding="6dp"
             app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp" />

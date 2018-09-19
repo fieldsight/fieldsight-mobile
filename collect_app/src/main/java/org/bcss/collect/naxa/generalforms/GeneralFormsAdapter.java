@@ -40,7 +40,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
     private ArrayList<GeneralFormAndSubmission> generalForms;
     private OnFormItemClickListener<GeneralForm> listener;
 
-    public GeneralFormsAdapter(ArrayList<GeneralFormAndSubmission> totalList, OnFormItemClickListener<GeneralForm> listener) {
+    GeneralFormsAdapter(ArrayList<GeneralFormAndSubmission> totalList, OnFormItemClickListener<GeneralForm> listener) {
         this.generalForms = totalList;
         this.listener = listener;
     }
@@ -121,8 +121,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
                 break;
             case Constant.FormStatus.Pending:
-                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
-                break;
             default:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
                 break;
@@ -132,10 +130,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
     }
 
 
-    private void showOrHide(TextView textView, String text) {
-        textView.setVisibility(TextUtils.isEmpty(text) ? View.GONE : View.VISIBLE);
-        textView.setText(text);
-    }
 
 
     @Override
@@ -166,15 +160,16 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             badge = view.findViewById(R.id.iv_stage_badge);
             cardView = view.findViewById(R.id.card_view_form_list_item);
             btnCardMenu = view.findViewById(R.id.btn_card_menu);
+
             tvSubtext = view.findViewById(R.id.tv_form_sub_text);
             btnExpandCard = view.findViewById(R.id.btn_expand);
+
             ivCardCircle = view.findViewById(R.id.iv_form_circle);
             tvLastSubmissionDateTime = view.findViewById(R.id.tv_form_last_submitted_date);
             tvLastSubmissionStatus = view.findViewById(R.id.tv_form_status);
 
 
             cardView.setOnClickListener(this);
-//            rootLayout.setOnClickListener(this);
             btnOpenEdu.setOnClickListener(this);
             btnOpenHistory.setOnClickListener(this);
             btnCardMenu.setOnClickListener(this);

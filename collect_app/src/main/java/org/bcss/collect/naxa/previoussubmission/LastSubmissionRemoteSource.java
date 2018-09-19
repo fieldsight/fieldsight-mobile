@@ -1,23 +1,15 @@
 package org.bcss.collect.naxa.previoussubmission;
 
-import android.os.AsyncTask;
-
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
-import org.bcss.collect.naxa.common.FieldSightDatabase;
-import org.bcss.collect.naxa.generalforms.data.FormType;
-import org.bcss.collect.naxa.generalforms.data.GeneralFormLocalSource;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.previoussubmission.model.LastSubmissionResponse;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
-import org.bcss.collect.naxa.submissions.FormHistoryResponse;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
