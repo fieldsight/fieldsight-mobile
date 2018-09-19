@@ -3,29 +3,40 @@ package org.bcss.collect.naxa.substages;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.utilities.DateTimeUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
+import org.bcss.collect.naxa.generalforms.GeneralFormsAdapter;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
+import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.stages.data.SubStage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.bcss.collect.naxa.common.AnimationUtils.getRotationAnimation;
 
 /**
  * Created by Susan on 1/30/2017.
@@ -35,15 +46,8 @@ public class SubStageListAdapter extends
 
 
     private List<SubStage> subStages;
-//    private OnSubStageClickListener listener;
-
-    OnFormItemClickListener<SubStage> listener;
-
-    private final String TAG = "SubStageAdapter";
-
+    private OnFormItemClickListener<SubStage> listener;
     private String stageOrder;
-    public String idFormsTable;
-    private int stagePosition;
 
 
     public SubStageListAdapter(List<SubStage> subStages, String stageOrder, OnFormItemClickListener<SubStage> listener) {
@@ -64,7 +68,7 @@ public class SubStageListAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_expanded, null);
         return new ViewHolder(view);
     }
 
@@ -74,41 +78,10 @@ public class SubStageListAdapter extends
 
         viewHolder.tvStageName.setText(subStages.get(position).getName());
         viewHolder.tvSubTitle.setText(subStages.get(position).getName());
-//        viewHolder.tvLastFilledDateTime.setText(subStage.getLastFilledDateTime());
-//        viewHolder.substageBadge.setVisibility(subStage.isSubStageComplete() ? View.VISIBLE : View.GONE);
         viewHolder.btnViewFormHistory.setOnClickListener(view -> listener.onFormHistoryButtonClicked(subStage));
 
         setSubstageNumber(viewHolder);
-
-        viewHolder.rootlayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onFormItemClicked(subStage, viewHolder.getAdapterPosition());
-            }
-        });
-
-        viewHolder.rootlayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (BuildConfig.DEBUG) {
-//                    Context context = viewHolder.layoutFormStatus.getContext();
-//                    String msg = String.format("FormID %s\nSiteID %s\nDeployedFrom %s\nFormType %s", subStage.getFsFormId(),
-//                            subStage.getSiteId(),
-//                            subStage.getFormDeployedFrom());
-//                    DialogFactory.createGenericErrorDialog(context, msg).show();
-//
-//                    ToastUtils.showShortToast("fsFormId %s siteId %s", subStage.getFsFormId(), subStage.getSiteId());
-                }
-                return true;
-            }
-        });
-
-        viewHolder.btnOpenEdu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onGuideBookButtonClicked(subStage, viewHolder.getAdapterPosition());
-            }
-        });
+        setSubmissionText(viewHolder, null);
 
     }
 
@@ -121,6 +94,49 @@ public class SubStageListAdapter extends
         viewHolder.tvSubStageIconText.setText(iconText);
     }
 
+    private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail) {
+
+        String submittedBy = "";
+        String submissionDateTime = "";
+        String submissionStatus = "";
+        Context context = viewHolder.card.getContext();
+
+        if (submissionDetail != null) {
+            submittedBy = submissionDetail.getSubmittedBy();
+            submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
+            submissionStatus = submissionDetail.getStatusDisplay();
+            viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
+        }
+
+        viewHolder.tvSubtext.setText(context.getString(R.string.form_last_submitted_by, submittedBy));
+        viewHolder.tvLastSubmissionDateTime.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
+        viewHolder.tvLastSubmissionStatus.setText(context.getString(R.string.form_last_submission_status, submissionStatus));
+
+
+    }
+
+    private Drawable getCircleDrawableBackground(String status) {
+
+        Drawable drawable;
+        switch (status) {
+            case Constant.FormStatus.Approved:
+                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
+                break;
+            case Constant.FormStatus.Flagged:
+                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_yellow);
+                break;
+            case Constant.FormStatus.Rejected:
+                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
+                break;
+            case Constant.FormStatus.Pending:
+            default:
+                drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
+                break;
+        }
+
+        return drawable;
+    }
+
 
     @Override
     public int getItemCount() {
@@ -129,46 +145,75 @@ public class SubStageListAdapter extends
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvStageName, tvSubTitle, tvLastFilledDateTime, tvSubStageIconText;
-        private RelativeLayout rootlayout, layoutFormStatus;
-        Button btnViewFormHistory, btnOpenEdu;
-        ImageView substageBadge;
+        private TextView tvStageName, tvSubTitle, tvSubStageIconText, tvSubtext, tvLastSubmissionStatus, tvLastSubmissionDateTime;
+        private Button btnViewFormHistory, btnOpenEdu;
+        private CardView card;
+        ImageButton btnExpandCard;
+        ImageView ivCardCircle;
+
 
         public ViewHolder(View view) {
             super(view);
 
-            rootlayout = (RelativeLayout) view.findViewById(R.id.rl_form_list_item);
-            tvStageName = (TextView) view.findViewById(R.id.tv_form_primary);
-            tvSubTitle = (TextView) view.findViewById(R.id.tv_form_secondary);
-            tvSubStageIconText = (TextView) view.findViewById(R.id.form_icon_text);
-            tvLastFilledDateTime = (TextView) view.findViewById(R.id.tv_form_status);
-            btnViewFormHistory = (Button) view.findViewById(R.id.btn_form_responses);
-            btnOpenEdu = (Button) view.findViewById(R.id.btn_form_edu);
-            substageBadge = view.findViewById(R.id.iv_stage_badge);
+            tvStageName = view.findViewById(R.id.tv_form_primary);
+            card = view.findViewById(R.id.card_view_form_list_item);
+            tvSubTitle = view.findViewById(R.id.tv_form_secondary);
+            tvSubStageIconText = view.findViewById(R.id.form_icon_text);
+            btnViewFormHistory = view.findViewById(R.id.btn_form_responses);
+            btnOpenEdu = view.findViewById(R.id.btn_form_edu);
+            btnExpandCard = view.findViewById(R.id.btn_expand_card);
+            tvSubtext = view.findViewById(R.id.tv_form_sub_text);
+            tvLastSubmissionStatus = view.findViewById(R.id.tv_form_status);
+            tvLastSubmissionDateTime = view.findViewById(R.id.tv_form_last_submitted_date);
+            ivCardCircle = view.findViewById(R.id.iv_form_circle);
+
 
             btnViewFormHistory.setOnClickListener(this);
+            btnOpenEdu.setOnClickListener(this);
+            card.setOnClickListener(this);
+            btnExpandCard.setOnClickListener(this);
 
 
         }
 
         @Override
         public void onClick(View v) {
+
+            SubStage subStage = subStages.get(getAdapterPosition());
+
             switch (v.getId()) {
                 case R.id.btn_form_edu:
-//                    Intent intent = new Intent(v.getContext(), EducationMaterialSliderActivity.class);
-//                    // Code for button 2 click
-//                    intent.putExtra("SUB_SITE_ID", subStages.get(getPosition()).getSiteId());
-//                    intent.putExtra("SUB_STAGE_ID", subStages.get(getPosition()).getSubStageId());
-//                    intent.putExtra("StagePosition", stagePosition);
-//                    Log.d(TAG, "onClick: " + getAdapterPosition() + "  " + getItemId());
-//                    intent.putExtra("SUB_STAGE_POSITION", getAdapterPosition());
-//                    v.getContext().startActivity(intent);
+                    listener.onGuideBookButtonClicked(subStage, getAdapterPosition());
                     break;
+                case R.id.btn_form_responses:
+                    listener.onFormHistoryButtonClicked(subStage);
+                    break;
+                case R.id.card_view_form_list_item:
+                    listener.onFormItemClicked(subStage, getAdapterPosition());
+                    break;
+                case R.id.btn_expand_card:
 
+                    boolean isCollapsed = tvSubtext.getVisibility() == View.GONE;
 
+                    if (isCollapsed) {
+                        btnExpandCard.startAnimation(getRotationAnimation(180, 0));
+                        btnExpandCard.setRotation(180);
+                    } else {
+                        btnExpandCard.startAnimation(getRotationAnimation(180, 360));
+                        btnExpandCard.setRotation(360);
+                    }
+
+                    tvSubtext.setVisibility(tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    tvLastSubmissionStatus.setVisibility(tvLastSubmissionStatus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                    tvLastSubmissionDateTime.setVisibility(tvLastSubmissionDateTime.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+
+                    break;
             }
+
+
         }
     }
-
-
 }
+
+
+

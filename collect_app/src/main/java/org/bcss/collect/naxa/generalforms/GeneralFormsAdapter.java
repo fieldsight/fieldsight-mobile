@@ -9,14 +9,10 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -58,7 +54,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_small, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_expanded, null);
         return new ViewHolder(view);
 
 
@@ -79,8 +75,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         }
 
         Integer count = generalForm.getResponsesCount();
-        viewHolder.badge.setVisibility(count != null && count > 0 ? View.GONE : View.GONE);
-
 
         setSubmissionText(viewHolder, submissionDetail);
 
@@ -164,7 +158,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             btnCardMenu = view.findViewById(R.id.btn_card_menu);
 
             tvSubtext = view.findViewById(R.id.tv_form_sub_text);
-            btnExpandCard = view.findViewById(R.id.btn_expand);
+            btnExpandCard = view.findViewById(R.id.btn_expand_card);
 
             ivCardCircle = view.findViewById(R.id.iv_form_circle);
             tvLastSubmissionDateTime = view.findViewById(R.id.tv_form_last_submitted_date);
@@ -189,8 +183,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             GeneralForm generalForm = generalForms.get(getAdapterPosition()).getGeneralForm();
 
             switch (v.getId()) {
-                case R.id.rl_form_list_item:
-                    break;
                 case R.id.btn_form_edu:
                     listener.onGuideBookButtonClicked(generalForm, getAdapterPosition());
                     break;
@@ -203,7 +195,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
                 case R.id.btn_card_menu:
                     popup.show();
                     break;
-                case R.id.btn_expand:
+                case R.id.btn_expand_card:
 
                     boolean isCollapsed = tvSubtext.getVisibility() == View.GONE;
                     if (isCollapsed) {
@@ -212,7 +204,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
                     }else {
                         btnExpandCard.startAnimation(getRotationAnimation(180, 360));
                         btnExpandCard.setRotation(360);
-
                     }
 
                     tvSubtext.setVisibility(tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);

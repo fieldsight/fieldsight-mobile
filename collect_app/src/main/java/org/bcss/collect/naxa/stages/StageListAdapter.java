@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.stages;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,7 @@ public class StageListAdapter extends
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_small2, null);
         return new ViewHolder(view);
     }
 
@@ -53,17 +54,13 @@ public class StageListAdapter extends
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
 
         Stage stage = totalList.get(viewHolder.getAdapterPosition());
-        try {
 
-            int stageNumber = position + 1;
-            viewHolder.tvStageName.setText(stage.getName());
-            viewHolder.tvSubTitle.setText(stage.getDescription());
-            viewHolder.tvIconText.setText(String.valueOf(stageNumber));
-            viewHolder.stageBadge.setVisibility(stage.hasAllSubStageComplete() ? View.VISIBLE : View.GONE);
+        int stageNumber = position + 1;
+        viewHolder.tvStageName.setText(stage.getName());
+        viewHolder.tvSubTitle.setText(stage.getDescription());
+        viewHolder.tvIconText.setText(String.valueOf(stageNumber));
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Override
@@ -79,25 +76,18 @@ public class StageListAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tvStageName, tvSubTitle, tvIconText;
-        ImageView stageBadge;
-        RelativeLayout rootLayout;
-        Button btnFormResponse, btnEduMaterials;
+        CardView card;
+
 
         public ViewHolder(View view) {
             super(view);
 
+
             tvStageName = view.findViewById(R.id.tv_form_primary);
             tvSubTitle = view.findViewById(R.id.tv_form_secondary);
             tvIconText = view.findViewById(R.id.form_icon_text);
-            stageBadge = view.findViewById(R.id.iv_stage_badge);
-            btnFormResponse = view.findViewById(R.id.btn_form_responses);
-            btnEduMaterials = view.findViewById(R.id.btn_form_edu);
-            rootLayout = view.findViewById(R.id.rl_form_list_item);
-
-            rootLayout.setOnClickListener(this);
-            btnEduMaterials.setOnClickListener(this);
-            btnFormResponse.setOnClickListener(this);
-
+            card = view.findViewById(R.id.card_view_form_list_item);
+            card.setOnClickListener(this);
 
         }
 
@@ -106,14 +96,8 @@ public class StageListAdapter extends
 
             Stage stage = totalList.get(getAdapterPosition());
             switch (v.getId()) {
-                case R.id.rl_form_list_item:
-                    onFormItemClickListener.onFormItemClicked(stage,getAdapterPosition());
-                    break;
-                case R.id.btn_form_edu:
-                    onFormItemClickListener.onGuideBookButtonClicked(stage, getAdapterPosition());
-                    break;
-                case R.id.btn_form_responses:
-                    onFormItemClickListener.onFormHistoryButtonClicked(stage);
+                case R.id.card_view_form_list_item:
+                    onFormItemClickListener.onFormItemClicked(stage, getAdapterPosition());
                     break;
             }
         }

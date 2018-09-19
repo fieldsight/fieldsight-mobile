@@ -16,12 +16,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding2.view.RxView;
-
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.DateTimeUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
@@ -30,12 +27,6 @@ import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Handler;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 import static org.bcss.collect.naxa.common.AnimationUtils.getRotationAnimation;
 
@@ -59,7 +50,7 @@ public class ScheduledFormsAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_small, null);
+        View itemLayoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_expanded, null);
         return new ViewHolder(itemLayoutView);
     }
 
@@ -156,7 +147,7 @@ public class ScheduledFormsAdapter extends
 //             tvScheduleLevel = itemLayoutView.findViewById(R.id.tv_schedule_level);
 
             tvSubtext = itemLayoutView.findViewById(R.id.tv_form_sub_text);
-            btnExpandCard = itemLayoutView.findViewById(R.id.btn_expand);
+            btnExpandCard = itemLayoutView.findViewById(R.id.btn_expand_card);
 
             ivCardCircle = itemLayoutView.findViewById(R.id.iv_form_circle);
             tvLastSubmissionDateTime = itemLayoutView.findViewById(R.id.tv_form_last_submitted_date);
@@ -186,7 +177,7 @@ public class ScheduledFormsAdapter extends
                 case R.id.card_view_form_list_item:
                     listener.onFormItemClicked(scheduleForm, getAdapterPosition());
                     break;
-                case R.id.btn_expand:
+                case R.id.btn_expand_card:
 
                     boolean isCollapsed = tvSubtext.getVisibility() == View.GONE;
                     if (isCollapsed) {
