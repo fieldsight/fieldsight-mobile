@@ -40,10 +40,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     private final static AtomicInteger notificationId = new AtomicInteger(0);
     private static final String NOTIFY_STATUS = "status";
     public static final String NEW_FORM = "New Form";
-    public static final String OUTSTANDING_FORM = "Outstanding";
-    public static final String REJECTED_FORM = "Rejected";
-    public static final String APPROVED_FORM = "Approved";
-    public static final String FLAGGED_FORM = "Flagged";
+
 
 
     String notifyType;
