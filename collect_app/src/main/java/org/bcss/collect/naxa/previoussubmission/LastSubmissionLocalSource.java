@@ -54,5 +54,8 @@ public class LastSubmissionLocalSource implements BaseLocalDataSource<Submission
 
     }
 
+    public void deleteAll() {
+        AsyncTask.execute(() -> dao.deleteAll());
+    }
 
 }

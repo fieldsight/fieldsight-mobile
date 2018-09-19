@@ -78,10 +78,7 @@ public class SubStageListAdapter extends
 //        viewHolder.substageBadge.setVisibility(subStage.isSubStageComplete() ? View.VISIBLE : View.GONE);
         viewHolder.btnViewFormHistory.setOnClickListener(view -> listener.onFormHistoryButtonClicked(subStage));
 
-        int substageNumber = position;
-        String iconText = stageOrder + "." + substageNumber;
-
-        viewHolder.tvSubStageIconText.setText(iconText);
+        setSubstageNumber(viewHolder);
 
         viewHolder.rootlayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +110,15 @@ public class SubStageListAdapter extends
             }
         });
 
+    }
+
+    private void setSubstageNumber(ViewHolder viewHolder) {
+
+        int substageNumber = viewHolder.getAdapterPosition() + 1;
+        int stageNumber = Integer.parseInt(stageOrder + 1);
+        String iconText = stageNumber + "." + substageNumber;
+
+        viewHolder.tvSubStageIconText.setText(iconText);
     }
 
 

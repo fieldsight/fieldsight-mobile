@@ -41,13 +41,18 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
 
     @Override
     public void getAll() {
+
+
         getPageAndNext(APIEndpoint.GET_ALL_SUBMISSION)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<LastSubmissionResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+
+                        LastSubmissionLocalSource.getInstance().deleteAll();
                         SyncRepository.getInstance().showProgress(PREV_SUBMISSION);
+
                     }
 
                     @Override
