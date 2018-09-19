@@ -43,7 +43,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
         this.downloadView = downloadView;
         this.downloadModel = new DownloadModelImpl();
         syncRepository = SyncRepository.getInstance();
-        syncRepository.setAllCheckedTrue();
+
 
         LiveData<List<SyncableItems>> livedata = syncRepository.getAllSyncItems();
         livedata.observe(downloadView.getLifeCycleOwner(), new Observer<List<SyncableItems>>() {

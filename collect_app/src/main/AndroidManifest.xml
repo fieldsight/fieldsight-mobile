@@ -326,6 +326,9 @@ the specific language governing permissions and limitations under the License.
             android:name="org.bcss.collect.naxa.site.SiteDetailActivity"
             android:exported="true" />
         <activity android:name="org.bcss.collect.naxa.project.MapActivity" />
+        <activity
+            android:exported="true"
+            android:name="org.bcss.collect.naxa.profile.UserProfileActivity" />
 
     </application>
 

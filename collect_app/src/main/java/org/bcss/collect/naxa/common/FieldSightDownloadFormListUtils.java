@@ -265,11 +265,15 @@ public class FieldSightDownloadFormListUtils {
                                 hash = null;
                             }
 
-                            boolean isDeployedFromProject = !TextUtils.isEmpty(siteId);
-                            if (isDeployedFromProject) {
+                            boolean isSiteFormList = !xmlForm.isCreatedFromProject();
+                            if (isSiteFormList) {
                                 populateSiteOverideList(siteId, isScheduled, isStaged, isSurvey);
-                                SurveyFormLocalSource.getInstance().save(new SurveyForm(fsFormId, xmlForm.getFormCreatorsId(), formId, name));
                             }
+
+                            if ("true".equalsIgnoreCase(isSurvey)) {
+                                SurveyFormLocalSource.getInstance().save(new SurveyForm(fsFormId, xmlForm.getFormCreatorsId(), formId, formName));
+                            }
+
                             break;
                     }
                 }
@@ -406,7 +410,7 @@ public class FieldSightDownloadFormListUtils {
 
         } else {
             Timber.e("A unknown type of form  has been deployed");
-            Crashlytics.log("A unknown type of form  has been deployed");
+
         }
 
 
