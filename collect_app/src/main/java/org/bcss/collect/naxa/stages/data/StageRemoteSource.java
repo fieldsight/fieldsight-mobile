@@ -143,6 +143,7 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
                         for(SubStage subStage: stage.getSubStage()){
                             subStage.setStageId(stage.getId());
                             subStage.setFsFormId(subStage.getStageForms().getId());
+                            subStage.setJrFormId(subStage.getStageForms().getXf().getJrFormId());
                             subStageList.add(subStage);
                         }
 
