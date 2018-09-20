@@ -38,6 +38,7 @@ import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
+import org.bcss.collect.naxa.project.MapActivity;
 import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.json.JSONObject;
 
@@ -305,7 +306,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
         createSiteDetailViewModel = ViewModelProviders.of(this, factory).get(CreateSiteDetailViewModel.class);
     }
 
-    @OnClick({R.id.btn_site_edit_add_photo, R.id.btn_site_records_location, R.id.fab_activate_edit_mode})
+    @OnClick({R.id.btn_site_edit_add_photo, R.id.btn_site_records_location, R.id.fab_activate_edit_mode, R.id.btn_view_site_on_map})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_site_edit_add_photo:
@@ -346,6 +347,9 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         createSiteDetailViewModel.saveSite();
                         break;
                 }
+                break;
+            case R.id.btn_view_site_on_map:
+                MapActivity.start(this, nSite);
                 break;
         }
     }
@@ -388,6 +392,18 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onBackPressed() {
+        switch (layoutSiteDataEdit.getVisibility()) {
+            case View.GONE:
+                super.onBackPressed();
+                break;
+            case View.VISIBLE:
+                createSiteDetailViewModel.setEditSite(false);
+                break;
+        }
     }
 
     private void collectMetaAtrributes(ArrayList<Integer> ids) {
