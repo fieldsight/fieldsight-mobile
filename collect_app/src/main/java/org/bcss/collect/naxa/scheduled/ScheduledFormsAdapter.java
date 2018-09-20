@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.DateTimeUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
+import org.bcss.collect.naxa.generalforms.GeneralFormsAdapter;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
@@ -65,29 +67,46 @@ public class ScheduledFormsAdapter extends
         viewHolder.tvDesc.setText(scheduleForm.getScheduleName());
         viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1).toUpperCase());
 
-        setSubmissionText(viewHolder, submissionDetail);
+        setSubmissionText(viewHolder, submissionDetail, "");
     }
 
 
-    private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail) {
+    private void setSubmissionText(ScheduledFormsAdapter.ViewHolder viewHolder, SubmissionDetail submissionDetail, String formCreatedAt) {
 
-        String submittedBy = "";
         String submissionDateTime = "";
+        String submittedBy = "";
         String submissionStatus = "";
         Context context = viewHolder.cardView.getContext();
 
-        if (submissionDetail != null) {
-            submittedBy = submissionDetail.getSubmittedBy();
-            submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
-            submissionStatus = submissionDetail.getStatusDisplay();
-            viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
+
+        if (submissionDetail == null && !TextUtils.isEmpty(formCreatedAt)) {
+            viewHolder.tvSubtext.setText(
+                    context.getString
+                            (R.string.form_created_on,
+                                    DateTimeUtils.getRelativeTime(formCreatedAt, true)
+                            ));
+            viewHolder.tvDesc.setText(R.string.form_pending_submission);
+            return;
         }
 
-        viewHolder.tvSubtext.setText(context.getString(R.string.form_last_submitted_by, submittedBy));
-        viewHolder.tvLastSubmissionDateTime.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
-        viewHolder.tvLastSubmissionStatus.setText(context.getString(R.string.form_last_submission_status, submissionStatus));
+        if (submissionDetail == null) {
+            viewHolder.tvDesc.setText(R.string.form_pending_submission);
+            return;
+        }
+
+        submittedBy = submissionDetail.getSubmittedBy();
+        submissionStatus = submissionDetail.getStatusDisplay();
+        submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
 
 
+        String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy)
+                + "\n" +
+                context.getString(R.string.form_last_submission_status, submissionStatus);
+
+
+        viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
+        viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
+        viewHolder.tvSubtext.setText(formSubtext);
     }
 
     private Drawable getCircleDrawableBackground(String status) {
@@ -127,38 +146,32 @@ public class ScheduledFormsAdapter extends
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView tvFormName, tvDesc, tvLastFilledAt, tvIconText, tvScheduleLevel, tvSubtext, tvLastSubmissionDateTime, tvLastSubmissionStatus;
-        Button btnOpenEdu, btnOpenHistory;
-        RelativeLayout rootLayout;
-        CardView cardView;
-        ImageButton btnCardMenu, btnExpandCard;
-        ImageView ivCardCircle;
+        private TextView tvFormName, tvDesc, tvIconText, tvSubtext;
+        private Button btnOpenEdu, btnOpenHistory;
+        private ImageView ivCardCircle;
+        private CardView cardView;
+        private ImageButton btnExpandCard;
 
-        public ViewHolder(View itemLayoutView) {
-            super(itemLayoutView);
+        public ViewHolder(View view) {
+            super(view);
 
-            tvFormName = itemLayoutView.findViewById(R.id.tv_form_primary);
-            tvDesc = itemLayoutView.findViewById(R.id.tv_form_secondary);
-            btnOpenHistory = itemLayoutView.findViewById(R.id.btn_form_responses);
-            btnOpenEdu = itemLayoutView.findViewById(R.id.btn_form_edu);
-            rootLayout = itemLayoutView.findViewById(R.id.rl_form_list_item);
-            tvIconText = itemLayoutView.findViewById(R.id.form_icon_text);
-            cardView = itemLayoutView.findViewById(R.id.card_view_form_list_item);
-//             tvScheduleLevel = itemLayoutView.findViewById(R.id.tv_schedule_level);
+            cardView = view.findViewById(R.id.card_view_form_list_item);
+            tvFormName = view.findViewById(R.id.tv_form_primary);
+            tvDesc = view.findViewById(R.id.tv_form_secondary);
+            tvIconText = view.findViewById(R.id.form_icon_text);
+            tvSubtext = view.findViewById(R.id.tv_form_subtext);
 
-            btnExpandCard = itemLayoutView.findViewById(R.id.btn_expand_card);
+            ivCardCircle = view.findViewById(R.id.iv_form_circle);
 
-            ivCardCircle = itemLayoutView.findViewById(R.id.iv_form_circle);
-            tvLastSubmissionStatus = itemLayoutView.findViewById(R.id.tv_form_status);
+            btnOpenHistory = view.findViewById(R.id.btn_form_responses);
+            btnOpenEdu = view.findViewById(R.id.btn_form_edu);
+            btnExpandCard = view.findViewById(R.id.btn_expand_card);
 
-
-            rootLayout.setOnClickListener(this);
-            btnOpenEdu.setOnClickListener(this);
-            btnOpenHistory.setOnClickListener(this);
             cardView.setOnClickListener(this);
             btnOpenEdu.setOnClickListener(this);
             btnOpenHistory.setOnClickListener(this);
             btnExpandCard.setOnClickListener(this);
+
         }
 
         @Override
@@ -181,18 +194,14 @@ public class ScheduledFormsAdapter extends
                     if (isCollapsed) {
                         btnExpandCard.startAnimation(getRotationAnimation(180, 0));
                         btnExpandCard.setRotation(180);
-                    }else {
+                    } else {
                         btnExpandCard.startAnimation(getRotationAnimation(180, 360));
                         btnExpandCard.setRotation(360);
 
                     }
 
-
                     int newVisiblity = tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
-
                     tvSubtext.setVisibility(newVisiblity);
-                    tvLastSubmissionStatus.setVisibility(newVisiblity);
-                    tvLastSubmissionDateTime.setVisibility(newVisiblity);
 
                     break;
             }

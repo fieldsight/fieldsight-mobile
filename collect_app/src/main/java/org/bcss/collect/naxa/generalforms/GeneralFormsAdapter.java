@@ -2,22 +2,18 @@ package org.bcss.collect.naxa.generalforms;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
@@ -70,26 +66,34 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         viewHolder.tvFormName.setText(generalForm.getName());
 
         String relativeDateTime = DateTimeUtils.getRelativeTime(generalForm.getDateCreated(), true);
-        viewHolder.tvDesc.setText(viewHolder.tvFormName.getContext().getString(R.string.msg_created_on, relativeDateTime));
+        viewHolder.tvDesc.setText(viewHolder.tvFormName.getContext().getString(R.string.form_created_on, relativeDateTime));
         if (generalForm.getName() != null) {
             viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1).toUpperCase());
         }
 
         Integer count = generalForm.getResponsesCount();
 
-        setSubmissionText(viewHolder, submissionDetail);
+        setSubmissionText(viewHolder, submissionDetail, generalForm.getDateCreated());
 
 
     }
 
-    private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail) {
+    private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail, String formCreatedAt) {
 
         String submissionDateTime = "";
         String submittedBy = "";
         String submissionStatus = "";
         Context context = viewHolder.cardView.getContext();
 
-        String[] infos = new String[]{submittedBy, submissionStatus};
+        if (submissionDetail == null && !TextUtils.isEmpty(formCreatedAt)) {
+            viewHolder.tvSubtext.setText(
+                    context.getString
+                            (R.string.form_created_on,
+                                    DateTimeUtils.getRelativeTime(formCreatedAt, true)
+                            ));
+            viewHolder.tvDesc.setText(R.string.form_pending_submission);
+            return;
+        }
 
         if (submissionDetail == null) {
             viewHolder.tvDesc.setText(R.string.form_pending_submission);
