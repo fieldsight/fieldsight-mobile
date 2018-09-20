@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:hint="Site Identifier"
             android:inputType="text"
+            android:textColor="@color/textview_colors"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </android.support.design.widget.TextInputLayout>
 
