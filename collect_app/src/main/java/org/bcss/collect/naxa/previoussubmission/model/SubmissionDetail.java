@@ -14,7 +14,8 @@ import org.bcss.collect.naxa.generalforms.data.FormType;
 @Entity(tableName = "submission_detail")
 public class SubmissionDetail {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
+    @SerializedName("id")
     private int uid;
 
     @SerializedName("site")

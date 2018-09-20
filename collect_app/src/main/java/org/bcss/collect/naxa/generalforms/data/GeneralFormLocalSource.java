@@ -1,24 +1,35 @@
 package org.bcss.collect.naxa.generalforms.data;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
+import org.bcss.collect.naxa.previoussubmission.LastSubmissionLocalSource;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
 import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> {
 
@@ -43,6 +54,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     @Deprecated
     public LiveData<List<GeneralForm>> getBySiteId(@NonNull String siteId, String projectId) {
 
+
         return dao.getSiteGeneralForms(siteId, projectId);
     }
 
@@ -52,11 +64,131 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
     public LiveData<List<GeneralFormAndSubmission>> getFormsBySiteId(@NonNull String siteId, @NonNull String projectId) {
-        return dao.getSiteGeneralFormAndSubmission(siteId, projectId);
+
+        MediatorLiveData<List<GeneralFormAndSubmission>> generalFormMediator = new MediatorLiveData<>();
+        LiveData<List<GeneralForm>> source = dao.getSiteGeneralForms(siteId, projectId);
+
+        generalFormMediator.addSource(source,
+                new android.arch.lifecycle.Observer<List<GeneralForm>>() {
+                    @Override
+                    public void onChanged(@Nullable List<GeneralForm> generalForms) {
+                        if (generalForms != null) {
+
+                            Observable.just(generalForms)
+                                    .flatMapIterable((Function<List<GeneralForm>, Iterable<GeneralForm>>) generalForms1 -> generalForms1)
+                                    .flatMap(new Function<GeneralForm, Observable<GeneralFormAndSubmission>>() {
+                                        @Override
+                                        public Observable<GeneralFormAndSubmission> apply(GeneralForm generalForm) throws Exception {
+                                            Maybe<SubmissionDetail> submissionDetailsSource;
+
+                                            if (SITE.equals(generalForm.getFormDeployedFrom())) {
+                                                submissionDetailsSource = LastSubmissionLocalSource.getInstance().getBySiteFsId(generalForm.getFsFormId());
+                                            } else {
+                                                submissionDetailsSource = LastSubmissionLocalSource.getInstance().getByProjectFsId(generalForm.getFsFormId());
+                                            }
+                                            return submissionDetailsSource.toObservable()
+                                                    .defaultIfEmpty(new SubmissionDetail())
+                                                    .map(new Function<SubmissionDetail, GeneralFormAndSubmission>() {
+                                                        @Override
+                                                        public GeneralFormAndSubmission apply(SubmissionDetail submissionDetail) throws Exception {
+                                                            GeneralFormAndSubmission generalFormAndSubmission = new GeneralFormAndSubmission();
+                                                            generalFormAndSubmission.setGeneralForm(generalForm);
+                                                            generalFormAndSubmission.setSubmissionDetail(submissionDetail);
+                                                            return generalFormAndSubmission;
+                                                        }
+                                                    });
+                                        }
+                                    })
+                                    .subscribeOn(Schedulers.computation())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .toList()
+                                    .subscribe(new SingleObserver<List<GeneralFormAndSubmission>>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onSuccess(List<GeneralFormAndSubmission> generalFormAndSubmissions) {
+                                            generalFormMediator.setValue(generalFormAndSubmissions);
+                                            generalFormMediator.removeSource(source);
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            e.printStackTrace();
+                                            generalFormMediator.removeSource(source);
+                                        }
+                                    });
+                        }
+                    }
+                });
+
+        return generalFormMediator;
+//        return dao.getSiteGeneralFormAndSubmission(siteId, projectId);
     }
 
     public LiveData<List<GeneralFormAndSubmission>> getFormsByProjectId(@NonNull String projectId) {
-        return dao.getProjectGeneralFormAndSubmission(projectId);
+
+        MediatorLiveData<List<GeneralFormAndSubmission>> generalFormMediator = new MediatorLiveData<>();
+        LiveData<List<GeneralForm>> source = dao.getProjectGeneralForms(projectId);
+
+        generalFormMediator.addSource(source,
+                new android.arch.lifecycle.Observer<List<GeneralForm>>() {
+                    @Override
+                    public void onChanged(@Nullable List<GeneralForm> generalForms) {
+                        if (generalForms != null) {
+                            Observable.just(generalForms)
+                                    .flatMapIterable((Function<List<GeneralForm>, Iterable<GeneralForm>>) generalForms1 -> generalForms1)
+                                    .flatMap(new Function<GeneralForm, Observable<GeneralFormAndSubmission>>() {
+                                        @Override
+                                        public Observable<GeneralFormAndSubmission> apply(GeneralForm generalForm) throws Exception {
+                                            Maybe<SubmissionDetail> submissionDetailsSource;
+
+                                            if (SITE.equals(generalForm.getFormDeployedFrom())) {
+                                                submissionDetailsSource = LastSubmissionLocalSource.getInstance().getBySiteFsId(generalForm.getFsFormId());
+                                            } else {
+                                                submissionDetailsSource = LastSubmissionLocalSource.getInstance().getByProjectFsId(generalForm.getFsFormId());
+                                            }
+                                            return submissionDetailsSource.toObservable()
+                                                    .map(new Function<SubmissionDetail, GeneralFormAndSubmission>() {
+                                                        @Override
+                                                        public GeneralFormAndSubmission apply(SubmissionDetail submissionDetail) throws Exception {
+                                                            GeneralFormAndSubmission generalFormAndSubmission = new GeneralFormAndSubmission();
+                                                            generalFormAndSubmission.setGeneralForm(generalForm);
+                                                            generalFormAndSubmission.setSubmissionDetail(submissionDetail);
+                                                            return generalFormAndSubmission;
+                                                        }
+                                                    });
+                                        }
+                                    })
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .toList()
+                                    .subscribe(new SingleObserver<List<GeneralFormAndSubmission>>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onSuccess(List<GeneralFormAndSubmission> generalFormAndSubmissions) {
+                                            generalFormMediator.setValue(generalFormAndSubmissions);
+                                            generalFormMediator.removeSource(source);
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            generalFormMediator.removeSource(source);
+                                        }
+                                    });
+                        }
+                    }
+                });
+
+        return generalFormMediator;
+
+        //        return dao.getProjectGeneralFormAndSubmission(projectId);
     }
 
     @Override
@@ -168,8 +300,6 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     public void updateLastSubmission(SubmissionDetail formResponse) {
 
     }
-
-
 
 
 }

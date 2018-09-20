@@ -77,6 +77,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
 
     }
+
     private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail, String formCreatedAt) {
 
         String submissionDateTime = "";
@@ -103,7 +104,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         submissionStatus = submissionDetail.getStatusDisplay();
         submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
 
-
         String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy)
                 + "\n" +
                 context.getString(R.string.form_last_submission_status, submissionStatus);
@@ -115,10 +115,12 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
     }
 
 
-
     private Drawable getCircleDrawableBackground(String status) {
 
-        Drawable drawable;
+        Drawable drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
+
+        if (status == null) return drawable;
+
         switch (status) {
             case Constant.FormStatus.Approved:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);

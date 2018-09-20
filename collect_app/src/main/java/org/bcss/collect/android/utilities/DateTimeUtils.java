@@ -134,6 +134,8 @@ public class DateTimeUtils {
 
         String relativeTime;
 
+        if(dateTime == null)return "";
+
         try {
             SimpleDateFormat sdf;
             String format;

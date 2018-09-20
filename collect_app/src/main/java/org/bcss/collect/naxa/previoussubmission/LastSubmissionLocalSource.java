@@ -11,6 +11,8 @@ import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Maybe;
+
 public class LastSubmissionLocalSource implements BaseLocalDataSource<SubmissionDetail> {
 
     private static LastSubmissionLocalSource INSTANCE;
@@ -37,6 +39,7 @@ public class LastSubmissionLocalSource implements BaseLocalDataSource<Submission
 
     @Override
     public void save(SubmissionDetail... items) {
+
         AsyncTask.execute(() -> {
             dao.insert(items);
         });
@@ -48,6 +51,15 @@ public class LastSubmissionLocalSource implements BaseLocalDataSource<Submission
             dao.insert(items);
         });
     }
+
+    public Maybe<SubmissionDetail> getBySiteFsId(String fsFormId){
+        return dao.getBySiteFsId(fsFormId);
+    }
+
+    public Maybe<SubmissionDetail> getByProjectFsId(String fsFormId){
+        return dao.getByProjectFsId(fsFormId);
+    }
+
 
     @Override
     public void updateAll(ArrayList<SubmissionDetail> items) {
