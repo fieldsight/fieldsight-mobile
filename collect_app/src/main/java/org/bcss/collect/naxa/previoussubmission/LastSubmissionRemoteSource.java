@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.previoussubmission;
 
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
@@ -68,6 +69,7 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
 
                     @Override
                     public void onComplete() {
+                        FieldSightNotificationLocalSource.getInstance().markFormStatusChangeAsRead();
                         SyncRepository.getInstance().setSuccess(PREV_SUBMISSION);
                     }
                 });

@@ -8,6 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 
+import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -37,6 +38,8 @@ public class SubStage {
     private String stageId;
 
 
+    @SerializedName("form")
+    @Expose
     private String fsFormId;
 
     private String jrFormId;
@@ -213,6 +216,33 @@ public class SubStage {
 
     public void setLastSubmissionBy(String lastSubmissionBy) {
         this.lastSubmissionBy = lastSubmissionBy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SubStage subStage = (SubStage) o;
+        return Objects.equal(id, subStage.id) &&
+                Objects.equal(stageId, subStage.stageId) &&
+                Objects.equal(fsFormId, subStage.fsFormId) &&
+                Objects.equal(jrFormId, subStage.jrFormId) &&
+                Objects.equal(stageForms, subStage.stageForms) &&
+                Objects.equal(name, subStage.name) &&
+                Objects.equal(description, subStage.description) &&
+                Objects.equal(order, subStage.order) &&
+                Objects.equal(tagIds, subStage.tagIds) &&
+                Objects.equal(responseCount, subStage.responseCount) &&
+                Objects.equal(em, subStage.em) &&
+                Objects.equal(projectStageId, subStage.projectStageId) &&
+                Objects.equal(latestSubmission, subStage.latestSubmission) &&
+                Objects.equal(lastSubmissionBy, subStage.lastSubmissionBy) &&
+                Objects.equal(lastSubmissionDateTime, subStage.lastSubmissionDateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, stageId, fsFormId, jrFormId, stageForms, name, description, order, tagIds, responseCount, em, projectStageId, latestSubmission, lastSubmissionBy, lastSubmissionDateTime);
     }
 
     public String getLastSubmissionDateTime() {

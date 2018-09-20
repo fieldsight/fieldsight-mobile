@@ -1,17 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_logout"
-        android:title="Logout" />
-
-
-    <item
-        android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh_white"
-        android:title="Refresh"
-        app:showAsAction="never" />
-
 
     <item
         android:id="@+id/action_search"
@@ -27,9 +16,20 @@
         android:title="Notifications"
         app:showAsAction="ifRoom" />
 
+
+    <item
+        android:id="@+id/action_refresh"
+
+        android:title="Sync"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_app_settings"
         android:title="Settings" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:title="Logout" />
 
 
 </menu>

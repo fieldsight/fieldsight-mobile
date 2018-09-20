@@ -49,7 +49,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
 
     public LiveData<List<SubStage>> getByStageId(String stageId, String siteTypeId) {
         MediatorLiveData<List<SubStage>> mediatorLiveData = new MediatorLiveData<>();
-        LiveData<List<SubStage>> forms = dao.getByStageId(stageId);
+        LiveData<List<SubStage>> forms = dao.getByStageIdAsLiveData(stageId);
 
 
         mediatorLiveData.addSource(forms, new Observer<List<SubStage>>() {
@@ -118,7 +118,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
     }
 
     public Observable<List<SubStage>> getByStageIdMaybe(String id, String siteTypeId ) {
-         return dao.getByStageIdMaybe(id).toObservable()
+         return dao.getByStageIdAsMaybe(id).toObservable()
          .flatMap(new Function<List<SubStage>, ObservableSource<List<SubStage>>>() {
              @Override
              public ObservableSource<List<SubStage>> apply(List<SubStage> subStages) throws Exception {
@@ -139,7 +139,4 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
     }
 
 
-    public LiveData<List<SubStage>> getById(String fsFormId) {
-        return dao.getById(fsFormId);
-    }
 }

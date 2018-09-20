@@ -135,6 +135,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
         Observable<Integer> notificaitonCountForm = FieldSightNotificationLocalSource.getInstance().anyFormsOutOfSync().toObservable();
         Observable<Integer> notificaitonCountSites = FieldSightNotificationLocalSource.getInstance().anyProjectSitesOutOfSync().toObservable();
+        Observable<Integer> notificaitonCountPreviousSubmission = FieldSightNotificationLocalSource.getInstance().anyFormStatusChangeOutOfSync().toObservable();
 
 
         Observable.just(syncableItems)
@@ -166,6 +167,24 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                                     public SyncableItems apply(Integer integer) throws Exception {
                                         switch (syncableItems.getUid()) {
                                             case Constant.DownloadUID.PROJECT_SITES:
+                                                syncableItems.setOutOfSync(integer > 0);
+                                                break;
+                                        }
+
+                                        return syncableItems;
+                                    }
+                                });
+                    }
+                })
+                .flatMap(new Function<SyncableItems, ObservableSource<SyncableItems>>() {
+                    @Override
+                    public ObservableSource<SyncableItems> apply(SyncableItems syncableItems) throws Exception {
+                        return notificaitonCountPreviousSubmission
+                                .map(new Function<Integer, SyncableItems>() {
+                                    @Override
+                                    public SyncableItems apply(Integer integer) throws Exception {
+                                        switch (syncableItems.getUid()) {
+                                            case Constant.DownloadUID.PREV_SUBMISSION:
                                                 syncableItems.setOutOfSync(integer > 0);
                                                 break;
                                         }

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
@@ -23,17 +24,14 @@ import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
-import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
-import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_PROJECT;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.NEW_STAGES;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
 import static org.bcss.collect.naxa.common.Truss.makeSectionOfTextBold;
-import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.APPROVED_FORM;
-import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.FLAGGED_FORM;
 import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.NEW_FORM;
-import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.REJECTED_FORM;
 
 
 public class FieldSightNotificationLocalSource implements BaseLocalDataSource<FieldSightNotification> {
@@ -94,6 +92,23 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 FORM_ALTERED_PROJECT,
                 SITE_FORM,
                 PROJECT_FORM);
+    }
+
+    public Maybe<Integer> anyFormStatusChangeOutOfSync() {
+        return dao.countForNotificationType(false,
+                Constant.FormStatus.Flagged,
+                Constant.FormStatus.Approved,
+                Constant.FormStatus.Pending,
+                Constant.FormStatus.Rejected
+        );
+    }
+
+    public void markFormStatusChangeAsRead() {
+        AsyncTask.execute(() -> dao.applyReadToNotificationType(true,
+                Constant.FormStatus.Flagged,
+                Constant.FormStatus.Approved,
+                Constant.FormStatus.Pending,
+                Constant.FormStatus.Rejected));
     }
 
     public void markSitesAsRead() {
@@ -212,7 +227,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
         SpannableStringBuilder formattedDesc = null;
 
         switch (fieldSightNotification.getFormStatus()) {
-            case (FLAGGED_FORM):
+            case Constant.FormStatus.Flagged:
                 desc = context.getResources().getString(R.string.notify_submission_result,
                         fieldSightNotification.getFormName(),
                         fieldSightNotification.getSiteName(),
@@ -224,7 +239,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                         context.getResources().getString(R.string.notify_form_flagged));
                 break;
 
-            case APPROVED_FORM:
+            case Constant.FormStatus.Approved:
 
                 desc = context.getResources().getString(R.string.notify_submission_result,
                         fieldSightNotification.getFormName(),
@@ -235,7 +250,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                         fieldSightNotification.getSiteName(),
                         fieldSightNotification.getFormName(), context.getResources().getString(R.string.notify_form_approved));
                 break;
-            case REJECTED_FORM:
+            case Constant.FormStatus.Rejected:
                 String form_rejected_response = context.getResources().getString(R.string.notify_submission_result,
                         fieldSightNotification.getFormName(),
                         fieldSightNotification.getSiteName(),

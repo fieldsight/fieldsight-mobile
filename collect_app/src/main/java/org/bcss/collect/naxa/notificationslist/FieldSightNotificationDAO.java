@@ -39,6 +39,8 @@ public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<Fie
     @Query("SELECT COUNT(notificationType) FROM fieldsightnotification WHERE notificationType in (:notificationTypes) and isRead =:read ")
     public abstract Maybe<Integer> countForNotificationType(Boolean read, String... notificationTypes);
 
+
+
     @Query("UPDATE fieldsightnotification SET isRead=:read WHERE notificationType in (:notificationTypes)")
     public abstract void applyReadToNotificationType(Boolean read, String... notificationTypes);
 
