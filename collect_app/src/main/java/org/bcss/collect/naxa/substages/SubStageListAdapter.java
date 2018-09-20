@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,12 +77,11 @@ public class SubStageListAdapter extends
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position) {
         SubStage subStage = subStages.get(viewHolder.getAdapterPosition());
 
-        viewHolder.tvStageName.setText(subStages.get(position).getName());
-        viewHolder.tvSubTitle.setText(subStages.get(position).getName());
-        viewHolder.btnViewFormHistory.setOnClickListener(view -> listener.onFormHistoryButtonClicked(subStage));
+        viewHolder.tvFormName.setText(subStages.get(position).getName());
+        viewHolder.tvDesc.setText(subStages.get(position).getName());
 
         setSubstageNumber(viewHolder);
-        setSubmissionText(viewHolder, null);
+        setSubmissionText(viewHolder, null, null);
 
     }
 
@@ -91,28 +91,44 @@ public class SubStageListAdapter extends
         int stageNumber = Integer.parseInt(stageOrder + 1);
         String iconText = stageNumber + "." + substageNumber;
 
-        viewHolder.tvSubStageIconText.setText(iconText);
+        viewHolder.tvIconText.setText(iconText);
     }
 
-    private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail) {
+    private void setSubmissionText(SubStageListAdapter.ViewHolder viewHolder, SubmissionDetail submissionDetail, String formCreatedAt) {
 
-        String submittedBy = "";
         String submissionDateTime = "";
+        String submittedBy = "";
         String submissionStatus = "";
-        Context context = viewHolder.card.getContext();
+        Context context = viewHolder.cardView.getContext();
 
-        if (submissionDetail != null) {
-            submittedBy = submissionDetail.getSubmittedBy();
-            submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
-            submissionStatus = submissionDetail.getStatusDisplay();
-            viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
+        if (submissionDetail == null && !TextUtils.isEmpty(formCreatedAt)) {
+            viewHolder.tvSubtext.setText(
+                    context.getString
+                            (R.string.form_created_on,
+                                    DateTimeUtils.getRelativeTime(formCreatedAt, true)
+                            ));
+            viewHolder.tvDesc.setText(R.string.form_pending_submission);
+            return;
         }
 
-        viewHolder.tvSubtext.setText(context.getString(R.string.form_last_submitted_by, submittedBy));
-        viewHolder.tvLastSubmissionDateTime.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
-        viewHolder.tvLastSubmissionStatus.setText(context.getString(R.string.form_last_submission_status, submissionStatus));
+        if (submissionDetail == null) {
+            viewHolder.tvDesc.setText(R.string.form_pending_submission);
+            return;
+        }
+
+        submittedBy = submissionDetail.getSubmittedBy();
+        submissionStatus = submissionDetail.getStatusDisplay();
+        submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
 
 
+        String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy)
+                + "\n" +
+                context.getString(R.string.form_last_submission_status, submissionStatus);
+
+
+        viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
+        viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
+        viewHolder.tvSubtext.setText(formSubtext);
     }
 
     private Drawable getCircleDrawableBackground(String status) {
@@ -145,31 +161,31 @@ public class SubStageListAdapter extends
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvStageName, tvSubTitle, tvSubStageIconText, tvSubtext, tvLastSubmissionStatus, tvLastSubmissionDateTime;
-        private Button btnViewFormHistory, btnOpenEdu;
-        private CardView card;
-        ImageButton btnExpandCard;
-        ImageView ivCardCircle;
+        private TextView tvFormName, tvDesc, tvIconText, tvSubtext;
+        private Button btnOpenEdu, btnOpenHistory;
+        private ImageView ivCardCircle;
+        private CardView cardView;
+        private ImageButton btnExpandCard;
 
 
         public ViewHolder(View view) {
             super(view);
 
-            tvStageName = view.findViewById(R.id.tv_form_primary);
-            card = view.findViewById(R.id.card_view_form_list_item);
-            tvSubTitle = view.findViewById(R.id.tv_form_secondary);
-            tvSubStageIconText = view.findViewById(R.id.form_icon_text);
-            btnViewFormHistory = view.findViewById(R.id.btn_form_responses);
-            btnOpenEdu = view.findViewById(R.id.btn_form_edu);
-            btnExpandCard = view.findViewById(R.id.btn_expand_card);
-            tvLastSubmissionStatus = view.findViewById(R.id.tv_form_status);
+            cardView = view.findViewById(R.id.card_view_form_list_item);
+            tvFormName = view.findViewById(R.id.tv_form_primary);
+            tvDesc = view.findViewById(R.id.tv_form_secondary);
+            tvIconText = view.findViewById(R.id.form_icon_text);
+            tvSubtext = view.findViewById(R.id.tv_form_subtext);
 
             ivCardCircle = view.findViewById(R.id.iv_form_circle);
 
+            btnOpenHistory = view.findViewById(R.id.btn_form_responses);
+            btnOpenEdu = view.findViewById(R.id.btn_form_edu);
+            btnExpandCard = view.findViewById(R.id.btn_expand_card);
 
-            btnViewFormHistory.setOnClickListener(this);
+            cardView.setOnClickListener(this);
             btnOpenEdu.setOnClickListener(this);
-            card.setOnClickListener(this);
+            btnOpenHistory.setOnClickListener(this);
             btnExpandCard.setOnClickListener(this);
 
 
@@ -193,19 +209,17 @@ public class SubStageListAdapter extends
                 case R.id.btn_expand_card:
 
                     boolean isCollapsed = tvSubtext.getVisibility() == View.GONE;
-
                     if (isCollapsed) {
                         btnExpandCard.startAnimation(getRotationAnimation(180, 0));
                         btnExpandCard.setRotation(180);
                     } else {
                         btnExpandCard.startAnimation(getRotationAnimation(180, 360));
                         btnExpandCard.setRotation(360);
+
                     }
 
-                    tvSubtext.setVisibility(tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                    tvLastSubmissionStatus.setVisibility(tvLastSubmissionStatus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                    tvLastSubmissionDateTime.setVisibility(tvLastSubmissionDateTime.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-
+                    int newVisiblity = tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
+                    tvSubtext.setVisibility(newVisiblity);
                     break;
             }
 

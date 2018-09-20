@@ -77,7 +77,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
 
     }
-
     private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail, String formCreatedAt) {
 
         String submissionDateTime = "";
@@ -114,6 +113,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
         viewHolder.tvSubtext.setText(formSubtext);
     }
+
 
 
     private Drawable getCircleDrawableBackground(String status) {
