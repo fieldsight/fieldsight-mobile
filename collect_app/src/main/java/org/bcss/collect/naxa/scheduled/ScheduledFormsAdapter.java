@@ -146,11 +146,9 @@ public class ScheduledFormsAdapter extends
             cardView = itemLayoutView.findViewById(R.id.card_view_form_list_item);
 //             tvScheduleLevel = itemLayoutView.findViewById(R.id.tv_schedule_level);
 
-            tvSubtext = itemLayoutView.findViewById(R.id.tv_form_sub_text);
             btnExpandCard = itemLayoutView.findViewById(R.id.btn_expand_card);
 
             ivCardCircle = itemLayoutView.findViewById(R.id.iv_form_circle);
-            tvLastSubmissionDateTime = itemLayoutView.findViewById(R.id.tv_form_last_submitted_date);
             tvLastSubmissionStatus = itemLayoutView.findViewById(R.id.tv_form_status);
 
 

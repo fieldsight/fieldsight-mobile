@@ -168,8 +168,9 @@
     <string name="msg_created_on">Created %s</string>
 
     <string name="form_last_submitted_by">• Last Submitted by: %s</string>
-    <string name="form_last_submission_datetime">• Last Submitted on: %s</string>
+    <string name="form_last_submission_datetime">Last Submitted on %s</string>
     <string name="form_last_submission_status">• Status: %s</string>
+    <string name="form_pending_submission">Pending Submission</string>
 
     <!--Notification sitelist ends here-->
 

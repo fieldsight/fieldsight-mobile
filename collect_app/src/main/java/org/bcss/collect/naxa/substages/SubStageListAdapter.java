@@ -162,9 +162,8 @@ public class SubStageListAdapter extends
             btnViewFormHistory = view.findViewById(R.id.btn_form_responses);
             btnOpenEdu = view.findViewById(R.id.btn_form_edu);
             btnExpandCard = view.findViewById(R.id.btn_expand_card);
-            tvSubtext = view.findViewById(R.id.tv_form_sub_text);
             tvLastSubmissionStatus = view.findViewById(R.id.tv_form_status);
-            tvLastSubmissionDateTime = view.findViewById(R.id.tv_form_last_submitted_date);
+
             ivCardCircle = view.findViewById(R.id.iv_form_circle);
 
 
