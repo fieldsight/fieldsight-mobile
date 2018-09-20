@@ -37,6 +37,8 @@ public class SubStage {
     private String stageId;
 
 
+    @SerializedName("form")
+    @Expose
     private String fsFormId;
 
     private String jrFormId;

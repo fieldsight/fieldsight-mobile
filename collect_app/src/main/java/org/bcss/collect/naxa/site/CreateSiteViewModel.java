@@ -22,9 +22,11 @@ public class CreateSiteViewModel extends ViewModel {
     private SingleLiveEvent<CreateSiteFormStatus> formStatus = new SingleLiveEvent<CreateSiteFormStatus>();
     private MutableLiveData<Site> siteMutableLiveData = new MutableLiveData<Site>();
     private MutableLiveData<Project> projectMutableLiveData = new MutableLiveData<Project>();
+
     private MutableLiveData<List<SiteMetaAttribute>> metaAttributes = new MutableLiveData<>();
     private MutableLiveData<ArrayList<Integer>> metaAttributesViewIds = new MutableLiveData<>();
     private MutableLiveData<String> metaAttributesAnswer = new MutableLiveData<>();
+
     private MutableLiveData<ArrayList<SiteRegion>> siteClusterMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<List<SiteType>> siteTypesMutableLiveData = new MutableLiveData<>();
 

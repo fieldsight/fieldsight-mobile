@@ -53,9 +53,6 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     @Inject
     ViewModelFactory viewModelFactory;
 
-    @Inject
-    SyncCommentLifecycleObserver syncCommentLifecycleObserver;
-
     private GeneralFormViewModel viewModel;
 
     @BindView(R.id.android_list)
@@ -201,6 +198,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+
     public void onEvent(DataSyncEvent event) {
 
         if (!isAdded() || getActivity() == null) {
