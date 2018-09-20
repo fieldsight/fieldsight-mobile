@@ -35,6 +35,8 @@ import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.bcss.collect.naxa.common.AnimationUtils.getRotationAnimation;
+
 public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapter.ViewHolder> {
 
     private ArrayList<GeneralFormAndSubmission> generalForms;
@@ -137,7 +139,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         return generalForms.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView tvFormName, tvDesc, tvLastFilledDateTime, tvIconText, tvSubtext, tvLastSubmissionDateTime, tvLastSubmissionStatus;
         Button btnOpenEdu, btnOpenHistory;
@@ -173,7 +175,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             btnOpenEdu.setOnClickListener(this);
             btnOpenHistory.setOnClickListener(this);
             btnCardMenu.setOnClickListener(this);
-            cardView.setOnLongClickListener(this);
+
             btnExpandCard.setOnClickListener(this);
 
             setupPopup(cardView.getContext(), btnCardMenu);
@@ -205,10 +207,10 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
                     boolean isCollapsed = tvSubtext.getVisibility() == View.GONE;
                     if (isCollapsed) {
-                        btnExpandCard.startAnimation(getRotation(0, 180));
+                        btnExpandCard.startAnimation(getRotationAnimation(180, 0));
                         btnExpandCard.setRotation(180);
                     }else {
-                        btnExpandCard.startAnimation(getRotation(180, 360));
+                        btnExpandCard.startAnimation(getRotationAnimation(180, 360));
                         btnExpandCard.setRotation(360);
 
                     }
@@ -234,26 +236,8 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             });
         }
 
-        @Override
-        public boolean onLongClick(View v) {
 
-            switch (v.getId()) {
-                case R.id.card_view_form_list_item:
-                    tvSubtext.setVisibility(tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                    tvLastSubmissionStatus.setVisibility(tvLastSubmissionStatus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                    tvLastSubmissionDateTime.setVisibility(tvLastSubmissionDateTime.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-                    break;
-            }
-            return false;
-        }
     }
 
-    private RotateAnimation getRotation(float from, float to) {
-        RotateAnimation rotate = new RotateAnimation(from, to, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        rotate.setDuration(200);
-        rotate.setInterpolator(new LinearInterpolator());
-
-        return rotate;
-    }
 
 }

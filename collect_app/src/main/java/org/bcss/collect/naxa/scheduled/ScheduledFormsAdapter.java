@@ -37,6 +37,8 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
+import static org.bcss.collect.naxa.common.AnimationUtils.getRotationAnimation;
+
 /**
  * Created by Susan on 1/30/2017.
  */
@@ -188,11 +190,14 @@ public class ScheduledFormsAdapter extends
 
                     boolean isCollapsed = tvSubtext.getVisibility() == View.GONE;
                     if (isCollapsed) {
+                        btnExpandCard.startAnimation(getRotationAnimation(180, 0));
                         btnExpandCard.setRotation(180);
-                    } else {
+                    }else {
+                        btnExpandCard.startAnimation(getRotationAnimation(180, 360));
                         btnExpandCard.setRotation(360);
 
                     }
+
 
                     int newVisiblity = tvSubtext.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
 
