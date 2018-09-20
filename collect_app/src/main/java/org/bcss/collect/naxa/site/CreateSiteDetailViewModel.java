@@ -6,16 +6,25 @@ import android.arch.lifecycle.ViewModel;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.SiteBuilder;
+import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteRepository;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateSiteDetailViewModel extends ViewModel {
 
     private SiteRepository siteRepository;
     private MutableLiveData<Site> siteMutableLiveData = new MutableLiveData<Site>();
     private SingleLiveEvent<CreateSiteDetailFormStatus> formStatus = new SingleLiveEvent<CreateSiteDetailFormStatus>();
+    private MutableLiveData<List<SiteMetaAttribute>> metaAttributes = new MutableLiveData<>();
     private MutableLiveData<Boolean> editSite = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<Integer>> metaAttributesViewIds = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<SiteRegion>> siteClusterMutableLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<SiteType>> siteTypesMutableLiveData = new MutableLiveData<>();
 
 
     public CreateSiteDetailViewModel(SiteRepository siteRepository) {
@@ -38,6 +47,43 @@ public class CreateSiteDetailViewModel extends ViewModel {
 
     public void setSiteMutableLiveData(Site site) {
         this.siteMutableLiveData.setValue(site);
+    }
+
+    public MutableLiveData<List<SiteMetaAttribute>> getMetaAttributes() {
+        return metaAttributes;
+    }
+
+    public void setSiteMutableLiveData(MutableLiveData<Site> siteMutableLiveData) {
+        this.siteMutableLiveData = siteMutableLiveData;
+    }
+
+    public void setSiteType(String typeId, String typeLabel) {
+        siteMutableLiveData.getValue().setTypeId(typeId);
+        siteMutableLiveData.getValue().setTypeLabel(typeLabel);
+    }
+
+    public MutableLiveData<ArrayList<SiteRegion>> getSiteClusterMutableLiveData() {
+        return siteClusterMutableLiveData;
+    }
+
+    public void setSiteCluster(ArrayList<SiteRegion> siteRegionArrayList) {
+        this.siteClusterMutableLiveData.setValue(siteRegionArrayList);
+    }
+
+    public MutableLiveData<List<SiteType>> getSiteTypesMutableLiveData() {
+        return siteTypesMutableLiveData;
+    }
+
+    public MutableLiveData<ArrayList<Integer>> getMetaAttributesViewIds() {
+        return metaAttributesViewIds;
+    }
+
+    public void appendMetaAttributeViewIds(Integer integer) {
+        this.metaAttributesViewIds.getValue().add(integer);
+    }
+
+    public void setSiteTypes(List<SiteType> siteTypeList) {
+        this.siteTypesMutableLiveData.setValue(siteTypeList);
     }
 
     public void setIdentifier(String identifier) {
@@ -120,6 +166,10 @@ public class CreateSiteDetailViewModel extends ViewModel {
 //        formStatus.setValue(CreateSiteFormStatus.VALIDATED);
         return true;
 
+    }
+
+    public void setMetaAttributesAnswer(String metaAttributesAnswer) {
+        siteMutableLiveData.getValue().setMetaAttributes(metaAttributesAnswer);
     }
 
     public void saveSite() {

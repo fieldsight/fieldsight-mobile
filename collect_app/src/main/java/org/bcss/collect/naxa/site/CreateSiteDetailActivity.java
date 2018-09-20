@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -17,6 +18,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -33,14 +35,26 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
+import org.bcss.collect.naxa.site.data.SiteRegion;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
@@ -174,6 +188,38 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                 });
 
         createSiteDetailViewModel
+                .getSiteTypesMutableLiveData()
+                .observe(this, new Observer<List<SiteType>>() {
+                    @Override
+                    public void onChanged(@Nullable List<SiteType> siteTypes) {
+                        boolean show = siteTypes != null && !siteTypes.isEmpty();
+                        spinnerSiteType.setVisibility(show ? View.VISIBLE : View.GONE);
+                        if (show) {
+                            SiteTypeSpinnerAdapter spinnerAdapter = new SiteTypeSpinnerAdapter(CreateSiteDetailActivity.this,
+                                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_type), siteTypes);
+                            spinnerSiteType.setAdapter(spinnerAdapter);
+                            spinnerSiteType.setSelection(spinnerAdapter.getCount());
+                        }
+                    }
+                });
+
+        createSiteDetailViewModel
+                .getSiteClusterMutableLiveData()
+                .observe(this, new Observer<ArrayList<SiteRegion>>() {
+                    @Override
+                    public void onChanged(@Nullable ArrayList<SiteRegion> clusters) {
+                        boolean show = clusters != null && !clusters.isEmpty();
+                        spinnerSiteCluster.setVisibility(show ? View.VISIBLE : View.GONE);
+                        if (show) {
+                            SiteClusterSpinnerAdapter spinnerAdapter = new SiteClusterSpinnerAdapter(CreateSiteDetailActivity.this,
+                                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_cluster), clusters);
+                            spinnerSiteCluster.setAdapter(spinnerAdapter);
+                            spinnerSiteCluster.setSelection(spinnerAdapter.getCount());
+                        }
+                    }
+                });
+
+        createSiteDetailViewModel
                 .getFormStatus()
                 .observe(this, new Observer<CreateSiteDetailFormStatus>() {
                     @Override
@@ -198,6 +244,46 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                                 break;
                         }
                     }
+                });
+
+        createSiteDetailViewModel.getMetaAttributes()
+                .observe(this,
+                        metaAttributes -> {
+                            if (metaAttributes != null) {
+                                Observable.just(metaAttributes)
+                                        .flatMapIterable((Function<List<SiteMetaAttribute>, Iterable<SiteMetaAttribute>>) metaAttributes1 -> metaAttributes1)
+                                        .subscribeOn(Schedulers.computation())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new DisposableObserver<SiteMetaAttribute>() {
+                                            @Override
+                                            public void onNext(SiteMetaAttribute metaAttribute) {
+                                                String question = metaAttribute.getQuestionText();
+                                                String submissionTag = metaAttribute.getQuestionName();
+                                                String questionType = metaAttribute.getQuestionType();//todo: introduce different widget using type
+
+                                                View view = getTextInputLayout(question, submissionTag, questionType);
+                                                layoutSiteDataEdit.addView(view);
+
+                                                createSiteDetailViewModel.appendMetaAttributeViewIds(view.getId());
+                                            }
+
+                                            @Override
+                                            public void onError(Throwable e) {
+                                                e.printStackTrace();
+//                                                createSiteViewModel.getFormStatus().setValue(CreateSiteFormStatus.ERROR);
+                                            }
+
+                                            @Override
+                                            public void onComplete() {
+                                            }
+                                        });
+                            }
+                        });
+
+        SiteTypeLocalSource.getInstance()
+                .getByProjectId(site.getProject())
+                .observe(this, siteTypes -> {
+                    createSiteDetailViewModel.setSiteTypes(siteTypes);
                 });
 
         watchText(ilSiteIdentifierEditable);
@@ -255,6 +341,8 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         createSiteDetailViewModel.setEditSite(true);
                         break;
                     case View.VISIBLE:
+//                        collectMetaAtrributes(createSiteDetailViewModel.getMetaAttributesViewIds().getValue());
+//                        collectSpinnerOptions();
                         createSiteDetailViewModel.saveSite();
                         break;
                 }
@@ -300,6 +388,89 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         }
                     }
                 });
+    }
+
+    private void collectMetaAtrributes(ArrayList<Integer> ids) {
+
+        JSONObject jsonObject = new JSONObject();
+        Observable.just(ids)
+                .flatMapIterable((Function<ArrayList<Integer>, Iterable<Integer>>) viewIds -> viewIds)
+                .filter(new Predicate<Integer>() {
+                    @Override
+                    public boolean test(Integer layoutId) throws Exception {
+                        return findViewById(layoutId) instanceof TextInputLayout;
+                    }
+                })
+                .map(new Function<Integer, JSONObject>() {
+                    @Override
+                    public JSONObject apply(Integer layoutId) throws Exception {
+                        TextInputLayout textInput = findViewById(layoutId);
+                        String answer = textInput.getEditText().getText().toString().trim();
+                        String submissionKey = (String) textInput.getTag();
+                        return jsonObject.put(submissionKey, answer);
+                    }
+                })
+                .toList()
+                .subscribe(new DisposableSingleObserver<List<JSONObject>>() {
+                    @Override
+                    public void onSuccess(List<JSONObject> jsonObjects) {
+                        String serializedString = jsonObject.toString();
+                        createSiteDetailViewModel.setMetaAttributesAnswer(serializedString);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    private void collectSpinnerOptions() {
+        if (spinnerSiteCluster.getVisibility() == View.VISIBLE) {
+            String selectedCluster = ((SiteRegion) spinnerSiteCluster.getSelectedItem()).getId();
+        }
+
+        if (spinnerSiteType.getVisibility() == View.VISIBLE) {
+            SiteType siteType = (SiteType) spinnerSiteType.getSelectedItem();
+            String siteTypeId = siteType.getId();
+            String siteTypeLabel = siteType.getName();
+            createSiteDetailViewModel.setSiteType(siteTypeId, siteTypeLabel);
+        }
+
+    }
+
+    public View getTextInputLayout(String question, String tag, String type) {
+
+        View view = getLayoutInflater().inflate(R.layout.layout_text_input, null);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(16, 16, 16, 16);
+        view.setLayoutParams(lp);
+
+
+        TextInputLayout textInputLayout = ((TextInputLayout) view);
+
+        textInputLayout.setHint(question);
+        textInputLayout.getEditText().setInputType(typeToInputType(type));
+        textInputLayout.setTag(tag);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            view.setId(ViewUtils.generateViewId());
+        } else {
+            view.setId(View.generateViewId());
+        }
+
+
+        return view;
+    }
+
+    private int typeToInputType(String type) {
+        switch (type) {
+            case "Number":
+                return InputType.TYPE_CLASS_NUMBER;
+
+            default:
+                return InputType.TYPE_CLASS_TEXT;
+        }
     }
 
     @Override
