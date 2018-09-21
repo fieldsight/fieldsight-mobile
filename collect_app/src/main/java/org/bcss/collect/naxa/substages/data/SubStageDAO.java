@@ -29,17 +29,18 @@ public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
         insert(items);
     }
 
-    @Deprecated
+
     @Query("SELECT * FROM substage WHERE stageId= :stageId")
     public abstract LiveData<List<SubStage>> getByStageId(String stageId);
 
-    @Deprecated
     @Query("SELECT * FROM substage WHERE stageId= :stageId")
     public abstract Maybe<List<SubStage>> getByStageIdMaybe(String stageId);
 
+    @Deprecated
     @Query("SELECT * FROM substage left join submission_detail on substage.fsFormId = submission_detail.siteFsFormId WHERE stageId =:stageId ")
     public abstract LiveData<List<SubStage>> getByStageIdAsLiveData(String stageId);
 
+    @Deprecated
     @Query("SELECT * FROM substage left join submission_detail on substage.fsFormId = submission_detail.siteFsFormId WHERE stageId =:stageId ")
     public abstract Maybe<List<SubStage>> getByStageIdAsMaybe(String stageId);
 

@@ -1,6 +1,7 @@
 
 package org.bcss.collect.naxa.stages.data;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
@@ -36,6 +37,9 @@ public class SubStage {
     private Integer id;
 
     private String stageId;
+
+    @ColumnInfo(name = "deployed_from")
+    private String subStageDeployedFrom;
 
 
     @SerializedName("form")
@@ -86,6 +90,15 @@ public class SubStage {
 
     private String lastSubmissionBy;
     private String lastSubmissionDateTime;
+
+
+    public String getSubStageDeployedFrom() {
+        return subStageDeployedFrom;
+    }
+
+    public void setSubStageDeployedFrom(String subStageDeployedFrom) {
+        this.subStageDeployedFrom = subStageDeployedFrom;
+    }
 
     public SubStage() {
 
