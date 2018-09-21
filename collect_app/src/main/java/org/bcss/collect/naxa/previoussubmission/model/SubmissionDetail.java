@@ -4,6 +4,7 @@ package org.bcss.collect.naxa.previoussubmission.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
@@ -14,21 +15,22 @@ import org.bcss.collect.naxa.generalforms.data.FormType;
 @Entity(tableName = "submission_detail")
 public class SubmissionDetail {
 
+    @NonNull
     @PrimaryKey
     @SerializedName("id")
-    private int uid;
+    private String uid;
 
     @SerializedName("site")
     @Expose
-    private Integer site;
+    private String site;
 
     @SerializedName("project")
     @Expose
-    private Integer project;
+    private String project;
 
     @SerializedName("site_fxf")
     @Expose
-    private Integer siteFsFormId;
+    private String siteFsFormId;
 
     @SerializedName("project_fxf")
     @Expose
@@ -51,27 +53,27 @@ public class SubmissionDetail {
     @Expose
     private String statusDisplay;
 
-    public Integer getSite() {
+    public String getSite() {
         return site;
     }
 
-    public void setSite(Integer site) {
+    public void setSite(String site) {
         this.site = site;
     }
 
-    public Integer getProject() {
+    public String getProject() {
         return project;
     }
 
-    public void setProject(Integer project) {
+    public void setProject(String project) {
         this.project = project;
     }
 
-    public Integer getSiteFsFormId() {
+    public String getSiteFsFormId() {
         return siteFsFormId;
     }
 
-    public void setSiteFsFormId(Integer siteFsFormId) {
+    public void setSiteFsFormId(String siteFsFormId) {
         this.siteFsFormId = siteFsFormId;
     }
 
@@ -83,7 +85,7 @@ public class SubmissionDetail {
         this.projectFsFormId = projectFsFormId;
     }
 
-    public int getUid() {
+    public String getUid() {
         return uid;
     }
 
@@ -115,7 +117,7 @@ public class SubmissionDetail {
         return statusDisplay;
     }
 
-    public void setUid(int uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

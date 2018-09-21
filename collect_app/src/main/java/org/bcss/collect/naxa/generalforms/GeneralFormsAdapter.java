@@ -86,7 +86,6 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         String formCreatedOn = "";
         Context context = viewHolder.cardView.getContext();
 
-
         if (submissionDetail != null) {
             submittedBy = submissionDetail.getSubmittedBy();
             submissionStatus = submissionDetail.getStatusDisplay();
@@ -100,7 +99,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         }
 
         if (generalForm.getDateCreated() != null) {
-            formCreatedOn = DateTimeUtils.getRelativeTime(generalForm.getDateCreated(),true);
+            formCreatedOn = DateTimeUtils.getRelativeTime(generalForm.getDateCreated(), true);
         }
 
         String formSubtext = generateSubtext(context, submittedBy, submissionStatus, formCreatedOn);

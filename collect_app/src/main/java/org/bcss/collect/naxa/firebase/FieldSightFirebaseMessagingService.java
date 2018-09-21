@@ -13,6 +13,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.data.FieldSightNotificationBuilder;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
+import org.bcss.collect.naxa.previoussubmission.LastSubmissionLocalSource;
+import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +33,7 @@ import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_FLAG;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
 import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyNormal;
 
@@ -42,7 +45,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     public static final String NEW_FORM = "New Form";
 
 
-
     String notifyType;
     String siteId;
     String siteName;
@@ -52,6 +54,8 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     String role;
     String jrFormId;
     String isFormDeployed, notificationDescriptions;
+    String submissionId;
+    String submissionDateTime;
 
 
     String date_str;
@@ -88,6 +92,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
         FieldSightNotificationBuilder builder = new FieldSightNotificationBuilder();
 
         String msg = remoteMessage.getData().toString();
+
         Context context = getApplicationContext();
 
         Timber.i(msg);
@@ -125,6 +130,22 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
             notifyNormal(context, title, content);
 
+            switch (notifyType) {
+                case FORM_FLAG:
+                    SubmissionDetail submissionDetail = new SubmissionDetail();
+                    submissionDetail.setProjectFsFormId(fsFormIdProject);
+                    submissionDetail.setSiteFsFormId(fsFormId);
+                    submissionDetail.setSite(siteId);
+                    submissionDetail.setProject(projectId);
+                    submissionDetail.setSubmissionDateTime(submissionDateTime);
+                    submissionDetail.setStatusDisplay(formStatus);
+                    submissionDetail.setUid(submissionId);
+
+                    LastSubmissionLocalSource.getInstance().save(submissionDetail);
+
+                    break;
+            }
+
         }
 
         if (remoteMessage.getData().containsValue("Flag")) {
@@ -142,6 +163,12 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
         if (notificationData.containsKey("notify_type")) {
             notifyType = notificationData.get("notify_type");
+        }
+        if (notificationData.containsKey("submission_id")) {
+            submissionId = notificationData.get("submission_id");
+        }
+        if (notificationData.containsKey("submission_date_time")) {
+            submissionDateTime = notificationData.get("submission_date_time");
         }
         if (notificationData.containsKey("description")) {
             notificationDescriptions = notificationData.get("description");

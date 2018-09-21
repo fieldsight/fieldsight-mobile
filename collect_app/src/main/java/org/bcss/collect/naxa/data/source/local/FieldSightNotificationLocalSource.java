@@ -26,6 +26,7 @@ import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STA
 import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_PROJECT;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_SITE;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_FLAG;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.NEW_STAGES;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
@@ -170,17 +171,17 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 break;
             case ALL_STAGE_DEPLOYED:
                 break;
+            case FORM_FLAG:
+                title = context.getString(R.string.notify_title_submission_result);
+                message = generateFormStatusChangeMsg(notification).toString();
+                break;
             case SITE_FORM:
                 boolean isNewForm = NEW_FORM.equalsIgnoreCase(notification.getFormStatus());
-                if (isNewForm) {
-                    String siteOrProjectName = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
-                    title = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
-                    message = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName);
-                    //todo: download form?
-                } else {
-                    title = context.getString(R.string.notify_title_submission_result);
-                    message = generateFormStatusChangeMsg(notification).toString();
-                }
+                String siteOrProjectName = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
+                title = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
+                message = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName);
+                //todo: download form?
+
                 break;
             case NEW_STAGES:
                 break;
@@ -188,13 +189,13 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
             case FORM_ALTERED_PROJECT:
             case PROJECT_FORM:
                 boolean isDeployed = "true".equalsIgnoreCase(notification.getIsFormDeployed());
-                String siteOrProjectName = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
+                String siteOrProjectName2 = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
 
                 String undeployedTitle = context.getString(R.string.notify_title_form_undeployed, notification.getFormType());
-                String undeployedContent = context.getString(R.string.notify_message_form_undeployed, notification.getFormName(), siteOrProjectName);
+                String undeployedContent = context.getString(R.string.notify_message_form_undeployed, notification.getFormName(), siteOrProjectName2);
 
                 String deployedTitle = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
-                String deployedContent = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName);
+                String deployedContent = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName2);
 
                 title = isDeployed ? deployedTitle : undeployedTitle;
                 message = isDeployed ? deployedContent : undeployedContent;

@@ -55,6 +55,7 @@ public class Constant {
 
         public static final String SITE_FORM = "Form";
         public static final String PROJECT_FORM = "ProjectForm";
+        public static final String FORM_FLAG = "Form_Flagged";
     }
 
     public static final class FormType {

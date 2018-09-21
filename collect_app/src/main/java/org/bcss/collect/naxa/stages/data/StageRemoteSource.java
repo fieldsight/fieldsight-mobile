@@ -1,5 +1,7 @@
 package org.bcss.collect.naxa.stages.data;
 
+import android.os.AsyncTask;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -157,5 +159,8 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+
+
+
     }
 }
