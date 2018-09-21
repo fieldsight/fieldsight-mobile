@@ -61,7 +61,7 @@ public class FieldSightUserSession {
         String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
         String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
 
-        if(fcmToken == null){
+        if (fcmToken == null) {
             FirebaseInstanceId.getInstance().getToken();
         }
 
@@ -100,8 +100,6 @@ public class FieldSightUserSession {
     private static void logout(Context context) {
 
 
-
-
         DeleteInstancesTask deleteInstancesTask = new DeleteInstancesTask();
         deleteInstancesTask.setContentResolver(context.getContentResolver());
         deleteInstancesTask.setDeleteListener(new DeleteInstancesListener() {
@@ -117,9 +115,6 @@ public class FieldSightUserSession {
         });
 
         deleteInstancesTask.execute(getAllInstancedsIds());
-
-
-
 
 
         ServiceGenerator
@@ -162,8 +157,15 @@ public class FieldSightUserSession {
 
     }
 
+    public static void setUser(User user) {
+        if (user != null) {
+            String userString = GSONInstance.getInstance().toJson(user);
+            SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, userString);
+        }
+    }
 
-    public static User getUser(){
+
+    public static User getUser() {
         String userString = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, null);
         return new Gson().fromJson(userString, User.class);
     }
