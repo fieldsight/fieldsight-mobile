@@ -77,13 +77,11 @@ public class CheckedItem extends RelativeLayout implements Checkable {
 
     public void showSucessMessage(String message) {
         tvUpdateInfo.setTextColor(sucessColor);
-
         tvUpdateInfo.setText(message);
     }
 
     public void showProgressMessage(String message) {
         tvUpdateInfo.setTextColor(progressColor);
-
         tvUpdateInfo.setText(message);
     }
 

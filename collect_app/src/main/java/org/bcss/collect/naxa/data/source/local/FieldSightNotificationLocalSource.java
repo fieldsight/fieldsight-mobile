@@ -97,19 +97,13 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
     public Maybe<Integer> anyFormStatusChangeOutOfSync() {
         return dao.countForNotificationType(false,
-                Constant.FormStatus.Flagged,
-                Constant.FormStatus.Approved,
-                Constant.FormStatus.Pending,
-                Constant.FormStatus.Rejected
+                Constant.NotificationType.FORM_FLAG
         );
     }
 
     public void markFormStatusChangeAsRead() {
         AsyncTask.execute(() -> dao.applyReadToNotificationType(true,
-                Constant.FormStatus.Flagged,
-                Constant.FormStatus.Approved,
-                Constant.FormStatus.Pending,
-                Constant.FormStatus.Rejected));
+                Constant.NotificationType.FORM_FLAG));
     }
 
     public void markSitesAsRead() {

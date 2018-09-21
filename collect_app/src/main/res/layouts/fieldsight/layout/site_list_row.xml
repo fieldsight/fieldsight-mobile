@@ -7,16 +7,18 @@
     android:id="@+id/card_site_lst_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/corner_radius"
     app:cardElevation="2dp"
+    android:clickable="false"
+    android:focusable="false"
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true"
     card_view:cardCornerRadius="4dp">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:clickable="true"
+        android:focusable="true"
         android:id="@+id/root_layout_message_list_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,6 +30,8 @@
         <include layout="@layout/item_text_circle" />
 
         <TextView
+            android:clickable="false"
+            android:focusable="false"
             android:id="@+id/site_list_row_site_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,6 +46,8 @@
 
 
         <TextView
+            android:clickable="false"
+            android:focusable="false"
             android:id="@+id/tv_site_identifier"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,6 +70,8 @@
             tools:text="Kathmandu, Nepal" />
 
         <TextView
+            android:clickable="false"
+            android:focusable="false"
             android:id="@+id/site_list_row_site_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,6 +85,8 @@
             tools:text="+977-9878787678" />
 
         <TextView
+            android:clickable="false"
+            android:focusable="false"
             android:id="@+id/tv_tag_offline_site"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
