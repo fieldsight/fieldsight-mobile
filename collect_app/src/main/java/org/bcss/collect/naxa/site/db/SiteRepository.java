@@ -90,6 +90,9 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
         site.setScheduleFormDeployedForm(PROJECT);
         site.setStagedFormDeployedFrom(PROJECT);
         AsyncTask.execute(() -> localSource.save(site));
+    }
 
+    public void saveSiteModified(Site site){
+        AsyncTask.execute(() -> localSource.save(site));
     }
 }

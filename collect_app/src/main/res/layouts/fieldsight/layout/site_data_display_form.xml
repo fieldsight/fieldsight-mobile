@@ -6,7 +6,7 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/il_site_identifier"
-        
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"
@@ -18,7 +18,8 @@
             android:enabled="false"
             android:hint="Site Identifier"
             android:inputType="text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/textview_colors" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -31,13 +32,13 @@
         android:layout_marginTop="4dp">
 
         <EditText
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
             android:hint="Site name"
             android:inputType="text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/textview_colors" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -56,7 +57,8 @@
             android:inputType="phone"
             android:maxLines="1"
             android:minLines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/textview_colors" />
     </android.support.design.widget.TextInputLayout>
 
 
@@ -77,7 +79,8 @@
             android:inputType="text"
             android:maxLines="3"
             android:minLines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/textview_colors" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
@@ -90,9 +93,9 @@
         android:visibility="gone">
 
         <EditText
-            android:enabled="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Site Public Description"
             android:inputType="text"
             android:maxLines="5"
@@ -117,7 +120,8 @@
             android:inputType="text"
             android:maxLines="5"
             android:minLines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/textview_colors" />
     </android.support.design.widget.TextInputLayout>
 
 
@@ -137,27 +141,28 @@
             android:inputType="text"
             android:maxLines="5"
             android:minLines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/textview_colors" />
     </android.support.design.widget.TextInputLayout>
 
 
     <Button
-        android:visibility="gone"
+
         android:id="@+id/btn_view_site_on_map"
-        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:drawableLeft="@drawable/ic_place"
-        android:text="Open in map " />
+        android:text="Open in map "
+        android:visibility="visible" />
 
     <ImageView
-        android:visibility="gone"
         android:id="@+id/iv_site_photo"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:scaleType="centerCrop"
-
-        />
+        android:visibility="gone" />
 
 
 </LinearLayout>

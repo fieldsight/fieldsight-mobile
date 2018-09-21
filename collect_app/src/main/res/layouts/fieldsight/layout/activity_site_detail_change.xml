@@ -29,14 +29,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:animateLayoutChanges="true"
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="4dp"
             app:cardElevation="4dp">
 
             <include
                 android:id="@+id/layout_site_data_display"
-                android:visibility="visible"
-                layout="@layout/site_data_display_form" />
+                layout="@layout/site_data_display_form"
+                android:visibility="visible" />
 
             <include
                 android:id="@+id/layout_site_data_edit"

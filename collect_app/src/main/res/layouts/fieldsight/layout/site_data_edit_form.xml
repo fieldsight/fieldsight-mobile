@@ -5,7 +5,6 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/il_site_identifier_editable"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"
@@ -17,6 +16,7 @@
             android:layout_height="wrap_content"
             android:hint="Site Identifier"
             android:inputType="text"
+
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </android.support.design.widget.TextInputLayout>
 
@@ -125,11 +125,11 @@
         android:text="@string/btn_add_site_photo" />
 
     <ImageView
-        android:visibility="gone"
         android:id="@+id/iv_site_photo_editable"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/btn_site_records_location"
