@@ -111,7 +111,10 @@ public class ScheduledFormsAdapter extends
 
     private Drawable getCircleDrawableBackground(String status) {
 
-        Drawable drawable;
+        Drawable drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
+
+        if (status == null) return drawable;
+
         switch (status) {
             case Constant.FormStatus.Approved:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
@@ -130,7 +133,6 @@ public class ScheduledFormsAdapter extends
 
         return drawable;
     }
-
 
     @Override
     public int getItemCount() {

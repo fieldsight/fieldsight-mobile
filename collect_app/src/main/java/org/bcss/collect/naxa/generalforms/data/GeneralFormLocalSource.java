@@ -53,8 +53,6 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
     @Deprecated
     public LiveData<List<GeneralForm>> getBySiteId(@NonNull String siteId, String projectId) {
-
-
         return dao.getSiteGeneralForms(siteId, projectId);
     }
 
