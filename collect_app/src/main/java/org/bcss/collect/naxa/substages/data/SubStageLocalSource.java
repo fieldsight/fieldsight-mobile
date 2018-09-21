@@ -10,19 +10,24 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
-import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
+import org.bcss.collect.naxa.previoussubmission.LastSubmissionLocalSource;
+import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
+import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.stages.data.SubStage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.fabric.sdk.android.services.concurrency.AsyncTask;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
 
@@ -47,12 +52,12 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
         return dao.getAllSubStages();
     }
 
-    public LiveData<List<SubStage>> getByStageId(String stageId, String siteTypeId) {
-        MediatorLiveData<List<SubStage>> mediatorLiveData = new MediatorLiveData<>();
-        LiveData<List<SubStage>> forms = dao.getByStageId(stageId);
+    public MediatorLiveData<List<SubStageAndSubmission>> getByStageId(String stageId, String siteTypeId) {
+        MediatorLiveData<List<SubStageAndSubmission>> mediatorLiveData = new MediatorLiveData<>();
+        LiveData<List<SubStage>> source = dao.getByStageId(stageId);
 
 
-        mediatorLiveData.addSource(forms, new Observer<List<SubStage>>() {
+        mediatorLiveData.addSource(source, new Observer<List<SubStage>>() {
             @Override
             public void onChanged(@Nullable List<SubStage> subStages) {
                 if (subStages != null) {
@@ -75,26 +80,46 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
                                     return filteredSubstages;
                                 }
                             })
+                            .flatMapIterable((Function<List<SubStage>, Iterable<SubStage>>) subStages1 -> subStages1)
+                            .flatMap(new Function<SubStage, ObservableSource<SubStageAndSubmission>>() {
+                                @Override
+                                public ObservableSource<SubStageAndSubmission> apply(SubStage subStage) throws Exception {
+                                    Maybe<SubmissionDetail> submissionDetailsSource;
+
+                                    if (SITE.equals(subStage.getSubStageDeployedFrom())) {
+                                        submissionDetailsSource = LastSubmissionLocalSource.getInstance().getBySiteFsId(subStage.getFsFormId());
+                                    } else {
+                                        submissionDetailsSource = LastSubmissionLocalSource.getInstance().getByProjectFsId(subStage.getFsFormId());
+                                    }
 
 
+                                    return submissionDetailsSource.toObservable()
+                                            .defaultIfEmpty(new SubmissionDetail())
+                                            .map(new Function<SubmissionDetail, SubStageAndSubmission>() {
+                                                @Override
+                                                public SubStageAndSubmission apply(SubmissionDetail submissionDetail) throws Exception {
+                                                    SubStageAndSubmission subStageAndSubmission = new SubStageAndSubmission();
+                                                    subStageAndSubmission.setSubStage(subStage);
+                                                    subStageAndSubmission.setSubmissionDetail(submissionDetail);
+                                                    return subStageAndSubmission;
+                                                }
+                                            });
+                                }
+                            })
                             .subscribeOn(Schedulers.computation())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new DisposableObserver<List<SubStage>>() {
+                            .toList()
+                            .subscribe(new DisposableSingleObserver<List<SubStageAndSubmission>>() {
                                 @Override
-                                public void onNext(List<SubStage> subStages) {
-                                    mediatorLiveData.setValue(subStages);
-                                    mediatorLiveData.removeSource(forms);
-
+                                public void onSuccess(List<SubStageAndSubmission> subStageAndSubmissions) {
+                                    mediatorLiveData.setValue(subStageAndSubmissions);
+                                    mediatorLiveData.removeSource(source);
                                 }
 
                                 @Override
                                 public void onError(Throwable e) {
                                     e.printStackTrace();
-                                }
-
-                                @Override
-                                public void onComplete() {
-
+                                    mediatorLiveData.removeSource(source);
                                 }
                             });
                 }

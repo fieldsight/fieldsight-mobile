@@ -1,9 +1,9 @@
 package org.bcss.collect.naxa.substages;
 
-import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.ViewModel;
 
-import org.bcss.collect.naxa.stages.data.SubStage;
+import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.bcss.collect.naxa.substages.data.SubStageRepository;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class SubStageViewModel extends ViewModel {
         this.repository = repository;
     }
 
-    public LiveData<List<SubStage>> loadSubStages(String id, String project, String stageId, String siteTypeId) {
+    public MediatorLiveData<List<SubStageAndSubmission>> loadSubStages(String id, String project, String stageId, String siteTypeId) {
 
         return repository.getByStageId(stageId, siteTypeId);
     }

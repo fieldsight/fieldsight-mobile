@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
+import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.bcss.collect.naxa.substages.data.SubStageLocalSource;
 
 import java.util.ArrayList;
@@ -27,7 +28,6 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
         this.dao = database.getStageDAO();
     }
-
 
     public static StageLocalSource getInstance() {
         if (INSTANCE == null) {
@@ -56,9 +56,9 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
         AsyncTask.execute(() -> dao.updateAll(items));
     }
 
-    public LiveData<List<Stage>> getBySiteId(String siteId, String siteTypeId,String projectId) {
+    public LiveData<List<Stage>> getBySiteId(String siteId, String siteTypeId, String projectId) {
         MediatorLiveData<List<Stage>> mediatorLiveData = new MediatorLiveData<>();
-        LiveData<List<Stage>> stagesliveData = dao.getBySiteId(siteId,projectId);
+        LiveData<List<Stage>> stagesliveData = dao.getBySiteId(siteId, projectId);
 
         mediatorLiveData.addSource(stagesliveData, new Observer<List<Stage>>() {
             @Override
@@ -69,12 +69,12 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
                 List<Stage> filteredStages = new ArrayList<>();
                 for (Stage stage : stages) {
-                    LiveData<List<SubStage>> substages = SubStageLocalSource.getInstance().getByStageId(stage.getId(), siteTypeId);
-                    substages.observeForever(new Observer<List<SubStage>>() {
+                    MediatorLiveData<List<SubStageAndSubmission>> substages = SubStageLocalSource.getInstance().getByStageId(stage.getId(), siteTypeId);
+                    substages.observeForever(new Observer<List<SubStageAndSubmission>>() {
                         @Override
-                        public void onChanged(@Nullable List<SubStage> subStages) {
+                        public void onChanged(@Nullable List<SubStageAndSubmission> subStageAndSubmissions) {
                             substages.removeObserver(this);
-                            if (subStages != null && subStages.size() > 0) {
+                            if (subStageAndSubmissions != null && subStageAndSubmissions.size() > 0) {
                                 filteredStages.add(stage);
                             }
                         }
@@ -132,13 +132,12 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
                 List<Stage> filteredStages = new ArrayList<>();
                 for (Stage stage : stages) {
-                    LiveData<List<SubStage>> substages = SubStageLocalSource.getInstance().getByStageId(stage.getId(), siteTypeId);
-
-                    substages.observeForever(new Observer<List<SubStage>>() {
+                    MediatorLiveData<List<SubStageAndSubmission>> substages = SubStageLocalSource.getInstance().getByStageId(stage.getId(), siteTypeId);
+                    substages.observeForever(new Observer<List<SubStageAndSubmission>>() {
                         @Override
-                        public void onChanged(@Nullable List<SubStage> subStages) {
+                        public void onChanged(@Nullable List<SubStageAndSubmission> subStageAndSubmissions) {
                             substages.removeObserver(this);
-                            if (subStages != null && subStages.size() > 0) {
+                            if (subStageAndSubmissions != null && subStageAndSubmissions.size() > 0) {
                                 filteredStages.add(stage);
                             }
                         }

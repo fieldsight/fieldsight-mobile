@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.substages;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
+import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.bcss.collect.naxa.stages.data.SubStage;
 
 import java.util.List;
@@ -10,11 +11,11 @@ import java.util.List;
 
 public class SubStageDiffCallback extends DiffUtil.Callback {
 
-    private List<SubStage> oldSubStages;
-    private List<SubStage> newSubStages;
+    private List<SubStageAndSubmission> oldSubStages;
+    private List<SubStageAndSubmission> newSubStages;
 
 
-    public SubStageDiffCallback(List<SubStage> newSubStages, List<SubStage> oldSubStages) {
+    public SubStageDiffCallback(List<SubStageAndSubmission> newSubStages, List<SubStageAndSubmission> oldSubStages) {
         this.newSubStages = newSubStages;
         this.oldSubStages = oldSubStages;
     }
@@ -33,8 +34,8 @@ public class SubStageDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldSubStages.get(oldItemPosition).getId()
-                .equals(newSubStages.get(newItemPosition).getId());
+        return oldSubStages.get(oldItemPosition).getSubStage().getId()
+                .equals(newSubStages.get(newItemPosition).getSubStage().getId());
     }
 
     @Override

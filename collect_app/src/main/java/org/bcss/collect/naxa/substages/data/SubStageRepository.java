@@ -1,9 +1,11 @@
 package org.bcss.collect.naxa.substages.data;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import android.support.annotation.NonNull;
 
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
+import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.bcss.collect.naxa.stages.data.StageRemoteSource;
 import org.bcss.collect.naxa.stages.data.SubStage;
 
@@ -55,7 +57,7 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
         localSource.updateAll(items);
     }
 
-    public LiveData<List<SubStage>> getByStageId( String stageId,String siteTypeId) {
+    public MediatorLiveData<List<SubStageAndSubmission>> getByStageId(String stageId, String siteTypeId) {
         return localSource.getByStageId(stageId,siteTypeId);
     }
 }

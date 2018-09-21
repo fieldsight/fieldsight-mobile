@@ -31,6 +31,7 @@ import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.generalforms.GeneralFormsAdapter;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
+import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.stages.data.SubStage;
 
@@ -46,18 +47,18 @@ public class SubStageListAdapter extends
         RecyclerView.Adapter<SubStageListAdapter.ViewHolder> {
 
 
-    private List<SubStage> subStages;
+    private List<SubStageAndSubmission> subStages;
     private OnFormItemClickListener<SubStage> listener;
     private String stageOrder;
 
 
-    public SubStageListAdapter(List<SubStage> subStages, String stageOrder, OnFormItemClickListener<SubStage> listener) {
+    public SubStageListAdapter(List<SubStageAndSubmission> subStages, String stageOrder, OnFormItemClickListener<SubStage> listener) {
         this.subStages = subStages;
         this.stageOrder = stageOrder;
         this.listener = listener;
     }
 
-    public void updateList(List<SubStage> newList) {
+    public void updateList(List<SubStageAndSubmission> newList) {
 
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SubStageDiffCallback(newList, subStages));
         subStages.clear();
@@ -75,13 +76,15 @@ public class SubStageListAdapter extends
 
 
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position) {
-        SubStage subStage = subStages.get(viewHolder.getAdapterPosition());
+        SubStage subStage = subStages.get(viewHolder.getAdapterPosition()).getSubStage();
+        SubmissionDetail submissionDetail = subStages.get(viewHolder.getAdapterPosition()).getSubmissionDetail();
 
-        viewHolder.tvFormName.setText(subStages.get(position).getName());
-        viewHolder.tvDesc.setText(subStages.get(position).getName());
+        viewHolder.tvFormName.setText(subStage.getName());
+        viewHolder.tvDesc.setText(subStage.getName());
 
         setSubstageNumber(viewHolder);
-        setSubmissionText(viewHolder, null, null);
+        setSubmissionText(viewHolder, submissionDetail, null);
+
 
     }
 
@@ -120,10 +123,9 @@ public class SubStageListAdapter extends
         submissionStatus = submissionDetail.getStatusDisplay();
         submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
 
-
-        String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy)
+        String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy == null ? "" : submittedBy)
                 + "\n" +
-                context.getString(R.string.form_last_submission_status, submissionStatus);
+                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus);
 
 
         viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
@@ -133,7 +135,9 @@ public class SubStageListAdapter extends
 
     private Drawable getCircleDrawableBackground(String status) {
 
-        Drawable drawable;
+        Drawable drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
+
+        if (status == null) return drawable;
         switch (status) {
             case Constant.FormStatus.Approved:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
@@ -194,7 +198,7 @@ public class SubStageListAdapter extends
         @Override
         public void onClick(View v) {
 
-            SubStage subStage = subStages.get(getAdapterPosition());
+            SubStage subStage = subStages.get(getAdapterPosition()).getSubStage();
 
             switch (v.getId()) {
                 case R.id.btn_form_edu:
@@ -225,7 +229,70 @@ public class SubStageListAdapter extends
 
 
         }
+
+        private void setSubmissionText(SubStageListAdapter.ViewHolder viewHolder, SubmissionDetail submissionDetail, String formCreatedAt) {
+
+            String submissionDateTime = "";
+            String submittedBy = "";
+            String submissionStatus = "";
+            Context context = viewHolder.cardView.getContext();
+
+            if (submissionDetail == null && !TextUtils.isEmpty(formCreatedAt)) {
+                viewHolder.tvSubtext.setText(
+                        context.getString
+                                (R.string.form_created_on,
+                                        DateTimeUtils.getRelativeTime(formCreatedAt, true)
+                                ));
+                viewHolder.tvDesc.setText(R.string.form_pending_submission);
+                return;
+            }
+
+            if (submissionDetail == null) {
+                viewHolder.tvDesc.setText(R.string.form_pending_submission);
+                return;
+            }
+
+            submittedBy = submissionDetail.getSubmittedBy();
+            submissionStatus = submissionDetail.getStatusDisplay();
+            submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
+
+
+            String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy)
+                    + "\n" +
+                    context.getString(R.string.form_last_submission_status, submissionStatus);
+
+
+            viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
+            viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
+            viewHolder.tvSubtext.setText(formSubtext);
+        }
+
+        private Drawable getCircleDrawableBackground(String status) {
+
+            Drawable drawable;
+            switch (status) {
+                case Constant.FormStatus.Approved:
+                    drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
+                    break;
+                case Constant.FormStatus.Flagged:
+                    drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_yellow);
+                    break;
+                case Constant.FormStatus.Rejected:
+                    drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
+                    break;
+                case Constant.FormStatus.Pending:
+                default:
+                    drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
+                    break;
+            }
+
+            return drawable;
+        }
+
+
     }
+
+
 }
 
 

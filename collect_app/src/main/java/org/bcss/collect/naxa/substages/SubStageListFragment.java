@@ -1,11 +1,15 @@
 package org.bcss.collect.naxa.substages;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.utilities.DateTimeUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -137,6 +143,8 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
 
 
     }
+
+
 
 
     @Override
