@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
@@ -22,7 +21,6 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.DateTimeUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
-import org.bcss.collect.naxa.generalforms.GeneralFormsAdapter;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
@@ -67,19 +65,21 @@ public class ScheduledFormsAdapter extends
         viewHolder.tvDesc.setText(scheduleForm.getScheduleName());
         viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1).toUpperCase());
 
-        setSubmissionText(viewHolder, submissionDetail, "");
+        setSubmissionText(viewHolder, submissionDetail, scheduleForm);
     }
 
 
-    private void setSubmissionText(ScheduledFormsAdapter.ViewHolder viewHolder, SubmissionDetail submissionDetail, String formCreatedAt) {
+    private void setSubmissionText(ScheduledFormsAdapter.ViewHolder viewHolder, SubmissionDetail submissionDetail, ScheduleForm scheduleForm) {
 
         String submissionDateTime = "";
         String submittedBy = "";
         String submissionStatus = "";
+        String scheduleType = "";
+        String formCreatedAt = "";
         Context context = viewHolder.cardView.getContext();
 
 
-        if (submissionDetail == null && !TextUtils.isEmpty(formCreatedAt)) {
+        if (!TextUtils.isEmpty(formCreatedAt)) {
             viewHolder.tvSubtext.setText(
                     context.getString
                             (R.string.form_created_on,
@@ -89,25 +89,33 @@ public class ScheduledFormsAdapter extends
             return;
         }
 
-        if (submissionDetail == null) {
+        if (submissionDetail != null && submissionDetail.getSubmissionDateTime() == null) {
             viewHolder.tvDesc.setText(R.string.form_pending_submission);
             return;
         }
 
-        submittedBy = submissionDetail.getSubmittedBy();
-        submissionStatus = submissionDetail.getStatusDisplay();
-        submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
+        if (submissionDetail != null) {
+            submittedBy = submissionDetail.getSubmittedBy();
+            submissionStatus = submissionDetail.getStatusDisplay();
+            submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
+            scheduleType = scheduleForm.getScheduleLevel();
+        }
+
+        String formSubtext = generateSubtext(context, submittedBy, submissionStatus, scheduleType);
 
 
-        String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy == null ? "" : submittedBy)
-                + "\n" +
-                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus);
-
-
-        viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
+        viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionStatus));
         viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
-
         viewHolder.tvSubtext.setText(formSubtext);
+    }
+
+    private String generateSubtext(Context context, String submittedBy, String submissionStatus, String scheduleType) {
+
+        return context.getString(R.string.form_last_submitted_by, submittedBy == null ? "" : submittedBy)
+                + "\n" +
+                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus)
+                + "\n" +
+                context.getString(R.string.schedule_type, scheduleType == null ? "" : scheduleType);
     }
 
     private Drawable getCircleDrawableBackground(String status) {

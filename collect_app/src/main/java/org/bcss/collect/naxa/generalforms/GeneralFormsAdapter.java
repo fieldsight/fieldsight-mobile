@@ -104,14 +104,18 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         submissionStatus = submissionDetail.getStatusDisplay();
         submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
 
-        String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy == null ? "" : submittedBy)
-                + "\n" +
-                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus);
+        String formSubtext = generateSubtext(context, submittedBy, submissionStatus);
 
 
         viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
         viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
         viewHolder.tvSubtext.setText(formSubtext);
+    }
+
+    private String generateSubtext(Context context, String submittedBy, String submissionStatus) {
+        return context.getString(R.string.form_last_submitted_by, submittedBy == null ? "" : submittedBy)
+                + "\n" +
+                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus);
     }
 
 
