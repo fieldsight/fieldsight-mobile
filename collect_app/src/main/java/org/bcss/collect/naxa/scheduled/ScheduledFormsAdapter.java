@@ -99,13 +99,14 @@ public class ScheduledFormsAdapter extends
         submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
 
 
-        String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy)
+        String formSubtext = context.getString(R.string.form_last_submitted_by, submittedBy == null ? "" : submittedBy)
                 + "\n" +
-                context.getString(R.string.form_last_submission_status, submissionStatus);
+                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus);
 
 
         viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionDetail.getStatusDisplay()));
         viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
+
         viewHolder.tvSubtext.setText(formSubtext);
     }
 
