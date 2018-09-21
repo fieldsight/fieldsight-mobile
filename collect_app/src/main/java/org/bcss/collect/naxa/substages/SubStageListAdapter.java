@@ -83,7 +83,7 @@ public class SubStageListAdapter extends
         viewHolder.tvDesc.setText(subStage.getName());
 
         setSubstageNumber(viewHolder);
-        setSubmissionText(viewHolder, submissionDetail, null);
+        setSubmissionText(viewHolder, submissionDetail, subStage);
 
 
     }
@@ -97,48 +97,46 @@ public class SubStageListAdapter extends
         viewHolder.tvIconText.setText(iconText);
     }
 
-    private void setSubmissionText(SubStageListAdapter.ViewHolder viewHolder, SubmissionDetail submissionDetail, String formCreatedAt) {
+    private void setSubmissionText(SubStageListAdapter.ViewHolder viewHolder, SubmissionDetail submissionDetail, SubStage subStage) {
 
         String submissionDateTime = "";
         String submittedBy = "";
         String submissionStatus = "";
+        String subStageDesc = "";
+        String formCreatedAt = "";
         Context context = viewHolder.cardView.getContext();
 
-        if (!TextUtils.isEmpty(formCreatedAt)) {
-            viewHolder.tvSubtext.setText(
-                    context.getString
-                            (R.string.form_created_on,
-                                    DateTimeUtils.getRelativeTime(formCreatedAt, true)
-                            ));
-            viewHolder.tvDesc.setText(R.string.form_pending_submission);
-            return;
-        }
-
-        if (submissionDetail != null && submissionDetail.getSubmissionDateTime() == null) {
-            viewHolder.tvDesc.setText(R.string.form_pending_submission);
-            return;
-        }
 
         if (submissionDetail != null) {
             submittedBy = submissionDetail.getSubmittedBy();
             submissionStatus = submissionDetail.getStatusDisplay();
             submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
-
         }
 
+        if (submissionDetail != null && submissionDetail.getSubmissionDateTime() == null) {
+            submissionDateTime = context.getString(R.string.form_pending_submission);
+        } else {
+            submissionDateTime = context.getString(R.string.form_last_submission_datetime, submissionDateTime);
+        }
 
-        String formSubtext = generateSubtext(context, submittedBy, submissionStatus);
+        if (subStage.getDescription() != null) {
+            subStageDesc = subStage.getDescription();
+        }
+
+        String formSubtext = generateSubtext(context, submittedBy, submissionStatus, subStageDesc);
 
 
         viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionStatus));
-        viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
+        viewHolder.tvDesc.setText(submissionDateTime);
         viewHolder.tvSubtext.setText(formSubtext);
     }
 
-    private String generateSubtext(Context context, String submittedBy, String submissionStatus) {
+    private String generateSubtext(Context context, String submittedBy, String submissionStatus, String subStageDesc) {
         return context.getString(R.string.form_last_submitted_by, submittedBy == null ? "" : submittedBy)
                 + "\n" +
-                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus);
+                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus)
+                + "\n" +
+                context.getString(R.string.substage_description, subStageDesc == null ? "" : subStageDesc);
     }
 
     private Drawable getCircleDrawableBackground(String status) {

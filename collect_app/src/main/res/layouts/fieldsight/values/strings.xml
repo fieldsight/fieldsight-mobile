@@ -171,6 +171,7 @@
     <string name="form_last_submission_datetime">Last Submitted %s</string>
     <string name="form_last_submission_status">• Status: %s</string>
     <string name="schedule_type">• Schedule Type: %s</string>
+    <string name="substage_description">• Description: %s</string>
     <string name="form_pending_submission">Pending Submission</string>
 
     <!--Notification sitelist ends here-->

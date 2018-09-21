@@ -79,25 +79,19 @@ public class ScheduledFormsAdapter extends
         Context context = viewHolder.cardView.getContext();
 
 
-        if (!TextUtils.isEmpty(formCreatedAt)) {
-            viewHolder.tvSubtext.setText(
-                    context.getString
-                            (R.string.form_created_on,
-                                    DateTimeUtils.getRelativeTime(formCreatedAt, true)
-                            ));
-            viewHolder.tvDesc.setText(R.string.form_pending_submission);
-            return;
-        }
-
-        if (submissionDetail != null && submissionDetail.getSubmissionDateTime() == null) {
-            viewHolder.tvDesc.setText(R.string.form_pending_submission);
-            return;
-        }
-
         if (submissionDetail != null) {
             submittedBy = submissionDetail.getSubmittedBy();
             submissionStatus = submissionDetail.getStatusDisplay();
             submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
+        }
+
+        if (submissionDetail != null && submissionDetail.getSubmissionDateTime() == null) {
+            submissionDateTime = context.getString(R.string.form_pending_submission);
+        } else {
+            submissionDateTime = context.getString(R.string.form_last_submission_datetime, submissionDateTime);
+        }
+
+        if (scheduleForm.getScheduleLevel() != null) {
             scheduleType = scheduleForm.getScheduleLevel();
         }
 
@@ -105,7 +99,7 @@ public class ScheduledFormsAdapter extends
 
 
         viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionStatus));
-        viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
+        viewHolder.tvDesc.setText(submissionDateTime);
         viewHolder.tvSubtext.setText(formSubtext);
     }
 

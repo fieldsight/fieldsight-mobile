@@ -73,32 +73,19 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
         Integer count = generalForm.getResponsesCount();
 
-        setSubmissionText(viewHolder, submissionDetail, generalForm.getDateCreated());
+        setSubmissionText(viewHolder, submissionDetail, generalForm);
 
 
     }
 
-    private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail, String formCreatedAt) {
+    private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail, GeneralForm generalForm) {
 
         String submissionDateTime = "";
         String submittedBy = "";
         String submissionStatus = "";
+        String formCreatedOn = "";
         Context context = viewHolder.cardView.getContext();
 
-        if (!TextUtils.isEmpty(formCreatedAt)) {
-            viewHolder.tvSubtext.setText(
-                    context.getString
-                            (R.string.form_created_on,
-                                    DateTimeUtils.getRelativeTime(formCreatedAt, true)
-                            ));
-            viewHolder.tvDesc.setText(R.string.form_pending_submission);
-            return;
-        }
-
-        if (submissionDetail != null && submissionDetail.getSubmissionDateTime() == null) {
-            viewHolder.tvDesc.setText(R.string.form_pending_submission);
-            return;
-        }
 
         if (submissionDetail != null) {
             submittedBy = submissionDetail.getSubmittedBy();
@@ -106,17 +93,29 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
             submissionDateTime = DateTimeUtils.getRelativeTime(submissionDetail.getSubmissionDateTime(), true);
         }
 
-        String formSubtext = generateSubtext(context, submittedBy, submissionStatus);
+        if (submissionDetail != null && submissionDetail.getSubmissionDateTime() == null) {
+            submissionDateTime = context.getString(R.string.form_pending_submission);
+        } else {
+            submissionDateTime = context.getString(R.string.form_last_submission_datetime, submissionDateTime);
+        }
+
+        if (generalForm.getDateCreated() != null) {
+            formCreatedOn = DateTimeUtils.getRelativeTime(generalForm.getDateCreated(),true);
+        }
+
+        String formSubtext = generateSubtext(context, submittedBy, submissionStatus, formCreatedOn);
 
         viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionStatus));
         viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
         viewHolder.tvSubtext.setText(formSubtext);
     }
 
-    private String generateSubtext(Context context, String submittedBy, String submissionStatus) {
+    private String generateSubtext(Context context, String submittedBy, String submissionStatus, String formCreatedOn) {
         return context.getString(R.string.form_last_submitted_by, submittedBy == null ? "" : submittedBy)
                 + "\n" +
-                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus);
+                context.getString(R.string.form_last_submission_status, submissionStatus == null ? "" : submissionStatus)
+                + "\n" +
+                context.getString(R.string.form_created_on, formCreatedOn == null ? "" : formCreatedOn);
     }
 
 
