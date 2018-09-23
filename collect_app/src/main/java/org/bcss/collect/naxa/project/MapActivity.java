@@ -84,7 +84,7 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
     private LocationClient locationClient;
 
     private Location location;
-    private ImageButton reloadLocationButton;
+
 
     private boolean captureLocation;
     private boolean setClear;
@@ -111,6 +111,7 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
     private boolean foundFirstLocation;
     private Site loadedSite;
     private Toolbar toolbar;
+    private GeoPoint siteGeoPoint;
 
 
     public static void start(Context context, Site loadedSite) {
@@ -155,8 +156,7 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         setSiteMarkerOrFail();
 
 
-
-        marker.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_place_black));
+        marker.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_place));
         myLocationOverlay = new MyLocationNewOverlay(map);
 
 
@@ -164,28 +164,10 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         locationStatus.setText(getString(R.string.please_wait_long));
 
 
-
         locationClient = LocationClients.clientForContext(this);
         locationClient.setListener(this);
 
 
-
-
-        reloadLocationButton = findViewById(R.id.reload_location);
-        reloadLocationButton.setEnabled(false);
-        reloadLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                map.getOverlays().add(marker);
-                setClear = false;
-                latLng = new GeoPoint(location.getLatitude(), location.getLongitude());
-                marker.setPosition(latLng);
-                captureLocation = true;
-                isDragged = false;
-                zoomToPoint();
-            }
-
-        });
 
         // Focuses on marked location
         showLocationButton = findViewById(R.id.show_location);
@@ -239,8 +221,6 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         });
 
 
-
-
         if (latLng != null) {
             marker.setPosition(latLng);
             map.getOverlays().add(marker);
@@ -262,11 +242,14 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
                 public void run() {
 
                     try {
-                        GeoPoint point = new GeoPoint(Double.parseDouble(loadedSite.getLatitude()), Double.parseDouble(loadedSite.getLongitude()));
+                         siteGeoPoint = new GeoPoint(Double.parseDouble(loadedSite.getLatitude()), Double.parseDouble(loadedSite.getLongitude()));
                         map.getController().setZoom(4);
-                        map.getController().setCenter(point);
+                        map.getController().setCenter(siteGeoPoint);
                         marker.setTitle(loadedSite.getName());
                         marker.setSnippet(loadedSite.getAddress());
+                        marker.setPosition(siteGeoPoint);
+                        map.getOverlays().add(marker);
+
                     } catch (NumberFormatException e) {
                         ToastUtils.showShortToastInMiddle("Failed to load site marker");
                     }
@@ -281,7 +264,6 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.projects);
     }
-
 
 
     @Override
@@ -348,11 +330,11 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
     }
 
     private void zoomToPoint() {
-        if (latLng != null) {
+        if (siteGeoPoint != null) {
             handler.postDelayed(new Runnable() {
                 public void run() {
                     map.getController().setZoom(16);
-                    map.getController().setCenter(latLng);
+                    map.getController().setCenter(siteGeoPoint);
                     map.invalidate();
                 }
             }, 200);
@@ -370,19 +352,14 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
     public void onLocationChanged(Location location) {
 
         this.location = location;
-        if (setClear) {
-            reloadLocationButton.setEnabled(true);
-        }
+
         if (this.location != null) {
             int locationCountFoundLimit = 1;
             if (locationCountNum >= locationCountFoundLimit) {
                 showLocationButton.setEnabled(true);
                 if (!captureLocation & !setClear) {
                     latLng = new GeoPoint(this.location.getLatitude(), this.location.getLongitude());
-                    map.getOverlays().add(marker);
-                    marker.setPosition(latLng);
                     captureLocation = true;
-                    reloadLocationButton.setEnabled(true);
                 }
                 if (!foundFirstLocation) {
                     // zoomToPoint();
