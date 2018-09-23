@@ -460,7 +460,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     @OnClick(R.id.btnCollectSiteAddPhoto)
     public void showImageDialog() {
-        final CharSequence[] items = {"Take Photo", "Choose siteName Gallery", "Dismiss"};
+        final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Dismiss"};
         DialogFactory.createListActionDialog(this, "Add photo", items, (dialog, which) -> {
             switch (which) {
                 case 0:

@@ -134,6 +134,7 @@
         android:text="@string/btn_add_site_photo" />
 
     <Button
+
         android:id="@+id/btnCollectSiteRecordLocation"
         style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"

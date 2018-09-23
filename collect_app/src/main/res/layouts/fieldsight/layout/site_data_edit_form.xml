@@ -137,8 +137,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"
-        android:drawableLeft="@drawable/ic_location_city_black_24dp"
-        android:drawableStart="@drawable/ic_location_city_black_24dp"
+        android:drawableLeft="@drawable/ic_location_city_white_24dp"
+        android:drawableStart="@drawable/ic_location_city_white_24dp"
 
         android:text="@string/get_location" />
 
