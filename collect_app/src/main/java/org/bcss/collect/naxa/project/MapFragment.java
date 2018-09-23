@@ -19,8 +19,11 @@ import android.view.ViewGroup;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.spatial.MapHelper;
+import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.util.BoundingBox;
@@ -38,10 +41,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -131,9 +138,9 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
 
 //        handler.postDelayed(new Runnable() {
 //            public void run() {
-//                GeoPoint point = new GeoPoint(34.08145, -39.85007);
+//
 //                map.getController().setZoom(4);
-//                map.getController().setCenter(point);
+//
 //            }
 //        }, 100);
 
@@ -144,30 +151,39 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
                 .getSiteByProject(loadedProject);
 
         Publisher<List<Site>> pub = LiveDataReactiveStreams.toPublisher(this, livedata);
-        Observable.fromPublisher(pub)
+
+        SiteLocalSource.getInstance().getByIdAsSingle(loadedProject.getId())
+                .toObservable()
                 .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites -> sites)
-                .doOnNext(this::plotSite)
-                .map(site -> new GeoPoint(Double.parseDouble(site.getLatitude()), Double.parseDouble(site.getLongitude())))
+                .flatMap((Function<Site, ObservableSource<GeoPoint>>) site -> {
+                    GeoPoint geoPoint = new GeoPoint(Double.parseDouble(site.getLatitude()), Double.parseDouble(site.getLongitude()));
+
+                    plotSite(site);
+                    return Observable.just(geoPoint);
+
+                })
                 .toList()
-                .doOnSuccess(new Consumer<List<GeoPoint>>() {
+                .map(geoPoints -> {
+                    return generateSitesBoundingBox((ArrayList<GeoPoint>) geoPoints);
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<BoundingBox>() {
                     @Override
-                    public void accept(List<GeoPoint> geoPoints) throws Exception {
-                        BoundingBox box = generateSitesBoundingBox((ArrayList<GeoPoint>) geoPoints);
-                        if(map != null){
-                            map.zoomToBoundingBox(box,true);
+                    public void onSuccess(BoundingBox boundingBox) {
+
+                        if (map != null) {
+                            map.zoomToBoundingBox(boundingBox, true);
                         }
                     }
-                })
-                .subscribe(new DisposableSingleObserver<List<GeoPoint>>() {
-                    @Override
-                    public void onSuccess(List<GeoPoint> geoPoints) {
 
-                    }
                     @Override
                     public void onError(Throwable e) {
+                        FlashBarUtils.showErrorFlashbar(getActivity(), "Failed to plot on map");
                         e.printStackTrace();
                     }
                 });
+
 
         return view;
     }

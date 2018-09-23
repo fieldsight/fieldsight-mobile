@@ -213,6 +213,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
             public void onSubscribe(Disposable d) {
                 Timber.i("getAll() has been subscribed");
                 ProjectLocalSource.getInstance().deleteAll();
+                SiteLocalSource.getInstance().deleteAll();
                 EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
                 SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
             }

@@ -445,6 +445,8 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
                 case R.id.action_upload_sites:
                     uploadSelectedSites(siteListAdapter.getSelected());
+                    siteListAdapter.clearSelections();
+                    actionMode.finish();
                     return true;
 
                 default:
@@ -484,14 +486,17 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     @Override
                     public void onSuccess(List<Long> instanceIDs) {
                         NotificationUtils.cancelNotification(progressNotifyId);
-                        NotificationUtils.notifyNormal(getActivity(), completedMessage, completedMessage);
+                        NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), completedMessage, completedMessage);
 
-                        DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
-                                .setPositiveButton("Upload ", (dialog, which) -> {
-                                    Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
-                                    i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs.toArray(new Long[instanceIDs.size()]));
-                                    startActivityForResult(i, INSTANCE_UPLOADER);
-                                }).setNegativeButton("Not now", null);
+                        if(isAdded()){
+                            DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
+                                    .setPositiveButton("Upload ", (dialog, which) -> {
+                                        Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
+                                        i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs.toArray(new Long[instanceIDs.size()]));
+                                        startActivityForResult(i, INSTANCE_UPLOADER);
+                                    }).setNegativeButton("Not now", null);
+                        }
+
                     }
 
                     @Override
@@ -499,7 +504,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
                         String errorMessage = e.getMessage();
                         NotificationUtils.cancelNotification(progressNotifyId);
-                        NotificationUtils.notifyNormal(getActivity(), failedMessage, errorMessage);
+                        NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), failedMessage, errorMessage);
 
                         if (e instanceof HttpException) {
                             ResponseBody responseBody = ((HttpException) e).response().errorBody();

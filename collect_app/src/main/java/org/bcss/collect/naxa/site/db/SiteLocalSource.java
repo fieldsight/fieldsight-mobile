@@ -13,6 +13,8 @@ import org.bcss.collect.naxa.login.model.Site;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
+
 public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
 
@@ -42,6 +44,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     public LiveData<List<Site>> getById(String projectId) {
         return dao.getSiteByProjectId(projectId);
+    }
+
+    public Single<List<Site>> getByIdAsSingle(String projectId){
+        return dao.getSiteByProjectIdAsSingle(projectId);
     }
 
 
@@ -112,4 +118,8 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
+    public void deleteAll() {
+
+        AsyncTask.execute(() -> dao.deleteAll());
+    }
 }
