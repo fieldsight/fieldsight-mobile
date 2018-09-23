@@ -213,7 +213,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         spinnerSiteCluster.setVisibility(show ? View.VISIBLE : View.GONE);
                         if (show) {
                             SiteClusterSpinnerAdapter spinnerAdapter = new SiteClusterSpinnerAdapter(CreateSiteDetailActivity.this,
-                                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_cluster), clusters);
+                                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_region), clusters);
                             spinnerSiteCluster.setAdapter(spinnerAdapter);
                             spinnerSiteCluster.setSelection(spinnerAdapter.getCount());
                         }
@@ -243,6 +243,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                                 ilPhoneEditable.setError(getString(R.string.error_field_required));
                                 ilPhoneEditable.requestFocus();
                                 break;
+
                         }
                     }
                 });

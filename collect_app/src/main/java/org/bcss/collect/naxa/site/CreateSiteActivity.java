@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -179,6 +180,14 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                         case EMPTY_SITE_IDENTIFIER:
                             tiSiteIdentifier.setError(getString(R.string.error_field_required));
                             tiSiteIdentifier.requestFocus();
+                            break;
+                        case REGION_NOT_SELECTED:
+                            TextView errorText = (TextView) spinnerSiteCluster.getSelectedView();
+                            errorText.setError("");
+                            errorText.setTextColor(Color.RED);
+                            String message = getString(R.string.error_selection_required);
+                            errorText.setText(String.format(message, "region"));
+
                             break;
                         case LOCATION_RECORDED:
                             btnCollectSiteRecordLocation.setTextColor(sucessColor);
@@ -366,7 +375,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         spinnerSiteCluster.setVisibility(show ? View.VISIBLE : View.GONE);
         if (show) {
             SiteClusterSpinnerAdapter spinnerAdapter = new SiteClusterSpinnerAdapter(this,
-                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_cluster), clusters);
+                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_region), clusters);
             spinnerSiteCluster.setAdapter(spinnerAdapter);
             spinnerSiteCluster.setSelection(spinnerAdapter.getCount());
         }

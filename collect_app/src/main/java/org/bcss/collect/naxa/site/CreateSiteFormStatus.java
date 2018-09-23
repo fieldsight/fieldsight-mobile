@@ -9,4 +9,5 @@ public enum CreateSiteFormStatus {
     LOCATION_RECORDED,
     VALIDATED,
     PHOTO_TAKEN,
+    REGION_NOT_SELECTED,
 }

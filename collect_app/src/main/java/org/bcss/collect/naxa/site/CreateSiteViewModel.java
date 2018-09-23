@@ -64,7 +64,6 @@ public class CreateSiteViewModel extends ViewModel {
     }
 
 
-
     public SingleLiveEvent<CreateSiteFormStatus> getFormStatus() {
         return formStatus;
     }
@@ -123,6 +122,8 @@ public class CreateSiteViewModel extends ViewModel {
         String identifier = siteMutableLiveData.getValue().getIdentifier();
         String name = siteMutableLiveData.getValue().getName();
         String lat = siteMutableLiveData.getValue().getLatitude();
+        String selectedRegion = siteMutableLiveData.getValue().getRegionId();
+
 
         if (identifier == null || identifier.length() <= 0) {
             formStatus.setValue(CreateSiteFormStatus.EMPTY_SITE_IDENTIFIER);
@@ -135,11 +136,16 @@ public class CreateSiteViewModel extends ViewModel {
             return false;
         }
 
+        if (selectedRegion == null) {
+            formStatus.setValue(CreateSiteFormStatus.REGION_NOT_SELECTED);
+            return false;
+        }
+
+
         if (lat == null || lat.length() <= 0) {
             formStatus.setValue(CreateSiteFormStatus.EMPTY_SITE_LOCATION);
             return false;
         }
-
 
 
         formStatus.setValue(CreateSiteFormStatus.VALIDATED);
@@ -182,7 +188,7 @@ public class CreateSiteViewModel extends ViewModel {
 
     }
 
-    public void setSiteType(String typeId,String typeLabel) {
+    public void setSiteType(String typeId, String typeLabel) {
         if (siteMutableLiveData.getValue() == null) {
             siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }

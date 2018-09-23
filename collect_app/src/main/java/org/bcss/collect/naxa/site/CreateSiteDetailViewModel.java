@@ -148,6 +148,7 @@ public class CreateSiteDetailViewModel extends ViewModel {
         String identifier = siteMutableLiveData.getValue().getIdentifier();
         String name = siteMutableLiveData.getValue().getName();
         String lat = siteMutableLiveData.getValue().getLatitude();
+        String cluster = siteMutableLiveData.getValue().getRegionId();
 
         if (identifier == null || identifier.length() <= 0) {
             formStatus.setValue(CreateSiteDetailFormStatus.EMPTY_SITE_IDENTIFIER);
