@@ -23,6 +23,7 @@ import org.bcss.collect.naxa.site.db.SiteRepository;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -100,6 +101,12 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
                         return ServiceGenerator.getRxClient().create(ApiInterface.class)
                                 .getRegionsByProjectId(project.getId())
+                                .flatMap(new Function<List<SiteRegion>, ObservableSource<List<SiteRegion>>>() {
+                                    @Override
+                                    public ObservableSource<List<SiteRegion>> apply(List<SiteRegion> siteRegions) throws Exception {
+                                        return Observable.just(new ArrayList<SiteRegion>(0));
+                                    }
+                                })
                                 .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
                                     @Override
                                     public ObservableSource<Project> apply(List<SiteRegion> siteRegions) throws Exception {

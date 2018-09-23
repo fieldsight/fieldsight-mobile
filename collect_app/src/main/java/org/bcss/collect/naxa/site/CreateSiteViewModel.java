@@ -199,11 +199,12 @@ public class CreateSiteViewModel extends ViewModel {
     }
 
 
-    public void setSiteCluster(String regionLabel) {
+    public void setSiteRegion(String regionLabel,String regionId) {
         if (siteMutableLiveData.getValue() == null) {
             siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }
 
+        siteMutableLiveData.getValue().setRegionId(regionId);
         siteMutableLiveData.getValue().setRegion(regionLabel);
 
     }

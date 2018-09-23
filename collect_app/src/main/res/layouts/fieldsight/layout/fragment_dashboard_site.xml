@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -33,20 +32,20 @@
 
 
         <TextView
-            android:gravity="center"
-
-            android:drawableLeft="@drawable/ic_location_city_white_24dp"
-            android:drawableStart="@drawable/ic_location_city_white_24dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
             android:id="@+id/site_option_frag_site_type"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Bagmati"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_below="@id/site_option_frag_btn_info"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
             android:background="@drawable/shape_chip_drawable"
+            android:drawableLeft="@drawable/ic_location_city_white_24dp"
+            android:drawableStart="@drawable/ic_location_city_white_24dp"
+            android:gravity="center"
+            android:text="Bagmati"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_small"
             android:textStyle="bold" />
@@ -109,7 +108,6 @@
                 android:layout_toRightOf="@+id/site_option_frag_btn_edit_saved_form"
                 android:stateListAnimator="@null"
                 android:text="@string/nav_delete_saved_form" />
-
 
 
             <Button
@@ -358,7 +356,6 @@
             android:orientation="horizontal">
 
             <ToggleButton
-
                 android:id="@+id/site_option_btn_finalize_site"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
@@ -367,9 +364,12 @@
                 android:stateListAnimator="@null"
                 android:textOff="@string/btn_text_off_not_finalized"
                 android:textOn="@string/btn_text_on_finalized"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <Button
+                android:drawableStart="@drawable/ic_delete_forever"
+                android:drawableLeft="@drawable/ic_delete_forever"
                 android:id="@+id/site_option_btn_delete_site"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
@@ -377,6 +377,7 @@
                 android:layout_weight="1"
                 android:stateListAnimator="@null"
                 android:text="@string/btn_text_delete_site"
+                android:textAllCaps="true"
                 android:textSize="16sp" />
         </LinearLayout>
 

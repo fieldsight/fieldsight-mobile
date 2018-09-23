@@ -406,7 +406,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     private void collectSpinnerOptions() {
         if (spinnerSiteCluster.getVisibility() == View.VISIBLE) {
-            String selectedCluster = ((SiteRegion) spinnerSiteCluster.getSelectedItem()).getId();
+            String selectedRegionId = ((SiteRegion) spinnerSiteCluster.getSelectedItem()).getId();
+            String selectedRegionLabel = ((SiteRegion) spinnerSiteCluster.getSelectedItem()).getName();
+            createSiteViewModel.setSiteRegion(selectedRegionLabel, selectedRegionId);
 
         }
 

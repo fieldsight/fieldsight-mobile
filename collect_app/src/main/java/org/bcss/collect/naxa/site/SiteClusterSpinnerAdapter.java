@@ -26,7 +26,7 @@ public class SiteClusterSpinnerAdapter extends ArrayAdapter<SiteRegion> {
         super(context, textViewResourceId, values);
         this.context = context;
 
-        SiteRegion dummy = new SiteRegion(hint, hint, hint);
+        SiteRegion dummy = new SiteRegion(null, hint, null);
         values.add(dummy);
 
         this.values = values;

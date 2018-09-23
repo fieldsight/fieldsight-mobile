@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.site;
 
+import android.arch.lifecycle.Observer;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -140,20 +141,30 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void deleteSite(Site loadedSite) {
-        int affectedRows = 1;
 
-        switch (affectedRows) {
-            case 1:
-                ToastUtils.showShortToast(getString(R.string.msg_delete_sucess, loadedSite.getName()));
-                new Handler().postDelayed(() -> getActivity().onBackPressed(), 500);
-                break;
-            case -1:
-                ToastUtils.showShortToast(getString(R.string.msg_delete_failed, loadedSite.getName()));
-                break;
-            default:
-                ToastUtils.showShortToast(getString(R.string.dialog_unexpected_error_title));
-                break;
-        }
+        SiteLocalSource.getInstance().delete(loadedSite).observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer affectedRows) {
+
+                if (affectedRows == null) {
+                    ToastUtils.showShortToast(R.string.dialog_unexpected_error_title);
+                    return;
+                }
+
+                switch (affectedRows) {
+                    case 1:
+                        ToastUtils.showShortToast(getString(R.string.msg_delete_sucess, loadedSite.getName()));
+                        new Handler().postDelayed(() -> getActivity().onBackPressed(), 500);
+                        break;
+                    case -1:
+                        ToastUtils.showShortToast(getString(R.string.msg_delete_failed, loadedSite.getName()));
+                        break;
+                    default:
+                        ToastUtils.showShortToast(getString(R.string.dialog_unexpected_error_title));
+                        break;
+                }
+            }
+        });
 
 
     }
@@ -180,14 +191,14 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
                         break;
                     case R.id.popup_open_in_map:
-                        MapActivity.start(getActivity(),loadedSite);
+                        MapActivity.start(getActivity(), loadedSite);
 
                         break;
                     case R.id.popup_view_blue_prints:
                         ToastUtils.showShortToast("Not implemented yet");
                         break;
 
-                        
+
                 }
                 return true;
             }

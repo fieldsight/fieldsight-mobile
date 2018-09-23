@@ -103,7 +103,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     private ProjectViewModel viewModel;
 
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -122,10 +121,10 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 .getAll(false)
                 .observe(ProjectListActivity.this, projects -> {
                     Timber.i("Projects data changing %s", projects.size());
-                    if(projectlistAdapter.getItemCount() == 0){
+                    if (projectlistAdapter.getItemCount() == 0) {
                         projectlistAdapter.updateList(projects);
                         runLayoutAnimation(rvProjects);
-                    }else {
+                    } else {
                         projectlistAdapter.updateList(projects);
                     }
 
@@ -161,7 +160,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                if(allowClick()){
+                if (allowClick()) {
                     loadToolBarSearch();
                 }
                 break;
@@ -385,7 +384,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
         Pair<View, String> p1 = Pair.create(appbarGeneral, ViewCompat.getTransitionName(appbarGeneral));
         //inspection
-        ProjectDashboardActivity.start(this,project,p1);
+        ProjectDashboardActivity.start(this, project, p1);
 
     }
 

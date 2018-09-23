@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.site.db;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 
 import org.bcss.collect.android.application.Collect;
@@ -11,8 +12,6 @@ import org.bcss.collect.naxa.login.model.Site;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Single;
 
 public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
@@ -46,16 +45,13 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
-
-
-
     public LiveData<List<Site>> getByIdAndSiteStatus(String projectId, int status) {
         return dao.getByIdOfflineSites(projectId, status);
     }
 
-    public LiveData<List<Site>> getByIdStatusAndCluster(String projectId,String cluster){
+    public LiveData<List<Site>> getByIdStatusAndCluster(String projectId, String cluster) {
 
-        return dao.getSiteFromFilter(projectId,cluster);
+        return dao.getSiteFromFilter(projectId, cluster);
     }
 
     public LiveData<List<Site>> getBySiteId(String siteId) {
@@ -63,8 +59,11 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
     //todo return affected rows count
-    public void delete(Site site) {
-        AsyncTask.execute(() -> dao.delete(site));
+    public LiveData<Integer> delete(Site site) {
+        MutableLiveData<Integer> affectedRowsMutData = new MutableLiveData<>();
+        AsyncTask.execute(() -> affectedRowsMutData.postValue(dao.delete(site)));
+
+        return affectedRowsMutData;
     }
 
 
