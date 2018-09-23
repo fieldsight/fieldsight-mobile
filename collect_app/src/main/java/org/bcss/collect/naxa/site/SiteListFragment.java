@@ -315,6 +315,14 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 .flatMapIterable((Function<List<SiteRegion>, Iterable<SiteRegion>>) siteClusters1 -> siteClusters1)
                 .map((Function<SiteRegion, Pair>) siteCluster -> Pair.create(siteCluster.getId(), siteCluster.getName()))
                 .toList()
+                .map(new Function<List<Pair>, List<Pair>>() {
+                    @Override
+                    public List<Pair> apply(List<Pair> pairs) throws Exception {
+                        pairs.add(Pair.create("0", "All sites"));
+
+                        return pairs;
+                    }
+                })
                 .subscribe(new SingleObserver<List<Pair>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
