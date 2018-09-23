@@ -1,5 +1,11 @@
 package org.bcss.collect.naxa.site.db;
 
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
+
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 
 import org.bcss.collect.naxa.login.model.Site;
@@ -57,11 +63,15 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     }
 
     private Observable<Site> uploadSite(Site siteLocationPojo) {
-        String imagePath = siteLocationPojo.getLogo();
-//        final File ImageFile = new File(imagePath);
-        RequestBody imageRequestBody = null;
-        String imageName = "";
+        RequestBody requestBody;
         MultipartBody.Part body = null;
+
+        File file = FileUtils.getFileByPath(siteLocationPojo.getLogo());
+
+        if (FileUtils.isFileExists(file)) {
+            requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+            body = MultipartBody.Part.createFormData("logo", file.getName(), requestBody);
+        }
 
         RequestBody SiteNameRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getName());
         RequestBody latRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getLatitude()));
@@ -74,7 +84,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         RequestBody SiteRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getTypeId()));
         RequestBody isSurvey = RequestBody.create(MediaType.parse("text/plain"), "false");
         RequestBody metaAttrs = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getMetaAttributes());
-        RequestBody regionId = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getRegion());
+        RequestBody regionId = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getRegionId());
 
         return getRxClient()
                 .create(ApiInterface.class)

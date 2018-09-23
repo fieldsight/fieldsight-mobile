@@ -63,6 +63,11 @@ public class FlashBarUtils {
 
     }
 
+
+    public static void showErrorFlashbar(@NonNull Activity context, @NonNull String message) {
+        showFlashbar(context, message, false);
+    }
+
     public static void showFlashbar(@NonNull Activity context, @NonNull String message, boolean progressIcon) {
         if (message.isEmpty()) {
             return;

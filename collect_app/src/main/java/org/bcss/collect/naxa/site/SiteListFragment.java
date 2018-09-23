@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -455,6 +456,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }
     }
 
+
     private void uploadSelectedSites(ArrayList<Site> selected) {
         SiteRemoteSource.getInstance()
                 .uploadMultipleSites(selected)
@@ -473,9 +475,16 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     @Override
                     public void onSuccess(List<Long> instanceIDs) {
 
-                        Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
-                        i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs.toArray(new Long[instanceIDs.size()]));
-                        startActivityForResult(i, INSTANCE_UPLOADER);
+                        DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
+                                .setPositiveButton("Upload ", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
+                                        i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs.toArray(new Long[instanceIDs.size()]));
+                                        startActivityForResult(i, INSTANCE_UPLOADER);
+                                    }
+                                }).setNegativeButton("Not now", null);
+
                     }
 
                     @Override
@@ -488,7 +497,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         }
 
                         e.printStackTrace();
-                        DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
+                        if(isAdded()){
+                            DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
+                        }
                     }
                 });
     }

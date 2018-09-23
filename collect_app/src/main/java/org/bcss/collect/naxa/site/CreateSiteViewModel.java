@@ -205,7 +205,6 @@ public class CreateSiteViewModel extends ViewModel {
         }
 
         siteMutableLiveData.getValue().setRegionId(regionId);
-        siteMutableLiveData.getValue().setRegion(regionLabel);
 
     }
 
