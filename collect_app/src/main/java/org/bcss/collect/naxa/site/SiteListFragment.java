@@ -52,8 +52,10 @@ import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.bcss.collect.naxa.common.database.ProjectFilter;
 import org.bcss.collect.naxa.common.database.ProjectFilterLocalSource;
+import org.bcss.collect.naxa.common.rx.SingleObserverWithProgress;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
+import org.bcss.collect.naxa.firebase.NotificationUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.data.SiteRegion;
@@ -458,6 +460,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     private void uploadSelectedSites(ArrayList<Site> selected) {
+
+        String progressMessage = "Uploading site(s)";
+        String completedMessage = "Site(s) Uploaded";
+        String failedMessage = "Site(s) upload failed";
+        final int progressNotifyId = 987876756;
+
         SiteRemoteSource.getInstance()
                 .uploadMultipleSites(selected)
                 .flattenAsObservable((Function<List<Site>, Iterable<Site>>) sites -> sites)
@@ -469,27 +477,29 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 .subscribe(new SingleObserver<List<Long>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        FlashBarUtils.showFlashbar(getActivity(), "Uploading site(s)", true);
+
+                        NotificationUtils.createUploadNotification(progressNotifyId, progressMessage);
                     }
 
                     @Override
                     public void onSuccess(List<Long> instanceIDs) {
+                        NotificationUtils.cancelNotification(progressNotifyId);
+                        NotificationUtils.notifyNormal(getActivity(), completedMessage, completedMessage);
 
                         DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
-                                .setPositiveButton("Upload ", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
-                                        i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs.toArray(new Long[instanceIDs.size()]));
-                                        startActivityForResult(i, INSTANCE_UPLOADER);
-                                    }
+                                .setPositiveButton("Upload ", (dialog, which) -> {
+                                    Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
+                                    i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs.toArray(new Long[instanceIDs.size()]));
+                                    startActivityForResult(i, INSTANCE_UPLOADER);
                                 }).setNegativeButton("Not now", null);
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
+
                         String errorMessage = e.getMessage();
+                        NotificationUtils.cancelNotification(progressNotifyId);
+                        NotificationUtils.notifyNormal(getActivity(), failedMessage, errorMessage);
 
                         if (e instanceof HttpException) {
                             ResponseBody responseBody = ((HttpException) e).response().errorBody();
@@ -497,7 +507,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         }
 
                         e.printStackTrace();
-                        if(isAdded()){
+                        if (isAdded()) {
                             DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
                         }
                     }

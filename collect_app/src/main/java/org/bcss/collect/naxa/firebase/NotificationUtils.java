@@ -113,6 +113,30 @@ public class NotificationUtils {
     }
 
 
+    public static int createUploadNotification(int notificationId, String title) {
+        Context context = Collect.getInstance();
+
+        NotificationManager manager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setSmallIcon(android.R.drawable.stat_sys_upload)
+                .setAutoCancel(true)
+                .setContentTitle(title)
+                .setOngoing(true)
+                .setProgress(100, 0, true)
+                .setGroup("upload");
+
+        Notification n = builder.build();
+
+        if (manager != null) {
+            manager.notify(notificationId, n);
+        }
+
+        return notificationId;
+    }
+
+
     public static int createProgressNotification(int notificationId, String title) {
         Context context = Collect.getInstance();
 
