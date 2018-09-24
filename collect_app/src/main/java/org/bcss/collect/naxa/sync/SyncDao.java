@@ -53,5 +53,6 @@ public interface SyncDao {
     void setIsDataOutOfSync(String syncItemType, boolean value);
 
     @Query("SELECT * from sync WHERE uid=:uid")
-    Single<SyncableItems> getById(String uid);
-}
+    Single<SyncableItems> getById(int uid);
+
+    }

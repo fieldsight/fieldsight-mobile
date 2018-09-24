@@ -64,21 +64,24 @@ public class RecyclerViewEmptySupport extends RecyclerView {
             dispatchViewChanges();
         }
 
-        private void dispatchViewChanges() {
+
+    };
 
 
-            Adapter<?> adapter = getAdapter();
-            if (adapter != null && emptyView != null) {
-                if (adapter.getItemCount() == 0) {
-                    emptyView.setVisibility(View.VISIBLE);
-                    RecyclerViewEmptySupport.this.setVisibility(View.GONE);
-                } else {
-                    emptyView.setVisibility(View.GONE);
-                    RecyclerViewEmptySupport.this.setVisibility(View.VISIBLE);
-                }
+    public void dispatchViewChanges() {
+
+
+        Adapter<?> adapter = getAdapter();
+        if (adapter != null && emptyView != null) {
+            if (adapter.getItemCount() == 0) {
+                emptyView.setVisibility(View.VISIBLE);
+                RecyclerViewEmptySupport.this.setVisibility(View.GONE);
+            } else {
+                emptyView.setVisibility(View.GONE);
+                RecyclerViewEmptySupport.this.setVisibility(View.VISIBLE);
             }
         }
-    };
+    }
 
     // Preventing multiple dispatch, using threshold of 2000 ms
     public boolean allowDispatch() {

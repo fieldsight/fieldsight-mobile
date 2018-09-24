@@ -164,6 +164,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUserInformation()
+
                 .flatMap(new Function<MeResponse, ObservableSource<List<MySites>>>() {
                     @Override
                     public ObservableSource<List<MySites>> apply(MeResponse meResponse) throws Exception {
@@ -211,7 +212,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         observable.subscribe(new SingleObserver<List<Project>>() {
             @Override
             public void onSubscribe(Disposable d) {
-                Timber.i("getAll() has been subscribed");
                 ProjectLocalSource.getInstance().deleteAll();
                 SiteLocalSource.getInstance().deleteAll();
                 EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));

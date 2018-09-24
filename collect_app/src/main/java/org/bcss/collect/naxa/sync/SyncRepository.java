@@ -28,7 +28,7 @@ public class SyncRepository {
     private SyncDao syncDao;
     private static SyncRepository INSTANCE;
     private final String CHECKED = "checked";
-    private final String PROGRESS = "progress";
+    public final String PROGRESS = "progress";
     private final String DATE = "date";
     private final String STATUS = "status";
     private final String STATUS_ALL = "status_all";
@@ -91,7 +91,7 @@ public class SyncRepository {
         hideProgress(uid);
     }
 
-    public Single<SyncableItems> getStatusById(String uid) {
+    public Single<SyncableItems> getStatusById(int uid) {
         return syncDao.getById(uid);
     }
 

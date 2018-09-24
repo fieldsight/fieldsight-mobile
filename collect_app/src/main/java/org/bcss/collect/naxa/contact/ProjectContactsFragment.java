@@ -17,6 +17,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Phone;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;
 import org.bcss.collect.naxa.stages.StageViewModel;
 
@@ -39,7 +40,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     private Unbinder unbinder;
 
     @BindView(R.id.recycler_view)
-    RecyclerViewEmptySupport recyclerView;
+    RecyclerView recyclerView;
 
     public static ProjectContactsFragment getInstance() {
         return new ProjectContactsFragment();
@@ -62,6 +63,13 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
                         if (fieldSightContactModels != null) {
                             contactAdapter = new ContactAdapter(fieldSightContactModels, ProjectContactsFragment.this, getActivity());
                             recyclerView.swapAdapter(contactAdapter, true);
+                            if(contactAdapter.getItemCount() > 0){
+                                emptyLayout.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                            }else {
+                                emptyLayout.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }
                         }
                     }
                 });
@@ -73,14 +81,14 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
         contactAdapter = new ContactAdapter(new ArrayList<>(0), ProjectContactsFragment.this, getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-//        recyclerView.setEmptyView(emptyLayout,
-//                getString(R.string.empty_message_contact),
-//                new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
-//                    @Override
-//                    public void onRetryButtonClick() {
-//
-//                    }
-//                });
+
+        emptyLayout.findViewById(R.id.btn_retry)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DownloadActivity.start(getActivity());
+                    }
+                });
         recyclerView.setAdapter(contactAdapter);
     }
 
@@ -88,7 +96,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     public void onContactClicked(FieldSightContactModel contactModel) {
         ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.getInstance();
         contactDetailsBottomSheetFragmentDialog.setContact(contactModel);
-        contactDetailsBottomSheetFragmentDialog.show(getFragmentManager(), "Custom Bottom Sheet");
+        contactDetailsBottomSheetFragmentDialog.show(getFragmentManager(), "Contact Bottom Sheet");
     }
 
     @Override
