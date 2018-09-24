@@ -6,7 +6,7 @@ import java.util.List;
 
 interface DownloadView {
 
-    void addAdapter(List<SyncableItems> syncableItems);
+    void addAdapter(List<SyncableItem> syncableItems);
 
     LifecycleOwner getLifeCycleOwner();
 }

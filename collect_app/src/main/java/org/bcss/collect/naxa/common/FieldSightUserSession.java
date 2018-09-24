@@ -7,10 +7,10 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.ColorInt;
+import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.gson.Gson;
 
 import org.bcss.collect.android.R;
@@ -24,7 +24,7 @@ import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.tasks.DeleteFormsTask;
 import org.bcss.collect.android.tasks.DeleteInstancesTask;
-import org.bcss.collect.naxa.FirebaseTokenException;
+import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.LoginActivity;
@@ -32,7 +32,6 @@ import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import io.reactivex.Observer;
@@ -116,10 +115,10 @@ public class FieldSightUserSession {
 
         deleteInstancesTask.execute(getAllInstancedsIds());
 
-
+        User user = getUser();
         ServiceGenerator
                 .createService(ApiInterface.class)
-                .postFCMUserParameter(REMOVE_FCM, getFCM(getUser().getUser_name(), false))
+                .postFCMUserParameter(REMOVE_FCM, getFCM(user.getUser_name(), false))
                 .subscribe(new Observer<FCMParameter>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -165,6 +164,7 @@ public class FieldSightUserSession {
     }
 
 
+    @Nullable
     public static User getUser() {
         String userString = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, null);
         return new Gson().fromJson(userString, User.class);

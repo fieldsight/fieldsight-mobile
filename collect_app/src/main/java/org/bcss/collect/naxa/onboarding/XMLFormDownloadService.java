@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.onboarding;
 
 import android.app.IntentService;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -17,20 +16,30 @@ import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.listeners.FormListDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.tasks.DownloadFormsTask;
+import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.exception.DownloadRunningException;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
+import org.bcss.collect.naxa.sync.SyncRepository;
 import org.bcss.collect.naxa.task.FieldSightDownloadFormListTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.Single;
 import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -86,19 +95,52 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         message = new Bundle();
         receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
 
+        SyncRepository.getInstance()
+                .getStatusById(Constant.DownloadUID.PROJECT_SITES)
+                .map(syncableItem -> {
+                    if (syncableItem.isProgressStatus()) {
+                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
 
-        ProjectLocalSource.getInstance()
-                .getProjectsMaybe()
+                    }
+                    return syncableItem;
+                })
+                .toObservable()
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                                if (throwable instanceof DownloadRunningException) {
+                                    Timber.i("Polling for project sites");
+                                    return Observable.timer(3, TimeUnit.SECONDS);
+                                }
+
+                                return Observable.just(throwable);
+                            }
+                        });
+
+                    }
+                })
+                .flatMapSingle(new Function<SyncableItem, SingleSource<List<Project>>>() {
+                    @Override
+                    public SingleSource<List<Project>> apply(SyncableItem syncableItem) throws Exception {
+                        return ProjectLocalSource.getInstance()
+                                .getProjectsMaybe();
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Project>>() {
+                .subscribe(new Observer<List<Project>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        Timber.i("Subscribed");
                     }
 
                     @Override
-                    public void onSuccess(List<Project> projects) {
+                    public void onNext(List<Project> projects) {
+                        Timber.i("onNext %d",projects.size());
+
                         ArrayList<String> projectIds = new ArrayList<>();
 
                         for (Project project : projects) {
@@ -123,7 +165,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
                         if (formsToDownlaod == null || formsToDownlaod.isEmpty()) {
                             broadcastDownloadError("No project id provided to donwload forms");
-                        }else {
+                        } else {
                             downloadFormList(getApplicationContext(), XMLFormDownloadService.this, XMLFormDownloadService.this, formsToDownlaod.get(0));
                             broadcastDownloadStarted();
                         }
@@ -131,7 +173,13 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
                     @Override
                     public void onError(Throwable e) {
+                        Timber.i("onError");
+                        broadcastDownloadError(e.getMessage());
+                    }
 
+                    @Override
+                    public void onComplete() {
+                        Timber.i("onComplete ");
                     }
                 });
 

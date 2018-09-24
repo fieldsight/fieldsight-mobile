@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa;
+package org.bcss.collect.naxa.common.exception;
 
 public class FirebaseTokenException extends RuntimeException {
     public FirebaseTokenException(String message) {

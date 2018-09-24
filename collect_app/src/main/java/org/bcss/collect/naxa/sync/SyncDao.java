@@ -6,11 +6,9 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.onboarding.SyncableItems;
+import org.bcss.collect.naxa.onboarding.SyncableItem;
 
 import java.util.List;
-import java.util.Observable;
 
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -19,10 +17,10 @@ import io.reactivex.Single;
 public interface SyncDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insert(SyncableItems... items);
+    void insert(SyncableItem... items);
 
     @Query("SELECT * FROM sync")
-    LiveData<List<SyncableItems>> getAllSyncableItems();
+    LiveData<List<SyncableItem>> getAllSyncableItems();
 
     @Query("SELECT checked FROM sync WHERE uid=:key")
     Flowable<Boolean> isChecked(int key);
@@ -53,6 +51,6 @@ public interface SyncDao {
     void setIsDataOutOfSync(String syncItemType, boolean value);
 
     @Query("SELECT * from sync WHERE uid=:uid")
-    Single<SyncableItems> getById(int uid);
+    Single<SyncableItem> getById(int uid);
 
     }

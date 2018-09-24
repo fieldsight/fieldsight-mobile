@@ -2,12 +2,9 @@ package org.bcss.collect.naxa.onboarding;
 
 import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.LiveDataReactiveStreams;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,17 +17,12 @@ import android.widget.Button;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.common.anim.ScaleUpAndDownItemAnimator;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.project.ProjectListActivity;
-import org.bcss.collect.naxa.sync.SyncRepository;
-import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,12 +32,8 @@ import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DefaultObserver;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -128,7 +116,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
 
     @Override
-    public void addAdapter(List<SyncableItems> syncableItems) {
+    public void addAdapter(List<SyncableItem> syncableItems) {
 
 
 //        downloadButton.setEnabled(areCheckedItems());
@@ -139,57 +127,57 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
 
         Observable.just(syncableItems)
-                .flatMapIterable((Function<List<SyncableItems>, Iterable<SyncableItems>>) syncableItems1 -> syncableItems1)
-                .flatMap(new Function<SyncableItems, ObservableSource<SyncableItems>>() {
+                .flatMapIterable((Function<List<SyncableItem>, Iterable<SyncableItem>>) syncableItems1 -> syncableItems1)
+                .flatMap(new Function<SyncableItem, ObservableSource<SyncableItem>>() {
                     @Override
-                    public ObservableSource<SyncableItems> apply(SyncableItems syncableItems) throws Exception {
+                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) throws Exception {
                         return notificaitonCountForm
-                                .map(new Function<Integer, SyncableItems>() {
+                                .map(new Function<Integer, SyncableItem>() {
                                     @Override
-                                    public SyncableItems apply(Integer integer) throws Exception {
-                                        switch (syncableItems.getUid()) {
+                                    public SyncableItem apply(Integer integer) throws Exception {
+                                        switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.ALL_FORMS:
-                                                syncableItems.setOutOfSync(integer > 0);
+                                                syncableItem.setOutOfSync(integer > 0);
                                                 break;
                                         }
 
-                                        return syncableItems;
+                                        return syncableItem;
                                     }
                                 });
                     }
                 })
-                .flatMap(new Function<SyncableItems, ObservableSource<SyncableItems>>() {
+                .flatMap(new Function<SyncableItem, ObservableSource<SyncableItem>>() {
                     @Override
-                    public ObservableSource<SyncableItems> apply(SyncableItems syncableItems) throws Exception {
+                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) throws Exception {
                         return notificaitonCountSites
-                                .map(new Function<Integer, SyncableItems>() {
+                                .map(new Function<Integer, SyncableItem>() {
                                     @Override
-                                    public SyncableItems apply(Integer integer) throws Exception {
-                                        switch (syncableItems.getUid()) {
+                                    public SyncableItem apply(Integer integer) throws Exception {
+                                        switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.PROJECT_SITES:
-                                                syncableItems.setOutOfSync(integer > 0);
+                                                syncableItem.setOutOfSync(integer > 0);
                                                 break;
                                         }
 
-                                        return syncableItems;
+                                        return syncableItem;
                                     }
                                 });
                     }
                 })
-                .flatMap(new Function<SyncableItems, ObservableSource<SyncableItems>>() {
+                .flatMap(new Function<SyncableItem, ObservableSource<SyncableItem>>() {
                     @Override
-                    public ObservableSource<SyncableItems> apply(SyncableItems syncableItems) throws Exception {
+                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) throws Exception {
                         return notificaitonCountPreviousSubmission
-                                .map(new Function<Integer, SyncableItems>() {
+                                .map(new Function<Integer, SyncableItem>() {
                                     @Override
-                                    public SyncableItems apply(Integer integer) throws Exception {
-                                        switch (syncableItems.getUid()) {
+                                    public SyncableItem apply(Integer integer) throws Exception {
+                                        switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.PREV_SUBMISSION:
-                                                syncableItems.setOutOfSync(integer > 0);
+                                                syncableItem.setOutOfSync(integer > 0);
                                                 break;
                                         }
 
-                                        return syncableItems;
+                                        return syncableItem;
                                     }
                                 });
                     }
@@ -197,14 +185,14 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<SyncableItems>>() {
+                .subscribe(new SingleObserver<List<SyncableItem>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onSuccess(List<SyncableItems> syncableItems) {
+                    public void onSuccess(List<SyncableItem> syncableItems) {
                         downloadListAdapter.updateList(syncableItems);
                     }
 
@@ -216,9 +204,9 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
 
 //        Observable.fromPublisher(notificaitonCountForm)
-//                .flatMapIterable(new Function<Integer, Iterable<SyncableItems>>() {
+//                .flatMapIterable(new Function<Integer, Iterable<SyncableItem>>() {
 //                    @Override
-//                    public Iterable<SyncableItems> apply(Integer integer) throws Exception {
+//                    public Iterable<SyncableItem> apply(Integer integer) throws Exception {
 //
 //                        return null;
 //                    }

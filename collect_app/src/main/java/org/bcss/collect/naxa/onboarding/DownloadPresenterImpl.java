@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.onboarding;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
@@ -22,10 +21,6 @@ import org.bcss.collect.naxa.sync.SyncRepository;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
-
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
@@ -45,11 +40,11 @@ public class DownloadPresenterImpl implements DownloadPresenter {
         syncRepository = SyncRepository.getInstance();
 
 
-        LiveData<List<SyncableItems>> livedata = syncRepository.getAllSyncItems();
-        livedata.observe(downloadView.getLifeCycleOwner(), new Observer<List<SyncableItems>>() {
+        LiveData<List<SyncableItem>> livedata = syncRepository.getAllSyncItems();
+        livedata.observe(downloadView.getLifeCycleOwner(), new Observer<List<SyncableItem>>() {
             @Override
-            public void onChanged(@Nullable List<SyncableItems> syncableItemsList) {
-                downloadView.addAdapter(syncableItemsList);
+            public void onChanged(@Nullable List<SyncableItem> syncableItemList) {
+                downloadView.addAdapter(syncableItemList);
             }
         });
 
@@ -57,8 +52,8 @@ public class DownloadPresenterImpl implements DownloadPresenter {
     }
 
     @Override
-    public void onToggleButtonClick(ArrayList<SyncableItems> syncableItemList) {
-        for (SyncableItems items : syncableItemList) {
+    public void onToggleButtonClick(ArrayList<SyncableItem> syncableItemList) {
+        for (SyncableItem items : syncableItemList) {
             if (items.isChecked()) {
                 syncRepository.setChecked(items.getUid(), false);
             } else {
@@ -68,7 +63,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
     }
 
     @Override
-    public void onDownloadButtonClick(ArrayList<SyncableItems> syncableItemList) {
+    public void onDownloadButtonClick(ArrayList<SyncableItem> syncableItemList) {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) Collect.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = null;
@@ -82,7 +77,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
             return;
         }
 
-        for (SyncableItems syncableItem : syncableItemList) {
+        for (SyncableItem syncableItem : syncableItemList) {
             if (syncableItem.isChecked()) {
                 downloadOneItem(syncableItem.getUid());
             }

@@ -8,7 +8,7 @@ import com.google.common.base.Objects;
 
 
 @Entity(tableName = "sync")
-public class SyncableItems {
+public class SyncableItem {
 
     @PrimaryKey
     private int uid;
@@ -25,12 +25,12 @@ public class SyncableItems {
     @Ignore
     private boolean isSelected;
 
-    public SyncableItems() {
+    public SyncableItem() {
 
     }
 
     @Ignore
-    public SyncableItems(int uid, int downloadingStatus, String lastSyncDateTime, String title, String detail) {
+    public SyncableItem(int uid, int downloadingStatus, String lastSyncDateTime, String title, String detail) {
         this.uid = uid;
         this.downloadingStatus = downloadingStatus;
         this.lastSyncDateTime = lastSyncDateTime;
@@ -118,7 +118,7 @@ public class SyncableItems {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SyncableItems that = (SyncableItems) o;
+        SyncableItem that = (SyncableItem) o;
         return uid == that.uid &&
                 downloadingStatus == that.downloadingStatus &&
                 checked == that.checked &&
@@ -128,6 +128,21 @@ public class SyncableItems {
                 Objects.equal(lastSyncDateTime, that.lastSyncDateTime) &&
                 Objects.equal(title, that.title) &&
                 Objects.equal(detail, that.detail);
+    }
+
+    @Override
+    public String toString() {
+        return "SyncableItem{" +
+                "uid=" + uid +
+                ", downloadingStatus=" + downloadingStatus +
+                ", lastSyncDateTime='" + lastSyncDateTime + '\'' +
+                ", title='" + title + '\'' +
+                ", detail='" + detail + '\'' +
+                ", checked=" + checked +
+                ", progressStatus=" + progressStatus +
+                ", isOutOfSync=" + isOutOfSync +
+                ", isSelected=" + isSelected +
+                '}';
     }
 
     @Override

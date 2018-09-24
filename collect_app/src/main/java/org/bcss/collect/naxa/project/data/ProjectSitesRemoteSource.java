@@ -60,6 +60,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUser()
+                .delay(10, TimeUnit.SECONDS)
                 .flatMap(new Function<MeResponse, ObservableSource<MySiteResponse>>() {
                     @Override
                     public ObservableSource<MySiteResponse> apply(MeResponse meResponse) throws Exception {
