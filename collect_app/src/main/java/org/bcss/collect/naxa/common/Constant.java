@@ -36,8 +36,8 @@ public class Constant {
     }
 
     public final static class ANIM {
-        public final static int fragmentEnterAnimation = R.anim.pop_enter;
-        public final static int fragmentExitAnimation = R.anim.pop_exit;
+        public final static int fragmentEnterAnimation = 0;//R.anim.pop_enter;
+        public final static int fragmentExitAnimation = 0;//R.anim.pop_exit;
     }
 
     public static final class NotificationEvent {

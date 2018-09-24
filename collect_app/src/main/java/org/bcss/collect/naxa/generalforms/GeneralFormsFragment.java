@@ -116,7 +116,11 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
                 .observe(this, new Observer<List<GeneralFormAndSubmission>>() {
                     @Override
                     public void onChanged(@Nullable List<GeneralFormAndSubmission> generalFormAndSubmissions) {
+                        if (generalFormsAdapter.getItemCount() == 0) {
+                            runLayoutAnimation(recyclerView);
+                        }
                         generalFormsAdapter.updateList(generalFormAndSubmissions);
+
                     }
                 });
     }

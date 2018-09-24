@@ -160,7 +160,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
                                                     });
                                         }
                                     })
-                                    .subscribeOn(Schedulers.io())
+                                    .subscribeOn(Schedulers.computation())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .toList()
                                     .subscribe(new SingleObserver<List<GeneralFormAndSubmission>>() {
