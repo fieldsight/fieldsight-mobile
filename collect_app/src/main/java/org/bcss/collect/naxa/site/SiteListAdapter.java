@@ -62,11 +62,11 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if (viewType == VIEW_TYPE_SURVEY_FORM) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.open_survey_from, parent, false);
+                    .inflate(R.layout.survey_list_item, parent, false);
             holder = new SurveyViewHolder(itemView);
         } else if (viewType == VIEW_TYPE_SITE) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.message_list_row, parent, false);
+                    .inflate(R.layout.site_list_item, parent, false);
             holder = new SiteViewHolder(itemView);
         }
         return holder;
@@ -116,7 +116,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 resetCurrentIndex();
             }
 
-            holder.rooTLayout.setActivated(true);
+            holder.rootLayout.setActivated(true);
         } else {
             holder.iconBack.setVisibility(View.GONE);
             resetIconYAxis(holder.iconFront);
@@ -128,7 +128,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
 
-            holder.rooTLayout.setActivated(false);
+            holder.rootLayout.setActivated(false);
         }
     }
 
@@ -191,7 +191,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private ImageView iconImp, imgProfile;
         private LinearLayout messageContainer;
         private RelativeLayout iconContainer, iconBack, iconFront;
-        private View rooTLayout;
+        private View rootLayout;
 
         public SiteViewHolder(View view) {
             super(view);
@@ -206,10 +206,10 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             imgProfile = (ImageView) view.findViewById(R.id.icon_profile);
             messageContainer = (LinearLayout) view.findViewById(R.id.message_container);
             iconContainer = (RelativeLayout) view.findViewById(R.id.icon_container);
-            rooTLayout = view.findViewById(R.id.root_layout_message_list_row);
+            rootLayout = view.findViewById(R.id.root_layout_message_list_row);
 
-            rooTLayout.setOnLongClickListener(this);
-            rooTLayout.setOnClickListener(this);
+            rootLayout.setOnLongClickListener(this);
+            rootLayout.setOnClickListener(this);
         }
 
         @Override
