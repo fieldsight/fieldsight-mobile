@@ -23,13 +23,19 @@ import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.site.SiteInfoWindow;
+import org.bcss.collect.naxa.site.SiteMarker;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
+import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.FolderOverlay;
+import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.reactivestreams.Publisher;
 
@@ -77,20 +83,23 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
     }
 
 
-    private Marker getMarker(GeoPoint geoPoint, String title, String snippet) {
-        Marker marker = new Marker(map);
+    private SiteMarker getMarker(GeoPoint geoPoint, String title, String snippet) {
+        SiteMarker marker = new SiteMarker(map);
         marker.setSnippet(snippet);
         marker.setTitle(title);
-        marker.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_place));
-
+        marker.setIcon(ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.ic_place));
         marker.setPosition(geoPoint);
         return marker;
     }
 
     private void plotSite(Site site) {
         GeoPoint geoPoint = new GeoPoint(Double.parseDouble(site.getLatitude()), Double.parseDouble(site.getLongitude()));
-        Marker marker = getMarker(geoPoint, site.getName(), site.getAddress());
+        SiteMarker marker = getMarker(geoPoint, site.getName(), site.getAddress());
         plottedSites.add(geoPoint);
+        InfoWindow infoWindow = new SiteInfoWindow(R.layout.site_bubble, map);
+        marker.setSite(site);
+        marker.setInfoWindow(infoWindow);
+        marker.setSubDescription(site.getId());
         map.getOverlays().add(marker);
 
     }
@@ -134,6 +143,8 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
             map.setMultiTouchControls(true);
             map.setBuiltInZoomControls(true);
             map.setTilesScaledToDpi(true);
+
+
         }
 
 //        handler.postDelayed(new Runnable() {
@@ -183,6 +194,22 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
                         e.printStackTrace();
                     }
                 });
+
+
+        MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(getActivity(), new MapEventsReceiver() {
+            @Override
+            public boolean singleTapConfirmedHelper(GeoPoint p) {
+                InfoWindow.closeAllInfoWindowsOn(map);
+                return true;
+            }
+
+            @Override
+            public boolean longPressHelper(GeoPoint p) {
+                return false;
+            }
+        });
+
+        map.getOverlays().add(0, mapEventsOverlay);
 
 
         return view;

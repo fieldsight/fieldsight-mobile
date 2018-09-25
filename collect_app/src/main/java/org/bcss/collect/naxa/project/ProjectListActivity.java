@@ -39,7 +39,11 @@ import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
+import org.bcss.collect.naxa.demo.FeaturesItem;
+import org.bcss.collect.naxa.demo.RawAssetLoader;
+import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -73,7 +77,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
@@ -130,7 +138,33 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
                 });
 
+        //total = 40747
+        new RawAssetLoader().loadTextFromAsset("demofile.geojson")
+                .subscribeOn(Schedulers.computation())
+                .skipLast(40746)
+                .subscribe(new Observer<Site>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
+                    }
+
+                    @Override
+                    public void onNext(Site site) {
+                        SiteLocalSource.getInstance().save(site);
+                        Timber.i(site.getName());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.e(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {

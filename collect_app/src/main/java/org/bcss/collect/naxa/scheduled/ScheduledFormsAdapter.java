@@ -154,7 +154,7 @@ public class ScheduledFormsAdapter extends
         private TextView tvFormName, tvDesc, tvIconText, tvSubtext;
         private Button btnOpenEdu, btnOpenHistory;
         private ImageView ivCardCircle;
-        private CardView cardView;
+        private View cardView;
         private ImageButton btnExpandCard;
 
         public ViewHolder(View view) {

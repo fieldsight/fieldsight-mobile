@@ -38,6 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
@@ -92,6 +93,9 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
                 .observe(this, new Observer<List<ScheduledFormAndSubmission>>() {
                     @Override
                     public void onChanged(@Nullable List<ScheduledFormAndSubmission> scheduledFormAndSubmissions) {
+                        if (scheduledFormsAdapter.getItemCount() == 0) {
+                            runLayoutAnimation(recyclerView);
+                        }
                         scheduledFormsAdapter.updateList(scheduledFormAndSubmissions);
                     }
                 });

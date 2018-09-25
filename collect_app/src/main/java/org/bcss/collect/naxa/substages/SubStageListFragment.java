@@ -45,6 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_FORM_DEPLOYED_FORM;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_ID;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -121,6 +122,9 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         viewModel.loadSubStages(loadedSite.getId(), loadedSite.getProject(), stageId, loadedSite.getTypeId())
                 .observe(this, substages -> {
                     Timber.i("SubStage forms data has been changed");
+                    if (listAdapter.getItemCount() == 0) {
+                        runLayoutAnimation(recyclerView);
+                    }
                     listAdapter.updateList(substages);
                 });
     }

@@ -38,6 +38,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
     GeneralFormsAdapter(ArrayList<GeneralFormAndSubmission> totalList, OnFormItemClickListener<GeneralForm> listener) {
         this.generalForms = totalList;
         this.listener = listener;
+        setHasStableIds(true);
     }
 
     public void updateList(List<GeneralFormAndSubmission> newList) {
@@ -57,6 +58,11 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
     }
 
+    @Override
+    public long getItemId(int position) {
+        GeneralForm generalForm = generalForms.get(position).getGeneralForm();
+        return Long.parseLong(generalForm.getFsFormId());//fsFormId is always a number
+    }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
@@ -105,7 +111,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         String formSubtext = generateSubtext(context, submittedBy, submissionStatus, formCreatedOn);
 
         viewHolder.ivCardCircle.setImageDrawable(getCircleDrawableBackground(submissionStatus));
-        viewHolder.tvDesc.setText(context.getString(R.string.form_last_submission_datetime, submissionDateTime));
+        viewHolder.tvDesc.setText(submissionDateTime);
         viewHolder.tvSubtext.setText(formSubtext);
     }
 

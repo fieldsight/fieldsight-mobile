@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.common;
 
 import android.content.Context;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -111,11 +112,16 @@ public class RecyclerViewEmptySupport extends RecyclerView {
     public void setAdapter(Adapter adapter) {
         super.setAdapter(adapter);
 
-        if (adapter != null) {
-            adapter.registerAdapterDataObserver(emptyObserver);
-        }
 
-        emptyObserver.onChanged();
+        new Handler()
+                .postDelayed(() -> {
+                    if (adapter != null) {
+                        adapter.registerAdapterDataObserver(emptyObserver);
+                    }
+
+                    emptyObserver.onChanged();
+                }, 1000);
+
     }
 
     public void setEmptyView(View emptyView, @Nullable String message, OnEmptyLayoutClickListener onEmptyLayoutClickListener) {
@@ -124,7 +130,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         if (message != null) {
             tvMsg.setText(message);
         }
-        if (onEmptyLayoutClickListener!= null) {
+        if (onEmptyLayoutClickListener != null) {
             this.emptyView.findViewById(R.id.btn_retry)
                     .setOnClickListener(new OnClickListener() {
                         @Override
