@@ -65,7 +65,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     }
 
 
-    public static SiteDashboardFragment getInstance(Site site) {
+    public static SiteDashboardFragment newInstance(Site site) {
         SiteDashboardFragment fragment = new SiteDashboardFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_OBJECT, site);

@@ -120,12 +120,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         intent.putExtra(EXTRA_OBJECT, project);
 
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
-            context.startActivity(intent, activityOptions.toBundle());
-        }else {
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
+//            context.startActivity(intent, activityOptions.toBundle());
+//        }else {
             context.startActivity(intent);
-        }
+//        }
 
 
     }
