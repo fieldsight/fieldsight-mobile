@@ -113,14 +113,12 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         super.setAdapter(adapter);
 
 
-        new Handler()
-                .postDelayed(() -> {
-                    if (adapter != null) {
-                        adapter.registerAdapterDataObserver(emptyObserver);
-                    }
+        if (adapter != null) {
+            adapter.registerAdapterDataObserver(emptyObserver);
+        }
 
-                    emptyObserver.onChanged();
-                }, 1000);
+        emptyObserver.onChanged();
+
 
     }
 

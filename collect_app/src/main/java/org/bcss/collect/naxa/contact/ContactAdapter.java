@@ -24,6 +24,7 @@ import org.bcss.collect.naxa.common.GlideApp;
 
 
 import java.util.List;
+import java.util.logging.Handler;
 
 import io.reactivex.annotations.NonNull;
 

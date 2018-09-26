@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
+    android:background="?selectableItemBackground"
     app:cardCornerRadius="@dimen/corner_radius"
     app:cardElevation="@dimen/elevation_card_resting"
     android:stateListAnimator="@animator/lift_on_touch"
