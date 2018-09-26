@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.site;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -27,6 +28,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
+import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
+import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -53,7 +56,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         setupToolbar();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_container, SiteDashboardFragment.getInstance(loadedSite), "frag0")
+                .add(R.id.fragment_container, SiteDashboardFragment.newInstance(loadedSite), "frag0")
                 .commit();
 
 

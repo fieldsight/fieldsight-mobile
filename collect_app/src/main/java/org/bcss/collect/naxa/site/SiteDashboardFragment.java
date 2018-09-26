@@ -65,7 +65,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     }
 
 
-    public static SiteDashboardFragment getInstance(Site site) {
+    public static SiteDashboardFragment newInstance(Site site) {
         SiteDashboardFragment fragment = new SiteDashboardFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_OBJECT, site);
@@ -251,11 +251,11 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         if (isOfflineSite) {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(true);
-            rootView.findViewById(R.id.site_option_btn_delete_site).setEnabled(true);
+            rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.VISIBLE);
         } else {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(true);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(false);
-            rootView.findViewById(R.id.site_option_btn_delete_site).setEnabled(false);
+            rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.GONE);
         }
 
     }

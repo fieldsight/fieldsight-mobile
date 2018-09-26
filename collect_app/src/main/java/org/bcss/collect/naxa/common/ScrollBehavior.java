@@ -67,6 +67,7 @@ public class ScrollBehavior extends CoordinatorLayout.Behavior<FloatingActionBut
 
     private void show(FloatingActionButton floatingTextButton) {
 
+        if(floatingTextButton.getVisibility() == View.GONE)floatingTextButton.setVisibility(View.VISIBLE);
         animation = ViewCompat.animate(floatingTextButton)
                 .translationY(TRANSLATION_SHOW)
                 .setDuration(HIDE_DURATION);

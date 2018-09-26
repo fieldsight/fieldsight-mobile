@@ -19,7 +19,7 @@ import org.bcss.collect.naxa.login.model.Site;
 
 import org.bcss.collect.naxa.login.model.SiteMetaAttributesTypeConverter;
 import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
-import org.bcss.collect.naxa.onboarding.SyncableItems;
+import org.bcss.collect.naxa.onboarding.SyncableItem;
 import org.bcss.collect.naxa.previoussubmission.SubmissionDetailDAO;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.project.data.ProjectDao;
@@ -44,7 +44,7 @@ import java.io.File;
         {
                 Site.class,
                 Project.class,
-                SyncableItems.class,
+                SyncableItem.class,
                 GeneralForm.class,
                 ScheduleForm.class,
                 Stage.class,

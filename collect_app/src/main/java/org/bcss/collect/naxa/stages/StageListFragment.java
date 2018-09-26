@@ -46,6 +46,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class StageListFragment extends Fragment implements OnFormItemClickListener<Stage> {
@@ -112,6 +113,9 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
                 .subscribe(new DisposableObserver<List<Stage>>() {
                     @Override
                     public void onNext(List<Stage> stages) {
+                        if (listAdapter.getItemCount() == 0) {
+                            runLayoutAnimation(recyclerView);
+                        }
                         listAdapter.updateList(stages);
                     }
 

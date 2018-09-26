@@ -8,6 +8,7 @@ package org.bcss.collect.naxa.contact;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import org.bcss.collect.naxa.common.GlideApp;
 
 
 import java.util.List;
+import java.util.logging.Handler;
 
 import io.reactivex.annotations.NonNull;
 
@@ -50,6 +52,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         private TextView tvFullName, tvUserName, tvPhone;
         private ImageView ivProfilePicture;
         private ImageButton btnCall;
+        private CardView card;
 
         public MyViewHolder(View view) {
             super(view);
@@ -58,31 +61,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             tvFullName = (TextView) view.findViewById(R.id.contact_name);
             tvUserName = (TextView) view.findViewById(R.id.contact_username);
             btnCall = (ImageButton) view.findViewById(R.id.frag_contact_btn_call);
+            card = view.findViewById(R.id.card_contact_list_item);
 
-            tvFullName.setTypeface(face);
-            tvUserName.setTypeface(face1);
-
-            try {
-                btnCall.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int pos = getAdapterPosition();
-                        contactDetailListener.onPhoneButtonClick(contactList.get(pos));
-                    }
-                });
-
-
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int pos = getAdapterPosition();
-                        contactDetailListener.onContactClicked(contactList.get(pos));
-                    }
-                });
-            } catch (NullPointerException e) {
-                //bug - listener is sometimes null
-            }
-
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    contactDetailListener.onContactClicked(contactList.get(pos));
+                }
+            });
         }
     }
 
@@ -91,7 +78,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(@android.support.annotation.NonNull ViewGroup parent, int viewType) {
         itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.bcss_contact_row_layout, parent, false);
+                .inflate(R.layout.contact_list_item, parent, false);
 
         context = parent.getContext();
 
@@ -103,7 +90,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final FieldSightContactModel contact = contactList.get(position);
         holder.tvFullName.setText(contact.getFull_name());
-        holder.tvUserName.setText(contact.getUsername());
+        holder.tvUserName.setText(contact.getEmail());
 /*
         //open tvSkype
         holder.tvSkype.setOnClickListener(new View.OnClickListener() {

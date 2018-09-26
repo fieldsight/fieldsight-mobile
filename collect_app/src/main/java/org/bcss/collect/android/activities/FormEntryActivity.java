@@ -1026,8 +1026,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
 
-        menu.findItem(R.id.menu_preferences).setVisible(useability)
-                .setEnabled(useability);
+//        menu.findItem(R.id.menu_preferences).setVisible(useability)
+//                .setEnabled(useability);
+        menu.findItem(R.id.menu_preferences).setVisible(false)
+                .setEnabled(false);
         return true;
     }
 
@@ -2345,8 +2347,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         String navigation = (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_NAVIGATION);
         showNavigationButtons = navigation.contains(PreferenceKeys.NAVIGATION_BUTTONS);
-        backButton.setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
-        nextButton.setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
+        backButton.setVisibility(showNavigationButtons ? View.VISIBLE : View.VISIBLE);
+        nextButton.setVisibility(showNavigationButtons ? View.VISIBLE : View.VISIBLE);
 
         if (errorMessage != null) {
             if (alertDialog != null && !alertDialog.isShowing()) {

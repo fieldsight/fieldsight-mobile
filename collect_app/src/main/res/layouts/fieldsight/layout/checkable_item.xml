@@ -80,12 +80,12 @@ the specific language governing permissions and limitations under the License. -
 
 
         <ProgressBar
-            android:id="@+id/update_progress"
+             android:id="@+id/update_progress"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/update_info"
             android:indeterminate="true"
-            android:visibility="gone" />
+             />
     </RelativeLayout>
 </org.bcss.collect.android.views.TwoItemMultipleChoiceView>

@@ -86,6 +86,7 @@ import retrofit2.HttpException;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
+import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.SharedPreferenceUtils.keySelectedRegionId;
@@ -241,7 +242,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }
 
         source.observe(this, sites -> {
-
+            if (siteListAdapter.getItemCount() == 0) {
+                runLayoutAnimation(recyclerView);
+            }
             siteListAdapter.updateList(sites);
         });
 
@@ -291,7 +294,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 recyclerView.setAdapter(adapter);
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
                 recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
+
             }
         });
 
@@ -395,14 +398,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         SurveyFormsActivity.start(getActivity(), loadedProject);
     }
 
-    private void runLayoutAnimation(final RecyclerView recyclerView) {
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }
+
 
     private void enableActionMode(int position) {
         if (actionMode == null) {

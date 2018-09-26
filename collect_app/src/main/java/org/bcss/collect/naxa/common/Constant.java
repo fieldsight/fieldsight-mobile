@@ -36,8 +36,8 @@ public class Constant {
     }
 
     public final static class ANIM {
-        public final static int fragmentEnterAnimation = R.anim.pop_enter;
-        public final static int fragmentExitAnimation = R.anim.pop_exit;
+        public final static int fragmentEnterAnimation = android.R.anim.fade_in;
+        public final static int fragmentExitAnimation = R.anim.fade_out;
     }
 
     public static final class NotificationEvent {
@@ -118,7 +118,6 @@ public class Constant {
 
 
     }
-
 
 
     public final static class DownloadStatus {

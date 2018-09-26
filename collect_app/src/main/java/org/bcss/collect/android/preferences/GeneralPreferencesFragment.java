@@ -27,6 +27,7 @@ import org.bcss.collect.android.R;
 
 import java.util.Collection;
 
+import static org.bcss.collect.android.preferences.AdminKeys.KEY_EDIT_SAVED;
 import static org.bcss.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public class GeneralPreferencesFragment extends BasePreferenceFragment implements Preference.OnPreferenceClickListener {
@@ -91,7 +92,6 @@ public class GeneralPreferencesFragment extends BasePreferenceFragment implement
 
         return true;
     }
-
     private void setPreferencesVisibility() {
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         if (!hasAtleastOneSettingEnabled(AdminKeys.serverKeys)) {

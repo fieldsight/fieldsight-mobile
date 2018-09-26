@@ -43,6 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
@@ -116,21 +117,16 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
                 .observe(this, new Observer<List<GeneralFormAndSubmission>>() {
                     @Override
                     public void onChanged(@Nullable List<GeneralFormAndSubmission> generalFormAndSubmissions) {
+                        if (generalFormsAdapter.getItemCount() == 0) {
+                            runLayoutAnimation(recyclerView);
+                        }
                         generalFormsAdapter.updateList(generalFormAndSubmissions);
+
                     }
                 });
     }
 
-    public void runLayoutAnimation(final RecyclerView recyclerView) {
 
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
-
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }
 
 
     private void setupListAdapter() {
@@ -138,17 +134,18 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         generalFormsAdapter = new GeneralFormsAdapter(new ArrayList<>(0), this);
+        recyclerView.setAdapter(generalFormsAdapter);
         recyclerView.setEmptyView(emptyLayout,
                 getString(R.string.empty_message, "general forms"),
                 new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {
-                        viewModel.getFormsAndSubmission(loadedSite);
+
                     }
                 });
-        recyclerView.setAdapter(generalFormsAdapter);
+
     }
 
     @Override

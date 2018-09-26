@@ -15,6 +15,7 @@
         android:fillEnabled="false">
 
         <ImageView
+            android:id="@+id/imageView2"
             android:layout_width="@dimen/icon_width_height"
             android:layout_height="@dimen/icon_width_height"
             android:src="@drawable/circle_green" />

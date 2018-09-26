@@ -32,3 +32,7 @@ out/
 .externalNativeBuild/
 .navigation/
 captures/
+
+# Debug
+/collect_app/src/main/java/org/bcss/collect/naxa/common/Login.java
+

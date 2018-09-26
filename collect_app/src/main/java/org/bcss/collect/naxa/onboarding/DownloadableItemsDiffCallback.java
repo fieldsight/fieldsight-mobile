@@ -7,11 +7,11 @@ import java.util.List;
 
 public class DownloadableItemsDiffCallback extends DiffUtil.Callback {
 
-    private List<SyncableItems> oldItems;
-    private List<SyncableItems> newItems;
+    private List<SyncableItem> oldItems;
+    private List<SyncableItem> newItems;
 
 
-    public DownloadableItemsDiffCallback(List<SyncableItems> newItems, List<SyncableItems> oldItems) {
+    public DownloadableItemsDiffCallback(List<SyncableItem> newItems, List<SyncableItem> oldItems) {
         this.newItems = newItems;
         this.oldItems = oldItems;
     }

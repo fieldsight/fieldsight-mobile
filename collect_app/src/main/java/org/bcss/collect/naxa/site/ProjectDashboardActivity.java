@@ -118,15 +118,15 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         ActivityOptions activityOptions = null;
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
-        context.startActivity(intent);
+
 
 //        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 //            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
-//        }
-//
-//        if (activityOptions != null) {
 //            context.startActivity(intent, activityOptions.toBundle());
+//        }else {
+            context.startActivity(intent);
 //        }
+
 
     }
 
@@ -169,33 +169,34 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false) {
             Transition sharedElementEnterTransition = getWindow().getSharedElementEnterTransition();
 
-            sharedElementEnterTransition.addListener(new Transition.TransitionListener() {
-                @Override
-                public void onTransitionStart(Transition transition) {
-                    pager.setVisibility(View.INVISIBLE);
-                    hideTabs();
-                    pager.animate().alpha(0.0f).start();
-                }
+            sharedElementEnterTransition
+                    .addListener(new Transition.TransitionListener() {
+                        @Override
+                        public void onTransitionStart(Transition transition) {
+                            pager.setVisibility(View.INVISIBLE);
+                            hideTabs();
+                            pager.animate().alpha(0.0f).setDuration(500).start();
+                        }
 
-                @Override
-                public void onTransitionEnd(Transition transition) {
-                    pager.setVisibility(View.VISIBLE);
-                    pager.animate().alpha(1.0f).start();
-                    showTabs();
-                }
+                        @Override
+                        public void onTransitionEnd(Transition transition) {
+                            pager.setVisibility(View.VISIBLE);
+                            pager.animate().alpha(1.0f).setDuration(500).start();
+                            showTabs();
+                        }
 
-                @Override
-                public void onTransitionCancel(Transition transition) {
-                }
+                        @Override
+                        public void onTransitionCancel(Transition transition) {
+                        }
 
-                @Override
-                public void onTransitionPause(Transition transition) {
-                }
+                        @Override
+                        public void onTransitionPause(Transition transition) {
+                        }
 
-                @Override
-                public void onTransitionResume(Transition transition) {
-                }
-            });
+                        @Override
+                        public void onTransitionResume(Transition transition) {
+                        }
+                    });
         } else {
             pager.setVisibility(View.VISIBLE);
             showTabs();
@@ -427,7 +428,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     public void setToolbalText(String title) {
         collapsingToolbarLayout.setTitle(title);
     }
-
 
 
     private void bindUI() {
