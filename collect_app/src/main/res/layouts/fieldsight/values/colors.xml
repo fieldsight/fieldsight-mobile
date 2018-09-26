@@ -31,8 +31,8 @@
     <color name="color_grey_light">#ececec</color>
     <color name="white">#FFFFFF</color>
     <color name="green_approved">#00A651</color>
-    <color name="red_rejected">#f12e33</color>
-    <color name="yellow_flagged">#FEF200</color>
+    <color name="red_rejected">#c62828</color>
+    <color name="yellow_flagged">#fbc02d</color>
     <color name="grey_outstanding">#C2C2C2</color>
     <color name="yellow">#ffc400</color>
     <color name="orange">#ec491c</color>
