@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
 
     <RelativeLayout
@@ -12,13 +12,10 @@
 
 
 
-
         <ImageView
-
             android:id="@+id/iv_contactdetail_image"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            />
+            android:layout_height="300dp" />
 
         <ImageView
 
@@ -27,13 +24,29 @@
             android:src="@drawable/black_transparent_top_graident" />
 
 
+
+        <Button
+            android:id="@+id/btn_phone_call"
+            android:textColor="@color/white"
+            android:layout_margin="@dimen/margin_medium"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/margin_medium"
+
+            android:drawableStart="@drawable/ic_local_phone"
+            android:drawableLeft="@drawable/ic_local_phone"
+            android:text="Call Now" />
+
         <TextView
             android:id="@+id/tv_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_contactdetail_image"
-            android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:paddingLeft="@dimen/margin_large"
             android:text="Info"
             android:textColor="@drawable/black"
@@ -55,23 +68,22 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_contactdetail_fullname"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Username"
             android:textSize="@dimen/text_size_small" />
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/tv_contactdetail_role"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_contactdetail_username"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Role"
             android:textSize="@dimen/text_size_small"
-            />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_contactdetail_address"
@@ -79,8 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_contactdetail_role"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Address"
             android:textSize="@dimen/text_size_small" />
 
@@ -90,11 +102,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_contactdetail_address"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Gender"
             android:textSize="@dimen/text_size_small" />
-
 
 
         <TextView
@@ -104,15 +115,11 @@
             android:layout_below="@id/tv_contactdetail_gender"
             android:layout_marginBottom="@dimen/margin_medium"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_medium"
             android:paddingTop="@dimen/margin_medium"
+            android:paddingRight="@dimen/margin_medium"
             android:text="Contact"
             android:textColor="@drawable/black"
             android:textSize="@dimen/text_size_medium" />
-
-
-
-
 
 
         <ImageView
@@ -120,22 +127,22 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/tv_contact"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
             android:background="@color/colorPrimary"
             android:padding="2dp"
             android:src="@android:drawable/ic_dialog_email" />
 
         <TextView
-            android:autoLink="email"
             android:id="@+id/tv_contactdetail_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_contact"
             android:layout_toRightOf="@id/iv_email_icon"
+            android:autoLink="email"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Email"
             android:textSize="@dimen/text_size_small" />
 
@@ -144,8 +151,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/iv_email_icon"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
 
             android:padding="2dp"
             android:src="@drawable/ic_skype_icon" />
@@ -158,8 +165,8 @@
             android:layout_below="@id/iv_email_icon"
             android:layout_toRightOf="@id/iv_skype_icon"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Skype"
             android:textSize="@dimen/text_size_small" />
 
@@ -168,8 +175,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/iv_skype_icon"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
 
             android:padding="2dp"
             android:src="@drawable/ic_twitter_icon" />
@@ -181,8 +188,8 @@
             android:layout_below="@id/iv_skype_icon"
             android:layout_toRightOf="@id/iv_twitter_icon"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Twitter"
             android:textSize="@dimen/text_size_small" />
 
@@ -191,8 +198,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/iv_twitter_icon"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
 
             android:padding="2dp"
             android:src="@drawable/ic_tango" />
@@ -204,8 +211,8 @@
             android:layout_below="@id/iv_twitter_icon"
             android:layout_toRightOf="@id/iv_tango_icon"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Tango"
             android:textSize="@dimen/text_size_small" />
 
@@ -214,8 +221,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/iv_tango_icon"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
 
             android:padding="2dp"
             android:src="@drawable/ic_hike" />
@@ -227,8 +234,8 @@
             android:layout_below="@id/iv_tango_icon"
             android:layout_toRightOf="@id/iv_hike_icon"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Hike"
             android:textSize="@dimen/text_size_small" />
 
@@ -237,8 +244,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/iv_hike_icon"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
 
             android:padding="2dp"
             android:src="@drawable/ic_qq" />
@@ -251,8 +258,8 @@
             android:layout_below="@id/iv_hike_icon"
             android:layout_toRightOf="@id/iv_qq_icon"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="QQ"
             android:textSize="@dimen/text_size_small" />
 
@@ -261,8 +268,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/iv_qq_icon"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
 
             android:padding="2dp"
             android:src="@drawable/ic_google_talk" />
@@ -274,8 +281,8 @@
             android:layout_below="@id/iv_qq_icon"
             android:layout_toRightOf="@id/iv_googletalk_icon"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Google Talk"
             android:textSize="@dimen/text_size_small" />
 
@@ -284,8 +291,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/iv_googletalk_icon"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
 
             android:padding="2dp"
             android:src="@drawable/ic_viber" />
@@ -297,8 +304,8 @@
             android:layout_below="@id/iv_googletalk_icon"
             android:layout_toRightOf="@id/iv_viber_icon"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Viber"
             android:textSize="@dimen/text_size_small" />
 
@@ -307,8 +314,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/iv_viber_icon"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
 
             android:padding="2dp"
             android:src="@drawable/ic_whatsapp" />
@@ -321,8 +328,8 @@
             android:layout_below="@id/iv_viber_icon"
             android:layout_toRightOf="@id/iv_whatsapp_icon"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="Whats App"
             android:textSize="@dimen/text_size_small" />
 
@@ -331,8 +338,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@id/iv_whatsapp_icon"
-            android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_small"
 
             android:padding="2dp"
             android:src="@drawable/ic_wechat" />
@@ -345,8 +352,8 @@
             android:layout_below="@id/iv_whatsapp_icon"
             android:layout_toRightOf="@id/iv_wechat_icon"
             android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
             android:paddingTop="@dimen/margin_small"
+            android:paddingRight="@dimen/margin_small"
             android:text="We Chat"
             android:textSize="@dimen/text_size_small" />
 

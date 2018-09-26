@@ -120,7 +120,6 @@ public class Constant {
     }
 
 
-
     public final static class DownloadStatus {
         public static final int PENDING = 1;
         public static final int FAILED = 2;
