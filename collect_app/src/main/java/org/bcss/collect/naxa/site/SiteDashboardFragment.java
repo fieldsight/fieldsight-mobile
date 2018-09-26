@@ -46,6 +46,8 @@ import butterknife.Unbinder;
 
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
+import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
+import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.ViewUtils.showOrHide;
 
@@ -322,7 +324,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         GeneralFormsFragment fragment = GeneralFormsFragment.newInstance(loadedSite);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentEnterAnimation, fragmentExitAnimation);
+        fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack("generalfrag");
         fragmentTransaction.commit();
@@ -336,7 +338,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentEnterAnimation, fragmentExitAnimation)
+                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation)
                 .replace(R.id.fragment_container, stageListFragment)
                 .addToBackStack("myfrag2").commit();
 
@@ -352,7 +354,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentEnterAnimation, fragmentExitAnimation)
+                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation)
                 .replace(R.id.fragment_container, scheduleFormListFragment)
                 .addToBackStack("myfrag1").commit();
 

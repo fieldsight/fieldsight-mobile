@@ -175,7 +175,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(Constant.ANIM.fragmentEnterAnimation
-                , Constant.ANIM.fragmentExitAnimation, Constant.ANIM.fragmentEnterAnimation, Constant.ANIM.fragmentExitAnimation);
+                , Constant.ANIM.fragmentExitAnimation, Constant.ANIM.fragmentEnterAnimation, Constant.ANIM.fragmentPopExitAnimation);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack("myfrag3");
         fragmentTransaction.commit();
