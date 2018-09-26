@@ -54,4 +54,5 @@
     <color name="from">#000000</color>
     <color name="subject">#111111</color>
     <color name="message">#7a7a7a</color>
+    <color name="colorButton">#0277bd</color>
 </resources>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/profile_background"
+            android:elevation="2dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="68dp"
+                android:fontFamily="sans-serif"
+                android:text="Marian Hart"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvName"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:lines="2"
+                android:text="Director of Project Management at GoldenPhase Solar"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvEducation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvTitle"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="4dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Syracuse University - New York"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvEducation"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Greater San Diego Area . 500"
+                android:textSize="16sp" />
+
+            <Space
+                android:id="@+id/spaceHolder"
+                android:layout_width="10dp"
+                android:layout_height="0dp"
+                android:layout_below="@id/tvEducation"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:id="@+id/btnMessage"
+                android:layout_width="110dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/tvAddress"
+                android:layout_marginBottom="16dp"
+                android:layout_toLeftOf="@id/spaceHolder"
+                android:layout_toStartOf="@id/spaceHolder"
+                android:background="@drawable/button_colorless_bordered_blue"
+                android:fontFamily="sans-serif-medium"
+                android:paddingEnd="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:text="message"
+                android:textColor="@color/colorButton"
+                android:textSize="16sp" />
+
+            <Button
+                android:layout_width="110dp"
+                android:layout_height="40dp"
+                android:layout_below="@id/tvAddress"
+                android:layout_marginBottom="16dp"
+                android:layout_toEndOf="@id/spaceHolder"
+                android:layout_toRightOf="@id/spaceHolder"
+                android:background="@drawable/button_colored_blue"
+                android:fontFamily="sans-serif-medium"
+                android:paddingEnd="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:text="connect"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvSummary"
+                android:layout_width="310dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/btnMessage"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:lines="2"
+                android:text="I'm a renewable energy executive with 10 years of experience, and have built strong skills in getting companies"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <include
+            android:id="@+id/photoHeader"
+            layout="@layout/user_profile_photo_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_anchor="@id/relativeLayout"
+            app:layout_anchorGravity="top|center" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</ScrollView>

@@ -310,8 +310,9 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name="org.bcss.collect.naxa.site.CreateSiteActivity"
             android:exported="true" />
-        <activity android:name="org.bcss.collect.naxa.site.CreateSiteDetailActivity"
-            android:exported="true"/>
+        <activity
+            android:name="org.bcss.collect.naxa.site.CreateSiteDetailActivity"
+            android:exported="true" />
         <activity
             android:name="org.bcss.collect.naxa.survey.SurveyFormsActivity"
             android:exported="true" />
@@ -327,9 +328,11 @@ the specific language governing permissions and limitations under the License.
             android:exported="true" />
         <activity android:name="org.bcss.collect.naxa.project.MapActivity" />
         <activity
-            android:exported="true"
-            android:name="org.bcss.collect.naxa.profile.UserProfileActivity" />
-
+            android:name="org.bcss.collect.naxa.profile.UserProfileActivity"
+            android:exported="true" />
+        <activity
+            android:name="org.bcss.collect.naxa.profile.UserActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
