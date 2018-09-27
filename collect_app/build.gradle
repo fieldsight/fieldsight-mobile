@@ -3,6 +3,7 @@ apply plugin: 'io.fabric'
 apply from: '../config/quality.gradle'
 apply from: '../config/jacoco.gradle'
 
+
 import com.android.ddmlib.DdmPreferences
 
 DdmPreferences.setTimeOut(60000)

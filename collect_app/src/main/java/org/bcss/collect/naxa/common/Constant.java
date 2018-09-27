@@ -36,8 +36,14 @@ public class Constant {
     }
 
     public final static class ANIM {
-        public final static int fragmentEnterAnimation = android.R.anim.fade_in;
-        public final static int fragmentExitAnimation = R.anim.fade_out;
+
+
+        public final static int fragmentEnterAnimation = R.anim.enter_from_right;
+        public final static int fragmentExitAnimation = R.anim.exit_to_left;
+        public final static int fragmentPopEnterAnimation = R.anim.enter_from_left;
+        public final static int fragmentPopExitAnimation = R.anim.exit_to_right;
+
+
     }
 
     public static final class NotificationEvent {

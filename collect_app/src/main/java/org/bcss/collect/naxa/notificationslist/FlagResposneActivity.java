@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -61,6 +62,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     RelativeLayout relativeStatus;
     RelativeLayout formBox;
     private FieldSightNotification loadedFieldSightNotification;
+    private Toolbar toolbar;
 
 
     public static void start(Context context, FieldSightNotification fieldSightNotification) {
@@ -70,18 +72,43 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     }
 
 
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle("Form Flagged");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activty_flag_response);
 
+        bindUI();
+        setupToolbar();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        formBox.setOnClickListener(this);
+
+        loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
+        setupData(loadedFieldSightNotification);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void bindUI() {
 
         //layout element ids
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         noMessage = (TextView) findViewById(R.id.textView6);
         tvFormName = (TextView) findViewById(R.id.tv_form_name);
         tvFormDesc = (TextView) findViewById(R.id.tv_form_desc);
@@ -93,11 +120,6 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
 
         relativeStatus = (RelativeLayout) findViewById(R.id.relativeLayout_status);
         formBox = (RelativeLayout) findViewById(R.id.relative_layout_comment_open_form);
-        formBox.setOnClickListener(this);
-
-        loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
-        setupData(loadedFieldSightNotification);
-
     }
 
     private void setupData(FieldSightNotification fieldSightNotification) {

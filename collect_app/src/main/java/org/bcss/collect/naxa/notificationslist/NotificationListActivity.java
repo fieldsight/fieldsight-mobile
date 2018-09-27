@@ -137,7 +137,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     @Override
     public void onClickPrimaryAction(FieldSightNotification fieldSightNotification) {
         switch (fieldSightNotification.getNotificationType()) {
-            case Constant.NotificationType.SITE_FORM:
+            case Constant.NotificationType.FORM_FLAG:
                 FlagResposneActivity.start(this, fieldSightNotification);
                 break;
         }

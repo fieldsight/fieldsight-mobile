@@ -124,6 +124,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         @Override
         public void onClick(View v) {
             FieldSightNotification FieldSightNotification = FieldSightNotifications.get(getAdapterPosition());
+
+
             switch (v.getId()) {
                 case R.id.card_view_list_item_title_desc:
                     listener.onClickPrimaryAction(FieldSightNotification);
