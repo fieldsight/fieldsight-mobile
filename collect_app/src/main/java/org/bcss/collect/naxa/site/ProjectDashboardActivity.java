@@ -65,6 +65,7 @@ import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
+import org.bcss.collect.naxa.profile.UserActivity;
 import org.bcss.collect.naxa.project.MapFragment;
 import org.bcss.collect.naxa.contact.ProjectContactsFragment;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
@@ -234,7 +235,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtils.showLongToast("Not implemented yet");
+//                        ToastUtils.showLongToast("Not implemented yet");
+                        UserActivity.start(ProjectDashboardActivity.this);
                     }
                 }, 250);
             }
