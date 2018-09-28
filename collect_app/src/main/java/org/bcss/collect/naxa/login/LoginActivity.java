@@ -22,7 +22,7 @@ import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.DialogFactory;
-import org.bcss.collect.naxa.common.Login;
+//import org.bcss.collect.naxa.common.Login;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
 
@@ -58,7 +58,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
             @Override
             public void onClick(View view) {
-                if(allowClick()){
+                if (allowClick()) {
                     hideKeyboardInActivity(LoginActivity.this);
                     attemptLogin();
                 }
@@ -67,7 +67,6 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
         mLoginFormView = findViewById(R.id.logo);
         mProgressView = findViewById(R.id.login_progress);
-
 
 
         findViewById(R.id.tv_forgot_pwd).setOnClickListener(new OnClickListener() {
@@ -85,10 +84,10 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
         loginPresenter = new LoginPresenterImpl(this);
 
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             hideKeyboardInActivity(this);
-            mEmailView.setText(Login.username);
-            mPasswordView.setText(Login.pwd);
+//            mEmailView.setText(Login.username);
+//            mPasswordView.setText(Login.pwd);
             mEmailSignInButton.performClick();
         }
     }

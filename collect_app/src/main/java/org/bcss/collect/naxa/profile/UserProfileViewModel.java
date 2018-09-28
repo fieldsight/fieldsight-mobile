@@ -11,10 +11,20 @@ import java.io.File;
 
 public class UserProfileViewModel extends ViewModel {
 
+    private UserProfileRepository userProfileRepository;
     private MutableLiveData<User> user = new MutableLiveData<>();
     private MutableLiveData<Boolean> editProfile = new MutableLiveData<>();
 
     public UserProfileViewModel() {
+        this.userProfileRepository = new UserProfileRepository();
+    }
+
+    public void save(User user) {
+        userProfileRepository.save(user);
+    }
+
+    public User get() {
+        return userProfileRepository.get();
     }
 
     public MutableLiveData<Boolean> getEditProfile() {

@@ -114,8 +114,7 @@ public class UserActivity extends CollectAbstractActivity {
 
         userProfileViewModel.setEditProfile(false);
 
-        String userString = SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_KEY.USER, null);
-        mUser = new Gson().fromJson(userString, User.class);
+        mUser = userProfileViewModel.get();
 
         if (mUser != null) {
             userProfileViewModel.setUser(mUser);
@@ -154,8 +153,7 @@ public class UserActivity extends CollectAbstractActivity {
                             checkAndSetVisibility(ilOrganization);
                             checkAndSetVisibility(ilProject);
 
-                            String userString = GSONInstance.getInstance().toJson(userProfileViewModel.getUser().getValue());
-                            SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, userString);
+                            userProfileViewModel.save(userProfileViewModel.getUser().getValue());
 
                         }
                         currentEditable = editMode;
