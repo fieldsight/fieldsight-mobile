@@ -1,5 +1,7 @@
 package org.bcss.collect.naxa.project.data;
 
+import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 
 import org.bcss.collect.naxa.common.GSONInstance;
@@ -29,8 +31,10 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -207,33 +211,40 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     public void getAll() {
         int uid = Constant.DownloadUID.PROJECT_SITES;
 
-        Single<List<Project>> observable = fetchProjectAndSites()
-                .observeOn(AndroidSchedulers.mainThread());
+        Single<List<Project>> observable = fetchProjectAndSites();
 
-        observable.subscribe(new SingleObserver<List<Project>>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                ProjectLocalSource.getInstance().deleteAll();
-                SiteLocalSource.getInstance().deleteAll();
-                EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
-                SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
-            }
+        ReactiveNetwork
+                .observeNetworkConnectivity(Collect.getInstance().getApplicationContext())
+                .flatMapSingle((Function<Connectivity, SingleSource<List<Project>>>) connectivity -> observable)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<List<Project>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        ProjectLocalSource.getInstance().deleteAll();
+                        SiteLocalSource.getInstance().deleteAll();
+                        EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
+                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
+                    }
 
-            @Override
-            public void onSuccess(List<Project> projects) {
-                EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
-                FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
-                syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
-            }
+                    @Override
+                    public void onNext(List<Project> projects) {
+                        EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
+                        FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
+                        syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
-                syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
+                        syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
+                    }
 
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
 
