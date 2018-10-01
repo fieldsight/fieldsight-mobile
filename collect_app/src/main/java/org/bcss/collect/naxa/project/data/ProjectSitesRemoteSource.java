@@ -191,7 +191,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                                     @Override
                                     public ObservableSource<Project> apply(List<SiteRegion> siteRegions) throws Exception {
 
-
                                         siteRegions.add(new SiteRegion("", "Unassigned", ""));
 
                                         String value = new Gson().toJson(siteRegions);

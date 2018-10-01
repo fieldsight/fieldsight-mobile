@@ -174,6 +174,9 @@
     <string name="substage_description">• Description: %s</string>
     <string name="form_pending_submission">Pending Submission</string>
     <string name="error_selection_required">A %s selection is required</string>
+    <string name="toolbar_site_documents">Site Documents</string>
+    <string name="title_activity_image_viewer">ImageViewerActivity</string>
+    <string name="empty_message_site_documents" >Once Site documents are added to your site they will be listed here</string>
 
     <!--Notification sitelist ends here-->
 

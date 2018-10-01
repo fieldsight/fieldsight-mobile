@@ -2,6 +2,8 @@ package org.bcss.collect.naxa.login.model;
 
 import android.os.Parcel;
 
+import java.util.List;
+
 public class SiteBuilder {
     private String id;
     private String latitude;
@@ -28,6 +30,7 @@ public class SiteBuilder {
     private String stagedFormDeployedFrom;
     private String scheduleFormDeployedForm;
     private Parcel in;
+    private List<String> siteDocuments;
 
     public SiteBuilder setId(String id) {
         this.id = id;
@@ -154,7 +157,15 @@ public class SiteBuilder {
         return this;
     }
 
+    public SiteBuilder setSiteDocuments(List<String> siteDocuments) {
+        this.siteDocuments = siteDocuments;
+        return this;
+    }
+
     public Site createSite() {
-        return new Site(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, metaAttributes, region, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
+        return new Site(id, latitude, longitude, identifier, name, typeId, typeLabel,
+                phone, address, publicDesc, additionalDesc, logo, isActive, location,
+                isSurvey, dateCreated, project, isSiteVerified, siteTypeError, metaAttributes,
+                region, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm, siteDocuments);
     }
 }

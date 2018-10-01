@@ -36,6 +36,7 @@ import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.project.MapActivity;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsFragment;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.bcss.collect.naxa.sitedocuments.SiteDocumentsListActivity;
 import org.bcss.collect.naxa.stages.StageListFragment;
 
 import java.io.File;
@@ -197,7 +198,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
                         break;
                     case R.id.popup_view_blue_prints:
-                        ToastUtils.showShortToast("Not implemented yet");
+                        SiteDocumentsListActivity.start(getActivity(),loadedSite);
                         break;
 
 

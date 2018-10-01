@@ -80,6 +80,15 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         archivesBaseName = 'collect'
+
+        javaCompileOptions {
+
+//            https://developer.android.com/training/data-storage/room/migrating-db-versions
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -329,7 +338,6 @@ dependencies {
 
     // Used to generate documentation screenshots.
     androidTestImplementation "tools.fastlane:screengrab:1.1.0"
-
 
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"
