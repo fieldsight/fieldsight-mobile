@@ -377,10 +377,11 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equal(mySitesModel, user.mySitesModel) &&
+        return sync == user.sync &&
+                Objects.equal(mySitesModel, user.mySitesModel) &&
                 Objects.equal(user_name, user.user_name) &&
-                Objects.equal(profilepic, user.profilepic) &&
                 Objects.equal(serverTime, user.serverTime) &&
+                Objects.equal(profilepic, user.profilepic) &&
                 Objects.equal(firstName, user.firstName) &&
                 Objects.equal(lastName, user.lastName) &&
                 Objects.equal(email, user.email) &&
@@ -410,6 +411,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mySitesModel, user_name, profilepic, serverTime, firstName, lastName, email, phone, address, gender, skype, primaryNumber, secondaryNumber, officeNumber, viber, whatsApp, wechat, line, tango, hike, qq, googleTalk, twitter, organization, project, isSupervisor, lastLogin, organizationUrl, additionalProperties);
+        return Objects.hashCode(mySitesModel, user_name, serverTime, profilepic, firstName, lastName, email, phone, address, gender, skype, primaryNumber, secondaryNumber, officeNumber, viber, whatsApp, wechat, line, tango, hike, qq, googleTalk, twitter, organization, project, isSupervisor, lastLogin, organizationUrl, additionalProperties, sync);
     }
 }

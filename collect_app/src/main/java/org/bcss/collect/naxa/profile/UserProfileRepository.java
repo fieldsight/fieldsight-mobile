@@ -50,20 +50,20 @@ public class UserProfileRepository {
         RequestBody twitterIn = checkAndReturnStringBody(user.getTwitter());
         RequestBody organizationIn = checkAndReturnStringBody(user.getOrganization());
 
-        if (user.getProfilepic().isEmpty()) {
-            userObservable = getRxClient()
-                    .create(ApiInterface.class)
-                    .updateUserProfileNoImage(APIEndpoint.BASE_URL + "/users/api/profile/" + "303" + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
-                            officeIn, viberIn, whatsAppIn, wechatIn, lineIn, tangoIn, hikeIn, qqIn, googleTalkIn, twitterIn, organizationIn);
-        } else {
-            File image = new File(user.getProfilepic());
-            RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), image);
-            MultipartBody.Part imageIn = MultipartBody.Part.createFormData(image.getName(), image.getName(), imageRequestBody);
-            userObservable = getRxClient()
-                    .create(ApiInterface.class)
-                    .updateUserProfile(APIEndpoint.BASE_URL + "/users/api/profile/" + user.getUser_name() + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
-                            officeIn, viberIn, whatsAppIn, wechatIn, lineIn, tangoIn, hikeIn, qqIn, googleTalkIn, twitterIn, organizationIn, imageIn);
-        }
+//        if (user.getProfilepic().isEmpty()) {
+        userObservable = getRxClient()
+                .create(ApiInterface.class)
+                .updateUserProfileNoImage(APIEndpoint.BASE_URL + "/users/api/profile/" + "303" + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
+                        officeIn, viberIn, whatsAppIn, wechatIn, lineIn, tangoIn, hikeIn, qqIn, googleTalkIn, twitterIn, organizationIn);
+//        } else {
+//            File image = new File(user.getProfilepic());
+//            RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), image);
+//            MultipartBody.Part imageIn = MultipartBody.Part.createFormData(image.getName(), image.getName(), imageRequestBody);
+//            userObservable = getRxClient()
+//                    .create(ApiInterface.class)
+//                    .updateUserProfile(APIEndpoint.BASE_URL + "/users/api/profile/" + user.getUser_name() + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
+//                            officeIn, viberIn, whatsAppIn, wechatIn, lineIn, tangoIn, hikeIn, qqIn, googleTalkIn, twitterIn, organizationIn, imageIn);
+//        }
 
         return userObservable
                 .subscribeOn(Schedulers.io())

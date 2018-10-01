@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -34,7 +35,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 
 public class UserActivity extends CollectAbstractActivity {
@@ -90,10 +90,11 @@ public class UserActivity extends CollectAbstractActivity {
     FloatingActionButton fabPictureEdit;
     @BindView(R.id.iv_back)
     ImageView ivBack;
+    @BindView(R.id.btn_sync)
+    Button btnSync;
 
     private UserProfileViewModel userProfileViewModel;
     private User mUser;
-    private Boolean currentEditable;
     private File photoToUpload;
     private Uri phototoUploadUri;
 
@@ -155,28 +156,7 @@ public class UserActivity extends CollectAbstractActivity {
                             checkAndSetVisibility(ilProject);
 
                             userProfileViewModel.save(userProfileViewModel.getUser().getValue());
-
-                            userProfileViewModel.upload()
-                                    .subscribe(new DisposableObserver<User>() {
-                                        @Override
-                                        public void onNext(User user) {
-
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-                                            e.printStackTrace();
-                                            ToastUtils.showShortToast("Failed");
-                                        }
-
-                                        @Override
-                                        public void onComplete() {
-                                            ToastUtils.showShortToast("Completed");
-                                        }
-                                    });
-
                         }
-                        currentEditable = editMode;
                     }
                 });
 
@@ -185,15 +165,19 @@ public class UserActivity extends CollectAbstractActivity {
                 .observe(this, new Observer<User>() {
                     @Override
                     public void onChanged(@Nullable User user) {
+                        userProfileViewModel.setSyncLiveData(user.isSync());
+
+                        if (user == mUser) {
+                            userProfileViewModel.setSyncLiveData(true);
+                        } else {
+                            userProfileViewModel.setSyncLiveData(false);
+                        }
+
                         boolean userProfile = (user.getProfilepic().isEmpty() || (user.getProfilepic() == null));
                         if (!userProfile) {
-                            try {
-                                GlideApp.with(UserActivity.this)
-                                        .load(user.getProfilepic())
-                                        .into(civProfilePic);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            GlideApp.with(UserActivity.this)
+                                    .load(user.getProfilepic())
+                                    .into(civProfilePic);
                         }
 
                         setInputLayoutData(ilName, user.getFull_name());
@@ -215,6 +199,23 @@ public class UserActivity extends CollectAbstractActivity {
                         setInputLayoutData(ilTwitter, user.getTwitter());
                         setInputLayoutData(ilOrganization, user.getOrganization());
                         setInputLayoutData(ilProject, user.getProject());
+                    }
+                });
+
+        userProfileViewModel
+                .getSyncLiveData()
+                .observe(this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(@Nullable Boolean sync) {
+                        if (sync) {
+                            btnSync.setClickable(false);
+                            btnSync.setText("Synced");
+                            btnSync.setTextColor(getResources().getColor(R.color.green_approved));
+                        } else {
+                            btnSync.setClickable(true);
+                            btnSync.setText("Tap to Sync");
+                            btnSync.setTextColor(getResources().getColor(R.color.red_rejected));
+                        }
                     }
                 });
 
@@ -269,7 +270,7 @@ public class UserActivity extends CollectAbstractActivity {
         userProfileViewModel = new UserProfileViewModel();
     }
 
-    @OnClick({R.id.fab_edit_profile, R.id.fab_picture_edit, R.id.iv_back})
+    @OnClick({R.id.fab_edit_profile, R.id.fab_picture_edit, R.id.iv_back, R.id.btn_sync})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fab_edit_profile:
@@ -304,6 +305,27 @@ public class UserActivity extends CollectAbstractActivity {
                             break;
                     }
                 }).show();
+                break;
+            case R.id.btn_sync:
+                userProfileViewModel.upload()
+                        .subscribe(new DisposableObserver<User>() {
+                            @Override
+                            public void onNext(User user) {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                                ToastUtils.showShortToast("Failed");
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                ToastUtils.showShortToast("Completed");
+                                userProfileViewModel.setSyncLiveData(true);
+                            }
+                        });
                 break;
             case R.id.iv_back:
                 super.onBackPressed();

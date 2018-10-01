@@ -50,6 +50,14 @@ public class UserProfileViewModel extends ViewModel {
         this.user.setValue(user);
     }
 
+    public MutableLiveData<Boolean> getSyncLiveData() {
+        return syncLiveData;
+    }
+
+    public void setSyncLiveData(Boolean syncValue) {
+        this.syncLiveData.setValue(syncValue);
+    }
+
     public File generateImageFile(String imageName) {
         String path = Collect.SITES_PATH +
                 File.separator +

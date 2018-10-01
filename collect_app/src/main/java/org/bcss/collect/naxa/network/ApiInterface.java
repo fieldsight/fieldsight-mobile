@@ -88,7 +88,7 @@ public interface ApiInterface {
                                 @Part("project") RequestBody project,
                                 @Part("type") RequestBody type,
                                 @Part("region") RequestBody regionID,
-                                @Part("site_meta    _attributes_ans") RequestBody metaAttrs);
+                                @Part("site_meta_attributes_ans") RequestBody metaAttrs);
 
     @Multipart
     @POST
