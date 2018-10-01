@@ -8,11 +8,14 @@ import org.bcss.collect.naxa.login.model.User;
 
 import java.io.File;
 
+import io.reactivex.Observable;
+
 
 public class UserProfileViewModel extends ViewModel {
 
     private UserProfileRepository userProfileRepository;
     private MutableLiveData<User> user = new MutableLiveData<>();
+    private MutableLiveData<Boolean> syncLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> editProfile = new MutableLiveData<>();
 
     public UserProfileViewModel() {
@@ -25,6 +28,10 @@ public class UserProfileViewModel extends ViewModel {
 
     public User get() {
         return userProfileRepository.get();
+    }
+
+    public Observable<User> upload() {
+        return userProfileRepository.upload(get());
     }
 
     public MutableLiveData<Boolean> getEditProfile() {

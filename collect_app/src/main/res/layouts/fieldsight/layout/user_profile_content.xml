@@ -22,24 +22,33 @@
             android:elevation="2dp"
             android:paddingBottom="16dp">
 
-            <EditText
-                android:id="@+id/tvName"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/il_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="68dp"
-                android:fontFamily="sans-serif"
-                android:text="Full Name"
-                android:enabled="false"
-                android:textColor="@color/textview_colors"
-                android:textSize="24sp" />
+                app:errorEnabled="false"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
+                android:layout_marginTop="68dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:enabled="false"
+                    android:fontFamily="sans-serif"
+                    android:text="Full Name"
+                    android:textColor="@color/textview_colors"
+                    android:textSize="24sp" />
+            </android.support.design.widget.TextInputLayout>
+
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/il_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvName"
+                android:layout_below="@id/il_name"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="@dimen/margin_extra_large"

@@ -7,6 +7,7 @@ import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.login.model.AuthResponse;
 import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.notificationslist.NotificationDetail;
 import org.bcss.collect.naxa.previoussubmission.model.LastSubmissionResponse;
 import org.bcss.collect.naxa.project.data.MySiteResponse;
@@ -87,7 +88,54 @@ public interface ApiInterface {
                                 @Part("project") RequestBody project,
                                 @Part("type") RequestBody type,
                                 @Part("region") RequestBody regionID,
-                                @Part("site_meta_attributes_ans") RequestBody metaAttrs);
+                                @Part("site_meta    _attributes_ans") RequestBody metaAttrs);
+
+    @Multipart
+    @POST
+    Observable<User> updateUserProfileNoImage(@Url String url,
+                                              @Part("first_name") RequestBody first_name,
+                                              @Part("last_name") RequestBody last_name,
+                                              @Part("address") RequestBody address,
+                                              @Part("gender") RequestBody gender,
+                                              @Part("phone") RequestBody phone,
+                                              @Part("skype") RequestBody skype,
+                                              @Part("primary_number") RequestBody primary_number,
+                                              @Part("secondary_number") RequestBody secondary_number,
+                                              @Part("office_number") RequestBody office_number,
+                                              @Part("viber") RequestBody viber,
+                                              @Part("whatsapp") RequestBody whatsapp,
+                                              @Part("wechat") RequestBody wechat,
+                                              @Part("line") RequestBody line,
+                                              @Part("tango") RequestBody tango,
+                                              @Part("hike") RequestBody hike,
+                                              @Part("qq") RequestBody qq,
+                                              @Part("google_talk") RequestBody google_talk,
+                                              @Part("twitter") RequestBody twitter,
+                                              @Part("organization") RequestBody organization);
+
+    @Multipart
+    @POST
+    Observable<User> updateUserProfile(@Url String url,
+                                       @Part("first_name") RequestBody first_name,
+                                       @Part("last_name") RequestBody last_name,
+                                       @Part("address") RequestBody address,
+                                       @Part("gender") RequestBody gender,
+                                       @Part("phone") RequestBody phone,
+                                       @Part("skype") RequestBody skype,
+                                       @Part("primary_number") RequestBody primary_number,
+                                       @Part("secondary_number") RequestBody secondary_number,
+                                       @Part("office_number") RequestBody office_number,
+                                       @Part("viber") RequestBody viber,
+                                       @Part("whatsapp") RequestBody whatsapp,
+                                       @Part("wechat") RequestBody wechat,
+                                       @Part("line") RequestBody line,
+                                       @Part("tango") RequestBody tango,
+                                       @Part("hike") RequestBody hike,
+                                       @Part("qq") RequestBody qq,
+                                       @Part("google_talk") RequestBody google_talk,
+                                       @Part("twitter") RequestBody twitter,
+                                       @Part("organization") RequestBody organization,
+                                       @Part MultipartBody.Part file);
 
     @GET(GET_SITE_TYPES)
     Single<List<SiteType>> getSiteTypes();

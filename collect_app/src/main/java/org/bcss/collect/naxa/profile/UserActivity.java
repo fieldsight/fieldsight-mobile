@@ -15,21 +15,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import com.google.gson.Gson;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
-import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.ImageFileUtils;
-import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.login.model.User;
 
 import java.io.File;
@@ -38,14 +34,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 public class UserActivity extends CollectAbstractActivity {
 
 
     @BindView(R.id.fab_edit_profile)
     FloatingActionButton fabEditProfile;
-    @BindView(R.id.tvName)
-    EditText tvName;
+    @BindView(R.id.il_name)
+    TextInputLayout ilName;
     @BindView(R.id.il_email)
     TextInputLayout ilEmail;
     @BindView(R.id.il_phone)
@@ -90,6 +88,8 @@ public class UserActivity extends CollectAbstractActivity {
     CircleImageView civProfilePic;
     @BindView(R.id.fab_picture_edit)
     FloatingActionButton fabPictureEdit;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
 
     private UserProfileViewModel userProfileViewModel;
     private User mUser;
@@ -99,7 +99,7 @@ public class UserActivity extends CollectAbstractActivity {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, UserActivity.class);
-//        intent.putExtra(EXTRA_OBJECT, project);
+//        intent.putExtra(EXTRA_OBJECT, );
         context.startActivity(intent);
     }
 
@@ -133,6 +133,7 @@ public class UserActivity extends CollectAbstractActivity {
                             fabPictureEdit.setVisibility(View.GONE);
                             setInputLayoutEnabledStatus(false);
 
+                            checkAndSetVisibility(ilName);
                             checkAndSetVisibility(ilEmail);
                             checkAndSetVisibility(ilPhone);
                             checkAndSetVisibility(ilLocation);
@@ -155,6 +156,25 @@ public class UserActivity extends CollectAbstractActivity {
 
                             userProfileViewModel.save(userProfileViewModel.getUser().getValue());
 
+                            userProfileViewModel.upload()
+                                    .subscribe(new DisposableObserver<User>() {
+                                        @Override
+                                        public void onNext(User user) {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            e.printStackTrace();
+                                            ToastUtils.showShortToast("Failed");
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+                                            ToastUtils.showShortToast("Completed");
+                                        }
+                                    });
+
                         }
                         currentEditable = editMode;
                     }
@@ -176,8 +196,7 @@ public class UserActivity extends CollectAbstractActivity {
                             }
                         }
 
-                        tvName.setText(user.getFull_name());
-
+                        setInputLayoutData(ilName, user.getFull_name());
                         setInputLayoutData(ilEmail, user.getEmail());
                         setInputLayoutData(ilPhone, user.getPhone());
                         setInputLayoutData(ilLocation, user.getAddress());
@@ -199,7 +218,7 @@ public class UserActivity extends CollectAbstractActivity {
                     }
                 });
 
-
+        watchText(ilName);
         watchText(ilEmail);
         watchText(ilPhone);
         watchText(ilLocation);
@@ -331,6 +350,9 @@ public class UserActivity extends CollectAbstractActivity {
                     @Override
                     public void afterTextChanged(Editable s) {
                         switch (textInputLayout.getId()) {
+                            case R.id.il_name:
+                                userProfileViewModel.getUser().getValue().setFull_name(s.toString());
+                                break;
                             case R.id.il_email:
                                 userProfileViewModel.getUser().getValue().setEmail(s.toString());
                                 break;
@@ -394,7 +416,8 @@ public class UserActivity extends CollectAbstractActivity {
     }
 
     private void setInputLayoutEnabledStatus(Boolean status) {
-        tvName.setEnabled(status);
+        ilName.setEnabled(status);
+        ilEmail.setEnabled(status);
         ilEmail.setEnabled(status);
         ilPhone.setEnabled(status);
         ilLocation.setEnabled(status);
@@ -417,13 +440,14 @@ public class UserActivity extends CollectAbstractActivity {
     }
 
     private void checkAndSetVisibility(TextInputLayout inputLayout) {
+        if (inputLayout == ilName) return;
         if (inputLayout.getEditText().getText().toString().isEmpty()) {
             inputLayout.setVisibility(View.GONE);
         }
     }
 
     private void setInputLayoutVisibility(int visibility) {
-        tvName.setVisibility(visibility);
+        ilName.setVisibility(visibility);
         ilEmail.setVisibility(visibility);
         ilPhone.setVisibility(visibility);
         ilLocation.setVisibility(visibility);
