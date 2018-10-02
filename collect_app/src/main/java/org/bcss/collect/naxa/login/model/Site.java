@@ -5,6 +5,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -15,6 +16,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.site.data.SiteRegion;
+import org.bcss.collect.naxa.stages.StringListTypeConvertor;
+
+import java.util.List;
 
 @Entity(tableName = "sites")
 public class Site implements Parcelable {
@@ -90,28 +94,31 @@ public class Site implements Parcelable {
     @SerializedName("non_field_errors")
     @Ignore
     private String siteUploadError;
-
     private String metaAttributes;
 
-
+    @TypeConverters(StringListTypeConvertor.class)
+    @SerializedName("blueprints")
+    private List<String> siteDocuments;
 
     @SerializedName("region")
     private String regionId;
-
 
     //default values for  table
     private String generalFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
     private String stagedFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
     private String scheduleFormDeployedForm = Constant.FormDeploymentFrom.PROJECT;
 
-
-
     public Site() {
-
     }
 
     @Ignore
-    public Site(@NonNull String id, String latitude, String longitude, String identifier, String name, String typeId, String typeLabel, String phone, String address, String publicDesc, String additionalDesc, String logo, Boolean isActive, String location, Boolean isSurvey, String dateCreated, String project, int isSiteVerified, String siteTypeError, String metaAttributes, String regionId, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm) {
+    public Site(@NonNull String id, String latitude, String longitude, String identifier, String name,
+                String typeId, String typeLabel, String phone, String address, String publicDesc,
+                String additionalDesc, String logo, Boolean isActive, String location,
+                Boolean isSurvey, String dateCreated, String project,
+                int isSiteVerified, String siteTypeError, String metaAttributes,
+                String regionId, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm,
+                List<String> siteDocuments) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -136,6 +143,15 @@ public class Site implements Parcelable {
         this.generalFormDeployedFrom = generalFormDeployedFrom;
         this.stagedFormDeployedFrom = stagedFormDeployedFrom;
         this.scheduleFormDeployedForm = scheduleFormDeployedForm;
+        this.siteDocuments = siteDocuments;
+    }
+
+    public List<String> getSiteDocuments() {
+        return siteDocuments;
+    }
+
+    public void setSiteDocuments(List<String> siteDocuments) {
+        this.siteDocuments = siteDocuments;
     }
 
     public String getMetaAttributes() {
@@ -345,7 +361,6 @@ public class Site implements Parcelable {
     }
 
 
-
     public String getRegionId() {
         return regionId;
     }
@@ -353,6 +368,14 @@ public class Site implements Parcelable {
     public void setRegionId(String regionId) {
         this.regionId = regionId;
     }
+
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, metaAttributes, regionId, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
+    }
+
 
     @Override
     public int describeContents() {
@@ -380,47 +403,13 @@ public class Site implements Parcelable {
         dest.writeString(this.project);
         dest.writeInt(this.isSiteVerified);
         dest.writeString(this.siteTypeError);
+        dest.writeString(this.siteUploadError);
         dest.writeString(this.metaAttributes);
+        dest.writeStringList(this.siteDocuments);
         dest.writeString(this.regionId);
         dest.writeString(this.generalFormDeployedFrom);
         dest.writeString(this.stagedFormDeployedFrom);
         dest.writeString(this.scheduleFormDeployedForm);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Site site = (Site) o;
-        return isSiteVerified == site.isSiteVerified &&
-                Objects.equal(id, site.id) &&
-                Objects.equal(latitude, site.latitude) &&
-                Objects.equal(longitude, site.longitude) &&
-                Objects.equal(identifier, site.identifier) &&
-                Objects.equal(name, site.name) &&
-                Objects.equal(typeId, site.typeId) &&
-                Objects.equal(typeLabel, site.typeLabel) &&
-                Objects.equal(phone, site.phone) &&
-                Objects.equal(address, site.address) &&
-                Objects.equal(publicDesc, site.publicDesc) &&
-                Objects.equal(additionalDesc, site.additionalDesc) &&
-                Objects.equal(logo, site.logo) &&
-                Objects.equal(isActive, site.isActive) &&
-                Objects.equal(location, site.location) &&
-                Objects.equal(isSurvey, site.isSurvey) &&
-                Objects.equal(dateCreated, site.dateCreated) &&
-                Objects.equal(project, site.project) &&
-                Objects.equal(siteTypeError, site.siteTypeError) &&
-                Objects.equal(metaAttributes, site.metaAttributes) &&
-                Objects.equal(regionId, site.regionId) &&
-                Objects.equal(generalFormDeployedFrom, site.generalFormDeployedFrom) &&
-                Objects.equal(stagedFormDeployedFrom, site.stagedFormDeployedFrom) &&
-                Objects.equal(scheduleFormDeployedForm, site.scheduleFormDeployedForm);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, metaAttributes, regionId, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
     }
 
     protected Site(Parcel in) {
@@ -443,9 +432,10 @@ public class Site implements Parcelable {
         this.project = in.readString();
         this.isSiteVerified = in.readInt();
         this.siteTypeError = in.readString();
+        this.siteUploadError = in.readString();
         this.metaAttributes = in.readString();
+        this.siteDocuments = in.createStringArrayList();
         this.regionId = in.readString();
-
         this.generalFormDeployedFrom = in.readString();
         this.stagedFormDeployedFrom = in.readString();
         this.scheduleFormDeployedForm = in.readString();

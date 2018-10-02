@@ -42,6 +42,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ThemeUtils;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
@@ -192,17 +193,13 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 break;
         }
         source.observe(this, sites -> {
-
             siteListAdapter.updateList(sites);
-
-
         });
 
     }
 
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
-
 //        String selectedRegion = ProjectFilterLocalSource.getInstance()
 //                .getById(loadedProject.getId())
 //                .toObservable()
@@ -212,9 +209,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 //        String regionLabel = ProjectFilterLocalSource.getInstance()
 //                .getById(loadedProject.getId())
 //                .getSelectedRegionId();
-
         String site = "", selectedRegion = "0", regionLabel = "";
-
 
         for (FilterOption filterOption : sortList) {
             switch (filterOption.getType()) {
@@ -224,11 +219,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 case SELECTED_REGION:
                     selectedRegion = filterOption.getSelectionId();
                     regionLabel = filterOption.getSelectionLabel();
-
                     break;
             }
         }
-
 
         LiveData<List<Site>> source;
         switch (selectedRegion) {
@@ -399,7 +392,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
 
-
     private void enableActionMode(int position) {
         if (actionMode == null) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -484,7 +476,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         NotificationUtils.cancelNotification(progressNotifyId);
                         NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), completedMessage, completedMessage);
 
-                        if(isAdded()){
+                        if (isAdded()) {
                             DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
                                     .setPositiveButton("Upload ", (dialog, which) -> {
                                         Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
