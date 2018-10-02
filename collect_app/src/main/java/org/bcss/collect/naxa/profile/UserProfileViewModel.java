@@ -17,16 +17,18 @@ public class UserProfileViewModel extends ViewModel {
     private MutableLiveData<User> user = new MutableLiveData<>();
     private MutableLiveData<Boolean> syncLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> editProfile = new MutableLiveData<>();
+    private MutableLiveData<Boolean> progressBar = new MutableLiveData<>();
 
     public UserProfileViewModel() {
         this.userProfileRepository = new UserProfileRepository();
+        getUser().setValue(get());
     }
 
-    public void save(User user) {
-        userProfileRepository.save(user);
+    public void save() {
+        userProfileRepository.save(getUser().getValue());
     }
 
-    public User get() {
+    private User get() {
         return userProfileRepository.get();
     }
 
@@ -56,6 +58,14 @@ public class UserProfileViewModel extends ViewModel {
 
     public void setSyncLiveData(Boolean syncValue) {
         this.syncLiveData.setValue(syncValue);
+    }
+
+    public MutableLiveData<Boolean> getProgressBar() {
+        return progressBar;
+    }
+
+    public void setProgressBar(Boolean progressBar) {
+        this.progressBar.setValue(progressBar);
     }
 
     public File generateImageFile(String imageName) {

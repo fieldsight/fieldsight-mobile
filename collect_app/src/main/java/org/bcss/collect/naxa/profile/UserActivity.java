@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.BuildConfig;
@@ -38,7 +39,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.observers.DisposableObserver;
 
 public class UserActivity extends CollectAbstractActivity {
-
 
     @BindView(R.id.fab_edit_profile)
     FloatingActionButton fabEditProfile;
@@ -92,6 +92,8 @@ public class UserActivity extends CollectAbstractActivity {
     ImageView ivBack;
     @BindView(R.id.btn_sync)
     Button btnSync;
+    @BindView(R.id.progress_sync)
+    ProgressBar progressSync;
 
     private UserProfileViewModel userProfileViewModel;
     private User mUser;
@@ -111,15 +113,14 @@ public class UserActivity extends CollectAbstractActivity {
         ButterKnife.bind(this);
 
         initUI();
+
         setupViewModel();
 
         userProfileViewModel.setEditProfile(false);
 
-        mUser = userProfileViewModel.get();
+        mUser = userProfileViewModel.getUser().getValue();
 
-        if (mUser != null) {
-            userProfileViewModel.setUser(mUser);
-        }
+        userProfileViewModel.setSyncLiveData(mUser.isSync());
 
         userProfileViewModel
                 .getEditProfile()
@@ -128,34 +129,20 @@ public class UserActivity extends CollectAbstractActivity {
                     public void onChanged(@Nullable Boolean editMode) {
                         if (editMode) {
                             fabPictureEdit.setVisibility(View.VISIBLE);
+                            fabEditProfile.setImageResource(R.drawable.ic_check);
                             setInputLayoutEnabledStatus(true);
                             setInputLayoutVisibility(View.VISIBLE);
+
+                            btnSync.setClickable(false);
+                            btnSync.setText("Edit Mode");
+                            btnSync.setTextColor(getResources().getColor(R.color.bg_action_mode));
                         } else {
                             fabPictureEdit.setVisibility(View.GONE);
+                            fabEditProfile.setImageResource(R.drawable.ic_edit);
                             setInputLayoutEnabledStatus(false);
 
-                            checkAndSetVisibility(ilName);
-                            checkAndSetVisibility(ilEmail);
-                            checkAndSetVisibility(ilPhone);
-                            checkAndSetVisibility(ilLocation);
-                            checkAndSetVisibility(ilGender);
-                            checkAndSetVisibility(ilSkype);
-                            checkAndSetVisibility(ilPrimaryNumber);
-                            checkAndSetVisibility(ilSecondaryNumber);
-                            checkAndSetVisibility(ilOfficeNumber);
-                            checkAndSetVisibility(ilViber);
-                            checkAndSetVisibility(ilWhatsapp);
-                            checkAndSetVisibility(ilWechat);
-                            checkAndSetVisibility(ilLine);
-                            checkAndSetVisibility(ilTango);
-                            checkAndSetVisibility(ilHike);
-                            checkAndSetVisibility(ilQq);
-                            checkAndSetVisibility(ilGoogleTalk);
-                            checkAndSetVisibility(ilTwitter);
-                            checkAndSetVisibility(ilOrganization);
-                            checkAndSetVisibility(ilProject);
-
-                            userProfileViewModel.save(userProfileViewModel.getUser().getValue());
+                            userProfileViewModel.setUser(mUser);
+                            userProfileViewModel.save();
                         }
                     }
                 });
@@ -165,13 +152,8 @@ public class UserActivity extends CollectAbstractActivity {
                 .observe(this, new Observer<User>() {
                     @Override
                     public void onChanged(@Nullable User user) {
-                        userProfileViewModel.setSyncLiveData(user.isSync());
 
-                        if (user == mUser) {
-                            userProfileViewModel.setSyncLiveData(true);
-                        } else {
-                            userProfileViewModel.setSyncLiveData(false);
-                        }
+                        userProfileViewModel.setSyncLiveData(user.isSync());
 
                         boolean userProfile = (user.getProfilepic().isEmpty() || (user.getProfilepic() == null));
                         if (!userProfile) {
@@ -194,6 +176,7 @@ public class UserActivity extends CollectAbstractActivity {
                         setInputLayoutData(ilWechat, user.getWechat());
                         setInputLayoutData(ilLine, user.getLine());
                         setInputLayoutData(ilTango, user.getTango());
+                        setInputLayoutData(ilHike, user.getTango());
                         setInputLayoutData(ilQq, user.getQq());
                         setInputLayoutData(ilGoogleTalk, user.getGoogleTalk());
                         setInputLayoutData(ilTwitter, user.getTwitter());
@@ -215,6 +198,21 @@ public class UserActivity extends CollectAbstractActivity {
                             btnSync.setClickable(true);
                             btnSync.setText("Tap to Sync");
                             btnSync.setTextColor(getResources().getColor(R.color.red_rejected));
+                        }
+                    }
+                });
+
+        userProfileViewModel
+                .getProgressBar()
+                .observe(this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(@Nullable Boolean progress) {
+                        if (progress) {
+                            progressSync.setVisibility(View.VISIBLE);
+                            btnSync.setVisibility(View.GONE);
+                        } else {
+                            progressSync.setVisibility(View.GONE);
+                            btnSync.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -307,23 +305,31 @@ public class UserActivity extends CollectAbstractActivity {
                 }).show();
                 break;
             case R.id.btn_sync:
-                userProfileViewModel.upload()
+                userProfileViewModel.setProgressBar(true);
+                userProfileViewModel
+                        .upload()
                         .subscribe(new DisposableObserver<User>() {
                             @Override
                             public void onNext(User user) {
-
                             }
 
                             @Override
                             public void onError(Throwable e) {
                                 e.printStackTrace();
-                                ToastUtils.showShortToast("Failed");
+                                userProfileViewModel.setProgressBar(false);
+                                userProfileViewModel.setSyncLiveData(false);
+                                mUser.setSync(false);
+                                userProfileViewModel.setUser(mUser);
+                                userProfileViewModel.save();
                             }
 
                             @Override
                             public void onComplete() {
-                                ToastUtils.showShortToast("Completed");
+                                userProfileViewModel.setProgressBar(false);
                                 userProfileViewModel.setSyncLiveData(true);
+                                mUser.setSync(true);
+                                userProfileViewModel.setUser(mUser);
+                                userProfileViewModel.save();
                             }
                         });
                 break;
@@ -361,76 +367,75 @@ public class UserActivity extends CollectAbstractActivity {
                 .addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                     }
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                     }
 
                     @Override
                     public void afterTextChanged(Editable s) {
+                        mUser.setSync(false);
                         switch (textInputLayout.getId()) {
                             case R.id.il_name:
-                                userProfileViewModel.getUser().getValue().setFull_name(s.toString());
+                                mUser.setFull_name(s.toString());
                                 break;
                             case R.id.il_email:
-                                userProfileViewModel.getUser().getValue().setEmail(s.toString());
+                                mUser.setEmail(s.toString());
                                 break;
                             case R.id.il_phone:
-                                userProfileViewModel.getUser().getValue().setPhone(s.toString());
+                                mUser.setPhone(s.toString());
                                 break;
                             case R.id.il_location:
-                                userProfileViewModel.getUser().getValue().setAddress(s.toString());
+                                mUser.setAddress(s.toString());
                                 break;
                             case R.id.il_gender:
-                                userProfileViewModel.getUser().getValue().setGender(s.toString());
+                                mUser.setGender(s.toString());
                                 break;
                             case R.id.il_skype:
-                                userProfileViewModel.getUser().getValue().setSkype(s.toString());
+                                mUser.setSkype(s.toString());
                                 break;
                             case R.id.il_primary_number:
-                                userProfileViewModel.getUser().getValue().setPrimaryNumber(s.toString());
+                                mUser.setPrimaryNumber(s.toString());
                                 break;
                             case R.id.il_secondary_number:
-                                userProfileViewModel.getUser().getValue().setSecondaryNumber(s.toString());
+                                mUser.setSecondaryNumber(s.toString());
                                 break;
                             case R.id.il_office_number:
-                                userProfileViewModel.getUser().getValue().setOfficeNumber(s.toString());
+                                mUser.setOfficeNumber(s.toString());
                                 break;
                             case R.id.il_viber:
-                                userProfileViewModel.getUser().getValue().setViber(s.toString());
+                                mUser.setViber(s.toString());
                                 break;
                             case R.id.il_whatsapp:
-                                userProfileViewModel.getUser().getValue().setWhatsApp(s.toString());
+                                mUser.setWhatsApp(s.toString());
                                 break;
                             case R.id.il_wechat:
-                                userProfileViewModel.getUser().getValue().setWechat(s.toString());
+                                mUser.setWechat(s.toString());
                                 break;
                             case R.id.il_line:
-                                userProfileViewModel.getUser().getValue().setLine(s.toString());
+                                mUser.setLine(s.toString());
                                 break;
                             case R.id.il_tango:
-                                userProfileViewModel.getUser().getValue().setTango(s.toString());
+                                mUser.setTango(s.toString());
                                 break;
                             case R.id.il_hike:
-                                userProfileViewModel.getUser().getValue().setHike(s.toString());
+                                mUser.setHike(s.toString());
                                 break;
                             case R.id.il_qq:
-                                userProfileViewModel.getUser().getValue().setQq(s.toString());
+                                mUser.setQq(s.toString());
                                 break;
                             case R.id.il_google_talk:
-                                userProfileViewModel.getUser().getValue().setGoogleTalk(s.toString());
+                                mUser.setGoogleTalk(s.toString());
                                 break;
                             case R.id.il_twitter:
-                                userProfileViewModel.getUser().getValue().setTwitter(s.toString());
+                                mUser.setTwitter(s.toString());
                                 break;
                             case R.id.il_organization:
-                                userProfileViewModel.getUser().getValue().setOrganization(s.toString());
+                                mUser.setOrganization(s.toString());
                                 break;
                             case R.id.il_project:
-                                userProfileViewModel.getUser().getValue().setProject(s.toString());
+                                mUser.setProject(s.toString());
                                 break;
                         }
                     }
@@ -459,13 +464,6 @@ public class UserActivity extends CollectAbstractActivity {
         ilTwitter.setEnabled(status);
         ilOrganization.setEnabled(status);
         ilProject.setEnabled(status);
-    }
-
-    private void checkAndSetVisibility(TextInputLayout inputLayout) {
-        if (inputLayout == ilName) return;
-        if (inputLayout.getEditText().getText().toString().isEmpty()) {
-            inputLayout.setVisibility(View.GONE);
-        }
     }
 
     private void setInputLayoutVisibility(int visibility) {

@@ -41,5 +41,7 @@ public class APIEndpoint {
     public static final String GET_ALL_SUBMISSION = BASE_URL + "/forms/last-submissions/";
     public static final String GET_MY_SITES = BASE_URL + "/users/mysites";
 
+    public static final String GET_USER_PROFILE = BASE_URL + "/users/api/profile/";
+
 
 }

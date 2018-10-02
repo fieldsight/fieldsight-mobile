@@ -20,6 +20,7 @@ public class User {
     private String user_name;
     @SerializedName("server_time")
     private String serverTime;
+    private String id;
 
     @SerializedName("profile_pic")
     @Expose
@@ -111,6 +112,13 @@ public class User {
         return isSupervisor;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * @return The email

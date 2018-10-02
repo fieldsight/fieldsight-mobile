@@ -42,6 +42,7 @@ import static org.bcss.collect.naxa.network.APIEndpoint.GET_GENERAL_FORM;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_PROJECT_SITES;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_SITE_TYPES;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_STAGE_SUB_STAGE;
+import static org.bcss.collect.naxa.network.APIEndpoint.GET_USER_PROFILE;
 
 public interface ApiInterface {
 
@@ -89,6 +90,9 @@ public interface ApiInterface {
                                 @Part("type") RequestBody type,
                                 @Part("region") RequestBody regionID,
                                 @Part("site_meta_attributes_ans") RequestBody metaAttrs);
+
+    @GET(GET_USER_PROFILE)
+    Observable<User> getUserProfile();
 
     @Multipart
     @POST
