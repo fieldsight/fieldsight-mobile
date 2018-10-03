@@ -1,10 +1,14 @@
 package org.bcss.collect.naxa.project.data;
 
+import android.widget.EditText;
+
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 
+import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.naxa.common.GSONInstance;
+import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.greenrobot.eventbus.EventBus;
@@ -25,21 +29,19 @@ import org.bcss.collect.naxa.site.db.SiteRepository;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
     private static ProjectSitesRemoteSource INSTANCE;
@@ -60,7 +62,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         syncRepository = SyncRepository.getInstance();
     }
 
-    public Single<List<Project>> fetchProjectAndSites() {
+    public Single<List<Object>> fetchProjectAndSites() {
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUser()
@@ -97,21 +99,29 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         return mySites;
                     }
                 })
-                .flatMap(new Function<MySites, Observable<Project>>() {
+                .flatMap(new Function<MySites, Observable<Object>>() {
                     @Override
-                    public Observable<Project> apply(MySites mySites) throws Exception {
+                    public Observable<Object> apply(MySites mySites) throws Exception {
                         Project project = mySites.getProject();
                         siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
                         projectLocalSource.save(project);
 
-                        return ServiceGenerator.getRxClient().create(ApiInterface.class)
+//                        Observable<String> siteDocumentsObservable = Observable.just(mySites.getSite().getSiteDocuments())
+//                                .flatMapIterable((Function<List<String>, Iterable<String>>) urls -> urls)
+//                                .flatMap(new Function<String, ObservableSource<String>>() {
+//                                    @Override
+//                                    public ObservableSource<String> apply(String url) throws Exception {
+//                                        String fileName = FilenameUtils.getName(url);
+//                                        boolean isPDF = FilenameUtils.getExtension(url).equalsIgnoreCase("pdf");
+//                                        String savePath = isPDF ? Collect.PDF : Collect.IMAGES;
+//                                        return new RxDownloader(Collect.getInstance())
+//                                                .download(url, fileName, savePath, "*/*", false).subscribeOn(Schedulers.io());
+//                                    }
+//                                });
+
+
+                        Observable<Project> siteRegionObservable = ServiceGenerator.getRxClient().create(ApiInterface.class)
                                 .getRegionsByProjectId(project.getId())
-                                .flatMap(new Function<List<SiteRegion>, ObservableSource<List<SiteRegion>>>() {
-                                    @Override
-                                    public ObservableSource<List<SiteRegion>> apply(List<SiteRegion> siteRegions) throws Exception {
-                                        return Observable.just(new ArrayList<SiteRegion>(0));
-                                    }
-                                })
                                 .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
                                     @Override
                                     public ObservableSource<Project> apply(List<SiteRegion> siteRegions) throws Exception {
@@ -121,6 +131,11 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                                         return Observable.just(project);
                                     }
                                 });
+
+                        return Observable.concat(siteRegionObservable,Observable.just("demo"));
+//                        return Observable.concat(siteDocumentsObservable, siteRegionObservable);
+
+
                     }
                 })
                 .toList()
@@ -161,6 +176,8 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                                 .concatWith(getPageAndNext(mySiteResponse.getNext()));
                     }
                 });
+
+
     }
 
     @Deprecated
@@ -169,7 +186,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUserInformation()
-
                 .flatMap(new Function<MeResponse, ObservableSource<List<MySites>>>() {
                     @Override
                     public ObservableSource<List<MySites>> apply(MeResponse meResponse) throws Exception {
@@ -185,16 +201,15 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         Project project = mySites.getProject();
                         siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
                         projectLocalSource.save(project);
+
+
                         return ServiceGenerator.createService(ApiInterface.class)
                                 .getRegionsByProjectId(project.getId())
                                 .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
                                     @Override
                                     public ObservableSource<Project> apply(List<SiteRegion> siteRegions) throws Exception {
-
                                         siteRegions.add(new SiteRegion("", "Unassigned", ""));
-
                                         String value = new Gson().toJson(siteRegions);
-
                                         ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
                                         return Observable.just(project);
                                     }
@@ -210,14 +225,15 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     public void getAll() {
         int uid = Constant.DownloadUID.PROJECT_SITES;
 
-        Single<List<Project>> observable = fetchProjectAndSites();
+        Single<List<Object>> observable = fetchProjectAndSites();
 
         ReactiveNetwork
                 .observeNetworkConnectivity(Collect.getInstance().getApplicationContext())
-                .flatMapSingle((Function<Connectivity, SingleSource<List<Project>>>) connectivity -> observable)
+
+                .flatMapSingle((Function<Connectivity, SingleSource<List<Object>>>) connectivity -> observable)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<List<Project>>() {
+                .subscribe(new Observer<List<Object>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         ProjectLocalSource.getInstance().deleteAll();
@@ -227,7 +243,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     }
 
                     @Override
-                    public void onNext(List<Project> projects) {
+                    public void onNext(List<Object> objectList) {
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
                         FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
                         syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
@@ -235,6 +251,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
                         syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
                     }

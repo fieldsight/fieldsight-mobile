@@ -44,6 +44,7 @@ import static org.bcss.collect.naxa.network.APIEndpoint.GET_STAGE_SUB_STAGE;
 
 public interface ApiInterface {
 
+    @Deprecated
     @GET("/users/me/")
     Observable<MeResponse> getUserInformation();
 
