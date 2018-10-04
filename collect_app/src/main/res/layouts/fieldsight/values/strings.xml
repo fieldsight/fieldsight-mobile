@@ -53,7 +53,7 @@
     <string name="dialog_unexpected_error_title">An unexpected error occurred.</string>
     <string name="dialog_action_dismiss">Dismiss</string>
     <string name="forms_msg_none_available">Nothing available to display.\\n\\nTry Refreshing or Contact Web Admin.</string>
-    <string name="toolbar_general_forms">General Forms</string>
+    <string name="toolbar_general_forms">General Form(s)</string>
     <string name="form_not_present">Unable to load this form because it is not present or was deleted</string>
     <string name="search_sites">Search Sites</string>
     <string name="action_upload">Upload</string>
@@ -177,6 +177,9 @@
     <string name="toolbar_site_documents">Site Documents</string>
     <string name="title_activity_image_viewer">ImageViewerActivity</string>
     <string name="empty_message_site_documents" >Once Site documents are added to your site they will be listed here</string>
+    <string name="toolbar_scheduled_forms">Scheduled Form(s)</string>
+    <string name="toolbar_stages">Site Stage(s)</string>
+    <string name="toolbar_substages">Substage(s)</string>
 
     <!--Notification sitelist ends here-->
 

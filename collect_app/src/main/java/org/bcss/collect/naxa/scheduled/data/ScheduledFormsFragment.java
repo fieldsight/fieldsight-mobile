@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,9 +81,15 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
         viewModel =
                 ViewModelProviders.of(getActivity(), factory).get(ScheduledFormViewModel.class);
 
+        setToolbarText();
         return rootView;
     }
 
+    private void setToolbarText() {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.toolbar_scheduled_forms);
+        toolbar.setSubtitle(loadedSite.getName());
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

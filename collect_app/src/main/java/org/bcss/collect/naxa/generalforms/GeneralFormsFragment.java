@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,8 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     @BindView(R.id.root_layout_empty_layout)
     View emptyLayout;
 
+
+
     Unbinder unbinder;
     private GeneralFormsAdapter generalFormsAdapter;
 
@@ -91,7 +94,14 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         unbinder = ButterKnife.bind(this, rootView);
         viewModel = FragmentHostActivity.obtainViewModel(getActivity());
 
+        setToolbarText();
         return rootView;
+    }
+
+    private void setToolbarText() {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.toolbar_general_forms);
+        toolbar.setSubtitle(loadedSite.getName());
     }
 
     @Override
@@ -125,8 +135,6 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
                     }
                 });
     }
-
-
 
 
     private void setupListAdapter() {

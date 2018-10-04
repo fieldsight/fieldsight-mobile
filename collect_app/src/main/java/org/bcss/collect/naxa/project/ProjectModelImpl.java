@@ -3,21 +3,16 @@ package org.bcss.collect.naxa.project;
 
 import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
-
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
-
 import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.MySites;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
-
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
-
 import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;

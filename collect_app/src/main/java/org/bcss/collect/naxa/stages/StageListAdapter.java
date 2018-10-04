@@ -41,6 +41,8 @@ public class StageListAdapter extends
         return new ViewHolder(view);
     }
 
+
+
     public void updateList(List<Stage> newList) {
 
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new StagesDiffCallback(newList, totalList));

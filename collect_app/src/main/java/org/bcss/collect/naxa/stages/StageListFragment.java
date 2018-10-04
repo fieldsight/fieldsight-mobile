@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,8 +100,17 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
 
         viewModel = ViewModelProviders.of(getActivity(), factory).get(StageViewModel.class);
 
+        setToolbarText();
         return rootView;
     }
+
+
+    private void setToolbarText() {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.toolbar_stages);
+        toolbar.setSubtitle(loadedSite.getName());
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

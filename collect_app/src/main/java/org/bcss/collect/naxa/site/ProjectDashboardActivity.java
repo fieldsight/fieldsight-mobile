@@ -255,7 +255,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 switch (position) {
                     case 0:
                         mapExistReachesPosition = position;
-                        setToolbalText(SharedPreferenceUtils.getSiteLisTitle(ProjectDashboardActivity.this, loadedProject.getId()));
+                        setToolbalText(loadedProject.getName());
+//                        setToolbalText(SharedPreferenceUtils.getSiteLisTitle(ProjectDashboardActivity.this, loadedProject.getId()));
                         deactivateMapMode();
                         break;
                     case 1:
@@ -421,8 +422,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-
-        setToolbalText("My Sites");
+        setToolbalText(loadedProject.getName());
 
 
     }

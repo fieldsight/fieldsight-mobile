@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,7 +113,16 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         viewModelFactory = ViewModelFactory.getInstance(getActivity().getApplication());
 
         viewModel = ViewModelProviders.of(getActivity(), viewModelFactory).get(SubStageViewModel.class);
+        setToolbarText();
+
         return rootView;
+    }
+
+
+    private void setToolbarText() {
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.toolbar_substages);
+        toolbar.setSubtitle(loadedSite.getName());
     }
 
     @Override
@@ -147,7 +157,6 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
 
 
     }
-
 
 
 
