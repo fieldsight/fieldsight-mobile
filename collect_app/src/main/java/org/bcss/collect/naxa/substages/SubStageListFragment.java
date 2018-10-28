@@ -131,7 +131,6 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         setupListAdapter();
         viewModel.loadSubStages(loadedSite.getId(), loadedSite.getProject(), stageId, loadedSite.getTypeId())
                 .observe(this, substages -> {
-                    Timber.i("SubStage forms data has been changed");
                     if (listAdapter.getItemCount() == 0) {
                         runLayoutAnimation(recyclerView);
                     }

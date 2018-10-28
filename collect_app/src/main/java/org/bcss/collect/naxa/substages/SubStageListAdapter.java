@@ -91,7 +91,7 @@ public class SubStageListAdapter extends
     private void setSubstageNumber(ViewHolder viewHolder) {
 
         int substageNumber = viewHolder.getAdapterPosition() + 1;
-        int stageNumber = Integer.parseInt(stageOrder + 1);
+        int stageNumber = Integer.parseInt(stageOrder) + 1;
         String iconText = stageNumber + "." + substageNumber;
 
         viewHolder.tvIconText.setText(iconText);
