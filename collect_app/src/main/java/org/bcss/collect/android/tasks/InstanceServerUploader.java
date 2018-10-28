@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.webkit.MimeTypeMap;
 
+import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.InstancesDao;
@@ -434,7 +435,7 @@ public class InstanceServerUploader extends InstanceUploader {
                 Timber.i("Issuing POST request for %s to: %s", id, submissionUri.toString());
                 response = httpclient.execute(httppost, localContext);
                 int responseCode = response.getStatusLine().getStatusCode();
-//                ResponseUtils.saveHttpResponseToFile(response,"Daily Site Diary");
+//                ResponseUtils.saveHttpResponseToFile(response,FilenameUtils.getName(instanceFilePath));
                 HttpEntity httpEntity = response.getEntity();
                 messageParser = new ResponseMessageParser(httpEntity);
                 WebUtils.discardEntityBytes(response);

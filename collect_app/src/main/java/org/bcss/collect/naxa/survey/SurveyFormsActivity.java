@@ -143,7 +143,9 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
 
     @Override
     public void onCardClicked(SurveyForm surveyForm) {
-        String submissionUrl = generateSubmissionUrl(PROJECT, surveyForm.getProjectId(), surveyForm.getFsFormId());
+
+        String projectIdForSurveyForm = "0";
+        String submissionUrl = generateSubmissionUrl(PROJECT, projectIdForSurveyForm, surveyForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, "0");
 
