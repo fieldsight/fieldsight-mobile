@@ -15,21 +15,19 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
-import com.google.gson.Gson;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
-import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.ImageFileUtils;
-import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.login.model.User;
 
 import java.io.File;
@@ -38,14 +36,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.observers.DisposableObserver;
 
 public class UserActivity extends CollectAbstractActivity {
 
-
     @BindView(R.id.fab_edit_profile)
     FloatingActionButton fabEditProfile;
-    @BindView(R.id.tvName)
-    EditText tvName;
+    @BindView(R.id.il_name)
+    TextInputLayout ilName;
     @BindView(R.id.il_email)
     TextInputLayout ilEmail;
     @BindView(R.id.il_phone)
@@ -90,16 +88,21 @@ public class UserActivity extends CollectAbstractActivity {
     CircleImageView civProfilePic;
     @BindView(R.id.fab_picture_edit)
     FloatingActionButton fabPictureEdit;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.btn_sync)
+    Button btnSync;
+    @BindView(R.id.progress_sync)
+    ProgressBar progressSync;
 
     private UserProfileViewModel userProfileViewModel;
     private User mUser;
-    private Boolean currentEditable;
     private File photoToUpload;
     private Uri phototoUploadUri;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, UserActivity.class);
-//        intent.putExtra(EXTRA_OBJECT, project);
+//        intent.putExtra(EXTRA_OBJECT, );
         context.startActivity(intent);
     }
 
@@ -110,16 +113,14 @@ public class UserActivity extends CollectAbstractActivity {
         ButterKnife.bind(this);
 
         initUI();
+
         setupViewModel();
 
         userProfileViewModel.setEditProfile(false);
 
-        String userString = SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_KEY.USER, null);
-        mUser = new Gson().fromJson(userString, User.class);
+        mUser = userProfileViewModel.getUser().getValue();
 
-        if (mUser != null) {
-            userProfileViewModel.setUser(mUser);
-        }
+        userProfileViewModel.setSyncLiveData(mUser.isSync());
 
         userProfileViewModel
                 .getEditProfile()
@@ -128,37 +129,21 @@ public class UserActivity extends CollectAbstractActivity {
                     public void onChanged(@Nullable Boolean editMode) {
                         if (editMode) {
                             fabPictureEdit.setVisibility(View.VISIBLE);
+                            fabEditProfile.setImageResource(R.drawable.ic_check);
                             setInputLayoutEnabledStatus(true);
                             setInputLayoutVisibility(View.VISIBLE);
+
+                            btnSync.setClickable(false);
+                            btnSync.setText("Edit Mode");
+                            btnSync.setTextColor(getResources().getColor(R.color.bg_action_mode));
                         } else {
                             fabPictureEdit.setVisibility(View.GONE);
+                            fabEditProfile.setImageResource(R.drawable.ic_edit);
                             setInputLayoutEnabledStatus(false);
 
-                            checkAndSetVisibility(ilEmail);
-                            checkAndSetVisibility(ilPhone);
-                            checkAndSetVisibility(ilLocation);
-                            checkAndSetVisibility(ilGender);
-                            checkAndSetVisibility(ilSkype);
-                            checkAndSetVisibility(ilPrimaryNumber);
-                            checkAndSetVisibility(ilSecondaryNumber);
-                            checkAndSetVisibility(ilOfficeNumber);
-                            checkAndSetVisibility(ilViber);
-                            checkAndSetVisibility(ilWhatsapp);
-                            checkAndSetVisibility(ilWechat);
-                            checkAndSetVisibility(ilLine);
-                            checkAndSetVisibility(ilTango);
-                            checkAndSetVisibility(ilHike);
-                            checkAndSetVisibility(ilQq);
-                            checkAndSetVisibility(ilGoogleTalk);
-                            checkAndSetVisibility(ilTwitter);
-                            checkAndSetVisibility(ilOrganization);
-                            checkAndSetVisibility(ilProject);
-
-                            String userString = GSONInstance.getInstance().toJson(userProfileViewModel.getUser().getValue());
-                            SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, userString);
-
+                            userProfileViewModel.setUser(mUser);
+                            userProfileViewModel.save();
                         }
-                        currentEditable = editMode;
                     }
                 });
 
@@ -167,19 +152,17 @@ public class UserActivity extends CollectAbstractActivity {
                 .observe(this, new Observer<User>() {
                     @Override
                     public void onChanged(@Nullable User user) {
+
+                        userProfileViewModel.setSyncLiveData(user.isSync());
+
                         boolean userProfile = (user.getProfilepic().isEmpty() || (user.getProfilepic() == null));
                         if (!userProfile) {
-                            try {
-                                GlideApp.with(UserActivity.this)
-                                        .load(user.getProfilepic())
-                                        .into(civProfilePic);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            GlideApp.with(UserActivity.this)
+                                    .load(user.getProfilepic())
+                                    .into(civProfilePic);
                         }
 
-                        tvName.setText(user.getFull_name());
-
+                        setInputLayoutData(ilName, user.getFull_name());
                         setInputLayoutData(ilEmail, user.getEmail());
                         setInputLayoutData(ilPhone, user.getPhone());
                         setInputLayoutData(ilLocation, user.getAddress());
@@ -193,6 +176,7 @@ public class UserActivity extends CollectAbstractActivity {
                         setInputLayoutData(ilWechat, user.getWechat());
                         setInputLayoutData(ilLine, user.getLine());
                         setInputLayoutData(ilTango, user.getTango());
+                        setInputLayoutData(ilHike, user.getTango());
                         setInputLayoutData(ilQq, user.getQq());
                         setInputLayoutData(ilGoogleTalk, user.getGoogleTalk());
                         setInputLayoutData(ilTwitter, user.getTwitter());
@@ -201,7 +185,39 @@ public class UserActivity extends CollectAbstractActivity {
                     }
                 });
 
+        userProfileViewModel
+                .getSyncLiveData()
+                .observe(this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(@Nullable Boolean sync) {
+                        if (sync) {
+                            btnSync.setClickable(false);
+                            btnSync.setText("Synced");
+                            btnSync.setTextColor(getResources().getColor(R.color.green_approved));
+                        } else {
+                            btnSync.setClickable(true);
+                            btnSync.setText("Tap to Sync");
+                            btnSync.setTextColor(getResources().getColor(R.color.red_rejected));
+                        }
+                    }
+                });
 
+        userProfileViewModel
+                .getProgressBar()
+                .observe(this, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(@Nullable Boolean progress) {
+                        if (progress) {
+                            progressSync.setVisibility(View.VISIBLE);
+                            btnSync.setVisibility(View.GONE);
+                        } else {
+                            progressSync.setVisibility(View.GONE);
+                            btnSync.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
+        watchText(ilName);
         watchText(ilEmail);
         watchText(ilPhone);
         watchText(ilLocation);
@@ -252,7 +268,7 @@ public class UserActivity extends CollectAbstractActivity {
         userProfileViewModel = new UserProfileViewModel();
     }
 
-    @OnClick({R.id.fab_edit_profile, R.id.fab_picture_edit, R.id.iv_back})
+    @OnClick({R.id.fab_edit_profile, R.id.fab_picture_edit, R.id.iv_back, R.id.btn_sync})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fab_edit_profile:
@@ -288,6 +304,35 @@ public class UserActivity extends CollectAbstractActivity {
                     }
                 }).show();
                 break;
+            case R.id.btn_sync:
+                userProfileViewModel.setProgressBar(true);
+                userProfileViewModel
+                        .upload()
+                        .subscribe(new DisposableObserver<User>() {
+                            @Override
+                            public void onNext(User user) {
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                                userProfileViewModel.setProgressBar(false);
+                                userProfileViewModel.setSyncLiveData(false);
+                                mUser.setSync(false);
+                                userProfileViewModel.setUser(mUser);
+                                userProfileViewModel.save();
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                userProfileViewModel.setProgressBar(false);
+                                userProfileViewModel.setSyncLiveData(true);
+                                mUser.setSync(true);
+                                userProfileViewModel.setUser(mUser);
+                                userProfileViewModel.save();
+                            }
+                        });
+                break;
             case R.id.iv_back:
                 super.onBackPressed();
         }
@@ -322,73 +367,75 @@ public class UserActivity extends CollectAbstractActivity {
                 .addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                     }
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
                     }
 
                     @Override
                     public void afterTextChanged(Editable s) {
+                        mUser.setSync(false);
                         switch (textInputLayout.getId()) {
+                            case R.id.il_name:
+                                mUser.setFull_name(s.toString());
+                                break;
                             case R.id.il_email:
-                                userProfileViewModel.getUser().getValue().setEmail(s.toString());
+                                mUser.setEmail(s.toString());
                                 break;
                             case R.id.il_phone:
-                                userProfileViewModel.getUser().getValue().setPhone(s.toString());
+                                mUser.setPhone(s.toString());
                                 break;
                             case R.id.il_location:
-                                userProfileViewModel.getUser().getValue().setAddress(s.toString());
+                                mUser.setAddress(s.toString());
                                 break;
                             case R.id.il_gender:
-                                userProfileViewModel.getUser().getValue().setGender(s.toString());
+                                mUser.setGender(s.toString());
                                 break;
                             case R.id.il_skype:
-                                userProfileViewModel.getUser().getValue().setSkype(s.toString());
+                                mUser.setSkype(s.toString());
                                 break;
                             case R.id.il_primary_number:
-                                userProfileViewModel.getUser().getValue().setPrimaryNumber(s.toString());
+                                mUser.setPrimaryNumber(s.toString());
                                 break;
                             case R.id.il_secondary_number:
-                                userProfileViewModel.getUser().getValue().setSecondaryNumber(s.toString());
+                                mUser.setSecondaryNumber(s.toString());
                                 break;
                             case R.id.il_office_number:
-                                userProfileViewModel.getUser().getValue().setOfficeNumber(s.toString());
+                                mUser.setOfficeNumber(s.toString());
                                 break;
                             case R.id.il_viber:
-                                userProfileViewModel.getUser().getValue().setViber(s.toString());
+                                mUser.setViber(s.toString());
                                 break;
                             case R.id.il_whatsapp:
-                                userProfileViewModel.getUser().getValue().setWhatsApp(s.toString());
+                                mUser.setWhatsApp(s.toString());
                                 break;
                             case R.id.il_wechat:
-                                userProfileViewModel.getUser().getValue().setWechat(s.toString());
+                                mUser.setWechat(s.toString());
                                 break;
                             case R.id.il_line:
-                                userProfileViewModel.getUser().getValue().setLine(s.toString());
+                                mUser.setLine(s.toString());
                                 break;
                             case R.id.il_tango:
-                                userProfileViewModel.getUser().getValue().setTango(s.toString());
+                                mUser.setTango(s.toString());
                                 break;
                             case R.id.il_hike:
-                                userProfileViewModel.getUser().getValue().setHike(s.toString());
+                                mUser.setHike(s.toString());
                                 break;
                             case R.id.il_qq:
-                                userProfileViewModel.getUser().getValue().setQq(s.toString());
+                                mUser.setQq(s.toString());
                                 break;
                             case R.id.il_google_talk:
-                                userProfileViewModel.getUser().getValue().setGoogleTalk(s.toString());
+                                mUser.setGoogleTalk(s.toString());
                                 break;
                             case R.id.il_twitter:
-                                userProfileViewModel.getUser().getValue().setTwitter(s.toString());
+                                mUser.setTwitter(s.toString());
                                 break;
                             case R.id.il_organization:
-                                userProfileViewModel.getUser().getValue().setOrganization(s.toString());
+                                mUser.setOrganization(s.toString());
                                 break;
                             case R.id.il_project:
-                                userProfileViewModel.getUser().getValue().setProject(s.toString());
+                                mUser.setProject(s.toString());
                                 break;
                         }
                     }
@@ -396,7 +443,8 @@ public class UserActivity extends CollectAbstractActivity {
     }
 
     private void setInputLayoutEnabledStatus(Boolean status) {
-        tvName.setEnabled(status);
+        ilName.setEnabled(status);
+        ilEmail.setEnabled(status);
         ilEmail.setEnabled(status);
         ilPhone.setEnabled(status);
         ilLocation.setEnabled(status);
@@ -418,14 +466,8 @@ public class UserActivity extends CollectAbstractActivity {
         ilProject.setEnabled(status);
     }
 
-    private void checkAndSetVisibility(TextInputLayout inputLayout) {
-        if (inputLayout.getEditText().getText().toString().isEmpty()) {
-            inputLayout.setVisibility(View.GONE);
-        }
-    }
-
     private void setInputLayoutVisibility(int visibility) {
-        tvName.setVisibility(visibility);
+        ilName.setVisibility(visibility);
         ilEmail.setVisibility(visibility);
         ilPhone.setVisibility(visibility);
         ilLocation.setVisibility(visibility);

@@ -8,13 +8,32 @@ import org.bcss.collect.naxa.login.model.User;
 
 import java.io.File;
 
+import io.reactivex.Observable;
+
 
 public class UserProfileViewModel extends ViewModel {
 
+    private UserProfileRepository userProfileRepository;
     private MutableLiveData<User> user = new MutableLiveData<>();
+    private MutableLiveData<Boolean> syncLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> editProfile = new MutableLiveData<>();
+    private MutableLiveData<Boolean> progressBar = new MutableLiveData<>();
 
     public UserProfileViewModel() {
+        this.userProfileRepository = new UserProfileRepository();
+        getUser().setValue(get());
+    }
+
+    public void save() {
+        userProfileRepository.save(getUser().getValue());
+    }
+
+    private User get() {
+        return userProfileRepository.get();
+    }
+
+    public Observable<User> upload() {
+        return userProfileRepository.upload(get());
     }
 
     public MutableLiveData<Boolean> getEditProfile() {
@@ -31,6 +50,22 @@ public class UserProfileViewModel extends ViewModel {
 
     public void setUser(User user) {
         this.user.setValue(user);
+    }
+
+    public MutableLiveData<Boolean> getSyncLiveData() {
+        return syncLiveData;
+    }
+
+    public void setSyncLiveData(Boolean syncValue) {
+        this.syncLiveData.setValue(syncValue);
+    }
+
+    public MutableLiveData<Boolean> getProgressBar() {
+        return progressBar;
+    }
+
+    public void setProgressBar(Boolean progressBar) {
+        this.progressBar.setValue(progressBar);
     }
 
     public File generateImageFile(String imageName) {

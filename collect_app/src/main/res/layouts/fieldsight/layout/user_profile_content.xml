@@ -22,24 +22,52 @@
             android:elevation="2dp"
             android:paddingBottom="16dp">
 
-            <EditText
-                android:id="@+id/tvName"
+            <ProgressBar
+                android:id="@+id/progress_sync"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btn_sync"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="Synced"
+                android:textColor="@color/green_approved" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/il_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:layout_marginRight="@dimen/margin_extra_large"
                 android:layout_marginTop="68dp"
-                android:fontFamily="sans-serif"
-                android:text="Full Name"
-                android:enabled="false"
-                android:textColor="@color/textview_colors"
-                android:textSize="24sp" />
+                app:errorEnabled="false">
+
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:enabled="false"
+                    android:fontFamily="sans-serif"
+                    android:text="Full Name"
+                    android:textColor="@color/textview_colors"
+                    android:textSize="24sp" />
+            </android.support.design.widget.TextInputLayout>
+
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/il_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvName"
+                android:layout_below="@id/il_name"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="@dimen/margin_extra_large"
@@ -71,6 +99,7 @@
                     android:enabled="false"
                     android:fontFamily="sans-serif-medium"
                     android:hint="Phone"
+                    android:inputType="number"
                     android:textColor="@color/textview_colors"
                     android:textSize="16sp" />
             </android.support.design.widget.TextInputLayout>
@@ -154,6 +183,7 @@
                     android:enabled="false"
                     android:fontFamily="sans-serif-light"
                     android:hint="Primary Number"
+                    android:inputType="number"
                     android:textColor="@color/textview_colors"
                     android:textSize="16sp" />
 
@@ -176,6 +206,7 @@
                     android:enabled="false"
                     android:fontFamily="sans-serif-light"
                     android:hint="Secondary Number"
+                    android:inputType="number"
                     android:textColor="@color/textview_colors"
                     android:textSize="16sp" />
 
@@ -197,6 +228,7 @@
                     android:enabled="false"
                     android:fontFamily="sans-serif-light"
                     android:hint="Office Number"
+                    android:inputType="number"
                     android:textColor="@color/textview_colors"
                     android:textSize="16sp" />
 

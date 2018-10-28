@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.login.model;
 
 import com.google.common.base.Objects;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -17,73 +18,84 @@ public class User {
     private List<MySites> mySitesModel = new ArrayList<MySites>();
     @SerializedName("username")
     private String user_name;
-    @SerializedName("profile_pic")
-    private String profilepic;
     @SerializedName("server_time")
     private String serverTime;
+    private String id;
 
-    private String full_name;
+    @SerializedName("profile_pic")
+    @Expose
+    private String profilepic;
+    @SerializedName("first_name")
+    @Expose
+    private String firstName;
+    @SerializedName("last_name")
+    @Expose
+    private String lastName;
+
     private String email;
+    @SerializedName("phone")
+    @Expose
     private String phone;
     @SerializedName("address")
     private String address;
+    @SerializedName("gender")
+    @Expose
     private String gender;
-
+    @SerializedName("skype")
+    @Expose
     private String skype;
-
+    @SerializedName("primary_number")
+    @Expose
     private String primaryNumber;
+    @SerializedName("secondary_number")
+    @Expose
     private String secondaryNumber;
+    @SerializedName("office_number")
+    @Expose
     private String officeNumber;
+    @SerializedName("viber")
+    @Expose
     private String viber;
+    @SerializedName("whatsapp")
+    @Expose
     private String whatsApp;
+    @SerializedName("wechat")
+    @Expose
     private String wechat;
+    @SerializedName("line")
+    @Expose
     private String line;
+    @SerializedName("tango")
+    @Expose
     private String tango;
+    @SerializedName("hike")
+    @Expose
     private String hike;
+    @SerializedName("qq")
+    @Expose
     private String qq;
+    @SerializedName("google_talk")
+    @Expose
     private String googleTalk;
+    @SerializedName("twitter")
+    @Expose
     private String twitter;
+    @SerializedName("organization")
+    @Expose
     private String organization;
     private String project;
+
     @SerializedName("is_supervisor")
     private Boolean isSupervisor;
-
     @SerializedName("last_login")
     private String lastLogin;
     @SerializedName("organization_url")
     private String organizationUrl;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private boolean sync;
 
 
     public User() {
-//        this.mySitesModel = new ArrayList<>();
-//        this.additionalProperties = new HashMap<>();
-//        this.user_name = "";
-//        this.profilepic = "";
-//        this.serverTime = "";
-//        this.full_name = "";
-//        this.email = "";
-//        this.phone = "";
-//        this.address = "";
-//        this.gender = "";
-//        this.skype = "";
-//        this.primaryNumber = "";
-//        this.secondaryNumber = "";
-//        this.officeNumber = "";
-//        this.viber = "";
-//        this.whatsApp = "";
-//        this.wechat = "";
-//        this.line = "";
-//        this.tango = "";
-//        this.hike = "";
-//        this.qq = "";
-//        this.googleTalk = "";
-//        this.twitter = "";
-//        this.organization = "";
-//        this.project = "";
-//        this.organizationUrl = "";
-//        this.lastLogin = "";
-//        this.isSupervisor = false;
     }
 
     /**
@@ -100,6 +112,13 @@ public class User {
         return isSupervisor;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * @return The email
@@ -122,7 +141,9 @@ public class User {
 
 
     public String getFull_name() {
-        return full_name;
+        if (firstName == null) firstName = "Full";
+        if (lastName == null) lastName = "Name";
+        return String.format("%s %s", firstName, lastName);
     }
 
     public void setMySitesModel(List<MySites> mySitesModel) {
@@ -150,7 +171,29 @@ public class User {
     }
 
     public void setFull_name(String full_name) {
-        this.full_name = full_name;
+        String[] name = full_name.split(" ");
+        firstName = name[0];
+        if (name.length > 1) {
+            lastName = name[1];
+        } else {
+            lastName = "";
+        }
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getAddress() {
@@ -329,18 +372,30 @@ public class User {
         this.additionalProperties = additionalProperties;
     }
 
+    public boolean isSync() {
+        return sync;
+    }
+
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equal(mySitesModel, user.mySitesModel) &&
+        return sync == user.sync &&
+                Objects.equal(mySitesModel, user.mySitesModel) &&
                 Objects.equal(user_name, user.user_name) &&
-                Objects.equal(profilepic, user.profilepic) &&
                 Objects.equal(serverTime, user.serverTime) &&
-                Objects.equal(full_name, user.full_name) &&
+                Objects.equal(profilepic, user.profilepic) &&
+                Objects.equal(firstName, user.firstName) &&
+                Objects.equal(lastName, user.lastName) &&
                 Objects.equal(email, user.email) &&
+                Objects.equal(phone, user.phone) &&
                 Objects.equal(address, user.address) &&
+                Objects.equal(gender, user.gender) &&
                 Objects.equal(skype, user.skype) &&
                 Objects.equal(primaryNumber, user.primaryNumber) &&
                 Objects.equal(secondaryNumber, user.secondaryNumber) &&
@@ -364,8 +419,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mySitesModel, user_name, profilepic, serverTime, full_name, email, address, skype, primaryNumber, secondaryNumber, officeNumber, viber, whatsApp, wechat, line, tango, hike, qq, googleTalk, twitter, organization, project, isSupervisor, lastLogin, organizationUrl, additionalProperties);
+        return Objects.hashCode(mySitesModel, user_name, serverTime, profilepic, firstName, lastName, email, phone, address, gender, skype, primaryNumber, secondaryNumber, officeNumber, viber, whatsApp, wechat, line, tango, hike, qq, googleTalk, twitter, organization, project, isSupervisor, lastLogin, organizationUrl, additionalProperties, sync);
     }
-
-
 }
