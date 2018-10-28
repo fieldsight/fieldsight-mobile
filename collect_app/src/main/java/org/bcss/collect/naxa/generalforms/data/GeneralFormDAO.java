@@ -16,11 +16,11 @@ import java.util.List;
 public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
 
     @Deprecated
-    @Query("SELECT * FROM general_forms WHERE projectId =:projectId")
+    @Query("SELECT * FROM general_forms WHERE projectId =:projectId and isDeployed = 1")
     public abstract LiveData<List<GeneralForm>> getProjectGeneralForms(String projectId);
 
     @Deprecated
-    @Query("SELECT * FROM general_forms WHERE siteId =:siteId OR projectId =:projectId")
+    @Query("SELECT * FROM general_forms WHERE (siteId =:siteId OR projectId =:projectId) and isDeployed = 1")
     public abstract LiveData<List<GeneralForm>> getSiteGeneralForms(String siteId, String projectId);
 
 
