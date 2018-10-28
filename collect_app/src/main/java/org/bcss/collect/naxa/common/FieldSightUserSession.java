@@ -177,7 +177,7 @@ public class FieldSightUserSession {
         if (android.text.TextUtils.isEmpty("")) {
             throw new IllegalArgumentException("User information is missing from cache");
         }
-        return new Gson().fromJson("", User.class);
+        return new Gson().fromJson(userString, User.class);
     }
 
     private static void deleteAllForms(Context context) {

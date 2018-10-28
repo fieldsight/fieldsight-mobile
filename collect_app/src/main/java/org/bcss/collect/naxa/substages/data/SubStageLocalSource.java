@@ -144,25 +144,30 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
         AsyncTask.execute(() -> dao.updateAll(items));
     }
 
-    public Observable<List<SubStage>> getByStageIdMaybe(String id, String siteTypeId ) {
-         return dao.getByStageIdMaybe(id).toObservable()
-         .flatMap(new Function<List<SubStage>, ObservableSource<List<SubStage>>>() {
-             @Override
-             public ObservableSource<List<SubStage>> apply(List<SubStage> subStages) throws Exception {
-                 ArrayList<SubStage> filteredSubstages = new ArrayList<>();
+    public Observable<List<SubStage>> getByStageIdMaybe(String id, String siteTypeId) {
+        return dao.getByStageIdMaybe(id).toObservable()
+                .flatMap(new Function<List<SubStage>, ObservableSource<List<SubStage>>>() {
+                    @Override
+                    public ObservableSource<List<SubStage>> apply(List<SubStage> subStages) throws Exception {
+                        ArrayList<SubStage> filteredSubstages = new ArrayList<>();
 
-                 for (SubStage subStage : subStages) {
-                     if (TextUtils.isEmpty(siteTypeId)
-                             || Constant.DEFAULT_SITE_TYPE.equals(siteTypeId)
-                             || subStage.getTagIds().contains(siteTypeId)
-                             || subStage.getTagIds().size() == 0) {
+                        for (SubStage subStage : subStages) {
 
-                         filteredSubstages.add(subStage);
-                     }
-                 }
-                 return Observable.just(filteredSubstages);
-             }
-         });
+                            boolean siteTypeNotDefined = TextUtils.isEmpty(siteTypeId)
+                                    || Constant.DEFAULT_SITE_TYPE.equals(siteTypeId);
+                            boolean subStageTagNotDefined = subStage.getTagIds().size() == 0;
+                            boolean siteTypeMatchesSubStageTag = subStage.getTagIds().contains(siteTypeId);
+
+                            if (siteTypeNotDefined
+                                    || subStageTagNotDefined
+                                    || siteTypeMatchesSubStageTag) {
+
+                                filteredSubstages.add(subStage);
+                            }
+                        }
+                        return Observable.just(filteredSubstages);
+                    }
+                });
     }
 
 

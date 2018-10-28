@@ -95,13 +95,15 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
         return dao.getByProjectIdMaybe(projectId)
                 .toObservable()
                 .flatMapIterable((Function<List<Stage>, Iterable<Stage>>) stages -> stages)
-                .flatMap(new Function<Stage, Observable<List<Stage>>>() {
+                .flatMap(new Function<Stage, Observable<Stage>>() {
                     @Override
-                    public Observable<List<Stage>> apply(Stage stage) throws Exception {
-                        return SubStageLocalSource.getInstance().getByStageIdMaybe(stage.getId(), siteTypeId)
+                    public Observable<Stage> apply(Stage stage) throws Exception {
+                        return SubStageLocalSource.getInstance()
+                                .getByStageIdMaybe(stage.getId(), siteTypeId)
                                 .filter(new Predicate<List<SubStage>>() {
                                     @Override
                                     public boolean test(List<SubStage> subStages) throws Exception {
+
                                         return subStages.size() > 0;
                                     }
                                 }).map(new Function<List<SubStage>, Stage>() {
@@ -109,11 +111,12 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
                                     public Stage apply(List<SubStage> subStages) throws Exception {
                                         return stage;
                                     }
-                                })
-                                .toList()
-                                .toObservable();
+                                });
+
                     }
-                });
+                })
+                .toList()
+                .toObservable();
 
 
     }

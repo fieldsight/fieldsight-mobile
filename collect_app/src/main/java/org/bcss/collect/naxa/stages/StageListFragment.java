@@ -48,6 +48,10 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
+import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
+import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
+import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
+import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class StageListFragment extends Fragment implements OnFormItemClickListener<Stage> {
@@ -181,11 +185,10 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
 
     @Override
     public void onFormItemClicked(Stage stage, int position) {
-        Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getId(), String.valueOf(position),stage.getFormDeployedFrom());
+        Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getId(), String.valueOf(position), stage.getFormDeployedFrom());
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(Constant.ANIM.fragmentEnterAnimation
-                , Constant.ANIM.fragmentExitAnimation, Constant.ANIM.fragmentEnterAnimation, Constant.ANIM.fragmentPopExitAnimation);
+        fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack("myfrag3");
         fragmentTransaction.commit();
