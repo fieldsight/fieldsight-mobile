@@ -181,6 +181,8 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     private void setupToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         getSupportActionBar().setTitle(R.string.projects);
     }
 
