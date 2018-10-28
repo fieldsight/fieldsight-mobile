@@ -44,6 +44,7 @@ import java.io.File;
 import butterknife.ButterKnife;
 import butterknife.OnLongClick;
 import butterknife.Unbinder;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
@@ -80,6 +81,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Nullable
@@ -91,6 +93,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         unbinder = ButterKnife.bind(this, rootView);
 
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
+        Timber.i(loadedSite.toString());
 
         bindUI(rootView);
         hideSendButtonIfMockedSite(rootView);
@@ -198,7 +201,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
                         break;
                     case R.id.popup_view_blue_prints:
-                        SiteDocumentsListActivity.start(getActivity(),loadedSite);
+                        SiteDocumentsListActivity.start(getActivity(), loadedSite);
                         break;
 
 

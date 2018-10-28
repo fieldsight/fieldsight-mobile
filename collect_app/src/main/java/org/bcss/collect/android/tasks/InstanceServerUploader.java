@@ -434,7 +434,7 @@ public class InstanceServerUploader extends InstanceUploader {
                 Timber.i("Issuing POST request for %s to: %s", id, submissionUri.toString());
                 response = httpclient.execute(httppost, localContext);
                 int responseCode = response.getStatusLine().getStatusCode();
-                ResponseUtils.saveHttpResponseToFile(response,"Daily Site Diary");
+//                ResponseUtils.saveHttpResponseToFile(response,"Daily Site Diary");
                 HttpEntity httpEntity = response.getEntity();
                 messageParser = new ResponseMessageParser(httpEntity);
                 WebUtils.discardEntityBytes(response);

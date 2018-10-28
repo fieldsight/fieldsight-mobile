@@ -146,6 +146,24 @@ public class Site implements Parcelable {
         this.siteDocuments = siteDocuments;
     }
 
+    @Override
+    public String toString() {
+        return "Site{" +
+                "id='" + id + '\'' +
+                ",projectId='" + project + '\'' +
+                ", general='" + generalFormDeployedFrom + '\'' +
+                ", staged='" + stagedFormDeployedFrom + '\'' +
+                ", schedule='" + scheduleFormDeployedForm + '\'' +
+                ", identifier='" + identifier + '\'' +
+                ", name='" + name + '\'' +
+                ", typeId='" + typeId + '\'' +
+                ", typeLabel='" + typeLabel + '\'' +
+                ", dateCreated='" + dateCreated + '\'' +
+                ", isSiteVerified=" + isSiteVerified +
+                ", regionId='" + regionId + '\'' +
+                '}';
+    }
+
     public List<String> getSiteDocuments() {
         return siteDocuments;
     }

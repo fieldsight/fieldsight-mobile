@@ -27,6 +27,7 @@ import org.bcss.collect.naxa.login.model.Site;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
@@ -42,6 +43,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         Intent intent = new Intent(context, FragmentHostActivity.class);
         intent.putExtra(EXTRA_OBJECT, site);
         context.startActivity(intent);
+
 
     }
 

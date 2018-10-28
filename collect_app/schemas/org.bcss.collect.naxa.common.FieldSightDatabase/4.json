@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "09a84c8d60ecf7d7558fcf08e477e178",
+    "identityHash": "d271d55f21cd2be332bd5bc20a363d9e",
     "entities": [
       {
         "tableName": "sites",
@@ -1187,12 +1187,12 @@
       },
       {
         "tableName": "submission_detail",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` TEXT NOT NULL, `site` TEXT, `project` TEXT, `siteFsFormId` TEXT, `projectFsFormId` TEXT, `submissionDateTime` TEXT, `submittedBy` TEXT, `statusDisplay` TEXT, PRIMARY KEY(`uid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `site` TEXT, `project` TEXT, `siteFsFormId` TEXT, `projectFsFormId` TEXT, `submissionDateTime` TEXT, `submittedBy` TEXT, `statusDisplay` TEXT)",
         "fields": [
           {
             "fieldPath": "uid",
             "columnName": "uid",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -1242,7 +1242,7 @@
           "columnNames": [
             "uid"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -1250,7 +1250,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"09a84c8d60ecf7d7558fcf08e477e178\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d271d55f21cd2be332bd5bc20a363d9e\")"
     ]
   }
 }

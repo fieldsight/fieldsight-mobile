@@ -148,7 +148,9 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
                                             } else {
                                                 submissionDetailsSource = LastSubmissionLocalSource.getInstance().getByProjectFsId(generalForm.getFsFormId());
                                             }
+
                                             return submissionDetailsSource.toObservable()
+                                                    .defaultIfEmpty(new SubmissionDetail())
                                                     .map(new Function<SubmissionDetail, GeneralFormAndSubmission>() {
                                                         @Override
                                                         public GeneralFormAndSubmission apply(SubmissionDetail submissionDetail) throws Exception {

@@ -139,7 +139,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     submissionDetail.setProject(projectId);
                     submissionDetail.setSubmissionDateTime(submissionDateTime);
                     submissionDetail.setStatusDisplay(formStatus);
-                    submissionDetail.setUid(submissionId);
 
                     LastSubmissionLocalSource.getInstance().save(submissionDetail);
 

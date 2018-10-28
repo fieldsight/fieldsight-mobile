@@ -32,6 +32,9 @@ public class LoginModelImpl implements LoginModel {
                 .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
                     @Override
                     public ObservableSource<FCMParameter> apply(AuthResponse authResponse) throws Exception {
+
+                        ServiceGenerator.clearInstance();
+
                         return ServiceGenerator
                                 .createService(ApiInterface.class)
                                 .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true))

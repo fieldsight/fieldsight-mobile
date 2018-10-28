@@ -108,7 +108,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private ActionMode actionMode;
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
     private LiveData<List<Site>> filteredSiteLiveData;
-    private MenuItem filterMenuItem;
+    private MenuItem sortActionFilter;
 
 
     public static SiteListFragment getInstance(Project project) {
@@ -160,16 +160,23 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         unbinder.unbind();
     }
 
+    private void changeActionVisibility(boolean visible){
+        if(true)return;
+        if(sortActionFilter != null){
+            Timber.i("menu filter %s",visible);
+            sortActionFilter.setVisible(visible);
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
+        sortActionFilter = menu.findItem(R.id.action_filter);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
-
+        changeActionVisibility(menuVisible);
         super.setMenuVisibility(menuVisible);
     }
 
@@ -362,6 +369,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         if (item.getItemId() == R.id.action_filter) {
             bottomSheetDialog.show();
         }
@@ -382,12 +390,14 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @Override
     public void onUselessLayoutClicked(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
+            changeActionVisibility(false);
             FragmentHostActivity.start(getActivity(), site);
         }
     }
 
     @Override
     public void onSurveyFormClicked() {
+        changeActionVisibility(false);
         SurveyFormsActivity.start(getActivity(), loadedProject);
     }
 
@@ -479,6 +489,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         if (isAdded()) {
                             DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
                                     .setPositiveButton("Upload ", (dialog, which) -> {
+
                                         Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
                                         i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs.toArray(new Long[instanceIDs.size()]));
                                         startActivityForResult(i, INSTANCE_UPLOADER);

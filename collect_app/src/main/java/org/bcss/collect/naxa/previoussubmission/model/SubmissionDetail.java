@@ -16,9 +16,8 @@ import org.bcss.collect.naxa.generalforms.data.FormType;
 public class SubmissionDetail {
 
     @NonNull
-    @PrimaryKey
-    @SerializedName("id")
-    private String uid;
+    @PrimaryKey(autoGenerate = true)
+    private Integer uid;
 
     @SerializedName("site")
     @Expose
@@ -85,7 +84,7 @@ public class SubmissionDetail {
         this.projectFsFormId = projectFsFormId;
     }
 
-    public String getUid() {
+    public Integer getUid() {
         return uid;
     }
 
@@ -117,7 +116,7 @@ public class SubmissionDetail {
         return statusDisplay;
     }
 
-    public void setUid(String uid) {
+    public void setUid(Integer uid) {
         this.uid = uid;
     }
 
@@ -126,7 +125,7 @@ public class SubmissionDetail {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubmissionDetail that = (SubmissionDetail) o;
-        return uid == that.uid &&
+        return
                 Objects.equal(site, that.site) &&
                 Objects.equal(project, that.project) &&
                 Objects.equal(siteFsFormId, that.siteFsFormId) &&
