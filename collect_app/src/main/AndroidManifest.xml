@@ -337,6 +337,9 @@ the specific language governing permissions and limitations under the License.
             android:name="org.bcss.collect.naxa.sitedocuments.ImageViewerActivity"
             android:label="@string/title_activity_image_viewer"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:exported="true"
+            android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity" />
     </application>
 
 </manifest>
