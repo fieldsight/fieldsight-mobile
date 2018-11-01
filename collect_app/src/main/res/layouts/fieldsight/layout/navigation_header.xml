@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/nav_header_root_layout"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:background="@drawable/ic_banner_image"
+    android:layout_height="220dp"
+
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground">
@@ -12,7 +12,18 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/transparent_black_gradient_shape">
+        android:background="@color/colorTransparentBlueTop">
+
+
+
+        <ImageView
+
+            android:scaleType="centerCrop"
+            android:src="@drawable/user_profile_background"
+            android:layout_width="match_parent"
+            android:layout_height="250dp" />
+
+
 
 
 
@@ -52,6 +63,7 @@
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_extra_small" />
+        
 
     </RelativeLayout>
 

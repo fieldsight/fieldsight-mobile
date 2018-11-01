@@ -33,7 +33,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/bcss_old_man"
+                    android:src="@drawable/sand_city_illustration"
                     android:tint="@color/colorTransparentBlue"
                     tools:ignore="ContentDescription" />
 
