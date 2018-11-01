@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,7 +15,6 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
-import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 
 import butterknife.BindView;
@@ -42,7 +40,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
     final Integer errorOccured = -1;
     private final Integer max = 3;
 
-    private static void start(Context context, String usernameOrEmail) {
+    public static void start(Context context, String usernameOrEmail) {
         Intent intent = new Intent(context, MigrateFieldSightActivity.class);
         intent.putExtra(EXTRA_MESSAGE, usernameOrEmail);
         context.startActivity(intent);
@@ -55,13 +53,12 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
         setContentView(R.layout.fieldsight_migrate_activity);
         ButterKnife.bind(this);
         setupViewModel();
-        //String usernameOrEmail = getIntent().getExtras().getString(EXTRA_MESSAGE);
-        String usernameOrEmail = "nishon.tan@gmail.com";
+        String usernameOrEmail = getIntent().getExtras().getString(EXTRA_MESSAGE);
 
         subtitle.setText(usernameOrEmail);
 
 
-        viewModel.hasOldAccount(usernameOrEmail)
+        viewModel.copyFromOldAccount(usernameOrEmail)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Integer>() {
@@ -69,7 +66,6 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
                     public void onSubscribe(Disposable d) {
                         progressBar.setMax(6);
                         progressBar.setInterpolator(new DecelerateInterpolator());
-                        progressBar.setMin(1);
                     }
 
                     @Override
@@ -80,6 +76,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
                                 break;
                             case 6:
                                 new Handler().postDelayed(() -> {
+
                                     startActivity(new Intent(MigrateFieldSightActivity.this, ProjectListActivity.class));
                                     finish();
                                 }, 2000);

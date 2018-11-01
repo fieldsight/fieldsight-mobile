@@ -26,6 +26,7 @@ import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.DialogFactory;
 //import org.bcss.collect.naxa.common.Login;
 import org.bcss.collect.naxa.common.Login;
+import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
 
@@ -161,8 +162,10 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
     @Override
     public void successAction() {
+
+        MigrateFieldSightActivity.start(this,mEmailView.getText().toString());
         Toast.makeText(this, "Logged In!", Toast.LENGTH_SHORT).show();
-        DownloadActivity.start(LoginActivity.this);
+
     }
 
     @Override

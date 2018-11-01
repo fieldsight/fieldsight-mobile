@@ -95,7 +95,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
 
 
-    Observable<Integer> hasOldAccount(@NonNull String usernameOrEmail) {
+    Observable<Integer> copyFromOldAccount(@NonNull String usernameOrEmail) {
         MutableLiveData<Boolean> hasOldAccount = new MutableLiveData<>();
         this.usernameOrEmail = usernameOrEmail;
 
