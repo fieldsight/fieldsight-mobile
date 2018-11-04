@@ -174,7 +174,7 @@ public class FieldSightUserSession {
     @NonNull
     public static User getUser() {
         String userString = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, null);
-        if (android.text.TextUtils.isEmpty("")) {
+        if (userString == null || userString.length() == 0) {
             throw new IllegalArgumentException("User information is missing from cache");
         }
         return new Gson().fromJson(userString, User.class);

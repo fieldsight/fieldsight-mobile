@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.login.model.User;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public class UserProfileViewModel extends ViewModel {
     }
 
     private User get() {
-        return userProfileRepository.get();
+        return FieldSightUserSession.getUser();
     }
 
     public Observable<User> upload() {

@@ -3,13 +3,12 @@
     android:id="@+id/nav_header_root_layout"
     android:layout_width="match_parent"
     android:layout_height="220dp"
-
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?selectableItemBackground">
+>
 
     <RelativeLayout
-
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorTransparentBlueTop">
@@ -22,9 +21,6 @@
             android:src="@drawable/user_profile_background"
             android:layout_width="match_parent"
             android:layout_height="250dp" />
-
-
-
 
 
         <de.hdodenhof.circleimageview.CircleImageView

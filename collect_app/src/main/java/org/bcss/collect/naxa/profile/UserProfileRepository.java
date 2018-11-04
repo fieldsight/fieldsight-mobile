@@ -22,9 +22,7 @@ public class UserProfileRepository {
         FieldSightUserSession.setUser(user);
     }
 
-    public User get() {
-        return FieldSightUserSession.getUser();
-    }
+
 
     public Observable<User> upload(User user) {
 

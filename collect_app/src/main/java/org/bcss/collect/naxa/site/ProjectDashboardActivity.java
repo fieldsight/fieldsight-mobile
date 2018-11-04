@@ -57,6 +57,7 @@ import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.AppBarStateChangeListener;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.NonSwipeableViewPager;
 import org.bcss.collect.naxa.common.RxSearchObservable;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
@@ -226,18 +227,15 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         User user = new Gson().fromJson(userString, User.class);
         ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFull_name());
         ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
-//        ViewUtils.loadImage(user.getProfilepic()).into((ImageView) navigationHeader.findViewById(R.id.image_profile));
+        ImageView ivProfilePicture = (ImageView) navigationHeader.findViewById(R.id.image_profile);
+        GlideApp.with(this).load(user.getProfilepic()).into(ivProfilePicture);
+
         navigationHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggleNavDrawer();
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-//                        ToastUtils.showLongToast("Not implemented yet");
-                        UserActivity.start(ProjectDashboardActivity.this);
-                    }
+                new Handler().postDelayed(() -> {
+                    UserActivity.start(ProjectDashboardActivity.this);
                 }, 250);
             }
         });
