@@ -52,19 +52,19 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fieldsight_migrate_activity);
         ButterKnife.bind(this);
-        setupViewModel();
-        String usernameOrEmail = getIntent().getExtras().getString(EXTRA_MESSAGE);
 
+        String usernameOrEmail = getIntent().getExtras().getString(EXTRA_MESSAGE);
+        setupViewModel(usernameOrEmail);
         subtitle.setText(usernameOrEmail);
 
 
-        viewModel.copyFromOldAccount(usernameOrEmail)
+        viewModel.copyFromOldAccount()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        progressBar.setMax(6);
+                        progressBar.setMax(3);
                         progressBar.setInterpolator(new DecelerateInterpolator());
                     }
 
@@ -74,7 +74,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
                             case -1:
                                 showErrorUI("");
                                 break;
-                            case 6:
+                            case 3:
                                 new Handler().postDelayed(() -> {
 
                                     startActivity(new Intent(MigrateFieldSightActivity.this, ProjectListActivity.class));
@@ -111,9 +111,10 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
     }
 
 
-    private void setupViewModel() {
+    private void setupViewModel(String userNameOrEmail) {
         ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
         viewModel = ViewModelProviders.of(this, factory).get(MigrateFieldSightViewModel.class);
+        viewModel.setUserNameEmail(userNameOrEmail);
     }
 
 

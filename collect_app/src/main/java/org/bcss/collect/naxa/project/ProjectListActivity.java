@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -110,6 +111,11 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     private MyProjectsAdapter projectlistAdapter;
     private ProjectViewModel viewModel;
 
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, ProjectListActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

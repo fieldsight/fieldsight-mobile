@@ -31,13 +31,16 @@ import org.kxml2.kdom.Node;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.FileNameMap;
@@ -516,11 +519,11 @@ public class FileUtils {
 
     /**
      * Grants read and write permissions to a content URI added to the specified intent.
-     *
+     * <p>
      * For Android > 4.4, the permissions expire when the receiving app's stack is finished. For
      * Android <= 4.4, the permissions are granted to all applications that can respond to the
      * intent.
-     *
+     * <p>
      * For true security, the permissions for Android <= 4.4 should be revoked manually but we don't
      * revoke them because we don't have many users on lower API levels and prior to targeting API
      * 24+, all apps always had access to the files anyway.
@@ -546,7 +549,7 @@ public class FileUtils {
 
     /**
      * Grants read permissions to a content URI added to the specified Intent.
-     *
+     * <p>
      * See {@link #grantFileReadPermissions(Intent, Uri, Context)} for details.
      */
     public static void grantFileReadPermissions(Intent intent, Uri uri, Context context) {
@@ -601,5 +604,218 @@ public class FileUtils {
         return getFileExtension(file.getPath());
     }
 
+    /**
+     * Copy the directory.
+     *
+     * @param srcDir  The source directory.
+     * @param destDir The destination directory.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean copyDir(final File srcDir,
+                                  final File destDir) {
+        return copyOrMoveDir(srcDir, destDir, new OnReplaceListener() {
+            @Override
+            public boolean onReplace() {
+                return true;
+            }
+        }, false);
+    }
+
+    /**
+     * Copy the directory.
+     *
+     * @param srcDirPath  The path of source directory.
+     * @param destDirPath The path of destination directory.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean copyDir(final String srcDirPath,
+                                  final String destDirPath) {
+        return copyDir(getFileByPath(srcDirPath), getFileByPath(destDirPath));
+    }
+
+    public interface OnReplaceListener {
+        boolean onReplace();
+    }
+
+    /**
+     * Delete the all in directory.
+     *
+     * @param dir The directory.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean deleteAllInDir(final File dir) {
+        return deleteFilesInDirWithFilter(dir, new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return true;
+            }
+        });
+    }
+
+
+    /**
+     * Delete all files that satisfy the filter in directory.
+     *
+     * @param dir    The directory.
+     * @param filter The filter.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean deleteFilesInDirWithFilter(final File dir, final FileFilter filter) {
+        if (dir == null) return false;
+        // dir doesn't exist then return true
+        if (!dir.exists()) return true;
+        // dir isn't a directory then return false
+        if (!dir.isDirectory()) return false;
+        File[] files = dir.listFiles();
+        if (files != null && files.length != 0) {
+            for (File file : files) {
+                if (filter.accept(file)) {
+                    if (file.isFile()) {
+                        if (!file.delete()) return false;
+                    } else if (file.isDirectory()) {
+                        if (!deleteDir(file)) return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Delete the directory.
+     *
+     * @param dir The directory.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean deleteDir(final File dir) {
+        if (dir == null) return false;
+        // dir doesn't exist then return true
+        if (!dir.exists()) return true;
+        // dir isn't a directory then return false
+        if (!dir.isDirectory()) return false;
+        File[] files = dir.listFiles();
+        if (files != null && files.length != 0) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    if (!file.delete()) return false;
+                } else if (file.isDirectory()) {
+                    if (!deleteDir(file)) return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
+
+
+    private static boolean copyOrMoveDir(final File srcDir,
+                                         final File destDir,
+                                         final OnReplaceListener listener,
+                                         final boolean isMove) {
+        if (srcDir == null || destDir == null) return false;
+        // destDir's path locate in srcDir's path then return false
+        String srcPath = srcDir.getPath() + File.separator;
+        String destPath = destDir.getPath() + File.separator;
+        if (destPath.contains(srcPath)) return false;
+        if (!srcDir.exists() || !srcDir.isDirectory()) return false;
+        if (destDir.exists()) {
+            if (listener == null || listener.onReplace()) {// require delete the old directory
+                if (!deleteAllInDir(destDir)) {// unsuccessfully delete then return false
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+        if (!createOrExistsDir(destDir)) return false;
+        File[] files = srcDir.listFiles();
+        for (File file : files) {
+            File oneDestFile = new File(destPath + file.getName());
+            if (file.isFile()) {
+                if (!copyOrMoveFile(file, oneDestFile, listener, isMove)) return false;
+            } else if (file.isDirectory()) {
+                if (!copyOrMoveDir(file, oneDestFile, listener, isMove)) return false;
+            }
+        }
+        return !isMove || deleteDir(srcDir);
+    }
+
+
+    private static boolean copyOrMoveFile(final File srcFile,
+                                          final File destFile,
+                                          final OnReplaceListener listener,
+                                          final boolean isMove) {
+        if (srcFile == null || destFile == null) return false;
+        // srcFile equals destFile then return false
+        if (srcFile.equals(destFile)) return false;
+        // srcFile doesn't exist or isn't a file then return false
+        if (!srcFile.exists() || !srcFile.isFile()) return false;
+        if (destFile.exists()) {
+            if (listener == null || listener.onReplace()) {// require delete the old file
+                if (!destFile.delete()) {// unsuccessfully delete then return false
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+        if (!createOrExistsDir(destFile.getParentFile())) return false;
+        try {
+            return writeFileFromIS(destFile, new FileInputStream(srcFile))
+                    && !(isMove && !deleteFile(srcFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Delete the file.
+     *
+     * @param file The file.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean deleteFile(final File file) {
+        return file != null && (!file.exists() || file.isFile() && file.delete());
+    }
+
+    private static boolean writeFileFromIS(final File file,
+                                           final InputStream is) {
+        OutputStream os = null;
+        try {
+            os = new BufferedOutputStream(new FileOutputStream(file));
+            byte data[] = new byte[8192];
+            int len;
+            while ((len = is.read(data, 0, 8192)) != -1) {
+                os.write(data, 0, len);
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (os != null) {
+                    os.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Create a directory if it doesn't exist, otherwise do nothing.
+     *
+     * @param file The file.
+     * @return {@code true}: exists or creates successfully<br>{@code false}: otherwise
+     */
+    public static boolean createOrExistsDir(final File file) {
+        return file != null && (file.exists() ? file.isDirectory() : file.mkdirs());
+    }
 
 }

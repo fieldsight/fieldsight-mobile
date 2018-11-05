@@ -10,10 +10,23 @@ import java.util.List;
 public class MigrationHelper {
 
 
-    public static final String ROOT = Environment.getExternalStorageDirectory() + File.separator;
-    public static final String MIGRATE_FROM = ROOT + "bcss";
-    private final String MIGRATE_TO = ROOT + "collect";
+    public final String ROOT = Environment.getExternalStorageDirectory() + File.separator;
+    public final String MIGRATE_FROM = ROOT + "bcss";
+    private final String MIGRATE_TO = ROOT + "fieldsight";
+    private final String usernameOrEmail;
 
+
+    public MigrationHelper(String usernameOrEmail) {
+        this.usernameOrEmail = usernameOrEmail;
+    }
+
+    String getOldRootPath() {
+        return MIGRATE_FROM + File.separator + usernameOrEmail;
+    }
+
+    String getNewRootPath() {
+        return MIGRATE_TO + File.separator;
+    }
 
     public List<File> listOldAccount() {
         return listFilesInDir(getFileByPath(MIGRATE_FROM));
@@ -31,6 +44,17 @@ public class MigrationHelper {
             }
         }
         return true;
+    }
+
+    public boolean hasOldAccount() {
+        boolean hasOldAccount = false;
+        for (File file : listOldAccount()) {
+            if (usernameOrEmail.equalsIgnoreCase(file.getName())) {
+                hasOldAccount = true;
+            }
+        }
+
+        return hasOldAccount;
     }
 
 
