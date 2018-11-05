@@ -110,7 +110,7 @@ public class PermissionUtils {
                 .withErrorListener(error -> Timber.i(error.name()))
                 .check();
     }
-  
+
     public static void requestLocationPermissions(@NonNull Activity activity, @NonNull PermissionListener action) {
         MultiplePermissionsListener multiplePermissionsListener = new MultiplePermissionsListener() {
             @Override
@@ -273,6 +273,34 @@ public class PermissionUtils {
                 .withPermission(
                         Manifest.permission.READ_PHONE_STATE
                 ).withListener(permissionListener)
+                .withErrorListener(error -> Timber.i(error.name()))
+                .check();
+    }
+
+    public static void requestPhoneAndStoragePermission(@NonNull Activity activity, @NonNull PermissionListener action) {
+        MultiplePermissionsListener multiplePermissionsListener = new MultiplePermissionsListener() {
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport report) {
+                if (report.areAllPermissionsGranted()) {
+                    action.granted();
+                } else {
+                    showAdditionalExplanation(activity, R.string.storage_runtime_permission_denied_title,
+                            R.string.storage_runtime_permission_denied_desc, R.drawable.sd, action);
+                }
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                token.continuePermissionRequest();
+            }
+        };
+
+        Dexter.withActivity(activity)
+                .withPermissions(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_PHONE_STATE
+                ).withListener(multiplePermissionsListener)
                 .withErrorListener(error -> Timber.i(error.name()))
                 .check();
     }

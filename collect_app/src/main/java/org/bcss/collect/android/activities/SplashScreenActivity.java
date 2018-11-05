@@ -48,6 +48,8 @@ import java.io.IOException;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_SPLASH_PATH;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestPhoneAndStoragePermission;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestReadPhoneStatePermission;
 import static org.bcss.collect.android.utilities.PermissionUtils.requestStoragePermissions;
 
 public class SplashScreenActivity extends Activity {
@@ -63,7 +65,7 @@ public class SplashScreenActivity extends Activity {
         // this splash screen should be a blank slate
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        requestStoragePermissions(this, new PermissionListener() {
+        requestPhoneAndStoragePermission(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
@@ -84,6 +86,18 @@ public class SplashScreenActivity extends Activity {
                 finish();
             }
         });
+
+        requestReadPhoneStatePermission(this, new PermissionListener() {
+            @Override
+            public void granted() {
+
+            }
+
+            @Override
+            public void denied() {
+
+            }
+        }, true);
     }
 
     private void init() {
@@ -131,9 +145,9 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void endSplashScreen() {
-        if(FieldSightUserSession.isLoggedIn()){
+        if (FieldSightUserSession.isLoggedIn()) {
             startActivity(new Intent(this, ProjectListActivity.class));
-        }else {
+        } else {
             startActivity(new Intent(this, LoginActivity.class));
         }
         finish();
