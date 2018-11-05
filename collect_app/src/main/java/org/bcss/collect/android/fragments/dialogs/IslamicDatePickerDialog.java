@@ -1,4 +1,4 @@
-/*
+package org.bcss.collect.android.fragments.dialogs;/*
  * Copyright 2017 Nafundi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-
-package org.bcss.collect.android.fragments.dialogs;
-
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.fragments.dialogs.CustomDatePickerDialog;
+import org.bcss.collect.android.logic.DatePickerDetails;
+import org.bcss.collect.android.utilities.DateTimeUtils;
 import org.javarosa.core.model.FormIndex;
 import org.joda.time.LocalDateTime;
 import org.joda.time.chrono.IslamicChronology;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.logic.DatePickerDetails;
-import org.bcss.collect.android.utilities.DateTimeUtils;
 
 import java.util.Arrays;
+
+
+
+
 
 public class IslamicDatePickerDialog extends CustomDatePickerDialog {
 
@@ -49,7 +51,8 @@ public class IslamicDatePickerDialog extends CustomDatePickerDialog {
 
     @Override
     protected void updateDays() {
-        setUpDayPicker(getCurrentIslamicDate());
+        LocalDateTime localDateTime = getCurrentIslamicDate();
+        setUpDayPicker(localDateTime.getDayOfMonth(), localDateTime.dayOfMonth().getMaximumValue());
     }
 
     @Override
@@ -63,9 +66,9 @@ public class IslamicDatePickerDialog extends CustomDatePickerDialog {
                 .toDateTime()
                 .withChronology(IslamicChronology.getInstance())
                 .toLocalDateTime();
-        setUpDayPicker(islamicDate);
-        setUpMonthPicker(islamicDate, monthsArray);
-        setUpYearPicker(islamicDate, MIN_SUPPORTED_YEAR, MAX_SUPPORTED_YEAR);
+        setUpDayPicker(islamicDate.getDayOfMonth(), islamicDate.dayOfMonth().getMaximumValue());
+        setUpMonthPicker(islamicDate.getMonthOfYear(), monthsArray);
+        setUpYearPicker(islamicDate.getYear(), MIN_SUPPORTED_YEAR, MAX_SUPPORTED_YEAR);
     }
 
     private void setUpValues() {

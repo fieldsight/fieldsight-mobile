@@ -208,7 +208,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     private void setupSearchView() {
 
         searchView.setOnClickListener(view -> {
-            if (Collect.allowClick()) {
+            if (Collect.allowClick(getClass().getName())) {
                 loadToolBarSearch();
             }
         });
@@ -349,13 +349,11 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 CreateSiteActivity.start(this, loadedProject);
                 break;
             case R.id.nav_delete_saved_form:
-                Collect.getInstance().getActivityLogger()
-                        .logAction(this, "deleteSavedInstances", "click");
+
                 startActivity(new Intent(getApplicationContext(), FileManagerTabs.class));
                 break;
             case R.id.nav_edit_saved_form:
-                Collect.getInstance().getActivityLogger()
-                        .logAction(this, ApplicationConstants.FormModes.EDIT_SAVED, "click");
+
                 Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                 i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                         ApplicationConstants.FormModes.EDIT_SAVED);
@@ -363,8 +361,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 break;
             case R.id.nav_send_final_form:
 
-                Collect.getInstance().getActivityLogger()
-                        .logAction(this, "uploadForms", "click");
                 startActivity(new Intent(getApplicationContext(),
                         InstanceUploaderList.class));
 

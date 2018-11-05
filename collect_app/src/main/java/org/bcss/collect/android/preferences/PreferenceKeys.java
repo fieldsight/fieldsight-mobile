@@ -46,6 +46,10 @@ public final class PreferenceKeys {
 
     // server_preferences.xml
     public static final String KEY_PROTOCOL                 = "protocol";
+    public static final String KEY_SMS_GATEWAY              = "sms_gateway";
+    public static final String KEY_SUBMISSION_TRANSPORT_TYPE = "submission_transport_type";
+    public static final String KEY_TRANSPORT_PREFERENCE      = "submission_transport_preference";
+    public static final String KEY_SMS_PREFERENCE            = "sms_preference";
 
     // user_interface_preferences.xml
     public static final String KEY_APP_THEME                = "appTheme";
@@ -58,7 +62,6 @@ public final class PreferenceKeys {
     public static final String KEY_MAP_BASEMAP              = "map_basemap_behavior";
 
     // other keys
-    public static final String ACTIVITY_LOGGER_ANALYTICS    = "activity_logger_event";
     public static final String KEY_LAST_VERSION             = "lastVersion";
     public static final String KEY_FIRST_RUN                = "firstRun";
     /** Whether any existing username and email values have been migrated to form metadata */
@@ -108,6 +111,8 @@ public final class PreferenceKeys {
         hashMap.put(KEY_SUBMISSION_URL,             Collect.getInstance().getString(R.string.default_odk_submission));
         // server_preferences.xml
         hashMap.put(KEY_PROTOCOL,                   Collect.getInstance().getString(R.string.protocol_odk_default));
+        hashMap.put(KEY_SMS_GATEWAY,                "");
+        hashMap.put(KEY_SUBMISSION_TRANSPORT_TYPE,  Collect.getInstance().getString(R.string.transport_type_value_internet));
         // user_interface_preferences.xml
         hashMap.put(KEY_APP_THEME,                  Collect.getInstance().getString(R.string.app_theme_light));
         hashMap.put(KEY_APP_LANGUAGE,               "");
@@ -125,8 +130,7 @@ public final class PreferenceKeys {
             KEY_FIRST_RUN,
             KEY_METADATA_MIGRATED,
             KEY_AUTOSEND_WIFI,
-            KEY_AUTOSEND_NETWORK,
-            ACTIVITY_LOGGER_ANALYTICS
+            KEY_AUTOSEND_NETWORK
     );
 
     public static final HashMap<String, Object> GENERAL_KEYS = getHashMap();

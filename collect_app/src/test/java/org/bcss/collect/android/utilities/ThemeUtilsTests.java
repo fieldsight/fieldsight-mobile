@@ -3,16 +3,14 @@ package org.bcss.collect.android.utilities;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 
+import org.bcss.collect.android.activities.MainMenuActivity;
+import org.bcss.collect.android.preferences.GeneralSharedPreferences;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.MainMenuActivity;
-import org.bcss.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.R;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
@@ -22,7 +20,6 @@ import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_APP_THEME;
  * Unit tests for checking the behaviour of updating themes siteName User Interface settings
  */
 
-@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class ThemeUtilsTests {
 

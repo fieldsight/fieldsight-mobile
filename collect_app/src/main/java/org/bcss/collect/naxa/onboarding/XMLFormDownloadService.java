@@ -342,8 +342,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
         totalCount = filesToDownload.size();
 
-        Collect.getInstance().getActivityLogger().logAction(this, "downloadSelectedFiles", Integer.toString(totalCount));
-
         Log.d(TAG, "Total number of forms being downloaded: " + totalCount);
 
 

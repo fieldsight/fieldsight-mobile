@@ -17,6 +17,7 @@ package org.bcss.collect.android.widgets;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -32,6 +33,11 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.external.ExternalDataUtil;
+import org.bcss.collect.android.external.ExternalSelectChoice;
+import org.bcss.collect.android.utilities.FileUtils;
+import org.bcss.collect.android.utilities.ViewIds;
+import org.bcss.collect.android.widgets.interfaces.MultiChoiceWidget;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
@@ -42,18 +48,15 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.external.ExternalDataUtil;
-import org.bcss.collect.android.external.ExternalSelectChoice;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.utilities.ViewIds;
-import org.bcss.collect.android.widgets.interfaces.MultiChoiceWidget;
+import org.bcss.collect.android.listeners.AdvanceToNextListener;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
+
+
 
 /**
  * ListWidget handles select-one fields using radio buttons. The radio buttons are aligned
@@ -68,13 +71,23 @@ import timber.log.Timber;
 @SuppressLint("ViewConstructor")
 public class ListWidget extends QuestionWidget implements MultiChoiceWidget, OnCheckedChangeListener {
 
+    @Nullable
+    private AdvanceToNextListener listener;
+
+    private final boolean autoAdvance;
+
     List<SelectChoice> items; // may take a while to compute
 
     ArrayList<RadioButton> buttons;
     View center;
 
-    public ListWidget(Context context, FormEntryPrompt prompt, boolean displayLabel) {
+    public ListWidget(Context context, FormEntryPrompt prompt, boolean displayLabel, boolean autoAdvance) {
         super(context, prompt);
+
+        this.autoAdvance = autoAdvance;
+        if (context instanceof AdvanceToNextListener) {
+            listener = (AdvanceToNextListener) context;
+        }
 
         // SurveyCTO-added support for dynamic select content (from .csv files)
         XPathFuncExpr xpathFuncExpr = ExternalDataUtil.getSearchXPathExpression(
@@ -194,7 +207,6 @@ public class ListWidget extends QuestionWidget implements MultiChoiceWidget, OnC
                                 LayoutParams.WRAP_CONTENT);
                 headerParams.gravity = Gravity.CENTER_HORIZONTAL;
 
-
                 LinearLayout.LayoutParams buttonParams =
                         new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                                 LayoutParams.WRAP_CONTENT);
@@ -228,7 +240,6 @@ public class ListWidget extends QuestionWidget implements MultiChoiceWidget, OnC
             }
         }
 
-
         buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
@@ -236,7 +247,6 @@ public class ListWidget extends QuestionWidget implements MultiChoiceWidget, OnC
         params.addRule(RelativeLayout.RIGHT_OF, center.getId());
         addView(buttonLayout, params);
     }
-
 
     @Override
     public void clearAnswer() {
@@ -247,7 +257,6 @@ public class ListWidget extends QuestionWidget implements MultiChoiceWidget, OnC
             }
         }
     }
-
 
     @Override
     public IAnswerData getAnswer() {
@@ -270,7 +279,6 @@ public class ListWidget extends QuestionWidget implements MultiChoiceWidget, OnC
         return -1;
     }
 
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (!isChecked) {
@@ -279,14 +287,15 @@ public class ListWidget extends QuestionWidget implements MultiChoiceWidget, OnC
         }
 
         for (RadioButton button : this.buttons) {
-            if (button.isChecked() && !(buttonView == button)) {
+            if (button.isChecked() && buttonView != button) {
                 button.setChecked(false);
             }
         }
-        Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCheckedChanged",
-                items.get((Integer) buttonView.getTag()).getValue(), getFormEntryPrompt().getIndex());
-    }
 
+        if (autoAdvance && listener != null) {
+            listener.advance();
+        }
+    }
 
     @Override
     public void setOnLongClickListener(OnLongClickListener l) {
@@ -294,7 +303,6 @@ public class ListWidget extends QuestionWidget implements MultiChoiceWidget, OnC
             r.setOnLongClickListener(l);
         }
     }
-
 
     @Override
     public void cancelLongPress() {

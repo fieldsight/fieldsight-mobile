@@ -275,8 +275,6 @@
   <string name="no_google_account">គ្មាន​គណនី​ Google បាន​ជ្រើស​រើស</string>
   <string name="google_set_account">អ្នក​បាន​ជ្រើស​សន្លឹក​ Google ជា​ម៉ាស៊ីន​មេ​របស់​អ្នក​សូម​ជ្រើស​រើស​គណនី Google ត្រូវគ្នា ដែលឋិតក្នុងការកំណត់ទូទៅមុននឹងបន្ត</string>
   <string name="media_upload_error">បរាជ័យក្នុងការផ្ទុកឯកសារមេឌៀដែលមិនមាន៖ %1$s</string>
-  <string name="odk_auth_auth_fail">​ការផ្ទៀង​ផ្ទាត់​បរាជ័យដើម្បីឲ្យ ODK ផ្ញើរចេញដោយស្វ័យប្រវត្តិ សូមធ្វើឲ្យប្រាកដថា​ការកំណត់របស់​អ្នក​ត្រឹម​ត្រូវ</string>
-  <string name="odk_auto_note">ការជូនដំណឹងពីការផ្ញើរចេញដោយ​ស្វ័យ​ប្រវត្តិរបស់​ ODK </string>
   <string name="notification_error">បង្ហាញសារជួនដំណឹងដែលមានបញ្ហា</string>
   <string name="delete_after_send">លុបទម្រង់បន្ទាប់ការផ្ញើចេញ</string>
   <string name="delete_after_send_summary">លុប​សំណុំ​​បែប​​បទ​ដែល​បាន​បញ្ចប់ និង​មីឌៀ ​បន្ទាប់​ពី​ការ​ផ្ញើ​ចេញ​ទៅ​កាន់​ម៉ាស៊ីន​មេ</string>
@@ -325,7 +323,6 @@
   <string name="select_geotrace_mode">ជ្រើសរើសវិធី GeoTrace</string>
   <string name="start">ចាប់ផ្តើម</string>
   <string name="enable_gps">ដំណើរ​ការ​ប្រព័ន្ធ​ចាប់​ទីតាំង</string>
-  <string name="enable_gps_message">ប្រព័ន្ធ​ចាប់​ទី​តាំង​ក្នុងឧបករណ៍​របស់​អ្នក​បានបិទ។ តើ​អ្នក​ចង់​បើក​ដំណើរ​ការ​វា​ដែរ​ឬ​ទេ?</string>
   <string name="geotrace_title">GeoTrace</string>
   <string name="polygon_save">រក្សាទុកជាពហុកោណ</string>
   <string name="polyline_save">រក្សាទុកជាពហុបន្ទាត់</string>
@@ -337,7 +334,6 @@
   <string name="geo_exit_warning">បោះបង់​ការផ្លាស់​ប្តូរ និងត្រឡប់ទៅកាន់ ODK វិញ?</string>
   <string name="polygon_validator">ត្រូវការចំនុចយ៉ាងតិច 3 ដើម្បី​បង្កើតពហុកោណ</string>
   <string name="clear">លុ​បចេញ</string>
-  <string name="polyline_polygon_text">រក្សាទុក GeoTrace ជា</string>
   <string name="manual_mode">របៀបធ្វើដោយដៃ</string>
   <string name="automatic_mode">របៀបធ្វើដោយស័្វយប្រវត្តិ</string>
   <string name="geoshape_instruction">ចុចយូរដើម្បីដាក់ស្លាកកន្លែង</string>
@@ -429,7 +425,6 @@
   <string name="sort_by_status_asc">ស្ថានភាព, បានបញ្ចប់មុនបំផុត</string>
   <string name="sort_by_status_desc">ស្ថានភាព, មិនបានបញ្ចប់មុនបំផុត</string>
   <string name="sort_the_list">តម្រៀបបញ្ជី</string>
-  <string name="request_permissions_google_account">កម្មវិធី ODK Collect ត្រូវ​ការ​ចូល​ទៅ​កាន់​គណនី​ Google របស់​អ្នក​ដើម្បី​ទាញ​យក​ទម្រង់​ទទេរ​ និង​បញ្ជូន​ទម្រង់​ដែល​បាន​បំពេញ​ហើយ។</string>
   <string name="filter_the_list">តម្រងបញ្ជី</string>
   <string name="language">ភាសា</string>
   <string name="google_auth_io_exception_msg">មិន​អាច​ប្រើប្រាស់​ API បាន​។ ប្រសិន​ជា​អ្នក​កំពុង​ដំណើរការ​កសាង​ក្នុង​ម៉ាស៊ីន (local), សូម​អាន​អំពី​គម្រោង​នេះ​សារ​ឡើង​វិញ​។</string>
@@ -470,7 +465,6 @@
   <string name="share_qrcode">ចែក​រំលែក​ QR Code</string>
   <string name="take_picture_instruction">ប៉ះលើផ្ទៃ​អេក្រង់ដើម្បីថត​រូប</string>
   <string name="error_front_camera_unavailable">កាមេរ៉ាខាងមុខមិនមាននៅលើឧបករណ៍នេះទេ</string>
-  <string name="request_permission">កម្មវិធី​នេះ​ត្រូវ​ការ​សិទ្ធិ​ក្នុង​ការប្រើ​ប្រាស់​កាម៉េរ៉ាលើឧបករណ៍</string>
   <string name="camera_error">ឧបករណ៍នេះមិនមានការគាំទ្រ​ក្នុង​ការ​ប្រើ​ប្រាស់ API របស់ Camera2</string>
   <string name="invalid_range_widget">ធាតុក្រាហ្វិកនេះមានប៉ារ៉ាម៉ែត្រមិនត្រឹមត្រូវ!</string>
   <string name="form_entry_setting">ការ​កំណត់​នៃ​ទម្រង់​បញ្ជូល</string>
@@ -583,11 +577,8 @@
   <string name="every_six_hours">រៀងរាល់ ៦ ម៉ោង</string>
   <string name="every_24_hours">រៀងរាល់ ២៤ ម៉ោង</string>
   <string name="form_updates_available">មានទម្រង់សម្រាប់ធ្វើបច្ចុប្បន្នភាព</string>
-  <string name="new_form_versions_downloaded">ទម្រង់ជំនាន់ថ្មីបានទាញយក</string>
   <string name="automatic_download">ទាញយក​ដោយ​ស្វ័យ​ប្រវត្តិ</string>
   <string name="automatic_download_summary">ធ្វើបច្ចុប្បន្នភាពជំនាន់ទម្រង់​ដោយទាញយក​​ដោយ​ស្វ័យ​ប្រវត្តិ</string>
-  <string name="forms_downloaded">ទម្រង់ដែលបានទាញយក៖</string>
-  <string name="forms_sent">ឯកសារ​ផ្ញើរចេញ៖</string>
   <string name="guidance_hint_title">បង្ហាញការណែនាំសម្រាប់សំណួរ</string>
   <string name="app_theme">Theme</string>
   <string name="theme_light">Light theme</string>
@@ -596,4 +587,5 @@
   <string name="not_a_directory">%s មានរួច, ប៉ុន្តែ​ពុំមែន​ជាថត​ឯក​សារ</string>
   <string name="location_metadata">ផ្កាយរណបមាន៖ %1$d/24\n\nពេលវេលាកន្លងទៅ៖ %2$s</string>
   <string name="instance_upload_cancelled">បានបោះបង់ការផ្ទុកឡើងភ្លាមៗ</string>
+  <!--Sms submission-->
 </resources>

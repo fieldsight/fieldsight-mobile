@@ -1,6 +1,5 @@
 package org.bcss.collect.android.location.client;
 
-
 import android.location.Location;
 import android.location.LocationManager;
 

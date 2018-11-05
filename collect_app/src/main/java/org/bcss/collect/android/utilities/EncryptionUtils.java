@@ -110,9 +110,9 @@ public class EncryptionUtils {
         public final String base64RsaEncryptedSymmetricKey;
         public final SecretKeySpec symmetricKey;
         public final byte[] ivSeedArray;
-        private int ivCounter = 0;
+        private int ivCounter;
         public final StringBuilder elementSignatureSource = new StringBuilder();
-        private boolean isNotBouncyCastle = false;
+        private boolean isNotBouncyCastle;
 
         EncryptedFormInformation(String formId, String formVersion,
                                  InstanceMetadata instanceMetadata, PublicKey rsaPublicKey) {
@@ -137,7 +137,7 @@ public class EncryptionUtils {
                 byte[] messageDigest = md.digest();
                 ivSeedArray = new byte[IV_BYTE_LENGTH];
                 for (int i = 0; i < IV_BYTE_LENGTH; ++i) {
-                    ivSeedArray[i] = messageDigest[(i % messageDigest.length)];
+                    ivSeedArray[i] = messageDigest[i % messageDigest.length];
                 }
             } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
                 Timber.e(e, "Unable to set md5 hash for instanceid and symmetric key.");
@@ -171,7 +171,7 @@ public class EncryptionUtils {
         }
 
         public void appendElementSignatureSource(String value) {
-            elementSignatureSource.append(value).append("\n");
+            elementSignatureSource.append(value).append('\n');
         }
 
         public void appendFileSignatureSource(File file) {

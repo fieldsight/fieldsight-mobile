@@ -7,6 +7,14 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
     </style>
 
+    <style name="CustomImageButtonLight" parent="Widget.AppCompat.ImageButton">
+        <item name="android:tint">@color/light_theme_tint_list</item>
+    </style>
+
+    <style name="CustomImageButtonDark" parent="Widget.AppCompat.ImageButton">
+        <item name="android:tint">@color/dark_theme_tint_list</item>
+    </style>
+
     <style name="emptyViewStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -35,6 +43,7 @@
         <item name="android:windowExitAnimation">@anim/popup_hide</item>
     </style>
 
+
     <style name="WhiteText" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
@@ -46,6 +55,19 @@
 
     <style name="BlueGradientBackground" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:background">@drawable/toolbar_gradient</item>
+    </style>
+
+
+    <style name="MediaButtonStyle">
+        <item name="android:background">#ddd</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">9dp</item>
+        <item name="android:paddingRight">9dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginRight">2dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
 
     </style>
 

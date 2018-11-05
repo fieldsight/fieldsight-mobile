@@ -4,9 +4,9 @@ apply from: '../config/quality.gradle'
 apply from: '../config/jacoco.gradle'
 
 
-import com.android.ddmlib.DdmPreferences
-
-DdmPreferences.setTimeOut(60000)
+//import com.android.ddmlib.DdmPreferences
+//
+//DdmPreferences.setTimeOut(60000)
 
 ant.condition(property: 'os', value: 'windows') {
     os(family: 'windows')
@@ -40,6 +40,8 @@ def getMasterCommitCount = { ->
 }
 
 def getVersionName = { ->
+
+
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
@@ -66,16 +68,14 @@ if (secretsFile.exists()) {
 }
 
 android {
-    compileSdkVersion(27)
+    compileSdkVersion(28)
 
     defaultConfig {
         applicationId('org.bcss.collect.android')
         minSdkVersion(16)
-        targetSdkVersion(22)
-//        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
-        versionCode 32
-        versionName '3.0-beta'
-//        versionName getVersionName()
+        targetSdkVersion(26)
+        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
+        versionName getVersionName()
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -117,7 +117,7 @@ android {
             shrinkResources false
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
         }
-        // Release build for the original ODK Collect app
+        // Release build for the official ODK Collect app
         odkCollectRelease {
             if (secrets.getProperty('RELEASE_STORE_FILE')) {
                 signingConfig signingConfigs.release
@@ -175,7 +175,7 @@ android {
             returnDefaultValues = true
             all {
                 // https://discuss.circleci.com/t/11207/24
-                // it seems any number works, but 1024 - 2048 seem reasonable 
+                // it seems any number works, but 1024 - 2048 seem reasonable
                 maxHeapSize = "2048M"
             }
         }
@@ -230,7 +230,6 @@ dependencies {
     implementation 'com.github.matecode:Snacky:1.0.3'
     implementation 'com.github.pwittchen:reactivenetwork-rx2:2.0.0'
     implementation "android.arch.lifecycle:reactivestreams:1.1.1"
-    implementation "com.google.firebase:firebase-messaging:${rootProject.playServicesVersion}"
     implementation 'com.github.naman14:Spider:1.0'
 
     //debug dependecies - fieldsight
@@ -253,13 +252,18 @@ dependencies {
     implementation "com.android.support:exifinterface:${rootProject.supportLibraryVersion}"
     implementation "com.android.support:multidex:1.0.3"
 
-    implementation "com.google.android.gms:play-services-analytics:${rootProject.playServicesVersion}"
-    implementation "com.google.android.gms:play-services-auth:${rootProject.playServicesVersion}"
-    implementation "com.google.android.gms:play-services-maps:${rootProject.playServicesVersion}"
-    implementation "com.google.android.gms:play-services-location:${rootProject.playServicesVersion}"
+    implementation "com.google.android.gms:play-services-analytics:16.0.1"
+    implementation "com.google.android.gms:play-services-auth:16.0.0"
+    implementation "com.google.android.gms:play-services-maps:15.0.1"
+    implementation "com.google.android.gms:play-services-location:15.0.1"
 
-    implementation "com.google.firebase:firebase-core:${rootProject.playServicesVersion}"
+    implementation "com.google.firebase:firebase-core:16.0.1"
     implementation "com.crashlytics.sdk.android:crashlytics:2.9.2"
+
+    implementation "com.google.firebase:firebase-messaging:17.0.0"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.9.2"
+
+    implementation("com.google.guava:guava:26.0-android")
 
     implementation("com.google.code.gson:gson:2.6.2") {
         exclude group: 'org.apache.httpcomponents'
@@ -272,27 +276,31 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
 
+    implementation 'bikramsambat:bikram-sambat:1.0.0'
     implementation "com.evernote:android-job:1.2.5"
     implementation "com.rarepebble:colorpicker:2.3.1"
     implementation "commons-io:commons-io:2.6"
     implementation "net.sf.kxml:kxml2:2.3.0"
     implementation "net.sf.opencsv:opencsv:2.3"
-    implementation("org.opendatakit:opendatakit-javarosa:2.11.0-SNAPSHOT") {
+    implementation("org.opendatakit:opendatakit-javarosa:2.12.0") {
         exclude group: 'joda-time'
         exclude group: 'org.slf4j'
     }
     implementation "com.karumi:dexter:4.2.0"
     implementation "org.osmdroid:osmdroid-android:5.6.4"
     implementation "org.slf4j:slf4j-android:1.6.1-RC1"
-    implementation "pub.devrel:easypermissions:0.2.1"
     implementation("com.google.api-client:google-api-client-android:1.22.0") {
         exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.guava'
     }
     implementation("com.google.apis:google-api-services-drive:v3-rev64-1.22.0") {
         exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.guava'
     }
     implementation("com.google.apis:google-api-services-sheets:v4-rev463-1.22.0") {
         exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.guava'
+
     }
     implementation "com.jakewharton.timber:timber:4.7.0"
     implementation "com.google.zxing:core:3.3.0"
@@ -316,6 +324,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:${rootProject.daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-android-processor:${rootProject.daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
 
     // RxJava 2:
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
@@ -332,9 +341,22 @@ dependencies {
     implementation "com.trello.rxlifecycle2:rxlifecycle-android:${rootProject.rxLifecycleVersion}"
     implementation "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:${rootProject.rxLifecycleVersion}"
 
+    // WorkManager for specifying deferrable, asynchronous tasks
+    implementation("android.arch.work:work-runtime:${rootProject.workManagerVersion}") {
+        exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
+    // Optional JobDispatcher support so devices with Play Services do better than AlarmManager
+    implementation("android.arch.work:work-firebase:${rootProject.workManagerVersion}") {
+        exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
+
     // Makes binding to Views easy:
     implementation "com.jakewharton:butterknife:8.8.1"
     annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
+
+    // Annotations understood by FindBugs
+    compileOnly 'com.google.code.findbugs:annotations:3.0.1'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 
     // Used to generate documentation screenshots.
     androidTestImplementation "tools.fastlane:screengrab:1.1.0"
@@ -342,8 +364,8 @@ dependencies {
     // Testing-only dependencies
     testImplementation "junit:junit:4.12"
     testImplementation "org.mockito:mockito-core:2.8.47"
-    testImplementation "org.robolectric:robolectric:3.5.1"
-    testImplementation "org.robolectric:shadows-multidex:3.5.1"
+    testImplementation "org.robolectric:robolectric:4.0-beta-1"
+    testImplementation "org.robolectric:shadows-multidex:4.0-beta-1"
 
     // power mock (for mocking final methods which is not handled by mockito)
     testImplementation "org.powermock:powermock-module-junit4:1.6.4"
@@ -361,6 +383,8 @@ dependencies {
     }
 
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:3.9.0"
+
+    androidTestImplementation "android.arch.work:work-testing:${rootProject.workManagerVersion}"
 }
 
 // Must be at bottom to prevent dependency collisions

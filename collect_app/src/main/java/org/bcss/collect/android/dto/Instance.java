@@ -23,7 +23,6 @@ package org.bcss.collect.android.dto;
  * Objects of this class are created using builder pattern: https://en.wikipedia.org/wiki/Builder_pattern
  */
 public class Instance {
-
     private final String displayName;
     private final String submissionUri;
     private final String canEditWhenComplete;
@@ -35,6 +34,8 @@ public class Instance {
     private final String displaySubtext;
     private final Long deletedDate;
     private final String fieldSightSiteId;
+
+    private final Long databaseId;
 
     private Instance(Builder builder) {
         displayName = builder.displayName;
@@ -48,6 +49,8 @@ public class Instance {
         displaySubtext = builder.displaySubtext;
         deletedDate = builder.deletedDate;
         fieldSightSiteId = builder.fieldSightSiteId;
+        databaseId = builder.databaseId;
+
     }
 
     public static class Builder {
@@ -62,6 +65,8 @@ public class Instance {
         private String displaySubtext;
         private Long deletedDate;
         private String fieldSightSiteId;
+
+        private Long databaseId;
 
         public Builder displayName(String displayName) {
             this.displayName = displayName;
@@ -113,8 +118,14 @@ public class Instance {
             return this;
         }
 
+
         public Builder fieldSightSiteId(String fieldSightSiteId) {
             this.fieldSightSiteId = fieldSightSiteId;
+            return this;
+        }
+
+        public Builder databaseId(Long databaseId) {
+            this.databaseId = databaseId;
             return this;
         }
 
@@ -163,7 +174,13 @@ public class Instance {
         return deletedDate;
     }
 
+
     public String getFieldSightSiteId() {
         return fieldSightSiteId;
+    }
+
+    public Long getDatabaseId() {
+        return databaseId;
+
     }
 }

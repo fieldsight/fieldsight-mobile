@@ -15,6 +15,7 @@
 package org.bcss.collect.android.tasks;
 
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 
 import org.bcss.collect.android.listeners.FormListDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
@@ -24,7 +25,7 @@ import org.bcss.collect.naxa.onboarding.XMLForm;
 import java.util.HashMap;
 
 /**
- * Background task for downloading forms siteName urls or a formlist siteName a url. We overload this task
+ * Background task for downloading forms from urls or a formlist from a url. We overload this task
  * a bit so that we don't have to keep track of two separate downloading tasks and it simplifies
  * interfaces. If LIST_URL is passed to doInBackground(), we fetch a form list. If a hashmap
  * containing form/url pairs is passed, we download those forms.
@@ -34,10 +35,16 @@ import java.util.HashMap;
 public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String, FormDetails>> {
 
     private FormListDownloaderListener stateListener;
+    private String url;
+    private String username;
+    private String password;
+
+
     private XMLForm xmlForm;
 
     public DownloadFormListTask(XMLForm xmlForm) {
         this.xmlForm = xmlForm;
+        this.url = xmlForm.getDownloadUrl();
     }
 
     public DownloadFormListTask(){
@@ -46,7 +53,7 @@ public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String
 
     @Override
     protected HashMap<String, FormDetails> doInBackground(Void... values) {
-        return DownloadFormListUtils.downloadFormList(false, xmlForm.getDownloadUrl());
+        return new DownloadFormListUtils().downloadFormList(url, username, password, false);
     }
 
     @Override
@@ -62,6 +69,12 @@ public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String
         synchronized (this) {
             stateListener = sl;
         }
+    }
+
+    public void setAlternateCredentials(@Nullable String url, @Nullable String username, @Nullable String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
     }
 
 }

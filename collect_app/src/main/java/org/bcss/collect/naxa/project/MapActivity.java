@@ -176,8 +176,7 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         showLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collect.getInstance().getActivityLogger()
-                        .logInstanceAction(this, "showLocation", "onClick");
+
                 showZoomDialog();
             }
         });
@@ -190,7 +189,7 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         layersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                helper.showLayersDialog(MapActivity.this);
+                helper.showLayersDialog();
 
             }
         });
@@ -275,8 +274,6 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
     @Override
     protected void onStart() {
         super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-
         locationClient.start();
     }
 
@@ -293,8 +290,6 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
     @Override
     protected void onStop() {
         locationClient.stop();
-
-        Collect.getInstance().getActivityLogger().logOnStop(this);
         super.onStop();
     }
 

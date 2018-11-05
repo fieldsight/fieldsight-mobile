@@ -28,22 +28,23 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.utilities.FileUtil;
 import org.bcss.collect.android.utilities.MediaManager;
 import org.bcss.collect.android.utilities.MediaUtil;
 import org.bcss.collect.android.widgets.interfaces.FileWidget;
-
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
+import org.javarosa.form.api.FormEntryPrompt;
 import java.io.File;
 import java.util.Locale;
 
 import timber.log.Timber;
 
 import static org.bcss.collect.android.utilities.ApplicationConstants.RequestCodes;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestRecordAudioPermission;
 
 /**
  * Widget that allows user to take pictures, sounds or video and add them to the
@@ -80,12 +81,10 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
         this.audioController = audioController;
 
         captureButton = getSimpleButton(getContext().getString(R.string.capture_audio), R.id.capture_audio);
-        captureButton.setEnabled(!prompt.isReadOnly());
 
         chooseButton = getSimpleButton(getContext().getString(R.string.choose_sound), R.id.choose_sound);
-        chooseButton.setEnabled(!prompt.isReadOnly());
 
-        audioController.init(context, getPlayer(), getFormEntryPrompt());
+        audioController.init(context, getPlayer());
 
         // finish complex layout
         LinearLayout answerLayout = new LinearLayout(getContext());
@@ -162,11 +161,6 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
             return;
         }
 
-        if (newAudio == null) {
-            Timber.e("setBinaryData FAILED");
-            return;
-        }
-
         if (newAudio.exists()) {
             // Add the copy to the content provier
             ContentValues values = new ContentValues(6);
@@ -199,10 +193,7 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
     }
 
     private void hideButtonsIfNeeded() {
-        if (getFormEntryPrompt().isReadOnly()) {
-            captureButton.setVisibility(View.GONE);
-            chooseButton.setVisibility(View.GONE);
-        } else if (getFormEntryPrompt().getAppearanceHint() != null
+        if (getFormEntryPrompt().getAppearanceHint() != null
                 && getFormEntryPrompt().getAppearanceHint().toLowerCase(Locale.ENGLISH).contains("new")) {
             chooseButton.setVisibility(View.GONE);
         }
@@ -235,7 +226,16 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
     public void onButtonClick(int buttonId) {
         switch (buttonId) {
             case R.id.capture_audio:
-                captureAudio();
+                requestRecordAudioPermission((FormEntryActivity) getContext(), new PermissionListener() {
+                    @Override
+                    public void granted() {
+                        captureAudio();
+                    }
+
+                    @Override
+                    public void denied() {
+                    }
+                });
                 break;
             case R.id.choose_sound:
                 chooseSound();
@@ -244,10 +244,6 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
     }
 
     private void captureAudio() {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "captureButton", "click",
-                        getFormEntryPrompt().getIndex());
         Intent i = new Intent(
                 android.provider.MediaStore.Audio.Media.RECORD_SOUND_ACTION);
         i.putExtra(
@@ -269,10 +265,6 @@ public class AudioWidget extends QuestionWidget implements FileWidget {
     }
 
     private void chooseSound() {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "chooseButton", "click",
-                        getFormEntryPrompt().getIndex());
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.setType("audio/*");
         try {

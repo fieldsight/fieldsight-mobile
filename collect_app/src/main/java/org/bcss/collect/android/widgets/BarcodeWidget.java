@@ -22,14 +22,20 @@ import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 
+import org.bcss.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.activities.ScannerWithFlashlightActivity;
+import org.bcss.collect.android.listeners.PermissionListener;
+import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.FormEntryActivity;
-import org.bcss.collect.android.activities.ScannerWithFlashlightActivity;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
+import org.bcss.collect.android.listeners.PermissionListener;
+import org.bcss.collect.android.utilities.CameraUtils;
+import org.bcss.collect.android.utilities.ToastUtils;
+
+import static org.bcss.collect.android.utilities.PermissionUtils.requestCameraPermission;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestCameraPermission;
 
 /**
  * Widget that allows user to scan barcodes and add them to the form.
@@ -44,7 +50,6 @@ public class BarcodeWidget extends QuestionWidget implements BinaryWidget {
         super(context, prompt);
 
         getBarcodeButton = getSimpleButton(getContext().getString(R.string.get_barcode));
-        getBarcodeButton.setEnabled(!prompt.isReadOnly());
 
         stringAnswer = getCenteredAnswerTextView();
 
@@ -105,18 +110,36 @@ public class BarcodeWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "recordBarcode", "click",
-                        getFormEntryPrompt().getIndex());
+        requestCameraPermission((FormEntryActivity) getContext(), new PermissionListener() {
+            @Override
+            public void granted() {
+                waitForData();
 
-        waitForData();
+                IntentIntegrator intent = new IntentIntegrator((Activity) getContext())
+                        .setCaptureActivity(ScannerWithFlashlightActivity.class)
+                        .setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
+                        .setOrientationLocked(false)
+                        .setPrompt(getContext().getString(R.string.barcode_scanner_prompt));
 
-        new IntentIntegrator((Activity) getContext())
-                .setCaptureActivity(ScannerWithFlashlightActivity.class)
-                .setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES)
-                .setOrientationLocked(false)
-                .setPrompt(getContext().getString(R.string.barcode_scanner_prompt))
-                .initiateScan();
+                setCameraIdIfNeeded(intent);
+                intent.initiateScan();
+            }
+
+            @Override
+            public void denied() {
+            }
+        });
+    }
+
+    private void setCameraIdIfNeeded(IntentIntegrator intent) {
+        String appearance = getFormEntryPrompt().getAppearanceHint();
+        if (appearance != null && appearance.equalsIgnoreCase("front")) {
+            if (CameraUtils.isFrontCameraAvailable()) {
+                intent.setCameraId(CameraUtils.getFrontCameraId());
+                intent.addExtra("front", true);
+            } else {
+                ToastUtils.showLongToast(R.string.error_front_camera_unavailable);
+            }
+        }
     }
 }

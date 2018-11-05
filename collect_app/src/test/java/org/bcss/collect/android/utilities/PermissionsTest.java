@@ -4,19 +4,18 @@ import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.BuildConfig;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.manifest.AndroidManifest;
 import org.robolectric.res.Fs;
 
 import java.util.List;
 
+
+
 /**
  * Test for checking permissions in {@link AndroidManifest}
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
 public class PermissionsTest {
 
     @Test
@@ -37,8 +36,6 @@ public class PermissionsTest {
                 "android.permission.ACCESS_NETWORK_STATE",
                 "android.permission.MANAGE_ACCOUNTS",
                 "android.permission.WAKE_LOCK",
-                "org.odk.collect.android.permission.MAPS_RECEIVE",
-                "com.google.android.providers.gsf.permission.READ_GSERVICES"
         };
 
         //Checking expected permissions one by one

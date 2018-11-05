@@ -24,23 +24,24 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.GeoTraceGoogleMapActivity;
-import org.bcss.collect.android.activities.GeoTraceOsmMapActivity;
+import org.bcss.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.preferences.PreferenceKeys;
 import org.bcss.collect.android.utilities.PlayServicesUtil;
 import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.bcss.collect.android.activities.GeoTraceActivity;
 
 import static org.bcss.collect.android.utilities.ApplicationConstants.RequestCodes;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestLocationPermissions;
+
 
 /**
- * GeoShapeTrace is the widget that allows the user to get Collect multiple GPS points based on the
- * locations.
- * <p>
- * Date
+ * GeoTraceWidget allows the user to collect a trace of GPS points as the
+ * device moves along a path.
  *
  * @author Jon Nordling (jonnordling@gmail.com)
  */
@@ -69,10 +70,6 @@ public class GeoTraceWidget extends QuestionWidget implements BinaryWidget {
 
         createTraceButton = getSimpleButton(getContext().getString(R.string.get_trace));
 
-        if (prompt.isReadOnly()) {
-            createTraceButton.setEnabled(false);
-        }
-
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
         answerLayout.addView(createTraceButton);
@@ -90,22 +87,14 @@ public class GeoTraceWidget extends QuestionWidget implements BinaryWidget {
     }
 
     private void startGeoTraceActivity() {
-        Intent i;
-        if (mapSDK.equals(GOOGLE_MAP_KEY)) {
-            if (PlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
-                i = new Intent(getContext(), GeoTraceGoogleMapActivity.class);
-            } else {
-                PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(getContext());
-                return;
-            }
-        } else {
-            i = new Intent(getContext(), GeoTraceOsmMapActivity.class);
+        if (mapSDK.equals(GOOGLE_MAP_KEY) && !PlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
+            PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(getContext());
+            return;
         }
-        String s = answerDisplay.getText().toString();
-        if (s.length() != 0) {
-            i.putExtra(TRACE_LOCATION, s);
-        }
-        ((Activity) getContext()).startActivityForResult(i, RequestCodes.GEOTRACE_CAPTURE);
+        Intent intent = new Intent(getContext(), GeoTraceActivity.class)
+            .putExtra(TRACE_LOCATION, answerDisplay.getText().toString())
+            .putExtra(PreferenceKeys.KEY_MAP_SDK, mapSDK);
+        ((Activity) getContext()).startActivityForResult(intent, RequestCodes.GEOTRACE_CAPTURE);
     }
 
     private void updateButtonLabelsAndVisibility(boolean dataAvailable) {
@@ -144,7 +133,16 @@ public class GeoTraceWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
-        waitForData();
-        startGeoTraceActivity();
+        requestLocationPermissions((FormEntryActivity) getContext(), new PermissionListener() {
+            @Override
+            public void granted() {
+                waitForData();
+                startGeoTraceActivity();
+            }
+
+            @Override
+            public void denied() {
+            }
+        });
     }
 }

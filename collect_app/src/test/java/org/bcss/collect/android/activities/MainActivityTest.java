@@ -6,15 +6,13 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
+import org.bcss.collect.android.preferences.PreferencesActivity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.R;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowIntent;
 
@@ -25,7 +23,6 @@ import static org.robolectric.Shadows.shadowOf;
 /**
  * Unit test for checking {@link Button}'s behaviour  in {@link MainMenuActivity}
  */
-@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class MainActivityTest {
     private MainMenuActivity mainMenuActivity;

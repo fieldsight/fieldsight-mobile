@@ -239,7 +239,7 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
 
     @OnClick(R.id.layer_menu)
     public void onViewClicked() {
-        helper.showLayersDialog(this.getContext());
+        helper.showLayersDialog();
     }
 
 

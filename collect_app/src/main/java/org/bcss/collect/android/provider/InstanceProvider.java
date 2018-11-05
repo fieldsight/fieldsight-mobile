@@ -51,22 +51,21 @@ public class InstanceProvider extends ContentProvider {
 
     private static final UriMatcher URI_MATCHER;
 
-    private InstancesDatabaseHelper databaseHelper;
-
-    private InstancesDatabaseHelper getDbHelper() {
+    private static InstancesDatabaseHelper dbHelper;
+    
+    private synchronized InstancesDatabaseHelper getDbHelper() {
         // wrapper to test and reset/set the dbHelper based upon the attachment state of the device.
         try {
             Collect.createODKDirs();
         } catch (RuntimeException e) {
-            databaseHelper = null;
             return null;
         }
 
-        if (databaseHelper != null) {
-            return databaseHelper;
+        if (dbHelper == null) {
+            dbHelper = new InstancesDatabaseHelper();
         }
-        databaseHelper = new InstancesDatabaseHelper();
-        return databaseHelper;
+
+        return dbHelper;
     }
 
     @Override
@@ -173,8 +172,6 @@ public class InstanceProvider extends ContentProvider {
             if (rowId > 0) {
                 Uri instanceUri = ContentUris.withAppendedId(InstanceColumns.CONTENT_URI, rowId);
                 getContext().getContentResolver().notifyChange(instanceUri, null);
-                Collect.getInstance().getActivityLogger().logActionParam(this, "insert",
-                        instanceUri.toString(), values.getAsString(InstanceColumns.INSTANCE_FILE_PATH));
                 return instanceUri;
             }
         }
@@ -262,8 +259,6 @@ public class InstanceProvider extends ContentProvider {
                             do {
                                 String instanceFile = del.getString(
                                         del.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
-                                Collect.getInstance().getActivityLogger().logAction(this, "delete",
-                                        instanceFile);
                                 File instanceDir = (new File(instanceFile)).getParentFile();
                                 deleteAllFilesInDirectory(instanceDir);
                             } while (del.moveToNext());
@@ -289,8 +284,6 @@ public class InstanceProvider extends ContentProvider {
                             do {
                                 String instanceFile = c.getString(
                                         c.getColumnIndex(InstanceColumns.INSTANCE_FILE_PATH));
-                                Collect.getInstance().getActivityLogger().logAction(this, "delete",
-                                        instanceFile);
                                 File instanceDir = (new File(instanceFile)).getParentFile();
                                 deleteAllFilesInDirectory(instanceDir);
                             } while (c.moveToNext());
@@ -312,7 +305,7 @@ public class InstanceProvider extends ContentProvider {
                         if (whereArgs == null || whereArgs.length == 0) {
                             newWhereArgs = new String[] {instanceId};
                         } else {
-                            newWhereArgs = new String[(whereArgs.length + 1)];
+                            newWhereArgs = new String[whereArgs.length + 1];
                             newWhereArgs[0] = instanceId;
                             System.arraycopy(whereArgs, 0, newWhereArgs, 1, whereArgs.length);
                         }
@@ -386,7 +379,7 @@ public class InstanceProvider extends ContentProvider {
                     if (whereArgs == null || whereArgs.length == 0) {
                         newWhereArgs = new String[] {instanceId};
                     } else {
-                        newWhereArgs = new String[(whereArgs.length + 1)];
+                        newWhereArgs = new String[whereArgs.length + 1];
                         newWhereArgs[0] = instanceId;
                         System.arraycopy(whereArgs, 0, newWhereArgs, 1, whereArgs.length);
                     }

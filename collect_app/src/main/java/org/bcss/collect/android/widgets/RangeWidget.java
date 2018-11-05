@@ -30,7 +30,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.javarosa.core.model.RangeQuestion;
-import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.FormEntryActivity;
@@ -76,20 +75,11 @@ public abstract class RangeWidget extends QuestionWidget implements ButtonWidget
         setUpWidgetParameters();
         setUpAppearance();
 
-        if (prompt.isReadOnly()) {
-            if (isPickerAppearance) {
-                pickerButton.setEnabled(false);
-            } else {
-                seekBar.setEnabled(false);
-            }
+        if (prompt.isReadOnly() && !isPickerAppearance) {
+            seekBar.setEnabled(false);
         }
 
         addAnswerView(view);
-    }
-
-    @Override
-    public IAnswerData getAnswer() {
-        return null;
     }
 
     @Override
@@ -304,7 +294,7 @@ public abstract class RangeWidget extends QuestionWidget implements ButtonWidget
         }
     }
 
-    private LayoutInflater layoutInflater = null;
+    private LayoutInflater layoutInflater;
 
     // For testing purposes only:
     void setLayoutInflater(LayoutInflater layoutInflater) {

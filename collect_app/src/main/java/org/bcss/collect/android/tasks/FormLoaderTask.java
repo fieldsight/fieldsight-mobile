@@ -75,14 +75,14 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
     private String instancePath;
     private final String xpath;
     private final String waitingXPath;
-    private boolean pendingActivityResult = false;
-    private int requestCode = 0;
-    private int resultCode = 0;
-    private Intent intent = null;
+    private boolean pendingActivityResult;
+    private int requestCode;
+    private int resultCode;
+    private Intent intent;
     private ExternalDataManager externalDataManager;
     private FormDef formDef;
 
-    protected class FECWrapper {
+    protected static class FECWrapper {
         FormController controller;
         boolean usedSavepoint;
 
@@ -404,7 +404,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         }
     }
 
-    static void importData(File instanceFile, FormEntryController fec) {
+    public static void importData(File instanceFile, FormEntryController fec) {
         // convert files into a byte array
         byte[] fileBytes = FileUtils.getFileAsBytes(instanceFile);
 

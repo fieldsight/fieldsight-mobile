@@ -62,7 +62,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
             @Override
             public void onClick(View view) {
-                if (allowClick()) {
+                if (allowClick(getClass().getName())) {
                     hideKeyboardInActivity(LoginActivity.this);
                     attemptLogin();
                 }
@@ -76,7 +76,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         findViewById(R.id.tv_forgot_pwd).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (allowClick()) {
+                if (allowClick(getClass().getName())) {
                     String url = APIEndpoint.PASSWORD_RESET;
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));

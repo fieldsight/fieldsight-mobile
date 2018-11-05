@@ -4,13 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.bcss.collect.android.application.Collect;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.application.Collect;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -19,8 +17,6 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.bcss.collect.android.preferences.FormMetadataMigrator.SOURCE_TARGET_VALUE_PAIRS;
 import static org.bcss.collect.android.preferences.FormMetadataMigrator.migrate;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_METADATA_EMAIL;
@@ -29,9 +25,11 @@ import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_METADATA_P
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_METADATA_USERNAME;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 /** Tests the FormMetadataFragment */
-@Config(constants = BuildConfig.class)
 @RunWith(RobolectricTestRunner.class)
 public class FormMetadataMigratorTest {
 

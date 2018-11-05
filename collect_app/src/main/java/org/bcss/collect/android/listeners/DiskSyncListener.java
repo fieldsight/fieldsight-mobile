@@ -14,7 +14,6 @@
 
 package org.bcss.collect.android.listeners;
 
-
 import android.support.annotation.NonNull;
 
 /**

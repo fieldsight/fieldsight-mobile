@@ -24,7 +24,7 @@ import static org.bcss.collect.android.preferences.AdminPreferencesFragment.ADMI
 
 public class AdminSharedPreferences {
 
-    private static AdminSharedPreferences instance = null;
+    private static AdminSharedPreferences instance;
     private final android.content.SharedPreferences sharedPreferences;
 
     private AdminSharedPreferences() {

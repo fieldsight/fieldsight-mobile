@@ -232,7 +232,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
                 ContentUris.withAppendedId(InstanceProviderAPI.InstanceColumns.CONTENT_URI,
                         idFormsTable);
 
-        Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick", instanceUri.toString());
+
 
         String action = getIntent().getAction();
         if (Intent.ACTION_PICK.equals(action)) {
@@ -342,7 +342,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
         Timber.d("Opening new form with _ID%s", idFormsTable);
 
         Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, idFormsTable);
-        Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick", formUri.toString());
+
         String action = getIntent().getAction();
 
         if (Intent.ACTION_PICK.equals(action)) {

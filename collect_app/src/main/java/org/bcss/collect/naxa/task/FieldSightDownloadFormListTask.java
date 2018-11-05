@@ -18,8 +18,7 @@ import android.os.AsyncTask;
 
 import org.bcss.collect.android.listeners.FormListDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
-import org.bcss.collect.android.utilities.DownloadFormListUtils;
-import org.bcss.collect.naxa.common.FieldSightDownloadFormListUtils;
+import org.bcss.collect.naxa.common.utilities.FieldSightFormListDownloadUtils;
 import org.bcss.collect.naxa.onboarding.XMLForm;
 
 import java.util.HashMap;
@@ -47,7 +46,7 @@ public class FieldSightDownloadFormListTask extends AsyncTask<Void, String, Hash
 
     @Override
     protected HashMap<String, FormDetails> doInBackground(Void... values) {
-        return FieldSightDownloadFormListUtils.downloadFormList(false, xmlForm);
+        return new FieldSightFormListDownloadUtils().downloadFormList(false);
     }
 
     @Override

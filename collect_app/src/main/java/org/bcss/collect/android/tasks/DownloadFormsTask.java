@@ -20,7 +20,6 @@ import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.listeners.FormDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.utilities.FormDownloader;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

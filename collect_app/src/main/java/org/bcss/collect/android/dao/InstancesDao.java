@@ -392,16 +392,16 @@ public class InstancesDao {
             while (j < selectionArgs.length) {
                 selectionArgs[j] = ids.get(
                         counter * ApplicationConstants.SQLITE_MAX_VARIABLE_NUMBER + j);
-                selection.append("?");
+                selection.append('?');
 
                 if (j != selectionArgs.length - 1) {
-                    selection.append(",");
+                    selection.append(',');
                 }
                 j++;
             }
             counter++;
             count -= selectionArgs.length;
-            selection.append(")");
+            selection.append(')');
             Collect.getInstance().getContentResolver()
                     .delete(InstanceProviderAPI.InstanceColumns.CONTENT_URI,
                             selection.toString(), selectionArgs);
@@ -409,10 +409,14 @@ public class InstancesDao {
         }
     }
 
+    /**
+     * Returns all instances available through the cursor and closes the cursor.
+     */
     public List<Instance> getInstancesFromCursor(Cursor cursor) {
         List<Instance> instances = new ArrayList<>();
         if (cursor != null) {
             try {
+                cursor.moveToPosition(-1);
                 while (cursor.moveToNext()) {
                     int displayNameColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME);
                     int submissionUriColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.SUBMISSION_URI);
@@ -426,6 +430,8 @@ public class InstancesDao {
                     int deletedDateColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DELETED_DATE);
                     int fsSiteColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.FS_SITE_ID);
 
+                    int databaseIdIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID);
+
                     Instance instance = new Instance.Builder()
                             .displayName(cursor.getString(displayNameColumnIndex))
                             .submissionUri(cursor.getString(submissionUriColumnIndex))
@@ -438,6 +444,7 @@ public class InstancesDao {
                             .displaySubtext(cursor.getString(displaySubtextColumnIndex))
                             .deletedDate(cursor.getLong(deletedDateColumnIndex))
                             .fieldSightSiteId(cursor.getString(fsSiteColumnIndex))
+                            .databaseId(cursor.getLong(databaseIdIndex))
                             .build();
 
                     instances.add(instance);
@@ -449,6 +456,12 @@ public class InstancesDao {
         return instances;
     }
 
+    /**
+     * Returns the values of an instance as a ContentValues object for use with
+     * {@link #saveInstance(ContentValues)} or {@link #updateInstance(ContentValues, String, String[])}
+     *
+     * Does NOT include the database ID.
+     */
     public ContentValues getValuesFromInstanceObject(Instance instance) {
         ContentValues values = new ContentValues();
         values.put(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME, instance.getDisplayName());

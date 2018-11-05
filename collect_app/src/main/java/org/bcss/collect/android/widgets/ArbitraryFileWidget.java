@@ -101,7 +101,6 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget {
         File newFile;
         // get the file path and create a copy in the instance folder
         if (object instanceof Uri) {
-            FileUtils.revokeFileReadWritePermission(getContext(), (Uri) object);
             String sourcePath = getSourcePathFromUri((Uri) object);
             String destinationPath = getDestinationPathFromSourcePath(sourcePath);
             File source = fileUtil.getFileAtPath(sourcePath);
@@ -112,11 +111,6 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget {
             newFile = (File) object;
         } else {
             Timber.w("FileWidget's setBinaryData must receive a File or Uri object.");
-            return;
-        }
-
-        if (newFile == null) {
-            Timber.e("setBinaryData FAILED");
             return;
         }
 
@@ -146,6 +140,7 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget {
         widgetLayout.setOrientation(LinearLayout.VERTICAL);
 
         chooseFileButton = getSimpleButton(getContext().getString(R.string.choose_file));
+        chooseFileButton.setEnabled(!getFormEntryPrompt().isReadOnly());
 
         answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.HORIZONTAL);

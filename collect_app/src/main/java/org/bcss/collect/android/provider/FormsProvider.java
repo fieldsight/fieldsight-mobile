@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -50,25 +51,26 @@ public class FormsProvider extends ContentProvider {
 
     private static final int FORMS = 1;
     private static final int FORM_ID = 2;
+    // Forms unique by ID, keeping only the latest one downloaded
+    private static final int UNIQUE_FORMS_BY_FORM_ID = 3;
 
     private static final UriMatcher URI_MATCHER;
 
-    private FormsDatabaseHelper databaseHelper;
+    private static FormsDatabaseHelper dbHelper;
 
-    private FormsDatabaseHelper getDbHelper() {
+    private synchronized FormsDatabaseHelper getDbHelper() {
         // wrapper to test and reset/set the dbHelper based upon the attachment state of the device.
         try {
             Collect.createODKDirs();
         } catch (RuntimeException e) {
-            databaseHelper = null;
             return null;
         }
 
-        if (databaseHelper != null) {
-            return databaseHelper;
+        if (dbHelper == null) {
+            dbHelper = new FormsDatabaseHelper();
         }
-        databaseHelper = new FormsDatabaseHelper();
-        return databaseHelper;
+
+        return dbHelper;
     }
 
     @Override
@@ -97,23 +99,32 @@ public class FormsProvider extends ContentProvider {
         qb.setProjectionMap(sFormsProjectionMap);
         qb.setStrict(true);
 
-        switch (URI_MATCHER.match(uri)) {
-            case FORMS:
-                break;
-
-            case FORM_ID:
-                qb.appendWhere(FormsColumns._ID + "="
-                        + uri.getPathSegments().get(1));
-                break;
-
-            default:
-                throw new IllegalArgumentException("Unknown URI " + uri);
-        }
-
         Cursor c = null;
+        String groupBy = null;
         FormsDatabaseHelper formsDatabaseHelper = getDbHelper();
         if (formsDatabaseHelper != null) {
-            c = qb.query(formsDatabaseHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, sortOrder);
+            switch (URI_MATCHER.match(uri)) {
+                case FORMS:
+                    break;
+
+                case FORM_ID:
+                    qb.appendWhere(FormsColumns._ID + "="
+                            + uri.getPathSegments().get(1));
+                    break;
+
+                // Only include the latest form that was downloaded with each form_id
+                case UNIQUE_FORMS_BY_FORM_ID:
+                    Map<String, String> filteredProjectionMap = new HashMap<>(sFormsProjectionMap);
+                    filteredProjectionMap.put(FormsColumns.DATE, "MAX(" + FormsColumns.DATE + ")");
+
+                    qb.setProjectionMap(filteredProjectionMap);
+                    groupBy = FormsColumns.JR_FORM_ID;
+                    break;
+
+                default:
+                    throw new IllegalArgumentException("Unknown URI " + uri);
+            }
+            c = qb.query(formsDatabaseHelper.getReadableDatabase(), projection, selection, selectionArgs, groupBy, null, sortOrder);
 
             // Tell the cursor what uri to watch, so it knows when its source data changes
             c.setNotificationUri(getContext().getContentResolver(), uri);
@@ -126,6 +137,7 @@ public class FormsProvider extends ContentProvider {
     public String getType(@NonNull Uri uri) {
         switch (URI_MATCHER.match(uri)) {
             case FORMS:
+            case UNIQUE_FORMS_BY_FORM_ID:
                 return FormsColumns.CONTENT_TYPE;
 
             case FORM_ID:
@@ -142,7 +154,6 @@ public class FormsProvider extends ContentProvider {
         if (URI_MATCHER.match(uri) != FORMS) {
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
-
 
         if (!checkIfStoragePermissionsGranted(getContext())) {
             return null;
@@ -234,10 +245,6 @@ public class FormsProvider extends ContentProvider {
                 Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI,
                         rowId);
                 getContext().getContentResolver().notifyChange(formUri, null);
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logActionParam(this, "insert", formUri.toString(),
-                                values.getAsString(FormsColumns.FORM_FILE_PATH));
                 return formUri;
             }
         }
@@ -304,8 +311,6 @@ public class FormsProvider extends ContentProvider {
                                                 .getColumnIndex(FormsColumns.JRCACHE_FILE_PATH)));
                                 String formFilePath = del.getString(del
                                         .getColumnIndex(FormsColumns.FORM_FILE_PATH));
-                                Collect.getInstance().getActivityLogger()
-                                        .logAction(this, "delete", formFilePath);
                                 deleteFileOrDir(formFilePath);
                                 deleteFileOrDir(del.getString(del
                                         .getColumnIndex(FormsColumns.FORM_MEDIA_PATH)));
@@ -333,8 +338,6 @@ public class FormsProvider extends ContentProvider {
                                         .getColumnIndex(FormsColumns.JRCACHE_FILE_PATH)));
                                 String formFilePath = c.getString(c
                                         .getColumnIndex(FormsColumns.FORM_FILE_PATH));
-                                Collect.getInstance().getActivityLogger()
-                                        .logAction(this, "delete", formFilePath);
                                 deleteFileOrDir(formFilePath);
                                 deleteFileOrDir(c.getString(c
                                         .getColumnIndex(FormsColumns.FORM_MEDIA_PATH)));
@@ -542,7 +545,7 @@ public class FormsProvider extends ContentProvider {
         if (whereArgs == null || whereArgs.length == 0) {
             newWhereArgs = new String[] {formId};
         } else {
-            newWhereArgs = new String[(whereArgs.length + 1)];
+            newWhereArgs = new String[whereArgs.length + 1];
             newWhereArgs[0] = formId;
             System.arraycopy(whereArgs, 0, newWhereArgs, 1, whereArgs.length);
         }
@@ -553,6 +556,8 @@ public class FormsProvider extends ContentProvider {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
         URI_MATCHER.addURI(FormsProviderAPI.AUTHORITY, "forms", FORMS);
         URI_MATCHER.addURI(FormsProviderAPI.AUTHORITY, "forms/#", FORM_ID);
+        // Only available for query and type
+        URI_MATCHER.addURI(FormsProviderAPI.AUTHORITY, "uniqueFormsByFormId", UNIQUE_FORMS_BY_FORM_ID);
 
         sFormsProjectionMap = new HashMap<>();
         sFormsProjectionMap.put(FormsColumns._ID, FormsColumns._ID);

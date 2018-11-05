@@ -1,6 +1,5 @@
 package org.bcss.collect.android.architecture;
 
-
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;

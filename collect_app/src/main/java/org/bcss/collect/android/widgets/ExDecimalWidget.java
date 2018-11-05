@@ -23,11 +23,10 @@ import android.text.InputType;
 import android.text.Selection;
 import android.text.method.DigitsKeyListener;
 
+import org.bcss.collect.android.external.ExternalAppsUtils;
 import org.javarosa.core.model.data.DecimalData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.external.ExternalAppsUtils;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -93,12 +92,9 @@ public class ExDecimalWidget extends ExStringWidget {
     @Override
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
         i.putExtra("value", getDoubleAnswerValue());
-        Collect.getInstance().getActivityLogger().logInstanceAction(this, "launchIntent",
-                i.getAction(), getFormEntryPrompt().getIndex());
         ((Activity) getContext()).startActivityForResult(i,
                 RequestCodes.EX_DECIMAL_CAPTURE);
     }
-
 
     @Override
     public IAnswerData getAnswer() {
@@ -107,13 +103,12 @@ public class ExDecimalWidget extends ExStringWidget {
             return null;
         } else {
             try {
-                return new DecimalData(Double.valueOf(s).doubleValue());
+                return new DecimalData(Double.valueOf(s));
             } catch (Exception numberFormatException) {
                 return null;
             }
         }
     }
-
 
     /**
      * Allows answer to be set externally in {@link FormEntryActivity}.

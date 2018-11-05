@@ -14,6 +14,7 @@
 
 package org.bcss.collect.android.preferences;
 
+import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import org.bcss.collect.android.application.Collect;
@@ -29,9 +30,8 @@ import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_PERIODIC_F
 
 public class GeneralSharedPreferences {
 
-    private static GeneralSharedPreferences instance = null;
+    private static GeneralSharedPreferences instance;
     private final android.content.SharedPreferences sharedPreferences;
-    private android.content.SharedPreferences.Editor editor;
 
     private GeneralSharedPreferences() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Collect.getInstance());
@@ -45,6 +45,10 @@ public class GeneralSharedPreferences {
     }
 
     public Object get(String key) {
+        if (sharedPreferences == null) {
+            return null;
+        }
+
         Object defaultValue = null;
         Object value = null;
 
@@ -74,7 +78,7 @@ public class GeneralSharedPreferences {
     }
 
     public GeneralSharedPreferences save(String key, Object value) {
-        editor = sharedPreferences.edit();
+        Editor editor = sharedPreferences.edit();
 
         if (value == null || value instanceof String) {
             if (key.equals(KEY_PERIODIC_FORM_UPDATES_CHECK) && get(KEY_PERIODIC_FORM_UPDATES_CHECK) != value) {
@@ -124,5 +128,9 @@ public class GeneralSharedPreferences {
         for (Map.Entry<String, Object> keyValuePair : PreferenceKeys.GENERAL_KEYS.entrySet()) {
             save(keyValuePair.getKey(), get(keyValuePair.getKey()));
         }
+    }
+
+    public static boolean isAutoSendEnabled() {
+        return !getInstance().get(PreferenceKeys.KEY_AUTOSEND).equals("off");
     }
 }

@@ -16,9 +16,17 @@ package org.bcss.collect.android.widgets;
 
 import android.content.Context;
 
-import org.javarosa.core.model.Constants;
-import org.javarosa.form.api.FormEntryPrompt;
+import com.google.android.gms.analytics.HitBuilders;
 
+import org.javarosa.core.model.Constants;
+import org.javarosa.core.model.ItemsetBinding;
+import org.javarosa.core.model.QuestionDef;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.javarosa.xpath.expr.XPathExpression;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.external.ExternalDataUtil;
+
+import java.util.List;
 import java.util.Locale;
 
 import timber.log.Timber;
@@ -44,13 +52,18 @@ public class WidgetFactory {
     public static QuestionWidget createWidgetFromPrompt(FormEntryPrompt fep, Context context,
                                                         boolean readOnlyOverride) {
 
-        // get appearance hint and clean it up so it is lower case and never null...
+        // Get appearance hint and clean it up so it is lower case and never null.
         String appearance = fep.getAppearanceHint();
         if (appearance == null) {
             appearance = "";
         }
-        // for now, all appearance tags are in english...
+        // For now, all appearance tags are in English.
         appearance = appearance.toLowerCase(Locale.ENGLISH);
+
+        // Strip out the search() appearance/function which is handled in ExternalDataUtil so that
+        // it is not considered when matching other appearances. For example, a file named list.csv
+        // used as a parameter to search() should not be interpreted as a list appearance.
+        appearance = ExternalDataUtil.SEARCH_FUNCTION_REGEX.matcher(appearance).replaceAll("");
 
         final QuestionWidget questionWidget;
         switch (fep.getControlType()) {
@@ -66,6 +79,8 @@ public class WidgetFactory {
                             questionWidget = new CopticDateWidget(context, fep);
                         } else if (appearance.contains("islamic")) {
                             questionWidget = new IslamicDateWidget(context, fep);
+                        } else if (appearance.contains("bikram-sambat")) {
+                            questionWidget = new BikramSambatDateWidget(context, fep);
                         } else {
                             questionWidget = new DateWidget(context, fep);
                         }
@@ -115,6 +130,13 @@ public class WidgetFactory {
                         String query = fep.getQuestion().getAdditionalAttribute(null, "query");
                         if (query != null) {
                             questionWidget = new ItemsetWidget(context, fep, appearance.startsWith("quick"));
+
+                            Collect.getInstance().getDefaultTracker()
+                                    .send(new HitBuilders.EventBuilder()
+                                            .setCategory("ExternalData")
+                                            .setAction("External itemset")
+                                            .setLabel(Collect.getCurrentFormIdentifierHash())
+                                            .build());
                         } else if (appearance.startsWith("printer")) {
                             questionWidget = new ExPrinterWidget(context, fep);
                         } else if (appearance.startsWith("ex:")) {
@@ -168,48 +190,43 @@ public class WidgetFactory {
                 questionWidget = new VideoWidget(context, fep);
                 break;
             case Constants.CONTROL_SELECT_ONE:
-                // SurveyCTO-revised support for dynamic select content (from .csv files)
-                // consider traditional ODK appearance to be first word in appearance string
+                // search() appearance/function (not part of XForms spec) added by SurveyCTO gets
+                // considered in each widget by calls to ExternalDataUtil.getSearchXPathExpression.
+                // This means normal appearances should be put before search().
                 if (appearance.startsWith("compact") || appearance.startsWith("quickcompact")) {
                     int numColumns = -1;
                     try {
                         String firstWord = appearance.split("\\s+")[0];
                         int idx = firstWord.indexOf('-');
                         if (idx != -1) {
-                            numColumns =
-                                    Integer.parseInt(firstWord.substring(idx + 1));
+                            numColumns = Integer.parseInt(firstWord.substring(idx + 1));
                         }
                     } catch (Exception e) {
                         // Do nothing, leave numColumns as -1
                         Timber.e("Exception parsing numColumns");
                     }
-
-                    if (appearance.startsWith("quick")) {
-                        questionWidget = new GridWidget(context, fep, numColumns, true);
-                    } else {
-                        questionWidget = new GridWidget(context, fep, numColumns, false);
-                    }
-                } else if (appearance.startsWith("minimal")) {
-                    questionWidget = new SpinnerWidget(context, fep);
-                } else if (appearance.startsWith("quick")) {
-                    questionWidget = new SelectOneWidget(context, fep, true);
-                } else if (appearance.equals("list-nolabel")) {
-                    questionWidget = new ListWidget(context, fep, false);
-                } else if (appearance.equals("list")) {
-                    questionWidget = new ListWidget(context, fep, true);
+                    questionWidget = new GridWidget(context, fep, numColumns, appearance.contains("quick"));
+                } else if (appearance.contains("minimal")) {
+                    questionWidget = new SpinnerWidget(context, fep, appearance.contains("quick"));
+                } else if (appearance.contains("search") || appearance.contains("autocomplete")) {
+                    questionWidget = new SelectOneSearchWidget(context, fep, appearance.contains("quick"));
+                } else if (appearance.contains("list-nolabel")) {
+                    questionWidget = new ListWidget(context, fep, false, appearance.contains("quick"));
+                } else if (appearance.contains("list")) {
+                    questionWidget = new ListWidget(context, fep, true, appearance.contains("quick"));
                 } else if (appearance.equals("label")) {
                     questionWidget = new LabelWidget(context, fep);
-                } else if (appearance.contains("search") || appearance.contains("autocomplete")) {
-                    questionWidget = new SelectOneSearchWidget(context, fep);
-                } else if (appearance.startsWith("image-map")) {
-                    questionWidget = new SelectOneImageMapWidget(context, fep);
+                } else if (appearance.contains("image-map")) {
+                    questionWidget = new SelectOneImageMapWidget(context, fep, appearance.contains("quick"));
                 } else {
-                    questionWidget = new SelectOneWidget(context, fep, false);
+                    questionWidget = new SelectOneWidget(context, fep, appearance.contains("quick"));
                 }
+                logChoiceFilterAnalytics(fep.getQuestion());
                 break;
             case Constants.CONTROL_SELECT_MULTI:
-                // SurveyCTO-revised support for dynamic select content (from .csv files)
-                // consider traditional ODK appearance to be first word in appearance string
+                // search() appearance/function (not part of XForms spec) added by SurveyCTO gets
+                // considered in each widget by calls to ExternalDataUtil.getSearchXPathExpression.
+                // This means normal appearances should be put before search().
                 if (appearance.startsWith("compact")) {
                     int numColumns = -1;
                     try {
@@ -233,13 +250,14 @@ public class WidgetFactory {
                     questionWidget = new ListMultiWidget(context, fep, true);
                 } else if (appearance.startsWith("label")) {
                     questionWidget = new LabelWidget(context, fep);
-                } else if (appearance.contains("autocomplete")) {
+                } else if (appearance.contains("search") || appearance.contains("autocomplete")) {
                     questionWidget = new SelectMultipleAutocompleteWidget(context, fep);
                 } else if (appearance.startsWith("image-map")) {
                     questionWidget = new SelectMultiImageMapWidget(context, fep);
                 } else {
                     questionWidget = new SelectMultiWidget(context, fep);
                 }
+                logChoiceFilterAnalytics(fep.getQuestion());
                 break;
             case Constants.CONTROL_RANK:
                 questionWidget = new RankingWidget(context, fep);
@@ -248,23 +266,59 @@ public class WidgetFactory {
                 questionWidget = new TriggerWidget(context, fep);
                 break;
             case Constants.CONTROL_RANGE:
-                switch (fep.getDataType()) {
-                    case Constants.DATATYPE_INTEGER:
-                        questionWidget = new RangeIntegerWidget(context, fep);
-                        break;
-                    case Constants.DATATYPE_DECIMAL:
-                        questionWidget = new RangeDecimalWidget(context, fep);
-                        break;
-                    default:
-                        questionWidget = new StringWidget(context, fep, readOnlyOverride);
-                        break;
+
+                if (appearance.startsWith("rating")) {
+                    questionWidget = new RatingWidget(context, fep);
+                } else {
+                    switch (fep.getDataType()) {
+                        case Constants.DATATYPE_INTEGER:
+                            questionWidget = new RangeIntegerWidget(context, fep);
+                            break;
+                        case Constants.DATATYPE_DECIMAL:
+                            questionWidget = new RangeDecimalWidget(context, fep);
+                            break;
+                        default:
+                            questionWidget = new StringWidget(context, fep, readOnlyOverride);
+                            break;
+                    }
                 }
                 break;
             default:
                 questionWidget = new StringWidget(context, fep, readOnlyOverride);
                 break;
         }
+
         return questionWidget;
     }
 
+    /**
+     * Log analytics event each time a question with a choice filter is accessed, identifying
+     * choice filters with relative expressions. This was initially introduced to inform messaging
+     * around a long-standing bug in JavaRosa: https://github.com/opendatakit/javarosa/issues/293
+     */
+    private static void logChoiceFilterAnalytics(QuestionDef question) {
+        ItemsetBinding itemsetBinding = question.getDynamicChoices();
+
+        if (itemsetBinding != null && itemsetBinding.nodesetRef != null) {
+            if (itemsetBinding.nodesetRef.hasPredicates()) {
+                for (int level = 0; level < itemsetBinding.nodesetRef.size(); level++) {
+                    List<XPathExpression> predicates = itemsetBinding.nodesetRef.getPredicate(level);
+
+                    if (predicates != null) {
+                        for (XPathExpression predicate : predicates) {
+                            String actionName = predicate.toString().contains("func-expr:current") ?
+                                    "CurrentPredicate" : "NonCurrentPredicate";
+
+                            Collect.getInstance().getDefaultTracker()
+                                    .send(new HitBuilders.EventBuilder()
+                                    .setCategory("Itemset")
+                                    .setAction(actionName)
+                                    .setLabel(Collect.getCurrentFormIdentifierHash())
+                                    .build());
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

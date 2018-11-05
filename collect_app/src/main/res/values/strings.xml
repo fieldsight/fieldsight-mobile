@@ -58,7 +58,7 @@
     <string name="discard_answer">Remove response</string>
     <string name="discard_group">Remove group</string>
     <string name="download">Get Selected</string>
-    <string name="download_forms_result">Download Result</string>
+    <string name="download_forms_result">Download Results</string>
     <string name="downloading_data">Connecting to Server</string>
     <string name="do_not_change">Cancel</string>
     <string name="do_not_exit">Cancel</string>
@@ -127,6 +127,8 @@
     <string name="send_data">Send Finalized Form</string>
     <string name="send_data_button">Send Finalized Form (%s)</string>
     <string name="send_selected_data">Send Selected</string>
+    <string name="send_selected_data_internet">Send (Internet)</string>
+    <string name="send_selected_data_sms">Send (SMS)</string>
     <string name="view_sent_forms">View Sent Form</string>
     <string name="view_sent_forms_button">View Sent Form (%s)</string>
     <string name="server_auth_credentials">Invalid username or password for server: %s</string>
@@ -163,6 +165,7 @@
     <string name="file_fetch_failed">Error: %2$s (%3$s) at %1$s</string>
     <string name="fetching_manifest">%s. Getting manifest </string>
     <string name="success">Success</string>
+    <string name="failures">Failures</string>
     <string name="no_forms_uploaded">Sorry, no form was uploaded.</string>
     <string name="upload_results">Upload Results</string>
     <string name="xform_parse_error">XForm parse error for %1$s: %2$s is missing or invalid.</string>
@@ -273,6 +276,9 @@
     <string name="go_shared">Shared with Me</string>
     <string name="modified_on_date_at_time">\'Modified on\' EEE, MMM dd, yyyy \'at\' HH:mm</string>
     <string name="aggregate_preferences">ODK Aggregate settings</string>
+    <string name="sms_submission_preferences">SMS submission settings</string>
+    <string name="submission_transport">Submission transport (advanced)</string>
+    <string name="submission_transport_types_title">Send submissions via</string>
     <string name="other_preferences">Other platform settings</string>
     <string name="google_preferences">Google Sheets settings</string>
     <string name="google_sheets_url_hint">Forms must set a submission URL. If they don\'t, this URL will be used.</string>
@@ -280,8 +286,9 @@
     <string name="no_google_account">No Google Account Selected!</string>
     <string name="google_set_account">You have selected Google Sheets as your server, please select a corresponding Google account in the General Settings before continuing</string>
     <string name="media_upload_error">Failed to upload media file that does not exist: %1$s</string>
-    <string name="odk_auth_auth_fail">ODK auto send authentication failure, please make sure your settings are correct</string>
-    <string name="odk_auto_note">ODK Auto Send Notification</string>
+    <string name="odk_permissions_fail">ODK auto send permission failure, please make sure your have granted all required permissions</string>
+    <string name="odk_auto_note">ODK auto-send results</string>
+    <string name="odk_auto_download_notification_title">ODK auto-download results</string>
     <string name="notification_error">Error displaying notification text</string>
     <string name="delete_after_send">Delete after send</string>
     <string name="delete_after_send_summary">Deletes finalized forms and media after sending to server</string>
@@ -291,6 +298,7 @@
     <string name="send_in_progress">Background send running, please try again shortly</string>
     <string name="sheets_max_columns">Max number of columns is 255, your form has %s. Unable to upload to spreadsheet.</string>
     <string name="invalid_sheet_id">invalid sheet id: %1$s</string>
+    <string name="missing_submission_url">Missing submission URL</string>
     <string name="google_sheets_access_denied">Access denied. Please make sure the spreadsheet owner has granted you edit permission.</string>
     <string name="google_sheets_missing_columns">Spreadsheet is missing the following columns: %1$s</string>
     <string name="password_error_whitespace">Leading or trailing whitespace not allowed in passwords</string>
@@ -332,7 +340,6 @@
     <string name="select_geotrace_mode">"Select GeoTrace Mode"</string>
     <string name="start">Start</string>
     <string name="enable_gps">Enable GPS</string>
-    <string name="enable_gps_message">"GPS is disabled in your device. Would you like to enable it?"</string>
     <string name="geotrace_title">GeoTrace</string>
     <string name="polygon_save">Save as Polygon</string>
     <string name="polyline_save">Save as Polyline</string>
@@ -345,7 +352,6 @@
     <string name="polygon_validator">Must have at least 3 points to create Polygon</string>
     <string name="polyline_validator">Must have at least 2 points to create Polyline</string>
     <string name="clear">Clear</string>
-    <string name="polyline_polygon_text">Save GeoTrace As</string>
     <string name="manual_mode">Manual Mode</string>
     <string name="automatic_mode">Automatic Mode</string>
     <string name="geoshape_instruction">Long press to place marks.</string>
@@ -440,7 +446,6 @@
     <string name="sort_by_status_asc">Status, finalized first</string>
     <string name="sort_by_status_desc">Status, unfinalized first</string>
     <string name="sort_the_list">Sort the list</string>
-    <string name="request_permissions_google_account">ODK Collect needs access to your Google account to get blank forms and submit filled forms.</string>
     <string name="filter_the_list">Filter the list</string>
     <string name="language">Language</string>
     <string name="google_auth_io_exception_msg">Unable to make API calls. If you are running a local build, please review the projectId readme.</string>
@@ -481,7 +486,6 @@
     <string name="share_qrcode">Share QR code</string>
     <string name="take_picture_instruction">Tap the screen to take a picture</string>
     <string name="error_front_camera_unavailable">Front camera not available on this device</string>
-    <string name="request_permission">This application needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support the Camera2 API.</string>
     <string name="invalid_range_widget">This widget has invalid parameters!</string>
     <string name="form_entry_setting">Form Entry Settings</string>
@@ -517,6 +521,7 @@
     <string name="invalid_email_address">Invalid email address!</string>
     <string name="sort_by">Sort by</string>
     <string name="server">Server</string>
+    <string name="submission_transport_admin_setting">Submission transport</string>
     <string name="select_value">Select value</string>
     <string name="edit_value">Edit value</string>
     <string name="no_value_selected">No value selected</string>
@@ -587,6 +592,18 @@
     <string name="no_columns_to_upload">No columns found in the form to upload.</string>
     <string name="storage_runtime_permission_denied_title">Storage permissions</string>
     <string name="storage_runtime_permission_denied_desc">Without these permissions Collect can\'t access your forms or save answers. Reopen the app when you are ready to grant them.</string>
+    <string name="location_runtime_permissions_denied_title">Location permissions</string>
+    <string name="location_runtime_permissions_denied_desc">Without these permissions Collect can\'t record your location. Please try again when you are ready to grant them.</string>
+    <string name="camera_runtime_permission_denied_title">Camera permission</string>
+    <string name="camera_runtime_permission_denied_desc">Without this permission Collect can\'t access the camera. Please try again when you are ready to grant it.</string>
+    <string name="record_audio_runtime_permission_denied_title">Record audio permission</string>
+    <string name="record_audio_runtime_permission_denied_desc">Without this permission Collect can\'t access the microphone. Please try again when you are ready to grant it.</string>
+    <string name="get_accounts_runtime_permission_denied_title">Get accounts permission</string>
+    <string name="get_accounts_runtime_permission_denied_desc">Without this permission Collect can\'t access accounts. Please try again when you are ready to grant it.</string>
+    <string name="send_sms_runtime_permission_denied_title">Send SMS permission</string>
+    <string name="send_sms_runtime_permission_denied_desc">Without this permission Collect can\'t send SMS messages. Please try again when you are ready to grant it.</string>
+    <string name="read_phone_state_runtime_permission_denied_title">Read phone state permission</string>
+    <string name="read_phone_state_runtime_permission_denied_desc">ODK Collect does not make calls but it needs to access certain properties about your device such as the phone number and device ID.</string>
     <string name="form_update_category">Form update</string>
     <string name="periodic_form_updates_check_title">Periodic form updates check</string>
     <string name="never">Never</string>
@@ -595,11 +612,8 @@
     <string name="every_six_hours">Every six hours</string>
     <string name="every_24_hours">Every 24 hours</string>
     <string name="form_updates_available">Form updates available</string>
-    <string name="new_form_versions_downloaded">New form versions downloaded</string>
     <string name="automatic_download">Automatic download</string>
     <string name="automatic_download_summary">Automatically download updated versions of forms</string>
-    <string name="forms_downloaded">Forms downloaded:</string>
-    <string name="forms_sent">Forms sent:</string>
     <string name="guidance_hint_title">Show guidance for questions</string>
     <string name="app_theme">Theme</string>
     <string name="theme_light">Light theme</string>
@@ -610,7 +624,39 @@
     <string name="instance_upload_cancelled">Instance upload canceled</string>
     <string name="hide_old_form_versions_setting_title">Hide old form versions</string>
     <string name="hide_old_form_versions_setting_summary">Only the newest version will appear in Fill Blank Form</string>
+    <string name="sms_pref_dialog_title">Destination phone number</string>
+    <string name="sms_pref_title">Destination phone number</string>
+    <string name="sms_invalid_phone_number">Invalid phone number!</string>
+
+    <!-- Sms submission -->
+    <string name="sms_no_reception">\'Failed on\' EEE, MMM dd, yyyy \'at\' HH:mm \'due to no reception\'</string>
+    <string name="sms_no_number">\'Failed on\' EEE, MMM dd, yyyy \'at\' HH:mm \'due to no phone number.\'</string>
+    <string name="sms_fatal_error">\'Failed on\' EEE, MMM dd, yyyy \'at\' HH:mm</string>
+    <string name="sms_airplane_mode">\'Failed on\' EEE, MMM dd, yyyy \'at\' HH:mm \'due to Airplane Mode being on.\'</string>
+    <string name="sms_no_message">This form has no questions with SMS tags.</string>
+    <string name="sms_encrypted_message">Encrypted forms can\'t be submitted as SMS.</string>
+    <string name="sms_last_submission_on_date_at_time">\'Last submission attempt at\' EEE, MMM dd, yyyy \'at\' HH:mm</string>
+    <plurals name="sms_sending">
+        <item quantity="one">Submitting form as a single message.</item>
+        <item quantity="other">Submitting form, sending message %1$d of %2$d</item>
+    </plurals>
+    <string name="sms_sent_on_date_at_time">\'Sent as SMS on\' EEE, MMM dd, yyyy \'at\' HH:mm</string>
+    <string name="sms_submission_queued">Queued for submission.</string>
+    <string name="sms_submissions_notif_title">SMS submissions</string>
+    <string name="sms_submissions_notif_description">Several forms are currently being submitted.</string>
+    <string name="transport_type_internet">Wifi/Cellular (recommended)</string>
+    <string name="transport_type_sms">SMS</string>
+    <string name="transport_type_both">Select on send</string>
     <string name="seconds">Seconds</string>
+
+
+
+    <string name="rank_items">Rank items</string>
+    <string name="loading_form_failed">An error occurred while loading the form. Please try again.</string>
+    <string name="missing_google_account_dialog_title">Google account not set</string>
+    <string name="missing_google_account_dialog_desc">To submit forms via Google Sheets you have to set up your Google account in the Server settings.</string>
+    <string name="sms_invalid_phone_number_description">Set a destination phone number for SMS submissions or change your transport type.</string>
+    <string name="notification_channel_name">General notifications</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email or Username</string>
@@ -625,5 +671,7 @@
 
     <string name="double_tap_to_start">Double tap to start</string>
     <string name="projects">My Projects</string>
+
+
 
 </resources>

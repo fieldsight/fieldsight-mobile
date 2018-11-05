@@ -196,7 +196,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                if (allowClick()) {
+                if (allowClick(getClass().getName())) {
                     loadToolBarSearch();
                 }
                 break;
@@ -231,6 +231,10 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showProgress(boolean show) {
+        toolbarProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void setupProjectlist() {

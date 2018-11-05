@@ -20,12 +20,11 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-
 public abstract class QuestionWidgetTest<W extends Widget, A extends IAnswerData>
         extends WidgetTest {
 
     protected Random random = new Random();
-    private W widget = null;
+    private W widget;
 
     @Mock
     public FormIndex formIndex;

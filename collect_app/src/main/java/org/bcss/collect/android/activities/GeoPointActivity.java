@@ -29,19 +29,21 @@ import android.view.Window;
 
 import com.google.android.gms.location.LocationListener;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.location.client.LocationClient;
 import org.bcss.collect.android.location.client.LocationClients;
 import org.bcss.collect.android.utilities.GeoPointUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.android.widgets.GeoPointWidget;
+import org.bcss.collect.android.R;
 
 import java.text.DecimalFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import timber.log.Timber;
+
+import static org.bcss.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
+
 
 public class GeoPointActivity extends CollectAbstractActivity implements LocationListener,
         LocationClient.LocationClientListener, GpsStatus.Listener {
@@ -61,7 +63,7 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
 
     private double locationAccuracy;
 
-    private int locationCount = 0;
+    private int locationCount;
     private int numberOfAvailableSatellites;
 
     private long startTime = System.currentTimeMillis();
@@ -71,6 +73,12 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!checkIfLocationPermissionsGranted(this)) {
+            finish();
+            return;
+        }
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         if (savedInstanceState != null) {
@@ -101,13 +109,10 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
         setupLocationDialog();
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
         locationClient.start();
-
-        Collect.getInstance().getActivityLogger().logOnStart(this);
     }
 
     @Override
@@ -139,8 +144,6 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
     @Override
     protected void onStop() {
         locationClient.stop();
-
-        Collect.getInstance().getActivityLogger().logOnStop(this);
         super.onStop();
     }
 
@@ -185,8 +188,6 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
      */
     @SuppressWarnings("deprecation")
     private void setupLocationDialog() {
-        Collect.getInstance().getActivityLogger().logInstanceAction(this, "setupLocationDialog",
-                "show");
         // dialog displayed while fetching gps location
         locationDialog = new ProgressDialog(this);
 
@@ -202,13 +203,9 @@ public class GeoPointActivity extends CollectAbstractActivity implements Locatio
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                                        "acceptLocation", "OK");
                                 returnLocation();
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
-                                Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                                        "cancelLocation", "cancel");
                                 location = null;
                                 finish();
                                 break;

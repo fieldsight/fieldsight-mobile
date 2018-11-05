@@ -19,31 +19,34 @@ package org.bcss.collect.android.adapters;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.Adapter;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.javarosa.core.model.SelectChoice;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.utilities.ThemeUtils;
+import org.javarosa.core.model.FormIndex;
+import org.javarosa.core.model.SelectChoice;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RankingListAdapter extends RecyclerView.Adapter<RankingListAdapter.ItemViewHolder> {
 
-    private final List<SelectChoice> items;
-    private final FormEntryPrompt formEntryPrompt;
+public class RankingListAdapter extends Adapter<RankingListAdapter.ItemViewHolder> {
 
-    public RankingListAdapter(List<SelectChoice> items, FormEntryPrompt formEntryPrompt) {
-        this.items = new ArrayList<>(items);
-        this.formEntryPrompt = formEntryPrompt;
+    private final List<String> values;
+    private final FormIndex formIndex;
+
+    public RankingListAdapter(List<String> values, FormIndex formIndex) {
+        this.values = new ArrayList<>(values);
+        this.formIndex = formIndex;
     }
 
     @NonNull
@@ -54,44 +57,59 @@ public class RankingListAdapter extends RecyclerView.Adapter<RankingListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final ItemViewHolder holder, int position) {
-        holder.textView.setText(formEntryPrompt.getSelectChoiceText(items.get(position)));
+        FormController formController = Collect.getInstance().getFormController();
+        String itemName = formController != null
+                ? formController.getQuestionPrompt(formIndex).getSelectChoiceText(getItem(formController, values.get(position)))
+                : values.get(position);
+        holder.textView.setText(itemName);
+    }
+
+    private SelectChoice getItem(FormController formController, String value) {
+        for (SelectChoice item : formController.getQuestionPrompt(formIndex).getSelectChoices()) {
+            if (item.getValue().equals(value)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     public void onItemMove(int fromPosition, int toPosition) {
-        Collections.swap(items, fromPosition, toPosition);
+        Collections.swap(values, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return values.size();
     }
 
-    public List<SelectChoice> getItems() {
-        return items;
+    public List<String> getValues() {
+        return values;
     }
 
-    public static class ItemViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemViewHolder extends ViewHolder {
 
         final Context context;
         final TextView textView;
+        final ThemeUtils themeUtils;
 
         ItemViewHolder(Context context, View itemView) {
             super(itemView);
             this.context = context;
             textView = itemView.findViewById(R.id.rank_item_text);
             textView.setTextSize(Collect.getQuestionFontsize());
+            themeUtils = new ThemeUtils(context);
         }
 
         public void onItemSelected() {
             GradientDrawable border = new GradientDrawable();
-            border.setColor(new ThemeUtils(context).getPrimaryBackgroundColor());
-            border.setStroke(10, ContextCompat.getColor(Collect.getInstance(), R.color.tintColor));
+            border.setColor(themeUtils.getRankItemColor());
+            border.setStroke(10, themeUtils.getAccentColor());
             itemView.setBackground(border);
         }
 
         public void onItemClear() {
-            itemView.setBackgroundColor(new ThemeUtils(context).getPrimaryBackgroundColor());
+            itemView.setBackgroundColor(themeUtils.getRankItemColor());
         }
     }
 }

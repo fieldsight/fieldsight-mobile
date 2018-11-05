@@ -31,11 +31,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.adapters.SortDialogAdapter;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.database.ActivityLogger;
 import org.bcss.collect.android.listeners.RecyclerViewClickListener;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ThemeUtils;
@@ -50,7 +50,6 @@ import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrd
 
 abstract class AppListFragment extends ListFragment {
 
-    protected final ActivityLogger logger = Collect.getInstance().getActivityLogger();
     protected String[] sortingOptions;
     protected SimpleCursorAdapter listAdapter;
     protected LinkedHashSet<Long> selectedInstances = new LinkedHashSet<>();
@@ -99,7 +98,6 @@ abstract class AppListFragment extends ListFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Collect.getInstance().getActivityLogger().logInstanceAction(this, "onCreateOptionsMenu", "show");
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.list_menu, menu);

@@ -42,7 +42,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
-import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.preferences.AdminKeys;
@@ -54,10 +53,10 @@ import org.bcss.collect.android.preferences.PreferenceKeys;
 import org.bcss.collect.android.preferences.PreferencesActivity;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.bcss.collect.android.utilities.ApplicationConstants;
-import org.bcss.collect.android.utilities.AuthDialogUtility;
 import org.bcss.collect.android.utilities.PlayServicesUtil;
 import org.bcss.collect.android.utilities.SharedPreferencesUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.android.R;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -82,7 +81,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
     private static final boolean EXIT = true;
     // buttons
-    private Button enterDataButton;
     private Button manageFilesButton;
     private Button sendDataButton;
     private Button viewSentFormsButton;
@@ -116,14 +114,12 @@ public class MainMenuActivity extends CollectAbstractActivity {
         initToolbar();
 
         // enter data button. expects a result.
-        enterDataButton = findViewById(R.id.enter_data);
+        Button enterDataButton = findViewById(R.id.enter_data);
         enterDataButton.setText(getString(R.string.enter_data_button));
         enterDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "fillBlankForm", "click");
+                if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(),
                             FormChooserList.class);
                     startActivity(i);
@@ -137,9 +133,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         reviewDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, ApplicationConstants.FormModes.EDIT_SAVED, "click");
+                if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                     i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                             ApplicationConstants.FormModes.EDIT_SAVED);
@@ -154,9 +148,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         sendDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "uploadForms", "click");
+                if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(),
                             InstanceUploaderList.class);
                     startActivity(i);
@@ -169,9 +161,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         viewSentFormsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger().logAction(this,
-                            ApplicationConstants.FormModes.VIEW_SENT, "click");
+                if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                     i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                             ApplicationConstants.FormModes.VIEW_SENT);
@@ -186,9 +176,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         getFormsButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "downloadBlankForms", "click");
+                if (Collect.allowClick(getClass().getName())) {
                     SharedPreferences sharedPreferences = PreferenceManager
                             .getDefaultSharedPreferences(MainMenuActivity.this);
                     String protocol = sharedPreferences.getString(
@@ -217,9 +205,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
         manageFilesButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Collect.allowClick()) {
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "deleteSavedForms", "click");
+                if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(),
                             FileManagerTabs.class);
                     startActivity(i);
@@ -423,21 +409,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        Collect.getInstance().getActivityLogger().logOnStop(this);
-        super.onStop();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Collect.getInstance().getActivityLogger()
-                .logAction(this, "onCreateOptionsMenu", "show");
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -446,30 +418,18 @@ public class MainMenuActivity extends CollectAbstractActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_about:
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logAction(this, "onOptionsItemSelected",
-                                "MENU_ABOUT");
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case R.id.menu_general_preferences:
-                Collect.getInstance()
-                        .getActivityLogger()
-                        .logAction(this, "onOptionsItemSelected",
-                                "MENU_PREFERENCES");
                 startActivity(new Intent(this, PreferencesActivity.class));
                 return true;
             case R.id.menu_admin_preferences:
-                Collect.getInstance().getActivityLogger()
-                        .logAction(this, "onOptionsItemSelected", "MENU_ADMIN");
                 String pw = adminPreferences.getString(
                         AdminKeys.KEY_ADMIN_PW, "");
                 if ("".equalsIgnoreCase(pw)) {
                     startActivity(new Intent(this, AdminPreferencesActivity.class));
                 } else {
                     showDialog(PASSWORD_DIALOG);
-                    Collect.getInstance().getActivityLogger()
-                            .logAction(this, "createAdminPasswordDialog", "show");
                 }
                 return true;
         }
@@ -477,8 +437,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
     }
 
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        Collect.getInstance().getActivityLogger()
-                .logAction(this, "createErrorDialog", "show");
         alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setIcon(android.R.drawable.ic_dialog_info);
         alertDialog.setMessage(errorMsg);
@@ -487,10 +445,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
             public void onClick(DialogInterface dialog, int i) {
                 switch (i) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        Collect.getInstance()
-                                .getActivityLogger()
-                                .logAction(this, "createErrorDialog",
-                                        shouldExit ? "exitApplication" : "OK");
                         if (shouldExit) {
                             finish();
                         }
@@ -542,10 +496,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
                                     passwordDialog.dismiss();
                                 } else {
                                     ToastUtils.showShortToast(R.string.admin_password_incorrect);
-                                    Collect.getInstance()
-                                            .getActivityLogger()
-                                            .logAction(this, "adminPasswordDialog",
-                                                    "PASSWORD_INCORRECT");
                                 }
                             }
                         });
@@ -555,10 +505,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
                         new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface dialog, int which) {
-                                Collect.getInstance()
-                                        .getActivityLogger()
-                                        .logAction(this, "adminPasswordDialog",
-                                                "cancel");
                                 input.setText("");
                             }
                         });
@@ -644,8 +590,6 @@ public class MainMenuActivity extends CollectAbstractActivity {
                 GeneralSharedPreferences.getInstance().save(entry.getKey(), entry.getValue());
             }
 
-            AuthDialogUtility.setWebCredentialsFromPreferences();
-
             AdminSharedPreferences.getInstance().clear();
 
             // second object is admin options
@@ -653,6 +597,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             for (Entry<String, ?> entry : adminEntries.entrySet()) {
                 AdminSharedPreferences.getInstance().save(entry.getKey(), entry.getValue());
             }
+            Collect.getInstance().initProperties();
             res = true;
         } catch (IOException | ClassNotFoundException e) {
             Timber.e(e, "Exception while loading preferences siteName file due to : %s ", e.getMessage());

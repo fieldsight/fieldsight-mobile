@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import org.bcss.collect.android.R;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.listeners.DeleteInstancesListener;
 import org.bcss.collect.android.listeners.DiskSyncListener;
@@ -37,6 +36,14 @@ import org.bcss.collect.android.tasks.DeleteInstancesTask;
 import org.bcss.collect.android.tasks.InstanceSyncTask;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import timber.log.Timber;
 
@@ -53,11 +60,16 @@ public class DataManagerList extends InstanceListFragment
         implements DeleteInstancesListener, DiskSyncListener, View.OnClickListener {
     private static final String DATA_MANAGER_LIST_SORTING_ORDER = "dataManagerListSortingOrder";
 
-    DeleteInstancesTask deleteInstancesTask = null;
+    DeleteInstancesTask deleteInstancesTask;
     private AlertDialog alertDialog;
     private InstanceSyncTask instanceSyncTask;
     private ProgressDialog progressDialog;
+
     private Site loadedSite;
+
+
+    @Inject
+    SmsSubmissionManagerContract smsSubmissionManager;
 
     public static DataManagerList newInstance(Site loadedSite) {
         DataManagerList dataManagerList = new DataManagerList();
@@ -65,7 +77,10 @@ public class DataManagerList extends InstanceListFragment
         bundle.putParcelable(EXTRA_OBJECT, loadedSite);
         dataManagerList.setArguments(bundle);
         return dataManagerList;
+
     }
+
+
 
     @Nullable
     @Override
@@ -76,6 +91,12 @@ public class DataManagerList extends InstanceListFragment
         }
 
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Collect.getInstance().getComponent().inject(this);
     }
 
     @Override
@@ -147,9 +168,9 @@ public class DataManagerList extends InstanceListFragment
 
     @Override
     protected CursorLoader getCursorLoader() {
-        if(loadedSite != null){
+        if (loadedSite != null) {
             return new InstancesDao().getSavedInstancesCursorLoaderSite(loadedSite.getId(), getSortingOrder());
-        }else {
+        } else {
             return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
         }
     }
@@ -158,9 +179,6 @@ public class DataManagerList extends InstanceListFragment
      * Create the instance delete dialog
      */
     private void createDeleteInstancesDialog() {
-        logger.logAction(this, "createDeleteInstancesDialog",
-                "show");
-
         alertDialog = new AlertDialog.Builder(getContext()).create();
         alertDialog.setTitle(getString(R.string.delete_file));
         alertDialog.setMessage(getString(R.string.delete_confirm,
@@ -171,16 +189,10 @@ public class DataManagerList extends InstanceListFragment
                     public void onClick(DialogInterface dialog, int i) {
                         switch (i) {
                             case DialogInterface.BUTTON_POSITIVE: // delete
-                                logger.logAction(this,
-                                        "createDeleteInstancesDialog", "delete");
                                 deleteSelectedInstances();
                                 if (getListView().getCount() == getCheckedCount()) {
                                     toggleButton.setEnabled(false);
                                 }
-                                break;
-                            case DialogInterface.BUTTON_NEGATIVE: // do nothing
-                                logger.logAction(this,
-                                        "createDeleteInstancesDialog", "cancel");
                                 break;
                         }
                     }
@@ -211,12 +223,22 @@ public class DataManagerList extends InstanceListFragment
             progressDialog.setCancelable(false);
             progressDialog.show();
 
+            deleteSmsSubmissions(getCheckedIdObjects());
+
             deleteInstancesTask = new DeleteInstancesTask();
             deleteInstancesTask.setContentResolver(getActivity().getContentResolver());
             deleteInstancesTask.setDeleteListener(this);
             deleteInstancesTask.execute(getCheckedIdObjects());
         } else {
             ToastUtils.showLongToast(R.string.file_delete_in_progress);
+        }
+    }
+
+    private void deleteSmsSubmissions(Long[] ids) {
+        List<Long> list = Arrays.asList(ids);
+
+        for (Long id : list) {
+            smsSubmissionManager.forgetSubmission(String.valueOf(id));
         }
     }
 
@@ -228,8 +250,6 @@ public class DataManagerList extends InstanceListFragment
     @Override
     public void deleteComplete(int deletedInstances) {
         Timber.i("Delete instances complete");
-        logger.logAction(this, "deleteComplete",
-                Integer.toString(deletedInstances));
         final int toDeleteCount = deleteInstancesTask.getToDeleteCount();
 
         if (deletedInstances == toDeleteCount) {
@@ -237,7 +257,7 @@ public class DataManagerList extends InstanceListFragment
             ToastUtils.showShortToast(getString(R.string.file_deleted_ok, String.valueOf(deletedInstances)));
         } else {
             // had some failures
-            Timber.e("Failed to delete %d instances", (toDeleteCount - deletedInstances));
+            Timber.e("Failed to delete %d instances", toDeleteCount - deletedInstances);
             ToastUtils.showLongToast(getString(R.string.file_deleted_error,
                     String.valueOf(toDeleteCount - deletedInstances),
                     String.valueOf(toDeleteCount)));
@@ -258,7 +278,6 @@ public class DataManagerList extends InstanceListFragment
         switch (v.getId()) {
             case R.id.delete_button:
                 int checkedItemCount = getCheckedCount();
-                logger.logAction(this, "deleteButton", Integer.toString(checkedItemCount));
                 if (checkedItemCount > 0) {
                     createDeleteInstancesDialog();
                 } else {

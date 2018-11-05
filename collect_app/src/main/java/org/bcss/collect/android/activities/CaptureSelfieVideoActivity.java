@@ -1,4 +1,4 @@
-package org.bcss.collect.android.activities;
+package org.odk.collect.android.activities;
 
 /*
  * Copyright (C) 2013 The Android Open Source Project
@@ -28,11 +28,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import org.bcss.collect.android.utilities.CameraUtils;
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.CameraUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.android.views.CameraPreview;
-import org.bcss.collect.android.widgets.VideoWidget;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class CaptureSelfieVideoActivity extends Activity {
     private Camera camera;
     private CameraPreview camPreview;
     private int cameraId;
-    private boolean recording = false;
+    private boolean recording;
     private MediaRecorder mediaRecorder;
     private String outputFile;
 
@@ -74,47 +75,50 @@ public class CaptureSelfieVideoActivity extends Activity {
         this.camPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!recording) {
-                    // initialize video camera
-                    if (prepareVideoRecorder()) {
-                        // Camera is available and unlocked, MediaRecorder is prepared,
-                        // now you can start recording
-                        mediaRecorder.start();
-                        Timber.d("Started recording");
+                if (Collect.allowClick(getClass().getName())) {
+                    if (!recording) {
+                        // initialize video camera
+                        if (prepareVideoRecorder()) {
+                            // Camera is available and unlocked, MediaRecorder is prepared,
+                            // now you can start recording
+                            mediaRecorder.start();
+                            Timber.d("Started recording");
 
-                        // inform the user that recording has started
-                        ToastUtils.showLongToast(getString(R.string.stop_video_capture_instruction));
-                        recording = true;
+                            // inform the user that recording has started
+                            ToastUtils.showLongToast(getString(R.string.stop_video_capture_instruction));
+                            recording = true;
+                        } else {
+                            // prepare didn't work, release the camera
+                            releaseMediaRecorder();
+                        }
                     } else {
-                        // prepare didn't work, release the camera
-                        releaseMediaRecorder();
+                        try {
+                            camPreview.setClickable(false);
+                            Timber.d("About to stop recording");
+                            mediaRecorder.stop();  // stop the recording
+
+                            releaseMediaRecorder(); // release the MediaRecorder object
+                            camera.lock();         // take camera access back from MediaRecorder
+                            recording = false;
+                            releaseCamera();
+
+                            Intent i = new Intent();
+                            i.setData(Uri.fromFile(new File(outputFile)));
+                            setResult(RESULT_OK, i);
+                        } catch (RuntimeException e) {
+                            // RuntimeException is thrown when stop() is called immediately after start().
+                            // In this case the output file is not properly constructed ans should be deleted.
+                            Timber.d("RuntimeException: stop() is called immediately after start()");
+                            //noinspection ResultOfMethodCallIgnored
+                            new File(outputFile).delete();
+
+                            releaseMediaRecorder(); // release the MediaRecorder object
+                            camera.lock();         // take camera access back from MediaRecorder
+                            recording = false;
+                            releaseCamera();
+                        }
+                        finish();
                     }
-                } else {
-                    try {
-                        Timber.d("About to stop recording");
-                        mediaRecorder.stop();  // stop the recording
-
-                        releaseMediaRecorder(); // release the MediaRecorder object
-                        camera.lock();         // take camera access back siteName MediaRecorder
-                        recording = false;
-                        releaseCamera();
-
-                        Intent i = new Intent();
-                        i.setData(Uri.fromFile(new File(outputFile)));
-                        setResult(RESULT_OK, i);
-                    } catch (RuntimeException e) {
-                        // RuntimeException is thrown when stop() is called immediately after start().
-                        // In this case the output file is not properly constructed ans should be deleted.
-                        Timber.d("RuntimeException: stop() is called immediately after start()");
-                        //noinspection ResultOfMethodCallIgnored
-                        new File(outputFile).delete();
-
-                        releaseMediaRecorder(); // release the MediaRecorder object
-                        camera.lock();         // take camera access back siteName MediaRecorder
-                        recording = false;
-                        releaseCamera();
-                    }
-                    finish();
                 }
             }
         });
@@ -138,7 +142,10 @@ public class CaptureSelfieVideoActivity extends Activity {
         mediaRecorder.setProfile(CamcorderProfile.get(cameraId, CamcorderProfile.QUALITY_HIGH));
 
         // Step 4: Set output file
-        outputFile = VideoWidget.getOutputMediaFile(VideoWidget.MEDIA_TYPE_VIDEO).toString();
+
+        if (outputFile == null || outputFile.isEmpty()) {
+            outputFile = CameraUtils.getVideoFilePath(this);
+        }
         mediaRecorder.setOutputFile(outputFile);
 
         // Step 5: Set the preview output
@@ -147,11 +154,7 @@ public class CaptureSelfieVideoActivity extends Activity {
         // Step 6: Prepare configured MediaRecorder
         try {
             mediaRecorder.prepare();
-        } catch (IllegalStateException e) {
-            Timber.e(e);
-            releaseMediaRecorder();
-            return false;
-        } catch (IOException e) {
+        } catch (IllegalStateException | IOException e) {
             Timber.e(e);
             releaseMediaRecorder();
             return false;
@@ -187,7 +190,6 @@ public class CaptureSelfieVideoActivity extends Activity {
         releaseCamera();
         super.onPause();
     }
-
 
     @Override
     protected void onResume() {

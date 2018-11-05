@@ -1,6 +1,5 @@
 package org.bcss.collect.android.injection.config.architecture;
 
-
 import android.arch.lifecycle.ViewModel;
 
 import java.lang.annotation.Documented;

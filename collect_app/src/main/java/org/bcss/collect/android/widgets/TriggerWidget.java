@@ -23,12 +23,13 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.utilities.ViewIds;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.ViewIds;
+
+
 
 /**
  * Widget that allows user to scan barcodes and add them to the form.
@@ -60,14 +61,8 @@ public class TriggerWidget extends QuestionWidget {
             public void onClick(View v) {
                 if (triggerButton.isChecked()) {
                     stringAnswer.setText(OK_TEXT);
-                    Collect.getInstance().getActivityLogger().logInstanceAction(TriggerWidget.this,
-                            "triggerButton",
-                            "OK", TriggerWidget.this.prompt.getIndex());
                 } else {
                     stringAnswer.setText(null);
-                    Collect.getInstance().getActivityLogger().logInstanceAction(TriggerWidget.this,
-                            "triggerButton",
-                            "null", TriggerWidget.this.prompt.getIndex());
                 }
             }
         });
@@ -102,7 +97,6 @@ public class TriggerWidget extends QuestionWidget {
         triggerButton.setChecked(false);
     }
 
-
     @Override
     public IAnswerData getAnswer() {
         String s = stringAnswer.getText().toString();
@@ -116,7 +110,6 @@ public class TriggerWidget extends QuestionWidget {
         triggerButton.setOnLongClickListener(l);
         stringAnswer.setOnLongClickListener(l);
     }
-
 
     @Override
     public void cancelLongPress() {

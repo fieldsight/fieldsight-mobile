@@ -39,7 +39,6 @@
   <string name="discard_answer">Eemalda vastus</string>
   <string name="discard_group">Eemalda grupp</string>
   <string name="download">Lae alla</string>
-  <string name="download_forms_result">Lae tulemused alla</string>
   <string name="downloading_data">Serveriga ühendumine</string>
   <string name="do_not_change">Tühista</string>
   <string name="do_not_exit">Tühista</string>
@@ -296,7 +295,6 @@
   <string name="select_geotrace_mode">Vali raja sisestusviis</string>
   <string name="start">Alusta</string>
   <string name="enable_gps">Luba GPS</string>
-  <string name="enable_gps_message">Teie seadmel on GPS keelatud. Kas te soovite lubada?</string>
   <string name="geotrace_title">Rada</string>
   <string name="polygon_save">Salvesta polügoonina</string>
   <string name="polyline_save">Salvesta polyline-ina</string>
@@ -308,7 +306,6 @@
   <string name="geo_exit_warning">Loobu muudatustest ja ava ODK?</string>
   <string name="polygon_validator">Polügooni loomiseks on vaja vähemalt 3 punkti</string>
   <string name="clear">Eemalda</string>
-  <string name="polyline_polygon_text">Salvesta rada kui</string>
   <string name="manual_mode">Käsitsi sisestusviis</string>
   <string name="automatic_mode">Automaatne sisestusviis</string>
   <string name="geoshape_instruction">Märke paigutamiseks hoia pikalt soovitud asukohal.</string>
@@ -383,4 +380,5 @@
   <string name="deleted_form">Kustutatud vorm</string>
   <string name="exit">Välju</string>
   <!--Displays dates in specialized calendars with the Gregorian dates in parentheses. This is translated so right-to-left languages can specify the correct order-->
+  <!--Sms submission-->
 </resources>

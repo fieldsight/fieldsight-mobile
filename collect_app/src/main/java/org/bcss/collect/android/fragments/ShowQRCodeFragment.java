@@ -22,6 +22,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,17 +40,21 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.MainMenuActivity;
 import org.bcss.collect.android.activities.ScannerWithFlashlightActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.ActionListener;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.preferences.AdminPreferencesActivity;
 import org.bcss.collect.android.utilities.CompressionUtils;
+import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.android.utilities.LocaleHelper;
 import org.bcss.collect.android.utilities.QRCodeUtils;
 import org.bcss.collect.android.utilities.SharedPreferencesUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -71,8 +76,8 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static org.bcss.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_PASSWORD;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestCameraPermission;
 import static org.bcss.collect.android.utilities.QRCodeUtils.QR_CODE_FILEPATH;
-
 
 public class ShowQRCodeFragment extends Fragment {
 
@@ -83,7 +88,7 @@ public class ShowQRCodeFragment extends Fragment {
 
     @BindView(R.id.ivQRcode)
     ImageView ivQRCode;
-    @BindView(R.id.progressBar)
+    @BindView(R.id.circularProgressBar)
     ProgressBar progressBar;
     @BindView(R.id.tvPasswordWarning)
     TextView tvPasswordWarning;
@@ -147,18 +152,30 @@ public class ShowQRCodeFragment extends Fragment {
         shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.setType("image/*");
-        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + QR_CODE_FILEPATH));
+        Uri uri =
+                FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", new File(QR_CODE_FILEPATH));
+        FileUtils.grantFileReadPermissions(shareIntent, uri, getActivity());
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
     }
 
     @OnClick(R.id.btnScan)
     void scanButtonClicked() {
-        IntentIntegrator.forFragment(this)
-                .setCaptureActivity(ScannerWithFlashlightActivity.class)
-                .setBeepEnabled(true)
-                .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
-                .setOrientationLocked(false)
-                .setPrompt(getString(R.string.qrcode_scanner_prompt))
-                .initiateScan();
+        requestCameraPermission(getActivity(), new PermissionListener() {
+            @Override
+            public void granted() {
+                IntentIntegrator.forFragment(ShowQRCodeFragment.this)
+                        .setCaptureActivity(ScannerWithFlashlightActivity.class)
+                        .setBeepEnabled(true)
+                        .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE_TYPES)
+                        .setOrientationLocked(false)
+                        .setPrompt(getString(R.string.qrcode_scanner_prompt))
+                        .initiateScan();
+            }
+
+            @Override
+            public void denied() {
+            }
+        });
     }
 
     @OnClick(R.id.btnSelect)
@@ -229,10 +246,7 @@ public class ShowQRCodeFragment extends Fragment {
                 } catch (FormatException | NotFoundException | ChecksumException e) {
                     Timber.i(e);
                     ToastUtils.showLongToast("QR Code not found in the selected image");
-                } catch (IOException e) {
-                    Timber.e(e);
-                    ToastUtils.showLongToast("Unable to read the settings");
-                } catch (DataFormatException e) {
+                } catch (DataFormatException | IOException e) {
                     Timber.e(e);
                     ToastUtils.showShortToast(getString(R.string.invalid_qrcode));
                 }
@@ -242,11 +256,11 @@ public class ShowQRCodeFragment extends Fragment {
         }
     }
 
-
     private void applySettings(String content) {
         SharedPreferencesUtils.savePreferencesFromString(content, new ActionListener() {
             @Override
             public void onSuccess() {
+                Collect.getInstance().initProperties();
                 ToastUtils.showLongToast(Collect.getInstance().getString(R.string.successfully_imported_settings));
                 getActivity().finish();
                 final LocaleHelper localeHelper = new LocaleHelper();
