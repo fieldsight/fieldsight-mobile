@@ -46,7 +46,7 @@ public class FieldSightDownloadFormListTask extends AsyncTask<Void, String, Hash
 
     @Override
     protected HashMap<String, FormDetails> doInBackground(Void... values) {
-        return new FieldSightFormListDownloadUtils().downloadFormList(false);
+        return new FieldSightFormListDownloadUtils().downloadFormList(xmlForm, false);
     }
 
     @Override

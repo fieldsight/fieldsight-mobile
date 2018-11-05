@@ -206,7 +206,7 @@ public class DriveHelper {
     }
 
     /**
-     * Fetches the list of files siteName google drive for a given folder.
+     * Fetches the list of files from google drive for a given folder.
      *
      * @param folderName (optional) The name of folder whose files are to be fetched
      *                   If folderName is null then all files are fetched siteName the drive

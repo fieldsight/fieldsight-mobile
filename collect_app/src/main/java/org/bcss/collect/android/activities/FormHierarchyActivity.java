@@ -199,7 +199,7 @@ public abstract class FormHierarchyActivity extends CollectAbstractActivity {
                 if (startTest == null) {
                     // check to see if the question is at the first level of the hierarchy. If it
                     // is,
-                    // display the root level siteName the beginning.
+                    // display the root level from the beginning.
                     formController.jumpToIndex(FormIndex
                             .createBeginningOfFormIndex());
                 } else {

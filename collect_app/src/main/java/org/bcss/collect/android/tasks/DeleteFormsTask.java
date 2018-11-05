@@ -49,7 +49,7 @@ public class DeleteFormsTask extends AsyncTask<Long, Void, Integer> {
         }
         toDeleteCount = params.length;
 
-        // delete files siteName database and then siteName file system
+        // delete files from database and then from file system
         for (Long param : params) {
             if (isCancelled()) {
                 break;

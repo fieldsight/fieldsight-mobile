@@ -53,7 +53,7 @@ import timber.log.Timber;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 
 /**
- * Background task for syncing form instances siteName the instances folder to the instances table.
+ * Background task for syncing form instances from the instances folder to the instances table.
  * Returns immediately if it detects an error.
  */
 public class InstanceSyncTask extends AsyncTask<Void, String, String> {
@@ -148,7 +148,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
                 // Begin parsing and add them to the content provider
                 for (String candidateInstance : candidateInstances) {
                     String instanceFormId = getFormIdFromInstance(candidateInstance);
-                    // only process if we can find the id siteName the instance file
+                    // only process if we can find the id from the instance file
                     if (instanceFormId != null) {
                         Cursor formCursor = null;
                         try {

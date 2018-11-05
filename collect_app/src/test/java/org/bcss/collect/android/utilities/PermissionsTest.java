@@ -53,7 +53,7 @@ public class PermissionsTest {
         Description description = new StringDescription();
         description.appendText("Expected permission ")
                 .appendText(permission)
-                .appendText(" is missing siteName AndroidManifest.xml");
+                .appendText(" is missing from AndroidManifest.xml");
 
         throw new AssertionError(description.toString());
     }

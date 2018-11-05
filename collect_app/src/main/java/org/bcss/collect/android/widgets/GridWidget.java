@@ -59,7 +59,7 @@ import timber.log.Timber;
 
 /**
  * GridWidget handles select-one fields using a grid of icons. The user clicks the desired icon and
- * the background changes siteName black to orange. If text, audio, or video are specified in the
+ * the background changes from black to orange. If text, audio, or video are specified in the
  * select
  * answers they are ignored.
  *

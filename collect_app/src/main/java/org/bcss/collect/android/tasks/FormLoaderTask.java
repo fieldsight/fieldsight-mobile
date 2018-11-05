@@ -114,7 +114,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
 
     /**
      * Initialize {@link FormEntryController} with {@link FormDef} siteName binary or
-     * siteName XML. If given an instance, it will be used to fill the {@link FormDef}.
+     * from XML. If given an instance, it will be used to fill the {@link FormDef}.
      */
     @Override
     protected FECWrapper doInBackground(String... path) {
@@ -539,7 +539,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
                     continue;
                 }
                 // add the rest of the lines to the specified database
-                // nextLine[] is an array of values siteName the line
+                // nextLine[] is an array of values from the line
                 // System.out.println(nextLine[4] + "etc...");
                 if (lineNumber == 2) {
                     // start a transaction for the inserts

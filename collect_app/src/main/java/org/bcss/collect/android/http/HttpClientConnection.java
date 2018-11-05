@@ -27,6 +27,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.android.utilities.ResponseMessageParser;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.opendatakit.httpclientandroidlib.Header;
 import org.opendatakit.httpclientandroidlib.HttpEntity;
 import org.opendatakit.httpclientandroidlib.HttpHost;
@@ -98,6 +99,8 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
     private static final int CONNECTION_TIMEOUT = 30000;
     private static final int UPLOAD_CONNECTION_TIMEOUT = 60000; // it can take up to 27 seconds to spin up an Aggregate
     private static final String HTTP_CONTENT_TYPE_TEXT_XML = "text/xml";
+
+    private static final String FIELDSIGHT_AUTH_HEADER = "Authorization";
 
     // Retain authentication and cookies between requests. Gets mutated on each call to
     // HttpClient.execute).
@@ -533,6 +536,7 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
         HttpGet req = new HttpGet();
         setCollectHeaders(req);
         setOpenRosaHeaders(req);
+        setFieldSightHeaders(req);
         req.setURI(uri);
         return req;
     }
@@ -552,6 +556,12 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
         req.setHeader(DATE_HEADER,
                 DateFormat.format("E, dd MMM yyyy hh:mm:ss zz", gregorianCalendar).toString());
     }
+
+    private static void setFieldSightHeaders(HttpRequest req) {
+        String token = FieldSightUserSession.getAuthToken();
+        req.setHeader(FIELDSIGHT_AUTH_HEADER, token);
+    }
+
 
     /**
      * Utility to ensure that the entity stream of a response is drained of
@@ -587,6 +597,7 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
         HttpHead req = new HttpHead(uri);
         setCollectHeaders(req);
         setOpenRosaHeaders(req);
+        setFieldSightHeaders(req);
         return req;
     }
 
@@ -594,6 +605,7 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
         HttpPost req = new HttpPost(uri);
         setCollectHeaders(req);
         setOpenRosaHeaders(req);
+        setFieldSightHeaders(req);
         return req;
     }
 

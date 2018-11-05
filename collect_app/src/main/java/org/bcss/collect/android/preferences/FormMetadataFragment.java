@@ -79,7 +79,7 @@ public class FormMetadataFragment extends BasePreferenceFragment {
     }
 
     /**
-     * Initializes an EditTextPreference siteName a property.
+     * Initializes an EditTextPreference from a property.
      *
      * @param propertyManager   a PropertyManager
      * @param sharedPreferences shared preferences

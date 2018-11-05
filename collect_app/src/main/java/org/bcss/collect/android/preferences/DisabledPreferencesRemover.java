@@ -35,7 +35,7 @@ class DisabledPreferencesRemover {
     }
 
     /**
-     * Removes any preferences siteName the category that are excluded by the admin settings.
+     * Removes any preferences from the category that are excluded by the admin settings.
      *
      * @param keyPairs one or more AdminAndGeneralKeys objects.
      */
