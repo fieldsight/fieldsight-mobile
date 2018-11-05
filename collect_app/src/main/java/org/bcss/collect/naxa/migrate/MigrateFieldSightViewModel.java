@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.migrate;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -10,6 +11,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.bcss.collect.android.dao.FormsDao;
+import org.bcss.collect.android.dto.Form;
 import org.bcss.collect.android.tasks.sms.models.SmsSubmission;
 import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.naxa.common.GSONInstance;
@@ -34,7 +37,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
 
     private void copyProjects() {
-        SQLiteDatabase db = getProjSiteDB(usernameOrEmail);
+        SQLiteDatabase db = getProjSiteDB();
         Cursor cursor = null;
         cursor = selectAll(db, Table.project);
         ArrayList<Project> projects = new ArrayList<>();
@@ -87,6 +90,15 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
 
     private void copySites() {
+        SQLiteDatabase db = getProjSiteDB();
+
+        Cursor cursor = null;
+        cursor = selectAll(db, Table.my_site);
+        ArrayList<Project> sites = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+
+        }
 
     }
 
@@ -103,11 +115,47 @@ public class MigrateFieldSightViewModel extends ViewModel {
     }
 
     private void copyInstances() {
+        SQLiteDatabase db = getInstancesDB();
+        Cursor cursor = null;
+        cursor = selectAll(db, Table.instances);
+        while (cursor.moveToNext()) {
 
+        }
     }
 
     private void copyForms() {
+        SQLiteDatabase db = getFormsDB();
+        FormsDao dao = new FormsDao();
+        Cursor cursor = null;
+        cursor = selectAll(db, Table.forms);
+        while (cursor.moveToNext()) {
+            Form form = new Form.Builder()
+                    .displayName(getString(cursor, FormColumns.DISPLAY_NAME))
+                    .displaySubtext(getString(cursor, FormColumns.DISPLAY_SUBTEXT))
+                    .description(getString(cursor, FormColumns.DESCRIPTION))
+                    .jrFormId(getString(cursor, FormColumns.JR_FORM_ID))
+                    .jrVersion(getString(cursor, FormColumns.JR_VERSION))
+                    .md5Hash(getString(cursor, FormColumns.MD5_HASH))
+                    .date(Long.valueOf(getString(cursor, FormColumns.DATE)))
+                    .formMediaPath(getString(cursor, FormColumns.FORM_MEDIA_PATH))
+                    .formFilePath(getString(cursor, FormColumns.FORM_FILE_PATH))
+                    .language(getString(cursor, FormColumns.LANGUAGE))
+                    .base64RSAPublicKey(getString(cursor, FormColumns.BASE64_RSA_PUBLIC_KEY))
+                    .jrCacheFilePath(getString(cursor, FormColumns.JRCACHE_FILE_PATH))
+                    .build();
+            ContentValues values = dao.getValuesFromFormObject(form);
+            dao.saveForm(values);
+        }
+    }
 
+    private SQLiteDatabase getFormsDB() {
+        String dbPath = migrationHelper.getOldRootPath() + File.separator + Folder.METADATA + File.separator + Database.FORMS;
+        File dbfile = new File(dbPath);
+
+        if (!dbfile.exists())
+            throw new RuntimeException("Forms Database does not exist for " + usernameOrEmail);
+
+        return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
     }
 
     private Cursor selectAll(SQLiteDatabase db, String tableName) {
@@ -119,13 +167,23 @@ public class MigrateFieldSightViewModel extends ViewModel {
         return cursor.getString(cursor.getColumnIndex(columnName));
     }
 
-    private SQLiteDatabase getProjSiteDB(String usernameOrEmail) {
+    private SQLiteDatabase getProjSiteDB() {
         File dbfile = new File(migrationHelper.getOldRootPath() +
                 File.separator + Folder.DB_FOLDER +
                 File.separator + Database.PROJ_SITES);
 
         if (!dbfile.exists())
             throw new RuntimeException("Database file does not exist for " + usernameOrEmail);
+
+        return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
+    }
+
+    private SQLiteDatabase getInstancesDB() {
+        String dbPath = migrationHelper.getOldRootPath() + File.separator + Folder.METADATA + File.separator + Database.INSTANCES;
+        File dbfile = new File(dbPath);
+
+        if (!dbfile.exists())
+            throw new RuntimeException("Instance Database does not exist for " + usernameOrEmail);
 
         return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
     }
@@ -152,6 +210,9 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
                             copyInstancesFolder();
                             emitter.onNext(3);
+
+                            copyForms();
+                            emitter.onNext(4);
                             break;
                         }
                     }
@@ -180,16 +241,21 @@ public class MigrateFieldSightViewModel extends ViewModel {
         public static final String notifications = "table_notify";
         public static final String all_contacts = "table_contact";
 
+        public static String instances = "instances";
+        public static String forms = "forms";
     }
 
     public static class Folder {
         public static final String DB_FOLDER = "records";
         public static final String FORMS = "forms";
         public static final String INSTANCES = "instances";
+        public static final String METADATA = "metadata";
     }
 
     public static class Database {
         public static final String PROJ_SITES = "fieldsight_notify_schema.db";
+        public static final String INSTANCES = "instances.db";
+        public static final String FORMS = "forms.db";
     }
 
 
@@ -211,6 +277,34 @@ public class MigrateFieldSightViewModel extends ViewModel {
         private static final String KEY_PROJECT_ORGINATION_LOGO = "organization_logo";
         private static final String KEY_PROJECT_META_ATTRS = "meta_attrs";
         public static final String KEY_PROJECT_REGIONS = "regions";
+    }
+
+
+    private static class FormColumns {
+        // These are the only things needed for an replace
+        public static final String DISPLAY_NAME = "displayName";
+        public static final String DESCRIPTION = "description";  // can be null
+        public static final String JR_FORM_ID = "jrFormId";
+        public static final String JR_VERSION = "jrVersion"; // can be null
+        public static final String FORM_FILE_PATH = "formFilePath";
+        public static final String SUBMISSION_URI = "submissionUri"; // can be null
+        public static final String BASE64_RSA_PUBLIC_KEY = "base64RsaPublicKey"; // can be null
+
+        // these are generated for you (but you can replace something else if you want)
+        public static final String DISPLAY_SUBTEXT = "displaySubtext";
+        public static final String MD5_HASH = "md5Hash";
+        public static final String DATE = "date";
+        public static final String JRCACHE_FILE_PATH = "jrcacheFilePath";
+        public static final String FORM_MEDIA_PATH = "formMediaPath";
+
+
+        //FieldSightAccountManager Form Ids
+        public static final String FS_FORM_ID = "fsFormId";
+        //      public static final String IS_SITE_OFFLINE = "is_site_";
+
+
+        // this is null on create, and can only be set on an update.
+        public static final String LANGUAGE = "language";
     }
 
 }

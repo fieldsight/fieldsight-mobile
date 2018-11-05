@@ -64,7 +64,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
                 .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        progressBar.setMax(3);
+                        progressBar.setMax(4);
                         progressBar.setInterpolator(new DecelerateInterpolator());
                     }
 
