@@ -46,12 +46,43 @@
 
     <ProgressBar
         android:id="@+id/fieldsight_migrate_act_progress"
-        android:progress="20"
-        android:layout_margin="@dimen/margin_extra_large"
-        android:layout_below="@id/desc"
         style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/desc"
+        android:layout_margin="@dimen/margin_extra_large"
+        android:progress="20" />
+
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/fieldsight_migrate_act_tv_error_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fieldsight_migrate_act_btn_proceed_anyway"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginRight="32dp"
+        android:text="We were unable to migrate your old data"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <Button
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:id="@+id/fieldsight_migrate_act_btn_proceed_anyway"
+        android:background="@null"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:text="Proceed Anyway" />
+
+
 
 </RelativeLayout>
 

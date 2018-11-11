@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -357,6 +358,15 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void showSiteTypeSpinner(List<SiteType> siteTypes) {
         boolean show = siteTypes != null && !siteTypes.isEmpty();

@@ -7,7 +7,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -15,10 +17,13 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -37,8 +42,15 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
     @BindView(R.id.subtitle)
     TextView subtitle;
 
+    @BindView(R.id.fieldsight_migrate_act_btn_proceed_anyway)
+    Button btnProceedAnyway;
+
+    @BindView(R.id.fieldsight_migrate_act_tv_error_message)
+    TextView tvMigrateErrorMessage;
+
     final Integer errorOccured = -1;
     private final Integer max = 3;
+    private Observable<Integer> migration;
 
     public static void start(Context context, String usernameOrEmail) {
         Intent intent = new Intent(context, MigrateFieldSightActivity.class);
@@ -58,7 +70,9 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
         subtitle.setText(usernameOrEmail);
 
 
-        viewModel.copyFromOldAccount()
+        migration = viewModel.copyFromOldAccount();
+
+        migration
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Integer>() {
@@ -74,13 +88,9 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
                             case -1:
                                 showErrorUI("");
                                 break;
-                            case 3:
-                                new Handler().postDelayed(() -> {
-
-                                    startActivity(new Intent(MigrateFieldSightActivity.this, ProjectListActivity.class));
-                                    finish();
-                                }, 2000);
-
+                            case 4:
+                                openProjectList();
+                                break;
                             default:
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                     progressBar.setProgress(progress, true);
@@ -107,7 +117,10 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
     }
 
     private void showErrorUI(String s) {
-        ToastUtils.showShortToastInMiddle("ERROR: "+s);
+        btnProceedAnyway.setVisibility(View.VISIBLE);
+        tvMigrateErrorMessage.setVisibility(View.VISIBLE);
+        tvMigrateErrorMessage.setText(s);
+
     }
 
 
@@ -117,5 +130,13 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
         viewModel.setUserNameEmail(userNameOrEmail);
     }
 
+
+    @OnClick(R.id.fieldsight_migrate_act_btn_proceed_anyway)
+    public void openProjectList() {
+
+        ProjectListActivity.start(this);
+        finish();
+
+    }
 
 }

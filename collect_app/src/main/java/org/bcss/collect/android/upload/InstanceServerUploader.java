@@ -183,6 +183,7 @@ public class InstanceServerUploader extends InstanceUploader {
             messageParser = httpInterface.uploadSubmissionFile(files, submissionFile, uri,
                     webCredentialsUtils.getCredentials(uri));
 
+
             int responseCode = messageParser.getResponseCode();
 
             if (responseCode != HttpsURLConnection.HTTP_CREATED && responseCode != HttpsURLConnection.HTTP_ACCEPTED) {

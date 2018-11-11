@@ -36,10 +36,10 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class FileManagerTabs extends CollectAbstractActivity {
 
-    private final DataManagerList dataManagerList = null;
+    //private final DataManagerList dataManagerList = DataManagerList.newInstance();
     private final FormManagerList formManagerList = FormManagerList.newInstance();
-    private Site loadedSite;
 
+    private Site loadedSite;
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -47,7 +47,6 @@ public class FileManagerTabs extends CollectAbstractActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +60,14 @@ public class FileManagerTabs extends CollectAbstractActivity {
             loadedSite = bundle.getParcelable(EXTRA_OBJECT);
         }
 
+
 //        String[] tabNames = {getString(R.string.data), getString(R.string.forms)};
         String[] tabNames = {getString(R.string.data)};
         // Get the ViewPager and set its PagerAdapter so that it can display items
         ViewPager viewPager = findViewById(R.id.pager);
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        DataManagerList.newInstance(loadedSite);
-        fragments.add(dataManagerList);
+        fragments.add(DataManagerList.newInstance(loadedSite));
 //        fragments.add(formManagerList);
 
         viewPager.setAdapter(new ViewPagerAdapter(
@@ -91,6 +90,7 @@ public class FileManagerTabs extends CollectAbstractActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.notes);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

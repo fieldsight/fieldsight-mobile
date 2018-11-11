@@ -384,6 +384,7 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
                 int responseCode = response.getStatusLine().getStatusCode();
                 HttpEntity httpEntity = response.getEntity();
                 Timber.i("Response code:%d", responseCode);
+                //add http dump code here: Nishon
 
                 messageParser = new ResponseMessageParser(
                         EntityUtils.toString(httpEntity),

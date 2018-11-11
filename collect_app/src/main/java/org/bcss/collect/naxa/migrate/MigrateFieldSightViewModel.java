@@ -194,36 +194,35 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
     public Observable<Integer> copyFromOldAccount() {
 
-        return Observable.create(new ObservableOnSubscribe<Integer>() {
-            @Override
-            public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
-                try {
-                    List<File> files = migrationHelper.listOldAccount();
-                    for (File file : files) {
-                        if (usernameOrEmail.equals(file.getName())) {
+        return Observable.create(emitter -> {
+            try {
+                List<File> files = migrationHelper.listOldAccount();
+                for (File file : files) {
+                    if (usernameOrEmail.equals(file.getName())) {
 
-                            copyProjects();
-                            emitter.onNext(1);
+                        copyProjects();
+                        emitter.onNext(1);
 
-                            copyFormsFolder();
-                            emitter.onNext(2);
+                        copyForms();
+                        emitter.onNext(2);
 
-                            copyInstancesFolder();
-                            emitter.onNext(3);
+                        copyFormsFolder();
+                        emitter.onNext(3);
 
-                            copyForms();
-                            emitter.onNext(4);
-                            break;
-                        }
+                        copyInstancesFolder();
+                        emitter.onNext(4);
+
+
+                        break;
                     }
-
-                    emitter.onComplete();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    emitter.onError(ex);
                 }
 
+                emitter.onComplete();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                emitter.onError(ex);
             }
+
         });
     }
 

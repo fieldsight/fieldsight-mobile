@@ -264,7 +264,7 @@ public class FormsProvider extends ContentProvider {
                 int video = MediaUtils
                         .deleteVideoInFolderFromMediaProvider(file);
 
-                Timber.i("removed siteName content providers: %d image files, %d audio files, and %d"
+                Timber.i("removed from content providers: %d image files, %d audio files, and %d"
                         + " video files.", images, audio, video);
 
                 // delete all the containing files
@@ -543,7 +543,7 @@ public class FormsProvider extends ContentProvider {
     private String[] prepareWhereArgs(String[] whereArgs, String formId) {
         String[] newWhereArgs;
         if (whereArgs == null || whereArgs.length == 0) {
-            newWhereArgs = new String[] {formId};
+            newWhereArgs = new String[]{formId};
         } else {
             newWhereArgs = new String[whereArgs.length + 1];
             newWhereArgs[0] = formId;

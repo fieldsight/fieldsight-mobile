@@ -125,7 +125,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 //            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
 //            context.startActivity(intent, activityOptions.toBundle());
 //        }else {
-            context.startActivity(intent);
+        context.startActivity(intent);
 //        }
 
 
@@ -227,19 +227,10 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFull_name());
         ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
 //        ViewUtils.loadImage(user.getProfilepic()).into((ImageView) navigationHeader.findViewById(R.id.image_profile));
-        navigationHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleNavDrawer();
+        navigationHeader.setOnClickListener(view -> {
+            toggleNavDrawer();
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-//                        ToastUtils.showLongToast("Not implemented yet");
-                        UserActivity.start(ProjectDashboardActivity.this);
-                    }
-                }, 250);
-            }
+            new Handler().postDelayed(() -> UserActivity.start(ProjectDashboardActivity.this), 250);
         });
     }
 
