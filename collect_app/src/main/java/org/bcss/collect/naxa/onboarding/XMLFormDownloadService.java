@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.onboarding;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.listeners.FormListDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
@@ -33,13 +33,10 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -49,14 +46,13 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_RECEIVER;
 
-;
-
-
 /**
  * Created on 11/18/17
  * by nishon.tan@gmail.com
  */
 
+
+@SuppressLint("LogNotTimber")
 public class XMLFormDownloadService extends IntentService implements DownloadFormsTaskListener, FormListDownloaderListener {
 
 
@@ -220,7 +216,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
             return;
         }
 
-        Log.d(TAG, "Forms Downloading Complete for  project " + formsToDownlaod.get(0).getFormCreatorsId());
+        Log.d(TAG, "Forms Downloading Complete for project " + formsToDownlaod.get(0).getFormCreatorsId());
 
 
         //remove the site that has completed download

@@ -78,10 +78,10 @@ import static org.mockito.Mockito.when;
 import static org.bcss.collect.android.activities.FormEntryActivity.EXTRA_TESTING_PATH;
 
 // import android.support.annotation.Nullable;
-// import org.odk.collect.android.activities.BearingActivity;
+// import org.bcss.collect.android.activities.BearingActivity;
 // import static android.app.Activity.RESULT_CANCELED;
 //import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-//import static org.odk.collect.android.activities.FormEntryActivity.BEARING_RESULT;
+//import static org.bcss.collect.android.activities.FormEntryActivity.BEARING_RESULT;
 
 /**
  * Integration test that runs through a form with all question types.

@@ -2,9 +2,10 @@ package org.odk.collect.android.injection;
 
 import android.app.Application;
 
+import org.bcss.collect.android.injection.ActivityBuilder;
+import org.bcss.collect.android.injection.config.AppComponent;
 import org.odk.collect.android.http.CollectServerClientTest;
-import org.odk.collect.android.injection.config.AppComponent;
-import org.odk.collect.android.injection.config.scopes.PerApplication;
+import org.bcss.collect.android.injection.config.scopes.PerApplication;
 import org.odk.collect.android.sms.SmsSenderJobTest;
 import org.odk.collect.android.sms.SmsServiceTest;
 

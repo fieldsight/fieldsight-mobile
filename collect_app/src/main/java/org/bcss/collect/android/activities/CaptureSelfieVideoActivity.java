@@ -1,4 +1,4 @@
-package org.odk.collect.android.activities;
+package org.bcss.collect.android.activities;
 
 /*
  * Copyright (C) 2013 The Android Open Source Project

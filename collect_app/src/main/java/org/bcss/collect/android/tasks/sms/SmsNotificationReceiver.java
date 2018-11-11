@@ -26,8 +26,8 @@ import static org.bcss.collect.android.tasks.sms.SmsSender.SMS_INSTANCE_ID;
 import static org.bcss.collect.android.tasks.sms.SmsSender.SMS_RESULT_CODE;
 
 public class SmsNotificationReceiver extends BroadcastReceiver {
-    public static final String SMS_NOTIFICATION_ACTION = "org.odk.collect.android.COLLECT_SMS_NOTIFICATION_ACTION";
-    public static final String SMS_NOTIFICATION_GROUP = "org.odk.collect.android.COLLECT_SMS_NOTIFICATION_GROUP";
+    public static final String SMS_NOTIFICATION_ACTION = "org.bcss.collect.android.COLLECT_SMS_NOTIFICATION_ACTION";
+    public static final String SMS_NOTIFICATION_GROUP = "org.bcss.collect.android.COLLECT_SMS_NOTIFICATION_GROUP";
     private static final int SUMMARY_ID = 4324;
     private int resultCode;
 

@@ -4,15 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.telephony.SmsManager;
 
-import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
+import org.bcss.collect.android.dao.FormsDao;
+import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.events.RxEventBus;
 import org.bcss.collect.android.http.CollectServerClient;
 import org.bcss.collect.android.http.HttpClientConnection;
 import org.bcss.collect.android.http.OpenRosaHttpInterface;
 import org.odk.collect.android.http.mock.MockHttpClientConnection;
 import org.odk.collect.android.http.mock.MockHttpClientConnectionError;
-import org.odk.collect.android.injection.config.scopes.PerApplication;
+import org.bcss.collect.android.injection.config.scopes.PerApplication;
 import org.bcss.collect.android.tasks.sms.SmsSubmissionManager;
 import org.bcss.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.bcss.collect.android.utilities.WebCredentialsUtils;

@@ -359,7 +359,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 i = new Intent(getContext(), CaptureSelfieVideoActivityNewApi.class);
             } else {
-                i = new Intent(getContext(), org.odk.collect.android.activities.CaptureSelfieVideoActivity.class);
+                i = new Intent(getContext(), org.bcss.collect.android.activities.CaptureSelfieVideoActivity.class);
             }
         } else {
             i = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);

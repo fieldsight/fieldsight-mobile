@@ -168,7 +168,8 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         boolean hasOldAccount = new MigrationHelper(mEmailView.getText().toString()).hasOldAccount();
 
         if (hasOldAccount) {
-            MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
+            ProjectListActivity.start(this);
+//            MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
         } else {
             ProjectListActivity.start(this);
         }

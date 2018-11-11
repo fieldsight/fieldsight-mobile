@@ -1,6 +1,6 @@
 # remove the leading '#' to uncomment lines
 
-app_package_name 'org.odk.collect.android'
+app_package_name 'org.bcss.collect.android'
 # use_tests_in_packages ['your.screenshot.tests.package']
 
 #app_apk_path 'collect_app/build/outputs/apk/debug/apk-name'

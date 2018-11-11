@@ -6,8 +6,8 @@
         android:title="@string/general_preferences">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="org.odk.collect.android.preferences.PreferencesActivity"
-            android:targetPackage="org.odk.collect.android">
+            android:targetClass="org.bcss.collect.android.preferences.PreferencesActivity"
+            android:targetPackage="org.bcss.collect.android">
             <extra
                 android:name="adminMode"
                 android:value="true" />

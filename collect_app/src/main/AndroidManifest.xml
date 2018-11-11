@@ -163,7 +163,7 @@ the specific language governing permissions and limitations under the License.
         </activity>
         <activity android:name="org.bcss.collect.android.activities.FormDownloadList">
             <intent-filter>
-                <action android:name="org.odk.collect.android.FORM_DOWNLOAD" />
+                <action android:name="org.bcss.collect.android.FORM_DOWNLOAD" />
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
             </intent-filter>
@@ -194,7 +194,7 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name=".activities.InstanceUploaderActivity">
             <intent-filter>
-                <action android:name="org.odk.collect.android.INSTANCE_UPLOAD" />
+                <action android:name="org.bcss.collect.android.INSTANCE_UPLOAD" />
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
             </intent-filter>
@@ -338,7 +338,7 @@ the specific language governing permissions and limitations under the License.
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="org.odk.collect.android.COLLECT_SMS_SEND_ACTION" />
+                <action android:name="org.bcss.collect.android.COLLECT_SMS_SEND_ACTION" />
             </intent-filter>
         </receiver>
         <receiver
@@ -346,7 +346,7 @@ the specific language governing permissions and limitations under the License.
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="org.odk.collect.android.COLLECT_SMS_NOTIFICATION_ACTION" />
+                <action android:name="org.bcss.collect.android.COLLECT_SMS_NOTIFICATION_ACTION" />
             </intent-filter>
         </receiver>
     </application>

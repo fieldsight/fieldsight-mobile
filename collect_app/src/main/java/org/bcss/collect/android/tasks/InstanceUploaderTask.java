@@ -150,7 +150,7 @@ public abstract class InstanceUploaderTask extends AsyncTask<Long, Integer, Inst
      * finalized form is written messages to {@link #messagesByInstanceId}. In the case of an
      * authentication request from the server, {@link #authRequestingServer} is set instead.
      */
-    static class Outcome {
+    public static class Outcome {
         /**
          * The URI for the server that requested authentication when the latest finalized form was
          * attempted to be sent. This URI may not match the server specified in the app settings or

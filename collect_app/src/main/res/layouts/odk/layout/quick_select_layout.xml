@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
-    <org.odk.collect.android.views.MediaLayout
+    <org.bcss.collect.android.views.MediaLayout
         android:id="@+id/mediaLayout"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
