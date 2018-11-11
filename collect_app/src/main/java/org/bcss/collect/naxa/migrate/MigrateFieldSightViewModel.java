@@ -129,24 +129,30 @@ public class MigrateFieldSightViewModel extends ViewModel {
         Cursor cursor = null;
         cursor = selectAll(db, Table.forms);
         while (cursor.moveToNext()) {
+
+            String fixedFormFilePath = migrationHelper.fixFormAndInstancesPath(getString(cursor, FormColumns.FORM_FILE_PATH), usernameOrEmail);
+            String fixedFormMediaPath = migrationHelper.fixFormAndInstancesPath(getString(cursor, FormColumns.FORM_MEDIA_PATH), usernameOrEmail);
+            String fixedJrCacheFilePath = migrationHelper.fixFormAndInstancesPath(getString(cursor, FormColumns.JRCACHE_FILE_PATH), usernameOrEmail);
+
             Form form = new Form.Builder()
+                    .formMediaPath(fixedFormMediaPath)
+                    .formFilePath(fixedFormFilePath)
+                    .jrCacheFilePath(fixedJrCacheFilePath)
                     .displayName(getString(cursor, FormColumns.DISPLAY_NAME))
                     .displaySubtext(getString(cursor, FormColumns.DISPLAY_SUBTEXT))
                     .description(getString(cursor, FormColumns.DESCRIPTION))
                     .jrFormId(getString(cursor, FormColumns.JR_FORM_ID))
                     .jrVersion(getString(cursor, FormColumns.JR_VERSION))
-                    .md5Hash(getString(cursor, FormColumns.MD5_HASH))
                     .date(Long.valueOf(getString(cursor, FormColumns.DATE)))
-                    .formMediaPath(getString(cursor, FormColumns.FORM_MEDIA_PATH))
-                    .formFilePath(getString(cursor, FormColumns.FORM_FILE_PATH))
                     .language(getString(cursor, FormColumns.LANGUAGE))
                     .base64RSAPublicKey(getString(cursor, FormColumns.BASE64_RSA_PUBLIC_KEY))
-                    .jrCacheFilePath(getString(cursor, FormColumns.JRCACHE_FILE_PATH))
+
                     .build();
             ContentValues values = dao.getValuesFromFormObject(form);
             dao.saveForm(values);
         }
     }
+
 
     private SQLiteDatabase getFormsDB() {
         String dbPath = migrationHelper.getOldRootPath() + File.separator + Folder.METADATA + File.separator + Database.FORMS;
@@ -203,10 +209,10 @@ public class MigrateFieldSightViewModel extends ViewModel {
                         copyProjects();
                         emitter.onNext(1);
 
-                        copyForms();
+                        copyFormsFolder();
                         emitter.onNext(2);
 
-                        copyFormsFolder();
+                        copyForms();
                         emitter.onNext(3);
 
                         copyInstancesFolder();

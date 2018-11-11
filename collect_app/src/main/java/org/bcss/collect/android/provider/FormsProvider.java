@@ -239,8 +239,12 @@ public class FormsProvider extends ContentProvider {
                     c.close();
                 }
             }
-
-            long rowId = db.insert(FORMS_TABLE_NAME, null, values);
+            long rowId = -1;
+            try {
+                rowId = db.insertOrThrow(FORMS_TABLE_NAME, null, values);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             if (rowId > 0) {
                 Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI,
                         rowId);

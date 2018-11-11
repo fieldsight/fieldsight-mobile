@@ -11,8 +11,10 @@ public class MigrationHelper {
 
 
     public final String ROOT = Environment.getExternalStorageDirectory() + File.separator;
-    public final String MIGRATE_FROM = ROOT + "bcss";
-    private final String MIGRATE_TO = ROOT + "fieldsight";
+    private final String OLD_FOLDER = "bcss";
+    private final String NEW_FOLDER = "fieldsight";
+    private final String MIGRATE_FROM = ROOT + OLD_FOLDER;
+    private final String MIGRATE_TO = ROOT + NEW_FOLDER;
     private final String usernameOrEmail;
 
 
@@ -100,4 +102,9 @@ public class MigrationHelper {
         return file != null && file.exists() && file.isDirectory();
     }
 
+
+    public String fixFormAndInstancesPath(String oldPath, String usernameOrEmail) {
+        String strToRemove = OLD_FOLDER + "/" + usernameOrEmail;
+        return oldPath.replace(strToRemove, NEW_FOLDER);
+    }
 }
