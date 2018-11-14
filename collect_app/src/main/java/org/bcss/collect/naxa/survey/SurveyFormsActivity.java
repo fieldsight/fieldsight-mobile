@@ -101,6 +101,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
 
                         adapter.clear();
                         adapter.addAll(surveyForms);
+                        adapter.notifyDataSetChanged();
                         runLayoutAnimation(recyclerSurveyFormList);
                     }
                 });
@@ -124,6 +125,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
         if (actionBar != null) {
             actionBar.setTitle(loadedProject.getName());
             actionBar.setSubtitle("Survey Form");
+
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
@@ -133,12 +135,14 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
         adapter = new TitleDescAdapter();
         adapter.setOnCardClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerSurveyFormList.setLayoutManager(linearLayoutManager);
+        recyclerSurveyFormList.setItemAnimator(new DefaultItemAnimator());
         recyclerSurveyFormList.setEmptyView(findViewById(R.id.root_layout_empty_layout), getString(R.string.empty_message,"survey form(s)"), () -> {
 
         });
-        recyclerSurveyFormList.setLayoutManager(linearLayoutManager);
+
         recyclerSurveyFormList.setAdapter(adapter);
-        recyclerSurveyFormList.setItemAnimator(new DefaultItemAnimator());
+
     }
 
     @Override

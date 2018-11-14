@@ -14,6 +14,8 @@ import org.bcss.collect.naxa.onboarding.DownloadActivity;
 
 import javax.annotation.Nullable;
 
+import timber.log.Timber;
+
 ////https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview
 public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
@@ -71,7 +73,6 @@ public class RecyclerViewEmptySupport extends RecyclerView {
 
     public void dispatchViewChanges() {
 
-
         Adapter<?> adapter = getAdapter();
         if (adapter != null && emptyView != null) {
             if (adapter.getItemCount() == 0) {
@@ -82,17 +83,6 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                 RecyclerViewEmptySupport.this.setVisibility(View.VISIBLE);
             }
         }
-    }
-
-    // Preventing multiple dispatch, using threshold of 2000 ms
-    public boolean allowDispatch() {
-        long elapsedRealtime = SystemClock.elapsedRealtime();
-        boolean allowDispatch = (lastDispatch == 0 || lastDispatch == elapsedRealtime)
-                || elapsedRealtime - lastDispatch > 2000;
-        if (allowDispatch) {
-            lastDispatch = elapsedRealtime;
-        }
-        return allowDispatch;
     }
 
 
@@ -112,14 +102,11 @@ public class RecyclerViewEmptySupport extends RecyclerView {
     public void setAdapter(Adapter adapter) {
         super.setAdapter(adapter);
 
-
         if (adapter != null) {
             adapter.registerAdapterDataObserver(emptyObserver);
         }
 
-        emptyObserver.onChanged();
-
-
+//        emptyObserver.onChanged();
     }
 
     public void setEmptyView(View emptyView, @Nullable String message, OnEmptyLayoutClickListener onEmptyLayoutClickListener) {

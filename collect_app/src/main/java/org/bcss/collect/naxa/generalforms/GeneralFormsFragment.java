@@ -141,10 +141,10 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
 
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(manager);
 
         generalFormsAdapter = new GeneralFormsAdapter(new ArrayList<>(0), this);
-        recyclerView.setAdapter(generalFormsAdapter);
+
         recyclerView.setEmptyView(emptyLayout,
                 getString(R.string.empty_message, "general forms"),
                 new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
@@ -153,6 +153,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
 
                     }
                 });
+        recyclerView.setAdapter(generalFormsAdapter);
 
     }
 
@@ -203,7 +204,6 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-
     public void onEvent(DataSyncEvent event) {
 
         if (!isAdded() || getActivity() == null) {
