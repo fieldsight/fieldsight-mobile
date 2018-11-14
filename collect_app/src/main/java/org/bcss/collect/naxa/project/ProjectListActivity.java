@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -111,6 +112,11 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     private ProjectViewModel viewModel;
 
 
+    public static void start(Context context) {
+        Intent intent = new Intent(context, ProjectListActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
@@ -196,7 +202,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                if (allowClick()) {
+                if (allowClick(getClass().getName())) {
                     loadToolBarSearch();
                 }
                 break;
@@ -231,6 +237,10 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showProgress(boolean show) {
+        toolbarProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void setupProjectlist() {

@@ -15,8 +15,6 @@
 package org.bcss.collect.android.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -36,9 +34,11 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.preferences.GeneralSharedPreferences;
 import org.bcss.collect.android.preferences.PreferenceKeys;
+import org.bcss.collect.android.utilities.DialogUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,6 +48,8 @@ import java.io.IOException;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_SPLASH_PATH;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestPhoneAndStoragePermission;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestReadPhoneStatePermission;
 import static org.bcss.collect.android.utilities.PermissionUtils.requestStoragePermissions;
 
 public class SplashScreenActivity extends Activity {
@@ -56,7 +58,6 @@ public class SplashScreenActivity extends Activity {
     private static final boolean EXIT = true;
 
     private int imageMaxWidth;
-    private AlertDialog alertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,15 +65,15 @@ public class SplashScreenActivity extends Activity {
         // this splash screen should be a blank slate
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        requestStoragePermissions(this, new PermissionListener() {
+        requestPhoneAndStoragePermission(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
                 try {
                     Collect.createODKDirs();
-                    Collect.getInstance().getActivityLogger().open();
                 } catch (RuntimeException e) {
-                    createErrorDialog(e.getMessage(), EXIT);
+                    DialogUtils.showDialog(DialogUtils.createErrorDialog(SplashScreenActivity.this,
+                            e.getMessage(), EXIT), SplashScreenActivity.this);
                     return;
                 }
 
@@ -85,6 +86,18 @@ public class SplashScreenActivity extends Activity {
                 finish();
             }
         });
+
+        requestReadPhoneStatePermission(this, new PermissionListener() {
+            @Override
+            public void granted() {
+
+            }
+
+            @Override
+            public void denied() {
+
+            }
+        }, true);
     }
 
     private void init() {
@@ -132,9 +145,9 @@ public class SplashScreenActivity extends Activity {
     }
 
     private void endSplashScreen() {
-        if(FieldSightUserSession.isLoggedIn()){
+        if (FieldSightUserSession.isLoggedIn()) {
             startActivity(new Intent(this, ProjectListActivity.class));
-        }else {
+        } else {
             startActivity(new Intent(this, LoginActivity.class));
         }
         finish();
@@ -199,7 +212,7 @@ public class SplashScreenActivity extends Activity {
 
         // create a thread that counts up to the timeout
         Thread t = new Thread() {
-            int count = 0;
+            int count;
 
             @Override
             public void run() {
@@ -217,41 +230,5 @@ public class SplashScreenActivity extends Activity {
             }
         };
         t.start();
-    }
-
-    private void createErrorDialog(String errorMsg, final boolean shouldExit) {
-        Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
-        alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setIcon(android.R.drawable.ic_dialog_info);
-        alertDialog.setMessage(errorMsg);
-        DialogInterface.OnClickListener errorListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                switch (i) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        Collect.getInstance().getActivityLogger().logAction(this,
-                                "createErrorDialog", "OK");
-                        if (shouldExit) {
-                            finish();
-                        }
-                        break;
-                }
-            }
-        };
-        alertDialog.setCancelable(false);
-        alertDialog.setButton(getString(R.string.ok), errorListener);
-        alertDialog.show();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        Collect.getInstance().getActivityLogger().logOnStop(this);
-        super.onStop();
     }
 }

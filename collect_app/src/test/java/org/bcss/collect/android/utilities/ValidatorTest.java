@@ -18,15 +18,13 @@ package org.bcss.collect.android.utilities;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.BuildConfig;
+
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
 public class ValidatorTest {
 
     @Test

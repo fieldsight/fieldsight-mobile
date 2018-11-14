@@ -27,26 +27,30 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore.Video;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CaptureSelfieActivity;
-import org.bcss.collect.android.activities.CaptureSelfieActivityNewApi;
-import org.bcss.collect.android.activities.CaptureSelfieVideoActivity;
+
 import org.bcss.collect.android.activities.CaptureSelfieVideoActivityNewApi;
+import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.preferences.PreferenceKeys;
+import org.bcss.collect.android.utilities.CameraUtils;
 import org.bcss.collect.android.utilities.FileUtil;
+import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.android.utilities.MediaManager;
 import org.bcss.collect.android.utilities.MediaUtil;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.android.widgets.interfaces.FileWidget;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
+import org.javarosa.form.api.FormEntryPrompt;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -57,6 +61,8 @@ import timber.log.Timber;
 
 import static android.os.Build.MODEL;
 import static org.bcss.collect.android.utilities.ApplicationConstants.RequestCodes;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestCameraAndRecordAudioPermissions;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestCameraPermission;
 
 /**
  * Widget that allows user to take pictures, sounds or video and add them to the
@@ -103,10 +109,8 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
         selfie = appearance != null && (appearance.equalsIgnoreCase("selfie") || appearance.equalsIgnoreCase("new-front"));
 
         captureButton = getSimpleButton(getContext().getString(R.string.capture_video), R.id.capture_video);
-        captureButton.setEnabled(!prompt.isReadOnly());
 
         chooseButton = getSimpleButton(getContext().getString(R.string.choose_video), R.id.choose_video);
-        chooseButton.setEnabled(!prompt.isReadOnly());
 
         playButton = getSimpleButton(getContext().getString(R.string.play_video), R.id.play_video);
 
@@ -129,14 +133,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
         hideButtonsIfNeeded();
 
         if (selfie) {
-            boolean isFrontCameraAvailable;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                isFrontCameraAvailable = CaptureSelfieActivityNewApi.isFrontCameraAvailable();
-            } else {
-                isFrontCameraAvailable = CaptureSelfieActivity.isFrontCameraAvailable();
-            }
-
-            if (!isFrontCameraAvailable) {
+            if (!CameraUtils.isFrontCameraAvailable()) {
                 captureButton.setEnabled(false);
                 ToastUtils.showLongToast(R.string.error_front_camera_unavailable);
             }
@@ -246,13 +243,6 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
             return;
         }
 
-
-        if (newVideo == null) {
-            Timber.e("setBinaryData FAILED");
-            return;
-        }
-
-
         if (newVideo.exists()) {
             // Add the copy to the content provier
             ContentValues values = new ContentValues(6);
@@ -295,10 +285,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     }
 
     private void hideButtonsIfNeeded() {
-        if (getFormEntryPrompt().isReadOnly()) {
-            captureButton.setVisibility(View.GONE);
-            chooseButton.setVisibility(View.GONE);
-        } else if (selfie || (getFormEntryPrompt().getAppearanceHint() != null
+        if (selfie || (getFormEntryPrompt().getAppearanceHint() != null
                 && getFormEntryPrompt().getAppearanceHint().toLowerCase(Locale.ENGLISH).contains("new"))) {
             chooseButton.setVisibility(View.GONE);
         }
@@ -333,7 +320,29 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     public void onButtonClick(int id) {
         switch (id) {
             case R.id.capture_video:
-                captureVideo();
+                if (selfie) {
+                    requestCameraAndRecordAudioPermissions((FormEntryActivity) getContext(), new PermissionListener() {
+                        @Override
+                        public void granted() {
+                            captureVideo();
+                        }
+
+                        @Override
+                        public void denied() {
+                        }
+                    });
+                } else {
+                    requestCameraPermission((FormEntryActivity) getContext(), new PermissionListener() {
+                        @Override
+                        public void granted() {
+                            captureVideo();
+                        }
+
+                        @Override
+                        public void denied() {
+                        }
+                    });
+                }
                 break;
             case R.id.choose_video:
                 chooseVideo();
@@ -345,16 +354,12 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     }
 
     private void captureVideo() {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "captureButton",
-                        "click", getFormEntryPrompt().getIndex());
         Intent i;
         if (selfie) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 i = new Intent(getContext(), CaptureSelfieVideoActivityNewApi.class);
             } else {
-                i = new Intent(getContext(), CaptureSelfieVideoActivity.class);
+                i = new Intent(getContext(), org.bcss.collect.android.activities.CaptureSelfieVideoActivity.class);
             }
         } else {
             i = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
@@ -398,10 +403,6 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     }
 
     private void chooseVideo() {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "chooseButton",
-                        "click", getFormEntryPrompt().getIndex());
         Intent i = new Intent(Intent.ACTION_GET_CONTENT);
         i.setType("video/*");
         // Intent i =
@@ -423,16 +424,16 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     }
 
     private void playVideoFile() {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "playButton",
-                        "click", getFormEntryPrompt().getIndex());
-        Intent i = new Intent("android.intent.action.VIEW");
-        File f = new File(getInstanceFolder() + File.separator
-                + binaryName);
-        i.setDataAndType(Uri.fromFile(f), "video/*");
+        Intent intent = new Intent("android.intent.action.VIEW");
+        File file = new File(getInstanceFolder() + File.separator + binaryName);
+
+        Uri uri =
+                FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+
+        FileUtils.grantFileReadPermissions(intent, uri, getContext());
+        intent.setDataAndType(uri, "video/*");
         try {
-            getContext().startActivity(i);
+            getContext().startActivity(intent);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(
                     getContext(),

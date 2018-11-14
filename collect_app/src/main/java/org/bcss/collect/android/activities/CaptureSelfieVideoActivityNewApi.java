@@ -26,12 +26,20 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.fragments.Camera2VideoFragment;
 import org.bcss.collect.android.utilities.ToastUtils;
 
+import static org.bcss.collect.android.utilities.PermissionUtils.checkIfCameraAndRecordAudioPermissionsGranted;
+
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class CaptureSelfieVideoActivityNewApi extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!checkIfCameraAndRecordAudioPermissionsGranted(this)) {
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_capture_selfie_video_new_api);
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()

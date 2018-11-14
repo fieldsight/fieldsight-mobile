@@ -47,7 +47,6 @@ import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_SELECTED_G
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_SHOW_SPLASH;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
 
-
 @RunWith(AndroidJUnit4.class)
 public class QrCodeTest {
 

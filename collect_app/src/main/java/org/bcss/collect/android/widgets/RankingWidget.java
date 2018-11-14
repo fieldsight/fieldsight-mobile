@@ -17,36 +17,36 @@
 package org.bcss.collect.android.widgets;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.external.ExternalDataUtil;
+import org.bcss.collect.android.logic.FormController;
+import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
+import org.bcss.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.adapters.RankingListAdapter;
-import org.bcss.collect.android.external.ExternalDataUtil;
-import org.bcss.collect.android.listeners.DoubleClickListener;
-import org.bcss.collect.android.utilities.RankingItemTouchHelperCallback;
-import org.bcss.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
+import org.bcss.collect.android.fragments.dialogs.RankingWidgetDialog;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RankingWidget extends QuestionWidget {
 
-    private List<SelectChoice> items;
-    private RankingListAdapter rankingListAdapter;
-    private FrameLayout widgetLayout;
-    private boolean nullValue;
+public class RankingWidget extends QuestionWidget implements BinaryWidget {
+
+    private List<SelectChoice> originalItems;
+    private List<SelectChoice> savedItems;
+    private LinearLayout widgetLayout;
+    private Button showRankingDialogButton;
 
     public RankingWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
@@ -58,18 +58,19 @@ public class RankingWidget extends QuestionWidget {
     @Override
     public IAnswerData getAnswer() {
         List<Selection> orderedItems = new ArrayList<>();
-        for (SelectChoice selectChoice : rankingListAdapter.getItems()) {
-            orderedItems.add(new Selection(selectChoice));
+        if (savedItems != null) {
+            for (SelectChoice selectChoice : savedItems) {
+                orderedItems.add(new Selection(selectChoice));
+            }
         }
 
-        return nullValue ? null : new SelectMultiData(orderedItems);
+        return orderedItems.isEmpty() ? null : new SelectMultiData(orderedItems);
     }
 
     @Override
     public void clearAnswer() {
-        nullValue = true;
-        removeView(widgetLayout);
-        setUpLayout(items);
+        savedItems = null;
+        setUpLayout(originalItems);
     }
 
     @Override
@@ -78,15 +79,61 @@ public class RankingWidget extends QuestionWidget {
 
     @Override
     public void setOnLongClickListener(OnLongClickListener l) {
+        showRankingDialogButton.setOnLongClickListener(l);
+    }
+
+    @Override
+    public void cancelLongPress() {
+        super.cancelLongPress();
+        showRankingDialogButton.cancelLongPress();
+    }
+
+    @Override
+    public void setBinaryData(Object values) {
+        savedItems = getSavedItems((List<String>) values);
+        setUpLayout(savedItems);
+    }
+
+    @Override
+    public void onButtonClick(int buttonId) {
+        FormController formController = Collect.getInstance().getFormController();
+        if (formController != null) {
+            formController.setIndexWaitingForData(getFormEntryPrompt().getIndex());
+        }
+        RankingWidgetDialog rankingWidgetDialog = RankingWidgetDialog.newInstance(savedItems == null
+                ? getValues(originalItems)
+                : getValues(savedItems), getFormEntryPrompt().getIndex());
+        rankingWidgetDialog.show(((FormEntryActivity) getContext()).getSupportFragmentManager(), "RankingDialog");
+    }
+
+    private List<SelectChoice> getSavedItems(List<String> values) {
+        List<SelectChoice> savedItems = new ArrayList<>();
+        for (String value : values) {
+            for (SelectChoice item : originalItems) {
+                if (item.getValue().equals(value)) {
+                    savedItems.add(item);
+                    break;
+                }
+            }
+        }
+        return savedItems;
+    }
+
+    private List<String> getValues(List<SelectChoice> items) {
+        List<String> values = new ArrayList<>();
+        for (SelectChoice item : items) {
+            values.add(item.getValue());
+        }
+        return values;
     }
 
     private void readItems() {
         // SurveyCTO-added support for dynamic select content (from .csv files)
         XPathFuncExpr xpathFuncExpr = ExternalDataUtil.getSearchXPathExpression(getFormEntryPrompt().getAppearanceHint());
         if (xpathFuncExpr != null) {
-            items = ExternalDataUtil.populateExternalChoices(getFormEntryPrompt(), xpathFuncExpr);
+            originalItems = ExternalDataUtil.populateExternalChoices(getFormEntryPrompt(), xpathFuncExpr);
         } else {
-            items = getFormEntryPrompt().getSelectChoices();
+            originalItems = getFormEntryPrompt().getSelectChoices();
         }
     }
 
@@ -97,64 +144,57 @@ public class RankingWidget extends QuestionWidget {
                 : (List<Selection>) getFormEntryPrompt().getAnswerValue().getValue();
 
         if (savedOrderedItems.isEmpty()) {
-            nullValue = true;
-            return items;
+            return originalItems;
         } else {
-            List<SelectChoice> orderedItems = new ArrayList<>();
+            savedItems = new ArrayList<>();
             for (Selection selection : savedOrderedItems) {
-                for (SelectChoice selectChoice : items) {
+                for (SelectChoice selectChoice : originalItems) {
                     if (selection.getValue().equals(selectChoice.getValue())) {
-                        orderedItems.add(selectChoice);
+                        savedItems.add(selectChoice);
                         break;
                     }
                 }
             }
 
-            for (SelectChoice selectChoice : items) {
-                if (!orderedItems.contains(selectChoice)) {
-                    orderedItems.add(selectChoice);
+            for (SelectChoice selectChoice : originalItems) {
+                if (!savedItems.contains(selectChoice)) {
+                    savedItems.add(selectChoice);
                 }
             }
 
-            return orderedItems;
+            return savedItems;
         }
     }
 
     private void setUpLayout(List<SelectChoice> items) {
-        rankingListAdapter = new RankingListAdapter(items, getFormEntryPrompt());
+        removeView(widgetLayout);
 
-        LayoutInflater li = LayoutInflater.from(getContext());
-        widgetLayout = (FrameLayout) li.inflate(R.layout.ranking_widget, null);
-
-        RecyclerView recyclerView = widgetLayout.findViewById(R.id.ranking_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(rankingListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        ItemTouchHelper.Callback callback = new RankingItemTouchHelperCallback(rankingListAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
-        TextView nullValueMessage = widgetLayout.findViewById(R.id.ranking_null_value_message);
-        recyclerView.setAlpha(nullValue ? 0.2f : 1);
-        nullValueMessage.setVisibility(nullValue && !items.isEmpty() ? VISIBLE : GONE);
-
-        nullValueMessage.setOnClickListener(new DoubleClickListener() {
-            @Override
-            public void onSingleClick(View v) {
-            }
-
-            @Override
-            public void onDoubleClick(View v) {
-                nullValue = false;
-                removeView(widgetLayout);
-                setUpLayout(items);
-            }
-        });
+        widgetLayout = new LinearLayout(getContext());
+        widgetLayout.setOrientation(LinearLayout.VERTICAL);
+        showRankingDialogButton = getSimpleButton(getContext().getString(R.string.rank_items));
+        showRankingDialogButton.setEnabled(!getFormEntryPrompt().isReadOnly());
+        widgetLayout.addView(showRankingDialogButton);
+        widgetLayout.addView(setUpAnswerTextView());
 
         addAnswerView(widgetLayout);
         SpacesInUnderlyingValuesWarning
                 .forQuestionWidget(this)
                 .renderWarningIfNecessary(items);
+    }
+
+    private TextView setUpAnswerTextView() {
+        StringBuilder answerText = new StringBuilder();
+        if (savedItems != null) {
+            for (SelectChoice item : savedItems) {
+                answerText
+                        .append(savedItems.indexOf(item) + 1)
+                        .append(". ")
+                        .append(getFormEntryPrompt().getSelectChoiceText(item));
+                if ((savedItems.size() - 1) > savedItems.indexOf(item)) {
+                    answerText.append('\n');
+                }
+            }
+        }
+        return getAnswerTextView(answerText.toString());
     }
 }

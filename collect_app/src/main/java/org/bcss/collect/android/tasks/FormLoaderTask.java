@@ -75,14 +75,14 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
     private String instancePath;
     private final String xpath;
     private final String waitingXPath;
-    private boolean pendingActivityResult = false;
-    private int requestCode = 0;
-    private int resultCode = 0;
-    private Intent intent = null;
+    private boolean pendingActivityResult;
+    private int requestCode;
+    private int resultCode;
+    private Intent intent;
     private ExternalDataManager externalDataManager;
     private FormDef formDef;
 
-    protected class FECWrapper {
+    protected static class FECWrapper {
         FormController controller;
         boolean usedSavepoint;
 
@@ -114,7 +114,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
 
     /**
      * Initialize {@link FormEntryController} with {@link FormDef} siteName binary or
-     * siteName XML. If given an instance, it will be used to fill the {@link FormDef}.
+     * from XML. If given an instance, it will be used to fill the {@link FormDef}.
      */
     @Override
     protected FECWrapper doInBackground(String... path) {
@@ -404,7 +404,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         }
     }
 
-    static void importData(File instanceFile, FormEntryController fec) {
+    public static void importData(File instanceFile, FormEntryController fec) {
         // convert files into a byte array
         byte[] fileBytes = FileUtils.getFileAsBytes(instanceFile);
 
@@ -539,7 +539,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
                     continue;
                 }
                 // add the rest of the lines to the specified database
-                // nextLine[] is an array of values siteName the line
+                // nextLine[] is an array of values from the line
                 // System.out.println(nextLine[4] + "etc...");
                 if (lineNumber == 2) {
                     // start a transaction for the inserts

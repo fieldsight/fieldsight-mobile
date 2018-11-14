@@ -44,7 +44,7 @@ public class CaptureSelfieActivity extends CollectAbstractActivity {
                 .LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_capture_selfie);
-        FrameLayout preview = findViewById(R.id.camera_preview);
+        FrameLayout previewLayout = findViewById(R.id.camera_preview);
 
         try {
             cameraId = CameraUtils.getFrontCameraId();
@@ -53,12 +53,13 @@ public class CaptureSelfieActivity extends CollectAbstractActivity {
             Timber.e(e);
         }
 
-        this.preview = new CameraPreview(this, camera);
-        preview.addView(this.preview);
+        preview = new CameraPreview(this, camera);
+        previewLayout.addView(preview);
 
-        this.preview.setOnClickListener(new View.OnClickListener() {
+        preview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                preview.setEnabled(false);
                 camera.takePicture(null, null, picture);
             }
         });
@@ -74,7 +75,6 @@ public class CaptureSelfieActivity extends CollectAbstractActivity {
             finish();
         }
     };
-
 
     @Override
     protected void onPause() {
@@ -106,17 +106,5 @@ public class CaptureSelfieActivity extends CollectAbstractActivity {
                 }
             });
         }
-    }
-
-    public static boolean isFrontCameraAvailable() {
-        //https://developer.android.com/guide/topics/media/camera.html#check-camera-features
-        for (int camNo = 0; camNo < Camera.getNumberOfCameras(); camNo++) {
-            Camera.CameraInfo camInfo = new Camera.CameraInfo();
-            Camera.getCameraInfo(camNo, camInfo);
-            if (camInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                return true;
-            }
-        }
-        return false; // No front-facing camera found
     }
 }

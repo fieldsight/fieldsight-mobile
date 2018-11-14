@@ -27,7 +27,6 @@
         <exclude name="PositionLiteralsFirstInComparisons" />
         <exclude name="PreserveStackTrace" />
         <exclude name="SwitchStmtsShouldHaveDefault" />
-        <exclude name="UnusedFormalParameter" />
         <exclude name="UseVarargs" />
     </rule>
 
@@ -41,9 +40,7 @@
         <exclude name="CommentDefaultAccessModifier" />
         <exclude name="ConfusingTernary" />
         <exclude name="DefaultPackage" />
-        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
         <exclude name="FieldDeclarationsShouldBeAtStartOfClass" />
-        <exclude name="IdenticalCatchBranches" />
         <exclude name="LongVariable" />
         <exclude name="LocalVariableCouldBeFinal" />
         <exclude name="MIsLeadingVariableName" />
@@ -55,7 +52,6 @@
         <exclude name="ShortMethodName" />
         <exclude name="ShortVariable" />
         <exclude name="TooManyStaticImports" />
-        <exclude name="UnnecessaryConstructor" />
         <exclude name="UselessParentheses" />               <!-- Decided not to use in #1519 -->
     </rule>
 
@@ -74,15 +70,11 @@
         <exclude name="ExcessiveClassLength" />
         <exclude name="GodClass" />
         <exclude name="LawOfDemeter" />
-        <exclude name="LogicInversion" />
         <exclude name="LoosePackageCoupling" />
         <exclude name="NcssCount" />
         <exclude name="NPathComplexity" />
         <exclude name="SignatureDeclareThrowsException" />
-        <exclude name="SimplifiedTernary" />
         <exclude name="SimplifyConditional" />
-        <exclude name="SimplifyBooleanReturns" />
-        <exclude name="SingularField" />
         <exclude name="SwitchDensity" />
         <exclude name="TooManyFields" />
         <exclude name="TooManyMethods" />
@@ -129,18 +121,14 @@
     </rule>
 
     <rule ref="category/java/performance.xml">
-        <exclude name="AppendCharacterWithChar" />
         <exclude name="AvoidFileStream" />
         <exclude name="AvoidInstantiatingObjectsInLoops" />
-        <exclude name="ConsecutiveAppendsShouldReuse" />
         <exclude name="InefficientEmptyStringCheck" />
         <exclude name="InefficientStringBuffering" />
         <exclude name="InsufficientStringBufferDeclaration" />
         <exclude name="OptimizableToArrayCall" />
-        <exclude name="RedundantFieldInitializer" />
         <exclude name="SimplifyStartsWith" />
-        <exclude name="TooFewBranchesForASwitchStatement" />
-        <exclude name="UnnecessaryWrapperObjectCreation" />
+        <exclude name="TooFewBranchesForASwitchStatement" /> <!-- Decided not to use in #2564 -->
         <exclude name="UseStringBufferForStringAppends" />
     </rule>
 </ruleset>

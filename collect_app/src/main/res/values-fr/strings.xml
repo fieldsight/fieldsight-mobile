@@ -48,7 +48,7 @@
   <string name="discard_answer">Enlever la réponse</string>
   <string name="discard_group">Enlever le groupe</string>
   <string name="download">Télécharger la sélection</string>
-  <string name="download_forms_result">Résultat du téléchargement</string>
+  <string name="download_forms_result">Résultats du téléchargement</string>
   <string name="downloading_data">Connexion au serveur…</string>
   <string name="do_not_change">Annuler</string>
   <string name="do_not_exit">Annuler</string>
@@ -117,6 +117,8 @@
   <string name="send_data">Envoyer un formulaire finalisé</string>
   <string name="send_data_button">Envoyer un formulaire finalisé (%s)</string>
   <string name="send_selected_data">Envoyer éléments sélectionnés</string>
+  <string name="send_selected_data_internet">Envoyer (Internet)</string>
+  <string name="send_selected_data_sms">Envoyer (SMS)</string>
   <string name="view_sent_forms">Voir un formulaire envoyé</string>
   <string name="view_sent_forms_button">Voir formulaire envoyé (%s)</string>
   <string name="server_auth_credentials">Le nom d\'utilisateur et/ou le mot de passe est incorrect pour le serveur: %s</string>
@@ -153,6 +155,7 @@
   <string name="file_fetch_failed">Erreur: %2$s (%3$s) à %1$s</string>
   <string name="fetching_manifest">%s. Recherche du Manifest …</string>
   <string name="success">Succès</string>
+  <string name="failures">Échecs</string>
   <string name="no_forms_uploaded">Désolé, pas de formulaires téléchargés.</string>
   <string name="upload_results">Résultats du Téléchargement</string>
   <string name="xform_parse_error">Erreur d\'analyse de l\'XForm %1$s: l\'élément %2$s manque ou est invalide.</string>
@@ -268,6 +271,9 @@
   <string name="go_shared">Partagé avec moi</string>
   <string name="modified_on_date_at_time">\'Modifié\' EEE, MMM dd, yyyy \'à\' HH:mm</string>
   <string name="aggregate_preferences">Paramètres d\'ODK Aggregate</string>
+  <string name="sms_submission_preferences">Paramètres pour soumissions SMS</string>
+  <string name="submission_transport">Transport de soumissions (avancé)</string>
+  <string name="submission_transport_types_title">Envoyer soumissions par</string>
   <string name="other_preferences">Autres paramètres de la plate-forme</string>
   <string name="google_preferences">Paramettres de Google Sheets</string>
   <string name="google_sheets_url_hint">Les formulaires doivent définir une URL de soumission. Si ce n\'est pas le cas, cette URL sera utilisée.</string>
@@ -275,8 +281,9 @@
   <string name="no_google_account">Pas de compte Google choisi!</string>
   <string name="google_set_account">Vous avez choisi Google Sheets comme serveur. Merci de sélectionner un compte Google correspondant dans les paramètres généraux avant de continuer.</string>
   <string name="media_upload_error">Le téléversement du fichier média inexistant a échoué : %1$s</string>
-  <string name="odk_auth_auth_fail">Erreur d\'authentification d\'envoi automatique ODK, assurez-vous que vos paramètres sont corrects</string>
-  <string name="odk_auto_note">Notification d\'envoi automatique ODK</string>
+  <string name="odk_permissions_fail">Échec de l’autorisation d’envoi automatique ODK, veuillez vous assurer que vous avez accordé toutes les autorisations requises.</string>
+  <string name="odk_auto_note">Résultats d\'envoi automatique ODK</string>
+  <string name="odk_auto_download_notification_title">Résultats de téléchargement automatique ODK</string>
   <string name="notification_error">Erreur d\'affichage du texte de notification</string>
   <string name="delete_after_send">Supprimer après l\'envoi</string>
   <string name="delete_after_send_summary">Suppression des médias et formulaire finalisés après l\'envoi au serveur</string>
@@ -325,7 +332,6 @@
   <string name="select_geotrace_mode">Sélectionner le mode de TracéGéo</string>
   <string name="start">Démarrer</string>
   <string name="enable_gps">Activer le GPS</string>
-  <string name="enable_gps_message">Le GPS est désactivé. Voulez vous l\'activer ?</string>
   <string name="geotrace_title">TracéGéo</string>
   <string name="polygon_save">Enregistrer comme Polygone</string>
   <string name="polyline_save">Enregistrer comme Polyligne</string>
@@ -338,7 +344,6 @@
   <string name="polygon_validator">3 points minimum sont nécessaires pour créer un Polygone</string>
   <string name="polyline_validator">Il faut au moins 2 points pour créer une ligne</string>
   <string name="clear">Effacer</string>
-  <string name="polyline_polygon_text">Enregistrer le TracéGéo sous</string>
   <string name="manual_mode">Mode Manuel</string>
   <string name="automatic_mode">Mode Automatique</string>
   <string name="geoshape_instruction">Appuyer longtemps pour placer le marqueur</string>
@@ -372,6 +377,7 @@
   <string name="parser_exception">Exception XPathParser: \\"%s\\"</string>
   <string name="selected_answer">Sélectionné: %s</string>
   <string name="version_number">Version: %s</string>
+  <string name="id_number">ID: %s</string>
   <string name="odk_website">Visiter le site web de Open Data Kit</string>
   <string name="odk_website_summary">Open Data Kit (ODK) est utilisé pour collecter des données dans des environnements difficiles.</string>
   <string name="odk_forum">Rejoindre le Forum ODK</string>
@@ -430,7 +436,6 @@
   <string name="sort_by_status_asc">Statut, les finalisés en premier</string>
   <string name="sort_by_status_desc">Statut, les non finalisés en premier</string>
   <string name="sort_the_list">Trier la liste</string>
-  <string name="request_permissions_google_account">ODK Collect a besoin d\'accéder à votre compte Google pour obtenir des formulaires vierges et soumettre des formulaires complétés.</string>
   <string name="filter_the_list">Filtrer la liste</string>
   <string name="language">Langue</string>
   <string name="google_auth_io_exception_msg">Impossible de faire des appels API. Si vous exécutez une compilation locale, veuillez lire le fichier \"Readme\" du projet.</string>
@@ -471,7 +476,6 @@
   <string name="share_qrcode">Partager le QR code</string>
   <string name="take_picture_instruction">Toucher l\'écran pour prendre une photo</string>
   <string name="error_front_camera_unavailable">Caméra frontale non disponible sur cet appareil</string>
-  <string name="request_permission">Cette application nécessite les droits d\'utilisation de votre appareil photo.</string>
   <string name="camera_error">Cet appareil ne prend pas en charge l\'API Camera2.</string>
   <string name="invalid_range_widget">Les paramètres de ce widget sont invalides!</string>
   <string name="form_entry_setting">Paramètres d\'entrée du formulaire</string>
@@ -549,7 +553,7 @@
   <string name="coptic_month_11">Epip</string>
   <string name="coptic_month_12">Mesori</string>
   <string name="coptic_month_13">Pi Kogi Enavot</string>
-  <string name="multiple_media_folders_detected_notification">Plusieurs répertoires média détectés, retirez-en un puis réessayer svp</string>
+  <string name="multiple_media_folders_detected_notification">Plusieurs répertoires média détectés, retirez-en un puis réessayez svp</string>
   <string name="islamic_month_1">Muharram</string>
   <string name="islamic_month_2">Safar</string>
   <string name="islamic_month_3">Rabi\' al-awwal</string>
@@ -566,7 +570,7 @@
   <string name="moving_backwards_disabled_title">mouvement en recul désactivé</string>
   <string name="moving_backwards_disabled_message">Paramétrer le terminal à empêcher les utilisateurs de contourner ce paramètre ? \n\nLes modifications sont:\n\u2022 Désactiver Modifier formulaire sauvegardé\n\u2022 Désactiver sauvegarder le formulaire\n\u2022 Désactiver Aller à la ligne de saisie\n\u2022 Définir le traitement de contrainte au moment de balayage vers l\'avant</string>
   <string name="moving_backwards_enabled_title">Le recul est activé</string>
-  <string name="moving_backwards_enabled_message">Vous pourrez vouloir consulter les paramètres suivants :\n\n\u2022 Modifier le formulaire sauvegardé\n\u2022 Sauvegarder le formulaire\n\u2022 Aller à la ligne de saisie\n\u2022 Traitement des contraints</string>
+  <string name="moving_backwards_enabled_message">Vous pourrez vouloir consulter les paramètres suivants :\n\n\u2022 Modifier le formulaire sauvegardé\n\u2022 Sauvegarder le formulaire\n\u2022 Aller à la ligne de saisie\n\u2022 Traitement des contraintes</string>
   <string name="yes">Oui</string>
   <string name="no">Non</string>
   <string name="newer_version_of_a_form_info">Ceci est une version mise à jour d\'un formulaire dont vous disposez déjà !</string>
@@ -576,6 +580,17 @@
   <string name="no_columns_to_upload">Aucune colonne retrouvée dans le formulaire à téléverser.</string>
   <string name="storage_runtime_permission_denied_title">Autorisations de stockage</string>
   <string name="storage_runtime_permission_denied_desc">Sans ces permissions Collect ne peut pas accéder à vos formulaires ou sauvegarder des réponses. Ré-ouvrez l\'application quand vous êtes prêt à donner les permissions requises. </string>
+  <string name="location_runtime_permissions_denied_title">Autorisations liées à la localisation</string>
+  <string name="location_runtime_permissions_denied_desc">Sans ces permissions, Collect ne peut pas enregistrer votre localisation. Veuillez réessayer lorsque vous êtes prêt à l\'accorder.</string>
+  <string name="camera_runtime_permission_denied_title">Autorisation d\'enregistrement vidéo</string>
+  <string name="camera_runtime_permission_denied_desc">Sans cette permission, Collect ne peut pas accéder à la caméra. Veuillez réessayer lorsque vous êtes prêt à l\'accorder.</string>
+  <string name="record_audio_runtime_permission_denied_title">Autorisation d\'enregistrement audio</string>
+  <string name="record_audio_runtime_permission_denied_desc">Sans cette permission, Collect ne peut pas accéder au microphone. Veuillez réessayer lorsque vous êtes prêt à l\'accorder.</string>
+  <string name="get_accounts_runtime_permission_denied_title">Obtenir la permission des comptes</string>
+  <string name="send_sms_runtime_permission_denied_title">Envoyer la permission SMS</string>
+  <string name="send_sms_runtime_permission_denied_desc">Sans cette permission, Collect ne peut pas envoyer de SMS. Veuillez réessayer lorsque vous êtes prêt à l’accorder.</string>
+  <string name="read_phone_state_runtime_permission_denied_title">Lire la permission de l\'état du téléphone</string>
+  <string name="read_phone_state_runtime_permission_denied_desc">ODK Collect ne passe pas d\'appels, mais il doit accéder à certaines propriétés de votre périphérique, telles que le numéro de téléphone et l\'ID de périphérique.</string>
   <string name="form_update_category">Mise à jour d\'un fomulaire</string>
   <string name="periodic_form_updates_check_title">Vérification périodique des mises à jour des formulaires</string>
   <string name="never">Jamais</string>
@@ -584,11 +599,8 @@
   <string name="every_six_hours">Toutes les six heures</string>
   <string name="every_24_hours">Toutes les 24 heures</string>
   <string name="form_updates_available">Mise à jour de formulaire disponible</string>
-  <string name="new_form_versions_downloaded">Nouvelle version de formulaire téléchargée</string>
   <string name="automatic_download">Téléchargement automatique</string>
   <string name="automatic_download_summary">Télécharger automatiquement les versions mise à jour des formulaires</string>
-  <string name="forms_downloaded">Formulaires téléchargés:</string>
-  <string name="forms_sent">Formulaires envoyés:</string>
   <string name="guidance_hint_title">Montrer des conseils pour les questions</string>
   <string name="app_theme">Thème</string>
   <string name="theme_light">Thème clair</string>
@@ -599,4 +611,26 @@
   <string name="instance_upload_cancelled">Instance de téléchargement annulée</string>
   <string name="hide_old_form_versions_setting_title">Cacher les anciennes versions de formulaires</string>
   <string name="hide_old_form_versions_setting_summary">Seule la version la plus récente apparaîtra dans Remplir un formulaire</string>
+  <string name="sms_pref_dialog_title">Numéro de téléphone de la destination</string>
+  <string name="sms_pref_title">Numéro de téléphone de la destination</string>
+  <string name="sms_invalid_phone_number">Numéro de téléphone invalide!</string>
+  <!--Sms submission-->
+  <string name="sms_no_message">Ce formulaire n\'a aucune question avec \"tag\" SMS</string>
+  <string name="sms_encrypted_message">Les formulaires encryptés ne peuvent pas êtres envoyés par SMS.</string>
+  <plurals name="sms_sending">
+    <item quantity="one" tools:ignore="ImpliedQuantity">Envoi du formulaire en un seul message.</item>
+    <item quantity="other">Envoi du formulaire, envoi du message %1$d de %2$d</item>
+  </plurals>
+  <string name="sms_submission_queued">En file d\'attente pour la soumission.</string>
+  <string name="sms_submissions_notif_title">Soumissions SMS</string>
+  <string name="sms_submissions_notif_description">Plusieurs formulaires sont en train d\'être envoyés.</string>
+  <string name="transport_type_internet">Wifi/cellulaire (recommandé)</string>
+  <string name="transport_type_sms">SMS</string>
+  <string name="transport_type_both">Choisir à l\'envoi</string>
+  <string name="seconds">Secondes</string>
+  <string name="rank_items">Choisir l\'ordre des éléments</string>
+  <string name="loading_form_failed">Une erreur s\'est produite lors du chargement du formulaire. Veuillez réessayer.</string>
+  <string name="missing_google_account_dialog_title">Compte Google non sélectionné</string>
+  <string name="missing_google_account_dialog_desc">Pour envoyer des formulaires via Google Sheets, vous devez configurer votre compte Google dans les paramètres du serveur.</string>
+  <string name="sms_invalid_phone_number_description">Définissez un numéro de téléphone de destination pour l\'envoi de SMS ou modifiez votre type de transport.</string>
 </resources>

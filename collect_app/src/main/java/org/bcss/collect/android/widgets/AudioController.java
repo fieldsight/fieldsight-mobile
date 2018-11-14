@@ -26,12 +26,11 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.javarosa.form.api.FormEntryPrompt;
+import org.bcss.collect.android.R;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.FormEntryActivity;
-import org.bcss.collect.android.application.Collect;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +60,6 @@ public class AudioController implements SeekBar.OnSeekBarChangeListener {
     private State state;
     private Context context;
     private MediaPlayer mediaPlayer;
-    private FormEntryPrompt formEntryPrompt;
     private final Handler seekHandler = new Handler();
 
     /**
@@ -72,8 +70,11 @@ public class AudioController implements SeekBar.OnSeekBarChangeListener {
             try {
                 if (mediaPlayer.isPlaying()) {
                     updateTimer();
+                    seekHandler.postDelayed(this, 100);
+                } else {
+                    seekBar.setProgress(mediaPlayer.getDuration());
+                    seekHandler.removeCallbacks(updateTimeTask);
                 }
-                seekHandler.postDelayed(this, 100);
             } catch (IllegalStateException e) {
                 seekHandler.removeCallbacks(updateTimeTask);
                 Timber.i(e, "Attempting to update timer when player is stopped");
@@ -90,10 +91,9 @@ public class AudioController implements SeekBar.OnSeekBarChangeListener {
         return new DateTime(millis, DateTimeZone.UTC).toString("mm:ss");
     }
 
-    void init(Context context, MediaPlayer mediaPlayer, FormEntryPrompt formEntryPrompt) {
+    void init(Context context, MediaPlayer mediaPlayer) {
         this.context = context;
         this.mediaPlayer = mediaPlayer;
-        this.formEntryPrompt = formEntryPrompt;
 
         initMediaPlayer();
     }
@@ -193,22 +193,17 @@ public class AudioController implements SeekBar.OnSeekBarChangeListener {
     }
 
     private void play() {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "play", "click",
-                        formEntryPrompt.getIndex());
-
         playButton.setImageResource(R.drawable.ic_pause_24dp);
+
+        if (seekBar.getProgress() == mediaPlayer.getDuration()) {
+            seekBar.setProgress(0);
+        }
+
         mediaPlayer.start();
         updateProgressBar();
     }
 
     private void pause() {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "pause", "click",
-                        formEntryPrompt.getIndex());
-
         playButton.setImageResource(R.drawable.ic_play_arrow_24dp);
         mediaPlayer.pause();
         seekHandler.removeCallbacks(updateTimeTask);

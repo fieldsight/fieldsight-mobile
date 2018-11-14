@@ -14,13 +14,13 @@
 
 package org.bcss.collect.android.utilities;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.ActionListener;
 import org.bcss.collect.android.preferences.AdminSharedPreferences;
 import org.bcss.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.bcss.collect.android.preferences.GeneralSharedPreferences;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -35,6 +35,7 @@ import static org.bcss.collect.android.preferences.AdminKeys.ALL_KEYS;
 import static org.bcss.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
 import static org.bcss.collect.android.preferences.PreferenceKeys.GENERAL_KEYS;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_PASSWORD;
+
 
 public final class SharedPreferencesUtils {
 
@@ -119,7 +120,6 @@ public final class SharedPreferencesUtils {
                 }
             }
 
-            AuthDialogUtility.setWebCredentialsFromPreferences();
             AutoSendPreferenceMigrator.migrate(generalPrefsJson);
 
             if (listener != null) {
@@ -147,6 +147,7 @@ public final class SharedPreferencesUtils {
 
             savePreferencesFromString(builder.toString(), null);
 
+            Collect.getInstance().initProperties();
             res = true;
         } catch (IOException e) {
             Timber.e(e, "Exception while loading preferences siteName file due to : %s ", e.getMessage());

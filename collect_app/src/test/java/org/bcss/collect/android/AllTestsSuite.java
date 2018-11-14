@@ -8,7 +8,7 @@ import org.bcss.collect.android.utilities.PermissionsTest;
 import org.bcss.collect.android.utilities.TextUtilsTest;
 
 /**
- * Suite for running all unit tests siteName one place
+ * Suite for running all unit tests from one place
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

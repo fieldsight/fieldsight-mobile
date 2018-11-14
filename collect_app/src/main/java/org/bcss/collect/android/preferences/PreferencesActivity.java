@@ -18,15 +18,20 @@ package org.bcss.collect.android.preferences;
 
 import android.os.Bundle;
 
-import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.ThemeUtils;
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.listeners.OnBackPressedListener;
+
+
 
 public class PreferencesActivity extends CollectAbstractActivity {
 
     public static final String TAG = "GeneralPreferencesFragment";
     public static final String INTENT_KEY_ADMIN_MODE = "adminMode";
+
+    private OnBackPressedListener onBackPressedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,5 +51,19 @@ public class PreferencesActivity extends CollectAbstractActivity {
     protected void onPause() {
         super.onPause();
         Collect.getInstance().initProperties();
+    }
+
+    // If the onBackPressedListener is set then onBackPressed is delegated to it.
+    @Override
+    public void onBackPressed() {
+        if (onBackPressedListener != null) {
+            onBackPressedListener.doBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void setOnBackPressedListener(OnBackPressedListener onBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener;
     }
 }

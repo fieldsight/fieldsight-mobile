@@ -18,9 +18,9 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.DeleteInstancesListener;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+
 
 import timber.log.Timber;
 
@@ -32,12 +32,11 @@ import timber.log.Timber;
  */
 public class DeleteInstancesTask extends AsyncTask<Long, Integer, Integer> {
 
-
     private ContentResolver contentResolver;
     private DeleteInstancesListener deleteInstancesListener;
 
-    private int successCount = 0;
-    private int toDeleteCount = 0;
+    private int successCount;
+    private int toDeleteCount;
 
     @Override
     protected Integer doInBackground(Long... params) {
@@ -49,8 +48,8 @@ public class DeleteInstancesTask extends AsyncTask<Long, Integer, Integer> {
 
         toDeleteCount = params.length;
 
+        // delete files from database and then from file system
 
-        // delete files siteName database and then siteName file system
         for (Long param : params) {
             if (isCancelled()) {
                 break;
@@ -61,10 +60,6 @@ public class DeleteInstancesTask extends AsyncTask<Long, Integer, Integer> {
 
                 int wasDeleted = contentResolver.delete(deleteForm, null, null);
                 deleted += wasDeleted;
-
-                if (wasDeleted > 0) {
-                    Collect.getInstance().getActivityLogger().logAction(this, "delete", deleteForm.toString());
-                }
 
                 successCount++;
                 publishProgress(successCount, toDeleteCount);
@@ -106,7 +101,6 @@ public class DeleteInstancesTask extends AsyncTask<Long, Integer, Integer> {
     public void setDeleteListener(DeleteInstancesListener listener) {
         deleteInstancesListener = listener;
     }
-
 
     public void setContentResolver(ContentResolver resolver) {
         contentResolver = resolver;

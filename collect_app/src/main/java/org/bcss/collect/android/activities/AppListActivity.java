@@ -32,15 +32,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CursorAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleCursorAdapter;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.SortDialogAdapter;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.database.ActivityLogger;
 import org.bcss.collect.android.listeners.RecyclerViewClickListener;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.SnackbarUtils;
@@ -60,8 +59,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
     private static final String IS_BOTTOM_DIALOG_SHOWN = "isBottomDialogShown";
     private static final String SEARCH_TEXT = "searchText";
 
-    protected final ActivityLogger logger = Collect.getInstance().getActivityLogger();
-    protected SimpleCursorAdapter listAdapter;
+    protected CursorAdapter listAdapter;
     protected LinkedHashSet<Long> selectedInstances = new LinkedHashSet<>();
     protected String[] sortingOptions;
     protected Integer selectedSortingOrder;

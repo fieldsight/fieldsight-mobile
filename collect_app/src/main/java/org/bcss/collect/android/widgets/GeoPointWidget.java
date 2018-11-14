@@ -27,22 +27,25 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.activities.GeoPointActivity;
+import org.bcss.collect.android.activities.GeoPointMapActivity;
+import org.bcss.collect.android.activities.GeoPointOsmMapActivity;
+import org.bcss.collect.android.preferences.PreferenceKeys;
+import org.bcss.collect.android.utilities.PlayServicesUtil;
+import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
 import org.javarosa.core.model.data.GeoPointData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.GeoPointActivity;
-import org.bcss.collect.android.activities.GeoPointMapActivity;
-import org.bcss.collect.android.activities.GeoPointOsmMapActivity;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.preferences.PreferenceKeys;
-import org.bcss.collect.android.utilities.PlayServicesUtil;
-import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
+import org.bcss.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.listeners.PermissionListener;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
 
 import static org.bcss.collect.android.utilities.ApplicationConstants.RequestCodes;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestLocationPermissions;
+
 
 /**
  * GeoPointWidget is the widget that allows the user to get GPS readings.
@@ -108,7 +111,6 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
         viewButton = getSimpleButton(getContext().getString(R.string.get_point), R.id.get_point);
 
         getLocationButton = getSimpleButton(R.id.get_location);
-        getLocationButton.setEnabled(!prompt.isReadOnly());
 
         // finish complex layout
         // control what gets shown with setVisibility(View.GONE)
@@ -135,8 +137,6 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
         // for maps, we show the view button.
 
         if (useMapsV2 && useMaps) {
-            // show the GetLocation button
-            getLocationButton.setVisibility(View.VISIBLE);
             // hide the view button
             viewButton.setVisibility(View.GONE);
             if (readOnly) {
@@ -152,11 +152,7 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
                 }
             }
         } else {
-            // if it is read-only, hide the get-location button...
-            if (readOnly) {
-                getLocationButton.setVisibility(View.GONE);
-            } else {
-                getLocationButton.setVisibility(View.VISIBLE);
+            if (!readOnly) {
                 getLocationButton.setText(getContext().getString(
                         dataAvailable ? R.string.change_location : R.string.get_point));
             }
@@ -283,10 +279,19 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "recordLocation", "click",
-                        getFormEntryPrompt().getIndex());
+        requestLocationPermissions((FormEntryActivity) getContext(), new PermissionListener() {
+            @Override
+            public void granted() {
+                startGeoPoint();
+            }
+
+            @Override
+            public void denied() {
+            }
+        });
+    }
+
+    private void startGeoPoint() {
         Intent i;
         if (useMapsV2 && useMaps) {
             if (mapSDK.equals(GOOGLE_MAP_KEY)) {

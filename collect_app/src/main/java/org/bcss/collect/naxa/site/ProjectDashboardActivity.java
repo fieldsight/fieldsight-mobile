@@ -126,7 +126,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 //            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
 //            context.startActivity(intent, activityOptions.toBundle());
 //        }else {
-            context.startActivity(intent);
+        context.startActivity(intent);
 //        }
 
 
@@ -209,7 +209,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     private void setupSearchView() {
 
         searchView.setOnClickListener(view -> {
-            if (Collect.allowClick()) {
+            if (Collect.allowClick(getClass().getName())) {
                 loadToolBarSearch();
             }
         });
@@ -227,18 +227,21 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         User user = new Gson().fromJson(userString, User.class);
         ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFull_name());
         ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
+
         ImageView ivProfilePicture = (ImageView) navigationHeader.findViewById(R.id.image_profile);
         GlideApp.with(this).load(user.getProfilepic()).into(ivProfilePicture);
 
         navigationHeader.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 toggleNavDrawer();
                 new Handler().postDelayed(() -> {
                     UserActivity.start(ProjectDashboardActivity.this);
                 }, 250);
             }
         });
+
+
     }
 
     private void setupMapMode() {
@@ -347,13 +350,11 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 CreateSiteActivity.start(this, loadedProject);
                 break;
             case R.id.nav_delete_saved_form:
-                Collect.getInstance().getActivityLogger()
-                        .logAction(this, "deleteSavedInstances", "click");
+
                 startActivity(new Intent(getApplicationContext(), FileManagerTabs.class));
                 break;
             case R.id.nav_edit_saved_form:
-                Collect.getInstance().getActivityLogger()
-                        .logAction(this, ApplicationConstants.FormModes.EDIT_SAVED, "click");
+
                 Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
                 i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                         ApplicationConstants.FormModes.EDIT_SAVED);
@@ -361,8 +362,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 break;
             case R.id.nav_send_final_form:
 
-                Collect.getInstance().getActivityLogger()
-                        .logAction(this, "uploadForms", "click");
                 startActivity(new Intent(getApplicationContext(),
                         InstanceUploaderList.class));
 

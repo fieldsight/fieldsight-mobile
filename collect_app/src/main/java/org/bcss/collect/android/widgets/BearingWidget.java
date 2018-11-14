@@ -24,22 +24,22 @@ import android.hardware.SensorManager;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 
+import org.bcss.collect.android.activities.BearingActivity;
+import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.BearingActivity;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.ToastUtils;
-import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
 
 import static org.bcss.collect.android.utilities.ApplicationConstants.RequestCodes;
+
+
 
 /**
  * BearingWidget is the widget that allows the user to get a compass heading.
@@ -66,10 +66,6 @@ public class BearingWidget extends QuestionWidget implements BinaryWidget {
         answer.setBackground(null);
 
         getBearingButton = getSimpleButton(getContext().getString(R.string.get_bearing));
-        getBearingButton.setEnabled(!prompt.isReadOnly());
-        if (prompt.isReadOnly()) {
-            getBearingButton.setVisibility(View.GONE);
-        }
 
         answerLayout.addView(getBearingButton);
         answerLayout.addView(answer);
@@ -137,11 +133,7 @@ public class BearingWidget extends QuestionWidget implements BinaryWidget {
             isMagneticFieldSensorAvailable = true;
         }
 
-        if (!isAccelerometerSensorAvailable || !isMagneticFieldSensorAvailable) {
-            return false;
-        }
-
-        return true;
+        return isAccelerometerSensorAvailable && isMagneticFieldSensorAvailable;
     }
 
     private EditText getEditText() {
@@ -161,11 +153,6 @@ public class BearingWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "recordBearing", "click",
-                        getFormEntryPrompt().getIndex());
-
         if (isSensorAvailable) {
             Intent i = new Intent(getContext(), BearingActivity.class);
             waitForData();

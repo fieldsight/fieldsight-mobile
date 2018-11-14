@@ -25,7 +25,6 @@ import android.view.View;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.ViewPagerAdapter;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.fragments.DataManagerList;
 import org.bcss.collect.android.fragments.FormManagerList;
 import org.bcss.collect.android.views.SlidingTabLayout;
@@ -37,7 +36,7 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class FileManagerTabs extends CollectAbstractActivity {
 
-//    private final DataManagerList dataManagerList = DataManagerList.newInstance();
+    //private final DataManagerList dataManagerList = DataManagerList.newInstance();
     private final FormManagerList formManagerList = FormManagerList.newInstance();
 
     private Site loadedSite;
@@ -60,8 +59,6 @@ public class FileManagerTabs extends CollectAbstractActivity {
         if (bundle != null) {
             loadedSite = bundle.getParcelable(EXTRA_OBJECT);
         }
-
-
 
 
 //        String[] tabNames = {getString(R.string.data), getString(R.string.forms)};
@@ -103,17 +100,5 @@ public class FileManagerTabs extends CollectAbstractActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Collect.getInstance().getActivityLogger().logOnStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        Collect.getInstance().getActivityLogger().logOnStop(this);
-        super.onStop();
     }
 }

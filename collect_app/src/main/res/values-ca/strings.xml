@@ -41,7 +41,6 @@
   <string name="discard_answer">Descartar resposta</string>
   <string name="discard_group">Esborrar grup</string>
   <string name="download">Descarregar seleccionats</string>
-  <string name="download_forms_result">Descarregar resultats</string>
   <string name="downloading_data">Connectant a servidor</string>
   <string name="do_not_change">Cancel·lar</string>
   <string name="do_not_exit">Cancel·lar</string>
@@ -292,7 +291,6 @@
   <string name="select_geotrace_mode">Selecciona Mòdus GeoTraça</string>
   <string name="start">Comença</string>
   <string name="enable_gps">Activa GPS</string>
-  <string name="enable_gps_message">El GPS esta desactivat al teu dispositiu. Vols activar-lo?</string>
   <string name="geotrace_title">GeoTraça</string>
   <string name="polygon_save">Desa com Poligon</string>
   <string name="polyline_save">Desa com polilínea</string>
@@ -304,7 +302,6 @@
   <string name="geo_exit_warning">Descartar canvis i tornar a ODK?</string>
   <string name="polygon_validator">Per crear un polígon calen mínim 3 punts </string>
   <string name="clear">Neteja</string>
-  <string name="polyline_polygon_text">Desa GeoTraça com</string>
   <string name="manual_mode">Mòdus Manual</string>
   <string name="automatic_mode">Mòdus Automàtic</string>
   <string name="geoshape_instruction">Prem una estona per situar marques.</string>
@@ -382,4 +379,5 @@
   <string name="user_settings">Configuració d\'usuari</string>
   <string name="main_menu_settings">Menú principal de configuració</string>
   <!--Displays dates in specialized calendars with the Gregorian dates in parentheses. This is translated so right-to-left languages can specify the correct order-->
+  <!--Sms submission-->
 </resources>

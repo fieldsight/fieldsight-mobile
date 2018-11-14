@@ -18,7 +18,6 @@
 
 package org.bcss.collect.android.external;
 
-
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.QuestionDef;
@@ -97,7 +96,7 @@ public class ExternalAnswerResolver extends DefaultAnswerResolver {
                             case Constants.CONTROL_SELECT_MULTI: {
                                 // we should search in a potential comma-separated string of
                                 // values for a match
-                                // copied siteName org.javarosa.xform.util.XFormAnswerDataParser
+                                // copied from org.javarosa.xform.util.XFormAnswerDataParser
                                 // .getSelections()
                                 List<String> textValues = DateUtils.split(textVal,
                                         XFormAnswerDataSerializer.DELIMITER, true);

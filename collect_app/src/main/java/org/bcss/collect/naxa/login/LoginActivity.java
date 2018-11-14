@@ -26,8 +26,11 @@ import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.DialogFactory;
 //import org.bcss.collect.naxa.common.Login;
 import org.bcss.collect.naxa.common.Login;
+import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
+import org.bcss.collect.naxa.migrate.MigrationHelper;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
+import org.bcss.collect.naxa.project.ProjectListActivity;
 
 import static org.bcss.collect.android.application.Collect.allowClick;
 
@@ -61,7 +64,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
             @Override
             public void onClick(View view) {
-                if (allowClick()) {
+                if (allowClick(getClass().getName())) {
                     hideKeyboardInActivity(LoginActivity.this);
                     attemptLogin();
                 }
@@ -75,7 +78,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         findViewById(R.id.tv_forgot_pwd).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (allowClick()) {
+                if (allowClick(getClass().getName())) {
                     String url = APIEndpoint.PASSWORD_RESET;
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
@@ -161,8 +164,17 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
     @Override
     public void successAction() {
+
+        boolean hasOldAccount = new MigrationHelper(mEmailView.getText().toString()).hasOldAccount();
+
+        if (hasOldAccount) {
+            MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
+//            ProjectListActivity.start(this);
+        } else {
+            ProjectListActivity.start(this);
+        }
         Toast.makeText(this, "Logged In!", Toast.LENGTH_SHORT).show();
-        DownloadActivity.start(LoginActivity.this);
+
     }
 
     @Override

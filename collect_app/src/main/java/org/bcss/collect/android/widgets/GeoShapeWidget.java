@@ -23,17 +23,20 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.GeoShapeGoogleMapActivity;
-import org.bcss.collect.android.activities.GeoShapeOsmMapActivity;
+import org.bcss.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.activities.GeoShapeActivity;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.preferences.PreferenceKeys;
 import org.bcss.collect.android.utilities.PlayServicesUtil;
 import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
+import org.javarosa.form.api.FormEntryPrompt;
 
 import static org.bcss.collect.android.utilities.ApplicationConstants.RequestCodes;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestLocationPermissions;
+
 
 /**
  * GeoShapeWidget is the widget that allows the user to get Collect multiple GPS points.
@@ -61,10 +64,6 @@ public class GeoShapeWidget extends QuestionWidget implements BinaryWidget {
 
         createShapeButton = getSimpleButton(getContext().getString(R.string.get_shape));
 
-        if (prompt.isReadOnly()) {
-            createShapeButton.setEnabled(false);
-        }
-
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
         answerLayout.addView(createShapeButton);
@@ -82,22 +81,14 @@ public class GeoShapeWidget extends QuestionWidget implements BinaryWidget {
     }
 
     private void startGeoShapeActivity() {
-        Intent i;
-        if (mapSDK.equals(GOOGLE_MAP_KEY)) {
-            if (PlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
-                i = new Intent(getContext(), GeoShapeGoogleMapActivity.class);
-            } else {
-                PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(getContext());
-                return;
-            }
-        } else {
-            i = new Intent(getContext(), GeoShapeOsmMapActivity.class);
+        if (mapSDK.equals(GOOGLE_MAP_KEY) && !PlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
+            PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(getContext());
+            return;
         }
-        String s = answerDisplay.getText().toString();
-        if (s.length() != 0) {
-            i.putExtra(SHAPE_LOCATION, s);
-        }
-        ((Activity) getContext()).startActivityForResult(i, RequestCodes.GEOSHAPE_CAPTURE);
+        Intent intent = new Intent(getContext(), GeoShapeActivity.class)
+            .putExtra(SHAPE_LOCATION, answerDisplay.getText().toString())
+            .putExtra(PreferenceKeys.KEY_MAP_SDK, mapSDK);
+        ((Activity) getContext()).startActivityForResult(intent, RequestCodes.GEOSHAPE_CAPTURE);
     }
 
     private void updateButtonLabelsAndVisibility(boolean dataAvailable) {
@@ -138,7 +129,16 @@ public class GeoShapeWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
-        waitForData();
-        startGeoShapeActivity();
+        requestLocationPermissions((FormEntryActivity) getContext(), new PermissionListener() {
+            @Override
+            public void granted() {
+                waitForData();
+                startGeoShapeActivity();
+            }
+
+            @Override
+            public void denied() {
+            }
+        });
     }
 }

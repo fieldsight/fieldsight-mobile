@@ -27,7 +27,7 @@ public class DownloadFormListTaskTest extends MockedServerTest {
         RecordedRequest r = nextRequest();
         assertEquals("GET", r.getMethod());
         assertEquals("/formList", r.getPath());
-        assertMatches("Dalvik/.* org.odk.collect.android/.*", r.getHeader("User-Agent"));
+        assertMatches("Dalvik/.* org.bcss.collect.android/.*", r.getHeader("User-Agent"));
         assertEquals("1.0", r.getHeader("X-OpenRosa-Version"));
         assertEquals("gzip", r.getHeader("Accept-Encoding"));
 
@@ -44,7 +44,6 @@ public class DownloadFormListTaskTest extends MockedServerTest {
         assertNull(f1.getFormVersion());
         assertFalse(f1.isNewerFormVersionAvailable());
         assertFalse(f1.areNewerMediaFilesAvailable());
-
 
         // and
         FormDetails f2 = fetched.get("two");

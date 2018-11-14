@@ -33,6 +33,14 @@ import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.external.ExternalDataUtil;
+import org.bcss.collect.android.external.ExternalSelectChoice;
+import org.bcss.collect.android.listeners.AdvanceToNextListener;
+import org.bcss.collect.android.utilities.FileUtils;
+import org.bcss.collect.android.views.AudioButton.AudioHandler;
+import org.bcss.collect.android.views.ExpandedHeightGridView;
+import org.bcss.collect.android.widgets.interfaces.MultiChoiceWidget;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
@@ -42,15 +50,7 @@ import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.external.ExternalDataUtil;
-import org.bcss.collect.android.external.ExternalSelectChoice;
-import org.bcss.collect.android.listeners.AdvanceToNextListener;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.views.AudioButton.AudioHandler;
-import org.bcss.collect.android.views.ExpandedHeightGridView;
-import org.bcss.collect.android.widgets.interfaces.MultiChoiceWidget;
+
 
 import java.io.File;
 import java.util.List;
@@ -59,7 +59,7 @@ import timber.log.Timber;
 
 /**
  * GridWidget handles select-one fields using a grid of icons. The user clicks the desired icon and
- * the background changes siteName black to orange. If text, audio, or video are specified in the
+ * the background changes from black to orange. If text, audio, or video are specified in the
  * select
  * answers they are ignored.
  *
@@ -93,9 +93,6 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
     // The image views for each of the icons
     View[] imageViews;
     AudioHandler[] audioHandlers;
-
-    // Whether to advance immediately after the image is clicked
-    boolean quickAdvance;
 
     @Nullable
     private AdvanceToNextListener listener;
@@ -133,15 +130,14 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
         for (int i = 0; i < items.size(); i++) {
             imageViews[i] = new ImageView(getContext());
         }
-        this.quickAdvance = quickAdvance;
 
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int screenWidth = metrics.widthPixels;
         int screenHeight = metrics.heightPixels;
 
         if (numColumns > 0) {
-            resizeWidth = ((screenWidth - 2 * HORIZONTAL_PADDING - SCROLL_WIDTH
-                    - (IMAGE_PADDING + SPACING) * (numColumns + 1)) / numColumns);
+            resizeWidth = (screenWidth - 2 * HORIZONTAL_PADDING - SCROLL_WIDTH
+                    - (IMAGE_PADDING + SPACING) * (numColumns + 1)) / numColumns;
         }
 
         if (prompt.isReadOnly()) {
@@ -192,7 +188,6 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
                             }
 
                             ImageView imageView = (ImageView) imageViews[i];
-
 
                             if (numColumns > 0) {
                                 int resizeHeight = (b.getHeight() * resizeWidth) / b.getWidth();
@@ -305,9 +300,6 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
                     imageViews[i].setBackgroundColor(0);
                 }
                 selected[position] = true;
-                Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                        "onItemClick.select",
-                        items.get(position).getValue(), getFormEntryPrompt().getIndex());
                 imageViews[position].setBackgroundColor(Color.rgb(ORANGE_RED_VAL, ORANGE_GREEN_VAL,
                         ORANGE_BLUE_VAL));
 
@@ -342,7 +334,6 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
         addAnswerView(gridview);
     }
 
-
     @Override
     public IAnswerData getAnswer() {
         for (int i = 0; i < choices.length; ++i) {
@@ -353,7 +344,6 @@ public class GridWidget extends QuestionWidget implements MultiChoiceWidget {
         }
         return null;
     }
-
 
     @Override
     public void clearAnswer() {

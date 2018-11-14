@@ -32,6 +32,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
@@ -41,8 +42,7 @@ import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+
 import org.bcss.collect.android.external.ExternalDataUtil;
 import org.bcss.collect.android.external.ExternalSelectChoice;
 import org.bcss.collect.android.utilities.FileUtils;
@@ -50,7 +50,6 @@ import org.bcss.collect.android.views.AudioButton.AudioHandler;
 import org.bcss.collect.android.views.ExpandedHeightGridView;
 import org.bcss.collect.android.widgets.interfaces.MultiChoiceWidget;
 import org.bcss.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,10 +94,7 @@ public class GridMultiWidget extends QuestionWidget implements MultiChoiceWidget
     AudioHandler[] audioHandlers;
 
     // need to remember the last click position for audio treatment
-    int lastClickPosition = 0;
-
-    // The number of columns in the grid, can be user defined (<= 0 if unspecified)
-    int numColumns;
+    int lastClickPosition;
 
     int resizeWidth;
 
@@ -126,7 +122,6 @@ public class GridMultiWidget extends QuestionWidget implements MultiChoiceWidget
         // they are chosen automatically
         int maxColumnWidth = -1;
         int maxCellHeight = -1;
-        this.numColumns = numColumns;
         for (int i = 0; i < items.size(); i++) {
             imageViews[i] = new ImageView(getContext());
         }
@@ -136,8 +131,8 @@ public class GridMultiWidget extends QuestionWidget implements MultiChoiceWidget
         int screenHeight = metrics.heightPixels;
 
         if (numColumns > 0) {
-            resizeWidth = ((screenWidth - 2 * HORIZONTAL_PADDING - SCROLL_WIDTH
-                    - (IMAGE_PADDING + SPACING) * (numColumns + 1)) / numColumns);
+            resizeWidth = (screenWidth - 2 * HORIZONTAL_PADDING - SCROLL_WIDTH
+                    - (IMAGE_PADDING + SPACING) * (numColumns + 1)) / numColumns;
         }
 
         if (prompt.isReadOnly()) {
@@ -292,10 +287,6 @@ public class GridMultiWidget extends QuestionWidget implements MultiChoiceWidget
                     if (audioHandlers[position] != null) {
                         stopAudio();
                     }
-                    Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                            "onItemClick.deselect",
-                            items.get(position).getValue(), getFormEntryPrompt().getIndex());
-
                 } else {
                     selected[position] = true;
                     if (audioHandlers[lastClickPosition] != null) {
@@ -303,9 +294,6 @@ public class GridMultiWidget extends QuestionWidget implements MultiChoiceWidget
                     }
                     imageViews[position].setBackgroundColor(Color.rgb(ORANGE_RED_VAL, ORANGE_GREEN_VAL,
                             ORANGE_BLUE_VAL));
-                    Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                            "onItemClick.select",
-                            items.get(position).getValue(), getFormEntryPrompt().getIndex());
                     if (audioHandlers[position] != null) {
                         audioHandlers[position].playAudio(getContext());
                     }
@@ -351,7 +339,6 @@ public class GridMultiWidget extends QuestionWidget implements MultiChoiceWidget
         SpacesInUnderlyingValuesWarning.forQuestionWidget(this).renderWarningIfNecessary(items);
     }
 
-
     @Override
     public IAnswerData getAnswer() {
         List<Selection> vc = new ArrayList<>();
@@ -369,7 +356,6 @@ public class GridMultiWidget extends QuestionWidget implements MultiChoiceWidget
             return new SelectMultiData(vc);
         }
     }
-
 
     @Override
     public void clearAnswer() {

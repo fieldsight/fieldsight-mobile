@@ -42,7 +42,6 @@
   <string name="discard_answer">Ta bort svar</string>
   <string name="discard_group">Ta bort grupp</string>
   <string name="download">Hämta valda</string>
-  <string name="download_forms_result">Nedladdningsstatus</string>
   <string name="downloading_data">Ansluter till server</string>
   <string name="do_not_change">Avbryt</string>
   <string name="do_not_exit">Avbryt</string>
@@ -263,8 +262,6 @@
   <string name="drive_get_file">Hämtar %1$s och mediafiler.</string>
   <string name="no_google_account">Inget Google-konto valt!</string>
   <string name="google_set_account">Du har valt Google Sheets som din server, vänligen välj motsvarande Google-konto under allmänna inställningar innan du fortsätter</string>
-  <string name="odk_auth_auth_fail">ODK autentiseringsfel vid automatisk sändning. Kontrollera att inställningarna är korrekta.</string>
-  <string name="odk_auto_note">ODK notifiering vid automatisk sändning</string>
   <string name="notification_error">Fel vid visning av notifikationstext</string>
   <string name="delete_after_send">Radera efter sändning</string>
   <string name="delete_after_send_summary">Raderar avslutade formulär och media efter dessa sänts till servern</string>
@@ -309,7 +306,6 @@
   <string name="select_geotrace_mode">Välj GeoTrace-läge</string>
   <string name="start">Starta</string>
   <string name="enable_gps">Aktivera GPS</string>
-  <string name="enable_gps_message">GPS är inaktiverat på din enhet. Vill du aktivera den?</string>
   <string name="geotrace_title">GeoTrace</string>
   <string name="polygon_save">Spara som polygon</string>
   <string name="polyline_save">Spara som polyline</string>
@@ -321,7 +317,6 @@
   <string name="geo_exit_warning">Ignorera ändringar och återgå till ODK?</string>
   <string name="polygon_validator">Minst tre punkter krävs för att skapa en polygon</string>
   <string name="clear">Rensa</string>
-  <string name="polyline_polygon_text">Spara GeoTrace som</string>
   <string name="manual_mode">Manuellt läge</string>
   <string name="automatic_mode">Automatiskt läge</string>
   <string name="geoshape_instruction">Lång tryckning för att placera markör.</string>
@@ -410,7 +405,6 @@
   <string name="sort_by_status_asc">Status, avslutade först</string>
   <string name="sort_by_status_desc">Status, oavslutade first</string>
   <string name="sort_the_list">Sortera listan</string>
-  <string name="request_permissions_google_account">ODK Collect behöver få tillgång till ditt Google-konto för att hämta tomma formulär och ladda upp ifyllda formulär.</string>
   <string name="filter_the_list">Filtrera listan</string>
   <string name="language">Språk</string>
   <string name="google_auth_io_exception_msg">API-anrop misslyckades. Om du kör programmet lokalt, vänligen gå igenom projektets \'readme\'.</string>
@@ -451,7 +445,6 @@
   <string name="share_qrcode">Dela QR-koden</string>
   <string name="take_picture_instruction">Knacka på skärmen för att ta ett kort</string>
   <string name="error_front_camera_unavailable">Frontkamera inte tillgänglig på denna enhet</string>
-  <string name="request_permission">Programmet behöver behörighet till kameran.</string>
   <string name="camera_error">Denna enhet stöder inte Camera2 API:et.</string>
   <string name="invalid_range_widget">Ogiltiga parametrar för widget!</string>
   <string name="form_entry_setting">Formulärs inmatningsinställningar</string>
@@ -548,4 +541,5 @@
   <string name="yes">Ja</string>
   <string name="no">Nej</string>
   <string name="svg_file_does_not_exist">SVG-fil finns inte!</string>
+  <!--Sms submission-->
 </resources>

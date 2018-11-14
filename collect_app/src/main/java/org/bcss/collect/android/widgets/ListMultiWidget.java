@@ -31,6 +31,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.external.ExternalDataUtil;
+import org.bcss.collect.android.external.ExternalSelectChoice;
+import org.bcss.collect.android.utilities.FileUtils;
+import org.bcss.collect.android.utilities.ViewIds;
+import org.bcss.collect.android.widgets.interfaces.MultiChoiceWidget;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
@@ -41,12 +46,6 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.external.ExternalDataUtil;
-import org.bcss.collect.android.external.ExternalSelectChoice;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.utilities.ViewIds;
-import org.bcss.collect.android.widgets.interfaces.MultiChoiceWidget;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -72,7 +71,6 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
 
     private final ArrayList<CheckBox> checkBoxes;
     private View center;
-
 
     @SuppressWarnings("unchecked")
     public ListMultiWidget(Context context, FormEntryPrompt prompt, boolean displayLabel) {
@@ -122,16 +120,8 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
                         if (getFormEntryPrompt().isReadOnly()) {
                             if (buttonView.isChecked()) {
                                 buttonView.setChecked(false);
-                                Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                                        "onItemClick.deselect",
-                                        items.get((Integer) buttonView.getTag()).getValue(),
-                                        getFormEntryPrompt().getIndex());
                             } else {
                                 buttonView.setChecked(true);
-                                Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                                        "onItemClick.select",
-                                        items.get((Integer) buttonView.getTag()).getValue(),
-                                        getFormEntryPrompt().getIndex());
                             }
                         }
                     }
@@ -268,7 +258,6 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
 
     }
 
-
     @Override
     public void clearAnswer() {
         for (int i = 0; i < checkBoxes.size(); i++) {
@@ -278,7 +267,6 @@ public class ListMultiWidget extends QuestionWidget implements MultiChoiceWidget
             }
         }
     }
-
 
     @Override
     public IAnswerData getAnswer() {

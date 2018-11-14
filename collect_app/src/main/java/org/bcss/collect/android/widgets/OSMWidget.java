@@ -16,22 +16,23 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.logic.FormController;
+import org.bcss.collect.android.utilities.ViewIds;
+import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.core.model.osm.OSMTag;
 import org.javarosa.core.model.osm.OSMTagItem;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormController;
-import org.bcss.collect.android.utilities.ViewIds;
-import org.bcss.collect.android.widgets.interfaces.BinaryWidget;
-import org.opendatakit.httpclientandroidlib.entity.ContentType;
+import org.bcss.collect.android.http.CollectServerClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.bcss.collect.android.utilities.ApplicationConstants.RequestCodes;
+
 
 /**
  * Widget that allows the user to launch OpenMapKit to get an OSM Feature with a
@@ -101,7 +102,6 @@ public class OSMWidget extends QuestionWidget implements BinaryWidget {
         } else {
             launchOpenMapKitButton.setText(getContext().getString(R.string.capture_osm));
         }
-        launchOpenMapKitButton.setEnabled(!prompt.isReadOnly());
 
         osmFileNameHeaderTextView = new TextView(context);
         osmFileNameHeaderTextView.setId(ViewIds.generateViewId());
@@ -124,7 +124,6 @@ public class OSMWidget extends QuestionWidget implements BinaryWidget {
         params.setMargins(35, 30, 30, 35);
         osmFileNameTextView.setLayoutParams(params);
 
-
         // finish complex layout
         LinearLayout answerLayout = new LinearLayout(getContext());
         answerLayout.setOrientation(LinearLayout.VERTICAL);
@@ -134,10 +133,6 @@ public class OSMWidget extends QuestionWidget implements BinaryWidget {
         answerLayout.addView(osmFileNameTextView);
         addAnswerView(answerLayout);
 
-        // Hide Launch button if read-only
-        if (prompt.isReadOnly()) {
-            launchOpenMapKitButton.setVisibility(View.GONE);
-        }
         errorTextView.setVisibility(View.GONE);
     }
 
@@ -145,7 +140,7 @@ public class OSMWidget extends QuestionWidget implements BinaryWidget {
         try {
             //launch with intent that sends plain text
             Intent launchIntent = new Intent(Intent.ACTION_SEND);
-            launchIntent.setType(ContentType.TEXT_PLAIN.getMimeType());
+            launchIntent.setType(CollectServerClient.getPlainTextMimeType());
 
             //send form id
             launchIntent.putExtra("FORM_ID", String.valueOf(formId));
@@ -225,9 +220,6 @@ public class OSMWidget extends QuestionWidget implements BinaryWidget {
     @Override
     public void onButtonClick(int buttonId) {
         launchOpenMapKitButton.setBackgroundColor(OSM_BLUE);
-        Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                "launchOpenMapKitButton",
-                "click", getFormEntryPrompt().getIndex());
         errorTextView.setVisibility(View.GONE);
         launchOpenMapKit();
     }

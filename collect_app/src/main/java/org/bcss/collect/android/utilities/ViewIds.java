@@ -1,6 +1,5 @@
 package org.bcss.collect.android.utilities;
 
-
 import android.os.Build;
 import android.view.View;
 

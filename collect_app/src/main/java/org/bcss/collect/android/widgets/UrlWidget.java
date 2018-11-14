@@ -22,13 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.CustomTabHelper;
 import org.bcss.collect.android.widgets.interfaces.ButtonWidget;
+
 
 /**
  * Widget that allows user to open URLs from within the form
@@ -47,7 +47,6 @@ public class UrlWidget extends QuestionWidget implements ButtonWidget {
         super(context, prompt);
 
         openUrlButton = getSimpleButton(context.getString(R.string.open_url));
-        openUrlButton.setEnabled(!prompt.isReadOnly());
 
         stringAnswer = getCenteredAnswerTextView();
 
@@ -105,11 +104,6 @@ public class UrlWidget extends QuestionWidget implements ButtonWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
-        Collect.getInstance()
-                .getActivityLogger()
-                .logInstanceAction(this, "openUrl", "click",
-                        getFormEntryPrompt().getIndex());
-
         if (!isUrlEmpty(stringAnswer)) {
             customTabHelper.bindCustomTabsService(getContext(), null);
             customTabHelper.openUri(getContext(), uri);

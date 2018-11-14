@@ -21,6 +21,10 @@ package org.bcss.collect.android.external;
 import android.content.Intent;
 import android.database.Cursor;
 
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.dao.InstancesDao;
+import org.bcss.collect.android.exception.ExternalParamsException;
+import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.core.model.data.DecimalData;
@@ -34,15 +38,13 @@ import org.javarosa.xpath.XPathParseTool;
 import org.javarosa.xpath.expr.XPathExpression;
 import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.javarosa.xpath.expr.XPathPathExpr;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.exception.ExternalParamsException;
-import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.javarosa.xpath.parser.XPathSyntaxException;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 
 /**
  * Author: Meletis Margaritis
@@ -99,55 +101,13 @@ public class ExternalAppsUtils {
 
     public static void populateParameters(Intent intent, Map<String, String> exParams,
             TreeReference reference) throws ExternalParamsException {
-        FormDef formDef = Collect.getInstance().getFormController().getFormDef();
-        FormInstance formInstance = formDef.getInstance();
-        EvaluationContext evaluationContext = new EvaluationContext(formDef.getEvaluationContext(),
-                reference);
-
         if (exParams != null) {
             for (Map.Entry<String, String> paramEntry : exParams.entrySet()) {
                 String paramEntryValue = paramEntry.getValue();
 
                 try {
-                    Object result;
-                    if (paramEntryValue.startsWith("'")) {
-                        // treat this as a constant parameter
-                        // but not require an ending quote
-                        if (paramEntryValue.endsWith("'")) {
-                            result = paramEntryValue.substring(1, paramEntryValue.length() - 1);
-                        } else {
-                            result = paramEntryValue.substring(1, paramEntryValue.length());
-                        }
-                    } else if (paramEntryValue.startsWith("/")) {
-                        // treat this is an xpath
-                        XPathPathExpr pathExpr = XPathReference.getPathExpr(paramEntryValue);
-                        XPathNodeset xpathNodeset = pathExpr.eval(formInstance, evaluationContext);
-                        result = XPathFuncExpr.unpack(xpathNodeset);
-                    } else if (paramEntryValue.equals("instanceProviderID()")) {
-                        // instanceProviderID returns -1 if the current instance has not been
-                        // saved to disk already
-                        String path =
-                                Collect.getInstance().getFormController().getInstanceFile()
-                                        .getAbsolutePath();
+                    Object result = getValueRepresentedBy(paramEntry.getValue(), reference);
 
-                        String instanceProviderID = "-1";
-                        Cursor c = new InstancesDao().getInstancesCursorForFilePath(path);
-                        if (c != null && c.getCount() > 0) {
-                            // should only ever be one
-                            c.moveToFirst();
-                            instanceProviderID = c.getString(c.getColumnIndex(InstanceColumns._ID));
-                        }
-                        if (c != null) {
-                            c.close();
-                        }
-
-                        result = instanceProviderID;
-                    } else {
-                        // treat this is a function
-                        XPathExpression xpathExpression = XPathParseTool.parseXPath(
-                                paramEntryValue);
-                        result = xpathExpression.eval(formInstance, evaluationContext);
-                    }
                     if (result != null && result instanceof Serializable) {
                         intent.putExtra(paramEntry.getKey(), (Serializable) result);
                     }
@@ -156,6 +116,52 @@ public class ExternalAppsUtils {
                             "Could not evaluate '" + paramEntryValue + "'", e);
                 }
             }
+        }
+    }
+
+    public static Object getValueRepresentedBy(String text, TreeReference reference)
+            throws XPathSyntaxException {
+        FormDef formDef = Collect.getInstance().getFormController().getFormDef();
+        FormInstance formInstance = formDef.getInstance();
+        EvaluationContext evaluationContext = new EvaluationContext(formDef.getEvaluationContext(),
+                reference);
+
+        if (text.startsWith("'")) {
+            // treat this as a constant parameter
+            // but not require an ending quote
+            if (text.endsWith("'")) {
+                return text.substring(1, text.length() - 1);
+            } else {
+                return text.substring(1, text.length());
+            }
+        } else if (text.startsWith("/")) {
+            // treat this is an xpath
+            XPathPathExpr pathExpr = XPathReference.getPathExpr(text);
+            XPathNodeset xpathNodeset = pathExpr.eval(formInstance, evaluationContext);
+            return XPathFuncExpr.unpack(xpathNodeset);
+        } else if (text.equals("instanceProviderID()")) {
+            // instanceProviderID returns -1 if the current instance has not been
+            // saved to disk already
+            String path = Collect.getInstance().getFormController().getInstanceFile()
+                    .getAbsolutePath();
+
+            String instanceProviderID = "-1";
+            Cursor c = new InstancesDao().getInstancesCursorForFilePath(path);
+            if (c != null && c.getCount() > 0) {
+                // should only ever be one
+                c.moveToFirst();
+                instanceProviderID = c.getString(c.getColumnIndex(InstanceColumns._ID));
+            }
+            if (c != null) {
+                c.close();
+            }
+
+            return instanceProviderID;
+        } else {
+            // treat this as a function
+            XPathExpression xpathExpression = XPathParseTool.parseXPath(
+                    text);
+            return xpathExpression.eval(formInstance, evaluationContext);
         }
     }
 

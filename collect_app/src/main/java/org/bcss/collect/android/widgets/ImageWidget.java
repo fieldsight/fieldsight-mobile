@@ -21,17 +21,24 @@ import android.os.Build;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
-import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;
+
 import org.bcss.collect.android.activities.CaptureSelfieActivity;
 import org.bcss.collect.android.activities.CaptureSelfieActivityNewApi;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.FileUtils;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.listeners.PermissionListener;
+import org.bcss.collect.android.utilities.CameraUtils;
+
 import java.io.File;
 import java.util.Locale;
 
 import static org.bcss.collect.android.utilities.ApplicationConstants.RequestCodes;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestCameraPermission;
+
 
 /**
  * Widget that allows user to take pictures, sounds or video and add them to the form.
@@ -64,10 +71,8 @@ public class ImageWidget extends BaseImageWidget {
                 || appearance.equalsIgnoreCase("new-front"));
 
         captureButton = getSimpleButton(getContext().getString(R.string.capture_image), R.id.capture_image);
-        captureButton.setEnabled(!getFormEntryPrompt().isReadOnly());
 
         chooseButton = getSimpleButton(getContext().getString(R.string.choose_image), R.id.choose_image);
-        chooseButton.setEnabled(!getFormEntryPrompt().isReadOnly());
 
         answerLayout.addView(captureButton);
         answerLayout.addView(chooseButton);
@@ -76,21 +81,12 @@ public class ImageWidget extends BaseImageWidget {
         hideButtonsIfNeeded(appearance);
         errorTextView.setVisibility(View.GONE);
 
-
         if (selfie) {
-            boolean isFrontCameraAvailable;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                isFrontCameraAvailable = CaptureSelfieActivityNewApi.isFrontCameraAvailable();
-            } else {
-                isFrontCameraAvailable = CaptureSelfieActivity.isFrontCameraAvailable();
-            }
-
-            if (!isFrontCameraAvailable) {
+            if (!CameraUtils.isFrontCameraAvailable()) {
                 captureButton.setEnabled(false);
                 errorTextView.setText(R.string.error_front_camera_unavailable);
                 errorTextView.setVisibility(View.VISIBLE);
             }
-
         }
     }
 
@@ -124,7 +120,16 @@ public class ImageWidget extends BaseImageWidget {
     public void onButtonClick(int buttonId) {
         switch (buttonId) {
             case R.id.capture_image:
-                captureImage();
+                requestCameraPermission((FormEntryActivity) getContext(), new PermissionListener() {
+                    @Override
+                    public void granted() {
+                        captureImage();
+                    }
+
+                    @Override
+                    public void denied() {
+                    }
+                });
                 break;
             case R.id.choose_image:
                 imageCaptureHandler.chooseImage(R.string.choose_image);
@@ -133,18 +138,13 @@ public class ImageWidget extends BaseImageWidget {
     }
 
     private void hideButtonsIfNeeded(String appearance) {
-        if (getFormEntryPrompt().isReadOnly()) {
-            captureButton.setVisibility(View.GONE);
-            chooseButton.setVisibility(View.GONE);
-        } else if (selfie || ((appearance != null
+        if (selfie || ((appearance != null
                 && appearance.toLowerCase(Locale.ENGLISH).contains("new")))) {
             chooseButton.setVisibility(View.GONE);
         }
     }
 
     private void captureImage() {
-        Collect.getInstance().getActivityLogger().logInstanceAction(this, "captureButton",
-                "click", getFormEntryPrompt().getIndex());
         errorTextView.setVisibility(View.GONE);
         Intent intent;
         if (selfie) {

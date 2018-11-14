@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/act_dashboard_search_view"
     cardElevation="@dimen/elevation_card_raised"
+    app:cardCornerRadius="20dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/margin_extra_large"
@@ -17,7 +18,7 @@
 
 
         <ImageView
-            android:tint="@color/black"
+            android:tint="@color/colorPrimaryDark"
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:srcCompat="@drawable/ic_search" />

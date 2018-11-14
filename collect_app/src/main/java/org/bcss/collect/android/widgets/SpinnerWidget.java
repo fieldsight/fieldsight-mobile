@@ -17,6 +17,7 @@ package org.bcss.collect.android.widgets;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,19 +27,21 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.external.ExternalDataUtil;
+import org.bcss.collect.android.listeners.AdvanceToNextListener;
+import org.bcss.collect.android.views.ScrolledToTopSpinner;
+import org.bcss.collect.android.widgets.interfaces.MultiChoiceWidget;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.external.ExternalDataUtil;
-import org.bcss.collect.android.views.ScrolledToTopSpinner;
-import org.bcss.collect.android.widgets.interfaces.MultiChoiceWidget;
+
 
 import java.util.List;
+
 
 /**
  * SpinnerWidget handles select-one fields. Instead of a list of buttons it uses a spinner, wherein
@@ -53,8 +56,15 @@ public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
     ScrolledToTopSpinner spinner;
     String[] choices;
 
-    public SpinnerWidget(Context context, FormEntryPrompt prompt) {
+    @Nullable
+    private AdvanceToNextListener listener;
+
+    public SpinnerWidget(Context context, FormEntryPrompt prompt, boolean autoAdvance) {
         super(context, prompt);
+
+        if (context instanceof AdvanceToNextListener) {
+            listener = (AdvanceToNextListener) context;
+        }
 
         // SurveyCTO-added support for dynamic select content (from .csv files)
         XPathFuncExpr xpathFuncExpr = ExternalDataUtil.getSearchXPathExpression(
@@ -105,14 +115,8 @@ public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                if (position == items.size()) {
-                    Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                            "onCheckedChanged.clearValue",
-                            "", getFormEntryPrompt().getIndex());
-                } else {
-                    Collect.getInstance().getActivityLogger().logInstanceAction(this,
-                            "onCheckedChanged",
-                            items.get(position).getValue(), getFormEntryPrompt().getIndex());
+                if (position != items.size() && autoAdvance && listener != null) {
+                    listener.advance();
                 }
             }
 
@@ -124,7 +128,6 @@ public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
 
         addAnswerView(view);
     }
-
 
     @Override
     public IAnswerData getAnswer() {

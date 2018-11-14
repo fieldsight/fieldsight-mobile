@@ -1,12 +1,13 @@
 package org.bcss.collect.android.activities;
 
-
 import org.bcss.collect.android.provider.FormsProviderAPI;
 
 import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_ASC;
 import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_DESC;
 import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_ASC;
 import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_DESC;
+
+
 
 abstract class FormListActivity extends AppListActivity {
 

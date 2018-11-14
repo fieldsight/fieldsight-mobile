@@ -14,8 +14,8 @@
 
 package org.bcss.collect.android.listeners;
 
-
 import org.bcss.collect.android.adapters.SortDialogAdapter;
+
 
 public interface RecyclerViewClickListener {
 

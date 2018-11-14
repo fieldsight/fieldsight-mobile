@@ -3,6 +3,9 @@ package org.bcss.collect.android.location.activities;
 import android.content.Intent;
 import android.location.Location;
 
+import org.bcss.collect.android.activities.GeoPointMapActivity;
+import org.bcss.collect.android.location.client.LocationClient;
+import org.bcss.collect.android.location.client.LocationClients;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,31 +13,27 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.GeoPointMapActivity;
-import org.bcss.collect.android.location.client.LocationClient;
-import org.bcss.collect.android.location.client.LocationClients;
+import org.odk.collect.android.location.activities.BaseGeoActivityTest;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
-import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 
 import static android.app.Activity.RESULT_OK;
+import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
+import static org.bcss.collect.android.location.activities.GeoPointActivityTest.newMockLocation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
-import static org.bcss.collect.android.location.activities.GeoPointActivityTest.newMockLocation;
 import static org.robolectric.Shadows.shadowOf;
 
-@Config(constants = BuildConfig.class)
+
 @RunWith(RobolectricTestRunner.class)
-public class GeoPointMapActivityTest {
+public class GeoPointMapActivityTest extends BaseGeoActivityTest {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -52,6 +51,7 @@ public class GeoPointMapActivityTest {
      */
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         activityController = Robolectric.buildActivity(GeoPointMapActivity.class);
         activity = activityController.get();
         shadowActivity = shadowOf(activity);

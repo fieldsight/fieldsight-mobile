@@ -32,7 +32,6 @@ import android.widget.ProgressBar;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.utilities.SnackbarUtils;
 
-
 public abstract class FileManagerFragment extends AppListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int LOADER_ID = 0x01;
     protected Button deleteButton;
@@ -80,7 +79,6 @@ public abstract class FileManagerFragment extends AppListFragment implements Loa
     @Override
     public void onListItemClick(ListView l, View v, int position, long rowId) {
         super.onListItemClick(l, v, position, rowId);
-        logger.logAction(this, "onListItemClick", Long.toString(rowId));
 
         if (getListView().isItemChecked(position)) {
             selectedInstances.add(getListView().getItemIdAtPosition(position));
