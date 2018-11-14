@@ -611,12 +611,13 @@ public class FileUtils {
      * @param destDir The destination directory.
      * @return {@code true}: success<br>{@code false}: fail
      */
-    public static boolean copyDir(final File srcDir,
-                                  final File destDir) {
+
+    private static boolean copyDir(final File srcDir,
+                                   final File destDir) {
         return copyOrMoveDir(srcDir, destDir, new OnReplaceListener() {
             @Override
             public boolean onReplace() {
-                return true;
+                return false;
             }
         }, false);
     }

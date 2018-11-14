@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
@@ -47,6 +48,9 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
 
     @BindView(R.id.fieldsight_migrate_act_tv_error_message)
     TextView tvMigrateErrorMessage;
+
+    @BindView(R.id.fieldsight_migrate_act_error_card)
+    CardView cardViewError;
 
     final Integer errorOccured = -1;
     private final Integer max = 3;
@@ -119,10 +123,8 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
     }
 
     private void showErrorUI(String s) {
-        btnProceedAnyway.setVisibility(View.VISIBLE);
-        tvMigrateErrorMessage.setVisibility(View.VISIBLE);
         tvMigrateErrorMessage.setText(s);
-
+        cardViewError.setVisibility(View.VISIBLE);
     }
 
 
