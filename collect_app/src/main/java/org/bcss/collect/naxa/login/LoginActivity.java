@@ -169,6 +169,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
         if (hasOldAccount) {
             MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
+//            ProjectListActivity.start(this);
         } else {
             ProjectListActivity.start(this);
         }

@@ -52,6 +52,8 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
     private final Integer max = 3;
     private Observable<Integer> migration;
 
+    private final int MAX_PROGRESS = 8;
+
     public static void start(Context context, String usernameOrEmail) {
         Intent intent = new Intent(context, MigrateFieldSightActivity.class);
         intent.putExtra(EXTRA_MESSAGE, usernameOrEmail);
@@ -78,7 +80,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
                 .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        progressBar.setMax(4);
+                        progressBar.setMax(MAX_PROGRESS);
                         progressBar.setInterpolator(new DecelerateInterpolator());
                     }
 
@@ -88,7 +90,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
                             case -1:
                                 showErrorUI("");
                                 break;
-                            case 4:
+                            case MAX_PROGRESS:
                                 openProjectList();
                                 break;
                             default:

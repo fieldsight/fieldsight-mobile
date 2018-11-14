@@ -5,20 +5,22 @@ import android.arch.lifecycle.ViewModel;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.dao.FormsDao;
+import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Form;
-import org.bcss.collect.android.tasks.sms.models.SmsSubmission;
+import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.utilities.FileUtils;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.project.data.ProjectRepository;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -26,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 
 public class MigrateFieldSightViewModel extends ViewModel {
 
@@ -39,33 +39,33 @@ public class MigrateFieldSightViewModel extends ViewModel {
     private void copyProjects() {
         SQLiteDatabase db = getProjSiteDB();
         Cursor cursor = null;
-        cursor = selectAll(db, Table.project);
+        cursor = selectAll(db, MigrationHelper.Table.project);
         ArrayList<Project> projects = new ArrayList<>();
 
         while (cursor.moveToNext()) {
 
             Project project = new Project();
 
-            project.setId(getString(cursor, ProjectColumns.KEY_PROJECT_ID));
+            project.setId(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_ID));
             project.setTypeId(Integer.valueOf(
-                    getString(cursor, ProjectColumns.KEY_PROJECT_TYPE_ID)
+                    getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_TYPE_ID)
             ));
-            project.setTypeLabel(getString(cursor, ProjectColumns.KEY_PROJECT_TYPE_LABEL));
-            project.setPhone(getString(cursor, ProjectColumns.KEY_PROJECT_PHONE));
-            project.setName(getString(cursor, ProjectColumns.KEY_PROJECT_NAME));
-            project.setDescription(getString(cursor, ProjectColumns.KEY_PROJECT_DESC));
-            project.setAddress(getString(cursor, ProjectColumns.KEY_PROJECT_ADDRESS));
-            project.setLat(getString(cursor, ProjectColumns.KEY_PROJECT_LAT));
-            project.setLon(getString(cursor, ProjectColumns.KEY_PROJECT_LON));
+            project.setTypeLabel(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_TYPE_LABEL));
+            project.setPhone(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_PHONE));
+            project.setName(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_NAME));
+            project.setDescription(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_DESC));
+            project.setAddress(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_ADDRESS));
+            project.setLat(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_LAT));
+            project.setLon(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_LON));
             //todo check and migrate photo
-            getString(cursor, ProjectColumns.KEY_PROJECT_LOGO);
+            getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_LOGO);
             //todo check and miragte mananger
-            getString(cursor, ProjectColumns.KEY_PROJECT_MANAGER);
-            project.setOrganizationName(getString(cursor, ProjectColumns.KEY_PROJECT_ORGINATION));
-            project.setOrganizationName(getString(cursor, ProjectColumns.KEY_PROJECT_ORGINATION));
-            project.setOrganizationlogourl(getString(cursor, ProjectColumns.KEY_PROJECT_ORGINATION_LOGO));
+            getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_MANAGER);
+            project.setOrganizationName(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_ORGINATION));
 
-            String metaAttrs = getString(cursor, ProjectColumns.KEY_PROJECT_META_ATTRS);
+            project.setOrganizationlogourl(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_ORGINATION_LOGO));
+
+            String metaAttrs = getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_META_ATTRS);
             if (metaAttrs != null && metaAttrs.length() > 0) {
                 Type siteMetaAttrsList = new TypeToken<List<SiteMetaAttribute>>() {
                 }.getType();
@@ -74,8 +74,8 @@ public class MigrateFieldSightViewModel extends ViewModel {
             }
 
 
-            project.setSiteClusters(getString(cursor, ProjectColumns.KEY_PROJECT_REGIONS));
-            project.setHasClusteredSites(Boolean.valueOf(getString(cursor, ProjectColumns.KEY_HAS_CLUSTER)));
+            project.setSiteClusters(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_REGIONS));
+            project.setHasClusteredSites(Boolean.valueOf(getString(cursor, MigrationHelper.ProjectColumns.KEY_HAS_CLUSTER)));
             projects.add(project);
 
         }
@@ -88,64 +88,126 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
     }
 
+    private void copySitePhotosFolder() {
+        String oldPath = migrationHelper.getMigrateFrom() + File.separator + MigrationHelper.Folder.OLD_SITE_PHOTOS;
+        String newPath = migrationHelper.getMigrateTo() + File.separator + MigrationHelper.Folder.NEW_SITE_PHOTOS;
+        FileUtils.copyDir(oldPath, newPath);
+    }
 
     private void copySites() {
         SQLiteDatabase db = getProjSiteDB();
 
         Cursor cursor = null;
-        cursor = selectAll(db, Table.my_site);
-        ArrayList<Project> sites = new ArrayList<>();
+        cursor = selectAll(db, MigrationHelper.Table.my_site);
 
         while (cursor.moveToNext()) {
+
+            Integer curStatus = Integer.valueOf(getString(cursor, MigrationHelper.SiteColumns.KEY_IS_OFFLINE_SITE_SYNCED));
+            boolean isOfflineSite = curStatus == Constant.SiteStatus.IS_UNVERIFIED_SITE || curStatus == Constant.SiteStatus.IS_VERIFIED_BUT_UNSYNCED;
+
+            String fixedSitePhotoPath = migrationHelper.fixSitePhotosPath(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_PHOTO_OFFLINE));
+
+            if (isOfflineSite) {
+                Site site = new SiteBuilder()
+                        .setName(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_NAME))
+                        .setAddress(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_ADDRESS))
+                        .setAdditionalDesc(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_ADD_DESC))
+                        .setId(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_ID))
+                        .setIdentifier(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_IDENTIFIER))
+                        .setIsSiteVerified(curStatus)
+                        .setLatitude(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_LAT))
+                        .setLongitude(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_LONG))
+                        .setMetaAttributes(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_META_ATTRS))
+                        .setPhone(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_PHONE))
+                        .setProject(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_PROJECT_ID))
+                        .setPublicDesc(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_PUBLIC_DESC))
+                        .setTypeId(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_TYPE_ID))
+                        .setRegion(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_REGION))
+                        .setRegion(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_REGION))
+                        .setLogo(fixedSitePhotoPath)
+                        .createSite();
+
+                SiteLocalSource.getInstance().save(site);
+            }
+
+
 
         }
 
     }
 
     private void copyInstancesFolder() {
-        String oldPath = migrationHelper.getOldRootPath() + File.separator + Folder.INSTANCES;
-        String newPath = migrationHelper.getNewRootPath() + File.separator + Folder.INSTANCES;
+        String oldPath = migrationHelper.getOldRootPath() + File.separator + MigrationHelper.Folder.INSTANCES;
+        String newPath = migrationHelper.getNewRootPath() + File.separator + MigrationHelper.Folder.INSTANCES;
         FileUtils.copyDir(oldPath, newPath);
     }
 
     private void copyFormsFolder() {
-        String oldPath = migrationHelper.getOldRootPath() + File.separator + Folder.FORMS;
-        String newPath = migrationHelper.getNewRootPath() + File.separator + Folder.FORMS;
+        String oldPath = migrationHelper.getOldRootPath() + File.separator + MigrationHelper.Folder.FORMS;
+        String newPath = migrationHelper.getNewRootPath() + File.separator + MigrationHelper.Folder.FORMS;
         FileUtils.copyDir(oldPath, newPath);
     }
 
     private void copyInstances() {
         SQLiteDatabase db = getInstancesDB();
-        Cursor cursor = null;
-        cursor = selectAll(db, Table.instances);
+        InstancesDao dao = new InstancesDao();
+        Cursor cursor;
+        cursor = selectAll(db, MigrationHelper.Table.instances);
         while (cursor.moveToNext()) {
 
+            String formDeployedFrom = getString(cursor, MigrationHelper.InstanceColumns.FS_FORM_DEPLOYED_FROM);
+            String fsFormId = getString(cursor, MigrationHelper.InstanceColumns.FS_FORM_ID);
+            String siteId = getString(cursor, MigrationHelper.InstanceColumns.FS_SITE_ID);
+
+            String fixedSubmissionUrl = InstancesDao.generateSubmissionUrl(formDeployedFrom, siteId, fsFormId);
+
+            String fixedInstancePath = migrationHelper.fixFormAndInstancesPath(
+                    getString(cursor, MigrationHelper.InstanceColumns.INSTANCE_FILE_PATH),
+                    usernameOrEmail);
+
+            Long lastStatusChangeDate = Long.valueOf(getString(cursor, MigrationHelper.InstanceColumns.LAST_STATUS_CHANGE_DATE));
+
+            Instance instance = new Instance.Builder()
+                    .submissionUri(fixedSubmissionUrl)
+                    .instanceFilePath(fixedInstancePath)
+                    .displayName(getString(cursor, MigrationHelper.InstanceColumns.DISPLAY_NAME))
+                    .canEditWhenComplete(getString(cursor, MigrationHelper.InstanceColumns.CAN_EDIT_WHEN_COMPLETE))
+                    .jrFormId(getString(cursor, MigrationHelper.InstanceColumns.JR_FORM_ID))
+                    .fieldSightSiteId(getString(cursor, MigrationHelper.InstanceColumns.FS_SITE_ID))
+                    .jrVersion(getString(cursor, MigrationHelper.InstanceColumns.JR_VERSION))
+                    .status(getString(cursor, MigrationHelper.InstanceColumns.STATUS))
+                    .displaySubtext(getString(cursor, MigrationHelper.InstanceColumns.DISPLAY_SUBTEXT))
+                    .lastStatusChangeDate(lastStatusChangeDate)
+                    .build();
+
+            ContentValues value = dao.getValuesFromInstanceObject(instance);
+            dao.saveInstance(value);
         }
     }
 
     private void copyForms() {
         SQLiteDatabase db = getFormsDB();
         FormsDao dao = new FormsDao();
-        Cursor cursor = null;
-        cursor = selectAll(db, Table.forms);
+        Cursor cursor;
+        cursor = selectAll(db, MigrationHelper.Table.forms);
         while (cursor.moveToNext()) {
 
-            String fixedFormFilePath = migrationHelper.fixFormAndInstancesPath(getString(cursor, FormColumns.FORM_FILE_PATH), usernameOrEmail);
-            String fixedFormMediaPath = migrationHelper.fixFormAndInstancesPath(getString(cursor, FormColumns.FORM_MEDIA_PATH), usernameOrEmail);
-            String fixedJrCacheFilePath = migrationHelper.fixFormAndInstancesPath(getString(cursor, FormColumns.JRCACHE_FILE_PATH), usernameOrEmail);
+            String fixedFormFilePath = migrationHelper.fixFormAndInstancesPath(getString(cursor, MigrationHelper.FormColumns.FORM_FILE_PATH), usernameOrEmail);
+            String fixedFormMediaPath = migrationHelper.fixFormAndInstancesPath(getString(cursor, MigrationHelper.FormColumns.FORM_MEDIA_PATH), usernameOrEmail);
+            String fixedJrCacheFilePath = migrationHelper.fixFormAndInstancesPath(getString(cursor, MigrationHelper.FormColumns.JRCACHE_FILE_PATH), usernameOrEmail);
 
             Form form = new Form.Builder()
                     .formMediaPath(fixedFormMediaPath)
                     .formFilePath(fixedFormFilePath)
                     .jrCacheFilePath(fixedJrCacheFilePath)
-                    .displayName(getString(cursor, FormColumns.DISPLAY_NAME))
-                    .displaySubtext(getString(cursor, FormColumns.DISPLAY_SUBTEXT))
-                    .description(getString(cursor, FormColumns.DESCRIPTION))
-                    .jrFormId(getString(cursor, FormColumns.JR_FORM_ID))
-                    .jrVersion(getString(cursor, FormColumns.JR_VERSION))
-                    .date(Long.valueOf(getString(cursor, FormColumns.DATE)))
-                    .language(getString(cursor, FormColumns.LANGUAGE))
-                    .base64RSAPublicKey(getString(cursor, FormColumns.BASE64_RSA_PUBLIC_KEY))
+                    .displayName(getString(cursor, MigrationHelper.FormColumns.DISPLAY_NAME))
+                    .displaySubtext(getString(cursor, MigrationHelper.FormColumns.DISPLAY_SUBTEXT))
+                    .description(getString(cursor, MigrationHelper.FormColumns.DESCRIPTION))
+                    .jrFormId(getString(cursor, MigrationHelper.FormColumns.JR_FORM_ID))
+                    .jrVersion(getString(cursor, MigrationHelper.FormColumns.JR_VERSION))
+                    .date(Long.valueOf(getString(cursor, MigrationHelper.FormColumns.DATE)))
+                    .language(getString(cursor, MigrationHelper.FormColumns.LANGUAGE))
+                    .base64RSAPublicKey(getString(cursor, MigrationHelper.FormColumns.BASE64_RSA_PUBLIC_KEY))
 
                     .build();
             ContentValues values = dao.getValuesFromFormObject(form);
@@ -155,7 +217,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
 
     private SQLiteDatabase getFormsDB() {
-        String dbPath = migrationHelper.getOldRootPath() + File.separator + Folder.METADATA + File.separator + Database.FORMS;
+        String dbPath = migrationHelper.getOldRootPath() + File.separator + MigrationHelper.Folder.METADATA + File.separator + MigrationHelper.Database.FORMS;
         File dbfile = new File(dbPath);
 
         if (!dbfile.exists())
@@ -175,8 +237,8 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
     private SQLiteDatabase getProjSiteDB() {
         File dbfile = new File(migrationHelper.getOldRootPath() +
-                File.separator + Folder.DB_FOLDER +
-                File.separator + Database.PROJ_SITES);
+                File.separator + MigrationHelper.Folder.DB_FOLDER +
+                File.separator + MigrationHelper.Database.PROJ_SITES);
 
         if (!dbfile.exists())
             throw new RuntimeException("Database file does not exist for " + usernameOrEmail);
@@ -185,7 +247,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
     }
 
     private SQLiteDatabase getInstancesDB() {
-        String dbPath = migrationHelper.getOldRootPath() + File.separator + Folder.METADATA + File.separator + Database.INSTANCES;
+        String dbPath = migrationHelper.getOldRootPath() + File.separator + MigrationHelper.Folder.METADATA + File.separator + MigrationHelper.Database.INSTANCES;
         File dbfile = new File(dbPath);
 
         if (!dbfile.exists())
@@ -198,7 +260,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
     }
 
-    public Observable<Integer> copyFromOldAccount() {
+    Observable<Integer> copyFromOldAccount() {
 
         return Observable.create(emitter -> {
             try {
@@ -218,7 +280,17 @@ public class MigrateFieldSightViewModel extends ViewModel {
                         copyInstancesFolder();
                         emitter.onNext(4);
 
+                        copyInstances();
+                        emitter.onNext(5);
 
+                        copySites();
+                        emitter.onNext(6);
+
+                        copySitePhotosFolder();
+                        emitter.onNext(7);
+
+                        FileUtils.deleteDir((new File(migrationHelper.getOldRootPath())));
+                        emitter.onNext(8);
                         break;
                     }
                 }
@@ -233,83 +305,11 @@ public class MigrateFieldSightViewModel extends ViewModel {
     }
 
 
-    public void setUserNameEmail(String userNameOrEmail) {
+    void setUserNameEmail(String userNameOrEmail) {
         this.usernameOrEmail = userNameOrEmail;
         migrationHelper = new MigrationHelper(usernameOrEmail);
         oldAccounts.setValue(migrationHelper.listOldAccount());
     }
 
-
-    public static class Table {
-        public static final String project = "table_project";
-        public static final String my_site = "table_my_site_detail";
-        public static final String notifications = "table_notify";
-        public static final String all_contacts = "table_contact";
-
-        public static String instances = "instances";
-        public static String forms = "forms";
-    }
-
-    public static class Folder {
-        public static final String DB_FOLDER = "records";
-        public static final String FORMS = "forms";
-        public static final String INSTANCES = "instances";
-        public static final String METADATA = "metadata";
-    }
-
-    public static class Database {
-        public static final String PROJ_SITES = "fieldsight_notify_schema.db";
-        public static final String INSTANCES = "instances.db";
-        public static final String FORMS = "forms.db";
-    }
-
-
-    private static class ProjectColumns {
-        public static final String KEY_PROJECT_ID = "KEY_PROJECT_ID";
-        public static final String KEY_PROJECT_TYPE_ID = "KEY_PROJECT_TYPE_ID";
-        public static final String KEY_PROJECT_TYPE_LABEL = "KEY_PROJECT_TYPE_LABEL";
-        public static final String KEY_PROJECT_PHONE = "KEY_PROJECT_PHONE";
-        public static final String KEY_PROJECT_NAME = "KEY_PROJECT_NAME";
-        public static final String KEY_PROJECT_DESC = "KEY_PROJECT_DESC";
-        public static final String KEY_PROJECT_ADDRESS = "KEY_PROJECT_ADDRESS";
-        public static final String KEY_PROJECT_LAT = "KEY_PROJECT_LAT";
-        public static final String KEY_PROJECT_LON = "KEY_PROJECT_LON";
-        public static final String KEY_PROJECT_LOGO = "KEY_PROJECT_LOGO";
-        public static final String KEY_PROJECT_EMAIL = "KEY_PROJECT_EMAIL";
-        public static final String KEY_PROJECT_MANAGER = "KEY_PROJECT_MANAGER";
-        public static final String KEY_HAS_CLUSTER = "has_clusters";
-        private static final String KEY_PROJECT_ORGINATION = "organization_name";
-        private static final String KEY_PROJECT_ORGINATION_LOGO = "organization_logo";
-        private static final String KEY_PROJECT_META_ATTRS = "meta_attrs";
-        public static final String KEY_PROJECT_REGIONS = "regions";
-    }
-
-
-    private static class FormColumns {
-        // These are the only things needed for an replace
-        public static final String DISPLAY_NAME = "displayName";
-        public static final String DESCRIPTION = "description";  // can be null
-        public static final String JR_FORM_ID = "jrFormId";
-        public static final String JR_VERSION = "jrVersion"; // can be null
-        public static final String FORM_FILE_PATH = "formFilePath";
-        public static final String SUBMISSION_URI = "submissionUri"; // can be null
-        public static final String BASE64_RSA_PUBLIC_KEY = "base64RsaPublicKey"; // can be null
-
-        // these are generated for you (but you can replace something else if you want)
-        public static final String DISPLAY_SUBTEXT = "displaySubtext";
-        public static final String MD5_HASH = "md5Hash";
-        public static final String DATE = "date";
-        public static final String JRCACHE_FILE_PATH = "jrcacheFilePath";
-        public static final String FORM_MEDIA_PATH = "formMediaPath";
-
-
-        //FieldSightAccountManager Form Ids
-        public static final String FS_FORM_ID = "fsFormId";
-        //      public static final String IS_SITE_OFFLINE = "is_site_";
-
-
-        // this is null on create, and can only be set on an update.
-        public static final String LANGUAGE = "language";
-    }
 
 }

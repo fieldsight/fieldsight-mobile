@@ -168,7 +168,12 @@ public class InstanceProvider extends ContentProvider {
                 values.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
             }
 
-            long rowId = instancesDatabaseHelper.getWritableDatabase().insert(INSTANCES_TABLE_NAME, null, values);
+            long rowId = -1;
+            try{
+                rowId = instancesDatabaseHelper.getWritableDatabase().insertOrThrow(INSTANCES_TABLE_NAME, null, values);
+            }catch (SQLException ex){
+                ex.printStackTrace();
+            }
             if (rowId > 0) {
                 Uri instanceUri = ContentUris.withAppendedId(InstanceColumns.CONTENT_URI, rowId);
                 getContext().getContentResolver().notifyChange(instanceUri, null);

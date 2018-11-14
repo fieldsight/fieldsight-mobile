@@ -727,8 +727,11 @@ public class FileUtils {
             }
         }
         if (!createOrExistsDir(destDir)) return false;
+        String[] a = srcDir.list();
         File[] files = srcDir.listFiles();
+
         for (File file : files) {
+
             File oneDestFile = new File(destPath + file.getName());
             if (file.isFile()) {
                 if (!copyOrMoveFile(file, oneDestFile, listener, isMove)) return false;

@@ -27,6 +27,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.android.utilities.ResponseMessageParser;
+import org.bcss.collect.naxa.ResponseUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.opendatakit.httpclientandroidlib.Header;
 import org.opendatakit.httpclientandroidlib.HttpEntity;
@@ -385,6 +386,7 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
                 HttpEntity httpEntity = response.getEntity();
                 Timber.i("Response code:%d", responseCode);
                 //add http dump code here: Nishon
+//                ResponseUtils.saveHttpResponseToFile(response,submissionFile.getName());
 
                 messageParser = new ResponseMessageParser(
                         EntityUtils.toString(httpEntity),
