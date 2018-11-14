@@ -123,7 +123,9 @@ public class MigrateFieldSightViewModel extends ViewModel {
                         .setPublicDesc(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_PUBLIC_DESC))
                         .setTypeId(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_TYPE_ID))
                         .setRegion(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_REGION))
-                        .setRegion(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_REGION))
+                        .setGeneralFormDeployedFrom(Constant.FormDeploymentFrom.PROJECT)
+                        .setStagedFormDeployedFrom(Constant.FormDeploymentFrom.PROJECT)
+                        .setScheduleFormDeployedForm(Constant.FormDeploymentFrom.PROJECT)
                         .setLogo(fixedSitePhotoPath)
                         .createSite();
 

@@ -118,7 +118,7 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         scheduledFormsAdapter = new ScheduledFormsAdapter(new ArrayList<>(0), this);
         recyclerView.setEmptyView(emptyLayout,
-                getString(R.string.empty_message, "general forms"),
+                getString(R.string.empty_message, "scheduled forms"),
                 new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {
