@@ -46,6 +46,11 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         generalForms.clear();
         generalForms.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
+
+        if(newList.isEmpty()){
+            //triggers observer so it display empty layout - nishon
+            this.notifyDataSetChanged();
+        }
     }
 
     @NonNull

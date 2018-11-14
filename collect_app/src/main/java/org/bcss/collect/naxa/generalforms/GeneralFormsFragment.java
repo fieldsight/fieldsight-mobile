@@ -130,6 +130,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
                         if (generalFormsAdapter.getItemCount() == 0) {
                             runLayoutAnimation(recyclerView);
                         }
+
                         generalFormsAdapter.updateList(generalFormAndSubmissions);
 
                     }

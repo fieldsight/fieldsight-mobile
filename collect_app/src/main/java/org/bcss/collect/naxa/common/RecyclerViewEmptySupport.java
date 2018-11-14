@@ -105,8 +105,6 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         if (adapter != null) {
             adapter.registerAdapterDataObserver(emptyObserver);
         }
-
-//        emptyObserver.onChanged();
     }
 
     public void setEmptyView(View emptyView, @Nullable String message, OnEmptyLayoutClickListener onEmptyLayoutClickListener) {

@@ -64,6 +64,11 @@ public class SubStageListAdapter extends
         subStages.clear();
         subStages.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
+
+        if(newList.isEmpty()){
+            //triggers observer so it display empty layout - nishon
+            this.notifyDataSetChanged();
+        }
     }
 
     @NonNull

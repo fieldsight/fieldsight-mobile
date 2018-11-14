@@ -147,6 +147,11 @@ public class ScheduledFormsAdapter extends
         totalList.clear();
         totalList.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
+
+        if(newList.isEmpty()){
+            //triggers observer so it display empty layout - nishon
+            this.notifyDataSetChanged();
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
