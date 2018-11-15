@@ -617,7 +617,7 @@ public class FileUtils {
         return copyOrMoveDir(srcDir, destDir, new OnReplaceListener() {
             @Override
             public boolean onReplace() {
-                return false;
+                return true;
             }
         }, false);
     }

@@ -58,6 +58,7 @@
 
 
     <android.support.v7.widget.CardView
+        android:visibility="gone"
         android:id="@+id/fieldsight_migrate_act_error_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
