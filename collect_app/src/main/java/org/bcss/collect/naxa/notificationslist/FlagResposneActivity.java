@@ -32,6 +32,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.FileUtil;
 import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
@@ -382,9 +383,16 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
                     @Override
                     public void onNext(Uri instanceUri) {
                         Timber.i("Downloaded and saved instance at %s", instanceUri);
-                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
-                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
-                        startActivity(toEdit);
+//                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
+//                        toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+//                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
+//                        startActivity(toEdit);
+
+
+                        Intent intent = new Intent(Intent.ACTION_EDIT, instanceUri);
+                        intent.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
+                                ApplicationConstants.FormModes.EDIT_SAVED);
+                        startActivity(intent);
                     }
 
                     @Override

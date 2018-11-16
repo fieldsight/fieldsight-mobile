@@ -153,7 +153,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
             return null;
         }
 
-        // create FormEntryController siteName formdef
+        // create FormEntryController from formdef
         final FormEntryModel fem = new FormEntryModel(formDef);
         final FormEntryController fec = new FormEntryController(fem);
 
@@ -306,7 +306,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
                     && savepointFile.lastModified() > instanceXml.lastModified()) {
                 usedSavepoint = true;
                 instanceXml = savepointFile;
-                Timber.w("Loading instance siteName savepoint file: %s",
+                Timber.w("Loading instance from savepoint file: %s",
                         savepointFile.getAbsolutePath());
             }
 

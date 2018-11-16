@@ -1,14 +1,17 @@
 package org.bcss.collect.naxa.notificationslist;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.dao.FormsDao;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.logic.FormDetails;
+import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
@@ -45,7 +48,7 @@ public class FlagFormRemoteSource {
         return INSTANCE;
     }
 
-    public FlagFormRemoteSource() {
+    private FlagFormRemoteSource() {
         this.instancesDao = new InstancesDao();
     }
 
@@ -60,7 +63,7 @@ public class FlagFormRemoteSource {
     }
 
 
-    public Observable<Uri> runAll(FieldSightNotification fieldSightNotification){
+    Observable<Uri> runAll(FieldSightNotification fieldSightNotification){
         return getKOBOForm(fieldSightNotification)
                 .toObservable()
                 .flatMap(new Function<String, ObservableSource<Uri>>() {
@@ -71,7 +74,7 @@ public class FlagFormRemoteSource {
                 });
     }
 
-    public Single<String> getKOBOForm(FieldSightNotification notificationFormDetail) {
+    private Single<String> getKOBOForm(FieldSightNotification notificationFormDetail) {
 
         String fsFormId = notificationFormDetail.getFsFormId();
         String siteId = notificationFormDetail.getSiteId();
@@ -82,7 +85,7 @@ public class FlagFormRemoteSource {
     }
 
 
-    Observable<Uri> getODKInstance(FieldSightNotification notificationFormDetail) {
+    private Observable<Uri> getODKInstance(FieldSightNotification notificationFormDetail) {
 
         String fsFormId = notificationFormDetail.getFsFormId();//todo: project site fsFormId unhandled
         String siteId = notificationFormDetail.getSiteId();
@@ -93,10 +96,11 @@ public class FlagFormRemoteSource {
         String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_submission/%s", fsFormSubmissionId);
 
         Instance.Builder flaggedInstance = new Instance.Builder()
-                .status(InstanceProviderAPI.STATUS_FLAGGED)
+                .status(InstanceProviderAPI.STATUS_COMPLETE)
                 .jrFormId(jrFormId)
                 .fieldSightSiteId(siteId == null ? "0" : siteId)//survey form have 0 as siteId
                 .displayName(formName)
+                .canEditWhenComplete("true")
                 .displaySubtext("");
 
 
@@ -113,10 +117,20 @@ public class FlagFormRemoteSource {
                             .map(new Function<String, Uri>() {
                                 @Override
                                 public Uri apply(String path) throws Exception {
-                                    path = path.replace("file:///", "");
+                                    path = path.replace("file://", "");
 
                                     instance.instanceFilePath(path);
                                     instance.lastStatusChangeDate(System.currentTimeMillis());
+
+                                    String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + " = ? ";
+                                    String[] selectionArgs = new String[]{instance.build().getJrFormId()};
+                                    // retrieve the form definition
+                                    Cursor formCursor = new FormsDao().getFormsCursor(selection, selectionArgs);
+                                    formCursor.moveToFirst();
+
+                                    String jrVersion = getColumnString(formCursor,FormsProviderAPI.FormsColumns.JR_VERSION);
+                                    instance.jrVersion(jrVersion);
+
                                     ContentValues values = instancesDao.getValuesFromInstanceObject(instance.build());
                                     Uri instanceUri = instancesDao.saveInstance(values);
                                     Timber.i("Downloaded and saved instance at %s", path);
@@ -125,6 +139,10 @@ public class FlagFormRemoteSource {
                             });
                 });
 
+    }
+
+    public static String getColumnString(Cursor cursor,String columnName){
+        return cursor.getString(cursor.getColumnIndex(columnName));
     }
 
 
