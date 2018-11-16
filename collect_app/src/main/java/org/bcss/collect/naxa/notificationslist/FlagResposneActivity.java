@@ -374,6 +374,31 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
+//        FlagFormRemoteSource.getINSTANCE().getKOBOForm(loadedFieldSightNotification);
+        FlagFormRemoteSource.getINSTANCE()
+                .runAll(loadedFieldSightNotification)
+                .subscribe(new DisposableObserver<Uri>() {
+                    @Override
+                    public void onNext(Uri instanceUri) {
+                        Timber.i("Downloaded and saved instance at %s", instanceUri);
+                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
+                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
+                        startActivity(toEdit);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.i("Error downloading instance, reason: %s", e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+        if (true) return;
         FlagFormRemoteSource.getINSTANCE()
                 .getXMLInstance(loadedFieldSightNotification.getFormSubmissionId())
                 .map(new Function<String, String>() {
@@ -389,7 +414,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
                 .subscribe(new DisposableObserver<String>() {
                     @Override
                     public void onNext(String path) {
-                        String fixedPath = path.replace("file:///","");
+                        String fixedPath = path.replace("file:///", "");
                         Timber.i("Flagged form saved to %s", fixedPath);
                         Intent intent = new Intent(context, FormEntryActivity.class);
                         intent.putExtra(EXTRA_TESTING_PATH, fixedPath);
@@ -412,7 +437,6 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     private static String formPath() {
         return Environment.getExternalStorageDirectory().getPath();
     }
-
 
 
     private void initrecyclerViewImages(List<NotificationImage> framelist) {
