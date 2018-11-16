@@ -8,6 +8,8 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,12 +23,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.io.FilenameUtils;
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.bcss.collect.android.utilities.FileUtil;
+import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
@@ -34,14 +41,21 @@ import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
+import static org.bcss.collect.android.activities.FormEntryActivity.EXTRA_TESTING_PATH;
+import static org.bcss.collect.android.utilities.QRCodeUtils.QR_CODE_FILEPATH;
 import static org.bcss.collect.naxa.network.APIEndpoint.BASE_URL;
 
 
@@ -97,7 +111,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 super.onBackPressed();
                 break;
@@ -233,7 +247,6 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
                         idFormsTable);
 
 
-
         String action = getIntent().getAction();
         if (Intent.ACTION_PICK.equals(action)) {
             // caller is waiting on a picked form
@@ -264,8 +277,6 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
         }
         finish();
     }
-
-
 
 
     protected void fillODKForm(String idString) {
@@ -363,9 +374,45 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     @Override
     public void onClick(View v) {
         int id = v.getId();
-//        handleFlagForm(loadedFieldSightNotification.getFsFormId(), loadedFieldSightNotification.getFsFormIdProject(), loadedFieldSightNotification.getSiteId(), loadedFieldSightNotification.getIdString());
-        fillODKForm(loadedFieldSightNotification.getIdString());
+        FlagFormRemoteSource.getINSTANCE()
+                .getXMLInstance(loadedFieldSightNotification.getFormSubmissionId())
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String path) throws Exception {
+                        String fileName = FilenameUtils.getName(path).concat("-media");
+                        FileUtils.createFolder(Collect.FORMS_PATH + File.separator + fileName);
+                        return path;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<String>() {
+                    @Override
+                    public void onNext(String path) {
+                        String fixedPath = path.replace("file:///","");
+                        Timber.i("Flagged form saved to %s", fixedPath);
+                        Intent intent = new Intent(context, FormEntryActivity.class);
+                        intent.putExtra(EXTRA_TESTING_PATH, fixedPath);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+//        fillODKForm(loadedFieldSightNotification.getIdString());
     }
+
+    private static String formPath() {
+        return Environment.getExternalStorageDirectory().getPath();
+    }
+
 
 
     private void initrecyclerViewImages(List<NotificationImage> framelist) {

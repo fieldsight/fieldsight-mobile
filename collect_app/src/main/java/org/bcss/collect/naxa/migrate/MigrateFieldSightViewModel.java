@@ -291,7 +291,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
                         copySitePhotosFolder();
                         emitter.onNext(7);
 
-//                        FileUtils.deleteDir((new File(migrationHelper.getOldRootPath())));
+                        FileUtils.deleteDir((new File(migrationHelper.getOldRootPath())));
                         emitter.onNext(8);
                         break;
                     }

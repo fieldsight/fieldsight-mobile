@@ -20,6 +20,7 @@ public class FieldSightNotificationBuilder {
     private String comment;
     private String formType;
     private boolean isRead;
+    private String formSubmissionId;
 
     public FieldSightNotificationBuilder setId(int id) {
         this.id = id;
@@ -30,6 +31,12 @@ public class FieldSightNotificationBuilder {
         this.notificationType = notificationType;
         return this;
     }
+
+    public FieldSightNotificationBuilder setFormSubmissionId(String formSubmissionId) {
+        this.formSubmissionId = formSubmissionId;
+        return this;
+    }
+
 
     public FieldSightNotificationBuilder setNotifiedDate(String notifiedDate) {
         this.notifiedDate = notifiedDate;
@@ -117,6 +124,9 @@ public class FieldSightNotificationBuilder {
     }
 
     public FieldSightNotification createFieldSightNotification() {
-        return new FieldSightNotification(id, notificationType, notifiedDate, notifiedTime, idString, fsFormId, fsFormIdProject, formName, siteId, siteName, projectId, projectName, formStatus, role, isFormDeployed, details_url, comment, formType,isRead);
+        return new FieldSightNotification(id, notificationType, notifiedDate, notifiedTime,
+                idString, fsFormId, fsFormIdProject, formName, siteId, siteName, projectId,
+                projectName, formStatus, role, isFormDeployed, details_url, comment,
+                formType, isRead, formSubmissionId);
     }
 }

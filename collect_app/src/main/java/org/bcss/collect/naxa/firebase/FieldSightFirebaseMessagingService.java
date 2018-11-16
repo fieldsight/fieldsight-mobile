@@ -71,6 +71,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     private String comment;
     private String fsFormId;
     private String fsFormIdProject;
+    private String fsFormSubmissionId;
     private String formType;
     private String formName;
     private String formComment;
@@ -119,6 +120,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setIsFormDeployed(isFormDeployed)
                     .setFsFormId(fsFormIdProject)
                     .setIsFormDeployed(isDeployed)
+                    .setFormSubmissionId(fsFormSubmissionId)
                     .isRead(false)
                     .createFieldSightNotification();
 
@@ -247,6 +249,9 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
         if (notificationData.containsKey("project_form_id")) {
             fsFormIdProject = notificationData.get("project_form_id");
+        }
+        if (notificationData.containsKey("submission_id")) {
+            fsFormSubmissionId = notificationData.get("submission_id");
         }
     }
 

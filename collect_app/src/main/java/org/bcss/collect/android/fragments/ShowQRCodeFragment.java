@@ -154,6 +154,7 @@ public class ShowQRCodeFragment extends Fragment {
         shareIntent.setType("image/*");
         Uri uri =
                 FileProvider.getUriForFile(getActivity(), BuildConfig.APPLICATION_ID + ".provider", new File(QR_CODE_FILEPATH));
+//        content://org.bcss.collect.android.provider/external_files/fieldsight/settings/collect-settings.png
         FileUtils.grantFileReadPermissions(shareIntent, uri, getActivity());
         shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
     }

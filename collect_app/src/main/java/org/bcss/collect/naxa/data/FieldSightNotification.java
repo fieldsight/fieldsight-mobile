@@ -32,13 +32,20 @@ public class FieldSightNotification implements Parcelable {
     private String comment;
     private String formType;
     private boolean isRead;
+    private String formSubmissionId;
 
+    public String getFormSubmissionId() {
+        return formSubmissionId;
+    }
 
+    public void setFormSubmissionId(String formSubmissionId) {
+        this.formSubmissionId = formSubmissionId;
+    }
 
     public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString,
                                   String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId,
                                   String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment,
-                                  String formType,boolean isRead) {
+                                  String formType, boolean isRead,String formSubmissionId) {
         this.id = id;
         this.notificationType = notificationType;
         this.notifiedDate = notifiedDate;
@@ -58,6 +65,7 @@ public class FieldSightNotification implements Parcelable {
         this.comment = comment;
         this.formType = formType;
         this.isRead = isRead;
+        this.formSubmissionId = formSubmissionId;
     }
 
     public String getNotifiedTime() {
@@ -238,6 +246,7 @@ public class FieldSightNotification implements Parcelable {
         dest.writeString(this.details_url);
         dest.writeString(this.comment);
         dest.writeString(this.formType);
+        dest.writeString(this.formSubmissionId);
         dest.writeByte(this.isRead ? (byte) 1 : (byte) 0);
     }
 
@@ -260,6 +269,7 @@ public class FieldSightNotification implements Parcelable {
         this.details_url = in.readString();
         this.comment = in.readString();
         this.formType = in.readString();
+        this.formSubmissionId = in.readString();
         this.isRead = in.readByte() != 0;
     }
 

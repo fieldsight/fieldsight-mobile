@@ -10,13 +10,10 @@ import android.support.v4.app.Fragment;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.provider.FormsProviderAPI;
-import org.bcss.collect.naxa.network.APIEndpoint;
 
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class FieldSightFormListFragment extends Fragment {
 
@@ -63,7 +60,8 @@ public class FieldSightFormListFragment extends Fragment {
         Cursor cursor = getActivity().getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI,
                 projection,
                 selection, selectionArgs, null);
-        cursor.moveToFirst();
+
+        cursor.moveToLast();
         int columnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns._ID);
         long formId = Long.parseLong(cursor.getString(columnIndex));
 
