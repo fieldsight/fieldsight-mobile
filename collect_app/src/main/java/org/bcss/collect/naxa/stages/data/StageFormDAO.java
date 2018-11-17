@@ -26,7 +26,7 @@ public abstract class StageFormDAO implements BaseDaoFieldSight<Stage> {
         insert(items);
     }
 
-    @Query("SELECT * FROM stages WHERE site =:siteId AND project =:projectId")
+    @Query("SELECT * FROM stages WHERE site =:siteId OR project =:projectId")
     public abstract LiveData<List<Stage>> getBySiteId(String siteId, String projectId);
 
     @Query("SELECT * FROM stages WHERE project =:projectId ")
@@ -35,4 +35,7 @@ public abstract class StageFormDAO implements BaseDaoFieldSight<Stage> {
     @Query("SELECT * FROM stages WHERE project =:projectId ")
     public abstract Maybe<List<Stage>> getByProjectIdMaybe(String projectId);
 
+
+    @Query("SELECT * FROM stages WHERE project =:projectId OR site =:siteId")
+    public abstract Maybe<List<Stage>> getBySiteIdMaybe(String siteId, String projectId);
 }

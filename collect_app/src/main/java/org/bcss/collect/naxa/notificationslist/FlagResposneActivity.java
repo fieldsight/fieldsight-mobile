@@ -376,17 +376,20 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     public void onClick(View v) {
         int id = v.getId();
 
-//        FlagFormRemoteSource.getINSTANCE().getKOBOForm(loadedFieldSightNotification);
+        fillODKForm(loadedFieldSightNotification.getIdString());
+    }
+
+    private void downloadInstance(){
         FlagFormRemoteSource.getINSTANCE()
                 .runAll(loadedFieldSightNotification)
                 .subscribe(new DisposableObserver<Uri>() {
                     @Override
                     public void onNext(Uri instanceUri) {
                         Timber.i("Downloaded and saved instance at %s", instanceUri);
-//                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
-//                        toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
-//                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
-//                        startActivity(toEdit);
+                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
+                        toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
+                        startActivity(toEdit);
 
 
                         Intent intent = new Intent(Intent.ACTION_EDIT, instanceUri);
@@ -405,41 +408,6 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
 
                     }
                 });
-
-        if (true) return;
-        FlagFormRemoteSource.getINSTANCE()
-                .getXMLInstance(loadedFieldSightNotification.getFormSubmissionId())
-                .map(new Function<String, String>() {
-                    @Override
-                    public String apply(String path) throws Exception {
-                        String fileName = FilenameUtils.getName(path).concat("-media");
-                        FileUtils.createFolder(Collect.FORMS_PATH + File.separator + fileName);
-                        return path;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<String>() {
-                    @Override
-                    public void onNext(String path) {
-                        String fixedPath = path.replace("file:///", "");
-                        Timber.i("Flagged form saved to %s", fixedPath);
-                        Intent intent = new Intent(context, FormEntryActivity.class);
-                        intent.putExtra(EXTRA_TESTING_PATH, fixedPath);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-//        fillODKForm(loadedFieldSightNotification.getIdString());
     }
 
     private static String formPath() {

@@ -82,5 +82,9 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
     }
 
 
+    public Observable<List<Stage>> getBySiteIdMaybe(String siteId, String siteIdType, String projectId){
+        return localSource.getBySiteIdMaybe(siteId,siteIdType,projectId);
+    }
+
 
 }

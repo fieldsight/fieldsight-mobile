@@ -121,6 +121,36 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
     }
 
+    public Observable<List<Stage>> getBySiteIdMaybe(String siteId, String siteTypeId, String projectId) {
+        return dao.getBySiteIdMaybe(siteId,projectId)
+                .toObservable()
+                .flatMapIterable((Function<List<Stage>, Iterable<Stage>>) stages -> stages)
+                .flatMap(new Function<Stage, Observable<Stage>>() {
+                    @Override
+                    public Observable<Stage> apply(Stage stage) throws Exception {
+                        return SubStageLocalSource.getInstance()
+                                .getByStageIdMaybe(stage.getId(), siteTypeId)
+                                .filter(new Predicate<List<SubStage>>() {
+                                    @Override
+                                    public boolean test(List<SubStage> subStages) throws Exception {
+
+                                        return subStages.size() > 0;
+                                    }
+                                }).map(new Function<List<SubStage>, Stage>() {
+                                    @Override
+                                    public Stage apply(List<SubStage> subStages) throws Exception {
+                                        return stage;
+                                    }
+                                });
+
+                    }
+                })
+                .toList()
+                .toObservable();
+
+
+    }
+
     public LiveData<List<Stage>> getByProjectId(String projectId, String siteTypeId) {
         MediatorLiveData<List<Stage>> mediatorLiveData = new MediatorLiveData<>();
         LiveData<List<Stage>> stagesliveData = dao.getByProjectId(projectId);
