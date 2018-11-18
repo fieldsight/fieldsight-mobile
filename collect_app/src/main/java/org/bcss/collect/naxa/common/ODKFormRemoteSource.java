@@ -2,21 +2,14 @@ package org.bcss.collect.naxa.common;
 
 import android.os.Handler;
 
-import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.onboarding.DownloadProgress;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadReceiver;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadService;
-import org.bcss.collect.naxa.task.FieldSightDownloadFormListTask;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.greenrobot.eventbus.EventBus;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
@@ -59,6 +52,7 @@ public class ODKFormRemoteSource {
                         break;
                 }
             });
+
             XMLFormDownloadService.start(Collect.getInstance(), xmlFormDownloadReceiver);
         });
     }

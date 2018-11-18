@@ -289,7 +289,7 @@ public class DownloadModelImpl implements DownloadModel {
 
                     @Override
                     public void onNext(Object o) {
-//                        SyncRepository.getInstance().setSuccess(ALL_FORMS);
+                        SyncRepository.getInstance().setSuccess(ALL_FORMS);
                         FieldSightNotificationLocalSource.getInstance().markFormsAsRead();
                     }
 

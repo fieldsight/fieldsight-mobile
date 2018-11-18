@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -169,9 +170,9 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
         if (hasOldAccount) {
             MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
-//            ProjectListActivity.start(this);
         } else {
-            ProjectListActivity.start(this);
+            DownloadActivity.runAll(this);
+//            ProjectListActivity.start(this);
         }
         Toast.makeText(this, "Logged In!", Toast.LENGTH_SHORT).show();
 
@@ -184,7 +185,16 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
     }
 
     private void showErrorDialog(String msg) {
-        Dialog dialog = DialogFactory.createMessageDialog(LoginActivity.this, "Login Failed", msg);
+        Dialog dialog = DialogFactory.createActionDialog(LoginActivity.this, "Login Failed", msg)
+                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        attemptLogin();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_action_dismiss, null)
+                .create();
         new Handler().postDelayed(dialog::show, 500);
 
     }

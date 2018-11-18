@@ -26,7 +26,7 @@ import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 public class SyncRepository {
 
     private SyncDao syncDao;
-    private static SyncRepository INSTANCE;
+    public static SyncRepository INSTANCE;
     private final String CHECKED = "checked";
     public final String PROGRESS = "progress";
     private final String DATE = "date";
@@ -159,7 +159,6 @@ public class SyncRepository {
 //                new SyncableItem(Constant.DownloadUID.STAGED_FORMS, PENDING, null, "Staged forms", "Downloads scheduled forms for your sites"),
 //                new SyncableItem(Constant.DownloadUID.SCHEDULED_FORMS, PENDING, null, "Scheduled forms", "Download scheduled forms for your sites"),
                 new SyncableItem(Constant.DownloadUID.SITE_TYPES, PENDING, null, "Site type(s)", "Download site types to filter staged forms"),
-                new SyncableItem(Constant.DownloadUID.EDU_MATERIALS, PENDING, null, "Educational Materials", "Download educational attached for form(s)"),
                 new SyncableItem(Constant.DownloadUID.EDU_MATERIALS, PENDING, null, "Educational Materials", "Download educational attached for form(s)"),
                 new SyncableItem(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, null, "Project Contact(s)", "Download contact information for people associated with your project"),
                 new SyncableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, null, "Previous Submissions", "Download previous submission(s) for forms"),

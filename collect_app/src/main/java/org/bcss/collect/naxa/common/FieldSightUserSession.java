@@ -31,7 +31,9 @@ import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.sync.SyncRepository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import io.reactivex.Observer;
@@ -61,7 +63,14 @@ public class FieldSightUserSession {
         String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
 
         if (fcmToken == null) {
-            FirebaseInstanceId.getInstance().getToken();
+            AsyncTask.execute(() -> {
+                try {
+                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
         }
 
         if (fcmToken == null) {
@@ -157,6 +166,8 @@ public class FieldSightUserSession {
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcmToken);
 
         ServiceGenerator.clearInstance();
+
+        SyncRepository.INSTANCE = null; //todo: done to resolve sync screen blank bug; need to fix in future
 
     }
 

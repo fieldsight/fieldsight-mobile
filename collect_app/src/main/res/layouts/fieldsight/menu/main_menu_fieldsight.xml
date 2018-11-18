@@ -18,10 +18,11 @@
 
 
     <item
-        android:id="@+id/action_refresh"
 
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_refresh_white_2"
         android:title="Sync"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_app_settings"

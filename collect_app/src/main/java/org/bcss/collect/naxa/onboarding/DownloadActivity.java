@@ -19,6 +19,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
+import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 
 import java.util.ArrayList;
@@ -35,6 +36,12 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_CONTACTS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class DownloadActivity extends CollectAbstractActivity implements DownloadView {
@@ -67,6 +74,12 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         context.startActivity(intent);
     }
 
+    public static void runAll(Context context) {
+        Intent intent = new Intent(context, DownloadActivity.class);
+        intent.putExtra("run_all", true);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +89,17 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            int uid = bundle.getInt(EXTRA_OBJECT);
-            downloadPresenter.startDownload(uid);
+            if (bundle.containsKey(EXTRA_OBJECT)) {
+                int uid = bundle.getInt(EXTRA_OBJECT);
+                downloadPresenter.startDownload(uid);
+            } else if (bundle.containsKey("run_all")) {
+                downloadPresenter.startDownload(ALL_FORMS);
+                downloadPresenter.startDownload(PROJECT_SITES);
+                downloadPresenter.startDownload(SITE_TYPES);
+                downloadPresenter.startDownload(EDU_MATERIALS);
+                downloadPresenter.startDownload(PROJECT_CONTACTS);
+                downloadPresenter.startDownload(PREV_SUBMISSION);
+            }
         }
 
         setupToolbar();

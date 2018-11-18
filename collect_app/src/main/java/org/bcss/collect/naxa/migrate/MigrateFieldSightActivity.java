@@ -19,6 +19,7 @@ import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.login.LoginActivity;
+import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 
 import butterknife.BindView;
@@ -137,8 +138,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
 
     @OnClick(R.id.fieldsight_migrate_act_btn_proceed_anyway)
     public void openProjectList() {
-
-        ProjectListActivity.start(this);
+        DownloadActivity.runAll(this);
         finish();
 
     }

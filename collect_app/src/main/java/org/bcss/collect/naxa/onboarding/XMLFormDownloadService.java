@@ -83,7 +83,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         super(XMLFormDownloadService.class.getName());
     }
 
-
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
@@ -135,7 +134,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
                     @Override
                     public void onNext(List<Project> projects) {
-                        Timber.i("onNext %d",projects.size());
+                        Timber.i("onNext %d", projects.size());
 
                         ArrayList<String> projectIds = new ArrayList<>();
 
@@ -160,7 +159,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                         }
 
                         if (formsToDownlaod == null || formsToDownlaod.isEmpty()) {
-                            broadcastDownloadError("No project id provided to donwload forms");
+                            broadcastDownloadError("No project id provided to download forms");
                         } else {
                             downloadFormList(getApplicationContext(), XMLFormDownloadService.this, XMLFormDownloadService.this, formsToDownlaod.get(0));
                             broadcastDownloadStarted();
@@ -227,7 +226,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         } else {
             Log.d(TAG, " All forms downloading complete ");
             broadcastCompletedDownload();
-
         }
     }
 
@@ -261,7 +259,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
     @Override
     public void progressUpdate(String currentFile, int progress, int total) {
-
         broadcastDownloadProgress(currentFile, progress, total);
     }
 
@@ -283,7 +280,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         } else {
 
             Log.d(TAG, "Form List Downloading complete");
-
 
             // Everything worked. Clear the list and add the results.
             mFormNamesAndURLs = result;
