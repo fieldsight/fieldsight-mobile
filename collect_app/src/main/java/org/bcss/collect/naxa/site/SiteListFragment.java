@@ -3,18 +3,13 @@ package org.bcss.collect.naxa.site;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -28,10 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.R;
@@ -42,18 +34,11 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ThemeUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
 import org.bcss.collect.naxa.common.FilterOption;
 import org.bcss.collect.naxa.common.GSONInstance;
-import org.bcss.collect.naxa.common.LinearLayoutManagerWrapper;
-import org.bcss.collect.naxa.common.SharedPreferenceUtils;
-import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
-import org.bcss.collect.naxa.common.database.ProjectFilter;
-import org.bcss.collect.naxa.common.database.ProjectFilterLocalSource;
-import org.bcss.collect.naxa.common.rx.SingleObserverWithProgress;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.firebase.NotificationUtils;
@@ -66,16 +51,12 @@ import org.bcss.collect.naxa.survey.SurveyFormsActivity;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.github.benas.randombeans.api.EnhancedRandom;
 import io.reactivex.Observable;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -90,8 +71,6 @@ import static org.bcss.collect.android.activities.InstanceUploaderList.INSTANCE_
 import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
-import static org.bcss.collect.naxa.common.SharedPreferenceUtils.keySelectedRegionId;
-import static org.bcss.collect.naxa.common.SharedPreferenceUtils.keySelectedRegionLabel;
 
 public class SiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener {
 
@@ -160,12 +139,18 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         unbinder.unbind();
     }
 
-    private void changeActionVisibility(boolean visible){
-        if(true)return;
-        if(sortActionFilter != null){
-            Timber.i("menu filter %s",visible);
-            sortActionFilter.setVisible(visible);
+    private void changeActionVisibility(boolean visible) {
+        if (sortActionFilter == null) {
+            new Handler()
+                    .postDelayed(() -> {
+                        changeActionVisibility(visible);
+                        //it takes a while, for findMenu() to return action menu
+                    }, 1000);
+
+            return;
         }
+        sortActionFilter.setVisible(visible);
+
     }
 
     @Override
@@ -176,7 +161,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
-        changeActionVisibility(menuVisible);
         super.setMenuVisibility(menuVisible);
     }
 
@@ -186,6 +170,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);
     }
+
 
     private void assignFilterToList(FilterOption.FilterType type) {
         LiveData<List<Site>> source;
@@ -260,6 +245,13 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         if (bottomSheetDialog == null) {
             setupBottomSheet();
         }
+        changeActionVisibility(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        changeActionVisibility(false);
     }
 
     private void setupBottomSheet() {
@@ -390,14 +382,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @Override
     public void onUselessLayoutClicked(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
-            changeActionVisibility(false);
             FragmentHostActivity.start(getActivity(), site);
         }
     }
 
     @Override
     public void onSurveyFormClicked() {
-        changeActionVisibility(false);
         SurveyFormsActivity.start(getActivity(), loadedProject);
     }
 

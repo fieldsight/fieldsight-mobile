@@ -16,5 +16,5 @@
     <dimen name="timestamp">12dp</dimen>
     <dimen name="corner_radius_bottom_sheet">15dp</dimen>
 
-    <!--<dimen name="design_fab_image_size" tools:override="true">48dp</dimen>-->
+    <dimen name="design_fab_image_size" tools:override="true">18dp</dimen>
 </resources>

@@ -52,7 +52,8 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
     }
 
     private Single<List<SiteType>> fetchSiteTypes() {
-        return ServiceGenerator.createService(ApiInterface.class)
+        return ServiceGenerator.getRxClient()
+                .create(ApiInterface.class)
                 .getSiteTypes()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
