@@ -1,4 +1,5 @@
 package org.bcss.collect.naxa.onboarding;
+
 import java.io.Serializable;
 
 public class DownloadProgress implements Serializable {
@@ -12,11 +13,16 @@ public class DownloadProgress implements Serializable {
     private int progress;
     private int total;
     private String message;
+    private boolean isIndeterminate;
 
-    DownloadProgress(String currentFile, int progress, int total) {
-        this.currentFile = currentFile;
-        this.progress = progress;
+    DownloadProgress(String message, int total, boolean isIndeterminate) {
+        this.message = currentFile;
         this.total = total;
+        this.isIndeterminate = isIndeterminate;
+    }
+
+    public boolean isIndeterminate() {
+        return isIndeterminate;
     }
 
     public void setMessage(String message) {

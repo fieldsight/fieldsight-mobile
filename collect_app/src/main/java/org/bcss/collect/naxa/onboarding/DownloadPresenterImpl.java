@@ -41,12 +41,13 @@ public class DownloadPresenterImpl implements DownloadPresenter {
 
 
         LiveData<List<SyncableItem>> livedata = syncRepository.getAllSyncItems();
-        livedata.observe(downloadView.getLifeCycleOwner(), new Observer<List<SyncableItem>>() {
-            @Override
-            public void onChanged(@Nullable List<SyncableItem> syncableItemList) {
-                downloadView.addAdapter(syncableItemList);
-            }
-        });
+        livedata.observe(downloadView.getLifeCycleOwner(),
+                new Observer<List<SyncableItem>>() {
+                    @Override
+                    public void onChanged(@Nullable List<SyncableItem> syncableItemList) {
+                        downloadView.addAdapter(syncableItemList);
+                    }
+                });
 
 
     }

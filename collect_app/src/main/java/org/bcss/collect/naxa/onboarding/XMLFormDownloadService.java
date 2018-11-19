@@ -71,6 +71,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
     private Bundle message;
 
     private ResultReceiver receiver;
+    private DownloadProgress downloadProgress;
 
 
     public static void start(Context context, @NonNull XMLFormDownloadReceiver receiver) {
@@ -246,7 +247,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
     private void broadcastDownloadProgress(String currentFile, int progress, int total) {
 
         XMLForm xmlForm = formsToDownlaod.get(0);
-        DownloadProgress downloadProgress = new DownloadProgress("Downloading Forms", progress, total);
+        downloadProgress = new DownloadProgress("Downloading Forms", progress, false);
         String msg = "Downloading %s ";
 
         String formattedMsg = String.format(msg, currentFile);

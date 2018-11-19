@@ -22,7 +22,8 @@ public class CheckedItem extends RelativeLayout implements Checkable {
     private TextView title;
     private TextView tvSubtitle;
     private ProgressBar progressBar;
-    private int sucessColor, failureColor,progressColor;
+    private int sucessColor, failureColor, progressColor;
+    private boolean isIndeterminate = true;
 
 
     public CheckedItem(Context context, AttributeSet attrs, int defStyle) {
@@ -92,6 +93,15 @@ public class CheckedItem extends RelativeLayout implements Checkable {
 
     public void hideProgress() {
         progressBar.setVisibility(View.GONE);
+    }
+
+    public void setProgress(int total, int progress, String message) {
+        progressBar.setMax(total);
+        progressBar.setProgress(progress);
+    }
+
+    public void setup(boolean isIndeterminate) {
+        progressBar.setIndeterminate(isIndeterminate);
     }
 
     @Override

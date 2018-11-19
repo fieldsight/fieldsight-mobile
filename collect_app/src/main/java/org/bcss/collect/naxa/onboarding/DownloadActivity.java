@@ -140,9 +140,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     @Override
     public void addAdapter(List<SyncableItem> syncableItems) {
 
-
-//        downloadButton.setEnabled(areCheckedItems());
-
         Observable<Integer> notificaitonCountForm = FieldSightNotificationLocalSource.getInstance().anyFormsOutOfSync().toObservable();
         Observable<Integer> notificaitonCountSites = FieldSightNotificationLocalSource.getInstance().anyProjectSitesOutOfSync().toObservable();
         Observable<Integer> notificaitonCountPreviousSubmission = FieldSightNotificationLocalSource.getInstance().anyFormStatusChangeOutOfSync().toObservable();
@@ -223,19 +220,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                         e.printStackTrace();
                     }
                 });
-
-
-//        Observable.fromPublisher(notificaitonCountForm)
-//                .flatMapIterable(new Function<Integer, Iterable<SyncableItem>>() {
-//                    @Override
-//                    public Iterable<SyncableItem> apply(Integer integer) throws Exception {
-//
-//                        return null;
-//                    }
-//                });
-//
-//
-
 
     }
 
