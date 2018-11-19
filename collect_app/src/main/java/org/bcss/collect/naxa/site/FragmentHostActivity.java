@@ -27,6 +27,7 @@ import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -108,7 +109,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 break;
 
             case R.id.action_notificaiton:
-                //startActivity(new Intent(this, NotificationListActivity.class));
+                startActivity(new Intent(this, NotificationListActivity.class));
 
                 break;
             case R.id.action_app_settings:
@@ -135,7 +136,11 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                             }
                         });
                 break;
+            case R.id.action_refresh:
+                DownloadActivity.start(this);
+                break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 

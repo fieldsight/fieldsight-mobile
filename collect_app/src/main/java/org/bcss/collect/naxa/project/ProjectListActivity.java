@@ -144,33 +144,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
                 });
 
-        //total = 40747
-        new RawAssetLoader().loadTextFromAsset("demofile.geojson")
-                .subscribeOn(Schedulers.computation())
-                .skipLast(40746)
-                .subscribe(new Observer<Site>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Site site) {
-                        SiteLocalSource.getInstance().save(site);
-                        Timber.i(site.getName());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.e(e.getMessage());
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
@@ -235,6 +208,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                             }
                         });
                 break;
+
         }
         return super.onOptionsItemSelected(item);
     }

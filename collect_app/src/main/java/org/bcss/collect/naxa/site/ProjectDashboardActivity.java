@@ -66,6 +66,7 @@ import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
+import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.profile.UserActivity;
 import org.bcss.collect.naxa.project.MapFragment;
 import org.bcss.collect.naxa.contact.ProjectContactsFragment;
@@ -536,8 +537,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new DisposableSingleObserver<Boolean>() {
                             @Override
-                            public void onSuccess(Boolean aBoolean) {
-                                if (aBoolean) {
+                            public void onSuccess(Boolean hasInternet) {
+                                if (hasInternet) {
                                     FieldSightUserSession.createLogoutDialog(ProjectDashboardActivity.this);
                                 } else {
                                     FieldSightUserSession.stopLogoutDialog(ProjectDashboardActivity.this);
@@ -550,6 +551,9 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                             }
                         });
                 //logout();
+                break;
+            case R.id.action_refresh:
+                DownloadActivity.start(this);
                 break;
         }
         return super.onOptionsItemSelected(item);

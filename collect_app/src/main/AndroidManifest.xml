@@ -295,7 +295,7 @@ the specific language governing permissions and limitations under the License.
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.bcss.collect.naxa.onboarding.DownloadActivity"
-            android:exported="true" />
+             />
         <activity
             android:name="org.bcss.collect.naxa.project.ProjectListActivity"
             android:exported="true"

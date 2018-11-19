@@ -129,7 +129,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                startActivity(new Intent(DownloadActivity.this, ProjectListActivity.class));
                 finish();
                 break;
         }
