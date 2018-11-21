@@ -108,7 +108,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         ArrayList<Project> uniqueList = new ArrayList<>();
                         ArrayList<String> projectIds = new ArrayList<>();
                         for (Project project : projects) {
-                            if(!projectIds.contains(project.getId())){
+                            if (!projectIds.contains(project.getId())) {
                                 projectIds.add(project.getId());
                                 uniqueList.add(project);
                             }
@@ -156,21 +156,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     private Observable<MySiteResponse> getPageAndNext(String url) {
         return ServiceGenerator.getRxClient().create(ApiInterface.class)
                 .getAssignedSites(url)
-                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
-                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
-                            @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
-                                if (throwable instanceof SocketTimeoutException) {
-                                    return throwableObservable.delay(10, TimeUnit.SECONDS);
-                                }
-
-                                return Observable.error(throwable);
-                            }
-                        });
-                    }
-                })
                 .concatMap(new Function<MySiteResponse, ObservableSource<MySiteResponse>>() {
                     @Override
                     public ObservableSource<MySiteResponse> apply(MySiteResponse mySiteResponse) throws Exception {
@@ -179,7 +164,8 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         }
 
                         return Observable.just(mySiteResponse)
-                                .delay(5, TimeUnit.SECONDS)
+
+                                .delay(1, TimeUnit.SECONDS)
                                 .concatWith(getPageAndNext(mySiteResponse.getNext()));
                     }
                 });

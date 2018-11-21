@@ -13,6 +13,8 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Cache;
 import okhttp3.Dispatcher;
 import okhttp3.Interceptor;
@@ -69,7 +71,11 @@ public class ServiceGenerator {
                 okHttpClientBuilder.addInterceptor(spider);
             }
         }
+        okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS);
+        okHttpClientBuilder.writeTimeout(10, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);
         okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
+
 
         return okHttpClientBuilder
                 .build();
