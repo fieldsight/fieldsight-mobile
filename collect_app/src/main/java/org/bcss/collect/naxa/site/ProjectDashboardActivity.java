@@ -8,11 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -43,6 +45,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
@@ -109,6 +116,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     private FrameLayout navigationHeader;
     private int mapExistReachesPosition;
 
+    private ImageView ivToolbarBackground;
+
     public static void start(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
@@ -145,6 +154,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
+
         } catch (NullPointerException e) {
             ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
             finish();
@@ -160,9 +170,30 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         setupSearchView();
         setupNavigation();
         setupNavigationHeader();
-
         setupAnimation();
+    }
 
+    private void setToolbarBackground(String organizationlogourl) {
+        GlideApp.with(this)
+                .asBitmap()
+                .load(organizationlogourl)
+                .centerInside()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(R.drawable.sand_city_illustration)
+                .listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+
+                        return false;
+                    }
+                })
+                .into(ivToolbarBackground);
     }
 
 
@@ -217,6 +248,13 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
+    }
 
     private void setupNavigationHeader() {
 
@@ -226,11 +264,13 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         }
 
         User user = new Gson().fromJson(userString, User.class);
-        ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFull_name());
+        ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFullName());
         ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
 
         ImageView ivProfilePicture = (ImageView) navigationHeader.findViewById(R.id.image_profile);
         GlideApp.with(this).load(user.getProfilepic()).into(ivProfilePicture);
+
+
 
         navigationHeader.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,17 +297,17 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 switch (position) {
                     case 0:
                         mapExistReachesPosition = position;
-                        setToolbalText(loadedProject.getName());
-//                        setToolbalText(SharedPreferenceUtils.getSiteLisTitle(ProjectDashboardActivity.this, loadedProject.getId()));
+                        setToolbarText(loadedProject.getName());
+//                        setToolbarText(SharedPreferenceUtils.getSiteLisTitle(ProjectDashboardActivity.this, loadedProject.getId()));
                         deactivateMapMode();
                         break;
                     case 1:
                         mapExistReachesPosition = position;
-                        setToolbalText("Project Contacts");
+                        setToolbarText("Project Contacts");
                         deactivateMapMode();
                         break;
                     case 2:
-                        setToolbalText("Project Map");
+                        setToolbarText("Project Map");
                         activateMapMode();
                         break;
 
@@ -420,12 +460,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        setToolbalText(loadedProject.getName());
+        setToolbarText(loadedProject.getName());
 
 
     }
 
-    public void setToolbalText(String title) {
+    public void setToolbarText(String title) {
         collapsingToolbarLayout.setTitle(title);
     }
 
@@ -440,6 +480,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         drawerLayout = findViewById(R.id.activity_dashboard_drawer_layout);
         navigationView = findViewById(R.id.activity_dashboard_navigation_view);
         navigationHeader = (FrameLayout) navigationView.getHeaderView(0);
+        ivToolbarBackground = findViewById(R.id.iv_bg_toolbar);
 
 //        pager.setVisibility(View.GONE);
     }
@@ -550,7 +591,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
                             }
                         });
-                //logout();
                 break;
             case R.id.action_refresh:
                 DownloadActivity.start(this);

@@ -22,6 +22,10 @@ public class User {
     private String serverTime;
     private String id;
 
+    @SerializedName("full_name")
+    @Expose
+    private String fullName;
+
     @SerializedName("profile_pic")
     @Expose
     private String profilepic;
@@ -139,11 +143,12 @@ public class User {
         return user_name;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
 
-    public String getFull_name() {
-        if (firstName == null) firstName = "Full";
-        if (lastName == null) lastName = "Name";
-        return String.format("%s %s", firstName, lastName);
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public void setMySitesModel(List<MySites> mySitesModel) {
@@ -170,15 +175,6 @@ public class User {
         this.serverTime = serverTime;
     }
 
-    public void setFull_name(String full_name) {
-        String[] name = full_name.split(" ");
-        firstName = name[0];
-        if (name.length > 1) {
-            lastName = name[1];
-        } else {
-            lastName = "";
-        }
-    }
 
     public String getFirstName() {
         return firstName;

@@ -30,13 +30,21 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <ImageView
+                    android:id="@+id/iv_bg_toolbar"
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     android:src="@drawable/sand_city_illustration"
-                    android:tint="@color/colorTransparentBlue"
+
                     tools:ignore="ContentDescription" />
 
+                <ImageView
+                    android:background="@color/colorTransparentBlue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:tint="@color/colorTransparentBlue"
+                    tools:ignore="ContentDescription" />
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/act_dashboard_toolbar"

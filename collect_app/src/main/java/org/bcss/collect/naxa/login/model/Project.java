@@ -77,33 +77,6 @@ public class Project implements Parcelable {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Project project = (Project) o;
-        return isSyncedWithRemote == project.isSyncedWithRemote &&
-                Objects.equal(id, project.id) &&
-                Objects.equal(name, project.name) &&
-                Objects.equal(description, project.description) &&
-                Objects.equal(address, project.address) &&
-                Objects.equal(lat, project.lat) &&
-                Objects.equal(lon, project.lon) &&
-                Objects.equal(siteClusters, project.siteClusters) &&
-                Objects.equal(organizationName, project.organizationName) &&
-                Objects.equal(organizationlogourl, project.organizationlogourl) &&
-                Objects.equal(hasClusteredSites, project.hasClusteredSites) &&
-                Objects.equal(typeId, project.typeId) &&
-                Objects.equal(typeLabel, project.typeLabel) &&
-                Objects.equal(phone, project.phone) &&
-                Objects.equal(siteMetaAttributes, project.siteMetaAttributes);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, siteMetaAttributes);
-    }
-
     public Boolean getHasClusteredSites() {
         return hasClusteredSites;
     }
@@ -247,6 +220,33 @@ public class Project implements Parcelable {
         dest.writeString(this.phone);
         dest.writeByte(this.isSyncedWithRemote ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.siteMetaAttributes);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return isSyncedWithRemote == project.isSyncedWithRemote &&
+                Objects.equal(id, project.id) &&
+                Objects.equal(name, project.name) &&
+                Objects.equal(description, project.description) &&
+                Objects.equal(address, project.address) &&
+                Objects.equal(lat, project.lat) &&
+                Objects.equal(lon, project.lon) &&
+                Objects.equal(siteClusters, project.siteClusters) &&
+                Objects.equal(organizationName, project.organizationName) &&
+                Objects.equal(organizationlogourl, project.organizationlogourl) &&
+                Objects.equal(hasClusteredSites, project.hasClusteredSites) &&
+                Objects.equal(typeId, project.typeId) &&
+                Objects.equal(typeLabel, project.typeLabel) &&
+                Objects.equal(phone, project.phone) &&
+                Objects.equal(siteMetaAttributes, project.siteMetaAttributes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, siteMetaAttributes);
     }
 
     protected Project(Parcel in) {

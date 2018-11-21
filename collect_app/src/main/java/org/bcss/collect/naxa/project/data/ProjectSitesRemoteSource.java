@@ -1,14 +1,10 @@
 package org.bcss.collect.naxa.project.data;
 
-import android.widget.EditText;
-
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 
-import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.naxa.common.GSONInstance;
-import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.greenrobot.eventbus.EventBus;
@@ -29,10 +25,13 @@ import org.bcss.collect.naxa.site.db.SiteRepository;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.BackpressureStrategy;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
@@ -62,17 +61,17 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         syncRepository = SyncRepository.getInstance();
     }
 
-    public Single<List<Object>> fetchProjectAndSites() {
+    private Single<List<Object>> fetchProjectAndSites() {
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUser()
-                .delay(10, TimeUnit.SECONDS)
+                .delay(500, TimeUnit.MILLISECONDS)
                 .flatMap(new Function<MeResponse, ObservableSource<MySiteResponse>>() {
                     @Override
                     public ObservableSource<MySiteResponse> apply(MeResponse meResponse) throws Exception {
 
                         if (!meResponse.getData().getIsSupervisor()) {
-                            throw new BadUserException(meResponse.getData().getFull_name() + " has not been assigned as a site supervisor.");
+                            throw new BadUserException(meResponse.getData().getFullName() + " has not been assigned as a site supervisor.");
                         }
 
                         String user = GSONInstance.getInstance().toJson(meResponse.getData());
@@ -90,35 +89,46 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .map(new Function<MySiteResponse, List<MySites>>() {
                     @Override
                     public List<MySites> apply(MySiteResponse mySiteResponse) throws Exception {
+
                         return mySiteResponse.getResult();
                     }
                 })
-                .flatMapIterable(new Function<List<MySites>, Iterable<MySites>>() {
+                .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
+                .map(new Function<MySites, Project>() {
                     @Override
-                    public Iterable<MySites> apply(List<MySites> mySites) throws Exception {
-                        return mySites;
+                    public Project apply(MySites mySites) throws Exception {
+                        siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
+                        return mySites.getProject();
                     }
                 })
-                .flatMap(new Function<MySites, Observable<Object>>() {
+                .toList()
+                .map(new Function<List<Project>, Set<Project>>() {
                     @Override
-                    public Observable<Object> apply(MySites mySites) throws Exception {
-                        Project project = mySites.getProject();
-                        siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
+                    public Set<Project> apply(List<Project> projects) throws Exception {
+                        ArrayList<Project> uniqueList = new ArrayList<>();
+                        ArrayList<String> projectIds = new ArrayList<>();
+                        for (Project project : projects) {
+                            if(!projectIds.contains(project.getId())){
+                                projectIds.add(project.getId());
+                                uniqueList.add(project);
+                            }
+                        }
+
+                        return new HashSet<Project>(uniqueList);
+                    }
+                })
+                .toObservable()
+                .flatMapIterable(new Function<Set<Project>, Iterable<Project>>() {
+                    @Override
+                    public Iterable<Project> apply(Set<Project> projects) throws Exception {
+
+                        return projects;
+                    }
+                })
+                .flatMap(new Function<Project, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Project project) throws Exception {
                         projectLocalSource.save(project);
-
-//                        Observable<String> siteDocumentsObservable = Observable.just(mySites.getSite().getSiteDocuments())
-//                                .flatMapIterable((Function<List<String>, Iterable<String>>) urls -> urls)
-//                                .flatMap(new Function<String, ObservableSource<String>>() {
-//                                    @Override
-//                                    public ObservableSource<String> apply(String url) throws Exception {
-//                                        String fileName = FilenameUtils.getName(url);
-//                                        boolean isPDF = FilenameUtils.getExtension(url).equalsIgnoreCase("pdf");
-//                                        String savePath = isPDF ? Collect.PDF : Collect.IMAGES;
-//                                        return new RxDownloader(Collect.getInstance())
-//                                                .download(url, fileName, savePath, "*/*", false).subscribeOn(Schedulers.io());
-//                                    }
-//                                });
-
 
                         Observable<Project> siteRegionObservable = ServiceGenerator.getRxClient().create(ApiInterface.class)
                                 .getRegionsByProjectId(project.getId())
@@ -132,10 +142,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                                     }
                                 });
 
-                        return Observable.concat(siteRegionObservable,Observable.just("demo"));
-//                        return Observable.concat(siteDocumentsObservable, siteRegionObservable);
-
-
+                        return Observable.concat(siteRegionObservable, Observable.just("demo"));
                     }
                 })
                 .toList()

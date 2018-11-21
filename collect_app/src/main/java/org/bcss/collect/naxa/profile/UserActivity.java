@@ -162,7 +162,7 @@ public class UserActivity extends CollectAbstractActivity {
                                     .into(civProfilePic);
                         }
 
-                        setInputLayoutData(ilName, user.getFull_name());
+                        setInputLayoutData(ilName, user.getFullName());
                         setInputLayoutData(ilEmail, user.getEmail());
                         setInputLayoutData(ilPhone, user.getPhone());
                         setInputLayoutData(ilLocation, user.getAddress());
@@ -378,7 +378,7 @@ public class UserActivity extends CollectAbstractActivity {
                         mUser.setSync(false);
                         switch (textInputLayout.getId()) {
                             case R.id.il_name:
-                                mUser.setFull_name(s.toString());
+                                mUser.setFullName(s.toString());
                                 break;
                             case R.id.il_email:
                                 mUser.setEmail(s.toString());

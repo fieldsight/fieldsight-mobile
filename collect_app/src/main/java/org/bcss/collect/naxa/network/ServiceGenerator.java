@@ -14,6 +14,7 @@ import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 
 import okhttp3.Cache;
+import okhttp3.Dispatcher;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -56,6 +57,8 @@ public class ServiceGenerator {
     private static OkHttpClient createOkHttpClient() {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
         String token = FieldSightUserSession.getAuthToken();
+        Dispatcher dispatcher = new Dispatcher();
+
         if (!TextUtils.isEmpty(token)) {
             okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
         }

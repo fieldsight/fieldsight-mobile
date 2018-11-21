@@ -16,6 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.LinearLayout;
 
+import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
@@ -148,11 +149,8 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
 
         recyclerView.setEmptyView(emptyLayout,
                 getString(R.string.empty_message, "general forms"),
-                new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
-                    @Override
-                    public void onRetryButtonClick() {
+                () -> {
 
-                    }
                 });
         recyclerView.setAdapter(generalFormsAdapter);
 
@@ -160,7 +158,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
 
     @Override
     public void onGuideBookButtonClicked(GeneralForm generalForm, int position) {
-
+        EducationalMaterialActivity.start(getActivity(),generalFormsAdapter.getAll());
     }
 
     @Override
