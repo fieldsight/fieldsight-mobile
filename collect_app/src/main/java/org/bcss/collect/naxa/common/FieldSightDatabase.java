@@ -1,9 +1,11 @@
 package org.bcss.collect.naxa.common;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
@@ -58,7 +60,7 @@ import java.io.File;
                 SubmissionDetail.class
 
         },
-        version = 4)
+        version = 5)
 @TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
@@ -99,7 +101,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             FieldSightDatabase.class, DB_PATH)
-                            .fallbackToDestructiveMigration()
+                            .addMigrations(MIGRATION_4_5)
                             .build();
                 }
             }
@@ -109,4 +111,11 @@ public abstract class FieldSightDatabase extends RoomDatabase {
 
 
     public abstract SubmissionDetailDAO getSubmissionDetailDAO();
+
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("DELETE FROM sync");
+        }
+    };
 }

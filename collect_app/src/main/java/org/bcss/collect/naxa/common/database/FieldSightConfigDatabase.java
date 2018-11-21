@@ -1,8 +1,10 @@
 package org.bcss.collect.naxa.common.database;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
@@ -34,12 +36,13 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             FieldSightConfigDatabase.class, DB_PATH)
-                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
+
+
 
 }
