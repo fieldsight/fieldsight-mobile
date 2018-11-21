@@ -23,6 +23,7 @@ import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
@@ -34,6 +35,9 @@ import com.evernote.android.job.JobManagerCreateException;
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -60,7 +64,9 @@ import org.bcss.collect.android.utilities.NotificationUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -73,7 +79,6 @@ import static org.bcss.collect.android.logic.PropertyManager.SCHEME_USERNAME;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_APP_LANGUAGE;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_FONT_SIZE;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
-
 
 
 /**
@@ -232,7 +237,7 @@ public class Collect extends Application implements HasActivityInjector {
 
         Stetho.initializeWithDefaults(this);
 
-
+        setupFirebaseRemoteConfig();
         applicationComponent = DaggerAppComponent.builder()
                 .application(this)
                 .build();
@@ -382,4 +387,31 @@ public class Collect extends Application implements HasActivityInjector {
     public DispatchingAndroidInjector<Activity> activityInjector() {
         return androidInjector;
     }
+
+    private void setupFirebaseRemoteConfig() {
+
+        final FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+
+        // set in-app defaults
+        Map<String, Object> remoteConfigDefaults = new HashMap<>();
+        remoteConfigDefaults.put(ForceUpdateChecker.KEY_UPDATE_REQUIRED, false);
+        remoteConfigDefaults.put(ForceUpdateChecker.KEY_CURRENT_VERSION, ForceUpdateChecker.getAppVersion(this));
+        remoteConfigDefaults.put(ForceUpdateChecker.KEY_UPDATE_URL,
+                "https://play.google.com/store/apps/details?id=org.bcss.collect.android");
+
+
+        firebaseRemoteConfig.setDefaults(remoteConfigDefaults);
+        firebaseRemoteConfig.fetch(10) // fetch every minutes
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Timber.d("remote config is fetched.");
+                            firebaseRemoteConfig.activateFetched();
+                        }
+                    }
+                });
+    }
+
+
 }

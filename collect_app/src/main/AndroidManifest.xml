@@ -335,6 +335,8 @@ the specific language governing permissions and limitations under the License.
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EducationalMaterialActivity" />
+        <activity android:name="org.bcss.collect.naxa.onboarding.DownloadActivityRefactor" />
+        <activity android:name="org.bcss.collect.naxa.project.AppUpdateActivity" />
 
         <receiver
             android:name=".tasks.sms.SmsSentBroadcastReceiver"

@@ -39,6 +39,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
+import org.bcss.collect.android.application.ForceUpdateChecker;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.demo.FeaturesItem;
 import org.bcss.collect.naxa.demo.RawAssetLoader;
@@ -92,7 +93,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.android.application.Collect.allowClick;
 
-public class ProjectListActivity extends CollectAbstractActivity implements MyProjectsAdapter.OnItemClickListener {
+public class ProjectListActivity extends CollectAbstractActivity implements MyProjectsAdapter.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener  {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -126,6 +127,8 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
         ButterKnife.bind(this);
         setupToolbar();
         setupProjectlist();
+
+        ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
 
         ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
         viewModel = ViewModelProviders.of(this, factory).get(ProjectViewModel.class);
@@ -421,5 +424,12 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 //            getWindow().setExitTransition(fade);
 
         }
+    }
+
+
+    @Override
+    public void onUpdateNeeded(String updateUrl) {
+        startActivity(new Intent(this,AppUpdateActivity.class));
+
     }
 }
