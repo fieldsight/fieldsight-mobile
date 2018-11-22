@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
@@ -157,7 +158,7 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
 
     @Override
     public void onGuideBookButtonClicked(ScheduleForm scheduleForm, int position) {
-
+        EducationalMaterialActivity.startFromScheduled(getActivity(),scheduledFormsAdapter.getAll(),position);
     }
 
     @Override

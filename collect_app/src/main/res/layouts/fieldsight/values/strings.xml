@@ -188,6 +188,12 @@
     <string name="menu_title_logout">Logout</string>
     <string name="menu_title_search">Search</string>
 
+
+    <string name="dialog_pdf_application_title">No Application Found</string>
+    <string name="dialog_pdf_desc">Download one from Android Play Store?</string>
+    <string name="dialog_pdf_okay">Yes, Please</string>
+    <string name="dialog_pdf_no">No, Thanks</string>
+
     <!--Notification sitelist ends here-->
 
 </resources>

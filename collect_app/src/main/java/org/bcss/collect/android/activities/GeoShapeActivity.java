@@ -86,7 +86,7 @@ public class GeoShapeActivity extends CollectAbstractActivity implements IRegist
     public MapFragment createMapFragment() {
         String mapSdk = getIntent().getStringExtra(PreferenceKeys.KEY_MAP_SDK);
         return (mapSdk == null || mapSdk.equals(PREF_VALUE_GOOGLE_MAPS)) ?
-            new GoogleMapFragment() : new OsmMapFragment();
+            new OsmMapFragment() : new OsmMapFragment();
     }
 
     @Override protected void onStart() {

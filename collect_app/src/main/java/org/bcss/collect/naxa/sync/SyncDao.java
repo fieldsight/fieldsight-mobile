@@ -53,4 +53,9 @@ public interface SyncDao {
     @Query("SELECT * from sync WHERE uid=:uid")
     Single<SyncableItem> getById(int uid);
 
-    }
+//    @Query("UPDATE sync SET downloadingStatus='asda' WHERE downloadingStatus =:statusToChange");
+//    void updateAllUnknown(String statusToChange);
+
+    @Query("UPDATE sync SET downloadingStatus=:newValue WHERE progressStatus=:isProgress")
+    void updateAllUnknown(int newValue, boolean isProgress);
+}

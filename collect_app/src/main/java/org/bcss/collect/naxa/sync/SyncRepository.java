@@ -135,6 +135,16 @@ public class SyncRepository {
         return syncDao.getAllSyncableItems();
     }
 
+    public void updateAllUnknown() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                syncDao.updateAllUnknown(Constant.DownloadStatus.FAILED,false);
+            }
+        });
+
+    }
+
     private static class insertAsyncTask extends AsyncTask<SyncableItem, Void, Void> {
 
         private SyncDao syncDao;

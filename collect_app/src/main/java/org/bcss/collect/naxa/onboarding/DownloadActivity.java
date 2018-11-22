@@ -20,7 +20,9 @@ import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
+import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.project.ProjectListActivity;
+import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -200,6 +202,16 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                                 });
                     }
                 })
+//                .flatMap(new Function<SyncableItem, ObservableSource<SyncableItem>>() {
+//                    @Override
+//                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) throws Exception {
+//                        boolean hasAPIRunning = ServiceGenerator.getRunningAPICount() > 0;
+//                        if(!hasAPIRunning){
+//                            SyncRepository.getInstance().setError(syncableItem.getUid());
+//                        }
+//                        return Observable.just(syncableItem);
+//                    }
+//                })
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

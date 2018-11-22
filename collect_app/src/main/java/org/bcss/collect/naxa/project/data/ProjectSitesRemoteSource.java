@@ -65,7 +65,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUser()
-                .delay(500, TimeUnit.MILLISECONDS)
                 .flatMap(new Function<MeResponse, ObservableSource<MySiteResponse>>() {
                     @Override
                     public ObservableSource<MySiteResponse> apply(MeResponse meResponse) throws Exception {
@@ -173,46 +172,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
     }
 
-    @Deprecated
-    //old sites and project api
-    public Single<List<Project>> fetchProjecSites() {
-        return ServiceGenerator.getRxClient()
-                .create(ApiInterface.class)
-                .getUserInformation()
-                .flatMap(new Function<MeResponse, ObservableSource<List<MySites>>>() {
-                    @Override
-                    public ObservableSource<List<MySites>> apply(MeResponse meResponse) throws Exception {
-                        String user = new Gson().toJson(meResponse.getData());
-                        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
-                        return Observable.just(meResponse.getData().getMySitesModel());
-                    }
-                })
-                .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
-                .flatMap(new Function<MySites, ObservableSource<Project>>() {
-                    @Override
-                    public ObservableSource<Project> apply(MySites mySites) throws Exception {
-                        Project project = mySites.getProject();
-                        siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
-                        projectLocalSource.save(project);
 
-
-                        return ServiceGenerator.createService(ApiInterface.class)
-                                .getRegionsByProjectId(project.getId())
-                                .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
-                                    @Override
-                                    public ObservableSource<Project> apply(List<SiteRegion> siteRegions) throws Exception {
-                                        siteRegions.add(new SiteRegion("", "Unassigned", ""));
-                                        String value = new Gson().toJson(siteRegions);
-                                        ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
-                                        return Observable.just(project);
-                                    }
-                                });
-                    }
-                })
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
 
     @Override
     public void getAll() {

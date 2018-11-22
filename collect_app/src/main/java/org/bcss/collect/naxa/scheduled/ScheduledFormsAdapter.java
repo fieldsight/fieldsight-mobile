@@ -154,6 +154,10 @@ public class ScheduledFormsAdapter extends
         }
     }
 
+    public ArrayList<ScheduledFormAndSubmission> getAll() {
+        return totalList;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView tvFormName, tvDesc, tvIconText, tvSubtext;

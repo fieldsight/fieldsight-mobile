@@ -12,10 +12,13 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.sync.SyncRepository;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
+import okhttp3.Call;
 import okhttp3.Dispatcher;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -31,6 +34,7 @@ public class ServiceGenerator {
     private static Retrofit cacheablesRetrofit = null;
     private static Gson gson = new GsonBuilder().create();
     private static Retrofit rxRetrofit;
+    private static OkHttpClient okHttp;
 
 
     public static void clearInstance() {
@@ -119,6 +123,8 @@ public class ServiceGenerator {
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
+
+
         return retrofit.create(serviceClass);
     }
 
@@ -137,9 +143,13 @@ public class ServiceGenerator {
     public static Retrofit getRxClient() {
 
 
+        if (okHttp == null) {
+            okHttp = createOkHttpClient();
+        }
+
         if (rxRetrofit == null) {
             rxRetrofit = new Retrofit.Builder()
-                    .client(createOkHttpClient())
+                    .client(okHttp)
                     .baseUrl(APIEndpoint.BASE_URL)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
@@ -147,7 +157,23 @@ public class ServiceGenerator {
         }
 
 
+        okHttp.dispatcher()
+                .setIdleCallback(() -> {
+                    Timber.i("All network class have stopped");
+                    int callsInQueue = okHttp.dispatcher().queuedCallsCount();
+                    if(callsInQueue > 0){
+                        SyncRepository.getInstance().updateAllUnknown();
+                    }
+                });
+
         return rxRetrofit;
+    }
+
+
+    public static int getRunningAPICount() {
+        if (okHttp == null) return 0;
+
+        return okHttp.dispatcher().runningCallsCount();
     }
 
 }

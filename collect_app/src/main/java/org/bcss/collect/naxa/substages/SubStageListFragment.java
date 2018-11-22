@@ -21,6 +21,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.DateTimeUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
@@ -161,7 +162,7 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
 
     @Override
     public void onGuideBookButtonClicked(SubStage subStage, int position) {
-
+        EducationalMaterialActivity.startFromSubstage(getActivity(),listAdapter.getAll(),position);
     }
 
     @Override

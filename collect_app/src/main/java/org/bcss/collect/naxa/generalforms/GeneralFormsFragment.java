@@ -158,7 +158,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
 
     @Override
     public void onGuideBookButtonClicked(GeneralForm generalForm, int position) {
-//        EducationalMaterialActivity.start(getActivity(),generalFormsAdapter.getAll());
+        EducationalMaterialActivity.startFromGeneral(getActivity(),generalFormsAdapter.getAll(),position);
     }
 
     @Override

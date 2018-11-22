@@ -1,36 +1,26 @@
 package org.bcss.collect.naxa.substages;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.DateTimeUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
-import org.bcss.collect.naxa.generalforms.GeneralFormsAdapter;
-import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.stages.data.SubStage;
@@ -172,6 +162,10 @@ public class SubStageListAdapter extends
     @Override
     public int getItemCount() {
         return subStages.size();
+    }
+
+    public ArrayList<SubStageAndSubmission> getAll() {
+        return (ArrayList<SubStageAndSubmission>) subStages;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

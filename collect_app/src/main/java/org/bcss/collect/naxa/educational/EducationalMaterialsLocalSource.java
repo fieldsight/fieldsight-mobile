@@ -11,6 +11,8 @@ import org.bcss.collect.naxa.generalforms.data.Em;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Single;
+
 public class EducationalMaterialsLocalSource implements BaseLocalDataSource<Em> {
 
     private static EducationalMaterialsLocalSource INSTANCE;
@@ -31,7 +33,7 @@ public class EducationalMaterialsLocalSource implements BaseLocalDataSource<Em> 
 
     @Override
     public LiveData<List<Em>> getAll() {
-        return null;
+        return dao.getAll();
     }
 
     @Override
@@ -46,6 +48,11 @@ public class EducationalMaterialsLocalSource implements BaseLocalDataSource<Em> 
 
     @Override
     public void updateAll(ArrayList<Em> items) {
+
+    }
+
+    public Single<List<Em>> getByFsFormId(String fsFormId) {
+        return dao.getByFsFormId(fsFormId);
 
     }
 }

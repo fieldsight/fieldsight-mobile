@@ -67,7 +67,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                             nameAndUrl.add(pdfUrl);
                         }
 
-                        if (em.getEmImages().size() > 0) {
+                        if (em.getEmImages() != null && em.getEmImages().size() > 0) {
                             for (EmImage emImage : em.getEmImages()) {
                                 String imageUrl = emImage.getImage();
                                 nameAndUrl.add(imageUrl);
@@ -160,6 +160,12 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<ScheduleForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms("1", project.getId()))
                 .flatMapIterable((Function<ArrayList<ScheduleForm>, Iterable<ScheduleForm>>) scheduleForms -> scheduleForms)
+                .filter(new Predicate<ScheduleForm>() {
+                    @Override
+                    public boolean test(ScheduleForm scheduleForm) throws Exception {
+                        return scheduleForm.getEm() != null;
+                    }
+                })
                 .map(new Function<ScheduleForm, Em>() {
                     @Override
                     public Em apply(ScheduleForm scheduleForm) throws Exception {
@@ -181,12 +187,18 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 .flatMapIterable((Function<ArrayList<Stage>, Iterable<Stage>>) stages -> stages)
                 .map(Stage::getSubStage)
                 .flatMapIterable((Function<ArrayList<SubStage>, Iterable<SubStage>>) subStages -> subStages)
+                .filter(new Predicate<SubStage>() {
+                    @Override
+                    public boolean test(SubStage subStage) throws Exception {
+                        return subStage.getEm() != null;
+                    }
+                })
                 .map(new Function<SubStage, Em>() {
                     @Override
                     public Em apply(SubStage subStage) throws Exception {
                         Em em = subStage.getEm();
                         em.setFsFormId(subStage.getFsFormId());
-//                        EducationalMaterialsLocalSource.getInstance().save(em);
+                        EducationalMaterialsLocalSource.getInstance().save(em);
 
                         return em;
                     }
@@ -201,12 +213,20 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable("1", project.getId()))
                 .flatMapIterable((Function<ArrayList<GeneralForm>, Iterable<GeneralForm>>) generalForms -> generalForms)
+                .filter(new Predicate<GeneralForm>() {
+                    @Override
+                    public boolean test(GeneralForm generalForm) throws Exception {
+                        return generalForm.getEm() != null;
+                    }
+                })
                 .map(new Function<GeneralForm, Em>() {
                     @Override
                     public Em apply(GeneralForm generalForm) throws Exception {
                         Em em = generalForm.getEm();
+
                         em.setFsFormId(generalForm.getFsFormId());
                         EducationalMaterialsLocalSource.getInstance().save(em);
+
 
                         return em;
                     }
