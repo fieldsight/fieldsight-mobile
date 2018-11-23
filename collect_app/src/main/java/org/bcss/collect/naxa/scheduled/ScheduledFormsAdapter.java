@@ -63,7 +63,9 @@ public class ScheduledFormsAdapter extends
 
         viewHolder.tvFormName.setText(scheduleForm.getFormName());
         viewHolder.tvDesc.setText(scheduleForm.getScheduleName());
-        viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1).toUpperCase());
+        if(!TextUtils.isEmpty(scheduleForm.getScheduleName())){
+            viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1).toUpperCase());
+        }
 
         setSubmissionText(viewHolder, submissionDetail, scheduleForm);
     }
