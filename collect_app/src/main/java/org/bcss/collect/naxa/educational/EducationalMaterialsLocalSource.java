@@ -51,7 +51,7 @@ public class EducationalMaterialsLocalSource implements BaseLocalDataSource<Em> 
 
     }
 
-    public Single<List<Em>> getByFsFormId(String fsFormId) {
+    public Single<Em> getByFsFormId(String fsFormId) {
         return dao.getByFsFormId(fsFormId);
 
     }

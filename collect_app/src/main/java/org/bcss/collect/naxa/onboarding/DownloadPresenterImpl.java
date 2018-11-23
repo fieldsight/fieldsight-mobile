@@ -42,7 +42,6 @@ public class DownloadPresenterImpl implements DownloadPresenter {
 
         int count = (ServiceGenerator.getQueuedAPICount() + ServiceGenerator.getRunningAPICount());
         if (count == 0) {
-
             syncRepository.setAllRunningTaskAsFailed();
         }
 

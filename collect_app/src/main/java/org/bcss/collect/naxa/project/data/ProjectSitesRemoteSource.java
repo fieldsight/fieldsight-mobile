@@ -148,7 +148,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-
     }
 
 
@@ -171,7 +170,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
 
     }
-
 
 
     @Override

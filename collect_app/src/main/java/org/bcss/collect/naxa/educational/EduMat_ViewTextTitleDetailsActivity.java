@@ -12,12 +12,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.activities.CollectAbstractActivity;
 
 /**
  * Created by susan on 7/18/2017.
  */
 
-public class EduMat_ViewTextTitleDetailsActivity extends AppCompatActivity{
+public class EduMat_ViewTextTitleDetailsActivity extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -579,6 +579,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(getString(R.string.loading_form));
+
     }
 
     /**
@@ -995,6 +996,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 Intent pref = new Intent(this, PreferencesActivity.class);
                 startActivity(pref);
                 return true;
+            case android.R.id.home:
+                createQuitDialog();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

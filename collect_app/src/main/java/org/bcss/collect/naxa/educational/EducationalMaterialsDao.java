@@ -17,7 +17,7 @@ public abstract class EducationalMaterialsDao implements BaseDaoFieldSight<Em> {
 
 
     @Query("SELECT * FROM educational_materials where fsFormId =:fsFormId ")
-    public abstract Single<List<Em>> getByFsFormId(String fsFormId);
+    public abstract Single<Em> getByFsFormId(String fsFormId);
 
 
     @Query("SELECT * FROM educational_materials")

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.GlideApp;
 
 import java.io.File;
@@ -21,7 +22,7 @@ import java.io.File;
  * Created by susan on 7/18/2017.
  */
 
-public class EduMat_ViewImageDetailsActivity extends AppCompatActivity{
+public class EduMat_ViewImageDetailsActivity extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -2,14 +2,12 @@ package org.bcss.collect.naxa.educational;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.widget.TextView;
 
 import org.apache.commons.io.FilenameUtils;
@@ -17,7 +15,6 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.ToastUtils;
-import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.generalforms.data.Em;
 import org.bcss.collect.naxa.generalforms.data.EmImage;
@@ -25,21 +22,16 @@ import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
-import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
-import org.bcss.collect.naxa.stages.data.SubStage;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -53,7 +45,7 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
-public class EducationalMaterialActivity extends CollectAbstractActivity {
+public class EducationalMaterialActivity extends CollectAbstractActivity implements ViewPager.OnPageChangeListener {
 
 
     private ArrayList<String> fsFormIds;
@@ -99,7 +91,7 @@ public class EducationalMaterialActivity extends CollectAbstractActivity {
                 .toList();
     }
 
-    public static void startFromGeneral(Context context, ArrayList<GeneralFormAndSubmission> list, int pos ) {
+    public static void startFromGeneral(Context context, ArrayList<GeneralFormAndSubmission> list, int pos) {
         WeakReference<Context> weakReference = new WeakReference<Context>(context);
 
 
@@ -170,9 +162,6 @@ public class EducationalMaterialActivity extends CollectAbstractActivity {
     }
 
 
-
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,77 +188,105 @@ public class EducationalMaterialActivity extends CollectAbstractActivity {
     }
 
     private void generateFragments() {
-        ArrayList<Object> itemsListSiteTrue = new ArrayList<>();
 
 
-        Observable<Object> observable = Observable.just(fsFormIds)
+        Single<List<Fragment>> observable = Observable.just(fsFormIds)
                 .flatMapIterable((Function<ArrayList<String>, Iterable<String>>) strings -> strings)
-                .flatMap(new Function<String, ObservableSource<List<Em>>>() {
+                .flatMap(new Function<String, Observable<Em>>() {
                     @Override
-                    public ObservableSource<List<Em>> apply(String fsFormId) throws Exception {
-
-
+                    public Observable<Em> apply(String fsFormId) throws Exception {
                         return EducationalMaterialsLocalSource.getInstance().getByFsFormId(fsFormId).toObservable();
                     }
                 })
-                .map(new Function<List<Em>, Object>() {
+                .map(new Function<Em, Fragment>() {
                     @Override
-                    public Object apply(List<Em> ems) throws Exception {
+                    public Fragment apply(Em educationMaterial) throws Exception {
+                        ArrayList<Object> itemsListSiteTrue = new ArrayList<>();
 
-                        for (Em educationMaterial : ems) {
-
-
-                            itemsListSiteTrue.add(
-                                    new Edu_Title_Desc_Model(
-                                            educationMaterial.getTitle(),
-                                            educationMaterial.getText()));
+                        itemsListSiteTrue.add(
+                                new Edu_Title_Desc_Model(
+                                        educationMaterial.getTitle(),
+                                        educationMaterial.getText()));
 
 
-                            boolean educationMaterialExist = educationMaterial.getEmImages() != null && educationMaterial.getEmImages().size() > 0;
-                            if(educationMaterialExist){
-                                for(EmImage emImage: educationMaterial.getEmImages()){
-                                    String imageName  = FilenameUtils.getName(emImage.getImage());
-                                    String path = Collect.IMAGES + File.separator + imageName;
+                        boolean educationMaterialExist = educationMaterial.getEmImages() != null && educationMaterial.getEmImages().size() > 0;
+                        if (educationMaterialExist) {
+                            for (EmImage emImage : educationMaterial.getEmImages()) {
+                                String imageName = FilenameUtils.getName(emImage.getImage());
+                                String path = Collect.IMAGES + File.separator + imageName;
 
-                                    itemsListSiteTrue.add(
-                                            new Edu_Image_Model(
-                                                    path,
-                                                    path,
-                                                    imageName
-                                            ));
-                                }
+                                itemsListSiteTrue.add(
+                                        new Edu_Image_Model(
+                                                path,
+                                                path,
+                                                imageName
+                                        ));
                             }
+                        }
+
+                        boolean pdfExists = educationMaterial.getPdf() != null && educationMaterial.getPdf().length() > 0;
+
+                        if (pdfExists) {
+
+                            String url = educationMaterial.getPdf();
+                            String fileName = FilenameUtils.getName(educationMaterial.getPdf());
+                            String path = Collect.PDF + File.separator + fileName;
+
+                            itemsListSiteTrue.add(new Edu_PDF_Model(
+                                    url,
+                                    path,
+                                    fileName));
                         }
 
                         DynamicFragment dynamicFragment = new DynamicFragment();
                         dynamicFragment.prepareAllFields(itemsListSiteTrue);
-                        fragments.add(dynamicFragment);
-                        mPagerAdapter.notifyDataSetChanged();
-                        return ems;
+                        return dynamicFragment;
                     }
-                });
+                })
+                .toList();
 
         observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<Object>() {
-            @Override
-            public void onNext(Object o) {
-                Timber.i("onSuccess()");
-            }
+                .subscribe(new DisposableSingleObserver<List<Fragment>>() {
+                    @Override
+                    public void onSuccess(List<Fragment> dynamicFragments) {
+                        fragments.addAll(dynamicFragments);
+                        mPagerAdapter.notifyDataSetChanged();
+                        viewPager.setCurrentItem(defaultPagerPosition,true);
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                Timber.i("onError()");
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        ToastUtils.showShortToast("Failed to load Education Material");
+                        finish();
+                    }
+                });
 
-            @Override
-            public void onComplete() {
-
-            }
-        });
 
     }
 
+
+    private void setPageTitle() {
+
+
+
+    }
+
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        //not implemented
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        setPageTitle();
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        //not implemented
+    }
 }

@@ -39,6 +39,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
@@ -74,6 +75,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
     public static void start(Context context) {
         Intent intent = new Intent(context, DownloadActivity.class);
+        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
