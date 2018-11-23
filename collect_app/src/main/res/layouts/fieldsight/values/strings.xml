@@ -79,7 +79,7 @@
     <string name="shared_transition_toolbar" translatable="false">toolbar_shared_transition</string>
     <string name="btn_add_site_photo">Add Site photo</string>
     <string name="toolbar_title_offline_site">Create Site</string>
-    <string name="toolbar_title_offline_site_edit">Edit Site</string>
+    <string name="toolbar_title_offline_site_edit">Site Profile</string>
     <string name="msg_failed_to_load">Failed to load</string>
     <string name="menu_filter">Filter</string>
     <string name="hint_choose_site_type">Choose an type</string>
@@ -169,6 +169,7 @@
 
     <string name="form_last_submitted_by">• Last Submitted by: %s</string>
     <string name="form_last_submission_datetime">Last Submitted %s</string>
+    <string name="form_name">Form Name: %s</string>
     <string name="form_last_submission_status">• Status: %s</string>
     <string name="schedule_type">• Schedule Type: %s</string>
     <string name="substage_description">• Description: %s</string>
@@ -194,6 +195,7 @@
     <string name="dialog_pdf_okay">Yes, Please</string>
     <string name="dialog_pdf_no">No, Thanks</string>
     <string name="menu_title_educational_materials">Educational Materials</string>
+
 
     <!--Notification sitelist ends here-->
 

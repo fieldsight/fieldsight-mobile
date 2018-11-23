@@ -11,6 +11,6 @@
 
     <item
         android:id="@+id/popup_open_edit"
-        android:title="Edit Site" />
+        android:title="View Site Profile" />
 
 </menu>

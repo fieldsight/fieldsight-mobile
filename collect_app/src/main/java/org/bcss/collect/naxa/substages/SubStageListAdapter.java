@@ -55,7 +55,7 @@ public class SubStageListAdapter extends
         subStages.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
 
-        if(newList.isEmpty()){
+        if (newList.isEmpty()) {
             //triggers observer so it display empty layout - nishon
             this.notifyDataSetChanged();
         }

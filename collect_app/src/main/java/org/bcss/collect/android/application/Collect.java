@@ -72,6 +72,7 @@ import javax.inject.Inject;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
@@ -268,8 +269,11 @@ public class Collect extends Application implements HasActivityInjector {
 
         initProperties();
 
-        if (BuildConfig.BUILD_TYPE.equals("odkCollectRelease")) {
+        if (true) {
+            Fabric.with(this, new Crashlytics());
+    //        if (BuildConfig.BUILD_TYPE.equals("odkCollectRelease")) {
             Timber.plant(new CrashReportingTree());
+
         } else {
             Timber.plant(new Timber.DebugTree());
         }

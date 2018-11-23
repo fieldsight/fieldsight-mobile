@@ -138,7 +138,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
         setContentView(R.layout.activity_site_detail_change);
         ButterKnife.bind(this);
 
-        setupToolbar();
+
         setupViewModel();
 
         try {
@@ -149,6 +149,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
             finish();
         }
 
+        setupToolbar();
         createSiteDetailViewModel.setSiteMutableLiveData(site);
 
         createSiteDetailViewModel
@@ -296,7 +297,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
     }
 
     private void setupToolbar() {
-        toolbarGeneral.setTitle(R.string.toolbar_title_offline_site_edit);
+        toolbarGeneral.setTitle(site.getName());
         setSupportActionBar(toolbarGeneral);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -311,7 +312,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_site_edit_add_photo:
-                final CharSequence[] items = {"Take Photo", "Choose siteName Gallery", "Dismiss"};
+                final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Dismiss"};
                 DialogFactory.createListActionDialog(this, "Add photo", items, (dialog, which) -> {
                     switch (which) {
                         case 0:

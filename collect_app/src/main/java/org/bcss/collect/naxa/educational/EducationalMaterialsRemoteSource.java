@@ -126,6 +126,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     public void onError(Throwable e) {
                         SyncRepository.getInstance().setError(EDU_MATERIALS);
                         e.printStackTrace();
+                        Timber.e(e);
                     }
 
                     @Override

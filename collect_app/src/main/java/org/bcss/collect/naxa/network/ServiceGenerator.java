@@ -157,14 +157,6 @@ public class ServiceGenerator {
         }
 
 
-        okHttp.dispatcher()
-                .setIdleCallback(() -> {
-                    Timber.i("All network class have stopped");
-                    int callsInQueue = okHttp.dispatcher().queuedCallsCount();
-                    if(callsInQueue > 0){
-                        SyncRepository.getInstance().updateAllUnknown();
-                    }
-                });
 
         return rxRetrofit;
     }
