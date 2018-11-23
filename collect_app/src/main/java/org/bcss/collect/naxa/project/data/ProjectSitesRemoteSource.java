@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.MaybeSource;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
@@ -40,6 +41,7 @@ import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
@@ -178,10 +180,8 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
         Single<List<Object>> observable = fetchProjectAndSites();
 
-        ReactiveNetwork
-                .observeNetworkConnectivity(Collect.getInstance().getApplicationContext())
-
-                .flatMapSingle((Function<Connectivity, SingleSource<List<Object>>>) connectivity -> observable)
+        observable
+                .toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<List<Object>>() {
