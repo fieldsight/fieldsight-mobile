@@ -184,7 +184,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         ilPhone.getEditText().setText(nSite.getPhone());
                         ilAddress.getEditText().setText(nSite.getAddress());
                         ilRegion.getEditText().setText(nSite.getRegion());
-                        ilSiteType.getEditText().setText(nSite.getTypeId());
+                        ilSiteType.getEditText().setText(nSite.getTypeLabel());
 
                     }
                 });
@@ -196,6 +196,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                     public void onChanged(@Nullable List<SiteType> siteTypes) {
                         boolean show = siteTypes != null && !siteTypes.isEmpty();
                         spinnerSiteType.setVisibility(show ? View.VISIBLE : View.GONE);
+                        ilSiteType.setVisibility(show ?View.VISIBLE:View.GONE);
                         if (show) {
                             SiteTypeSpinnerAdapter spinnerAdapter = new SiteTypeSpinnerAdapter(CreateSiteDetailActivity.this,
                                     android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_type), siteTypes);

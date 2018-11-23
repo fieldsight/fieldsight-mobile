@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:layout_margin="@dimen/margin_large"
+
    >
 
     <!--https://stackoverflow.com/questions/27484126/adjust-icon-size-of-floating-action-button-fab-->
@@ -15,28 +15,28 @@
         android:src="@drawable/ic_list"
         android:id="@+id/tab_site_list"
         android:layout_width="wrap_content"
-
         android:scaleType="center"
-        app:fabSize="normal"
+        app:fabCustomSize="24dp"
         android:layout_height="wrap_content"
-
         app:backgroundTint="@color/primaryColor"
         />
 
     <android.support.design.widget.FloatingActionButton
-        app:fabSize="normal"
-        android:scaleType="center"
+        app:fabCustomSize="24dp"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_local_phone"
         android:id="@+id/tab_contacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         app:backgroundTint="@color/primaryColor"
         />
 
+
+
     <android.support.design.widget.FloatingActionButton
-        app:fabSize="normal"
-        android:scaleType="center"
+        app:fabCustomSize="24dp"
+
+        android:scaleType="fitXY"
         android:src="@drawable/ic_map"
         android:id="@+id/tab_map"
         android:layout_width="wrap_content"
