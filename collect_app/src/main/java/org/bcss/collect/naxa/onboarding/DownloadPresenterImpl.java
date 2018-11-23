@@ -53,8 +53,6 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                         downloadView.addAdapter(syncableItemList);
                     }
                 });
-
-
     }
 
     @Override

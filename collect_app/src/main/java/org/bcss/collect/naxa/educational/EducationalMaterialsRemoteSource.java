@@ -95,7 +95,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                                 break;
                         }
 
-                        return true;
+                        return !isFileAlreadyDownloaded;
                     }
                 })
                 .flatMap((Function<String, Observable<String>>) url -> {
@@ -170,9 +170,10 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     @Override
                     public Em apply(ScheduleForm scheduleForm) throws Exception {
                         Em em = scheduleForm.getEm();
-                        em.setFsFormId(scheduleForm.getFsFormId());
-                        EducationalMaterialsLocalSource.getInstance().save(em);
-
+                        if (em != null) {
+                            em.setFsFormId(scheduleForm.getFsFormId());
+                            EducationalMaterialsLocalSource.getInstance().save(em);
+                        }
                         return em;
                     }
                 });
@@ -197,8 +198,10 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     @Override
                     public Em apply(SubStage subStage) throws Exception {
                         Em em = subStage.getEm();
-                        em.setFsFormId(subStage.getFsFormId());
-                        EducationalMaterialsLocalSource.getInstance().save(em);
+                        if (em != null) {
+                            em.setFsFormId(subStage.getFsFormId());
+                            EducationalMaterialsLocalSource.getInstance().save(em);
+                        }
 
                         return em;
                     }
@@ -223,10 +226,10 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     @Override
                     public Em apply(GeneralForm generalForm) throws Exception {
                         Em em = generalForm.getEm();
-
-                        em.setFsFormId(generalForm.getFsFormId());
-                        EducationalMaterialsLocalSource.getInstance().save(em);
-
+                        if (em != null) {
+                            em.setFsFormId(generalForm.getFsFormId());
+                            EducationalMaterialsLocalSource.getInstance().save(em);
+                        }
 
                         return em;
                     }

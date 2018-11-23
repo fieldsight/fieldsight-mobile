@@ -61,7 +61,11 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.apache.commons.io.IOUtils;
+import org.bcss.collect.android.utilities.SharedPreferencesUtils;
 import org.bcss.collect.android.views.ODKView;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.educational.EducationalMaterial;
+import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
@@ -998,6 +1002,16 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 return true;
             case android.R.id.home:
                 createQuitDialog();
+                break;
+            case R.id.menu_show_edu_materials:
+                String submissionUri = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
+                        SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, "");
+                if (submissionUri != null && submissionUri.length() > 0) {
+                    String[] a = submissionUri.split("/");
+                    String fsFormId = a[a.length - 2];
+                    EducationalMaterialActivity.start(this, fsFormId);
+                }
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -2510,7 +2524,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     /**
      * Requests that unsent finalized forms be auto-sent. If no network connection is available,
      * the work will be performed when a connection becomes available.
-     *
+     * <p>
      * TODO: if the user changes auto-send settings, should an auto-send job immediately be enqueued?
      */
     private void requestAutoSend() {

@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.educational;
 
+import android.arch.persistence.room.EmptyResultSetException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.ViewUtils;
@@ -161,6 +163,17 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
 
     }
 
+    public static void start(FormEntryActivity formEntryActivity, String id) {
+        Intent intent = new Intent(formEntryActivity, EducationalMaterialActivity.class);
+
+        ArrayList<String> fsFormIds = new ArrayList<>();
+        fsFormIds.add(id);
+
+        intent.putExtra(EXTRA_MESSAGE, 0);
+        intent.putStringArrayListExtra(EXTRA_OBJECT, (ArrayList<String>) fsFormIds);
+        formEntryActivity.startActivity(intent);
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -253,13 +266,17 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
                     public void onSuccess(List<Fragment> dynamicFragments) {
                         fragments.addAll(dynamicFragments);
                         mPagerAdapter.notifyDataSetChanged();
-                        viewPager.setCurrentItem(defaultPagerPosition,true);
+                        viewPager.setCurrentItem(defaultPagerPosition, false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        ToastUtils.showShortToast("Failed to load Education Material");
+                        if (e instanceof EmptyResultSetException) {
+                            ToastUtils.showLongToast("No education materials present for this form");
+                        }else {
+                            ToastUtils.showLongToast("Failed to load Education Material");
+                        }
                         finish();
                     }
                 });
@@ -269,7 +286,6 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
 
 
     private void setPageTitle() {
-
 
 
     }
