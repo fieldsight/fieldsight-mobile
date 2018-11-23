@@ -58,4 +58,7 @@ public interface SyncDao {
 
     @Query("UPDATE sync SET downloadingStatus=:newValue WHERE progressStatus=:isProgress")
     void updateAllUnknown(int newValue, boolean isProgress);
+
+    @Query("UPDATE sync SET downloadingStatus = 2, progressStatus = 0, lastSyncDateTime =:date WHERE progressStatus= 1")
+    void markAllRunningTaskAsFailed(String date);
 }

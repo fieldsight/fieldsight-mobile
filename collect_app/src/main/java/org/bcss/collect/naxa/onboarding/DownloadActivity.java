@@ -37,6 +37,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
@@ -131,12 +132,24 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                super.onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Timber.i("onDestroy() %s",isFinishing());
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Timber.i("onPause() ");
+    }
 
     @Override
     public void addAdapter(List<SyncableItem> syncableItems) {

@@ -84,11 +84,16 @@ public class SyncRepository {
     }
 
     private void updateDate(int uid) {
+        updateField(uid, DATE, false, formattedDate());
+        hideProgress(uid);
+    }
+
+
+    public String formattedDate() {
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa", Locale.US);
         String formattedDate = df.format(date);
-        updateField(uid, DATE, false, formattedDate);
-        hideProgress(uid);
+        return formattedDate;
     }
 
     public Single<SyncableItem> getStatusById(int uid) {
@@ -139,10 +144,16 @@ public class SyncRepository {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDao.updateAllUnknown(Constant.DownloadStatus.FAILED,false);
+                syncDao.updateAllUnknown(Constant.DownloadStatus.FAILED, false);
             }
         });
 
+    }
+
+    public void setAllRunningTaskAsFailed() {
+        AsyncTask.execute(() -> {
+            syncDao.markAllRunningTaskAsFailed(formattedDate());
+        });
     }
 
     private static class insertAsyncTask extends AsyncTask<SyncableItem, Void, Void> {

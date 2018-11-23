@@ -14,6 +14,7 @@ import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.contact.ContactRemoteSource;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
+import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.previoussubmission.LastSubmissionRemoteSource;
 import org.bcss.collect.naxa.site.SiteTypeRemoteSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
@@ -39,6 +40,11 @@ public class DownloadPresenterImpl implements DownloadPresenter {
         this.downloadModel = new DownloadModelImpl();
         syncRepository = SyncRepository.getInstance();
 
+        int count = (ServiceGenerator.getQueuedAPICount() + ServiceGenerator.getRunningAPICount());
+        if (count == 0) {
+
+            syncRepository.setAllRunningTaskAsFailed();
+        }
 
         LiveData<List<SyncableItem>> livedata = syncRepository.getAllSyncItems();
         livedata.observe(downloadView.getLifeCycleOwner(),
