@@ -74,8 +74,8 @@ android {
         minSdkVersion(16)
         targetSdkVersion(26)
 //        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
-        versionCode 37
-        versionName "2.4.4"
+        versionCode 38
+        versionName "2.4.5"
 //        versionName getVersionName()
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true

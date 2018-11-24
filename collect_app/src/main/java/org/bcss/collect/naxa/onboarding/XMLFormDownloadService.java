@@ -170,6 +170,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                     @Override
                     public void onError(Throwable e) {
                         Timber.i("onError");
+                        e.printStackTrace();
                         broadcastDownloadError(e.getMessage());
                     }
 
