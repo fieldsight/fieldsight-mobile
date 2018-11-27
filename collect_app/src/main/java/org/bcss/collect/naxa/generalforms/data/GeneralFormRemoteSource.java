@@ -114,7 +114,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .toObservable();
 
 
-        return Observable.merge(siteODKForms, projectODKForms)
+        return Observable.concat(siteODKForms, projectODKForms)
 
                 .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
                 .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::fetchGeneralFromOneUrl)

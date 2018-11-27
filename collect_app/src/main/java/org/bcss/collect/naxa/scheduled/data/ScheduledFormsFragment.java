@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
@@ -158,13 +159,15 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
 
     @Override
     public void onGuideBookButtonClicked(ScheduleForm scheduleForm, int position) {
-        EducationalMaterialActivity.startFromScheduled(getActivity(),scheduledFormsAdapter.getAll(),position);
+        EducationalMaterialActivity.startFromScheduled(getActivity(), scheduledFormsAdapter.getAll(), position);
     }
 
     @Override
     public void onFormItemClicked(ScheduleForm scheduleForm, int position) {
 
-        String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), loadedSite.getId(), scheduleForm.getFsFormId());
+        String formDeployedFrom = scheduleForm.getSiteId() != null ? Constant.FormDeploymentFrom.SITE : Constant.FormDeploymentFrom.PROJECT;
+
+        String submissionUrl = generateSubmissionUrl(formDeployedFrom, loadedSite.getId(), scheduleForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 

@@ -167,7 +167,10 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
 
     @Override
     public void onFormItemClicked(SubStage subStage, int position) {
-        String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), loadedSite.getId(), subStage.getFsFormId());
+
+        String formDeployedFrom = subStage.getSubStageDeployedFrom();
+
+        String submissionUrl = generateSubmissionUrl(formDeployedFrom, loadedSite.getId(), subStage.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 

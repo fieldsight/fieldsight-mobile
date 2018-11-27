@@ -16,6 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.LinearLayout;
 
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
@@ -66,7 +67,6 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
 
     @BindView(R.id.root_layout_empty_layout)
     View emptyLayout;
-
 
 
     Unbinder unbinder;
@@ -158,18 +158,21 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
 
     @Override
     public void onGuideBookButtonClicked(GeneralForm generalForm, int position) {
-        EducationalMaterialActivity.startFromGeneral(getActivity(),generalFormsAdapter.getAll(),position);
+        EducationalMaterialActivity.startFromGeneral(getActivity(), generalFormsAdapter.getAll(), position);
     }
 
     @Override
     public void onFormItemClicked(GeneralForm generalForm, int position) {
 
-        String submissionUrl = generateSubmissionUrl(loadedSite.getGeneralFormDeployedFrom(), loadedSite.getId(), generalForm.getFsFormId());
+        String formDeployedFrom = generalForm.getSiteId() != null ? Constant.FormDeploymentFrom.SITE : Constant.FormDeploymentFrom.PROJECT;
+
+        String submissionUrl = generateSubmissionUrl(formDeployedFrom, loadedSite.getId(), generalForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 
         fillODKForm(generalForm.getIdString());
     }
+
 
     @Override
     public void onFormItemLongClicked(GeneralForm generalForm) {
