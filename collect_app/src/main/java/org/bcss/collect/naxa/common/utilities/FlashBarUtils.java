@@ -5,9 +5,12 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
 import com.andrognito.flashbar.Flashbar;
 import com.andrognito.flashbar.anim.FlashAnim;
+import com.karumi.dexter.listener.single.SnackbarOnDeniedPermissionListener;
 
 
 import org.bcss.collect.android.R;
@@ -28,10 +31,14 @@ public class FlashBarUtils {
         }
 
 
+
+
+
         Flashbar.Builder bar = new Flashbar.Builder(context)
                 .gravity(Flashbar.Gravity.BOTTOM)
                 .title("Out of sync")
                 .message(message)
+                .enableSwipeToDismiss()
                 .castShadow(false)
                 .titleColorRes(R.color.white)
                 .enableSwipeToDismiss()
@@ -41,12 +48,7 @@ public class FlashBarUtils {
                 .showIcon()
                 .positiveActionTextColorRes(R.color.colorGreenPrimaryLight)
                 .positiveActionText("Resolve")
-                .positiveActionTapListener(new Flashbar.OnActionTapListener() {
-                    @Override
-                    public void onActionTapped(Flashbar flashbar) {
-                        DownloadActivity.start(context, outOfSyncUid);
-                    }
-                })
+                .positiveActionTapListener(flashbar -> DownloadActivity.start(context, outOfSyncUid))
                 .enterAnimation(FlashAnim.with(context)
                         .animateBar()
                         .duration(400)
@@ -58,7 +60,7 @@ public class FlashBarUtils {
                         .accelerateDecelerate());
 
 
-        new Handler().postDelayed(() -> bar.build().show(), 2000);
+        new Handler().postDelayed(() -> bar.build().show(), 500);
 
 
     }
@@ -70,7 +72,6 @@ public class FlashBarUtils {
 
     public static void showFlashbar(@NonNull Activity context, @NonNull String message, boolean progressIcon) {
 
-        if(true)return;
 
         if (message.isEmpty()) {
             return;
