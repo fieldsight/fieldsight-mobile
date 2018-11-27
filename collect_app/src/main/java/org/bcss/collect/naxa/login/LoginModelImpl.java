@@ -42,7 +42,7 @@ public class LoginModelImpl implements LoginModel {
                                     @Override
                                     public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
                                         if ("false".equals(fcmParameter.getIs_active())) {
-                                            throw new FirebaseTokenException("FieldSight failed to add token");
+                                            throw new FirebaseTokenException("Failed to add token in server");
                                         }
 
                                         FieldSightUserSession.saveAuthToken(authResponse.getToken());
@@ -62,10 +62,10 @@ public class LoginModelImpl implements LoginModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        if (e instanceof HttpException) {
-                            onLoginFinishedListener.onError();
-                        } else if (e instanceof FirebaseTokenException) {
+                        if (e instanceof FirebaseTokenException) {
                             onLoginFinishedListener.fcmTokenError();
+                        }else {
+                            onLoginFinishedListener.onError();
                         }
 
                     }

@@ -44,6 +44,7 @@ def getVersionName = { ->
     try {
         def stdout = new ByteArrayOutputStream()
         exec {
+
             switch (ant.properties.os) {
                 case 'windows':
                     commandLine 'cmd', '/c', 'git', 'describe', '--tags', '--dirty', '--always'
@@ -73,10 +74,10 @@ android {
         applicationId('org.bcss.collect.android')
         minSdkVersion(16)
         targetSdkVersion(26)
-        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
+//        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         versionCode 38
-        versionName "2.4.5"
-        versionName getVersionName()
+        versionName "2.4.5-test"
+//        versionName getVersionName()
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true

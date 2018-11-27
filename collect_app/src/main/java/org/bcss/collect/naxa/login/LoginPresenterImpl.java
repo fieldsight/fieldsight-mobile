@@ -57,7 +57,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
                     @Override
                     public void onError(Throwable e) {
-
+                        loginView.showError("No Network Connectivity");
                     }
                 });
 
