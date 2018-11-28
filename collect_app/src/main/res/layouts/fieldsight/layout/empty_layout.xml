@@ -43,7 +43,5 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/msg"
         android:layout_centerHorizontal="true"
-        android:drawableLeft="@drawable/ic_refresh"
-        android:drawableStart="@drawable/ic_refresh"
         android:text="Check Now" />
 </RelativeLayout>

@@ -81,7 +81,6 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 });
 
 
-        FlashBarUtils.showOutOfSyncMsg(ALL_FORMS, FragmentHostActivity.this, "Form(s) information is out of sync");
     }
 
     private void setupToolbar() {

@@ -8,6 +8,8 @@ import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 
+import javax.net.ssl.SSLException;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -62,10 +64,16 @@ public class LoginModelImpl implements LoginModel {
 
                     @Override
                     public void onError(Throwable e) {
+
                         if (e instanceof FirebaseTokenException) {
                             onLoginFinishedListener.fcmTokenError();
-                        }else {
-                            onLoginFinishedListener.onError();
+                        } else if (e instanceof SSLException) {
+                            onLoginFinishedListener.onError("An ssl exception occurred");
+                        } else if (e instanceof HttpException) {
+                            HttpException httpException = (HttpException) e;
+
+                        } else {
+                            onLoginFinishedListener.onError("");
                         }
 
                     }

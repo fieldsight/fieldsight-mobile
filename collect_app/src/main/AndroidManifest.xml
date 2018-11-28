@@ -106,6 +106,7 @@ the specific language governing permissions and limitations under the License.
         </provider>
 
         <activity
+            android:exported="true"
             android:name="org.bcss.collect.android.activities.MainMenuActivity"
             android:configChanges="locale|orientation|screenSize" />
         <activity

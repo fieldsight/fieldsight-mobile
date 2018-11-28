@@ -5,7 +5,7 @@ import org.bcss.collect.naxa.login.model.MeResponse;
 public interface LoginModel {
 
     interface OnLoginFinishedListener {
-        void onError();
+        void onError(String message);
 
         void fcmTokenError();
 
