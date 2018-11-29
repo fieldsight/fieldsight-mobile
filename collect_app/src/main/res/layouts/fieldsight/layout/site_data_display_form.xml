@@ -153,7 +153,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:drawableLeft="@drawable/ic_place"
         android:text="Open in map "
         android:visibility="visible" />
 
