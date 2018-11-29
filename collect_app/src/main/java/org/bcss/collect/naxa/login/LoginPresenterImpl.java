@@ -70,9 +70,9 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     }
 
     @Override
-    public void onError() {
+    public void onError(String message) {
         loginView.showProgress(false);
-        loginView.showError("Invalid email/username or password");
+        loginView.showError(message);
 
     }
 

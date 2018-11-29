@@ -42,16 +42,15 @@
             android:layout_marginEnd="@dimen/margin_large"
             android:layout_marginRight="@dimen/margin_large"
             android:background="@drawable/shape_chip_drawable"
-            android:drawableLeft="@drawable/ic_location_city_white_24dp"
-            android:drawableStart="@drawable/ic_location_city_white_24dp"
+            android:drawableLeft="@drawable/ic_city_white"
+            android:drawableStart="@drawable/ic_city_white"
             android:gravity="center"
             android:text="Bagmati"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_small"
             android:textStyle="bold" />
 
-
-        <TextView
+   <TextView
             android:id="@+id/site_option_frag_site_name"
             style="@style/TextAppearance.AppCompat.Title.Inverse"
             android:layout_width="wrap_content"

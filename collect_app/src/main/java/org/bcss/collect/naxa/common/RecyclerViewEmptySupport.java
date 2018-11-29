@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.common;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,8 @@ import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import javax.annotation.Nullable;
 
 import timber.log.Timber;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 ////https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview
 public class RecyclerViewEmptySupport extends RecyclerView {
@@ -118,7 +121,10 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                     .setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            DownloadActivity.start(Collect.getInstance().getApplicationContext());
+                            Intent intent =  new Intent(Collect.getInstance(),DownloadActivity.class);
+                            intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                            Collect.getInstance().startActivity(intent);
+//                            DownloadActivity.start(Collect.getInstance().getApplicationContext());
                             //onEmptyLayoutClickListener.onRetryButtonClick();
                         }
                     });

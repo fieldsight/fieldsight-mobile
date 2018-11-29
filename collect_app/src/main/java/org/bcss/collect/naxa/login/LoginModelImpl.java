@@ -1,5 +1,7 @@
 package org.bcss.collect.naxa.login;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.firebase.FCMParameter;
@@ -7,6 +9,8 @@ import org.bcss.collect.naxa.login.model.AuthResponse;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+
+import javax.net.ssl.SSLException;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -63,9 +67,22 @@ public class LoginModelImpl implements LoginModel {
                     @Override
                     public void onError(Throwable e) {
                         if (e instanceof HttpException) {
-                            onLoginFinishedListener.onError();
+                            HttpException httpException = (HttpException) e;
+                            int statusCode = httpException.response().code();
+                            switch (statusCode) {
+                                case 400:
+                                    String parsedErrorMessage = APIErrorUtils.getNonFieldError(httpException);
+                                    onLoginFinishedListener.onError(parsedErrorMessage);
+                                    break;
+                                default:
+                                    onLoginFinishedListener.onError("Server returned " + statusCode);
+                            }
                         } else if (e instanceof FirebaseTokenException) {
                             onLoginFinishedListener.fcmTokenError();
+                        } else if (e instanceof SSLException) {
+                            onLoginFinishedListener.onError("An SSL exception occurred");
+                        } else {
+                            onLoginFinishedListener.onError("Generic error occurred: " + e.getMessage());
                         }
 
                     }

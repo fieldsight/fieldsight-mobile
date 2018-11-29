@@ -101,6 +101,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             FieldSightDatabase.class, DB_PATH)
+                            .fallbackToDestructiveMigrationFrom(1)
                             .addMigrations(MIGRATION_4_5)
                             .build();
                 }
@@ -112,10 +113,12 @@ public abstract class FieldSightDatabase extends RoomDatabase {
 
     public abstract SubmissionDetailDAO getSubmissionDetailDAO();
 
-    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("DELETE FROM sync");
         }
     };
+
+
 }
