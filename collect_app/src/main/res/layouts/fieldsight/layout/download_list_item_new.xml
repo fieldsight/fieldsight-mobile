@@ -80,6 +80,7 @@
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <TextView
+                        android:visibility="gone"
                         android:id="@+id/update_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -89,8 +90,8 @@
                         android:layout_toLeftOf="@+id/checkbox"
                         android:layout_toStartOf="@+id/checkbox"
                         android:text="@string/newer_version_of_a_form_info"
-                        android:textColor="@color/displaySubtextColor"
-                        android:visibility="gone" />
+                        android:textColor="@color/red"
+                        />
 
                     <CheckBox
                         android:id="@+id/checkbox"
@@ -125,6 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_holder"
                     android:layout_marginTop="@dimen/instance_list_icon_top_bottom_margin" />
+
 
                 <Button
 

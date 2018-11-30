@@ -75,26 +75,26 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     }
 
-    public Single<Integer> selectedItemCount(){
+    public Single<Integer> selectedItemCount() {
         return syncDAO.selectedItemsCount();
     }
 
-    public LiveData<Integer> selectedItemCountLive(){
+    public LiveData<Integer> selectedItemCountLive() {
         return syncDAO.selectedItemsCountLive();
     }
 
-    public LiveData<Integer> runningItemCountLive(){
+    public LiveData<Integer> runningItemCountLive() {
         return syncDAO.runningItemCountLive(Constant.DownloadStatus.RUNNING);
     }
 
     public Completable toggleSingleItem(Sync sync) {
         return Completable.fromAction(() -> {
-            if(sync.isChecked()){
+            if (sync.isChecked()) {
                 syncDAO.markAsUnchecked(sync.getUid());
-            }else {
+            } else {
                 syncDAO.markAsChecked(sync.getUid());
             }
-         });
+        });
     }
 
     public Single<List<Sync>> getAllChecked() {
@@ -102,46 +102,67 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
     }
 
 
-    public void markAsRunning(int uid){
+    public void markAsRunning(int uid) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsRunning(uid,Constant.DownloadStatus.RUNNING);
+                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.RUNNING);
+                clearErrorMessage(uid);
             }
         });
 
     }
 
-    public void markAsFailed(int uid){
+    public void markAsFailed(int uid) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsRunning(uid,Constant.DownloadStatus.FAILED);
+                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.FAILED);
             }
         });
 
     }
 
-    public void markAsPending(int uid){
+    private void updateErrorMessage(int uid, String errorMessage) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsRunning(uid,Constant.DownloadStatus.PENDING);
+                syncDAO.updateErrorMessage(uid, errorMessage);
+            }
+        });
+    }
+
+    public void addErrorMessage(int uid, String errorMessage) {
+        updateErrorMessage(uid, errorMessage);
+    }
+
+
+    public void clearErrorMessage(int uid) {
+        updateErrorMessage(uid, "");
+    }
+
+
+    public void markAsPending(int uid) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.PENDING);
             }
         });
 
     }
 
-    public void markAsCompleted(int uid){
+    public void markAsCompleted(int uid) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsRunning(uid,Constant.DownloadStatus.COMPLETED);
+                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.COMPLETED);
+                clearErrorMessage(uid);
             }
         });
     }
 
     public void updateProgress(int uid, int total, int progress) {
-        AsyncTask.execute(() -> syncDAO.updateProgress(uid,total,progress));
+        AsyncTask.execute(() -> syncDAO.updateProgress(uid, total, progress));
     }
 }

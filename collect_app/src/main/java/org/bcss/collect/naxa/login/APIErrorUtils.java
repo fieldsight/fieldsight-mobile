@@ -6,8 +6,8 @@ import java.io.IOException;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 
-class APIErrorUtils {
-    static String getNonFieldError(HttpException responseBody) {
+public class APIErrorUtils {
+    public static String getNonFieldError(HttpException responseBody) {
         String errorMessage = "An unknown error occurred";
 
         try {

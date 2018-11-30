@@ -8,6 +8,7 @@ import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.contact.ContactRemoteSource;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
@@ -122,6 +123,10 @@ public class DownloadViewModel extends ViewModel {
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         SyncLocalSource.getINSTANCE().markAsFailed(GENERAL_FORMS);
+                        if (e instanceof RetrofitException) {
+                            String message = ((RetrofitException) e).getMessage();
+                            SyncLocalSource.getINSTANCE().addErrorMessage(GENERAL_FORMS, message);
+                        }
                     }
                 });
 
@@ -171,6 +176,10 @@ public class DownloadViewModel extends ViewModel {
                     @Override
                     public void onError(Throwable e) {
                         SyncLocalSource.getINSTANCE().markAsFailed(SCHEDULED_FORMS);
+                        if (e instanceof RetrofitException) {
+                            String message = ((RetrofitException) e).getMessage();
+                            SyncLocalSource.getINSTANCE().addErrorMessage(SCHEDULED_FORMS, message);
+                        }
                     }
                 });
     }
@@ -220,6 +229,10 @@ public class DownloadViewModel extends ViewModel {
                     @Override
                     public void onError(Throwable e) {
                         SyncLocalSource.getINSTANCE().markAsFailed(STAGED_FORMS);
+                        if (e instanceof RetrofitException) {
+                            String message = ((RetrofitException) e).getMessage();
+                            SyncLocalSource.getINSTANCE().addErrorMessage(STAGED_FORMS, message);
+                        }
                     }
                 });
     }
@@ -308,6 +321,10 @@ public class DownloadViewModel extends ViewModel {
                     public void onError(Throwable e) {
                         SyncRepository.getInstance().setError(ALL_FORMS);
                         SyncLocalSource.getINSTANCE().markAsFailed(ALL_FORMS);
+                        if (e instanceof RetrofitException) {
+                            String message = ((RetrofitException) e).getMessage();
+                            SyncLocalSource.getINSTANCE().addErrorMessage(ALL_FORMS, message);
+                        }
                     }
 
                     @Override

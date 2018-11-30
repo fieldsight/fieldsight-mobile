@@ -60,6 +60,8 @@ import org.bcss.collect.android.utilities.PRNGFixes;
 
 import org.bcss.collect.android.jobs.CollectJobCreator;
 import org.bcss.collect.android.utilities.NotificationUtils;
+import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.login.APIErrorUtils;
 
 
 import java.io.ByteArrayInputStream;
@@ -69,10 +71,14 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.net.ssl.SSLException;
 
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import io.fabric.sdk.android.Fabric;
+import io.reactivex.functions.Consumer;
+import io.reactivex.plugins.RxJavaPlugins;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
@@ -80,6 +86,8 @@ import static org.bcss.collect.android.logic.PropertyManager.SCHEME_USERNAME;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_APP_LANGUAGE;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_FONT_SIZE;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
+import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyHeadsUp;
+import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyNormal;
 
 
 /**
@@ -168,6 +176,41 @@ public class Collect extends Application implements HasActivityInjector {
                 }
             }
         }
+    }
+
+
+    private void setGlobalRxErrorConsumer(){
+        RxJavaPlugins.setErrorHandler(new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable e) throws Exception {
+
+                String message;
+
+                if (e instanceof HttpException) {
+                    HttpException httpException = (HttpException) e;
+                    int statusCode = httpException.response().code();
+                    switch (statusCode) {
+                        case 400:
+                            message = APIErrorUtils.getNonFieldError(httpException);
+                            break;
+                        case 502:
+                            message = "BAD GATEWAY";
+                            break;
+                        default:
+                            message = "SERVER RETURNED " + statusCode;
+                            break;
+                    }
+                } else if (e instanceof SSLException) {
+                    message = "An SSL exception occurred" ;
+                } else {
+                    message = "Generic error occurred: " + e.getMessage();
+
+                }
+
+                ToastUtils.showLongToast(message);
+                notifyHeadsUp( "Error", message);
+            }
+        });
     }
 
     /**
@@ -279,6 +322,7 @@ public class Collect extends Application implements HasActivityInjector {
         }
 
         setupLeakCanary();
+        setGlobalRxErrorConsumer();
     }
 
     protected RefWatcher setupLeakCanary() {

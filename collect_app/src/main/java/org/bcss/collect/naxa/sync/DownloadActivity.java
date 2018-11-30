@@ -17,18 +17,27 @@ import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.login.APIErrorUtils;
 import org.bcss.collect.naxa.site.CreateSiteViewModel;
 
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.SSLException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
@@ -144,6 +153,8 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
 
     private void stopDownload() {
         viewModel.cancelAllTask();
+
+
     }
 
     private void runDownload() {

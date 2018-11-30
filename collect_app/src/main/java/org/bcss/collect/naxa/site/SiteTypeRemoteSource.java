@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.site;
 
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.sync.DisposableManager;
@@ -55,8 +56,14 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                     public void onError(Throwable e) {
                         SyncRepository.getInstance().setError(SITE_TYPES);
                         e.printStackTrace();
+                        if (e instanceof RetrofitException) {
+                            String message = ((RetrofitException) e).getMessage();
+                            SyncLocalSource.getINSTANCE().addErrorMessage(SITE_TYPES, message);
+                        }
 
                         SyncLocalSource.getINSTANCE().markAsFailed(SITE_TYPES);
+
+
                     }
                 });
     }

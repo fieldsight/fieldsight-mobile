@@ -21,6 +21,7 @@ public class Sync {
     private String lastSyncDateTime;
     private int syncProgress;
     private int syncTotal;
+    private String errorMessage;
 
     @Ignore
     private boolean isOutOfSync;
@@ -52,6 +53,16 @@ public class Sync {
         this.isSelected = false;
         this.checked = false;
     }
+
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
 
     boolean isOutOfSync() {
         return isOutOfSync;

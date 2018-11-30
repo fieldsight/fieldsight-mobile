@@ -21,7 +21,7 @@ import java.io.File;
                 Sync.class
 
         },
-        version = 3)
+        version = 4)
 
 public abstract class FieldSightConfigDatabase extends RoomDatabase {
 

@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.previoussubmission;
 
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
@@ -27,6 +28,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubmissionResponse> {
 
@@ -74,6 +76,12 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
                         SyncRepository.getInstance().setError(PREV_SUBMISSION);
                         SyncLocalSource.getINSTANCE().markAsFailed(PREV_SUBMISSION);
                         e.printStackTrace();
+
+
+                        if (e instanceof RetrofitException) {
+                            String message = ((RetrofitException) e).getMessage();
+                            SyncLocalSource.getINSTANCE().addErrorMessage(PREV_SUBMISSION, message);
+                        }
                     }
                 });
 

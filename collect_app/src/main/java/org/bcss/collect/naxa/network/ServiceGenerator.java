@@ -12,6 +12,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.common.rx.RxErrorHandlingCallAdapterFactory;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.util.List;
@@ -151,7 +152,7 @@ public class ServiceGenerator {
             rxRetrofit = new Retrofit.Builder()
                     .client(okHttp)
                     .baseUrl(APIEndpoint.BASE_URL)
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

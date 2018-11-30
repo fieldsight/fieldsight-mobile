@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.project.data;
 
 import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.android.application.Collect;
@@ -38,6 +39,9 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
     private static ProjectSitesRemoteSource INSTANCE;
@@ -218,6 +222,11 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
                         SyncLocalSource.getINSTANCE()
                                 .markAsFailed(Constant.DownloadUID.PROJECT_SITES);
+
+                        if (e instanceof RetrofitException) {
+                            String message = ((RetrofitException) e).getMessage();
+                            SyncLocalSource.getINSTANCE().addErrorMessage(PROJECT_SITES, message);
+                        }
                     }
 
                     @Override

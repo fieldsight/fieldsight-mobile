@@ -53,4 +53,8 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
 
     @Query("SELECT COUNT(checked) from sync where downloadingStatus =:running")
     public abstract LiveData<Integer> runningItemCountLive(int running);
+
+
+    @Query("UPDATE sync set errorMessage=:errorMessage WHERE uid=:uid  ")
+    public abstract void updateErrorMessage(int uid, String errorMessage);
 }

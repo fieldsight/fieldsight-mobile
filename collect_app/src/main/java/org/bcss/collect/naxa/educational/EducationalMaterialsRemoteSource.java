@@ -8,6 +8,7 @@ import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.generalforms.data.Em;
 import org.bcss.collect.naxa.generalforms.data.EmImage;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
@@ -38,6 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em> {
 
@@ -138,6 +140,11 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                         Timber.e(e);
 
                         SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS);
+
+                        if (e instanceof RetrofitException) {
+                            String message = ((RetrofitException) e).getMessage();
+                            SyncLocalSource.getINSTANCE().addErrorMessage(EDU_MATERIALS, message);
+                        }
                     }
                 });
 

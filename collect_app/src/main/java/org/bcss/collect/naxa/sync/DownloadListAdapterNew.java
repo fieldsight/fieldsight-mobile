@@ -88,6 +88,14 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         viewHolder.checkbox.setChecked(item.isChecked());
         viewHolder.progressBar.setMax(item.getSyncTotal());
 
+        boolean hasError = item.getErrorMessage() != null && item.getErrorMessage().length() > 0;
+
+        viewHolder.textView.setVisibility(hasError ? View.VISIBLE : View.GONE);
+
+        if (hasError) {
+            String formattedMessage = String.format("Failed to synchronize: %s",item.getErrorMessage());
+            viewHolder.textView.setText(formattedMessage);
+        }
 
         switch (item.getDownloadingStatus()) {
             case PENDING:
@@ -151,6 +159,10 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         ImageView closeButton;
         @BindView(R.id.btn_cancel_sync)
         Button btnCancelSync;
+
+        @BindView(R.id.update_info)
+        TextView textView;
+
 
         ViewHolder(View view) {
             super(view);
