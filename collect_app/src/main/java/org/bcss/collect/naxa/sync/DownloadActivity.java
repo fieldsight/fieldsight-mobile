@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.sync;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,6 +16,9 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.site.CreateSiteViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +45,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
     Button downloadButton;
 
     private DownloadListAdapterNew adapter;
+    private DownloadViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +55,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
 
         setupToolbar();
         setupRecyclerView();
+        setupViewModel();
 
 
         SyncLocalSource.getINSTANCE()
@@ -85,6 +91,22 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
                         toggleButton.setText(getString(R.string.select_all));
                     }
                 });
+
+        SyncLocalSource.getINSTANCE()
+                .runningItemCountLive()
+                .observe(this, integer -> {
+                    if (integer == null) return;
+                    if (integer > 0) {
+                        downloadButton.setText(R.string.stop_download);
+                    } else {
+                        downloadButton.setText(R.string.download);
+                    }
+                });
+    }
+
+    private void setupViewModel() {
+        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
+        viewModel = ViewModelProviders.of(this, factory).get(DownloadViewModel.class);
     }
 
     @OnClick({R.id.toggle_button, R.id.download_button})
@@ -108,8 +130,38 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
                         });
                 break;
             case R.id.download_button:
+
+                if (getString(R.string.download).contentEquals(downloadButton.getText())) {
+                    runDownload();
+                } else if (getString(R.string.stop_download).contentEquals(downloadButton.getText())) {
+                    stopDownload();
+                }
+
+
                 break;
         }
+    }
+
+    private void stopDownload() {
+        viewModel.cancelAllTask();
+    }
+
+    private void runDownload() {
+        SyncLocalSource.getINSTANCE().getAllChecked()
+                .subscribeOn(Schedulers.io())
+                .subscribe(new DisposableSingleObserver<List<Sync>>() {
+                    @Override
+                    public void onSuccess(List<Sync> syncs) {
+                        viewModel.queueSyncTask(syncs);
+                        Timber.i("Select completed on sync table");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.e("Select failed on sync table reason: %s", e.getMessage());
+                        e.printStackTrace();
+                    }
+                });
     }
 
     @Override
@@ -159,7 +211,8 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                super.onBackPressed();
+                adapter.getItemCount();
+//                super.onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -174,6 +227,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
                     @Override
                     public void onComplete() {
                         Timber.i("Update completed on sync table");
+
                     }
 
                     @Override
@@ -187,6 +241,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
 
     @Override
     public void onClickSecondaryAction(Sync sync) {
-        //not implemented
+//        SyncLocalSource.getINSTANCE().toggleSingleItem(sync);
+        SyncLocalSource.getINSTANCE().markAsPending(sync.getUid());
     }
 }

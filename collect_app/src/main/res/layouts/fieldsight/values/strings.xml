@@ -204,6 +204,7 @@
     <string name="dialog_pdf_okay">Yes, Please</string>
     <string name="dialog_pdf_no">No, Thanks</string>
     <string name="menu_title_educational_materials">Educational Materials</string>
+    <string name="stop_download">Stop Download</string>
 
 
     <!--Notification sitelist ends here-->

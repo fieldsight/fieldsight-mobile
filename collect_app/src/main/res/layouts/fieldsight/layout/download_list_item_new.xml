@@ -37,6 +37,7 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:animateLayoutChanges="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="?android:attr/listPreferredItemHeight"
@@ -104,6 +105,7 @@
                         android:focusable="false" />
 
                     <ImageView
+
                         android:id="@+id/close_box"
                         android:layout_width="@dimen/instance_list_close_width"
                         android:layout_height="@dimen/instance_list_close_height"
@@ -123,6 +125,17 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_holder"
                     android:layout_marginTop="@dimen/instance_list_icon_top_bottom_margin" />
+
+                <Button
+
+                    android:id="@+id/btn_cancel_sync"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:text="@string/cancel"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

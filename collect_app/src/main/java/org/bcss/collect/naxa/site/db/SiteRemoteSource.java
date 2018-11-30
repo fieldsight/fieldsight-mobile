@@ -1,10 +1,5 @@
 package org.bcss.collect.naxa.site.db;
 
-import android.net.Uri;
-import android.support.v4.content.FileProvider;
-
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 
@@ -42,6 +37,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
     @Override
     public void getAll() {
+
 
     }
 

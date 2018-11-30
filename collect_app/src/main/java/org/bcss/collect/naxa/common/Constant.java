@@ -139,4 +139,11 @@ public class Constant {
         public final static String Rejected = "Rejected";
         public final static String Pending = "Pending";
     }
+
+    public final static class SyncStatus {
+        public final static String PENDING = "pending";
+        public final static String RUNNING = "running";
+        public final static String COMPLETED = "completed";
+        public final static String FAILED = "failed";
+    }
 }

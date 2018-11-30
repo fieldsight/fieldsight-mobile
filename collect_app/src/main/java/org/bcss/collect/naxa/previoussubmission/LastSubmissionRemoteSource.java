@@ -7,15 +7,19 @@ import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.previoussubmission.model.LastSubmissionResponse;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
+import org.bcss.collect.naxa.sync.DisposableManager;
+import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -45,34 +49,35 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
 
 
         getPageAndNext(APIEndpoint.GET_ALL_SUBMISSION)
+                .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<LastSubmissionResponse>() {
+                .subscribe(new SingleObserver<List<LastSubmissionResponse>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        DisposableManager.add(d);
                         LastSubmissionLocalSource.getInstance().deleteAll();
                         SyncRepository.getInstance().showProgress(PREV_SUBMISSION);
 
+                        SyncLocalSource.getINSTANCE().markAsRunning(PREV_SUBMISSION);
                     }
 
                     @Override
-                    public void onNext(LastSubmissionResponse lastSubmissionResponse) {
+                    public void onSuccess(List<LastSubmissionResponse> lastSubmissionResponses) {
+                        FieldSightNotificationLocalSource.getInstance().markFormStatusChangeAsRead();
 
+                        SyncLocalSource.getINSTANCE().markAsCompleted(PREV_SUBMISSION);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         SyncRepository.getInstance().setError(PREV_SUBMISSION);
+                        SyncLocalSource.getINSTANCE().markAsFailed(PREV_SUBMISSION);
                         e.printStackTrace();
                     }
-
-                    @Override
-                    public void onComplete() {
-                        FieldSightNotificationLocalSource.getInstance().markFormStatusChangeAsRead();
-                        SyncRepository.getInstance().setSuccess(PREV_SUBMISSION);
-                    }
                 });
+
+
     }
 
     private Observable<LastSubmissionResponse> getPageAndNext(String url) {

@@ -18,6 +18,8 @@ import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.SubStage;
+import org.bcss.collect.naxa.sync.DisposableManager;
+import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.io.File;
@@ -27,6 +29,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -108,18 +111,24 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                             .download(url, fileName, savePath, "*/*", false);
 
                 })
+                .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
+                .subscribe(new SingleObserver<List<String>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        DisposableManager.add(d);
                         SyncRepository.getInstance().showProgress(EDU_MATERIALS);
+
+                        SyncLocalSource.getINSTANCE().markAsRunning(EDU_MATERIALS);
                     }
 
                     @Override
-                    public void onNext(String s) {
+                    public void onSuccess(List<String> strings) {
+                        SyncRepository.getInstance().setSuccess(EDU_MATERIALS);
+                        Timber.i("%s has been downloaded", strings.toString());
 
-                        Timber.i("%s has been downloaded", s);
+                        SyncLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
                     }
 
                     @Override
@@ -127,11 +136,8 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                         SyncRepository.getInstance().setError(EDU_MATERIALS);
                         e.printStackTrace();
                         Timber.e(e);
-                    }
 
-                    @Override
-                    public void onComplete() {
-                        SyncRepository.getInstance().setSuccess(EDU_MATERIALS);
+                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS);
                     }
                 });
 

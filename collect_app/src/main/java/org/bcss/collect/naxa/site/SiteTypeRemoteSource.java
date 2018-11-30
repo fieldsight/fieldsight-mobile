@@ -3,6 +3,8 @@ package org.bcss.collect.naxa.site;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.sync.DisposableManager;
+import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
@@ -33,7 +36,10 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                 .subscribe(new SingleObserver<List<SiteType>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        DisposableManager.add(d);
                         SyncRepository.getInstance().showProgress(SITE_TYPES);
+
+                        SyncLocalSource.getINSTANCE().markAsRunning(SITE_TYPES);
                     }
 
                     @Override
@@ -41,12 +47,16 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                         SiteType[] list = siteTypes.toArray(new SiteType[siteTypes.size()]);
                         SiteTypeLocalSource.getInstance().save(list);
                         SyncRepository.getInstance().setSuccess(SITE_TYPES);
+
+                        SyncLocalSource.getINSTANCE().markAsCompleted(SITE_TYPES);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         SyncRepository.getInstance().setError(SITE_TYPES);
                         e.printStackTrace();
+
+                        SyncLocalSource.getINSTANCE().markAsFailed(SITE_TYPES);
                     }
                 });
     }

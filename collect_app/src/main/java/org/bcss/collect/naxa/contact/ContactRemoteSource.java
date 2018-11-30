@@ -1,10 +1,10 @@
 package org.bcss.collect.naxa.contact;
 
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
-import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.sync.DisposableManager;
+import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
@@ -12,11 +12,10 @@ import java.util.ArrayList;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_CONTACTS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightContactModel> {
 
@@ -41,19 +40,24 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
                 .subscribe(new Observer<ArrayList<FieldSightContactModel>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
+                        DisposableManager.add(d);
                         SyncRepository.getInstance().showProgress(PROJECT_CONTACTS);
+                        SyncLocalSource.getINSTANCE().markAsRunning(PROJECT_CONTACTS);
                     }
 
                     @Override
                     public void onNext(ArrayList<FieldSightContactModel> fieldSightContactModels) {
                         ContactLocalSource.getInstance().save(fieldSightContactModels);
                         SyncRepository.getInstance().setSuccess(PROJECT_CONTACTS);
+
+                        SyncLocalSource.getINSTANCE().markAsCompleted(PROJECT_CONTACTS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         SyncRepository.getInstance().setError(PROJECT_CONTACTS);
+                        SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_CONTACTS);
                     }
 
                     @Override

@@ -42,6 +42,7 @@ import org.bcss.collect.naxa.substages.data.SubStageRepository;
 import org.bcss.collect.naxa.survey.SurveyFormLocalSource;
 import org.bcss.collect.naxa.survey.SurveyFormRepository;
 import org.bcss.collect.naxa.survey.SurveyFormViewModel;
+import org.bcss.collect.naxa.sync.DownloadViewModel;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
@@ -149,6 +150,10 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(MigrateFieldSightViewModel.class)) {
             //noinspection unchecked
             return (T) new MigrateFieldSightViewModel();
+
+        } else if (modelClass.isAssignableFrom(DownloadViewModel.class)) {
+            //noinspection unchecked
+            return (T) new DownloadViewModel();
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());

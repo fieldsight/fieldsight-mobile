@@ -1,18 +1,13 @@
 package org.bcss.collect.naxa.project.data;
 
-import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
-import com.google.gson.Gson;
-
 import org.bcss.collect.naxa.common.GSONInstance;
+import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.network.APIEndpoint;
-import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
-import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.MySites;
 import org.bcss.collect.naxa.login.model.Project;
@@ -22,26 +17,26 @@ import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.site.db.SiteRepository;
+import org.bcss.collect.naxa.sync.DisposableManager;
+import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.greenrobot.eventbus.EventBus;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.MaybeSource;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.Single;
-import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
@@ -63,7 +58,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         syncRepository = SyncRepository.getInstance();
     }
 
-    private Single<List<Object>> fetchProjectAndSites() {
+    public Single<List<Object>> fetchProjectAndSites() {
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUser()
@@ -163,6 +158,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                             return Observable.just(mySiteResponse);
                         }
 
+
                         return Observable.just(mySiteResponse)
 
                                 .delay(1, TimeUnit.SECONDS)
@@ -180,24 +176,38 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
         Single<List<Object>> observable = fetchProjectAndSites();
 
-        observable
-                .toObservable()
+
+        DisposableObserver<List<Object>> dis = observable.toObservable()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<List<Object>>() {
+                .doOnDispose(new Action() {
                     @Override
-                    public void onSubscribe(Disposable d) {
+                    public void run() throws Exception {
+                        SyncLocalSource.getINSTANCE()
+                                .markAsPending(Constant.DownloadUID.PROJECT_SITES);
+                    }
+                })
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
                         ProjectLocalSource.getInstance().deleteAll();
                         SiteLocalSource.getInstance().deleteAll();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
                         SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
-                    }
 
+                        SyncLocalSource.getINSTANCE()
+                                .markAsRunning(Constant.DownloadUID.PROJECT_SITES);
+                    }
+                })
+                .subscribeWith(new DisposableObserver<List<Object>>() {
                     @Override
-                    public void onNext(List<Object> objectList) {
+                    public void onNext(List<Object> objects) {
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
                         FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
                         syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
+
+                        SyncLocalSource.getINSTANCE()
+                                .markAsCompleted(Constant.DownloadUID.PROJECT_SITES);
                     }
 
                     @Override
@@ -205,6 +215,9 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
                         syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
+
+                        SyncLocalSource.getINSTANCE()
+                                .markAsFailed(Constant.DownloadUID.PROJECT_SITES);
                     }
 
                     @Override
@@ -212,6 +225,9 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
                     }
                 });
+
+        DisposableManager.add(dis);
+
     }
 
 

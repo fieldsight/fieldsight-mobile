@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +26,7 @@ import org.bcss.collect.android.utilities.ThemeUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 
 import org.bcss.collect.naxa.OnItemClickListener;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.onboarding.CheckedItem;
 import org.bcss.collect.naxa.onboarding.DownloadListAdapter;
 import org.bcss.collect.naxa.onboarding.DownloadableItemsDiffCallback;
@@ -86,10 +88,43 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         viewHolder.checkbox.setChecked(item.isChecked());
         viewHolder.progressBar.setMax(item.getSyncTotal());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            viewHolder.progressBar.setProgress(item.getSyncProgress(), true);
-        } else {
-            viewHolder.progressBar.setProgress(item.getSyncProgress());
+
+        switch (item.getDownloadingStatus()) {
+            case PENDING:
+                viewHolder.btnCancelSync.setVisibility(View.GONE);
+                viewHolder.statusIcon.setImageResource(R.drawable.ic_access_time_black_24dp);
+                viewHolder.progressBar.setIndeterminate(false);
+
+                break;
+            case RUNNING:
+                viewHolder.btnCancelSync.setVisibility(View.GONE);
+                viewHolder.statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
+                if (item.getUid() != Constant.DownloadUID.ODK_FORMS) {
+                    viewHolder.progressBar.setIndeterminate(true);
+                } else {
+                    viewHolder.progressBar.setMax(item.getSyncTotal());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        viewHolder.progressBar.setProgress(item.getSyncProgress(), true);
+                    } else {
+                        viewHolder.progressBar.setProgress(item.getSyncProgress());
+                    }
+                }
+
+                break;
+            case FAILED:
+                viewHolder.btnCancelSync.setVisibility(View.GONE);
+                viewHolder.statusIcon.setImageResource(R.drawable.exclamation);
+                if (item.getUid() != Constant.DownloadUID.ODK_FORMS) {
+                    viewHolder.progressBar.setIndeterminate(false);
+                }
+                break;
+            case COMPLETED:
+                viewHolder.btnCancelSync.setVisibility(View.GONE);
+                viewHolder.statusIcon.setImageResource(R.drawable.check);
+                if (item.getUid() != Constant.DownloadUID.ODK_FORMS) {
+                    viewHolder.progressBar.setIndeterminate(false);
+                }
+                break;
         }
     }
 
@@ -114,6 +149,8 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         ImageView statusIcon;
         @BindView(R.id.close_box)
         ImageView closeButton;
+        @BindView(R.id.btn_cancel_sync)
+        Button btnCancelSync;
 
         ViewHolder(View view) {
             super(view);
@@ -126,6 +163,14 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
             Sync sync = syncableItems.get(getAdapterPosition());
             if (onItemClickListener != null) {
                 onItemClickListener.onClickPrimaryAction(sync);
+            }
+        }
+
+        @OnClick(R.id.btn_cancel_sync)
+        void onCardCancelBtnClick() {
+            Sync sync = syncableItems.get(getAdapterPosition());
+            if (onItemClickListener != null) {
+                onItemClickListener.onClickSecondaryAction(sync);
             }
         }
     }
