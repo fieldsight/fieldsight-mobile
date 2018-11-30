@@ -9,6 +9,7 @@
     <include layout="@layout/close_toolbar" />
 
     <android.support.v7.widget.RecyclerView
+        android:layout_marginBottom="40dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/activity_download_recycler_view"
         android:layout_width="match_parent"
@@ -16,6 +17,7 @@
 
 
     <LinearLayout
+
         android:layout_gravity="bottom"
         android:id="@+id/button_wrapper"
         android:layout_width="match_parent"

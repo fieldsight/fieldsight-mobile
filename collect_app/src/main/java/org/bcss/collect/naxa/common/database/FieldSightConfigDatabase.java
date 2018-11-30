@@ -6,18 +6,22 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.sync.Sync;
+import org.bcss.collect.naxa.sync.SyncDAO;
 
 import java.io.File;
 
 @Database(entities =
         {
                 SiteOveride.class,
-                ProjectFilter.class
+                ProjectFilter.class,
+                Sync.class
 
         },
-        version = 2)
+        version = 3)
 
 public abstract class FieldSightConfigDatabase extends RoomDatabase {
 
@@ -27,6 +31,7 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
 
     public abstract ProjectFilterDAO getProjectFilterDAO();
 
+    public abstract SyncDAO getSyncDao();
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_cofig";
 
@@ -36,14 +41,13 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             FieldSightConfigDatabase.class, DB_PATH)
-                            .fallbackToDestructiveMigrationFrom(1)
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
-
 
 
 }

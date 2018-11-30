@@ -1,23 +1,26 @@
-package org.bcss.collect.naxa.onboarding;
+package org.bcss.collect.naxa.sync;
+
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import com.google.common.base.Objects;
 
 
 @Entity(tableName = "sync")
-public class SyncableItem {
+public class Sync {
 
     @PrimaryKey
     private int uid;
     private int downloadingStatus;
-    private String lastSyncDateTime;
     private String title;
     private String detail;
     private boolean checked;
-    private boolean progressStatus;
+    private String lastSyncDateTime;
+    private int syncProgress;
+    private int syncTotal;
 
     @Ignore
     private boolean isOutOfSync;
@@ -25,12 +28,12 @@ public class SyncableItem {
     @Ignore
     private boolean isSelected;
 
-    public SyncableItem() {
+    public Sync() {
 
     }
 
     @Ignore
-    public SyncableItem(int uid, int downloadingStatus, String lastSyncDateTime, String title, String detail) {
+    public Sync(int uid, int downloadingStatus, String lastSyncDateTime, String title, String detail) {
         this.uid = uid;
         this.downloadingStatus = downloadingStatus;
         this.lastSyncDateTime = lastSyncDateTime;
@@ -38,28 +41,23 @@ public class SyncableItem {
         this.detail = detail;
         this.isSelected = false;
         this.checked = true;
-        this.progressStatus = false;
-
     }
 
     @Ignore
-    public SyncableItem(int uid, int downloadingStatus, String title, String detail) {
+    public Sync(int uid, int downloadingStatus, String title, String detail) {
         this.uid = uid;
         this.downloadingStatus = downloadingStatus;
-
         this.title = title;
         this.detail = detail;
         this.isSelected = false;
-        this.checked = true;
-        this.progressStatus = false;
-
+        this.checked = false;
     }
 
-    public boolean isOutOfSync() {
+    boolean isOutOfSync() {
         return isOutOfSync;
     }
 
-    public void setOutOfSync(boolean outOfSync) {
+    void setOutOfSync(boolean outOfSync) {
         isOutOfSync = outOfSync;
     }
 
@@ -67,9 +65,6 @@ public class SyncableItem {
         this.checked = checked;
     }
 
-    public void setProgressStatus(boolean progressStatus) {
-        this.progressStatus = progressStatus;
-    }
 
     public boolean getIsSelected() {
         return isSelected;
@@ -81,10 +76,6 @@ public class SyncableItem {
 
     public boolean isChecked() {
         return checked;
-    }
-
-    public boolean isProgressStatus() {
-        return progressStatus;
     }
 
     public int getUid() {
@@ -127,15 +118,31 @@ public class SyncableItem {
         this.detail = detail;
     }
 
+    public int getSyncProgress() {
+        return syncProgress;
+    }
+
+    public void setSyncProgress(int syncProgress) {
+        this.syncProgress = syncProgress;
+    }
+
+    public int getSyncTotal() {
+        return syncTotal;
+    }
+
+    public void setSyncTotal(int syncTotal) {
+        this.syncTotal = syncTotal;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SyncableItem that = (SyncableItem) o;
+        Sync that = (Sync) o;
         return uid == that.uid &&
                 downloadingStatus == that.downloadingStatus &&
                 checked == that.checked &&
-                progressStatus == that.progressStatus &&
+
                 isOutOfSync == that.isOutOfSync &&
                 isSelected == that.isSelected &&
                 Objects.equal(lastSyncDateTime, that.lastSyncDateTime) &&
@@ -143,6 +150,7 @@ public class SyncableItem {
                 Objects.equal(detail, that.detail);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "SyncableItem{" +
@@ -152,7 +160,6 @@ public class SyncableItem {
                 ", title='" + title + '\'' +
                 ", detail='" + detail + '\'' +
                 ", checked=" + checked +
-                ", progressStatus=" + progressStatus +
                 ", isOutOfSync=" + isOutOfSync +
                 ", isSelected=" + isSelected +
                 '}';
@@ -160,12 +167,8 @@ public class SyncableItem {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(uid, downloadingStatus, lastSyncDateTime, title, detail, checked, progressStatus, isOutOfSync, isSelected);
+        return Objects.hashCode(uid, downloadingStatus, lastSyncDateTime, title, detail, checked, isOutOfSync, isSelected);
     }
-
-    public static void init() {
-
-    }
-
 
 }
+

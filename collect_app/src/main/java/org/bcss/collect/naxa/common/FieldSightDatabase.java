@@ -122,7 +122,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         }
     };
 
-    static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+    private static final Migration MIGRATION_5_6 = new Migration(5, 6) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("DELETE FROM sync");
