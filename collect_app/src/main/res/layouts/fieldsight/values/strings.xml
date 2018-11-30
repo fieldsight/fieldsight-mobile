@@ -134,7 +134,7 @@
     <string name="notification_cleared">%1$s notifications has been cleared.</string>
 
 
-    <string name="notify_form_removed_title">Form removed</string>
+    <string name="notify_form_removed_title">Form Removed</string>
     <string name="notify_form_removed">%1$s Form has been removed.</string>
 
     <string name="notify_title_form_altered">%1$s Form %2$s </string>
@@ -144,16 +144,25 @@
 
     <string name="notify_title_site_assigned">Assigned to %s</string>
     <string name="notify_message_site_assigned">You have been assigned as site supervisor in %s</string>
-    <string name="notify_title_site_unassigned">Unassigned from %s</string>
+    <string name="notify_title_site_unassigned">Unassigned From %s</string>
     <string name="notify_message_site_unassigned">You have been unassigned from %s</string>
-    <string name="notify_title_form_undeployed">Undeployed %s form</string>
+    <string name="notify_title_form_undeployed">Undeployed %s Form</string>
     <string name="notify_message_form_undeployed">%s has been undeployed in %s</string>
 
-    <string name="notify_title_form_deployed">Deployed %s form</string>
+    <string name="notify_title_form_deployed">Deployed %s Form</string>
     <string name="notify_message_form_deployed">%s has been deployed in %s</string>
-    <string name="notify_title_stage_deployed">Staged deployed</string>
-    <string name="notify_message_stage_deployed">A new stage has been deployed in %s site</string>
-    <string name="dialog_title_upload_forms">Upload forms</string>
+    <string name="notify_title_stage_deployed">Stage Deployed</string>
+    <string name="notify_title_substage_deployed">Substage Deployed</string>
+
+    <string name="notify_message_stage_deployed_site">A new stage has been deployed in %s site</string>
+    <string name="notify_message_stage_deployed_project">A new stage has been deployed for all sites in %s project</string>
+    <string name="notify_message_multiple_substage_deployed_site">A new substage has been deployed in %s site</string>
+    <string name="notify_message_multiple_substage_deployed_project">A new substage has been deployed for all sites in %s project</string>
+
+    <string name="notify_message_multiple_stage_deployed_site">Multiple new stages has been deployed in %s site</string>
+    <string name="notify_message_multiple_stage_deployed_project">Multiple new stages has been deployed for all sites in %s project</string>
+
+    <string name="dialog_title_upload_forms">Upload Forms</string>
     <string name="dialog_action_upload">Upload</string>
     <string name="btn_text_apply">apply</string>
     <string name="msg_site_upload_fail">Failed to upload </string>

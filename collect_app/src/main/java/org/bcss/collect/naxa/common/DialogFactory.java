@@ -11,11 +11,21 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 
+import com.google.android.gms.common.util.SharedPreferencesUtils;
+
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.network.APIEndpoint;
 
 
 public final class DialogFactory {
@@ -159,12 +169,26 @@ public final class DialogFactory {
     }
 
 
-    public static Dialog showCustomLayoutDialog(Context context, String msg) {
+    public static Dialog showCustomLayoutDialog(Context context, View view) {
         Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
-        dialog.setContentView(R.layout.dialog_site_project_filter);
+        dialog.setContentView(view);
 
         return dialog;
+    }
+
+    public static void showAPIUrlDialog(Context context) {
+
+
+        String baseUrl = SharedPreferenceUtils.getFromPrefs(context, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_BASE_URL, APIEndpoint.BASE_URL);
+
+        View viewInflated = LayoutInflater.from(Collect.getInstance()).inflate(R.layout.dialog_site_project_filter, null, false);
+        TextInputLayout textInputLayout = viewInflated.findViewById(R.id.text_input_layout);
+
+        textInputLayout.getEditText().setText(baseUrl);
+
+        Dialog dialog = showCustomLayoutDialog(context, viewInflated);
+        dialog.show();
     }
 }

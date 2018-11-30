@@ -23,6 +23,8 @@ import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_DEPLOYED;
+import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_PROJECT;
@@ -38,7 +40,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     private OnItemClickListener<FieldSightNotification> listener;
 
 
-    public NotificationsAdapter(ArrayList<FieldSightNotification> totalList, OnItemClickListener<FieldSightNotification> listener) {
+    NotificationsAdapter(ArrayList<FieldSightNotification> totalList, OnItemClickListener<FieldSightNotification> listener) {
         this.FieldSightNotifications = totalList;
         this.listener = listener;
     }
@@ -75,7 +77,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     private Drawable getNotificationImage(String notificationType) {
-        Drawable icon = null;
+        Drawable icon;
         Context context = Collect.getInstance().getApplicationContext();
         switch (notificationType) {
             case ASSIGNED_SITE:
@@ -87,7 +89,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             case FORM_ALTERED_SITE:
             case SINGLE_STAGE_DEPLOYED:
             case FORM_ALTERED_PROJECT:
-
+            case ALL_STAGE_DEPLOYED:
+            case SINGLE_STAGED_FORM_DEPLOYED:
                 icon = ContextCompat.getDrawable(context, R.drawable.ic_form_white);
 //                icon = ContextCompat.getDrawable(context, R.drawable.ic_format_list_bulleted);
                 break;

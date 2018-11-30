@@ -32,7 +32,7 @@ public class ScrollBehavior extends CoordinatorLayout.Behavior<FloatingActionBut
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, FloatingActionButton child, int layoutDirection) {
-
+        hide(child);
         return super.onLayoutChild(parent, child, layoutDirection);
     }
 

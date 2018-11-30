@@ -159,11 +159,22 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
         switch (notification.getNotificationType()) {
             case SINGLE_STAGE_DEPLOYED:
                 title = context.getString(R.string.notify_title_stage_deployed);
-                message = context.getString(R.string.notify_message_stage_deployed, notification.getSiteName());
+                String deployedFromSiteMsg = context.getString(R.string.notify_message_stage_deployed_site, notification.getSiteName());
+                String deployedFromProjectMsg = context.getString(R.string.notify_message_stage_deployed_project, notification.getProjectName());
+
+                message = notification.getSiteId() != null ? deployedFromSiteMsg : deployedFromProjectMsg;
                 break;
             case SINGLE_STAGED_FORM_DEPLOYED:
+                title = context.getString(R.string.notify_title_substage_deployed);
+                message = notification.getSiteId() != null
+                        ? context.getString(R.string.notify_message_multiple_substage_deployed_site, notification.getSiteName())
+                        : context.getString(R.string.notify_message_multiple_substage_deployed_project, notification.getProjectName());
                 break;
             case ALL_STAGE_DEPLOYED:
+                title = context.getString(R.string.notify_title_stage_deployed);
+                message = notification.getSiteId() != null
+                        ? context.getString(R.string.notify_message_multiple_stage_deployed_site, notification.getSiteName())
+                        : context.getString(R.string.notify_message_multiple_stage_deployed_project, notification.getProjectName());
                 break;
             case FORM_FLAG:
                 title = context.getString(R.string.notify_title_submission_result);

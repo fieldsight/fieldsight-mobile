@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -50,6 +51,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     RelativeLayout emptyLayout;
 
 
+
     private NotificationListViewModel viewModel;
     private NotificationsAdapter adapter;
     private int count;
@@ -77,7 +79,10 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                 .observe(this, fieldSightNotifications -> {
 
                     adapter.updateList(fieldSightNotifications);
+                    scrollToTop();
                 });
+
+
     }
 
 
@@ -144,6 +149,9 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
     @OnClick(R.id.fab_scroll_to_top)
     public void scrollToTop() {
-        rvNotificationList.smoothScrollToPosition(0);
+        new Handler().post(() -> {
+            rvNotificationList.smoothScrollToPosition(0);
+        });
+
     }
 }
