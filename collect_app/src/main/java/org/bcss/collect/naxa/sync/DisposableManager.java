@@ -11,9 +11,9 @@ public class DisposableManager {
         getCompositeDisposable().add(disposable);
     }
 
-    public static boolean dispose() {
-        getCompositeDisposable().dispose();
-        return getCompositeDisposable().isDisposed();
+    static void dispose() {
+        getCompositeDisposable().clear();
+
     }
 
     public static int size() {

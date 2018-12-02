@@ -21,4 +21,8 @@ public interface BaseDaoFieldSight<T> {
 
     @Delete
     void delete(T entity);
+
+
+
+
 }

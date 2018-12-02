@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_CONTACTS;
@@ -33,19 +36,25 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
 
     @Override
     public void getAll() {
-        ServiceGenerator.getRxClient()
+        Disposable d = ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getAllContacts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArrayList<FieldSightContactModel>>() {
+                .doOnDispose(new Action() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        DisposableManager.add(d);
+                    public void run() throws Exception {
+                        SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_CONTACTS);
+                    }
+                })
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
                         SyncRepository.getInstance().showProgress(PROJECT_CONTACTS);
                         SyncLocalSource.getINSTANCE().markAsRunning(PROJECT_CONTACTS);
                     }
-
+                })
+                .subscribeWith(new DisposableObserver<ArrayList<FieldSightContactModel>>() {
                     @Override
                     public void onNext(ArrayList<FieldSightContactModel> fieldSightContactModels) {
                         ContactLocalSource.getInstance().save(fieldSightContactModels);
@@ -60,10 +69,9 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
                         SyncRepository.getInstance().setError(PROJECT_CONTACTS);
                         SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_CONTACTS);
 
-                        if (e instanceof RetrofitException) {
-                            String message = ((RetrofitException) e).getMessage();
-                            SyncLocalSource.getINSTANCE().addErrorMessage(PROJECT_CONTACTS, message);
-                        }
+                        String message = e.getMessage();
+                        SyncLocalSource.getINSTANCE().addErrorMessage(PROJECT_CONTACTS, message);
+
                     }
 
                     @Override
@@ -71,5 +79,7 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
 
                     }
                 });
+
+        DisposableManager.add(d);
     }
 }

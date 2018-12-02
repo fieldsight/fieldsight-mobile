@@ -14,6 +14,7 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
@@ -34,6 +35,12 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
     @Override
     public void getAll() {
         fetchSiteTypes()
+                .doOnDispose(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                         SyncLocalSource.getINSTANCE().markAsPending(SITE_TYPES);
+                    }
+                })
                 .subscribe(new SingleObserver<List<SiteType>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -56,10 +63,10 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                     public void onError(Throwable e) {
                         SyncRepository.getInstance().setError(SITE_TYPES);
                         e.printStackTrace();
-                        if (e instanceof RetrofitException) {
-                            String message = ((RetrofitException) e).getMessage();
-                            SyncLocalSource.getINSTANCE().addErrorMessage(SITE_TYPES, message);
-                        }
+
+                        String message = ((RetrofitException) e).getMessage();
+                        SyncLocalSource.getINSTANCE().addErrorMessage(SITE_TYPES, message);
+
 
                         SyncLocalSource.getINSTANCE().markAsFailed(SITE_TYPES);
 

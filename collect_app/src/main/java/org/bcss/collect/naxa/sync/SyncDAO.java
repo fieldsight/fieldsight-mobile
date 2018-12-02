@@ -2,10 +2,11 @@ package org.bcss.collect.naxa.sync;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
-import org.bcss.collect.naxa.common.database.ProjectFilter;
 
 import java.util.List;
 
@@ -37,11 +38,11 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
     @Query("SELECT * from sync where checked = '1'")
     public abstract Single<List<Sync>> getAllChecked();
 
-    @Query("UPDATE sync set downloadingStatus=:failed WHERE uid=:uid")
-    public abstract void markSelectedAsFailed(int uid, int failed);
+    @Query("UPDATE sync set downloadingStatus=:failed,lastSyncDateTime =:now WHERE uid=:uid")
+    public abstract void markSelectedAsFailed(int uid, int failed, String now);
 
-    @Query("UPDATE sync set downloadingStatus=:completed WHERE uid=:uid")
-    public abstract void markSelectedAsCompleted(int uid, int completed);
+    @Query("UPDATE sync set downloadingStatus=:completed,lastSyncDateTime =:now  WHERE uid=:uid")
+    public abstract void markSelectedAsCompleted(int uid, int completed, String now);
 
 
     @Query("UPDATE sync set downloadingStatus=:running WHERE uid=:uid")
@@ -57,4 +58,7 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
 
     @Query("UPDATE sync set errorMessage=:errorMessage WHERE uid=:uid  ")
     public abstract void updateErrorMessage(int uid, String errorMessage);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    public abstract void insertOrIgnore(Sync... items);
 }

@@ -7,12 +7,15 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
-import io.reactivex.functions.Action;
 
 public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
@@ -43,15 +46,13 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
     @Override
     public Completable save(Sync... items) {
         return Completable.fromAction(() -> {
-            syncDAO.insert(items);
+            syncDAO.insertOrIgnore(items);
         });
     }
 
     @Override
     public Completable save(ArrayList<Sync> items) {
-        return Completable.fromAction(() -> {
-            syncDAO.insert(items);
-        });
+        throw new RuntimeException("Not implemented yet");
     }
 
     @Override
@@ -117,7 +118,8 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.FAILED);
+
+                syncDAO.markSelectedAsFailed(uid, Constant.DownloadStatus.FAILED,formattedDate());
             }
         });
 
@@ -153,16 +155,20 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
     }
 
     public void markAsCompleted(int uid) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.COMPLETED);
-                clearErrorMessage(uid);
-            }
+        AsyncTask.execute(() -> {
+            syncDAO.markSelectedAsCompleted(uid, Constant.DownloadStatus.COMPLETED, formattedDate());
+            clearErrorMessage(uid);
         });
     }
 
     public void updateProgress(int uid, int total, int progress) {
         AsyncTask.execute(() -> syncDAO.updateProgress(uid, total, progress));
+    }
+
+    public String formattedDate() {
+        Date date = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa", Locale.US);
+        String formattedDate = df.format(date);
+        return formattedDate;
     }
 }

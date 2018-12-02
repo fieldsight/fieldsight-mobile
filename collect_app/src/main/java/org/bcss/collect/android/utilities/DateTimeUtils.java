@@ -188,6 +188,10 @@ public class DateTimeUtils {
             CharSequence ago =
                     DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
             relativeTime = ago.toString();
+            if("0 minutes ago".equals(relativeTime)){
+                relativeTime = "just now";
+            }
+
         } catch (ParseException e) {
             e.printStackTrace();
             relativeTime = dateTime;

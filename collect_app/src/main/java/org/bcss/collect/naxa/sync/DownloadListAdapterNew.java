@@ -1,11 +1,10 @@
 package org.bcss.collect.naxa.sync;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,22 +15,13 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.DateTimeUtils;
 import org.bcss.collect.android.utilities.ThemeUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
-
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.onboarding.CheckedItem;
-import org.bcss.collect.naxa.onboarding.DownloadListAdapter;
-import org.bcss.collect.naxa.onboarding.DownloadableItemsDiffCallback;
-import org.bcss.collect.naxa.onboarding.SyncableItem;
-import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,25 +78,18 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         viewHolder.checkbox.setChecked(item.isChecked());
         viewHolder.progressBar.setMax(item.getSyncTotal());
 
-        boolean hasError = item.getErrorMessage() != null && item.getErrorMessage().length() > 0;
-
-        viewHolder.textView.setVisibility(hasError ? View.VISIBLE : View.GONE);
-
-        if (hasError) {
-            String formattedMessage = String.format("Failed to synchronize: %s",item.getErrorMessage());
-            viewHolder.textView.setText(formattedMessage);
-        }
 
         switch (item.getDownloadingStatus()) {
             case PENDING:
                 viewHolder.btnCancelSync.setVisibility(View.GONE);
                 viewHolder.statusIcon.setImageResource(R.drawable.ic_access_time_black_24dp);
                 viewHolder.progressBar.setIndeterminate(false);
-
+                viewHolder.textView.setVisibility(View.GONE);
                 break;
             case RUNNING:
                 viewHolder.btnCancelSync.setVisibility(View.GONE);
                 viewHolder.statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
+                viewHolder.textView.setVisibility(View.GONE);
                 if (item.getUid() != Constant.DownloadUID.ODK_FORMS) {
                     viewHolder.progressBar.setIndeterminate(true);
                 } else {
@@ -125,6 +108,16 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
                 if (item.getUid() != Constant.DownloadUID.ODK_FORMS) {
                     viewHolder.progressBar.setIndeterminate(false);
                 }
+
+                viewHolder.textView.setVisibility(View.VISIBLE);
+
+                String formattedMessage;
+
+                formattedMessage = String.format("Failed %s \nReason: %s", DateTimeUtils.getRelativeTime(item.getLastSyncDateTime(), false), item.getErrorMessage());
+                viewHolder.textView.setTextColor(ContextCompat.getColor(context,R.color.red));
+
+
+                viewHolder.textView.setText(formattedMessage);
                 break;
             case COMPLETED:
                 viewHolder.btnCancelSync.setVisibility(View.GONE);
@@ -132,6 +125,10 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
                 if (item.getUid() != Constant.DownloadUID.ODK_FORMS) {
                     viewHolder.progressBar.setIndeterminate(false);
                 }
+                viewHolder.textView.setVisibility(View.VISIBLE);
+                String message = String.format("Synced %s", DateTimeUtils.getRelativeTime(item.getLastSyncDateTime(), false));
+                viewHolder.textView.setText(message);
+                viewHolder.textView.setTextColor(ContextCompat.getColor(context,R.color.green));
                 break;
         }
     }

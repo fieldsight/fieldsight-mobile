@@ -70,12 +70,7 @@ public class DownloadViewModel extends ViewModel {
 
 
     void cancelAllTask() {
-        boolean isDisposed = DisposableManager.dispose();
-        if (isDisposed) {
-            ToastUtils.showLongToast("Canceled all tasks");
-        } else {
-            ToastUtils.showLongToast("Failed to canceled tasks");
-        }
+        DisposableManager.dispose();
     }
 
 

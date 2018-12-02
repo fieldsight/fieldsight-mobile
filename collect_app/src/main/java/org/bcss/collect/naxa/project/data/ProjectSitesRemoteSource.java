@@ -188,7 +188,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public void run() throws Exception {
                         SyncLocalSource.getINSTANCE()
-                                .markAsPending(Constant.DownloadUID.PROJECT_SITES);
+                                .markAsFailed(Constant.DownloadUID.PROJECT_SITES);
                     }
                 })
                 .doOnSubscribe(new Consumer<Disposable>() {
