@@ -62,7 +62,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         syncRepository = SyncRepository.getInstance();
     }
 
-    public Single<List<Object>> fetchProjectAndSites() {
+    private Single<List<Object>> fetchProjectAndSites() {     Observable<Integer> vals = Observable.range(1, 10);
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getUser()
@@ -76,10 +76,12 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
                         String user = GSONInstance.getInstance().toJson(meResponse.getData());
                         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
+
+
                         return getPageAndNext(APIEndpoint.GET_MY_SITES);
 
                     }
-                })
+                },5)
                 .concatMap(new Function<MySiteResponse, Observable<MySiteResponse>>() {
                     @Override
                     public Observable<MySiteResponse> apply(MySiteResponse mySiteResponse) throws Exception {
@@ -162,11 +164,9 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                             return Observable.just(mySiteResponse);
                         }
 
-
                         return Observable.just(mySiteResponse)
-
-                                .delay(1, TimeUnit.SECONDS)
-                                .concatWith(getPageAndNext(mySiteResponse.getNext()));
+                                .concatWith(getPageAndNext(mySiteResponse.getNext())
+                                );
                     }
                 });
 
@@ -194,6 +194,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
+
                         ProjectLocalSource.getInstance().deleteAll();
                         SiteLocalSource.getInstance().deleteAll();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));

@@ -184,6 +184,13 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
     }
 
 
+    public void cancelTask() {
+        mDownloadFormListTask.setDownloaderListener(null);
+        mDownloadFormListTask.cancel(true);
+        mDownloadFormListTask = null;
+    }
+
+
     public void downloadFormList(Context context, FormListDownloaderListener fl, DownloadFormsTaskListener fdl, XMLForm xmlForm) {
 
         mFormNamesAndURLs = new HashMap<String, FormDetails>();
@@ -248,11 +255,9 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
     private void broadcastDownloadProgress(String currentFile, int progress, int total) {
 
         XMLForm xmlForm = formsToDownlaod.get(0);
-        downloadProgress = new DownloadProgress("Downloading Forms", progress, false);
-        String msg = "Downloading %s ";
 
-        String formattedMsg = String.format(msg, currentFile);
-        downloadProgress.setMessage(formattedMsg);
+
+        DownloadProgress downloadProgress = new DownloadProgress(currentFile, progress, total, currentFile, false);
 
         message.putSerializable(EXTRA_OBJECT, downloadProgress);
         receiver.send(DownloadProgress.STATUS_PROGRESS_UPDATE, message);

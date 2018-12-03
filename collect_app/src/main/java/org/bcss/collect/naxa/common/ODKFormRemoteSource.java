@@ -7,6 +7,7 @@ import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.onboarding.DownloadProgress;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadReceiver;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadService;
+import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.greenrobot.eventbus.EventBus;
 
 import io.reactivex.Observable;
@@ -35,20 +36,17 @@ public class ODKFormRemoteSource {
             xmlFormDownloadReceiver.setReceiver((resultCode, resultData) -> {
                 switch (resultCode) {
                     case DownloadProgress.STATUS_RUNNING:
-                        EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_START));
                         break;
                     case DownloadProgress.STATUS_PROGRESS_UPDATE:
                         DownloadProgress progress = (DownloadProgress) resultData.getSerializable(EXTRA_OBJECT);
                         emitter.onNext(progress);
-                        EventBus.getDefault().post(new DataSyncEvent(uid, progress));
+                        SyncLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS,progress.getTotal(),progress.getProgress());
                         break;
                     case DownloadProgress.STATUS_ERROR:
                         emitter.onError(null);
-                        EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_ERROR));
                         break;
                     case DownloadProgress.STATUS_FINISHED_FORM:
                         emitter.onComplete();
-                        EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_END));
                         break;
                 }
             });

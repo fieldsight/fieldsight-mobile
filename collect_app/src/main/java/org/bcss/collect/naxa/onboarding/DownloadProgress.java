@@ -15,9 +15,11 @@ public class DownloadProgress implements Serializable {
     private String message;
     private boolean isIndeterminate;
 
-    DownloadProgress(String message, int total, boolean isIndeterminate) {
-        this.message = currentFile;
+    public DownloadProgress(String currentFile, int progress, int total, String message, boolean isIndeterminate) {
+        this.currentFile = currentFile;
+        this.progress = progress;
         this.total = total;
+        this.message = message;
         this.isIndeterminate = isIndeterminate;
     }
 
@@ -55,4 +57,8 @@ public class DownloadProgress implements Serializable {
         return message;
     }
 
+    public void setTotal(int total) {
+
+        this.total = total;
+    }
 }

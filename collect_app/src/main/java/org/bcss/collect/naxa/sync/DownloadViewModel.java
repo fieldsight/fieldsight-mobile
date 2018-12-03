@@ -71,6 +71,7 @@ public class DownloadViewModel extends ViewModel {
 
     void cancelAllTask() {
         DisposableManager.dispose();
+        SyncLocalSource.getINSTANCE().markAllAsPending();
     }
 
 
@@ -244,7 +245,7 @@ public class DownloadViewModel extends ViewModel {
                 case DownloadProgress.STATUS_PROGRESS_UPDATE:
                     DownloadProgress progress = (DownloadProgress) resultData.getSerializable(EXTRA_OBJECT);
                     Timber.i(progress.getMessage());
-                    EventBus.getDefault().post(new DataSyncEvent(uid, progress));
+                    SyncLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS,progress.getTotal(),progress.getProgress());
                     break;
                 case DownloadProgress.STATUS_ERROR:
                     EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_ERROR));
@@ -259,6 +260,7 @@ public class DownloadViewModel extends ViewModel {
 
         });
         XMLFormDownloadService.start(Collect.getInstance(), xmlFormDownloadReceiver);
+
 
     }
 

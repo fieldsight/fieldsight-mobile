@@ -113,6 +113,9 @@ public class FieldSightFormListDownloadUtils {
         return downloadFormList(xmlForm, xmlForm.getDownloadUrl(), null, null, alwaysCheckMediaFiles);
     }
 
+    public void cancelAll(){
+
+    }
 
     public HashMap<String, FormDetails> downloadFormList(@Nullable XMLForm xmlForm, @Nullable String url, @Nullable String username,
                                                          @Nullable String password, boolean alwaysCheckMediaFiles) {

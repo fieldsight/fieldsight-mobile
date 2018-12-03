@@ -294,9 +294,7 @@ the specific language governing permissions and limitations under the License.
             android:name="org.bcss.collect.naxa.login.LoginActivity"
             android:noHistory="true"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="org.bcss.collect.naxa.onboarding.DownloadActivity"
-             />
+
         <activity
             android:name="org.bcss.collect.naxa.project.ProjectListActivity"
             android:exported="true"
@@ -310,7 +308,7 @@ the specific language governing permissions and limitations under the License.
             android:exported="true" />
         <activity
             android:name="org.bcss.collect.naxa.site.CreateSiteDetailActivity"
-            android:exported="true" />
+            android:exported="true" />`
         <activity
             android:name="org.bcss.collect.naxa.survey.SurveyFormsActivity"
             android:exported="true" />
@@ -345,6 +343,10 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:exported="true"
             android:name="org.bcss.collect.naxa.sync.DownloadActivity" />
+        <activity android:name="org.bcss.collect.naxa.sync.DownloadActivityNew" />
+        <activity
+            android:exported="true"
+            android:name="org.bcss.collect.naxa.onboarding.DownloadActivity" />
 
         <receiver
             android:name=".tasks.sms.SmsSentBroadcastReceiver"

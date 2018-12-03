@@ -90,7 +90,9 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
                 viewHolder.btnCancelSync.setVisibility(View.GONE);
                 viewHolder.statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
                 viewHolder.textView.setVisibility(View.GONE);
-                if (item.getUid() != Constant.DownloadUID.ODK_FORMS) {
+
+//                if(item.getUid() != Constant.DownloadUID.ALL_FORMS){
+                if (true) {
                     viewHolder.progressBar.setIndeterminate(true);
                 } else {
                     viewHolder.progressBar.setMax(item.getSyncTotal());
@@ -114,7 +116,7 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
                 String formattedMessage;
 
                 formattedMessage = String.format("Failed %s \nReason: %s", DateTimeUtils.getRelativeTime(item.getLastSyncDateTime(), false), item.getErrorMessage());
-                viewHolder.textView.setTextColor(ContextCompat.getColor(context,R.color.red));
+                viewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.red));
 
 
                 viewHolder.textView.setText(formattedMessage);
@@ -128,7 +130,7 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
                 viewHolder.textView.setVisibility(View.VISIBLE);
                 String message = String.format("Synced %s", DateTimeUtils.getRelativeTime(item.getLastSyncDateTime(), false));
                 viewHolder.textView.setText(message);
-                viewHolder.textView.setTextColor(ContextCompat.getColor(context,R.color.green));
+                viewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.green));
                 break;
         }
     }

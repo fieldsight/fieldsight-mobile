@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MySiteResponse {
     @SerializedName("count")
-    private String count;
+    private int count;
 
     @SerializedName("next")
     private String next;
@@ -20,11 +20,11 @@ public class MySiteResponse {
     private List<MySites> result;
 
 
-    public String getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(int count) {
         this.count = count;
     }
 

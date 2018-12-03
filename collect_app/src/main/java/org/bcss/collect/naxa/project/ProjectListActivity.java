@@ -46,6 +46,7 @@ import org.bcss.collect.naxa.demo.RawAssetLoader;
 import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.bcss.collect.naxa.sync.DownloadActivityNew;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -182,7 +183,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 }
                 break;
             case R.id.action_refresh:
-                DownloadActivity.start(this);
+                DownloadActivityNew.start(this);
                 break;
             case R.id.action_notificaiton:
                 NotificationListActivity.start(this);

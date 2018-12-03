@@ -25,9 +25,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -36,7 +33,7 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
-public class DownloadActivity extends CollectAbstractActivity implements OnItemClickListener<Sync> {
+public class DownloadActivityNew extends CollectAbstractActivity implements OnItemClickListener<Sync> {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -69,7 +66,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
 
 
         SyncLocalSource.getINSTANCE()
-                .save(getData())
+                .init()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
@@ -154,10 +151,6 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
 
     private void stopDownload() {
         viewModel.cancelAllTask();
-
-
-
-
     }
 
     private void runDownload() {
@@ -168,8 +161,6 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
                     public void onSuccess(List<Sync> syncs) {
                         viewModel.queueSyncTask(syncs);
                         Timber.i("Select completed on sync table");
-
-
                     }
 
                     @Override
@@ -184,8 +175,6 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
     protected void onResume() {
         super.onResume();
         adapter.setOnItemClickListener(this);
-
-
     }
 
     @Override
@@ -194,17 +183,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
         adapter.setOnItemClickListener(null);
     }
 
-    private Sync[] getData() {
 
-        return new Sync[]{
-                new Sync(PROJECT_SITES, PENDING, "Project and sites", "Downloads your assigned project and sites"),
-                new Sync(Constant.DownloadUID.ALL_FORMS, PENDING, "Forms", "Downloads all forms for assigned sites"),
-                new Sync(Constant.DownloadUID.SITE_TYPES, PENDING, "Site type(s)", "Download site types to filter staged forms"),
-                new Sync(Constant.DownloadUID.EDU_MATERIALS, PENDING, "Educational Materials", "Download educational attached for form(s)"),
-                new Sync(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your project"),
-                new Sync(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
-        };
-    }
 
 
     private void setupToolbar() {
@@ -229,7 +208,8 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                super.onBackPressed();
+                adapter.getItemCount();
+//                super.onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);

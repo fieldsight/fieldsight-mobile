@@ -55,7 +55,7 @@ public class ServiceGenerator {
         return chain -> {
             Request request = chain.request().newBuilder()
                     .addHeader("Authorization",
-                            "Token " + token)
+                            token)
                     .build();
             return chain.proceed(request);
         };
@@ -64,18 +64,11 @@ public class ServiceGenerator {
     private static OkHttpClient createOkHttpClient() {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
         String token = FieldSightUserSession.getAuthToken();
-        Dispatcher dispatcher = new Dispatcher();
 
         if (!TextUtils.isEmpty(token)) {
             okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
         }
-        if (BuildConfig.DEBUG) {
-            SpiderInterceptor spider = SpiderInterceptor.Companion.getInstance(Collect.getInstance().getApplicationContext());
-            if (spider != null) {
-                Timber.i("Spider added to OkHTTP");
-                okHttpClientBuilder.addInterceptor(spider);
-            }
-        }
+
         okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS);
         okHttpClientBuilder.writeTimeout(10, TimeUnit.SECONDS);
         okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);

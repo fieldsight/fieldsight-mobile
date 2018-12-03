@@ -17,6 +17,9 @@ import java.util.Locale;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
+
 public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     private static SyncLocalSource INSTANCE;
@@ -72,23 +75,21 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
                     }
 
                 }));
-
-
     }
 
     public Single<Integer> selectedItemCount() {
         return syncDAO.selectedItemsCount();
     }
 
-    public LiveData<Integer> selectedItemCountLive() {
+    LiveData<Integer> selectedItemCountLive() {
         return syncDAO.selectedItemsCountLive();
     }
 
-    public LiveData<Integer> runningItemCountLive() {
+    LiveData<Integer> runningItemCountLive() {
         return syncDAO.runningItemCountLive(Constant.DownloadStatus.RUNNING);
     }
 
-    public Completable toggleSingleItem(Sync sync) {
+    Completable toggleSingleItem(Sync sync) {
         return Completable.fromAction(() -> {
             if (sync.isChecked()) {
                 syncDAO.markAsUnchecked(sync.getUid());
@@ -98,7 +99,7 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
         });
     }
 
-    public Single<List<Sync>> getAllChecked() {
+    Single<List<Sync>> getAllChecked() {
         return syncDAO.getAllChecked();
     }
 
@@ -119,7 +120,7 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
             @Override
             public void run() {
 
-                syncDAO.markSelectedAsFailed(uid, Constant.DownloadStatus.FAILED,formattedDate());
+                syncDAO.markSelectedAsFailed(uid, Constant.DownloadStatus.FAILED, formattedDate());
             }
         });
 
@@ -165,10 +166,38 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
         AsyncTask.execute(() -> syncDAO.updateProgress(uid, total, progress));
     }
 
-    public String formattedDate() {
+    private String formattedDate() {
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa", Locale.US);
         String formattedDate = df.format(date);
         return formattedDate;
+    }
+
+    void markAllAsPending() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                for (Sync sync : getData()) {
+                    markAsPending(sync.getUid());
+                }
+            }
+        });
+
+    }
+
+    private Sync[] getData() {
+
+        return new Sync[]{
+                new Sync(PROJECT_SITES, PENDING, "Project and sites", "Downloads your assigned project and sites"),
+                new Sync(Constant.DownloadUID.ALL_FORMS, PENDING, "Forms", "Downloads all forms for assigned sites"),
+                new Sync(Constant.DownloadUID.SITE_TYPES, PENDING, "Site type(s)", "Download site types to filter staged forms"),
+                new Sync(Constant.DownloadUID.EDU_MATERIALS, PENDING, "Educational Materials", "Download educational attached for form(s)"),
+                new Sync(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your project"),
+                new Sync(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
+        };
+    }
+
+    public Completable init() {
+        return save(getData());
     }
 }
