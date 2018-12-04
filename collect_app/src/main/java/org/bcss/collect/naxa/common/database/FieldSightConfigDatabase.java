@@ -18,7 +18,8 @@ import java.io.File;
         {
                 SiteOveride.class,
                 ProjectFilter.class,
-                Sync.class
+                Sync.class,
+                SiteIdMatch.class
 
         },
         version = 4)

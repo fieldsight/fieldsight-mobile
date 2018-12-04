@@ -34,6 +34,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ThemeUtils;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
@@ -467,7 +468,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 .subscribe(new SingleObserver<List<Long>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        ToastUtils.showLongToast("Upload started! check notification for details");
                         NotificationUtils.createUploadNotification(progressNotifyId, progressMessage);
                     }
 

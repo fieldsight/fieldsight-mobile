@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "d0c74bb7d5bd865909eb7340faf114c7",
+    "identityHash": "0b031e3dc475aecbd5b2392397867e00",
     "entities": [
       {
         "tableName": "site_overide_ids",
@@ -141,11 +141,37 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "site_id_match",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`oldSiteId` TEXT NOT NULL, `newSiteId` TEXT, PRIMARY KEY(`oldSiteId`))",
+        "fields": [
+          {
+            "fieldPath": "oldSiteId",
+            "columnName": "oldSiteId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "newSiteId",
+            "columnName": "newSiteId",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "oldSiteId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d0c74bb7d5bd865909eb7340faf114c7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0b031e3dc475aecbd5b2392397867e00\")"
     ]
   }
 }

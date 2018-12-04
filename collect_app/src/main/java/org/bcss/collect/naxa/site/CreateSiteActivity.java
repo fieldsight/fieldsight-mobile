@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -36,6 +37,8 @@ import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.activities.GeoPointActivity;
+import org.bcss.collect.android.listeners.PermissionListener;
+import org.bcss.collect.android.utilities.PermissionUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
@@ -360,7 +363,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 super.onBackPressed();
                 break;
@@ -480,6 +483,24 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     }
 
     @OnClick(R.id.btnCollectSiteAddPhoto)
+    public void checkPermissionAndShowDialog() {
+        if (PermissionUtils.checkIfCameraPermissionGranted(this)) {
+            showImageDialog();
+        } else {
+            PermissionUtils.requestCameraPermission(this, new PermissionListener() {
+                @Override
+                public void granted() {
+                    showImageDialog();
+                }
+
+                @Override
+                public void denied() {
+
+                }
+            });
+        }
+    }
+
     public void showImageDialog() {
         final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Dismiss"};
         DialogFactory.createListActionDialog(this, "Add photo", items, (dialog, which) -> {
@@ -554,8 +575,22 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     @OnClick(R.id.btnCollectSiteRecordLocation)
     public void onBtnCollectSiteRecordLocationClicked() {
-        Intent toGeoPointWidget = new Intent(this, GeoPointActivity.class);
-        startActivityForResult(toGeoPointWidget, Constant.Key.GEOPOINT_RESULT_CODE);
+        if (PermissionUtils.checkIfLocationPermissionsGranted(this)) {
+            Intent toGeoPointWidget = new Intent(this, GeoPointActivity.class);
+            startActivityForResult(toGeoPointWidget, Constant.Key.GEOPOINT_RESULT_CODE);
+        } else {
+            PermissionUtils.requestLocationPermissions(this, new PermissionListener() {
+                @Override
+                public void granted() {
+                    onBtnCollectSiteRecordLocationClicked();
+                }
+
+                @Override
+                public void denied() {
+
+                }
+            });
+        }
 
     }
 
