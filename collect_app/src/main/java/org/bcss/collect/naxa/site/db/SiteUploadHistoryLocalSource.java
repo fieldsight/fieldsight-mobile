@@ -12,7 +12,7 @@ import org.bcss.collect.naxa.common.database.SiteUploadHistoryDAO;
 import java.util.ArrayList;
 import java.util.List;
 
-class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUploadHistory> {
+public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUploadHistory> {
     public static SiteUploadHistoryLocalSource INSTANCE;
     private SiteUploadHistoryDAO dao;
 
@@ -50,5 +50,9 @@ class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUploadHist
     @Override
     public void updateAll(ArrayList<SiteUploadHistory> items) {
 
+    }
+
+    public String getById(String siteId) {
+        return dao.getBySiteId(siteId);
     }
 }

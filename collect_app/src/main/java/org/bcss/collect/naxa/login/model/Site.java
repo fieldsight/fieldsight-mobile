@@ -147,8 +147,9 @@ public class Site implements Parcelable {
     }
 
     public static String getMockedId() {
-        return String.valueOf(System.currentTimeMillis());
+        return String.valueOf(System.currentTimeMillis()).concat("-").concat("fake");
     }
+
 
     @Override
     public String toString() {

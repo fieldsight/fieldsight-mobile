@@ -42,6 +42,7 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             FieldSightConfigDatabase.class, DB_PATH)
                             .fallbackToDestructiveMigration()
+                            .allowMainThreadQueries()
                             .build();
                 }
             }

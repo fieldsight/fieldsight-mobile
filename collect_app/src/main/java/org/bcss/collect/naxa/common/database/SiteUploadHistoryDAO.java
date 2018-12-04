@@ -12,4 +12,8 @@ public abstract class SiteUploadHistoryDAO implements BaseDaoFieldSight<SiteUplo
 
     @Query("SELECT * from site_upload_history")
     public abstract LiveData<List<SiteUploadHistory>> getAll();
+
+    @Query("SELECT * from site_upload_history WHERE oldSiteId=:siteId")
+    public abstract String getBySiteId(String siteId);
+
 }

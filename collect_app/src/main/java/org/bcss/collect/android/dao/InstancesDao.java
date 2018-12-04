@@ -26,7 +26,9 @@ import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
+import org.bcss.collect.naxa.site.db.SiteUploadHistoryLocalSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -437,9 +439,10 @@ public class InstancesDao {
 
                     int databaseIdIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID);
 
+
                     Instance instance = new Instance.Builder()
                             .displayName(cursor.getString(displayNameColumnIndex))
-                            .submissionUri(cursor.getString(submissionUriColumnIndex))
+                            .submissionUri(fixUploadUrl(cursor.getString(submissionUriColumnIndex)))
                             .canEditWhenComplete(cursor.getString(canEditWhenCompleteIndex))
                             .instanceFilePath(cursor.getString(instanceFilePathIndex))
                             .jrFormId(cursor.getString(jrFormIdColumnIndex))
@@ -460,6 +463,27 @@ public class InstancesDao {
         }
         return instances;
     }
+
+
+    public String fixUploadUrl(String url) {
+        if (checkContainsFakeSiteID(url)) {
+            String mockedSiteId = getSiteIdFromUrl(url);
+            String siteId = SiteUploadHistoryLocalSource.getInstance().getById(mockedSiteId);
+            String fsFormId = getFsFormIdFromUrl(url);
+            String deployedFrom = getFormDeployedFrom(url);
+
+            return generateSubmissionUrl(deployedFrom, siteId, fsFormId);
+        }
+
+        return url;
+    }
+
+    public static boolean checkContainsFakeSiteID(String url) {
+        String[] split = url.split("/");
+        String siteId = split[split.length - 1];
+        return siteId.contains("fake");
+    }
+
 
     /**
      * Returns the values of an instance as a ContentValues object for use with

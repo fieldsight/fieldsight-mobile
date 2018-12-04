@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
+import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.http.HttpHeadResult;
 import org.bcss.collect.android.http.OpenRosaHttpInterface;
 import org.bcss.collect.android.R;
@@ -28,6 +29,10 @@ import org.bcss.collect.android.preferences.PreferenceKeys;
 import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.android.utilities.ResponseMessageParser;
 import org.bcss.collect.android.utilities.WebCredentialsUtils;
+import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.bcss.collect.naxa.site.db.SiteUploadHistoryLocalSource;
+import org.bcss.collect.naxa.sync.SyncLocalSource;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +67,7 @@ public class InstanceServerUploader extends InstanceUploader {
     /**
      * Uploads all files associated with an instance to the specified URL. Writes fail/success
      * status to database.
-     *
+     * <p>
      * Returns a custom success message if one is provided by the server.
      */
     @Override
@@ -266,7 +271,7 @@ public class InstanceServerUploader extends InstanceUploader {
 
     /**
      * Returns the URL this instance should be submitted to with appended deviceId.
-     *
+     * <p>
      * If the upload was triggered by an external app and specified an override URL, use that one.
      * Otherwise, use the submission URL configured in the form
      * (https://opendatakit.github.io/xforms-spec/#submission-attributes). Finally, default to the
@@ -286,14 +291,17 @@ public class InstanceServerUploader extends InstanceUploader {
         }
 
         // add deviceID to request
-//        try {
-//            urlString += "?deviceID=" + URLEncoder.encode(deviceId != null ? deviceId : "", "UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            Timber.i(e, "Error encoding URL for device id : %s", deviceId);
-//        }
+        try {
+            urlString += "?deviceID=" + URLEncoder.encode(deviceId != null ? deviceId : "", "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Timber.i(e, "Error encoding URL for device id : %s", deviceId);
+        }
 
         return urlString;
     }
+
+
+
 
     private String getServerSubmissionURL() {
 
