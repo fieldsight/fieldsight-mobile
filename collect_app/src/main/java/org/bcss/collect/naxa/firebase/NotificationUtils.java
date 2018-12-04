@@ -119,15 +119,25 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"upload")
                 .setSmallIcon(android.R.drawable.stat_sys_upload)
                 .setAutoCancel(true)
                 .setContentTitle(title)
                 .setOngoing(true)
                 .setProgress(100, 0, true)
-                .setGroup("upload");
+                .setGroup("upload")
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setPriority(Notification.PRIORITY_HIGH);
 
         Notification n = builder.build();
+
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            builder.setVibrate(new long[0]);
+        } else {
+            builder.setPriority(Notification.PRIORITY_HIGH);
+        }
+
 
         if (manager != null) {
             manager.notify(notificationId, n);

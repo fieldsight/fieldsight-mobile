@@ -146,6 +146,10 @@ public class Site implements Parcelable {
         this.siteDocuments = siteDocuments;
     }
 
+    public static String getMockedId() {
+        return String.valueOf(System.currentTimeMillis());
+    }
+
     @Override
     public String toString() {
         return "Site{" +
@@ -386,7 +390,6 @@ public class Site implements Parcelable {
     public void setRegionId(String regionId) {
         this.regionId = regionId;
     }
-
 
 
     @Override

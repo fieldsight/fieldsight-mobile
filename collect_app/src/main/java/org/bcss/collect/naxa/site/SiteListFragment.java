@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.primitives.Longs;
 import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.R;
@@ -33,6 +34,7 @@ import org.bcss.collect.android.activities.InstanceUploaderActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.bcss.collect.android.utilities.ArrayUtils;
 import org.bcss.collect.android.utilities.ThemeUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
@@ -53,6 +55,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -228,9 +231,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }
 
         source.observe(this, sites -> {
-            if (siteListAdapter.getItemCount() == 0) {
-                runLayoutAnimation(recyclerView);
-            }
             siteListAdapter.updateList(sites);
         });
 
@@ -366,6 +366,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         if (item.getItemId() == R.id.action_filter) {
             bottomSheetDialog.show();
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -434,7 +435,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
                 case R.id.action_upload_sites:
                     uploadSelectedSites(siteListAdapter.getSelected());
-                    siteListAdapter.clearSelections();
+
                     actionMode.finish();
                     return true;
 
@@ -480,11 +481,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         if (isAdded()) {
                             DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
                                     .setPositiveButton("Upload ", (dialog, which) -> {
-
                                         Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
-                                        i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs.toArray(new Long[instanceIDs.size()]));
+                                        i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
                                         startActivityForResult(i, INSTANCE_UPLOADER);
-                                    }).setNegativeButton("Not now", null);
+                                    }).setNegativeButton("Not now", null).show();
+                        } else {
+                            NotificationUtils.notifyHeadsUp("Unable to start upload", "Unable to start upload for offline site");
                         }
 
                     }
@@ -553,16 +555,17 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     public void disableActionMode() {
-        siteListAdapter.clearSelections();
-        actionMode.finish();
 
+        actionMode.finish();
         actionMode = null;
         recyclerView.post(new Runnable() {
             @Override
             public void run() {
-                siteListAdapter.resetAnimationIndex();
-
-                //siteListAdapter.notifyDataSetChanged();
+                setupRecycleView();
+                collectFilterAndApply(new ArrayList<>(0));
+//                siteListAdapter.clearSelections();
+//                siteListAdapter.resetAnimationIndex();
+//                siteListAdapter.notifyDataSetChanged();
             }
         });
     }

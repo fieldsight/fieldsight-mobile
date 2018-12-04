@@ -106,9 +106,9 @@ the specific language governing permissions and limitations under the License.
         </provider>
 
         <activity
-            android:exported="true"
-            android:name="org.bcss.collect.android.activities.MainMenuActivity"
-            android:configChanges="locale|orientation|screenSize" />
+            android:name=".activities.MainMenuActivity"
+            android:configChanges="locale|orientation|screenSize"
+            android:exported="true" />
         <activity
             android:name=".activities.ScannerWithFlashlightActivity"
             android:screenOrientation="portrait"
@@ -135,7 +135,7 @@ the specific language governing permissions and limitations under the License.
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
         <activity
-            android:name="org.bcss.collect.android.activities.DrawActivity"
+            android:name=".activities.DrawActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".activities.GoogleDriveActivity"
@@ -162,10 +162,12 @@ the specific language governing permissions and limitations under the License.
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
             </intent-filter>
         </activity>
-        <activity android:name="org.bcss.collect.android.activities.FormDownloadList">
+        <activity android:name=".activities.FormDownloadList">
             <intent-filter>
                 <action android:name="org.bcss.collect.android.FORM_DOWNLOAD" />
-                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
             </intent-filter>
         </activity>
@@ -176,7 +178,7 @@ the specific language governing permissions and limitations under the License.
             android:name=".activities.GoogleSheetsUploaderActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="org.bcss.collect.android.activities.InstanceUploaderList"
+            android:name=".activities.InstanceUploaderList"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -185,24 +187,23 @@ the specific language governing permissions and limitations under the License.
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".preferences.PreferencesActivity" />
         <activity
-            android:exported="true"
-            android:name=".preferences.AdminPreferencesActivity" />
+            android:name=".preferences.AdminPreferencesActivity"
+            android:exported="true" />
         <activity android:name=".activities.ViewFormHierarchyActivity" />
         <activity android:name=".activities.EditFormHierarchyActivity" />
         <activity android:name=".activities.GeoPointActivity" />
-        <activity
-            android:name=".activities.InstanceUploaderActivity">
+        <activity android:name=".activities.InstanceUploaderActivity">
             <intent-filter>
                 <action android:name="org.bcss.collect.android.INSTANCE_UPLOAD" />
-                <category android:name="android.intent.category.DEFAULT"/>
+
+                <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.GeoPointOsmMapActivity"
             android:configChanges="orientation" />
@@ -212,9 +213,9 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name=".activities.GeoTraceActivity"
             android:configChanges="orientation" />
-        <activity android:name="org.bcss.collect.android.activities.BearingActivity" />
+        <activity android:name=".activities.BearingActivity" />
         <activity
-            android:name="org.bcss.collect.android.activities.SplashScreenActivity"
+            android:name=".activities.SplashScreenActivity"
             android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -287,14 +288,12 @@ the specific language governing permissions and limitations under the License.
             android:name=".location.GeoActivity"
             android:configChanges="orientation"
             android:exported="true" />
-        <activity android:name="org.bcss.collect.android.activities.WebViewActivity" />
-        <activity android:name="org.bcss.collect.android.activities.CaptureSelfieVideoActivityNewApi" />
-
+        <activity android:name=".activities.WebViewActivity" />
+        <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
         <activity
             android:name="org.bcss.collect.naxa.login.LoginActivity"
             android:noHistory="true"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name="org.bcss.collect.naxa.project.ProjectListActivity"
             android:exported="true"
@@ -308,7 +307,8 @@ the specific language governing permissions and limitations under the License.
             android:exported="true" />
         <activity
             android:name="org.bcss.collect.naxa.site.CreateSiteDetailActivity"
-            android:exported="true" />`
+            android:exported="true" />
+        `
         <activity
             android:name="org.bcss.collect.naxa.survey.SurveyFormsActivity"
             android:exported="true" />
@@ -331,7 +331,7 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name="org.bcss.collect.naxa.sitedocuments.ImageViewerActivity"
             android:label="@string/title_activity_image_viewer"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EducationalMaterialActivity" />
         <activity android:name="org.bcss.collect.naxa.onboarding.DownloadActivityRefactor" />
@@ -341,12 +341,12 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewImageDetailsActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewVideoDetailsActivity" />
         <activity
-            android:exported="true"
-            android:name="org.bcss.collect.naxa.sync.DownloadActivity" />
+            android:name="org.bcss.collect.naxa.sync.DownloadActivity"
+            android:exported="true" />
         <activity android:name="org.bcss.collect.naxa.sync.DownloadActivityNew" />
         <activity
-            android:exported="true"
-            android:name="org.bcss.collect.naxa.onboarding.DownloadActivity" />
+            android:name="org.bcss.collect.naxa.onboarding.DownloadActivity"
+            android:exported="true" />
 
         <receiver
             android:name=".tasks.sms.SmsSentBroadcastReceiver"
@@ -364,5 +364,12 @@ the specific language governing permissions and limitations under the License.
                 <action android:name="org.bcss.collect.android.COLLECT_SMS_NOTIFICATION_ACTION" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:exported="true"
+            android:name=".TestingActivity"
+            android:label="@string/title_activity_testing"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+
 </manifest>

@@ -403,7 +403,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String mockedSiteId = String.valueOf(System.currentTimeMillis());
+                String mockedSiteId = Site.getMockedId();
                 createSiteViewModel.setId(mockedSiteId);
                 collectMetaAtrributes(createSiteViewModel.getMetaAttributesViewIds().getValue());
                 collectSpinnerOptions();

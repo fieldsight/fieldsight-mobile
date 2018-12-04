@@ -25,10 +25,15 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ApplicationConstants;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.network.APIEndpoint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
@@ -459,7 +464,7 @@ public class InstancesDao {
     /**
      * Returns the values of an instance as a ContentValues object for use with
      * {@link #saveInstance(ContentValues)} or {@link #updateInstance(ContentValues, String, String[])}
-     *
+     * <p>
      * Does NOT include the database ID.
      */
     public ContentValues getValuesFromInstanceObject(Instance instance) {
@@ -497,34 +502,64 @@ public class InstancesDao {
 
     }
 
-    private String parseSiteId(String url) throws IndexOutOfBoundsException {
-        boolean isSiteUrl = !url.contains("project");
-        String[] pieces = url.split("/");
-
-        return "";
+    private String getSiteIdFromUrl(String url) {
+        String[] split = url.split("/");
+        return split[split.length - 1];
     }
 
+    private String getFormDeployedFrom(String url) {
+        String[] split = url.split("/");
+        if (Constant.FormDeploymentFrom.PROJECT.equals(split[split.length - 3])) {
+            return Constant.FormDeploymentFrom.PROJECT;
+        } else {
+            return Constant.FormDeploymentFrom.SITE;
+        }
+    }
+
+
+    public Observable<String> cascadedSiteIds(String oldId, String newId) {
+        return Observable.just(getBySiteId(oldId))
+                .flatMapIterable((Function<List<Instance>, Iterable<Instance>>) instances -> instances)
+                .map(new Function<Instance, String>() {
+                    @Override
+                    public String apply(Instance instance) throws Exception {
+                        String url = instance.getSubmissionUri();
+                        String deployedFrom = getFormDeployedFrom(url);
+                        String fsFormId = getFsFormIdFromUrl(url);
+                        String newUrl = generateSubmissionUrl(deployedFrom, newId, fsFormId);
+
+
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(InstanceProviderAPI.InstanceColumns.SUBMISSION_URI, newUrl);
+                        contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, newId);
+                        String selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?";
+                        String[] selectionArgs = new String[]{oldId};
+
+                        updateInstance(contentValues, selection, selectionArgs);
+
+                        return newUrl;
+                    }
+                });
+
+
+    }
+
+    private String getFsFormIdFromUrl(String url) {
+        String[] split = url.split("/");
+        return split[split.length - 2];
+    }
 
     public List<Instance> getBySiteId(String siteId) {
 
         Cursor cursor;
-        String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and ("
-                + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                + InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + " = ?";
+        String selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?";
 
-        String[] selectionArgs = {
-                InstanceProviderAPI.STATUS_COMPLETE,
-                InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
-                InstanceProviderAPI.STATUS_SUBMITTED,
-                "%" + siteId + "%"};
+        String[] selectionArgs = new String[]{siteId};
 
         cursor = getInstancesCursor(selection, selectionArgs);
-        return getInstancesFromCursor(cursor);
+        List<Instance> list = getInstancesFromCursor(cursor);
+        return list;
     }
 
-    public void getByProjectId(String projectId) {
 
-    }
 }

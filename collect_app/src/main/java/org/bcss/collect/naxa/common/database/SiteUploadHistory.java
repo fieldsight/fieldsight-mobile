@@ -2,19 +2,26 @@ package org.bcss.collect.naxa.common.database;
 
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-@Entity(tableName = "site_id_match")
-public class SiteIdMatch {
+@Entity(tableName = "site_upload_history")
+public class SiteUploadHistory {
     @PrimaryKey
     @NonNull
-    private String oldSiteId;
     private String newSiteId;
+    private String oldSiteId;
 
 
-    public SiteIdMatch() {
+    public SiteUploadHistory() {
 
+    }
+
+    @Ignore
+    public SiteUploadHistory(@NonNull String newSiteId, String oldSiteId) {
+        this.newSiteId = newSiteId;
+        this.oldSiteId = oldSiteId;
     }
 
     @NonNull

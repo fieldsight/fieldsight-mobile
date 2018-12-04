@@ -1,12 +1,9 @@
 package org.bcss.collect.naxa.common.database;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.sync.Sync;
@@ -19,10 +16,10 @@ import java.io.File;
                 SiteOveride.class,
                 ProjectFilter.class,
                 Sync.class,
-                SiteIdMatch.class
+                SiteUploadHistory.class
 
         },
-        version = 4)
+        version = 5)
 
 public abstract class FieldSightConfigDatabase extends RoomDatabase {
 
@@ -33,6 +30,8 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
     public abstract ProjectFilterDAO getProjectFilterDAO();
 
     public abstract SyncDAO getSyncDao();
+
+    public abstract SiteUploadHistoryDAO getSiteUploadHistoryDao();
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_cofig";
 

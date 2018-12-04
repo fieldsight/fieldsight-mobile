@@ -1,8 +1,10 @@
 package org.bcss.collect.naxa.site.db;
 
+import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 
+import org.bcss.collect.naxa.common.database.SiteUploadHistory;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
@@ -14,9 +16,11 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 import static org.bcss.collect.naxa.network.ServiceGenerator.getRxClient;
@@ -43,14 +47,38 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
     public Single<List<Site>> uploadMultipleSites(List<Site> sites) {
 
+        InstancesDao instancesDao = new InstancesDao();
         return Observable.just(sites)
                 .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
                 .filter(site -> site.getIsSiteVerified() == IS_OFFLINE)
                 .flatMap((Function<Site, ObservableSource<Site>>) oldSite -> uploadSite(oldSite)
                         .map(newSite -> {
 
-                            SiteLocalSource.getInstance().setSiteAsVerified(oldSite.getId());
-                            SiteLocalSource.getInstance().setSiteId(oldSite.getId(), newSite.getId());
+                            String oldSiteId = oldSite.getId();
+                            String newSiteId = newSite.getId();
+
+                            SiteLocalSource.getInstance().setSiteAsVerified(oldSiteId);
+                            SiteLocalSource.getInstance().setSiteId(oldSiteId, newSiteId);
+                            instancesDao
+                                    .cascadedSiteIds(oldSiteId, newSiteId)
+                                    .subscribe(new DisposableObserver<String>() {
+                                        @Override
+                                        public void onNext(String s) {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
+                                        }
+                                    });
+
+                            SiteUploadHistoryLocalSource.getInstance().save(new SiteUploadHistory(newSiteId, oldSiteId));
 
                             return newSite;
                         }))
@@ -80,7 +108,8 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         RequestBody SiteRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getTypeId()));
         RequestBody isSurvey = RequestBody.create(MediaType.parse("text/plain"), "false");
         RequestBody metaAttrs = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getMetaAttributes());
-        RequestBody regionId = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getRegionId());
+//        RequestBody regionId = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getRegionId());
+        RequestBody regionId = null;
 
         return getRxClient()
                 .create(ApiInterface.class)

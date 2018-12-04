@@ -81,7 +81,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         return getPageAndNext(APIEndpoint.GET_MY_SITES);
 
                     }
-                },5)
+                })
                 .concatMap(new Function<MySiteResponse, Observable<MySiteResponse>>() {
                     @Override
                     public Observable<MySiteResponse> apply(MySiteResponse mySiteResponse) throws Exception {

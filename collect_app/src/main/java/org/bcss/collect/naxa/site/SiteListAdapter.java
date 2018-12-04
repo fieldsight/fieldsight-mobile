@@ -57,28 +57,26 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder  onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder holder = null;
+        View itemView = null;
 
-        if (viewType == VIEW_TYPE_SURVEY_FORM) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.survey_list_item, parent, false);
-            holder = new SurveyViewHolder(itemView);
-        } else if (viewType == VIEW_TYPE_SITE) {
-            View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.site_list_item, parent, false);
-            holder = new SiteViewHolder(itemView);
+        switch (viewType) {
+            case VIEW_TYPE_SURVEY_FORM:
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.survey_list_item, parent, false);
+                holder = new SurveyViewHolder(itemView);
+                break;
+            case VIEW_TYPE_SITE:
+            default:
+                itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.site_list_item, parent, false);
+                holder = new SiteViewHolder(itemView);
+                break;
         }
         return holder;
     }
 
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List<Object> payloads) {
-        if(payloads.isEmpty()){
-            super.onBindViewHolder(holder, position, payloads);
-        }
-    }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
@@ -88,7 +86,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 SurveyViewHolder surveyViewHolder = (SurveyViewHolder) holder;
                 break;
             default:
-                final SiteViewHolder siteViewHolder = (SiteViewHolder) holder;
+                SiteViewHolder siteViewHolder = (SiteViewHolder) holder;
                 Site site = siteList.get(holder.getAdapterPosition());
                 siteViewHolder.siteName.setText(site.getName());
                 siteViewHolder.iconText.setText(site.getName().substring(0, 1));
@@ -158,7 +156,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public void resetAnimationIndex() {
+    void resetAnimationIndex() {
         reverseAllAnimations = false;
         animationItemsIndex.clear();
     }
@@ -169,11 +167,15 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         notifyDataSetChanged();
     }
 
+    public List<Site> getAll() {
+        return siteList;
+    }
+
     public class SurveyViewHolder extends RecyclerView.ViewHolder {
 
         private RelativeLayout rootLayout;
 
-        public SurveyViewHolder(View itemView) {
+        SurveyViewHolder(View itemView) {
             super(itemView);
             rootLayout = itemView.findViewById(R.id.root_layout_survey_form_list_item);
             rootLayout.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +195,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private RelativeLayout iconContainer, iconBack, iconFront;
         private View rootLayout;
 
-        public SiteViewHolder(View view) {
+        SiteViewHolder(View view) {
             super(view);
             siteName = (TextView) view.findViewById(R.id.tv_site_name);
             identifier = (TextView) view.findViewById(R.id.tv_identifier);

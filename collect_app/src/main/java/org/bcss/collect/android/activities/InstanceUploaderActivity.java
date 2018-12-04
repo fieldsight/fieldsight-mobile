@@ -243,7 +243,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
 
     @Override
     public void uploadingComplete(HashMap<String, String> result) {
-        Timber.i("uploadingComplete: Processing results (%d) siteName upload of %d instances!",
+        Timber.i("uploadingComplete: Processing results (%d) from upload of %d instances!",
                 result.size(), instancesToSend.length);
 
         try {

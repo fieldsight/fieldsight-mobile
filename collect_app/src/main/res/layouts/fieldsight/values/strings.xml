@@ -186,7 +186,7 @@
     <string name="error_selection_required">A %s selection is required</string>
     <string name="toolbar_site_documents">Site Documents</string>
     <string name="title_activity_image_viewer">ImageViewerActivity</string>
-    <string name="empty_message_site_documents" >Once Site documents are added to your site they will be listed here</string>
+    <string name="empty_message_site_documents">Once Site documents are added to your site they will be listed here</string>
     <string name="toolbar_scheduled_forms">Scheduled Form(s)</string>
     <string name="toolbar_stages">Site Stage(s)</string>
     <string name="toolbar_substages">Substage(s)</string>
@@ -205,6 +205,7 @@
     <string name="dialog_pdf_no">No, Thanks</string>
     <string name="menu_title_educational_materials">Educational Materials</string>
     <string name="stop_download">Stop Download</string>
+    <string name="title_activity_testing">TestingActivity</string>
 
 
     <!--Notification sitelist ends here-->
