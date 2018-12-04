@@ -196,7 +196,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     public void accept(Disposable disposable) throws Exception {
 
                         ProjectLocalSource.getInstance().deleteAll();
-                        SiteLocalSource.getInstance().deleteAll();
+                        SiteLocalSource.getInstance().deleteSyncedSites();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
                         SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
 

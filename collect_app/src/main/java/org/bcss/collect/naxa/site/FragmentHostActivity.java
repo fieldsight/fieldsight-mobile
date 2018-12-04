@@ -137,7 +137,8 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                         });
                 break;
             case R.id.action_refresh:
-                DownloadActivity.start(this);
+                org.bcss.collect.naxa.sync.DownloadActivity.start(this);
+//                DownloadActivity.start(this);
                 break;
         }
 

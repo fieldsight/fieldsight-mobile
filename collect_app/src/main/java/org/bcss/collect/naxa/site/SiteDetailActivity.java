@@ -362,7 +362,7 @@
 //
 //    private void saveFormChanges(Site updatedSite) {
 //        switch (loadedSite.getIsSiteVerified()) {
-//            case Constant.SiteStatus.IS_UNVERIFIED_SITE:
+//            case Constant.SiteStatus.IS_OFFLINE:
 //            case Constant.SiteStatus.IS_VERIFIED_BUT_UNSYNCED:
 //                long result = updateSiteInfo(updatedSite);
 //                if (result != -1) {

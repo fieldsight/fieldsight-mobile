@@ -103,7 +103,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
         while (cursor.moveToNext()) {
 
             Integer curStatus = Integer.valueOf(getString(cursor, MigrationHelper.SiteColumns.KEY_IS_OFFLINE_SITE_SYNCED));
-            boolean isOfflineSite = curStatus == Constant.SiteStatus.IS_UNVERIFIED_SITE || curStatus == Constant.SiteStatus.IS_VERIFIED_BUT_UNSYNCED;
+            boolean isOfflineSite = curStatus == Constant.SiteStatus.IS_OFFLINE || curStatus == Constant.SiteStatus.IS_VERIFIED_BUT_UNSYNCED;
 
             String fixedSitePhotoPath = migrationHelper.fixSitePhotosPath(getString(cursor, MigrationHelper.SiteColumns.KEY_SITE_PHOTO_OFFLINE));
 

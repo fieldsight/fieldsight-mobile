@@ -15,6 +15,8 @@ import java.util.List;
 
 import io.reactivex.Single;
 
+import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
+
 public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
 
@@ -95,7 +97,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     public void setSiteAsNotFinalized(String siteId) {
         AsyncTask.execute(() -> {
-            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_UNVERIFIED_SITE);
+            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE);
         });
 
     }
@@ -109,7 +111,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     public void setSiteAsVerified(String siteId) {
         AsyncTask.execute(() -> {
-            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
+            long i = dao.updateSiteStatus(siteId, IS_ONLINE);
         });
     }
 
@@ -118,8 +120,12 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
-    public void deleteAll() {
-
-        AsyncTask.execute(() -> dao.deleteAll());
+    public void deleteSyncedSites() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao.deleteSyncedSites(IS_ONLINE);
+            }
+        });
     }
 }

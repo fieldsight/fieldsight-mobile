@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -252,7 +251,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void hideSendButtonIfMockedSite(View rootView) {
 
-        Boolean isOfflineSite = loadedSite.getIsSiteVerified() != Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED;
+        Boolean isOfflineSite = loadedSite.getIsSiteVerified() != Constant.SiteStatus.IS_ONLINE;
 
         if (isOfflineSite) {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);

@@ -112,7 +112,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
         allSitesLiveData = SiteLocalSource.getInstance().getById(loadedProject.getId());
-        offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_UNVERIFIED_SITE);
+        offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_OFFLINE);
 
         collectFilterAndApply(new ArrayList<>(0));
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
@@ -298,8 +298,8 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     public MutableLiveData<ArrayList<FilterOption>> getFilterOptionForSites() {
 
         ArrayList<Pair> sites = new ArrayList<>();
-        sites.add(Pair.create(Constant.SiteStatus.IS_UNVERIFIED_SITE, "Offline site(s)"));
-        sites.add(Pair.create(Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED, "All site(s)"));
+        sites.add(Pair.create(Constant.SiteStatus.IS_OFFLINE, "Offline site(s)"));
+        sites.add(Pair.create(Constant.SiteStatus.IS_ONLINE, "All site(s)"));
 
         Type type = new TypeToken<ArrayList<SiteRegion>>() {
         }.getType();

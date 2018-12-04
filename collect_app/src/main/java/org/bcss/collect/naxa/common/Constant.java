@@ -77,14 +77,11 @@ public class Constant {
     }
 
     public final static class SiteStatus {
-        public static final int IS_UNVERIFIED_SITE = 0;
-        public static final int IS_OFFLINE_SITE_SYNCED = 1;
-        public static final int IS_VERIFIED_BUT_UNSYNCED = 2;
+        public static final int IS_OFFLINE = 0;
+        public static final int IS_ONLINE = 1;
         public static final int IS_FINALIZED = 3;
 
-        public static final String NEEDS_SYNC = "1";
-        public static final String SYNCNED = "1";
-
+        public static final int IS_VERIFIED_BUT_UNSYNCED = 2;
     }
 
     public final static class BundleKey {

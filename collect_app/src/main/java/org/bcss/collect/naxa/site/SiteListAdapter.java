@@ -215,7 +215,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Override
         public boolean onLongClick(View view) {
 
-            if (Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED != siteList.get(getAdapterPosition()).getIsSiteVerified()) {
+            if (Constant.SiteStatus.IS_ONLINE != siteList.get(getAdapterPosition()).getIsSiteVerified()) {
                 listener.onRowLongClicked(getAdapterPosition());
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 return true;
@@ -236,10 +236,8 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Site siteLocationPojo = siteList.get(holder.getAdapterPosition());
 
         boolean isChecked = selectedItems.get(holder.getAdapterPosition(), false);
-        boolean isUnVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_UNVERIFIED_SITE;
-        boolean isUnsycned = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_VERIFIED_BUT_UNSYNCED;
-        boolean isFinalized = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_FINALIZED;
-        boolean isVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED;
+        boolean isUnVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
+        boolean isVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_ONLINE;
 
         if (isChecked) {
             holder.siteName.setTypeface(null, Typeface.BOLD);
@@ -248,7 +246,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.identifier.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
         }
 
-        if (isUnVerifiedSite || isUnsycned || isFinalized) {
+        if (isUnVerifiedSite) {
 
             holder.offlinetag.setText("Offline Site");
             holder.siteName.setTypeface(null, Typeface.NORMAL);

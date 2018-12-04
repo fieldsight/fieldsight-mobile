@@ -18,7 +18,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_UNVERIFIED_SITE;
+import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 import static org.bcss.collect.naxa.network.ServiceGenerator.getRxClient;
 
 public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
@@ -45,7 +45,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
         return Observable.just(sites)
                 .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
-                .filter(site -> site.getIsSiteVerified() == IS_UNVERIFIED_SITE)
+                .filter(site -> site.getIsSiteVerified() == IS_OFFLINE)
                 .flatMap((Function<Site, ObservableSource<Site>>) oldSite -> uploadSite(oldSite)
                         .map(newSite -> {
 

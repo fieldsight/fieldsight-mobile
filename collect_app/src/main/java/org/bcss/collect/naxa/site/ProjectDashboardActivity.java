@@ -593,7 +593,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                         });
                 break;
             case R.id.action_refresh:
-                DownloadActivity.start(this);
+                org.bcss.collect.naxa.sync.DownloadActivity.start(this);
                 break;
         }
         return super.onOptionsItemSelected(item);

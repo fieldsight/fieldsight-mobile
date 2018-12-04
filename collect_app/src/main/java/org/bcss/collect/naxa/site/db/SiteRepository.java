@@ -57,7 +57,7 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
     }
 
     public void saveSitesAsVerified(Site site, Project project) {
-        site.setIsSiteVerified(Constant.SiteStatus.IS_OFFLINE_SITE_SYNCED);
+        site.setIsSiteVerified(Constant.SiteStatus.IS_ONLINE);
         site.setProject(project.getId());
         AsyncTask.execute(() -> localSource.save(site));
     }
@@ -84,7 +84,7 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
     }
 
     public void saveSiteAsOffline(Site site, Project project) {
-        site.setIsSiteVerified(Constant.SiteStatus.IS_UNVERIFIED_SITE);
+        site.setIsSiteVerified(Constant.SiteStatus.IS_OFFLINE);
         site.setProject(project.getId());
         site.setGeneralFormDeployedFrom(PROJECT);
         site.setScheduleFormDeployedForm(PROJECT);
