@@ -35,10 +35,10 @@ public interface SiteDao {
     LiveData<List<Site>> getSiteById(String siteId);
 
     @Query("UPDATE sites SET isSiteVerified =:siteStatus WHERE id=:siteId")
-    long updateSiteStatus(String siteId, int siteStatus);
+    int updateSiteStatus(String siteId, int siteStatus);
 
     @Query("UPDATE sites SET id =:newSiteId WHERE id=:oldSiteId")
-    void updateSiteId(String oldSiteId, String newSiteId);
+    int updateSiteId(String oldSiteId, String newSiteId);
 
     @Query("UPDATE sites SET generalFormDeployedFrom = :deployedFrom WHERE id = :siteId ")
     void updateGeneralFormDeployedFrom(String siteId, String deployedFrom);

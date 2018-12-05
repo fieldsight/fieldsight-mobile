@@ -16,6 +16,7 @@ import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 
 import java.util.List;
+import java.util.Random;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -58,9 +59,9 @@ public class TestingActivity extends CollectAbstractActivity {
                                 .setProject(projId)
                                 .setScheduleFormDeployedForm(PROJECT)
                                 .setStagedFormDeployedFrom(PROJECT)
-                                .setIdentifier(rndChar())
+                                .setIdentifier(getSaltString())
                                 .setIsSiteVerified(Constant.SiteStatus.IS_OFFLINE)
-                                .setName("site" + rndChar())
+                                .setName("site" + getSaltString())
                                 .setLatitude("31.333332")
                                 .setLongitude("35.499998")
                                 .createSite();
@@ -95,6 +96,18 @@ public class TestingActivity extends CollectAbstractActivity {
         int rnd = (int) (Math.random() * 52); // or use Random or whatever
         char base = (rnd < 26) ? 'A' : 'a';
         return String.valueOf((char) (base + rnd % 26));
+    }
+
+    protected String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 4) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
 
     }
 }

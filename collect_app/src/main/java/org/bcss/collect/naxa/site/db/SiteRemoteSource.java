@@ -14,13 +14,10 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Single;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 import static org.bcss.collect.naxa.network.ServiceGenerator.getRxClient;
@@ -45,46 +42,99 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
     }
 
-    public Single<List<Site>> uploadMultipleSites(List<Site> sites) {
+    public Observable<Site> uploadMultipleSites(List<Site> sites) {
 
         InstancesDao instancesDao = new InstancesDao();
         return Observable.just(sites)
                 .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
                 .filter(site -> site.getIsSiteVerified() == IS_OFFLINE)
-                .flatMap((Function<Site, ObservableSource<Site>>) oldSite -> uploadSite(oldSite)
-                        .map(newSite -> {
-
-                            String oldSiteId = oldSite.getId();
-                            String newSiteId = newSite.getId();
-
-                            SiteLocalSource.getInstance().setSiteAsVerified(oldSiteId);
-                            SiteLocalSource.getInstance().setSiteId(oldSiteId, newSiteId);
-                            instancesDao
-                                    .cascadedSiteIds(oldSiteId, newSiteId)
-                                    .subscribe(new DisposableObserver<String>() {
-                                        @Override
-                                        public void onNext(String s) {
-
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-                                            e.printStackTrace();
-                                        }
-
-                                        @Override
-                                        public void onComplete() {
-
-                                        }
-                                    });
-
-                            SiteUploadHistoryLocalSource.getInstance().save(new SiteUploadHistory(newSiteId, oldSiteId));
-
-                            return newSite;
-                        }))
-                .toList();
+                .flatMap(new Function<Site, Observable<Site>>() {
+                    @Override
+                    public Observable<Site> apply(Site oldSite) throws Exception {
+                        return uploadSite(oldSite)
+                                .flatMap(new Function<Site, ObservableSource<Site>>() {
+                                    @Override
+                                    public ObservableSource<Site> apply(Site newSite) throws Exception {
+                                        String oldSiteId = oldSite.getId();
+                                        String newSiteId = newSite.getId();
+                                        return SiteLocalSource.getInstance().setSiteAsVerified(oldSiteId)
+                                                .flatMap(new Function<Integer, ObservableSource<Integer>>() {
+                                                    @Override
+                                                    public ObservableSource<Integer> apply(Integer integer) throws Exception {
+                                                        return SiteLocalSource.getInstance().updateSiteId(oldSiteId, newSiteId);
+                                                    }
+                                                })
+                                                .flatMap(new Function<Integer, Observable<Long[]>>() {
+                                                    @Override
+                                                    public Observable<Long[]> apply(Integer affectedRowsCount) throws Exception {
+                                                        return SiteUploadHistoryLocalSource.getInstance().saveAsObservable(new SiteUploadHistory(newSiteId, oldSiteId));
+                                                    }
+                                                }).flatMap(new Function<Long[], ObservableSource<Integer>>() {
+                                                    @Override
+                                                    public ObservableSource<Integer> apply(Long[] updatedRows) throws Exception {
+                                                        return instancesDao.cascadedSiteIds(oldSiteId, newSiteId);
+                                                    }
+                                                })
+                                                .map(new Function<Integer, Site>() {
+                                                    @Override
+                                                    public Site apply(Integer integer) throws Exception {
+                                                        return newSite;
+                                                    }
+                                                });
+                                    }
+                                });
+                    }
+                });
 
     }
+
+
+//    public Single<List<Site>> uploadMultipleSites(List<Site> sites) {
+//
+//        InstancesDao instancesDao = new InstancesDao();
+//        return Observable.just(sites)
+//                .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
+//                .filter(site -> site.getIsSiteVerified() == IS_OFFLINE)
+//                .flatMap((Function<Site, ObservableSource<Site>>) oldSite -> uploadSite(oldSite)
+//                        .flatMapCompletable(new Function<Site, CompletableSource>() {
+//                            @Override
+//                            public CompletableSource apply(Site newSite) throws Exception {
+//                                String oldSiteId = oldSite.get();
+//                                String newSiteId = newSite.getId();
+//                                return SiteLocalSource.getInstance().setSiteAsVerified(oldSiteId, newSiteId);
+//                            }
+//                        }).
+//                        .map(newSite -> {
+//
+//
+//                            SiteLocalSource.getInstance().setSiteAsVerified(oldSiteId, newSiteId);
+//
+//                            instancesDao
+//                                    .cascadedSiteIds(oldSiteId, newSiteId)
+//                                    .subscribe(new DisposableObserver<String>() {
+//                                        @Override
+//                                        public void onNext(String s) {
+//
+//                                        }
+//
+//                                        @Override
+//                                        public void onError(Throwable e) {
+//                                            e.printStackTrace();
+//                                        }
+//
+//                                        @Override
+//                                        public void onComplete() {
+//
+//                                        }
+//                                    });
+//
+//                            SiteUploadHistoryLocalSource.getInstance().save(new SiteUploadHistory(newSiteId, oldSiteId));
+//
+//                            return newSite;
+//                        }))
+//                .toList();
+//
+//    }
 
     private Observable<Site> uploadSite(Site siteLocationPojo) {
         RequestBody requestBody;

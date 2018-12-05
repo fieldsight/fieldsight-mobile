@@ -11,6 +11,11 @@ import org.bcss.collect.naxa.common.database.SiteUploadHistoryDAO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.functions.Action;
 
 public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUploadHistory> {
     public static SiteUploadHistoryLocalSource INSTANCE;
@@ -33,16 +38,45 @@ public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUpl
         return dao.getAll();
     }
 
+
+    public Completable saveUsingCompletable(SiteUploadHistory... items) {
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                dao.insert(items);
+            }
+        });
+    }
+
     @Override
     public void save(SiteUploadHistory... items) {
-        AsyncTask.execute(()->{
+        AsyncTask.execute(() -> {
             dao.insert(items);
+        });
+    }
+
+    public Observable<Long[]> saveAsObservable(SiteUploadHistory...siteUploadHistories){
+        return Observable.fromCallable(new Callable<Long[]>() {
+            @Override
+            public Long[] call() throws Exception {
+                return dao.insertAndReturnIds(siteUploadHistories);
+            }
+        });
+    }
+
+
+    public Completable saveAsCompletable(SiteUploadHistory... items) {
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                dao.insert(items);
+            }
         });
     }
 
     @Override
     public void save(ArrayList<SiteUploadHistory> items) {
-        AsyncTask.execute(()->{
+        AsyncTask.execute(() -> {
             dao.insert(items);
         });
     }
@@ -52,7 +86,7 @@ public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUpl
 
     }
 
-    public String getById(String siteId) {
+    public SiteUploadHistory getById(String siteId) {
         return dao.getBySiteId(siteId);
     }
 }

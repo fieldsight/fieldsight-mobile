@@ -95,7 +95,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     public static SiteListFragment getInstance(Project project) {
-
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_OBJECT, project);
         SiteListFragment siteListFragment = new SiteListFragment();
@@ -460,7 +459,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
         SiteRemoteSource.getInstance()
                 .uploadMultipleSites(selected)
-                .flattenAsObservable((Function<List<Site>, Iterable<Site>>) sites -> sites)
                 .map(site -> getNotUploadedFormForSite(site.getId()))
                 .flatMapIterable((Function<ArrayList<Long>, Iterable<Long>>) longs -> longs)
                 .toList()

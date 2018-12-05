@@ -95,7 +95,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 siteViewHolder.imgProfile.setImageResource(R.drawable.circle_blue);
 
                 applyIconAnimation(siteViewHolder, position);
-                applyOffilineSiteTag(siteViewHolder);
+                applyOffilineSiteTag(siteViewHolder,site);
                 break;
         }
 
@@ -232,14 +232,11 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-    private void applyOffilineSiteTag(SiteViewHolder holder) {
-
-
-        Site siteLocationPojo = siteList.get(holder.getAdapterPosition());
-
+    private void applyOffilineSiteTag(SiteViewHolder holder, Site siteLocationPojo) {
         boolean isChecked = selectedItems.get(holder.getAdapterPosition(), false);
         boolean isUnVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
         boolean isVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_ONLINE;
+        holder.offlinetag.setVisibility(View.GONE);
 
         if (isChecked) {
             holder.siteName.setTypeface(null, Typeface.BOLD);
@@ -249,7 +246,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         if (isUnVerifiedSite) {
-
+            holder.offlinetag.setVisibility(View.VISIBLE);
             holder.offlinetag.setText("Offline Site");
             holder.siteName.setTypeface(null, Typeface.NORMAL);
             holder.identifier.setTypeface(null, Typeface.NORMAL);

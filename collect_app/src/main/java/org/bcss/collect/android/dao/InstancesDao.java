@@ -26,13 +26,11 @@ import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.site.db.SiteUploadHistoryLocalSource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
@@ -468,7 +466,7 @@ public class InstancesDao {
     public String fixUploadUrl(String url) {
         if (checkContainsFakeSiteID(url)) {
             String mockedSiteId = getSiteIdFromUrl(url);
-            String siteId = SiteUploadHistoryLocalSource.getInstance().getById(mockedSiteId);
+            String siteId = SiteUploadHistoryLocalSource.getInstance().getById(mockedSiteId).getNewSiteId();
             String fsFormId = getFsFormIdFromUrl(url);
             String deployedFrom = getFormDeployedFrom(url);
 
@@ -541,12 +539,12 @@ public class InstancesDao {
     }
 
 
-    public Observable<String> cascadedSiteIds(String oldId, String newId) {
+    public Observable<Integer> cascadedSiteIds(String oldId, String newId) {
         return Observable.just(getBySiteId(oldId))
                 .flatMapIterable((Function<List<Instance>, Iterable<Instance>>) instances -> instances)
-                .map(new Function<Instance, String>() {
+                .map(new Function<Instance, Integer>() {
                     @Override
-                    public String apply(Instance instance) throws Exception {
+                    public Integer apply(Instance instance) throws Exception {
                         String url = instance.getSubmissionUri();
                         String deployedFrom = getFormDeployedFrom(url);
                         String fsFormId = getFsFormIdFromUrl(url);
@@ -559,9 +557,7 @@ public class InstancesDao {
                         String selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?";
                         String[] selectionArgs = new String[]{oldId};
 
-                        updateInstance(contentValues, selection, selectionArgs);
-
-                        return newUrl;
+                        return updateInstance(contentValues, selection, selectionArgs);
                     }
                 });
 

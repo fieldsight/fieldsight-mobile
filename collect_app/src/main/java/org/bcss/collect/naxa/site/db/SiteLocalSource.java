@@ -12,7 +12,9 @@ import org.bcss.collect.naxa.login.model.Site;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
@@ -48,7 +50,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteByProjectId(projectId);
     }
 
-    public Single<List<Site>> getByIdAsSingle(String projectId){
+    public Single<List<Site>> getByIdAsSingle(String projectId) {
         return dao.getSiteByProjectIdAsSingle(projectId);
     }
 
@@ -109,14 +111,27 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     }
 
-    public void setSiteAsVerified(String siteId) {
-        AsyncTask.execute(() -> {
-            long i = dao.updateSiteStatus(siteId, IS_ONLINE);
+    public Observable<Integer> setSiteAsVerified(String oldSiteId) {
+        return updateSiteStatus(oldSiteId, IS_ONLINE);
+    }
+
+    public Observable<Integer> updateSiteId(String oldSiteId, String newSiteId) {
+        return Observable.fromCallable(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return dao.updateSiteId(oldSiteId, newSiteId);
+            }
         });
     }
 
-    public void setSiteId(String oldSiteId, String newSiteId) {
-        AsyncTask.execute(() -> dao.updateSiteId(oldSiteId, newSiteId));
+
+    public Observable<Integer> updateSiteStatus(String siteId, int newStatus) {
+        return Observable.fromCallable(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return dao.updateSiteStatus(siteId, newStatus);
+            }
+        });
     }
 
 
