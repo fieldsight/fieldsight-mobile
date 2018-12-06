@@ -38,6 +38,7 @@ public class FlashBarUtils {
                 .gravity(Flashbar.Gravity.BOTTOM)
                 .title("Out of sync")
                 .message(message)
+                .dismissOnTapOutside()
                 .enableSwipeToDismiss()
                 .castShadow(false)
                 .titleColorRes(R.color.white)
@@ -79,6 +80,7 @@ public class FlashBarUtils {
 
         Flashbar.Builder bar = new Flashbar.Builder(context)
                 .gravity(Flashbar.Gravity.BOTTOM)
+                .dismissOnTapOutside()
                 .title(message)
                 .messageColor(R.color.white)
                 .castShadow(false)

@@ -5,5 +5,6 @@ public enum CreateSiteDetailFormStatus {
     EMPTY_SITE_IDENTIFIER,
     EMPTY_ADDRESS,
     EMPTY_PHONE,
+    SITE_SAVED,
 
 }

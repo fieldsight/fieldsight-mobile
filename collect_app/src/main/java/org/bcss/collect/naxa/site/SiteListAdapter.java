@@ -239,8 +239,8 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         holder.offlinetag.setVisibility(View.GONE);
 
         if (isChecked) {
-            holder.siteName.setTypeface(null, Typeface.BOLD);
-            holder.identifier.setTypeface(null, Typeface.BOLD);
+//            holder.siteName.setTypeface(null, Typeface.BOLD);
+//            holder.identifier.setTypeface(null, Typeface.BOLD);
             holder.siteName.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.from));
             holder.identifier.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
         }
@@ -248,8 +248,8 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (isUnVerifiedSite) {
             holder.offlinetag.setVisibility(View.VISIBLE);
             holder.offlinetag.setText("Offline Site");
-            holder.siteName.setTypeface(null, Typeface.NORMAL);
-            holder.identifier.setTypeface(null, Typeface.NORMAL);
+//            holder.siteName.setTypeface(null, Typeface.NORMAL);
+//            holder.identifier.setTypeface(null, Typeface.NORMAL);
             holder.siteName.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
             holder.identifier.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.message));
         }

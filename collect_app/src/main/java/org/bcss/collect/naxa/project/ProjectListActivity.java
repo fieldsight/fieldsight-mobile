@@ -40,12 +40,14 @@ import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.android.application.ForceUpdateChecker;
+import org.bcss.collect.android.utilities.NotificationUtils;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.demo.FeaturesItem;
 import org.bcss.collect.naxa.demo.RawAssetLoader;
 import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.sync.DownloadActivityNew;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -93,8 +95,10 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.application.Collect.allowClick;
+import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
+import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyHeadsUp;
 
-public class ProjectListActivity extends CollectAbstractActivity implements MyProjectsAdapter.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener  {
+public class ProjectListActivity extends CollectAbstractActivity implements MyProjectsAdapter.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -147,6 +151,39 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
                 });
 
+
+        SiteLocalSource.getInstance()
+                .getAllByStatus(IS_EDITED)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapObservable(new Function<Site, ObservableSource<Site>>() {
+                    @Override
+                    public ObservableSource<Site> apply(Site site) throws Exception {
+                        return SiteRemoteSource.getInstance().updateSite(site).subscribeOn(Schedulers.io());
+                    }
+                })
+                .toList()
+                .subscribe(new DisposableSingleObserver<List<Site>>() {
+                    @Override
+                    public void onSuccess(List<Site> sites) {
+                        String title = "Site Uploaded";
+                        String msg;
+                        if (sites.size() > 1) {
+                            msg = getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size());
+                        } else {
+                            msg = getString(R.string.msg_single_site_upload, sites.get(0).getName());
+                        }
+
+                        notifyHeadsUp(title, msg);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        Timber.e(e);
+                    }
+                });
+
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
@@ -183,7 +220,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 }
                 break;
             case R.id.action_refresh:
-                DownloadActivityNew.start(this);
+                DownloadActivity.start(this);
                 break;
             case R.id.action_notificaiton:
                 NotificationListActivity.start(this);
@@ -429,7 +466,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
     @Override
     public void onUpdateNeeded(String updateUrl) {
-        startActivity(new Intent(this,AppUpdateActivity.class));
+        startActivity(new Intent(this, AppUpdateActivity.class));
 
     }
 }

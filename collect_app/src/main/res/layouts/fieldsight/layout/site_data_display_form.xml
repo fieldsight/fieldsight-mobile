@@ -160,8 +160,7 @@
         android:id="@+id/iv_site_photo"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:scaleType="centerCrop"
-        android:visibility="gone" />
+        android:scaleType="centerCrop" />
 
 
 </LinearLayout>

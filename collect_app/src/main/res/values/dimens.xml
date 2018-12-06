@@ -63,6 +63,6 @@
     <dimen name="instance_list_close_height">30dp</dimen>
 
 
-    <dimen name="design_fab_image_size" tools:override="true">18dp</dimen>
+    <dimen name="design_fab_image_size" tools:override="false">18dp</dimen>
 
 </resources>

@@ -564,7 +564,7 @@ public class InstancesDao {
 
     }
 
-    private String getFsFormIdFromUrl(String url) {
+    public String getFsFormIdFromUrl(String url) {
         String[] split = url.split("/");
         return split[split.length - 2];
     }
@@ -581,5 +581,5 @@ public class InstancesDao {
         return list;
     }
 
-
 }
+

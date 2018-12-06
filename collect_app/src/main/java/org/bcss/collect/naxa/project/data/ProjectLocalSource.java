@@ -67,4 +67,8 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
     public void updateSiteClusters(String projectId, String siteClusters) {
         AsyncTask.execute(() -> dao.updateCluster(projectId, siteClusters));
     }
+
+    public LiveData<Project> getProjectById(String id) {
+        return dao.getById(id);
+    }
 }

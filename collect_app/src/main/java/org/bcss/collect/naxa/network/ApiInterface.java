@@ -167,5 +167,52 @@ public interface ApiInterface {
     @GET
     Observable<LastSubmissionResponse> getAllFormResponses(@Url String url);
 
+    @Multipart
+    @POST
+    Call<Site> updateSiteInfo(@Url String url,
+                              @Part("id") RequestBody id,
+                              @Part("name") RequestBody name,
+                              @Part("identifier") RequestBody identifier,
+                              @Part("address") RequestBody address,
+                              @Part("phone") RequestBody phone,
+                              @Part("public_desc") RequestBody public_desc,
+                              @Part("additional_desc") RequestBody add_desc,
+//                              @Part("type") RequestBody type,
+                              @Part MultipartBody.Part logoFile,
+                              @Part("site_meta_attributes_ans") RequestBody meta_ans,
+                              @Part("latitude") RequestBody lat,
+                              @Part("longitude") RequestBody lon
+    );
 
+    @Multipart
+    @POST
+    Observable<Site> updateSite(@Url String url,
+                                @Part MultipartBody.Part file,
+                                @Part("name") RequestBody name,
+                                @Part("latitude") RequestBody latitude,
+                                @Part("longitude") RequestBody longitude,
+                                @Part("identifier") RequestBody identifier,
+                                @Part("phone") RequestBody phone,
+                                @Part("address") RequestBody address,
+                                @Part("public_desc") RequestBody public_desc,
+                                @Part("project") RequestBody project,
+                                @Part("type") RequestBody type,
+                                @Part("region") RequestBody regionID,
+                                @Part("site_meta_attributes_ans") RequestBody metaAttrs);
+
+    @Multipart
+    @POST
+    Call<Site> updateSiteInfoWithNoImage(@Url String url,
+                                         @Part("id") RequestBody id,
+                                         @Part("name") RequestBody name,
+                                         @Part("identifier") RequestBody identifier,
+                                         @Part("address") RequestBody address,
+                                         @Part("phone") RequestBody phone,
+                                         @Part("public_desc") RequestBody public_desc,
+                                         @Part("additional_desc") RequestBody add_desc,
+//                                         @Part("type") RequestBody type,
+                                         @Part("site_meta_attributes_ans") RequestBody meta_ans,
+                                         @Part("latitude") RequestBody lat,
+                                         @Part("longitude") RequestBody lon
+    );
 }

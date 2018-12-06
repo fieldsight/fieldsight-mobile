@@ -30,6 +30,7 @@ import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.InstancesDao;
+import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ApplicationConstants;
@@ -191,47 +192,37 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
      * find the form primary key then open the saved instance of that form (if present)
      * other wise open the form blank
      */
-    private void handleFlagForm(String fsFormId, String fsFormIdProject, String siteId, String jrFormId) {
+    private void handleFlagForm(String fsFormId) {
 
-//
-//        Uri uri = InstanceProviderAPI.InstanceColumns.CONTENT_URI;
-//        String selection = "(" + InstanceProviderAPI.InstanceColumns.FS_FORM_ID + " =? OR "
-//                + InstanceProviderAPI.InstanceColumns.FS_FORM_ID + "=? ) " +
-//                " AND " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " =? ";
-//        String[] selectionArgs = new String[]{fsFormId, fsFormIdProject, siteId};
-
-        Cursor cursorInstanceForm = null;
-
+        Instance instance = null;
+        Cursor cursor = null;
         try {
-
-//            cursorInstanceForm = context.getContentResolver()
-//                    .query(uri, null,
-//                            selection,
-//                            selectionArgs, null);
-
-            Timber.i("Found %s instaces", cursorInstanceForm.getCount());
-            int count = cursorInstanceForm.getCount();
-//            if (count >= 1) {
-            if (false) {
-
-                //todo atm opens the latest saved need to compare timestamp with server submission to open exact instance
-                openSavedForm(cursorInstanceForm);
-            } else {
+            InstancesDao dao = new InstancesDao();
+            cursor = dao.getInstancesCursor(null, null);
+            List<Instance> list = dao.getInstancesFromCursor(cursor);
+            for (Instance curInstance : list) {
+                String url = curInstance.getSubmissionUri();
+                String fsFormIdFromUrl = dao.getFsFormIdFromUrl(url);
+                if (fsFormIdFromUrl.equals(fsFormId)) {
+                    instance = curInstance;
+                    break;
+                }
             }
 
-        } catch (NullPointerException |
-                CursorIndexOutOfBoundsException e)
 
-        {
-            ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
-        } finally
+            if (instance != null) {
+                openSavedForm(cursor);
+            } else {
+                openNewForm(instance.getJrFormId());
+            }
 
-        {
-            if (cursorInstanceForm != null) {
-                cursorInstanceForm.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
             }
         }
-
     }
 
 
@@ -376,10 +367,11 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     public void onClick(View v) {
         int id = v.getId();
 
-        fillODKForm(loadedFieldSightNotification.getIdString());
+
+        handleFlagForm(loadedFieldSightNotification.getFsFormId());
     }
 
-    private void downloadInstance(){
+    private void downloadInstance() {
         FlagFormRemoteSource.getINSTANCE()
                 .runAll(loadedFieldSightNotification)
                 .subscribe(new DisposableObserver<Uri>() {

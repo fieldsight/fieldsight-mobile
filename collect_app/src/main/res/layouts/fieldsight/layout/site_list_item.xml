@@ -40,7 +40,7 @@
                 android:lines="1"
                 android:textColor="@color/black"
                 android:textSize="@dimen/msg_text_primary"
-                android:textStyle="bold"
+                android:textStyle="normal"
                 tools:text="Narayan Primary School" />
 
             <TextView
@@ -51,7 +51,7 @@
                 android:lines="1"
                 android:textColor="@color/black_160"
                 android:textSize="@dimen/msg_text_secondary"
-                android:textStyle="bold"
+                android:textStyle="normal"
                 tools:text="identifier" />
 
             <TextView

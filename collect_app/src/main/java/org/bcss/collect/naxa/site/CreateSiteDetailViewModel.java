@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModel;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteRepository;
@@ -14,6 +13,11 @@ import org.bcss.collect.naxa.site.db.SiteRepository;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.CompletableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class CreateSiteDetailViewModel extends ViewModel {
 
@@ -25,6 +29,7 @@ public class CreateSiteDetailViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Integer>> metaAttributesViewIds = new MutableLiveData<>();
     private MutableLiveData<ArrayList<SiteRegion>> siteClusterMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<List<SiteType>> siteTypesMutableLiveData = new MutableLiveData<>();
+    private Site site = null;
 
 
     public CreateSiteDetailViewModel(SiteRepository siteRepository) {
@@ -47,6 +52,7 @@ public class CreateSiteDetailViewModel extends ViewModel {
 
     public void setSiteMutableLiveData(Site site) {
         this.siteMutableLiveData.setValue(site);
+        this.site = site;
     }
 
     public MutableLiveData<List<SiteMetaAttribute>> getMetaAttributes() {
@@ -169,16 +175,34 @@ public class CreateSiteDetailViewModel extends ViewModel {
 
     }
 
-    public void setMetaAttributesAnswer(String metaAttributesAnswer) {
+    void setMetaAttributesAnswer(String metaAttributesAnswer) {
         siteMutableLiveData.getValue().setMetaAttributes(metaAttributesAnswer);
     }
 
-    public void saveSite() {
+    void saveSite() {
         if (validateData()) {
-            siteRepository.saveSiteModified(siteMutableLiveData.getValue());
-            setEditSite(false);
-//            formStatus.setValue(CreateSiteFormStatus.SUCCESS);
+            siteRepository.saveSiteModified(siteMutableLiveData.getValue())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            setEditSite(false);
+                            formStatus.setValue(CreateSiteDetailFormStatus.SITE_SAVED);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+                    });
         }
     }
+
 
 }

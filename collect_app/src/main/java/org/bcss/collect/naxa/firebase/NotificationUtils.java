@@ -228,11 +228,6 @@ public class NotificationUtils {
                 .setTicker(msg)
                 .setContentText(msg);
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            builder.setVibrate(new long[0]);
-        } else {
-            builder.setPriority(Notification.PRIORITY_HIGH);
-        }
 
         Notification n = builder.build();
 

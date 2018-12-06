@@ -42,4 +42,6 @@ public abstract class ProjectDao implements BaseDaoFieldSight<Project> {
     @Query("UPDATE project  SET siteClusters = :siteClusters WHERE id = :projectId")
     public abstract void updateCluster(String projectId, String siteClusters);
 
+    @Query("SELECT * from project where id=:id")
+    public abstract LiveData<Project> getById(String id);
 }

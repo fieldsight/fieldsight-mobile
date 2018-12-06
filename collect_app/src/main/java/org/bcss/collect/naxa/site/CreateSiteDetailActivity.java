@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.site;
 
+import android.app.ProgressDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -14,35 +15,47 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.activities.GeoPointActivity;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
+import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.project.MapActivity;
+import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.site.data.SiteRegion;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +63,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
@@ -60,6 +76,8 @@ import timber.log.Timber;
 
 import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
+import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyHeadsUp;
 
 public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
@@ -125,6 +143,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
     private String latitude, longitude, accurary;
     private Uri phototoUploadUri;
+    private ProgressDialog dialog;
 
     public static void start(Context context, @NonNull Site site) {
         Intent intent = new Intent(context, CreateSiteDetailActivity.class);
@@ -150,7 +169,26 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
         }
 
         setupToolbar();
+
         createSiteDetailViewModel.setSiteMutableLiveData(site);
+
+        ProjectLocalSource.getInstance().getProjectById(site.getProject())
+                .observe(this, project -> {
+                    boolean isClusterIsEmpty;
+                    if (project != null) {
+                        isClusterIsEmpty = project.getSiteClusters() == null || project.getSiteClusters().isEmpty();
+
+                        if (!isClusterIsEmpty) {
+                            Type type = new TypeToken<ArrayList<SiteRegion>>() {
+                            }.getType();
+                            ArrayList<SiteRegion> siteRegions = new ArrayList<>(new Gson().fromJson(project.getSiteClusters(), type));
+                            createSiteDetailViewModel.setSiteCluster(siteRegions);
+
+
+                        }
+                    }
+                });
+
 
         createSiteDetailViewModel
                 .getEditSite()
@@ -158,6 +196,9 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                     @Override
                     public void onChanged(@Nullable Boolean aBoolean) {
                         if (aBoolean) {
+
+
+
                             layoutSiteDataDisplay.setVisibility(View.GONE);
                             layoutSiteDataEdit.setVisibility(View.VISIBLE);
 
@@ -165,6 +206,10 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                             ilSiteNameEditable.getEditText().setText(nSite.getName());
                             ilPhoneEditable.getEditText().setText(nSite.getPhone());
                             ilAddressEditable.getEditText().setText(nSite.getAddress());
+
+
+
+
                         } else {
                             layoutSiteDataEdit.setVisibility(View.GONE);
                             layoutSiteDataDisplay.setVisibility(View.VISIBLE);
@@ -183,8 +228,19 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         ilSiteName.getEditText().setText(nSite.getName());
                         ilPhone.getEditText().setText(nSite.getPhone());
                         ilAddress.getEditText().setText(nSite.getAddress());
-                        ilRegion.getEditText().setText(nSite.getRegion());
                         ilSiteType.getEditText().setText(nSite.getTypeLabel());
+
+                        int sucessColor = ContextCompat.getColor(CreateSiteDetailActivity.this, R.color.colorGreenPrimaryLight);
+
+                        File photoFile = new File(nSite.getLogo());
+                        if (photoFile.exists()) {
+                            GlideApp.with(CreateSiteDetailActivity.this)
+                                    .load(new File(nSite.getLogo()))
+                                    .into(ivSitePhoto);
+                            btnSiteEditAddPhoto.setTextColor(sucessColor);
+                            btnSiteEditAddPhoto.setText(getString(R.string.msg_photo_taken));
+                        }
+
 
                     }
                 });
@@ -196,7 +252,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                     public void onChanged(@Nullable List<SiteType> siteTypes) {
                         boolean show = siteTypes != null && !siteTypes.isEmpty();
                         spinnerSiteType.setVisibility(show ? View.VISIBLE : View.GONE);
-                        ilSiteType.setVisibility(show ?View.VISIBLE:View.GONE);
+                        ilSiteType.setVisibility(show ? View.VISIBLE : View.GONE);
                         if (show) {
                             SiteTypeSpinnerAdapter spinnerAdapter = new SiteTypeSpinnerAdapter(CreateSiteDetailActivity.this,
                                     android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_type), siteTypes);
@@ -218,6 +274,15 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                                     android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_region), clusters);
                             spinnerSiteCluster.setAdapter(spinnerAdapter);
                             spinnerSiteCluster.setSelection(spinnerAdapter.getCount());
+
+                            for (int pos = 0; pos < clusters.size(); pos++) {
+                                SiteRegion siteRegion = clusters.get(pos);
+                                if (siteRegion.getId().equals(site.getRegionId())) {
+                                    ilRegion.getEditText().setText(siteRegion.getName());
+                                    spinnerSiteCluster.setSelection(pos);
+                                    break;
+                                }
+                            }
                         }
                     }
                 });
@@ -244,6 +309,8 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                             case EMPTY_PHONE:
                                 ilPhoneEditable.setError(getString(R.string.error_field_required));
                                 ilPhoneEditable.requestFocus();
+                            case SITE_SAVED:
+                                saveSiteObservable();
                                 break;
 
                         }
@@ -297,6 +364,69 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
     }
 
+    private void showDialog() {
+        dialog = DialogFactory.createProgressDialogHorizontal(this, "Uploading Changes");
+        dialog.show();
+    }
+
+    private void hideDialog() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        hideDialog();
+    }
+
+    public void saveSiteObservable() {
+        SiteLocalSource.getInstance()
+                .getAllByStatus(IS_EDITED)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapObservable(new Function<Site, ObservableSource<Site>>() {
+                    @Override
+                    public ObservableSource<Site> apply(Site site) throws Exception {
+                        return SiteRemoteSource.getInstance().updateSite(site).subscribeOn(Schedulers.io());
+                    }
+                })
+                .toList()
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        showDialog();
+                    }
+                })
+                .subscribe(new DisposableSingleObserver<List<Site>>() {
+                    @Override
+                    public void onSuccess(List<Site> sites) {
+                        String title = "Site Uploaded";
+                        String msg;
+                        if (sites.size() > 1) {
+                            msg = Collect.getInstance().getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size()); //todo: never use context here but .. need to finish feature fast..someone refacotr this later
+                        } else {
+                            msg = Collect.getInstance().getString(R.string.msg_single_site_upload);
+                        }
+
+                        notifyHeadsUp(title, msg);
+                        hideDialog();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        Timber.e(e);
+                        String title = "Site upload failed";
+                        String msg;
+                        notifyHeadsUp(title, e.getMessage());
+                        hideDialog();
+                    }
+                });
+    }
+
+
     private void setupToolbar() {
         toolbarGeneral.setTitle(site.getName());
         setSupportActionBar(toolbarGeneral);
@@ -340,6 +470,8 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                 startActivityForResult(toGeoPointWidget, Constant.Key.GEOPOINT_RESULT_CODE);
                 break;
             case R.id.fab_activate_edit_mode:
+                fabActivateEditMode.setImageResource(layoutSiteDataEdit.getVisibility() == View.GONE ? R.drawable.ic_check : R.drawable.ic_edit);
+
                 switch (layoutSiteDataEdit.getVisibility()) {
                     case View.GONE:
                         createSiteDetailViewModel.setEditSite(true);
@@ -347,7 +479,9 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                     case View.VISIBLE:
 //                        collectMetaAtrributes(createSiteDetailViewModel.getMetaAttributesViewIds().getValue());
 //                        collectSpinnerOptions();
+
                         createSiteDetailViewModel.saveSite();
+
                         break;
                 }
                 break;
@@ -407,6 +541,17 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                 createSiteDetailViewModel.setEditSite(false);
                 break;
         }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void collectMetaAtrributes(ArrayList<Integer> ids) {

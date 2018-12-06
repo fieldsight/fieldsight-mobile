@@ -13,6 +13,8 @@ import org.bcss.collect.naxa.login.model.Site;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
+
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
 public class SiteRepository implements BaseRepository<GeneralForm> {
@@ -20,7 +22,6 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
     private static SiteRepository INSTANCE = null;
     private final SiteLocalSource localSource;
     private final SiteRemoteSource remoteSource;
-
 
 
     public static SiteRepository getInstance(SiteLocalSource localSource, SiteRemoteSource remoteSource) {
@@ -44,7 +45,7 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
         return localSource.searchSites(searchQuery);
     }
 
-    public LiveData<List<Site>> getSiteById(String id){
+    public LiveData<List<Site>> getSiteById(String id) {
         return localSource.getBySiteId(id);
     }
 
@@ -92,7 +93,14 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
         AsyncTask.execute(() -> localSource.save(site));
     }
 
-    public void saveSiteModified(Site site){
-        AsyncTask.execute(() -> localSource.save(site));
+    public Completable saveSiteModified(Site site) {
+
+
+        site.setIsSiteVerified(Constant.SiteStatus.IS_EDITED);
+        return localSource.saveAsCompletable(site);
+
+
     }
+
+
 }

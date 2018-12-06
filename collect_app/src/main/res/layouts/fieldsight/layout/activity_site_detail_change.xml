@@ -12,7 +12,6 @@
     <!--<include layout="@layout/flexible_toolbar" />-->
 
     <include
-
         layout="@layout/flexible_toolbar" />
 
     <android.support.v4.widget.NestedScrollView
@@ -30,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:animateLayoutChanges="true"
+            android:descendantFocusability="beforeDescendants"
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="4dp"
             app:cardElevation="4dp">

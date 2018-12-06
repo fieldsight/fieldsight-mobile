@@ -25,7 +25,7 @@ public interface SiteDao {
     @Query("SELECT * FROM sites WHERE name LIKE '%' || :searchQuery || '%' OR phone LIKE '%' || :searchQuery || '%' OR identifier LIKE '%' || :searchQuery || '%' OR address LIKE '%' || :searchQuery || '%'")
     List<Site> searchSites(String searchQuery);
 
-    @Query("SELECT * from sites WHERE project =  :projectID")
+    @Query("SELECT * from sites WHERE project =  :projectID ORDER BY isSiteVerified ASC")
     LiveData<List<Site>> getSiteByProjectId(String projectID);
 
     @Query("SELECT * from sites WHERE project = :projectID")
@@ -63,4 +63,7 @@ public interface SiteDao {
 
     @Query("DELETE from sites WHERE isSiteVerified =:id ")
     void deleteSyncedSites(int id);
+
+    @Query("SELECT * from sites WHERE isSiteVerified =:siteStatus")
+    Single<Site> getAllByStatus(int siteStatus);
 }

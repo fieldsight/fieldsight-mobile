@@ -392,12 +392,43 @@ public class Site implements Parcelable {
         this.regionId = regionId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Site site = (Site) o;
+        return isSiteVerified == site.isSiteVerified &&
+                Objects.equal(id, site.id) &&
+                Objects.equal(latitude, site.latitude) &&
+                Objects.equal(longitude, site.longitude) &&
+                Objects.equal(identifier, site.identifier) &&
+                Objects.equal(name, site.name) &&
+                Objects.equal(typeId, site.typeId) &&
+                Objects.equal(typeLabel, site.typeLabel) &&
+                Objects.equal(phone, site.phone) &&
+                Objects.equal(address, site.address) &&
+                Objects.equal(publicDesc, site.publicDesc) &&
+                Objects.equal(additionalDesc, site.additionalDesc) &&
+                Objects.equal(logo, site.logo) &&
+                Objects.equal(isActive, site.isActive) &&
+                Objects.equal(location, site.location) &&
+                Objects.equal(isSurvey, site.isSurvey) &&
+                Objects.equal(dateCreated, site.dateCreated) &&
+                Objects.equal(project, site.project) &&
+                Objects.equal(siteTypeError, site.siteTypeError) &&
+                Objects.equal(siteUploadError, site.siteUploadError) &&
+                Objects.equal(metaAttributes, site.metaAttributes) &&
+                Objects.equal(siteDocuments, site.siteDocuments) &&
+                Objects.equal(regionId, site.regionId) &&
+                Objects.equal(generalFormDeployedFrom, site.generalFormDeployedFrom) &&
+                Objects.equal(stagedFormDeployedFrom, site.stagedFormDeployedFrom) &&
+                Objects.equal(scheduleFormDeployedForm, site.scheduleFormDeployedForm);
+    }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, metaAttributes, regionId, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
+        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, siteUploadError, metaAttributes, siteDocuments, regionId, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
     }
-
 
     @Override
     public int describeContents() {

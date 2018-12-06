@@ -174,16 +174,19 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                             DialogFactory.createGenericErrorDialog(this, "").show();
                             break;
                         case EMPTY_SITE_NAME:
-                            tiSiteName.setError(getString(R.string.error_field_required));
                             btnCollectSiteRecordLocation.requestFocus();
+                            tiSiteName.setError(getString(R.string.error_field_required));
+
                             break;
                         case EMPTY_SITE_LOCATION:
-                            btnCollectSiteRecordLocation.setError(getString(R.string.error_field_required));
                             btnCollectSiteRecordLocation.requestFocus();
+                            btnCollectSiteRecordLocation.setError(getString(R.string.error_field_required));
+
                             break;
                         case EMPTY_SITE_IDENTIFIER:
-                            tiSiteIdentifier.setError(getString(R.string.error_field_required));
                             tiSiteIdentifier.requestFocus();
+                            tiSiteIdentifier.setError(getString(R.string.error_field_required));
+
                             break;
                         case REGION_NOT_SELECTED:
                             TextView errorText = (TextView) spinnerSiteCluster.getSelectedView();

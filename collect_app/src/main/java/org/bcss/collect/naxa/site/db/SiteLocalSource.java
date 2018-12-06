@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.functions.Action;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
 
@@ -87,6 +89,15 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         AsyncTask.execute(() -> dao.insert(items));
     }
 
+    public Completable saveAsCompletable(Site...sites){
+        return Completable.fromAction(new Action() {
+            @Override
+            public void run() throws Exception {
+                dao.insert(sites);
+            }
+        });
+    }
+
     @Override
     public void save(ArrayList<Site> items) {
         //AsyncTask.execute(() -> dao.insert(items));
@@ -134,7 +145,6 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         });
     }
 
-
     public void deleteSyncedSites() {
         AsyncTask.execute(new Runnable() {
             @Override
@@ -142,5 +152,9 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
                 dao.deleteSyncedSites(IS_ONLINE);
             }
         });
+    }
+
+    public Single<Site> getAllByStatus(int siteStatus) {
+        return dao.getAllByStatus(siteStatus);
     }
 }
