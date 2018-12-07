@@ -300,7 +300,52 @@ public class InstancesDao {
         return cursorLoader;
     }
 
-    public CursorLoader getCompletedUndeletedInstancesCursorLoaderBySite(String siteId, String sortOrder) {
+    public CursorLoader getCompletedUndeletedInstancesCursorLoaderHideOfflineSite(CharSequence charSequence, String sortOrder) {
+        CursorLoader cursorLoader;
+        if (charSequence.length() == 0) {
+            cursorLoader = getAllCompletedUndeletedInstancesCursorLoader(sortOrder);
+        } else {
+            String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and ("
+                    + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                    + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                    + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
+                    + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE ?";
+
+            String[] selectionArgs = {
+                    InstanceProviderAPI.STATUS_COMPLETE,
+                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
+                    InstanceProviderAPI.STATUS_SUBMITTED,
+                    "%" + charSequence + "%"
+            };
+
+            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
+        }
+        return cursorLoader;
+    }
+
+    public CursorLoader getFinalizedInstancesCursorLoaderHideOfflineSite(CharSequence charSequence, String sortOrder) {
+        CursorLoader cursorLoader;
+        if (charSequence.length() == 0) {
+            cursorLoader = getFinalizedInstancesCursorLoader(sortOrder);
+        } else {
+            String selection =
+                    "(" + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                            + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
+                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE ?";
+
+            String[] selectionArgs = {
+                    InstanceProviderAPI.STATUS_COMPLETE,
+                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
+                    "%" + charSequence + "%"};
+
+            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
+        }
+
+        return cursorLoader;
+    }
+
+    public CursorLoader getCompletedUndeletedInstancesCursorLoaderBySite(String siteId, String
+            sortOrder) {
         CursorLoader cursorLoader;
         if (siteId.length() == 0) {
             cursorLoader = getAllCompletedUndeletedInstancesCursorLoader(sortOrder);
@@ -338,12 +383,14 @@ public class InstancesDao {
         return getInstancesCursor(null, null, null, null);
     }
 
-    public Cursor getInstancesCursor(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor getInstancesCursor(String[] projection, String selection, String[]
+            selectionArgs, String sortOrder) {
         return Collect.getInstance().getContentResolver()
                 .query(InstanceProviderAPI.InstanceColumns.CONTENT_URI, projection, selection, selectionArgs, sortOrder);
     }
 
-    public CursorLoader getInstancesCursorLoader(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public CursorLoader getInstancesCursorLoader(String[] projection, String selection, String[]
+            selectionArgs, String sortOrder) {
         return new CursorLoader(
                 Collect.getInstance(),
                 InstanceProviderAPI.InstanceColumns.CONTENT_URI,
@@ -463,7 +510,6 @@ public class InstancesDao {
     }
 
 
-
     public String fixUploadUrl(String url) {
         if (checkContainsFakeSiteID(url)) {
             String mockedSiteId = getSiteIdFromUrl(url);
@@ -508,7 +554,8 @@ public class InstancesDao {
         return values;
     }
 
-    public static String generateSubmissionUrl(String formDeployedFrom, String siteId, String fsFormId) {
+    public static String generateSubmissionUrl(String formDeployedFrom, String siteId, String
+            fsFormId) {
         String submissionUrl = APIEndpoint.BASE_URL + APIEndpoint.FORM_SUBMISSION_PAGE;
 
         switch (formDeployedFrom) {

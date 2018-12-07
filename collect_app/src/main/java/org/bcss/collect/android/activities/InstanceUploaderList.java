@@ -486,13 +486,13 @@ public class InstanceUploaderList extends InstanceListActivity implements
             if (loadedSite != null) {
                 return instancesDao.getCompletedUndeletedInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
             } else {
-                return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
+                return instancesDao.getCompletedUndeletedInstancesCursorLoaderHideOfflineSite("fake", getSortingOrder());
             }
         } else {
             if (loadedSite != null) {
                 return instancesDao.getFinalizedInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
             } else {
-                return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
+                return instancesDao.getFinalizedInstancesCursorLoaderHideOfflineSite("fake", getSortingOrder());
             }
         }
     }
