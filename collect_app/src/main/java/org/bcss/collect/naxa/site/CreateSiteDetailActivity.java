@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -177,14 +178,11 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                     boolean isClusterIsEmpty;
                     if (project != null) {
                         isClusterIsEmpty = project.getSiteClusters() == null || project.getSiteClusters().isEmpty();
-
                         if (!isClusterIsEmpty) {
                             Type type = new TypeToken<ArrayList<SiteRegion>>() {
                             }.getType();
                             ArrayList<SiteRegion> siteRegions = new ArrayList<>(new Gson().fromJson(project.getSiteClusters(), type));
                             createSiteDetailViewModel.setSiteCluster(siteRegions);
-
-
                         }
                     }
                 });
@@ -198,7 +196,6 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         if (aBoolean) {
 
 
-
                             layoutSiteDataDisplay.setVisibility(View.GONE);
                             layoutSiteDataEdit.setVisibility(View.VISIBLE);
 
@@ -206,8 +203,6 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                             ilSiteNameEditable.getEditText().setText(nSite.getName());
                             ilPhoneEditable.getEditText().setText(nSite.getPhone());
                             ilAddressEditable.getEditText().setText(nSite.getAddress());
-
-
 
 
                         } else {
@@ -295,6 +290,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         if (createSiteDetailFormStatus == null) return;
                         switch (createSiteDetailFormStatus) {
                             case EMPTY_SITE_IDENTIFIER:
+
                                 ilSiteIdentifierEditable.setError(getString(R.string.error_field_required));
                                 ilSiteIdentifierEditable.requestFocus();
                                 break;
@@ -309,8 +305,22 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                             case EMPTY_PHONE:
                                 ilPhoneEditable.setError(getString(R.string.error_field_required));
                                 ilPhoneEditable.requestFocus();
+                                break;
                             case SITE_SAVED:
-                                saveSiteObservable();
+                                DialogFactory.createActionDialog(CreateSiteDetailActivity.this, "Save Changes", "Save the changes made on site information?")
+                                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                createSiteDetailViewModel.saveSite();
+                                            }
+                                        })
+                                        .setNegativeButton(R.string.dialog_action_dismiss, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                onBackPressed();
+                                            }
+                                        })
+                                        .show();
                                 break;
 
                         }
@@ -480,6 +490,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 //                        collectMetaAtrributes(createSiteDetailViewModel.getMetaAttributesViewIds().getValue());
 //                        collectSpinnerOptions();
 
+
                         createSiteDetailViewModel.saveSite();
 
                         break;
@@ -626,6 +637,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
         return view;
     }
+
 
     private int typeToInputType(String type) {
         switch (type) {

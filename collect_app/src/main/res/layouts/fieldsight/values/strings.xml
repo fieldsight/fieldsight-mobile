@@ -208,6 +208,7 @@
     <string name="title_activity_testing">TestingActivity</string>
     <string name="msg_multiple_sites_upload">%s and %d more edited sites has been uploaded</string>
     <string name="msg_single_site_upload">Edits on %s site has been uploaded</string>
+    <string name="save">Save</string>
 
 
     <!--Notification sitelist ends here-->

@@ -21,12 +21,18 @@ import javax.annotation.Nullable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
+import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyHeadsUp;
 import static org.bcss.collect.naxa.network.ServiceGenerator.getRxClient;
 
 public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
@@ -47,6 +53,41 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     public void getAll() {
 
 
+    }
+
+
+    public void updateAllEditedSite(){
+        SiteLocalSource.getInstance()
+                .getAllByStatus(IS_EDITED)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapObservable(new Function<Site, ObservableSource<Site>>() {
+                    @Override
+                    public ObservableSource<Site> apply(Site site) throws Exception {
+                        return SiteRemoteSource.getInstance().updateSite(site).subscribeOn(Schedulers.io());
+                    }
+                })
+                .toList()
+                .subscribe(new DisposableSingleObserver<List<Site>>() {
+                    @Override
+                    public void onSuccess(List<Site> sites) {
+                        String title = "Site Uploaded";
+                        String msg;
+                        if (sites.size() > 1) {
+                            msg = Collect.getInstance().getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size());
+                        } else {
+                            msg = Collect.getInstance().getString(R.string.msg_single_site_upload, sites.get(0).getName());
+                        }
+
+                        notifyHeadsUp(title, msg);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        Timber.e(e);
+                    }
+                });
     }
 
     public Observable<Site> uploadMultipleSites(List<Site> sites) {

@@ -80,7 +80,7 @@ public class Constant {
         public static final int IS_OFFLINE = 0;
         public static final int IS_ONLINE = 1;
         public static final int IS_FINALIZED = 3;
-        public static final int IS_EDITED = 4;
+        public static final int IS_EDITED = -1;
 
         public static final int IS_VERIFIED_BUT_UNSYNCED = 2;
     }

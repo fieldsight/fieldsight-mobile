@@ -95,7 +95,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 siteViewHolder.imgProfile.setImageResource(R.drawable.circle_blue);
 
                 applyIconAnimation(siteViewHolder, position);
-                applyOffilineSiteTag(siteViewHolder,site);
+                applyOffilineSiteTag(siteViewHolder, site);
                 break;
         }
 
@@ -236,6 +236,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         boolean isChecked = selectedItems.get(holder.getAdapterPosition(), false);
         boolean isUnVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
         boolean isVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_ONLINE;
+        boolean isEditedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
         holder.offlinetag.setVisibility(View.GONE);
 
         if (isChecked) {
@@ -243,6 +244,12 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //            holder.identifier.setTypeface(null, Typeface.BOLD);
             holder.siteName.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.from));
             holder.identifier.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
+        }
+
+
+        if (isEditedSite) {
+            holder.offlinetag.setVisibility(View.VISIBLE);
+            holder.offlinetag.setText("Edited Site");
         }
 
         if (isUnVerifiedSite) {

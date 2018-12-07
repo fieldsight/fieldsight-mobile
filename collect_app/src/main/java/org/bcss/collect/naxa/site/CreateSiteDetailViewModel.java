@@ -181,7 +181,8 @@ public class CreateSiteDetailViewModel extends ViewModel {
 
     void saveSite() {
         if (validateData()) {
-            siteRepository.saveSiteModified(siteMutableLiveData.getValue())
+            Site site = siteMutableLiveData.getValue();
+            siteRepository.saveSiteModified(site)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new CompletableObserver() {

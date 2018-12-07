@@ -467,7 +467,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 .subscribe(new SingleObserver<List<Long>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        ToastUtils.showLongToast("Upload started! check notification for details");
                         NotificationUtils.createUploadNotification(progressNotifyId, progressMessage);
                     }
 
