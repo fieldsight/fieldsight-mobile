@@ -196,9 +196,11 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
 
         Instance instance = null;
         Cursor cursor = null;
+
         try {
             InstancesDao dao = new InstancesDao();
             cursor = dao.getInstancesCursor(null, null);
+
             List<Instance> list = dao.getInstancesFromCursor(cursor);
             for (Instance curInstance : list) {
                 String url = curInstance.getSubmissionUri();
@@ -211,7 +213,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
 
 
             if (instance != null) {
-                openSavedForm(cursor);
+                openSavedForm(instance);
             } else {
                 openNewForm(instance.getJrFormId());
             }
@@ -226,17 +228,16 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     }
 
 
-    private void openSavedForm(Cursor cursorInstanceForm) {
+    private void openSavedForm(Instance instance) {
 
         Toast.makeText(context, "Opening saved form.", Toast.LENGTH_LONG).show();
 
-        cursorInstanceForm.moveToFirst();
-        long idFormsTable = Long.parseLong(cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
-        Log.d(TAG, "Opening saved form with _ID" + idFormsTable);
+
+        long selectedFormId = instance.getDatabaseId();
 
         Uri instanceUri =
                 ContentUris.withAppendedId(InstanceProviderAPI.InstanceColumns.CONTENT_URI,
-                        idFormsTable);
+                        selectedFormId);
 
 
         String action = getIntent().getAction();
@@ -247,9 +248,9 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
             // the form can be edited if it is incomplete or if, when it was
             // marked as complete, it was determined that it could be edited
             // later.
-            String status = cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS));
+            String status = instance.getStatus();
             String strCanEditWhenComplete =
-                    cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns.CAN_EDIT_WHEN_COMPLETE));
+                    instance.getCanEditWhenComplete();
 
             boolean canEdit = status.equals(InstanceProviderAPI.STATUS_INCOMPLETE)
                     || Boolean.parseBoolean(strCanEditWhenComplete);
@@ -260,9 +261,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
 
             // caller wants to view/edit a form, so launch FormEntryActivity
             //send the slected id to the upload button
-            //Susan
 
-            Long selectedFormId = cursorInstanceForm.getLong(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID));
             Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
             toEdit.putExtra("EditedFormID", selectedFormId);
             startActivity(toEdit);

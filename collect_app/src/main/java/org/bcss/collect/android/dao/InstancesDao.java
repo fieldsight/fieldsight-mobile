@@ -463,6 +463,7 @@ public class InstancesDao {
     }
 
 
+
     public String fixUploadUrl(String url) {
         if (checkContainsFakeSiteID(url)) {
             String mockedSiteId = getSiteIdFromUrl(url);
@@ -480,6 +481,7 @@ public class InstancesDao {
         String[] split = url.split("/");
         String siteId = split[split.length - 1];
         return siteId.contains("fake");
+
     }
 
 

@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.site;
 import android.arch.lifecycle.Observer;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -21,30 +22,53 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.common.primitives.Longs;
+
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.FileManagerTabs;
+import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.activities.InstanceChooserList;
+import org.bcss.collect.android.activities.InstanceUploaderActivity;
 import org.bcss.collect.android.activities.InstanceUploaderList;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.provider.FormsProviderAPI;
+import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.firebase.NotificationUtils;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.project.MapActivity;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsFragment;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.sitedocuments.SiteDocumentsListActivity;
 import org.bcss.collect.naxa.stages.StageListFragment;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnLongClick;
 import butterknife.Unbinder;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
+import static org.bcss.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
@@ -257,10 +281,12 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(true);
             rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.site_option_btn_upload_site).setVisibility(View.VISIBLE);
         } else {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(true);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(false);
             rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.GONE);
+            rootView.findViewById(R.id.site_option_btn_upload_site).setVisibility(View.GONE);
         }
 
     }
@@ -320,6 +346,115 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         }
 
         return false;
+    }
+
+    @OnClick(R.id.site_option_btn_upload_site)
+    public void uploadSite() {
+
+        String progressMessage = "Uploading site(s)";
+        String completedMessage = "Site(s) Uploaded";
+        String failedMessage = "Site(s) upload failed";
+        final int progressNotifyId = 987876756;
+
+        ArrayList<Site> list = new ArrayList<>();
+        list.add(loadedSite);
+        SiteRemoteSource.getInstance()
+                .uploadMultipleSites(list)
+                .map(new Function<Site, ArrayList<Long>>() {
+                    @Override
+                    public ArrayList<Long> apply(Site site) throws Exception {
+                        return getNotUploadedFormForSite(site.getId());
+                    }
+                })
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        NotificationUtils.createUploadNotification(progressNotifyId, progressMessage);
+                    }
+                })
+                .subscribe(new DisposableObserver<ArrayList<Long>>() {
+                    @Override
+                    public void onNext(ArrayList<Long> instanceIDs) {
+                        NotificationUtils.cancelNotification(progressNotifyId);
+                        NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), completedMessage, completedMessage);
+
+                        if (isAdded()) {
+                            DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
+                                    .setPositiveButton("Upload ", (dialog, which) -> {
+                                        Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
+                                        i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
+                                        startActivityForResult(i, INSTANCE_UPLOADER);
+                                    }).setNegativeButton("Not now", null).show();
+                        } else {
+                            NotificationUtils.notifyHeadsUp("Unable to start upload", "Unable to start upload for offline site");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        String errorMessage = e.getMessage();
+                        NotificationUtils.cancelNotification(progressNotifyId);
+                        NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), failedMessage, errorMessage);
+
+                        if (e instanceof HttpException) {
+                            ResponseBody responseBody = ((HttpException) e).response().errorBody();
+                            errorMessage = getErrorMessage(responseBody);
+                        }
+
+                        e.printStackTrace();
+                        if (isAdded()) {
+                            DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    private ArrayList<Long> getNotUploadedFormForSite(String siteId) {
+        String selection;
+        String[] selectionArgs;
+
+        selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=? and (" +
+                InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                + InstanceProviderAPI.InstanceColumns.STATUS + "=? )";
+
+        selectionArgs = new String[]{
+                siteId,
+                InstanceProviderAPI.STATUS_COMPLETE,
+                InstanceProviderAPI.STATUS_SUBMISSION_FAILED
+        };
+
+
+        String sortOrder = InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC";
+
+        Cursor c = getContext().getContentResolver().query(InstanceProviderAPI.InstanceColumns.CONTENT_URI, null, selection,
+                selectionArgs, sortOrder);
+
+        ArrayList<Long> instanceIDs = new ArrayList<>();
+
+        int i = 0;
+
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            int id = c.getInt(c.getColumnIndex(FormsProviderAPI.FormsColumns._ID));
+            instanceIDs.add((long) id);
+            i = i + 1;
+        }
+
+        return instanceIDs;
+
+    }
+
+    private String getErrorMessage(ResponseBody responseBody) {
+        try {
+            JSONObject jsonObject = new JSONObject(responseBody.string());
+            return jsonObject.getString("non_field_errors");
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
 

@@ -307,20 +307,11 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                                 ilPhoneEditable.requestFocus();
                                 break;
                             case SITE_SAVED:
-                                DialogFactory.createActionDialog(CreateSiteDetailActivity.this, "Save Changes", "Save the changes made on site information?")
-                                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                createSiteDetailViewModel.saveSite();
-                                            }
-                                        })
-                                        .setNegativeButton(R.string.dialog_action_dismiss, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                onBackPressed();
-                                            }
-                                        })
-                                        .show();
+                                onBackPressed();
+                                ToastUtils.showLongToast("Changes Saved");
+                                break;
+                            case SITE_SAVED_FAILED:
+                                onBackPressed();
                                 break;
 
                         }
@@ -489,8 +480,6 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                     case View.VISIBLE:
 //                        collectMetaAtrributes(createSiteDetailViewModel.getMetaAttributesViewIds().getValue());
 //                        collectSpinnerOptions();
-
-
                         createSiteDetailViewModel.saveSite();
 
                         break;

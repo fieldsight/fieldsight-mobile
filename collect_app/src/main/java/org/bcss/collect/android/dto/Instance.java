@@ -35,6 +35,7 @@ public class Instance {
     private final Long deletedDate;
     private final String fieldSightSiteId;
 
+
     private final Long databaseId;
 
     private Instance(Builder builder) {

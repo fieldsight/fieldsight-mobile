@@ -424,15 +424,21 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         if (spinnerSiteCluster.getVisibility() == View.VISIBLE) {
             String selectedRegionId = ((SiteRegion) spinnerSiteCluster.getSelectedItem()).getId();
             String selectedRegionLabel = ((SiteRegion) spinnerSiteCluster.getSelectedItem()).getName();
-            createSiteViewModel.setSiteRegion(selectedRegionLabel, selectedRegionId);
 
+
+            createSiteViewModel.setSiteRegion(selectedRegionLabel, selectedRegionId);
         }
 
         if (spinnerSiteType.getVisibility() == View.VISIBLE) {
             SiteType siteType = (SiteType) spinnerSiteType.getSelectedItem();
             String siteTypeId = siteType.getId();
             String siteTypeLabel = siteType.getName();
-            createSiteViewModel.setSiteType(siteTypeId, siteTypeLabel);
+
+            boolean isNotHint = !siteTypeLabel.equals(getString(R.string.hint_choose_site_type));
+            if (isNotHint) {
+                createSiteViewModel.setSiteType(siteTypeId, siteTypeLabel);
+            }
+
         }
 
     }

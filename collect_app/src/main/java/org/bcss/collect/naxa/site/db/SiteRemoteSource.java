@@ -56,7 +56,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     }
 
 
-    public void updateAllEditedSite(){
+    public void updateAllEditedSite() {
         SiteLocalSource.getInstance()
                 .getAllByStatus(IS_EDITED)
                 .subscribeOn(Schedulers.io())
@@ -89,6 +89,16 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                     }
                 });
     }
+
+
+    public void uploadEditedSites(List<Site> sites) {
+        InstancesDao instancesDao = new InstancesDao();
+
+
+    }
+
+
+
 
     public Observable<Site> uploadMultipleSites(List<Site> sites) {
 
@@ -186,6 +196,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
     private Observable<Site> uploadSite(Site siteLocationPojo) {
         RequestBody requestBody;
+        RequestBody siteTypeRequest = null;
         MultipartBody.Part body = null;
 
         File file = FileUtils.getFileByPath(siteLocationPojo.getLogo());
@@ -193,6 +204,12 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         if (FileUtils.isFileExists(file)) {
             requestBody = RequestBody.create(MediaType.parse("image/*"), file);
             body = MultipartBody.Part.createFormData("logo", file.getName(), requestBody);
+        }
+
+        boolean hasSiteType = siteLocationPojo.getTypeId() != null && siteLocationPojo.getTypeId().trim().length() > 0;
+
+        if (hasSiteType) {
+            siteTypeRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getTypeId()));
         }
 
         RequestBody SiteNameRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getName());
@@ -203,7 +220,6 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         RequestBody SiteAddressRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getAddress());
         RequestBody SitePublicDescRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPublicDesc());
         RequestBody projectIdRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getProject());
-        RequestBody SiteRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getTypeId()));
         RequestBody isSurvey = RequestBody.create(MediaType.parse("text/plain"), "false");
         RequestBody metaAttrs = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getMetaAttributes());
         RequestBody regionId = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getRegionId());
@@ -213,7 +229,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 .create(ApiInterface.class)
                 .uploadSite(APIEndpoint.ADD_SITE_URL, body, isSurvey
                         , SiteNameRequest, latRequest, lonRequest, identifierRequest, SitePhoneRequest,
-                        SiteAddressRequest, SitePublicDescRequest, projectIdRequest, SiteRequest, regionId, metaAttrs)
+                        SiteAddressRequest, SitePublicDescRequest, projectIdRequest, siteTypeRequest, regionId, metaAttrs)
                 ;
     }
 

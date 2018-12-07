@@ -199,7 +199,9 @@ public class CreateSiteDetailViewModel extends ViewModel {
 
                         @Override
                         public void onError(Throwable e) {
-
+                            setEditSite(false);
+                            formStatus.setValue(CreateSiteDetailFormStatus.SITE_SAVED_FAILED);
+                            e.printStackTrace();
                         }
                     });
         }

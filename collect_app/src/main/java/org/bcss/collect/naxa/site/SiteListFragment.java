@@ -459,11 +459,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
         SiteRemoteSource.getInstance()
                 .uploadMultipleSites(selected)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .map(site -> getNotUploadedFormForSite(site.getId()))
                 .flatMapIterable((Function<ArrayList<Long>, Iterable<Long>>) longs -> longs)
                 .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+
                 .subscribe(new SingleObserver<List<Long>>() {
                     @Override
                     public void onSubscribe(Disposable d) {

@@ -27,6 +27,8 @@ public class NotificationUtils {
     public static String DOWNLOAD_ACTION = "download.action";
     private static int smallIcon = R.drawable.ic_notification_icon;
 
+    private static final String channelID= "All Notifications";
+
     public NotificationUtils() {
 
     }
@@ -77,7 +79,7 @@ public class NotificationUtils {
 
 
         mNotifyManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(ctx);
+        mBuilder = new NotificationCompat.Builder(ctx,channelID);
         mBuilder.setContentTitle(ctx.getString(R.string.app_name))
                 .setContentText(text)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
@@ -95,7 +97,7 @@ public class NotificationUtils {
 
         PendingIntent p = intent != null ? PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT) : null;
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
                 .setContentIntent(p)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
@@ -153,7 +155,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setAutoCancel(true)
                 .setContentTitle(title)
@@ -179,7 +181,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setAutoCancel(true)
                 .setContentTitle("Looking for educational materials")
@@ -201,7 +203,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
                 .setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setContentText(msg);
 
@@ -222,7 +224,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
                 .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentTitle(title)
                 .setTicker(msg)
@@ -245,7 +247,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setContentText(msg)
                 .setProgress(total, progress, false);
@@ -262,7 +264,7 @@ public class NotificationUtils {
 
 
         mNotifyManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(ctx);
+        mBuilder = new NotificationCompat.Builder(ctx,channelID);
         mBuilder.setContentTitle(ctx.getString(R.string.app_name))
                 .setContentText("Downloading Forms")
                 .setSmallIcon(android.R.drawable.stat_sys_download).setTicker("Downloading Forms");
