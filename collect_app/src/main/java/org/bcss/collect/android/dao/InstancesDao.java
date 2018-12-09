@@ -26,6 +26,7 @@ import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.site.db.SiteUploadHistoryLocalSource;
 
@@ -34,6 +35,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
@@ -309,13 +311,12 @@ public class InstancesDao {
                     + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                     + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                     + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                    + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE ?";
+                    + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12";
 
             String[] selectionArgs = {
                     InstanceProviderAPI.STATUS_COMPLETE,
                     InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
-                    InstanceProviderAPI.STATUS_SUBMITTED,
-                    "%" + charSequence + "%"
+                    InstanceProviderAPI.STATUS_SUBMITTED
             };
 
             cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
@@ -331,12 +332,11 @@ public class InstancesDao {
             String selection =
                     "(" + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                             + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE ?";
+                            + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12";
 
             String[] selectionArgs = {
                     InstanceProviderAPI.STATUS_COMPLETE,
-                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
-                    "%" + charSequence + "%"};
+                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED};
 
             cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
         }
@@ -510,16 +510,22 @@ public class InstancesDao {
     }
 
 
-    public String fixUploadUrl(String url) {
-        if (checkContainsFakeSiteID(url)) {
-            String mockedSiteId = getSiteIdFromUrl(url);
-            String siteId = SiteUploadHistoryLocalSource.getInstance().getById(mockedSiteId).getNewSiteId();
-            String fsFormId = getFsFormIdFromUrl(url);
-            String deployedFrom = getFormDeployedFrom(url);
+    private String fixUploadUrl(String url) {
+        try {
+            if (checkContainsFakeSiteID(url)) {
+                String mockedSiteId = getSiteIdFromUrl(url);
+                String fsFormId = getFsFormIdFromUrl(url);
+                String deployedFrom = getFormDeployedFrom(url);
 
-            return generateSubmissionUrl(deployedFrom, siteId, fsFormId);
+                url = generateSubmissionUrl(deployedFrom, mockedSiteId.split("-")[0], fsFormId);
+
+                String siteId = SiteUploadHistoryLocalSource.getInstance().getById(mockedSiteId).getNewSiteId();
+                url = generateSubmissionUrl(deployedFrom, siteId, fsFormId);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            Timber.e("Failed to fix url");
         }
-
         return url;
     }
 
@@ -554,8 +560,8 @@ public class InstancesDao {
         return values;
     }
 
-    public static String generateSubmissionUrl(String formDeployedFrom, String siteId, String
-            fsFormId) {
+    public static String generateSubmissionUrl(String formDeployedFrom, String siteId, String fsFormId) {
+
         String submissionUrl = APIEndpoint.BASE_URL + APIEndpoint.FORM_SUBMISSION_PAGE;
 
         switch (formDeployedFrom) {

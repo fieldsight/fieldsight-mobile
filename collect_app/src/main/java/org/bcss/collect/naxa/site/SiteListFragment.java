@@ -491,7 +491,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
                     @Override
                     public void onError(Throwable e) {
-
+                        e.printStackTrace();
                         String errorMessage = e.getMessage();
                         NotificationUtils.cancelNotification(progressNotifyId);
                         NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), failedMessage, errorMessage);

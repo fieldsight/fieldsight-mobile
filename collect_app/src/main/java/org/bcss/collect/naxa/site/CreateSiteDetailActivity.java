@@ -38,6 +38,8 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.activities.GeoPointActivity;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.listeners.PermissionListener;
+import org.bcss.collect.android.utilities.PermissionUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
@@ -218,6 +220,8 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                 .observe(this, new Observer<List<Site>>() {
                     @Override
                     public void onChanged(@Nullable List<Site> sites) {
+                        if (sites == null || sites.size() == 0) return;
+
                         nSite = sites.get(0);
                         ilSiteIdentifier.getEditText().setText(nSite.getIdentifier());
                         ilSiteName.getEditText().setText(nSite.getName());
@@ -227,16 +231,16 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
                         int sucessColor = ContextCompat.getColor(CreateSiteDetailActivity.this, R.color.colorGreenPrimaryLight);
 
-                        File photoFile = new File(nSite.getLogo());
-                        if (photoFile.exists()) {
-                            GlideApp.with(CreateSiteDetailActivity.this)
-                                    .load(new File(nSite.getLogo()))
-                                    .into(ivSitePhoto);
-                            btnSiteEditAddPhoto.setTextColor(sucessColor);
-                            btnSiteEditAddPhoto.setText(getString(R.string.msg_photo_taken));
+                        if (nSite.getLogo() != null && nSite.getLogo().length() > 0){
+                            File photoFile = new File(nSite.getLogo());
+                            if (photoFile.exists()) {
+                                GlideApp.with(CreateSiteDetailActivity.this)
+                                        .load(new File(nSite.getLogo()))
+                                        .into(ivSitePhoto);
+                                btnSiteEditAddPhoto.setTextColor(sucessColor);
+                                btnSiteEditAddPhoto.setText(getString(R.string.msg_photo_taken));
+                            }
                         }
-
-
                     }
                 });
 
@@ -444,27 +448,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_site_edit_add_photo:
-                final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Dismiss"};
-                DialogFactory.createListActionDialog(this, "Add photo", items, (dialog, which) -> {
-                    switch (which) {
-                        case 0:
-                            photoToUpload = createSiteDetailViewModel.generateImageFile("site");
-                            phototoUploadUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photoToUpload);
-                            Intent toCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            toCamera.putExtra(MediaStore.EXTRA_OUTPUT, phototoUploadUri);
-                            startActivityForResult(toCamera, Constant.Key.RC_CAMERA);
-                            break;
-                        case 1:
-                            Intent intent = new Intent();
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            intent.addCategory(Intent.CATEGORY_OPENABLE);
-                            intent.setType("image/*");
-                            startActivityForResult(Intent.createChooser(intent, "Select site image"), Constant.Key.SELECT_FILE);
-                            break;
-                        default:
-                            break;
-                    }
-                }).show();
+                checkPermissionAndShowDialog();
                 break;
             case R.id.btn_site_records_location:
                 Intent toGeoPointWidget = new Intent(this, GeoPointActivity.class);
@@ -489,6 +473,49 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                 MapActivity.start(this, nSite);
                 break;
         }
+    }
+
+    public void checkPermissionAndShowDialog() {
+        if (PermissionUtils.checkIfCameraPermissionGranted(this)) {
+            showImageDialog();
+        } else {
+            PermissionUtils.requestCameraPermission(this, new PermissionListener() {
+                @Override
+                public void granted() {
+                    showImageDialog();
+                }
+
+                @Override
+                public void denied() {
+
+                }
+            });
+        }
+    }
+
+    private void showImageDialog() {
+
+        final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Dismiss"};
+        DialogFactory.createListActionDialog(this, "Add photo", items, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    photoToUpload = createSiteDetailViewModel.generateImageFile("site");
+                    phototoUploadUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photoToUpload);
+                    Intent toCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    toCamera.putExtra(MediaStore.EXTRA_OUTPUT, phototoUploadUri);
+                    startActivityForResult(toCamera, Constant.Key.RC_CAMERA);
+                    break;
+                case 1:
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(intent, "Select site image"), Constant.Key.SELECT_FILE);
+                    break;
+                default:
+                    break;
+            }
+        }).show();
     }
 
 

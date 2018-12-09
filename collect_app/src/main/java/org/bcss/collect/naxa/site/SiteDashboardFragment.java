@@ -360,6 +360,8 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         list.add(loadedSite);
         SiteRemoteSource.getInstance()
                 .uploadMultipleSites(list)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .map(new Function<Site, ArrayList<Long>>() {
                     @Override
                     public ArrayList<Long> apply(Site site) throws Exception {

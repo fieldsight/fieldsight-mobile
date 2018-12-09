@@ -48,6 +48,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import timber.log.Timber;
 
+import static org.bcss.collect.android.dao.InstancesDao.checkContainsFakeSiteID;
+
 public class InstanceServerUploader extends InstanceUploader {
     private static final String URL_PATH_SEP = "/";
     private static final String FAIL = "Error: ";
@@ -296,6 +298,8 @@ public class InstanceServerUploader extends InstanceUploader {
         } catch (UnsupportedEncodingException e) {
             Timber.i(e, "Error encoding URL for device id : %s", deviceId);
         }
+
+
 
         return urlString;
     }

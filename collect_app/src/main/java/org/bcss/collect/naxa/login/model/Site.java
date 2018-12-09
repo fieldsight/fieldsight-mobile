@@ -146,10 +146,17 @@ public class Site implements Parcelable {
         this.siteDocuments = siteDocuments;
     }
 
+
+    private final static String postfix = "fake";
+
+
     public static String getMockedId() {
-        return String.valueOf(System.currentTimeMillis()).concat("-").concat("fake");
+        return String.valueOf(System.currentTimeMillis()).concat("-").concat(postfix);
     }
 
+    public static boolean isFakeSiteId(String siteId){
+        return siteId.contains(Site.postfix);
+    }
 
     @Override
     public String toString() {

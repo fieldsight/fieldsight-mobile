@@ -145,13 +145,15 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         });
     }
 
-    public void deleteSyncedSites() {
-        AsyncTask.execute(new Runnable() {
+    public Completable deleteSyncedSites() {
+        return Completable.fromAction(new Action() {
             @Override
-            public void run() {
+            public void run() throws Exception {
                 dao.deleteSyncedSites(IS_ONLINE);
             }
         });
+
+
     }
 
     public Single<Site> getAllByStatus(int siteStatus) {
