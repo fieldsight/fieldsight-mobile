@@ -147,52 +147,6 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     }
 
 
-//    public Single<List<Site>> uploadMultipleSites(List<Site> sites) {
-//
-//        InstancesDao instancesDao = new InstancesDao();
-//        return Observable.just(sites)
-//                .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
-//                .filter(site -> site.getIsSiteVerified() == IS_OFFLINE)
-//                .flatMap((Function<Site, ObservableSource<Site>>) oldSite -> uploadSite(oldSite)
-//                        .flatMapCompletable(new Function<Site, CompletableSource>() {
-//                            @Override
-//                            public CompletableSource apply(Site newSite) throws Exception {
-//                                String oldSiteId = oldSite.get();
-//                                String newSiteId = newSite.getId();
-//                                return SiteLocalSource.getInstance().setSiteAsVerified(oldSiteId, newSiteId);
-//                            }
-//                        }).
-//                        .map(newSite -> {
-//
-//
-//                            SiteLocalSource.getInstance().setSiteAsVerified(oldSiteId, newSiteId);
-//
-//                            instancesDao
-//                                    .cascadedSiteIds(oldSiteId, newSiteId)
-//                                    .subscribe(new DisposableObserver<String>() {
-//                                        @Override
-//                                        public void onNext(String s) {
-//
-//                                        }
-//
-//                                        @Override
-//                                        public void onError(Throwable e) {
-//                                            e.printStackTrace();
-//                                        }
-//
-//                                        @Override
-//                                        public void onComplete() {
-//
-//                                        }
-//                                    });
-//
-//                            SiteUploadHistoryLocalSource.getInstance().save(new SiteUploadHistory(newSiteId, oldSiteId));
-//
-//                            return newSite;
-//                        }))
-//                .toList();
-//
-//    }
 
     private Observable<Site> uploadSite(Site siteLocationPojo) {
         RequestBody requestBody;

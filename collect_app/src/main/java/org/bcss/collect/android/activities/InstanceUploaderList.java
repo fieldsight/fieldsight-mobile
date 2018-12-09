@@ -39,25 +39,25 @@ import android.widget.ListView;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.adapters.InstanceUploaderAdapter;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.listeners.DiskSyncListener;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.preferences.GeneralSharedPreferences;
 import org.bcss.collect.android.preferences.PreferencesActivity;
-import org.bcss.collect.android.tasks.InstanceSyncTask;
-import org.bcss.collect.android.utilities.PlayServicesUtil;
-import org.bcss.collect.android.utilities.ToastUtils;
-import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.adapters.InstanceUploaderAdapter;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.preferences.Transport;
+import org.bcss.collect.android.tasks.InstanceSyncTask;
 import org.bcss.collect.android.tasks.sms.SmsNotificationReceiver;
 import org.bcss.collect.android.tasks.sms.SmsService;
 import org.bcss.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.bcss.collect.android.tasks.sms.models.SmsSubmission;
 import org.bcss.collect.android.upload.AutoSendWorker;
+import org.bcss.collect.android.utilities.PlayServicesUtil;
+import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.reactivestreams.Publisher;
 
 import java.util.List;
@@ -72,14 +72,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-import static org.bcss.collect.android.utilities.PermissionUtils.finishAllActivities;
-import static org.bcss.collect.android.utilities.PermissionUtils.requestStoragePermissions;
-import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_PROTOCOL;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 import static org.bcss.collect.android.tasks.sms.SmsSender.SMS_INSTANCE_ID;
+import static org.bcss.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.bcss.collect.android.utilities.PermissionUtils.requestReadPhoneStatePermission;
 import static org.bcss.collect.android.utilities.PermissionUtils.requestSendSMSPermission;
+import static org.bcss.collect.android.utilities.PermissionUtils.requestStoragePermissions;
+import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 
 
@@ -486,13 +486,13 @@ public class InstanceUploaderList extends InstanceListActivity implements
             if (loadedSite != null) {
                 return instancesDao.getCompletedUndeletedInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
             } else {
-                return instancesDao.getCompletedUndeletedInstancesCursorLoaderHideOfflineSite("fake", getSortingOrder());
+                return instancesDao.getCompletedUndeletedInstancesCursorLoaderHideOfflineSite(getFilterText(), getSortingOrder());
             }
         } else {
             if (loadedSite != null) {
                 return instancesDao.getFinalizedInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
             } else {
-                return instancesDao.getFinalizedInstancesCursorLoaderHideOfflineSite("fake", getSortingOrder());
+                return instancesDao.getFinalizedInstancesCursorLoaderHideOfflineSite(getFilterText(), getSortingOrder());
             }
         }
     }

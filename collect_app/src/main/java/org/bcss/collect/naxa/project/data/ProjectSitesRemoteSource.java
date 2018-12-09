@@ -62,6 +62,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
         syncRepository = SyncRepository.getInstance();
     }
 
+
     private Single<List<Object>> fetchProjectAndSites() {
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
