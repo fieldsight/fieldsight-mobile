@@ -9,6 +9,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.bcss.collect.naxa.common.GSONInstance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SiteMetaAttribute implements Parcelable {
 
     @SerializedName("question_name")
@@ -24,6 +27,17 @@ public class SiteMetaAttribute implements Parcelable {
     @Expose
     private String questionType;
 
+    @SerializedName("question_placeholder")
+    @Expose
+    private String questionPlaceholder;
+
+
+    @SerializedName("question_help")
+    @Expose
+    private String questionHelp;
+    @SerializedName("mcq_options")
+    @Expose
+    private List<McqOption> mcqOptions = null;
 
     public SiteMetaAttribute(String questionName, String questionText, String questionType) {
         this.questionName = questionName;
@@ -31,13 +45,7 @@ public class SiteMetaAttribute implements Parcelable {
         this.questionType = questionType;
     }
 
-    protected SiteMetaAttribute(Parcel in) {
-        questionName = in.readString();
-        byte tmpIsDeleted = in.readByte();
-        isDeleted = tmpIsDeleted == 0 ? null : tmpIsDeleted == 1;
-        questionText = in.readString();
-        questionType = in.readString();
-    }
+
 
 
     public SiteMetaAttribute toSiteMetaAttribute(String json) {
@@ -47,31 +55,21 @@ public class SiteMetaAttribute implements Parcelable {
     public String toJson(SiteMetaAttribute siteMetaAttribute) {
         return GSONInstance.getInstance().toJson(siteMetaAttribute);
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(questionName);
-        dest.writeByte((byte) (isDeleted == null ? 0 : isDeleted ? 1 : 2));
-        dest.writeString(questionText);
-        dest.writeString(questionType);
+    public String getQuestionText() {
+        return questionText;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
     }
 
-    public static final Creator<SiteMetaAttribute> CREATOR = new Creator<SiteMetaAttribute>() {
-        @Override
-        public SiteMetaAttribute createFromParcel(Parcel in) {
-            return new SiteMetaAttribute(in);
-        }
+    public String getQuestionPlaceholder() {
+        return questionPlaceholder;
+    }
 
-        @Override
-        public SiteMetaAttribute[] newArray(int size) {
-            return new SiteMetaAttribute[size];
-        }
-    };
+    public void setQuestionPlaceholder(String questionPlaceholder) {
+        this.questionPlaceholder = questionPlaceholder;
+    }
 
     public String getQuestionName() {
         return questionName;
@@ -79,22 +77,6 @@ public class SiteMetaAttribute implements Parcelable {
 
     public void setQuestionName(String questionName) {
         this.questionName = questionName;
-    }
-
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Boolean isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
-    public String getQuestionText() {
-        return questionText;
-    }
-
-    public void setQuestionText(String questionText) {
-        this.questionText = questionText;
     }
 
     public String getQuestionType() {
@@ -105,4 +87,57 @@ public class SiteMetaAttribute implements Parcelable {
         this.questionType = questionType;
     }
 
+    public String getQuestionHelp() {
+        return questionHelp;
+    }
+
+    public void setQuestionHelp(String questionHelp) {
+        this.questionHelp = questionHelp;
+    }
+
+    public List<McqOption> getMcqOptions() {
+        return mcqOptions;
+    }
+
+    public void setMcqOptions(List<McqOption> mcqOptions) {
+        this.mcqOptions = mcqOptions;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.questionName);
+        dest.writeValue(this.isDeleted);
+        dest.writeString(this.questionText);
+        dest.writeString(this.questionType);
+        dest.writeString(this.questionPlaceholder);
+        dest.writeString(this.questionHelp);
+        dest.writeTypedList(this.mcqOptions);
+    }
+
+    protected SiteMetaAttribute(Parcel in) {
+        this.questionName = in.readString();
+        this.isDeleted = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.questionText = in.readString();
+        this.questionType = in.readString();
+        this.questionPlaceholder = in.readString();
+        this.questionHelp = in.readString();
+        this.mcqOptions = in.createTypedArrayList(McqOption.CREATOR);
+    }
+
+    public static final Creator<SiteMetaAttribute> CREATOR = new Creator<SiteMetaAttribute>() {
+        @Override
+        public SiteMetaAttribute createFromParcel(Parcel source) {
+            return new SiteMetaAttribute(source);
+        }
+
+        @Override
+        public SiteMetaAttribute[] newArray(int size) {
+            return new SiteMetaAttribute[size];
+        }
+    };
 }

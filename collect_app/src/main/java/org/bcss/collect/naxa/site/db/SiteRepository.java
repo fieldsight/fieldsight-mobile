@@ -96,9 +96,8 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
     public Completable saveSiteModified(Site site) {
         if (site.getIsSiteVerified() == Constant.SiteStatus.IS_ONLINE) {
             site.setIsSiteVerified(Constant.SiteStatus.IS_EDITED);
-        } else {
-            site.setIsSiteVerified(Constant.SiteStatus.IS_OFFLINE);
         }
+
         return localSource.saveAsCompletable(site);
 
 

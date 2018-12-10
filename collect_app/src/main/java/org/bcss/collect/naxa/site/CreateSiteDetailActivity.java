@@ -464,7 +464,20 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                     case View.VISIBLE:
 //                        collectMetaAtrributes(createSiteDetailViewModel.getMetaAttributesViewIds().getValue());
 //                        collectSpinnerOptions();
-                        createSiteDetailViewModel.saveSite();
+                        DialogFactory.createActionDialog(CreateSiteDetailActivity.this,"Save Changes?","")
+                                .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        createSiteDetailViewModel.saveSite();
+                                    }
+                                })
+                                .setNegativeButton(R.string.dialog_action_dismiss, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        onBackPressed();
+                                    }
+                                })
+                                .show();
 
                         break;
                 }

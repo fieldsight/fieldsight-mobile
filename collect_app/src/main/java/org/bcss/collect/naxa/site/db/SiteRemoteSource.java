@@ -7,6 +7,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.utilities.FileUtils;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 
 import org.bcss.collect.naxa.common.database.SiteUploadHistory;
@@ -101,6 +102,8 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
 
     public Observable<Site> uploadMultipleSites(List<Site> sites) {
+
+        ToastUtils.showLongToast("Uploading site(s)");
 
         InstancesDao instancesDao = new InstancesDao();
         return Observable.just(sites)

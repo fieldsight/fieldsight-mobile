@@ -7,25 +7,23 @@ package org.bcss.collect.naxa.common;
  */
 
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
-
-import com.google.android.gms.common.util.SharedPreferencesUtils;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.network.APIEndpoint;
+
+import java.util.Calendar;
 
 
 public final class DialogFactory {
@@ -190,5 +188,17 @@ public final class DialogFactory {
 
         Dialog dialog = showCustomLayoutDialog(context, viewInflated);
         dialog.show();
+    }
+
+
+    public static DatePickerDialog createDatePickerDialog(Context context, DatePickerDialog.OnDateSetListener listener) {
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        int curYear = c.get(Calendar.YEAR);
+        int curMonth = c.get(Calendar.MONTH);
+        int curDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, listener, curYear, curMonth, curDay);
+        return datePickerDialog;
     }
 }

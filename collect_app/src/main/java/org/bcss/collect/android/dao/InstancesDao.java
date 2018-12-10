@@ -304,44 +304,43 @@ public class InstancesDao {
 
     public CursorLoader getCompletedUndeletedInstancesCursorLoaderHideOfflineSite(CharSequence charSequence, String sortOrder) {
         CursorLoader cursorLoader;
-        if (charSequence.length() == 0) {
-            cursorLoader = getAllCompletedUndeletedInstancesCursorLoader(sortOrder);
-        } else {
-            String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and ("
-                    + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                    + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                    + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                    + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12"
-                    + "OR " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE '%fake%'";
 
-            String[] selectionArgs = {
-                    InstanceProviderAPI.STATUS_COMPLETE,
-                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
-                    InstanceProviderAPI.STATUS_SUBMITTED
-            };
+        String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and ("
+                + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
+                + "("
+                + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12"
+                + "OR " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE '%fake%'"
+                + ")";
 
-            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
-        }
+        String[] selectionArgs = {
+                InstanceProviderAPI.STATUS_COMPLETE,
+                InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
+                InstanceProviderAPI.STATUS_SUBMITTED
+        };
+
+        cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
+
         return cursorLoader;
     }
 
     public CursorLoader getFinalizedInstancesCursorLoaderHideOfflineSite(CharSequence charSequence, String sortOrder) {
         CursorLoader cursorLoader;
-        if (charSequence.length() == 0) {
-            cursorLoader = getFinalizedInstancesCursorLoader(sortOrder);
-        } else {
-            String selection =
-                    "(" + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                            + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                            + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12 "
-                            + "OR " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE '%fake%'";
 
-            String[] selectionArgs = {
-                    InstanceProviderAPI.STATUS_COMPLETE,
-                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED};
+        String selection =
+                "(" + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
+                        + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
+                        + "("
+                        + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12 "
+                        + "OR " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE '%fake%'"
+                        + ")";
 
-            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
-        }
+        String[] selectionArgs = {
+                InstanceProviderAPI.STATUS_COMPLETE,
+                InstanceProviderAPI.STATUS_SUBMISSION_FAILED};
+
+        cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
 
         return cursorLoader;
     }

@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.site;
 
+import android.app.DatePickerDialog;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -23,10 +25,13 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -45,21 +50,26 @@ import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
+import org.bcss.collect.naxa.login.model.McqOption;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -70,6 +80,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.bcss.collect.naxa.common.Constant.MetaAttrsType.NUMBER;
 import static org.bcss.collect.naxa.common.ViewUtils.loadLocalImage;
 
 public class CreateSiteActivity extends CollectAbstractActivity {
@@ -230,10 +241,24 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                                                 String submissionTag = metaAttribute.getQuestionName();
                                                 String questionType = metaAttribute.getQuestionType();//todo: introduce different widget using type
 
-                                                View view = getTextInputLayout(question, submissionTag, questionType);
-                                                linearLayoutForm.addView(view);
+                                                View view = null;
+                                                switch (questionType) {
+                                                    case Constant.MetaAttrsType.TEXT:
+                                                    case NUMBER:
+                                                        view = getTextInputLayout(question, submissionTag, questionType);
+                                                        break;
+                                                    case Constant.MetaAttrsType.DATE:
+                                                        view = getDateLayout(question, submissionTag);
+                                                        break;
+                                                    case Constant.MetaAttrsType.MCQ:
+                                                        view = getMCQLayout(question, submissionTag, metaAttribute.getMcqOptions());
+                                                        break;
+                                                }
 
-                                                createSiteViewModel.appendMetaAttributeViewIds(view.getId());
+                                                if (view != null) {
+                                                    linearLayoutForm.addView(view);
+                                                    createSiteViewModel.appendMetaAttributeViewIds(view.getId());
+                                                }
 
 
                                             }
@@ -280,6 +305,68 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     }
 
+    private View getDateLayout(String question, String submissionTag) {
+        View view = getLayoutInflater().inflate(R.layout.layout_text_input, null);
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(16, 16, 16, 16);
+        view.setLayoutParams(lp);
+
+
+        TextInputLayout textInputLayout = ((TextInputLayout) view);
+        textInputLayout.setHint(question);
+        textInputLayout.setTag(submissionTag);
+        textInputLayout.getEditText().setFocusable(false);
+        textInputLayout.getEditText()
+                .setOnClickListener(v -> DialogFactory.createDatePickerDialog(CreateSiteActivity.this, (view1, year, month, dayOfMonth) -> {
+
+                    String formattedDate = String.format(Locale.US, "%d/%d/%d", year, month, dayOfMonth);
+                    textInputLayout.getEditText().setText(formattedDate);
+                }).show());
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            view.setId(ViewUtils.generateViewId());
+        } else {
+            view.setId(View.generateViewId());
+        }
+
+
+        return view;
+    }
+
+    private View getMCQLayout(String question, String submissionTag, List<McqOption> mcqOptions) {
+        View view = getLayoutInflater().inflate(R.layout.layout_spinner, null);
+
+
+        TextView tvLabel = view.findViewById(R.id.spinner_label);
+        Spinner spinner = view.findViewById(R.id.spinner);
+        spinner.setTag(submissionTag);
+
+        tvLabel.setText(question);
+
+        ArrayList<String> options = new ArrayList<>();
+        options.add(getString(R.string.msg_select_one_option));
+        for (McqOption mcqOption : mcqOptions) {
+            options.add(mcqOption.getOptionText());
+        }
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, android.R.layout.simple_spinner_item, options);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            view.setId(ViewUtils.generateViewId());
+        } else {
+            view.setId(View.generateViewId());
+        }
+
+
+        return view;
+    }
+
 
     public View getTextInputLayout(String question, String tag, String type) {
 
@@ -295,6 +382,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         textInputLayout.getEditText().setInputType(typeToInputType(type));
         textInputLayout.setTag(tag);
 
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             view.setId(ViewUtils.generateViewId());
         } else {
@@ -307,7 +395,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     private int typeToInputType(String type) {
         switch (type) {
-            case "Number":
+            case NUMBER:
                 return InputType.TYPE_CLASS_NUMBER;
 
             default:
@@ -451,15 +539,41 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 .filter(new Predicate<Integer>() {
                     @Override
                     public boolean test(Integer layoutId) throws Exception {
-                        return findViewById(layoutId) instanceof TextInputLayout;
+                        View view = findViewById(layoutId);
+                        String answer;
+                        boolean isValid = true;
+
+                        if (view instanceof ConstraintLayout) {
+                            Spinner spinner = view.findViewById(R.id.spinner);
+                            answer = (String) spinner.getSelectedItem();
+                            if (getString(R.string.msg_select_one_option).equals(answer)) {
+                                isValid = false;
+                            }
+                        }
+
+                        return isValid;
                     }
                 })
                 .map(new Function<Integer, JSONObject>() {
                     @Override
                     public JSONObject apply(Integer layoutId) throws Exception {
-                        TextInputLayout textInput = findViewById(layoutId);
-                        String answer = textInput.getEditText().getText().toString().trim();
-                        String submissionKey = (String) textInput.getTag();
+                        View view = findViewById(layoutId);
+                        String answer;
+                        String submissionKey;
+
+                        if (view instanceof TextInputLayout) {
+                            TextInputLayout textInputLayout = ((TextInputLayout) view);
+                            answer = textInputLayout.getEditText().getText().toString().trim();
+                            submissionKey = (String) textInputLayout.getTag();
+                        } else if (view instanceof ConstraintLayout) {
+                            Spinner spinner = view.findViewById(R.id.spinner);
+                            answer = (String) spinner.getSelectedItem();
+                            submissionKey = (String) spinner.getTag();
+
+                        } else {
+                            throw new RuntimeException("Unexpected view found while collecting answers");
+                        }
+
                         return jsonObject.put(submissionKey, answer);
                     }
                 })
@@ -473,7 +587,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Timber.e(e);
                     }
                 });
     }

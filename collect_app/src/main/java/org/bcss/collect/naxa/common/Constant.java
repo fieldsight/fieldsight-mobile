@@ -142,4 +142,11 @@ public class Constant {
         public final static String COMPLETED = "completed";
         public final static String FAILED = "failed";
     }
+
+    public final static class MetaAttrsType {
+        public final static String TEXT = "Text";
+        public final static String DATE = "Date";
+        public final static String MCQ = "MCQ";
+        public final static String NUMBER = "Number";
+    }
 }

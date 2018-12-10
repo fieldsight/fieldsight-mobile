@@ -6,7 +6,8 @@ public class APIEndpoint {
               public static final String BASE_URL = "http://app.fieldsight.org";
 //    public static final String BASE_URL = "http://fieldsight.naxa.com.np";
 //    public static final String BASE_URL = "http://192.168.1.107:8001";
-
+//    public static final String BASE_URL = "http://192.168.88.252:8001";
+//
     public static final String PASSWORD_RESET = BASE_URL + "/accounts/password/reset/";
     public static final String USER_LOGIN = BASE_URL + "/users/api/get-auth-token/";
 
