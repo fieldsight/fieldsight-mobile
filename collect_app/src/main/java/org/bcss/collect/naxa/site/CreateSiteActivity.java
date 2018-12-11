@@ -42,6 +42,7 @@ import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.activities.GeoPointActivity;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.utilities.PermissionUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
@@ -55,6 +56,7 @@ import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.site.data.SiteRegion;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
@@ -62,6 +64,7 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -126,10 +129,16 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     private String latitude, longitude, accurary;
     private Uri phototoUploadUri;
+    private Site loadedSite;
+    private boolean isUpdate = false;
 
-    public static void start(Context context, @NonNull Project project) {
+
+    public static void start(Context context, @NonNull Project project, @Nullable Site site) {
         Intent intent = new Intent(context, CreateSiteActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
+        if (site != null) {
+            intent.putExtra("site", site);
+        }
         context.startActivity(intent);
     }
 
@@ -139,6 +148,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_create);
         ButterKnife.bind(this);
+
 
         try {
             project = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
@@ -151,9 +161,15 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
         int sucessColor = ContextCompat.getColor(CreateSiteActivity.this, R.color.colorGreenPrimaryLight);
 
-        setupToolbar();
-        setupViewModel();
 
+        setupViewModel();
+        setupToolbar();
+
+        loadedSite = getIntent().getExtras().getParcelable("site");
+        if (loadedSite != null) {
+            loadFormWithValuesSet(loadedSite);
+            isUpdate = true;
+        }
 
         boolean isClusterIsEmpty = project.getSiteClusters() == null || project.getSiteClusters().isEmpty();
         if (!isClusterIsEmpty) {
@@ -165,9 +181,25 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
         createSiteViewModel.setMetaAttributes(project.getSiteMetaAttributes());
 
-        createSiteViewModel
-                .getSiteClusterMutableLiveData()
-                .observe(this, this::showSiteClusterSpinner);
+
+        createSiteViewModel.getSiteClusterMutableLiveData().observe(this, siteRegions -> {
+            showSiteClusterSpinner(siteRegions);
+
+//            if (loadedSite != null && siteRegions != null) {
+//                int selectedItemIndex = 0;
+//                if (loadedSite.getRegion() != null) {
+//                    for (int i = 0; i <= siteRegions.size(); i++) {
+//                        if (loadedSite.getRegion().equals(siteRegions.get(i).getId())) {
+//                            selectedItemIndex = Integer.parseInt(siteRegions.get(i).getId());
+//                            break;
+//                        }
+//                    }
+//                }
+//
+//                spinnerSiteCluster.setSelection(selectedItemIndex);
+//            }
+        });
+
 
         createSiteViewModel.getSiteTypesMutableLiveData()
                 .observe(this, this::showSiteTypeSpinner);
@@ -239,19 +271,19 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                                             public void onNext(SiteMetaAttribute metaAttribute) {
                                                 String question = metaAttribute.getQuestionText();
                                                 String submissionTag = metaAttribute.getQuestionName();
-                                                String questionType = metaAttribute.getQuestionType();//todo: introduce different widget using type
-
+                                                String questionType = metaAttribute.getQuestionType();
+                                                String answer = getAnswerFormMetaAttrs(submissionTag);
                                                 View view = null;
                                                 switch (questionType) {
                                                     case Constant.MetaAttrsType.TEXT:
                                                     case NUMBER:
-                                                        view = getTextInputLayout(question, submissionTag, questionType);
+                                                        view = getTextInputLayout(question, answer, submissionTag, questionType);
                                                         break;
                                                     case Constant.MetaAttrsType.DATE:
-                                                        view = getDateLayout(question, submissionTag);
+                                                        view = getDateLayout(question, answer, submissionTag);
                                                         break;
                                                     case Constant.MetaAttrsType.MCQ:
-                                                        view = getMCQLayout(question, submissionTag, metaAttribute.getMcqOptions());
+                                                        view = getMCQLayout(question, answer, submissionTag, metaAttribute.getMcqOptions());
                                                         break;
                                                 }
 
@@ -305,7 +337,31 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     }
 
-    private View getDateLayout(String question, String submissionTag) {
+
+    private void loadFormWithValuesSet(Site site) {
+        toolbarGeneral.setTitle("Update Site");
+        setText(tiSiteIdentifier, site.getIdentifier());
+        setText(tiSiteName, site.getName());
+        setText(tiSitePhone, site.getPhone());
+        setText(tiSiteAddress, site.getAddress());
+        setText(tiSitePublicDesc, site.getPublicDesc());
+
+        if (site.getLogo() != null) {
+            createSiteViewModel.setPhoto(site.getLogo());
+        }
+
+        createSiteViewModel.setLocation(site.getLatitude(), site.getLongitude());
+
+
+    }
+
+    private void setText(TextInputLayout inputLayout, String text) {
+        if (text == null || text.trim().length() == 0) return;
+        inputLayout.getEditText().setText(text);
+    }
+
+
+    private View getDateLayout(String question, String answer, String submissionTag) {
         View view = getLayoutInflater().inflate(R.layout.layout_text_input, null);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -317,12 +373,24 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         textInputLayout.setHint(question);
         textInputLayout.setTag(submissionTag);
         textInputLayout.getEditText().setFocusable(false);
-        textInputLayout.getEditText()
-                .setOnClickListener(v -> DialogFactory.createDatePickerDialog(CreateSiteActivity.this, (view1, year, month, dayOfMonth) -> {
+        textInputLayout.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Collect.allowClick(getClass().getName())) {
+                    DialogFactory.createDatePickerDialog(CreateSiteActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                            String formattedDate = String.format(Locale.US, "%d/%d/%d", year, month, dayOfMonth);
+                            textInputLayout.getEditText().setText(formattedDate);
+                        }
+                    }).show();
+                }
+            }
+        });
 
-                    String formattedDate = String.format(Locale.US, "%d/%d/%d", year, month, dayOfMonth);
-                    textInputLayout.getEditText().setText(formattedDate);
-                }).show());
+        if (answer != null) {
+            textInputLayout.getEditText().setText(answer);
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             view.setId(ViewUtils.generateViewId());
@@ -334,14 +402,11 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         return view;
     }
 
-    private View getMCQLayout(String question, String submissionTag, List<McqOption> mcqOptions) {
+    private View getMCQLayout(String question, String answer, String submissionTag, List<McqOption> mcqOptions) {
         View view = getLayoutInflater().inflate(R.layout.layout_spinner, null);
-
-
         TextView tvLabel = view.findViewById(R.id.spinner_label);
         Spinner spinner = view.findViewById(R.id.spinner);
         spinner.setTag(submissionTag);
-
         tvLabel.setText(question);
 
         ArrayList<String> options = new ArrayList<>();
@@ -350,12 +415,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             options.add(mcqOption.getOptionText());
         }
 
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, options);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             view.setId(ViewUtils.generateViewId());
@@ -363,12 +425,23 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             view.setId(View.generateViewId());
         }
 
+        try {
+            for (int i = 0; i <= options.size(); i++) {
+                String curOption = options.get(i);
+                if (answer.equals(curOption)) {
+                    spinner.setSelection(i);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         return view;
     }
 
 
-    public View getTextInputLayout(String question, String tag, String type) {
+    public View getTextInputLayout(String question, String answer, String tag, String type) {
 
         View view = getLayoutInflater().inflate(R.layout.layout_text_input, null);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -382,6 +455,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         textInputLayout.getEditText().setInputType(typeToInputType(type));
         textInputLayout.setTag(tag);
 
+        if (answer != null) {
+            textInputLayout.getEditText().setText(answer);
+        }
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             view.setId(ViewUtils.generateViewId());
@@ -487,19 +563,33 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
 
     private void setupSaveBtn() {
-        View view = getLayoutInflater().inflate(R.layout.btn_save, null);
+        Button view = (Button) getLayoutInflater().inflate(R.layout.btn_save, null);
+
+
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(16, 16, 16, 16);
         view.setLayoutParams(lp);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String mockedSiteId = Site.getMockedId();
-                createSiteViewModel.setId(mockedSiteId);
-                collectMetaAtrributes(createSiteViewModel.getMetaAttributesViewIds().getValue());
-                collectSpinnerOptions();
+                if (Collect.allowClick(getClass().getName())) {
 
-                createSiteViewModel.saveSite();
+                    collectMetaAtrributes(createSiteViewModel.getMetaAttributesViewIds().getValue());
+                    collectSpinnerOptions();
+
+                    if (isUpdate) {
+
+                        createSiteViewModel.setId(loadedSite.getId());
+                        createSiteViewModel.updateSite();
+                    } else {
+                        String mockedSiteId = Site.getMockedId();
+                        createSiteViewModel.setId(mockedSiteId);
+                        createSiteViewModel.saveSite();
+                    }
+
+
+
+                }
             }
         });
 
@@ -718,6 +808,28 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     }
 
 
+    public String getAnswerFormMetaAttrs(String submissionTag) {
+        String answer = null;
+        if (loadedSite != null) {
+            String value = loadedSite.getMetaAttributes();
+
+            try {
+                JSONObject metaAttrsJSON = new JSONObject(value);
+                Iterator<String> iter = metaAttrsJSON.keys();
+                while (iter.hasNext()) {
+                    String curKey = iter.next();
+                    if (submissionTag.equals(curKey)) {
+                        answer = metaAttrsJSON.getString(curKey);
+                        break;
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return answer;
+    }
 }
 
 

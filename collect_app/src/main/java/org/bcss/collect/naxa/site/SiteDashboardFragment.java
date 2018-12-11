@@ -26,6 +26,7 @@ import com.google.common.primitives.Longs;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.SiteProfileActivity;
 import org.bcss.collect.android.activities.FileManagerTabs;
 import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.activities.InstanceChooserList;
@@ -207,7 +208,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void setupPopup() {
 
-        popup = new PopupMenu(getActivity(), btnShowInfo);
+        popup = new PopupMenu(requireActivity(), btnShowInfo);
         popup.getMenuInflater().inflate(R.menu.popup_menu_site_option, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
@@ -216,7 +217,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 switch (item.getItemId()) {
 
                     case R.id.popup_open_edit:
-                        CreateSiteDetailActivity.start(getActivity(), loadedSite);
+                        SiteProfileActivity.start(requireActivity(),loadedSite.getId());
 
                         break;
                     case R.id.popup_open_in_map:
@@ -224,7 +225,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
                         break;
                     case R.id.popup_view_blue_prints:
-                        SiteDocumentsListActivity.start(getActivity(), loadedSite);
+                        SiteDocumentsListActivity.start(requireActivity(), loadedSite);
                         break;
 
 

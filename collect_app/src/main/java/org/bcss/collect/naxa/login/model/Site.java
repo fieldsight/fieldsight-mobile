@@ -94,6 +94,8 @@ public class Site implements Parcelable {
     @SerializedName("non_field_errors")
     @Ignore
     private String siteUploadError;
+
+
     private String metaAttributes;
 
     @TypeConverters(StringListTypeConvertor.class)
@@ -432,10 +434,6 @@ public class Site implements Parcelable {
                 Objects.equal(scheduleFormDeployedForm, site.scheduleFormDeployedForm);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, siteUploadError, metaAttributes, siteDocuments, regionId, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
-    }
 
     @Override
     public int describeContents() {
@@ -501,7 +499,7 @@ public class Site implements Parcelable {
         this.scheduleFormDeployedForm = in.readString();
     }
 
-    public static final Creator<Site> CREATOR = new Creator<Site>() {
+    public static final Parcelable.Creator<Site> CREATOR = new Parcelable.Creator<Site>() {
         @Override
         public Site createFromParcel(Parcel source) {
             return new Site(source);

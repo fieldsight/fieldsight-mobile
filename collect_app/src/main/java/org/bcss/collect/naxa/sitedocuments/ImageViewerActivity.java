@@ -12,6 +12,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.GlideApp;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -32,6 +33,12 @@ public class ImageViewerActivity extends CollectAbstractActivity {
         context.startActivity(intent);
     }
 
+    public static void startFromFile(Context context, String list) {
+        Intent intent = new Intent(context, ImageViewerActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, list);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +54,7 @@ public class ImageViewerActivity extends CollectAbstractActivity {
         circularProgressDrawable.start();
 
         GlideApp.with(getApplicationContext())
-                .load(url)
+                .load(new File(url))
                 .into(ivImageViewer);
     }
 }

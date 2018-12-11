@@ -231,7 +231,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
                         int sucessColor = ContextCompat.getColor(CreateSiteDetailActivity.this, R.color.colorGreenPrimaryLight);
 
-                        if (nSite.getLogo() != null && nSite.getLogo().length() > 0){
+                        if (nSite.getLogo() != null && nSite.getLogo().length() > 0) {
                             File photoFile = new File(nSite.getLogo());
                             if (photoFile.exists()) {
                                 GlideApp.with(CreateSiteDetailActivity.this)
@@ -367,6 +367,33 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
         watchText(ilPhoneEditable);
         watchText(ilAddressEditable);
 
+
+        Observable.just(site.getMetaAttributes())
+                .subscribeOn(Schedulers.computation())
+                .map(new Function<String, View>() {
+                    @Override
+                    public View apply(String s) throws Exception {
+                        return null;
+                    }
+                })
+                .subscribe(new DisposableObserver<View>() {
+                    @Override
+                    public void onNext(View view) {
+                        layoutSiteDataDisplay.addView(view);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
     }
 
     private void showDialog() {
@@ -464,7 +491,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                     case View.VISIBLE:
 //                        collectMetaAtrributes(createSiteDetailViewModel.getMetaAttributesViewIds().getValue());
 //                        collectSpinnerOptions();
-                        DialogFactory.createActionDialog(CreateSiteDetailActivity.this,"Save Changes?","")
+                        DialogFactory.createActionDialog(CreateSiteDetailActivity.this, "Save Changes?", "")
                                 .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

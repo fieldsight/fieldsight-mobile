@@ -104,6 +104,15 @@ public class CreateSiteViewModel extends ViewModel {
         }
     }
 
+    public void updateSite() {
+        if (validateData()) {
+            siteRepository.saveSiteModified(siteMutableLiveData.getValue());
+            formStatus.setValue(CreateSiteFormStatus.SUCCESS);
+            //todo check if saving site is faliling
+
+        }
+    }
+
 
     public void setMetaAttributes(List<SiteMetaAttribute> siteMetaAttributes) {
         metaAttributes.setValue(siteMetaAttributes);

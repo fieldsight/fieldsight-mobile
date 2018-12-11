@@ -253,7 +253,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         super.onResume();
 
 
-
     }
 
     private void setupNavigationHeader() {
@@ -269,7 +268,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
         ImageView ivProfilePicture = (ImageView) navigationHeader.findViewById(R.id.image_profile);
         GlideApp.with(this).load(user.getProfilepic()).into(ivProfilePicture);
-
 
 
         navigationHeader.setOnClickListener(new View.OnClickListener() {
@@ -388,7 +386,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     private void handleNavDrawerClicks(int id) {
         switch (id) {
             case R.id.nav_create_offline_site:
-                CreateSiteActivity.start(this, loadedProject);
+                CreateSiteActivity.start(this, loadedProject, null);
                 break;
             case R.id.nav_delete_saved_form:
 

@@ -47,5 +47,5 @@
         android:drawableLeft="@drawable/ic_refresh_black"
         android:drawableStart="@drawable/ic_refresh_black"/>
 
->>>>>>> demo
+
 </RelativeLayout>

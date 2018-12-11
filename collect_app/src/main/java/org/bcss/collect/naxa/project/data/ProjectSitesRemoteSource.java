@@ -78,7 +78,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         String user = GSONInstance.getInstance().toJson(meResponse.getData());
                         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
 
-
                         return getPageAndNext(APIEndpoint.GET_MY_SITES);
 
                     }

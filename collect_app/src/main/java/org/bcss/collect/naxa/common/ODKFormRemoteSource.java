@@ -33,6 +33,7 @@ public class ODKFormRemoteSource {
         int uid = Constant.DownloadUID.ODK_FORMS;
         return Observable.create(emitter -> {
             XMLFormDownloadReceiver xmlFormDownloadReceiver = new XMLFormDownloadReceiver(new Handler());
+
             xmlFormDownloadReceiver.setReceiver((resultCode, resultData) -> {
                 switch (resultCode) {
                     case DownloadProgress.STATUS_RUNNING:

@@ -210,6 +210,7 @@
     <string name="msg_single_site_upload">Edits on %s site has been uploaded</string>
     <string name="save">Save</string>
     <string name="msg_select_one_option">Select one option</string>
+    <string name="title_activity_site_profile">SiteProfileActivity</string>
 
 
     <!--Notification sitelist ends here-->

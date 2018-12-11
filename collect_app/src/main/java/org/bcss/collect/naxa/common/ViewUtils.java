@@ -1,5 +1,7 @@
 package org.bcss.collect.naxa.common;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -112,7 +114,7 @@ public final class ViewUtils {
                 .centerInside()
                 .skipMemoryCache(false)
                 .priority(Priority.LOW)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC );
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
     }
 
 
@@ -135,7 +137,7 @@ public final class ViewUtils {
      * @return a generated ID value
      */
     public static int generateViewId() {
-        for (;;) {
+        for (; ; ) {
             final int result = sNextGeneratedId.get();
             // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
             int newValue = result + 1;
@@ -143,6 +145,28 @@ public final class ViewUtils {
             if (sNextGeneratedId.compareAndSet(result, newValue)) {
                 return result;
             }
+        }
+    }
+
+    //https://stackoverflow.com/a/40282873/3730505
+    public static void animateViewVisibility(final View view, final int visibility) {
+        // cancel runnning animations and remove and listeners
+        view.animate().cancel();
+        view.animate().setListener(null);
+
+        // animate making view visible
+        if (visibility == View.VISIBLE) {
+            view.animate().alpha(1f).start();
+            view.setVisibility(View.VISIBLE);
+        }
+        // animate making view hidden (HIDDEN or INVISIBLE)
+        else {
+            view.animate().setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    view.setVisibility(visibility);
+                }
+            }).alpha(0f).start();
         }
     }
 

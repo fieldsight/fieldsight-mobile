@@ -306,9 +306,8 @@ the specific language governing permissions and limitations under the License.
             android:name="org.bcss.collect.naxa.site.CreateSiteActivity"
             android:exported="true" />
         <activity
-            android:windowSoftInputMode="adjustPan"
             android:name="org.bcss.collect.naxa.site.CreateSiteDetailActivity"
-             />
+            android:windowSoftInputMode="adjustPan" />
         `
         <activity
             android:name="org.bcss.collect.naxa.survey.SurveyFormsActivity"
@@ -367,10 +366,15 @@ the specific language governing permissions and limitations under the License.
         </receiver>
 
         <activity
-            android:exported="true"
             android:name=".TestingActivity"
+            android:exported="true"
             android:label="@string/title_activity_testing"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:exported="true"
+            android:name=".SiteProfileActivity"
+            android:label="@string/title_activity_site_profile"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

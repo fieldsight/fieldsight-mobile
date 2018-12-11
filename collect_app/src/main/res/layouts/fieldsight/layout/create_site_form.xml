@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Site Phone Number"
-            android:inputType="numberPassword"
+            android:inputType="phone"
             android:maxLines="1"
             android:minLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />

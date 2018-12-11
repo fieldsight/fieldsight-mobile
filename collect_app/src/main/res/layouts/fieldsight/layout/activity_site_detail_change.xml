@@ -35,7 +35,7 @@
             app:cardElevation="4dp">
 
             <include
-                android:id="@+id/layout_site_data_display"
+
                 layout="@layout/site_data_display_form"
                 android:visibility="visible" />
 
