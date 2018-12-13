@@ -375,6 +375,7 @@ the specific language governing permissions and limitations under the License.
             android:name=".SiteProfileActivity"
             android:label="@string/title_activity_site_profile"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name="org.bcss.collect.naxa.notificationslist.FlaggedFormActivity" />
     </application>
 
 </manifest>

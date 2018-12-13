@@ -1,7 +1,10 @@
 package org.bcss.collect.naxa.notificationslist;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
@@ -9,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,8 +35,12 @@ import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Instance;
+import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
+import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.bcss.collect.android.tasks.DownloadFormListTask;
+import org.bcss.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.FileUtil;
 import org.bcss.collect.android.utilities.FileUtils;
@@ -40,14 +48,19 @@ import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -81,6 +94,13 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     private Toolbar toolbar;
 
 
+    private DownloadFormListTask downloadFormListTask;
+    private DownloadFormsTask downloadFormsTask;
+    private ProgressDialog dialog;
+    private HashMap<String, Boolean> formResult;
+    private Dialog errorDialog;
+
+
     public static void start(Context context, FieldSightNotification fieldSightNotification) {
         Intent intent = new Intent(context, FlagResposneActivity.class);
         intent.putExtra(Constant.EXTRA_OBJECT, fieldSightNotification);
@@ -107,6 +127,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
         formBox.setOnClickListener(this);
 
         loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
+        formResult = new HashMap<>();
         setupData(loadedFieldSightNotification);
 
     }
@@ -177,7 +198,6 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
         tvFormStatus.setText(formStatus);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -186,121 +206,6 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
         } catch (NullPointerException e) {
             DialogFactory.createDataSyncErrorDialog(this, "Failed to load images", String.valueOf(500)).show();
         }
-    }
-
-    /**
-     * find the form primary key then open the saved instance of that form (if present)
-     * other wise open the form blank
-     */
-    private void handleFlagForm(String fsFormId) {
-
-        Instance instance = null;
-        Cursor cursor = null;
-
-        try {
-            InstancesDao dao = new InstancesDao();
-            cursor = dao.getInstancesCursor(null, null);
-
-            List<Instance> list = dao.getInstancesFromCursor(cursor);
-            for (Instance curInstance : list) {
-                String url = curInstance.getSubmissionUri();
-                String fsFormIdFromUrl = dao.getFsFormIdFromUrl(url);
-                if (fsFormIdFromUrl.equals(fsFormId)) {
-                    instance = curInstance;
-                    break;
-                }
-            }
-
-
-            if (instance != null) {
-                openSavedForm(instance);
-            } else {
-                openNewForm(instance.getJrFormId());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-
-    private void openSavedForm(Instance instance) {
-
-        Toast.makeText(context, "Opening saved form.", Toast.LENGTH_LONG).show();
-
-
-        long selectedFormId = instance.getDatabaseId();
-
-        Uri instanceUri =
-                ContentUris.withAppendedId(InstanceProviderAPI.InstanceColumns.CONTENT_URI,
-                        selectedFormId);
-
-
-        String action = getIntent().getAction();
-        if (Intent.ACTION_PICK.equals(action)) {
-            // caller is waiting on a picked form
-            setResult(RESULT_OK, new Intent().setData(instanceUri));
-        } else {
-            // the form can be edited if it is incomplete or if, when it was
-            // marked as complete, it was determined that it could be edited
-            // later.
-            String status = instance.getStatus();
-            String strCanEditWhenComplete =
-                    instance.getCanEditWhenComplete();
-
-            boolean canEdit = status.equals(InstanceProviderAPI.STATUS_INCOMPLETE)
-                    || Boolean.parseBoolean(strCanEditWhenComplete);
-            if (!canEdit) {
-                //this form cannot be edited
-                return;
-            }
-
-            // caller wants to view/edit a form, so launch FormEntryActivity
-            //send the slected id to the upload button
-
-            Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
-            toEdit.putExtra("EditedFormID", selectedFormId);
-            startActivity(toEdit);
-        }
-        finish();
-    }
-
-
-    protected void fillODKForm(String idString) {
-        try {
-            long formId = getFormId(idString);
-            Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, formId);
-            String action = getIntent().getAction();
-
-
-            if (Intent.ACTION_PICK.equals(action)) {
-                // caller is waiting on a picked form
-                setResult(RESULT_OK, new Intent().setData(formUri));
-            } else {
-                // caller wants to view/edit a form, so launch formentryactivity
-                Intent toFormEntry = new Intent(Intent.ACTION_EDIT, formUri);
-                toFormEntry.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(toFormEntry);
-
-            }
-        } catch (NullPointerException | NumberFormatException e) {
-            e.printStackTrace();
-            DialogFactory.createGenericErrorDialog(this, e.getMessage()).show();
-            Timber.e("Failed to load xml form %s", e.getMessage());
-        } catch (CursorIndexOutOfBoundsException e) {
-            DialogFactory.createGenericErrorDialog(this, getString(R.string.form_not_present)).show();
-            Timber.e("Failed to load xml form  %s", e.getMessage());
-        }
-
-
-    }
-
-    protected String generateSubmissionUrl(String formDeployedFrom, String siteId, String fsFormId) {
-        return InstancesDao.generateSubmissionUrl(formDeployedFrom, siteId, fsFormId);
     }
 
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
@@ -365,44 +270,132 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     @Override
     public void onClick(View v) {
         int id = v.getId();
-
-
-        handleFlagForm(loadedFieldSightNotification.getFsFormId());
+        download(loadedFieldSightNotification);
     }
 
-    private void downloadInstance() {
-        FlagFormRemoteSource.getINSTANCE()
-                .runAll(loadedFieldSightNotification)
-                .subscribe(new DisposableObserver<Uri>() {
-                    @Override
-                    public void onNext(Uri instanceUri) {
-                        Timber.i("Downloaded and saved instance at %s", instanceUri);
-                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
-                        toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
-                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
-                        startActivity(toEdit);
+    private void download(FieldSightNotification notificationFormDetail) {
 
+        String fsFormId = notificationFormDetail.getFsFormId();
+        String siteId = notificationFormDetail.getSiteId();
+        String formName = notificationFormDetail.getFormName();
+        String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
+        String jrFormId = "";
+        String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
 
-                        Intent intent = new Intent(Intent.ACTION_EDIT, instanceUri);
-                        intent.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
-                                ApplicationConstants.FormModes.EDIT_SAVED);
-                        startActivity(intent);
-                    }
+        ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
+        FormDetails formDetails = new FormDetails(formName,
+                downloadUrl,
+                null,
+                jrFormId,
+                null,
+                null,
+                null,
+                false,
+                false);
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.i("Error downloading instance, reason: %s", e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        filesToDownload.add(formDetails);
+        showDialog();
+        startFormsDownload(filesToDownload, notificationFormDetail);
     }
 
-    private static String formPath() {
-        return Environment.getExternalStorageDirectory().getPath();
+    private void showDialog() {
+        dialog = DialogFactory.createProgressDialogHorizontal(FlagResposneActivity.this, "Loading Form");
+        dialog.show();
+    }
+
+    private void hideDialog() {
+        runOnUiThread(() -> {
+            if (dialog != null && dialog.isShowing()) {
+                dialog.hide();
+            }
+        });
+
+    }
+
+    private void changeDialogMsg(String message) {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.setTitle(message);
+        }
+    }
+
+    private void startFormsDownload(@NonNull ArrayList<FormDetails> filesToDownload, FieldSightNotification notification) {
+        downloadFormsTask = new DownloadFormsTask();
+        downloadFormsTask.setDownloaderListener(new DownloadFormsTaskListener() {
+            @Override
+            public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
+                if (downloadFormsTask != null) {
+                    downloadFormsTask.setDownloaderListener(null);
+                }
+
+                for (FormDetails formDetails : result.keySet()) {
+                    String successKey = result.get(formDetails);
+                    if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
+                        FlagFormRemoteSource.getINSTANCE()
+                                .getODKInstance(notification)
+                                .observeOn(Schedulers.io())
+                                .subscribeOn(AndroidSchedulers.mainThread())
+                                .doOnSubscribe(d -> {
+                                    changeDialogMsg("Downloading filled form");
+                                })
+                                .subscribe(new DisposableObserver<Uri>() {
+                                    @Override
+                                    public void onNext(Uri instanceUri) {
+                                        hideDialog();
+
+
+                                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
+                                        toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
+                                        startActivity(toEdit);
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable throwable) {
+                                        throwable.printStackTrace();
+                                        hideDialog();
+                                        showErrorDialog(throwable.getMessage());
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
+                        break;
+                    } else {
+                        hideDialog();
+                        showErrorDialog("Failed to download form");
+                    }
+                }
+            }
+
+            @Override
+            public void progressUpdate(String currentFile, int progress, int total) {
+                changeDialogMsg("Downloading " + currentFile);
+            }
+
+            @Override
+            public void formsDownloadingCancelled() {
+                hideDialog();
+                showErrorDialog("Form download was canceled");
+            }
+        });
+
+        downloadFormsTask.execute(filesToDownload);
+    }
+
+
+    private void showErrorDialog(String errorMessage) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                errorDialog = DialogFactory.createGenericErrorDialog(FlagResposneActivity.this, errorMessage);
+
+                errorDialog.show();
+            }
+        });
+
+
     }
 
 

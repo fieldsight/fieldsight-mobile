@@ -395,8 +395,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
             case R.id.nav_edit_saved_form:
 
                 Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
-                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
-                        ApplicationConstants.FormModes.EDIT_SAVED);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
                 startActivity(i);
                 break;
             case R.id.nav_send_final_form:

@@ -142,7 +142,7 @@ public class InstanceChooserList extends InstanceListActivity implements
             if (view.findViewById(R.id.visible_off).getVisibility() != View.VISIBLE) {
                 String action = getIntent().getAction();
                 if (Intent.ACTION_PICK.equals(action)) {
-                    // caller is waiting on a picked form
+                    // caller is waiting on a picked forminstanceUri
                     setResult(RESULT_OK, new Intent().setData(instanceUri));
                 } else {
                     // the form can be edited if it is incomplete or if, when it was

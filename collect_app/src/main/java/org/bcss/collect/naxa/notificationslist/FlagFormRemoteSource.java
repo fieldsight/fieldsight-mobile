@@ -63,7 +63,7 @@ public class FlagFormRemoteSource {
     }
 
 
-    Observable<Uri> runAll(FieldSightNotification fieldSightNotification){
+    Observable<Uri> runAll(FieldSightNotification fieldSightNotification) {
         return getKOBOForm(fieldSightNotification)
                 .toObservable()
                 .flatMap(new Function<String, ObservableSource<Uri>>() {
@@ -85,7 +85,90 @@ public class FlagFormRemoteSource {
     }
 
 
-    private Observable<Uri> getODKInstance(FieldSightNotification notificationFormDetail) {
+    public void getODKForm(String formName, String fsSubmissionId, String jrFormId, DownloadFormsTaskListener listener) {
+        String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_xml_version/%s", fsSubmissionId);
+        DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask();
+        ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
+        FormDetails formDetails = new FormDetails(formName,
+                downloadUrl,
+                null,
+                jrFormId,
+                null,
+                null,
+                null,
+                false,
+                false);
+
+        filesToDownload.add(formDetails);
+        mDownloadFormsTask.setDownloaderListener(listener);
+        mDownloadFormsTask.execute(filesToDownload);
+
+    }
+
+    private Single<String> getODKForm(String fsFormId, String siteId, String formName, String fsFormSubmissionId, String jrFormId) {
+
+
+        return Single.create((SingleOnSubscribe<String>) emitter -> {
+            String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
+            ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
+            DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask();
+
+            FormDetails formDetails = new FormDetails(formName,
+                    downloadUrl,
+                    null,
+                    jrFormId,
+                    null,
+                    null,
+                    null,
+                    false,
+                    false);
+
+            filesToDownload.add(formDetails);
+            Timber.i("FLAG: Preparing to download xml form of the name %s", formDetails.getFormName());
+
+            mDownloadFormsTask.setDownloaderListener(new DownloadFormsTaskListener() {
+                @Override
+                public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
+                    String msg = result.get(formDetails);
+
+
+                    if (result.containsKey(DL_ERROR_MSG)) {
+                        Timber.e(" Forms could not be downloaded ");
+                        msg = "Forms could not be downloaded ";
+                    }
+                    if (result.containsKey(DL_AUTH_REQUIRED)) {
+                        Timber.e(" Mismatched token");
+                        msg = "Mismatched token";
+                    }
+
+                    if ("Success".equals(msg)) {
+                        emitter.onSuccess(msg);
+                    } else {
+                        emitter.onError(new RuntimeException(msg));
+                    }
+
+                    Timber.i("FLAG: Download completed for %s with message: %s ", formDetails.getFormName(), msg);
+                }
+
+                @Override
+                public void progressUpdate(String currentFile, int progress, int total) {
+                    Timber.i("FLAG:  Current file: %s, progress: %d, total: %d", currentFile, progress, total);
+                }
+
+                @Override
+                public void formsDownloadingCancelled() {
+                    emitter.onError(new RuntimeException("Download canceled"));
+                    Timber.i("FLAG: Form Download Cancled ");
+                }
+            });
+
+            mDownloadFormsTask.execute(filesToDownload);
+            Timber.i("FLAG: Download Task Started For %s", formDetails.getFormName());
+        });
+
+    }
+
+    public Observable<Uri> getODKInstance(FieldSightNotification notificationFormDetail) {
 
         String fsFormId = notificationFormDetail.getFsFormId();//todo: project site fsFormId unhandled
         String siteId = notificationFormDetail.getSiteId();
@@ -106,11 +189,11 @@ public class FlagFormRemoteSource {
 
         return Observable.just(flaggedInstance)
                 .flatMap((Function<Instance.Builder, ObservableSource<Uri>>) instance -> {
-                    String pathToDownload = getInstanceFolderPath(instance.build().getDisplayName());
+                    String pathToDownload = getInstanceFolderPath(formatFileName(instance.build().getDisplayName()));
 
                     return new RxDownloader(Collect.getInstance())
                             .download(downloadUrl,
-                                    formName.concat(".xml"),
+                                    formatFileName(formName).concat(".xml"),
                                     pathToDownload,
                                     "*/*",
                                     true)
@@ -128,7 +211,7 @@ public class FlagFormRemoteSource {
                                     Cursor formCursor = new FormsDao().getFormsCursor(selection, selectionArgs);
                                     formCursor.moveToFirst();
 
-                                    String jrVersion = getColumnString(formCursor,FormsProviderAPI.FormsColumns.JR_VERSION);
+                                    String jrVersion = getColumnString(formCursor, FormsProviderAPI.FormsColumns.JR_VERSION);
                                     instance.jrVersion(jrVersion);
 
                                     ContentValues values = instancesDao.getValuesFromInstanceObject(instance.build());
@@ -138,10 +221,13 @@ public class FlagFormRemoteSource {
                                 }
                             });
                 });
-
     }
 
-    public static String getColumnString(Cursor cursor,String columnName){
+    private String formatFileName(String text) {
+        return text.replace(" ", "_");
+    }
+
+    public static String getColumnString(Cursor cursor, String columnName) {
         return cursor.getString(cursor.getColumnIndex(columnName));
     }
 
@@ -192,61 +278,6 @@ public class FlagFormRemoteSource {
                             });
                 });
 
-
-    }
-
-    private Single<String> getODKForm(String fsFormId, String siteId, String formName, String fsFormSubmissionId, String jrFormId) {
-
-
-        return Single.create((SingleOnSubscribe<String>) emitter -> {
-            String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
-            ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
-
-            FormDetails formDetails = new FormDetails(formName, downloadUrl,
-                    null, jrFormId, null,
-                    null, null,
-                    false, false);
-            filesToDownload.add(formDetails);
-            DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask();
-
-            mDownloadFormsTask.setDownloaderListener(new DownloadFormsTaskListener() {
-                @Override
-                public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
-                    String msg = result.get(formDetails);
-
-
-                    if (result.containsKey(DL_ERROR_MSG)) {
-                        Timber.e(" Forms could not be downloaded ");
-                        msg = "Forms could not be downloaded ";
-                    }
-                    if (result.containsKey(DL_AUTH_REQUIRED)) {
-                        Timber.e(" Mismatched token");
-                        msg = "Mismatched token";
-                    }
-
-                    if ("Success".equals(msg)) {
-                        emitter.onSuccess(msg);
-                    } else {
-                        emitter.onError(new RuntimeException(msg));
-                    }
-
-                    Timber.i("message :%s", msg);
-                }
-
-                @Override
-                public void progressUpdate(String currentFile, int progress, int total) {
-                    Timber.i("Current file: %s, progress: %d, total: %d", currentFile, progress, total);
-                }
-
-                @Override
-                public void formsDownloadingCancelled() {
-                    emitter.onError(new RuntimeException("Download canceled"));
-                    Timber.i("formsDownloadingCancelled");
-                }
-            });
-
-            mDownloadFormsTask.execute(filesToDownload);
-        });
 
     }
 
