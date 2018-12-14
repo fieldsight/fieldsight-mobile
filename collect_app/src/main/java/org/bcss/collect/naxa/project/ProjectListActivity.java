@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.project;
 
 import android.app.Dialog;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,32 +38,21 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
-import org.bcss.collect.android.application.ForceUpdateChecker;
-import org.bcss.collect.android.utilities.NotificationUtils;
-import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
-import org.bcss.collect.naxa.demo.FeaturesItem;
-import org.bcss.collect.naxa.demo.RawAssetLoader;
-import org.bcss.collect.naxa.login.model.SiteBuilder;
-import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
-import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.bcss.collect.naxa.site.db.SiteRemoteSource;
-import org.bcss.collect.naxa.sync.DownloadActivityNew;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.application.ForceUpdateChecker;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.RxSearchObservable;
+import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;
@@ -72,7 +60,9 @@ import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.ProjectDashboardActivity;
 import org.bcss.collect.naxa.site.SearchAdapter;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
-
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,11 +72,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.Scheduler;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
@@ -95,8 +81,6 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.application.Collect.allowClick;
-import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
-import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyHeadsUp;
 
 public class ProjectListActivity extends CollectAbstractActivity implements MyProjectsAdapter.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener {
 

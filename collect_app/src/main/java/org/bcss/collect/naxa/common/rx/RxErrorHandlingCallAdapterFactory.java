@@ -2,7 +2,7 @@ package org.bcss.collect.naxa.common.rx;
 
 import android.support.annotation.NonNull;
 
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -21,8 +21,6 @@ import retrofit2.HttpException;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-
-import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyHeadsUp;
 
 //https://bytes.babbel.com/en/articles/2016-03-16-retrofit2-rxjava-error-handling.html
 
@@ -101,7 +99,8 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             }
             // A network error happened
             if (throwable instanceof IOException) {
-                notifyHeadsUp("Failed To Sync","A Network Error Happened");
+
+                FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp("Failed To Sync","A Network Error Happened");
                 return RetrofitException.networkError((IOException) throwable);
 
 

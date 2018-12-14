@@ -39,6 +39,7 @@ import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.firebase.NotificationUtils;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
 import org.bcss.collect.naxa.login.model.Site;
@@ -372,14 +373,15 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        NotificationUtils.createUploadNotification(progressNotifyId, progressMessage);
+                        FieldSightNotificationUtils.getINSTANCE().createUploadNotification(progressNotifyId, progressMessage);
                     }
                 })
                 .subscribe(new DisposableObserver<ArrayList<Long>>() {
                     @Override
                     public void onNext(ArrayList<Long> instanceIDs) {
                         NotificationUtils.cancelNotification(progressNotifyId);
-                        NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), completedMessage, completedMessage);
+                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(completedMessage,completedMessage);
+
 
                         if (isAdded()) {
                             DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
@@ -389,7 +391,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                                         startActivityForResult(i, INSTANCE_UPLOADER);
                                     }).setNegativeButton("Not now", null).show();
                         } else {
-                            NotificationUtils.notifyHeadsUp("Unable to start upload", "Unable to start upload for offline site");
+                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp("Unable to start upload", "Unable to start upload for offline site");
                         }
                     }
 
@@ -397,7 +399,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                     public void onError(Throwable e) {
                         String errorMessage = e.getMessage();
                         NotificationUtils.cancelNotification(progressNotifyId);
-                        NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), failedMessage, errorMessage);
+                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(failedMessage, errorMessage);
 
                         if (e instanceof HttpException) {
                             ResponseBody responseBody = ((HttpException) e).response().errorBody();

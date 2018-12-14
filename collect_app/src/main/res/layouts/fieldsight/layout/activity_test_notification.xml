@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showNotification"
+        android:text="show notification" />
+
+    <Button
+
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showHeadsUp"
+        android:text="show heads up" />
+
+    <Button
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showProgress"
+        android:text="show upload notification" />
+
+    <Button
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="showDownload"
+        android:text="show download notification" />
+</LinearLayout>

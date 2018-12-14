@@ -43,11 +43,11 @@ import org.bcss.collect.android.utilities.PermissionUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
-import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.project.MapActivity;
@@ -80,7 +80,6 @@ import timber.log.Timber;
 import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
-import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyHeadsUp;
 
 public class CreateSiteDetailActivity extends CollectAbstractActivity {
 
@@ -442,7 +441,8 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                             msg = Collect.getInstance().getString(R.string.msg_single_site_upload);
                         }
 
-                        notifyHeadsUp(title, msg);
+                        FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title,msg);
+
                         hideDialog();
                     }
 
@@ -452,7 +452,7 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
                         Timber.e(e);
                         String title = "Site upload failed";
                         String msg;
-                        notifyHeadsUp(title, e.getMessage());
+                        FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, e.getMessage());
                         hideDialog();
                     }
                 });

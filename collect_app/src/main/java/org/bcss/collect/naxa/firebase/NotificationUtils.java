@@ -27,7 +27,7 @@ public class NotificationUtils {
     public static String DOWNLOAD_ACTION = "download.action";
     private static int smallIcon = R.drawable.ic_notification_icon;
 
-    private static final String channelID= "All Notifications";
+    private static final String channelID = "All Notifications";
 
     public NotificationUtils() {
 
@@ -50,6 +50,7 @@ public class NotificationUtils {
     }
 
 
+    @Deprecated
     public static int notifyNormal(Context ctx, String title, String content) {
 
         int id = getUniqueMessageId();
@@ -79,7 +80,7 @@ public class NotificationUtils {
 
 
         mNotifyManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(ctx,channelID);
+        mBuilder = new NotificationCompat.Builder(ctx, channelID);
         mBuilder.setContentTitle(ctx.getString(R.string.app_name))
                 .setContentText(text)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
@@ -97,7 +98,7 @@ public class NotificationUtils {
 
         PendingIntent p = intent != null ? PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT) : null;
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setContentIntent(p)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
@@ -115,13 +116,14 @@ public class NotificationUtils {
     }
 
 
+    @Deprecated
     public static int createUploadNotification(int notificationId, String title) {
         Context context = Collect.getInstance();
 
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"upload")
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "upload")
                 .setSmallIcon(android.R.drawable.stat_sys_upload)
                 .setAutoCancel(true)
                 .setContentTitle(title)
@@ -155,7 +157,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setAutoCancel(true)
                 .setContentTitle(title)
@@ -181,7 +183,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setAutoCancel(true)
                 .setContentTitle("Looking for educational materials")
@@ -203,7 +205,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setContentText(msg);
 
@@ -218,13 +220,14 @@ public class NotificationUtils {
     }
 
 
+    @Deprecated
     public static void notifyHeadsUp(String title, String msg) {
         int notificationId = getID();
         Context context = Collect.getInstance();
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentTitle(title)
                 .setTicker(msg)
@@ -247,7 +250,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context,channelID)
+        android.support.v4.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setContentText(msg)
                 .setProgress(total, progress, false);
@@ -264,7 +267,7 @@ public class NotificationUtils {
 
 
         mNotifyManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(ctx,channelID);
+        mBuilder = new NotificationCompat.Builder(ctx, channelID);
         mBuilder.setContentTitle(ctx.getString(R.string.app_name))
                 .setContentText("Downloading Forms")
                 .setSmallIcon(android.R.drawable.stat_sys_download).setTicker("Downloading Forms");

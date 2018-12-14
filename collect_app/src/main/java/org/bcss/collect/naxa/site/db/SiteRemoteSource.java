@@ -1,15 +1,12 @@
 package org.bcss.collect.naxa.site.db;
 
-import android.net.Uri;
-import android.support.v4.content.FileProvider;
-
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
-
+import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.database.SiteUploadHistory;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -17,8 +14,6 @@ import org.bcss.collect.naxa.network.ApiInterface;
 
 import java.io.File;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -33,7 +28,6 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
-import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyHeadsUp;
 import static org.bcss.collect.naxa.network.ServiceGenerator.getRxClient;
 
 public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
@@ -80,7 +74,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                             msg = Collect.getInstance().getString(R.string.msg_single_site_upload, sites.get(0).getName());
                         }
 
-                        notifyHeadsUp(title, msg);
+                        FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, msg);
                     }
 
                     @Override

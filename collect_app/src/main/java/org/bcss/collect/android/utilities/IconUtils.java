@@ -29,4 +29,9 @@ public class IconUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
                 R.drawable.ic_notes_white : R.drawable.ic_notes_white_png;
     }
+
+    public static int getNotificationAppIconFieldSight() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
+                R.drawable.ic_notification_icon : R.drawable.ic_notification_icon;
+    }
 }

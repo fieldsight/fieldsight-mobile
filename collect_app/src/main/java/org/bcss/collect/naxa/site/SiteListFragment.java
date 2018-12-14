@@ -39,6 +39,7 @@ import org.bcss.collect.android.utilities.ThemeUtils;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
 import org.bcss.collect.naxa.common.FilterOption;
 import org.bcss.collect.naxa.common.GSONInstance;
@@ -468,13 +469,14 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 .subscribe(new SingleObserver<List<Long>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        NotificationUtils.createUploadNotification(progressNotifyId, progressMessage);
+
+//                        FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
                     }
 
                     @Override
                     public void onSuccess(List<Long> instanceIDs) {
                         NotificationUtils.cancelNotification(progressNotifyId);
-                        NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), completedMessage, completedMessage);
+                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(completedMessage, completedMessage);
 
                         if (isAdded()) {
                             DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
@@ -484,7 +486,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                                         startActivityForResult(i, INSTANCE_UPLOADER);
                                     }).setNegativeButton("Not now", null).show();
                         } else {
-                            NotificationUtils.notifyHeadsUp("Unable to start upload", "Unable to start upload for offline site");
+                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp("Unable to start upload", "Unable to start upload for offline site");
                         }
 
                     }
@@ -494,7 +496,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         e.printStackTrace();
                         String errorMessage = e.getMessage();
                         NotificationUtils.cancelNotification(progressNotifyId);
-                        NotificationUtils.notifyNormal(Collect.getInstance().getApplicationContext(), failedMessage, errorMessage);
+                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(failedMessage, errorMessage);
 
                         if (e instanceof HttpException) {
                             ResponseBody responseBody = ((HttpException) e).response().errorBody();

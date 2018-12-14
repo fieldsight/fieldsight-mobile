@@ -5,12 +5,11 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.util.Pair;
-import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.data.FieldSightNotificationBuilder;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.previoussubmission.LastSubmissionLocalSource;
@@ -29,13 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_DEPLOYED;
-import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
-import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
-import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_FLAG;
-import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
-import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyNormal;
 
 public class FieldSightFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -130,7 +123,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
             String title = titleContent.first;
             String content = titleContent.second;
 
-            notifyNormal(context, title, content);
+            FieldSightNotificationUtils.getINSTANCE().notifyNormal(title, content);
 
             switch (notifyType) {
                 case FORM_FLAG:

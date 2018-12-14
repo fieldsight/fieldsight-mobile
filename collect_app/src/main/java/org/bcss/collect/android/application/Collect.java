@@ -48,6 +48,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.external.ExternalDataManager;
 import org.bcss.collect.android.injection.config.AppComponent;
 import org.bcss.collect.android.injection.config.DaggerAppComponent;
+import org.bcss.collect.android.jobs.CollectJobCreator;
 import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.android.preferences.AdminSharedPreferences;
@@ -56,13 +57,10 @@ import org.bcss.collect.android.preferences.FormMetadataMigrator;
 import org.bcss.collect.android.preferences.GeneralSharedPreferences;
 import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.android.utilities.LocaleHelper;
-import org.bcss.collect.android.utilities.PRNGFixes;
-
-import org.bcss.collect.android.jobs.CollectJobCreator;
 import org.bcss.collect.android.utilities.NotificationUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.bcss.collect.android.utilities.PRNGFixes;
+import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.login.APIErrorUtils;
-
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -86,8 +84,6 @@ import static org.bcss.collect.android.logic.PropertyManager.SCHEME_USERNAME;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_APP_LANGUAGE;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_FONT_SIZE;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
-import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyHeadsUp;
-import static org.bcss.collect.naxa.firebase.NotificationUtils.notifyNormal;
 
 
 /**
@@ -288,6 +284,7 @@ public class Collect extends Application implements HasActivityInjector {
         applicationComponent.inject(this);
 
         NotificationUtils.createNotificationChannel(singleton);
+        FieldSightNotificationUtils.createChannels(singleton);
 
         try {
             JobManager
