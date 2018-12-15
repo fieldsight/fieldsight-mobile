@@ -3,17 +3,22 @@ package org.bcss.collect.android;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.card.MaterialCardView;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -38,12 +43,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -65,7 +74,16 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
     private HashMap<String, String> titles;
     private TextView tvPlaceHolder;
     String siteId;
+    private Toolbar toolbar;
 
+    @BindView(R.id.btn_edit_site)
+    Button btnEditSite;
+
+    @BindView(R.id.progress_circular)
+    ProgressBar progressBar;
+
+    @BindView(R.id.card_list)
+    MaterialCardView cardList;
 
     public static void start(Context context, String siteId) {
         Intent intent = new Intent(context, SiteProfileActivity.class);
@@ -97,6 +115,8 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
         titles.put("region", "Region");
         titles.put("type", "Type");
 
+        setupToolbar();
+
         SiteLocalSource.getInstance()
                 .getBySiteId(siteId)
                 .observe(this, new Observer<List<Site>>() {
@@ -106,7 +126,9 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                         loadedSite = sites.get(0);
                         tvSiteName.setText(loadedSite.getName());
                         setSiteImage(loadedSite.getLogo());
+                        tvPlaceHolder.setText(loadedSite.getName().substring(0, 1));
                         sub(loadedSite);
+                        collapsingToolbar.setTitle(loadedSite.getName());
                     }
                 });
 
@@ -132,6 +154,16 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
         });
     }
 
+
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        collapsingToolbar.setExpandedTitleColor(Color.TRANSPARENT);
+
+    }
+
     private void setSiteImage(String logo) {
         if (logo == null || logo.length() == 0) {
             tvPlaceHolder.setVisibility(View.VISIBLE);
@@ -151,21 +183,50 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
 
     private void sub(Site loadedSite) {
+
+
         setup(loadedSite)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(new Consumer<Throwable>() {
+                .delay(2,TimeUnit.SECONDS)
+                .subscribe(new io.reactivex.Observer<ArrayList<ViewModel>>() {
                     @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
+                    public void onSubscribe(Disposable d) {
 
                     }
-                })
-                .doOnNext(answers -> {
-                    setupRecyclerView();
-                    adapter.addAll(answers);
-                })
-                .subscribe();
+
+                    @Override
+                    public void onNext(ArrayList<ViewModel> viewModels) {
+                        adapter = new MultiViewAdapter();
+                        adapter.setOnCardClickListener(SiteProfileActivity.this);
+                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SiteProfileActivity.this, LinearLayoutManager.VERTICAL, false);
+                        rvFormHistory.setLayoutManager(linearLayoutManager);
+                        rvFormHistory.setAdapter(adapter);
+                        rvFormHistory.setItemAnimator(new DefaultItemAnimator());
+
+                        rvFormHistory.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
+                        rvFormHistory.setHasFixedSize(true);
+                        rvFormHistory.setNestedScrollingEnabled(false);
+                        btnEditSite.setVisibility(View.VISIBLE);
+
+                        adapter.addAll(viewModels);
+//                        progressBar.setVisibility(View.GONE);
+//                        cardList.setVisibility(View.VISIBLE);
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+//                        cardList.setVisibility(View.VISIBLE);
+//                        progressBar.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     private Observable<ArrayList<ViewModel>> setup(Site loadedSite) {
@@ -182,7 +243,6 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                     if (titles.containsKey(key)) {
                         answer = new ViewModel(titles.get(key), value, "id", "id");
                         answers.add(answer);
-//                        continue;
                     }
 
                     if ("metaAttributes".equals(key)) {
@@ -224,6 +284,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
         rvFormHistory = findViewById(R.id.recycler_view);
         tvSiteName = findViewById(R.id.tv_site_name);
         collapsingToolbar = findViewById(R.id.collapsing_toolbar);
+        toolbar = findViewById(R.id.toolbar);
         appBarLayout = findViewById(R.id.appbar_flexible);
         ivCircle = findViewById(R.id.iv_site);
         tvPlaceHolder = findViewById(R.id.iv_placeholder_text);
