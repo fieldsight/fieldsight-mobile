@@ -60,7 +60,7 @@
 
 
         <RelativeLayout
-            android:animateLayoutChanges="true"
+
             android:id="@+id/content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -100,21 +100,13 @@
                 </android.support.constraint.ConstraintLayout>
             </android.support.design.card.MaterialCardView>
 
-
-            <ProgressBar
-                android:id="@+id/progress_circular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/card_intro"
-                android:layout_centerHorizontal="true" />
-
             <android.support.design.card.MaterialCardView
+
                 android:id="@+id/card_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/card_intro"
                 android:layout_marginTop="@dimen/margin_medium"
-
                 app:cardCornerRadius="@dimen/corner_radius">
 
 
@@ -130,12 +122,12 @@
                         android:layout_height="wrap_content" />
 
                     <Button
+                        android:textAllCaps="true"
                         android:id="@+id/btn_edit_site"
                         style="@style/Base.Widget.AppCompat.Button.Colored"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Edit Site"
-                        android:textAllCaps="true" />
+                        android:text="Edit Site" />
                 </LinearLayout>
 
             </android.support.design.card.MaterialCardView>

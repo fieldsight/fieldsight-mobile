@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.card.MaterialCardView;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -43,7 +41,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,11 +76,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
     @BindView(R.id.btn_edit_site)
     Button btnEditSite;
 
-    @BindView(R.id.progress_circular)
-    ProgressBar progressBar;
 
-    @BindView(R.id.card_list)
-    MaterialCardView cardList;
 
     public static void start(Context context, String siteId) {
         Intent intent = new Intent(context, SiteProfileActivity.class);
@@ -126,7 +119,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                         loadedSite = sites.get(0);
                         tvSiteName.setText(loadedSite.getName());
                         setSiteImage(loadedSite.getLogo());
-                        tvPlaceHolder.setText(loadedSite.getName().substring(0, 1));
+                        tvPlaceHolder.setText(loadedSite.getName().substring(0,1));
                         sub(loadedSite);
                         collapsingToolbar.setTitle(loadedSite.getName());
                     }
@@ -183,16 +176,13 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
 
     private void sub(Site loadedSite) {
-
-
         setup(loadedSite)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .delay(2,TimeUnit.SECONDS)
                 .subscribe(new io.reactivex.Observer<ArrayList<ViewModel>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        btnEditSite.setVisibility(View.INVISIBLE);
                     }
 
                     @Override
@@ -210,16 +200,12 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                         btnEditSite.setVisibility(View.VISIBLE);
 
                         adapter.addAll(viewModels);
-//                        progressBar.setVisibility(View.GONE);
-//                        cardList.setVisibility(View.VISIBLE);
 
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
                         throwable.printStackTrace();
-//                        cardList.setVisibility(View.VISIBLE);
-//                        progressBar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
