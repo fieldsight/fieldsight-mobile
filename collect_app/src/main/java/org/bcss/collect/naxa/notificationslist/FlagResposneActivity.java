@@ -330,8 +330,9 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
                 for (FormDetails formDetails : result.keySet()) {
                     String successKey = result.get(formDetails);
                     if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
-                        FlagFormRemoteSource.getINSTANCE()
-                                .getODKInstance(notification)
+                        InstanceRemoteSource.getINSTANCE().downloadInstances(notification)
+//                        FlagFormRemoteSource.getINSTANCE()
+//                                .getODKInstance(notification)
                                 .observeOn(Schedulers.io())
                                 .subscribeOn(AndroidSchedulers.mainThread())
                                 .doOnSubscribe(d -> {

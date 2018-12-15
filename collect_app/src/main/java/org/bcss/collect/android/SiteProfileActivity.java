@@ -76,6 +76,8 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
     @BindView(R.id.btn_edit_site)
     Button btnEditSite;
 
+    @BindView(R.id.iv_bg_toolbar)
+    ImageView ivBgToolbar;
 
 
     public static void start(Context context, String siteId) {
@@ -119,7 +121,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                         loadedSite = sites.get(0);
                         tvSiteName.setText(loadedSite.getName());
                         setSiteImage(loadedSite.getLogo());
-                        tvPlaceHolder.setText(loadedSite.getName().substring(0,1));
+                        tvPlaceHolder.setText(loadedSite.getName().substring(0, 1));
                         sub(loadedSite);
                         collapsingToolbar.setTitle(loadedSite.getName());
                     }
@@ -165,10 +167,15 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
         File logoFile = new File(logo);
         if (logoFile.exists()) {
             tvPlaceHolder.setVisibility(View.GONE);
-            GlideApp.with(SiteProfileActivity.this)
-                    .load(logoFile)
+            ViewUtils.loadLocalImage(SiteProfileActivity.this, logo)
                     .circleCrop()
                     .into(ivCircle);
+
+            ViewUtils.loadLocalImage(SiteProfileActivity.this, logo)
+                    .circleCrop()
+                    .into(ivBgToolbar);
+
+
         } else {
             tvPlaceHolder.setVisibility(View.VISIBLE);
         }
