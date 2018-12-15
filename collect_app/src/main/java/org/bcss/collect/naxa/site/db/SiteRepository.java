@@ -93,17 +93,19 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
         AsyncTask.execute(() -> localSource.save(site));
     }
 
-    public Completable saveSiteModified(Site site) {
+    public Completable saveSiteModified(Site site, Project project) {
         if (site.getIsSiteVerified() == Constant.SiteStatus.IS_ONLINE) {
             site.setIsSiteVerified(Constant.SiteStatus.IS_EDITED);
         }
+
+        site.setProject(project.getId());
 
         return localSource.saveAsCompletable(site);
 
 
     }
 
-    public Completable deleteSyncedSites(){
+    public Completable deleteSyncedSites() {
         return localSource.deleteSyncedSites();
     }
 

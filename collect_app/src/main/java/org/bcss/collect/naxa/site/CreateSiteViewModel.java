@@ -106,7 +106,9 @@ public class CreateSiteViewModel extends ViewModel {
 
     public void updateSite() {
         if (validateData()) {
-            siteRepository.saveSiteModified(siteMutableLiveData.getValue());
+
+
+            siteRepository.saveSiteModified(siteMutableLiveData.getValue(), projectMutableLiveData.getValue());
             formStatus.setValue(CreateSiteFormStatus.SUCCESS);
             //todo check if saving site is faliling
 
@@ -188,6 +190,17 @@ public class CreateSiteViewModel extends ViewModel {
         siteMutableLiveData.getValue().setName(name);
     }
 
+
+    public void setFormDeployedFrom(String stagedDeployedForm, String generalDeployedForm, String scheduledDeployedForm) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
+        }
+        siteMutableLiveData.getValue().setStagedFormDeployedFrom(stagedDeployedForm);
+        siteMutableLiveData.getValue().setGeneralFormDeployedFrom(generalDeployedForm);
+        siteMutableLiveData.getValue().setScheduleFormDeployedForm(scheduledDeployedForm);
+
+    }
+
     public void setSitePhone(String text) {
         if (siteMutableLiveData.getValue() == null) {
             siteMutableLiveData.setValue(new SiteBuilder().createSite());
@@ -208,7 +221,7 @@ public class CreateSiteViewModel extends ViewModel {
     }
 
 
-    public void setSiteRegion(String regionLabel,String regionId) {
+    public void setSiteRegion(String regionLabel, String regionId) {
         if (siteMutableLiveData.getValue() == null) {
             siteMutableLiveData.setValue(new SiteBuilder().createSite());
         }

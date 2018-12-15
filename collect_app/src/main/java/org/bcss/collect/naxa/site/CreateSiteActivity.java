@@ -342,6 +342,8 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     private void loadFormWithValuesSet(Site site) {
         toolbarGeneral.setTitle("Update Site");
+
+
         setText(tiSiteIdentifier, site.getIdentifier());
         setText(tiSiteName, site.getName());
         setText(tiSitePhone, site.getPhone());
@@ -357,12 +359,36 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 createSiteViewModel.setPhoto(site.getLogo());
             }
 
-        }, TimeUnit.SECONDS.toMillis(4));
+        }, TimeUnit.SECONDS.toMillis(2));
+
+        createSiteViewModel.setFormDeployedFrom(site.getStagedFormDeployedFrom(),site.getGeneralFormDeployedFrom(),site.getScheduleFormDeployedForm());
     }
 
-    private void setText(TextInputLayout inputLayout, String text) {
+    private void setText(TextInputLayout textInputLayout, String text) {
         if (text == null || text.trim().length() == 0) return;
-        inputLayout.getEditText().setText(text);
+        textInputLayout.getEditText().setText(text);
+        switch (textInputLayout.getId()) {
+            case R.id.ILSiteIdentifier:
+                createSiteViewModel.setIdentifier(text);
+                break;
+            case R.id.ILSiteName:
+                createSiteViewModel.setSiteName(text);
+
+                break;
+            case R.id.collect_site_ti_phone:
+                createSiteViewModel.setSitePhone(text);
+
+                break;
+            case R.id.collect_site_ti_address:
+                createSiteViewModel.setSiteAddress(text);
+
+                break;
+            case R.id.collect_site_ti_public_desc:
+                createSiteViewModel.setSitePublicDesc(text);
+
+                break;
+
+        }
     }
 
 
@@ -608,7 +634,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
                     if (isUpdate) {
 
+
                         createSiteViewModel.setId(loadedSite.getId());
+
                         createSiteViewModel.updateSite();
                     } else {
                         String mockedSiteId = Site.getMockedId();
