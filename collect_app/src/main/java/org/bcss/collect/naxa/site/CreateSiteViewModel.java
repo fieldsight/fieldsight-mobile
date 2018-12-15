@@ -15,6 +15,12 @@ import org.bcss.collect.naxa.site.db.SiteRepository;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+
+import io.reactivex.CompletableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class CreateSiteViewModel extends ViewModel {
 
@@ -105,12 +111,29 @@ public class CreateSiteViewModel extends ViewModel {
     }
 
     public void updateSite() {
+
+
         if (validateData()) {
+            siteRepository.saveSiteModified(siteMutableLiveData.getValue(), projectMutableLiveData.getValue())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new CompletableObserver() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
+                        }
 
-            siteRepository.saveSiteModified(siteMutableLiveData.getValue(), projectMutableLiveData.getValue());
-            formStatus.setValue(CreateSiteFormStatus.SUCCESS);
-            //todo check if saving site is faliling
+                        @Override
+                        public void onComplete() {
+                            formStatus.setValue(CreateSiteFormStatus.UPDATE_SUCESS);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            formStatus.setValue(CreateSiteFormStatus.ERROR);
+                        }
+                    });
+
 
         }
     }

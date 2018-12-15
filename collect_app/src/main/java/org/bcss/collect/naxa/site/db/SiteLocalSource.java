@@ -90,12 +90,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
     public Completable saveAsCompletable(Site...sites){
-        return Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                dao.insert(sites);
-            }
-        });
+        return Completable.fromAction(() -> dao.insert(sites));
     }
 
     @Override

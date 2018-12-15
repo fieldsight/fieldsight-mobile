@@ -215,6 +215,10 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                             ToastUtils.showShortToastInMiddle("Offline Site Created");
                             finish();
                             break;
+                        case UPDATE_SUCESS:
+                            ToastUtils.showShortToastInMiddle("Site Updated");
+                            finish();
+                            break;
                         case ERROR:
                             DialogFactory.createGenericErrorDialog(this, "").show();
                             break;
@@ -361,7 +365,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
         }, TimeUnit.SECONDS.toMillis(2));
 
-        createSiteViewModel.setFormDeployedFrom(site.getStagedFormDeployedFrom(),site.getGeneralFormDeployedFrom(),site.getScheduleFormDeployedForm());
+        createSiteViewModel.setFormDeployedFrom(site.getStagedFormDeployedFrom(), site.getGeneralFormDeployedFrom(), site.getScheduleFormDeployedForm());
     }
 
     private void setText(TextInputLayout textInputLayout, String text) {
