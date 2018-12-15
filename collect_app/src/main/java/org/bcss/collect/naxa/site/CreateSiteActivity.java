@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -67,6 +68,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -346,13 +348,16 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         setText(tiSiteAddress, site.getAddress());
         setText(tiSitePublicDesc, site.getPublicDesc());
 
-        if (site.getLogo() != null) {
-            createSiteViewModel.setPhoto(site.getLogo());
+        if (site.getLatitude() != null) {
+            createSiteViewModel.setLocation(site.getLatitude(), site.getLongitude());
         }
 
-        createSiteViewModel.setLocation(site.getLatitude(), site.getLongitude());
+        new Handler().postDelayed(() -> {
+            if (site.getLogo() != null) {
+                createSiteViewModel.setPhoto(site.getLogo());
+            }
 
-
+        }, TimeUnit.SECONDS.toMillis(4));
     }
 
     private void setText(TextInputLayout inputLayout, String text) {
@@ -546,8 +551,20 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_type), siteTypes);
             spinnerSiteType.setAdapter(spinnerAdapter);
             spinnerSiteType.setSelection(spinnerAdapter.getCount());
+
+            loadValueIntoSiteTypeSpinner(siteTypes);
         }
 
+    }
+
+    private void loadValueIntoSiteTypeSpinner(List<SiteType> siteTypes) {
+        for (int pos = 0; pos < siteTypes.size(); pos++) {
+            SiteType siteType = siteTypes.get(pos);
+            if (siteType.getId().equals(loadedSite.getRegionId())) {
+                spinnerSiteCluster.setSelection(pos);
+                break;
+            }
+        }
     }
 
     private void showSiteClusterSpinner(ArrayList<SiteRegion> clusters) {
@@ -558,6 +575,18 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_region), clusters);
             spinnerSiteCluster.setAdapter(spinnerAdapter);
             spinnerSiteCluster.setSelection(spinnerAdapter.getCount());
+
+            loadValueIntoClusterSpinner(clusters);
+        }
+    }
+
+    private void loadValueIntoClusterSpinner(ArrayList<SiteRegion> clusters) {
+        for (int pos = 0; pos < clusters.size(); pos++) {
+            SiteRegion siteRegion = clusters.get(pos);
+            if (siteRegion.getId().equals(loadedSite.getRegionId())) {
+                spinnerSiteCluster.setSelection(pos);
+                break;
+            }
         }
     }
 
@@ -586,7 +615,6 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                         createSiteViewModel.setId(mockedSiteId);
                         createSiteViewModel.saveSite();
                     }
-
 
 
                 }

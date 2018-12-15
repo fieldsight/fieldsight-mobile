@@ -373,7 +373,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        FieldSightNotificationUtils.getINSTANCE().createUploadNotification(progressNotifyId, progressMessage);
+//                        FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressNotifyId, progressMessage);
                     }
                 })
                 .subscribe(new DisposableObserver<ArrayList<Long>>() {

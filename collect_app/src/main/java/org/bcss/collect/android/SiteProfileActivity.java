@@ -193,6 +193,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                             String metaAttrsKey = metaAttrsIter.next();
                             String metaAttrsValue = metaAttrsJSON.getString(metaAttrsKey);
                             Timber.i("key: %s value: %s", metaAttrsKey, metaAttrsValue);
+
                             answer = new ViewModel(metaAttrsKey.replace("_", " "), metaAttrsValue, "id", "id");
                             answers.add(answer);
                         }
