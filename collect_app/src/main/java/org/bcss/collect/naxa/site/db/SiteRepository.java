@@ -99,7 +99,6 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
         }
 
         site.setProject(project.getId());
-
         return localSource.saveAsCompletable(site);
 
 

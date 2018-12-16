@@ -110,7 +110,7 @@ public class CreateSiteViewModel extends ViewModel {
         }
     }
 
-    public void updateSite() {
+    void updateSite() {
 
 
         if (validateData()) {
@@ -203,6 +203,14 @@ public class CreateSiteViewModel extends ViewModel {
         }
 
         siteMutableLiveData.getValue().setIdentifier(identifier);
+    }
+
+    public void setIsSiteVerified(int siteStatus) {
+        if (siteMutableLiveData.getValue() == null) {
+            siteMutableLiveData.setValue(new SiteBuilder().createSite());
+        }
+
+        siteMutableLiveData.getValue().setIsSiteVerified(siteStatus);
     }
 
     public void setSiteName(String name) {

@@ -17,6 +17,8 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +26,20 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.CompletableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
+import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
+import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
+import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 
 public class DownloadActivityRefresh extends CollectAbstractActivity implements OnItemClickListener<Sync> {
 
@@ -44,8 +56,8 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
     private DownloadViewModel viewModel;
 
 
-    public static void start(Context context){
-        Intent intent = new Intent(context,DownloadActivityRefresh.class);
+    public static void start(Context context) {
+        Intent intent = new Intent(context, DownloadActivityRefresh.class);
         context.startActivity(intent);
     }
 
@@ -73,6 +85,76 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                     public void onError(Throwable e) {
                         Timber.e("Insert failed on sync table reason: %s", e.getMessage());
                         e.printStackTrace();
+                    }
+                });
+
+        SiteLocalSource.getInstance()
+                .getAllByStatus(IS_EDITED)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<Site>>() {
+                    @Override
+                    public void onSuccess(List<Site> sites) {
+                        if (sites.size() > 0) {
+                            SyncLocalSource.getINSTANCE()
+                                    .save(new Sync(EDITED_SITES, PENDING, "Edited Sites", "Upload Edited Site(s)"))
+                                    .subscribe(new CompletableObserver() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
+        SiteLocalSource.getInstance()
+                .getAllByStatus(IS_OFFLINE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<Site>>() {
+                    @Override
+                    public void onSuccess(List<Site> sites) {
+                        if (sites.size() > 0) {
+                            SyncLocalSource.getINSTANCE()
+                                    .save(new Sync(OFFLINE_SITES, PENDING, "Offline Sites", "Upload Offline Site(s)"))
+                                    .subscribe(new CompletableObserver() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
                 });
 
@@ -178,9 +260,6 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
         adapter.setOnItemClickListener(null);
     }
 
-
-
-
     private void setupToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.toolbar_downloads));
@@ -203,8 +282,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                adapter.getItemCount();
-//                super.onBackPressed();
+                super.onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);

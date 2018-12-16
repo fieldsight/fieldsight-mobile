@@ -65,5 +65,5 @@ public interface SiteDao {
     void deleteSyncedSites(int id);
 
     @Query("SELECT * from sites WHERE isSiteVerified =:siteStatus")
-    Single<Site> getAllByStatus(int siteStatus);
+    Single<List<Site>> getAllByStatus(int siteStatus);
 }

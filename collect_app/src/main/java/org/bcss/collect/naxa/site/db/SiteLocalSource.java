@@ -17,7 +17,6 @@ import java.util.concurrent.Callable;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.functions.Action;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
 
@@ -147,7 +146,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         });
     }
 
-    public Single<Site> getAllByStatus(int siteStatus) {
+    public Single<List<Site>> getAllByStatus(int siteStatus) {
         return dao.getAllByStatus(siteStatus);
     }
 }

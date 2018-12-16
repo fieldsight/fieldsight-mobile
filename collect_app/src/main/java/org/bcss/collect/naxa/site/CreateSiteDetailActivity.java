@@ -413,49 +413,49 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
     }
 
     public void saveSiteObservable() {
-        SiteLocalSource.getInstance()
-                .getAllByStatus(IS_EDITED)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMapObservable(new Function<Site, ObservableSource<Site>>() {
-                    @Override
-                    public ObservableSource<Site> apply(Site site) throws Exception {
-                        return SiteRemoteSource.getInstance().updateSite(site).subscribeOn(Schedulers.io());
-                    }
-                })
-                .toList()
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        showDialog();
-                    }
-                })
-                .subscribe(new DisposableSingleObserver<List<Site>>() {
-                    @Override
-                    public void onSuccess(List<Site> sites) {
-                        String title = "Site Uploaded";
-                        String msg;
-                        if (sites.size() > 1) {
-                            msg = Collect.getInstance().getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size()); //todo: never use context here but .. need to finish feature fast..someone refacotr this later
-                        } else {
-                            msg = Collect.getInstance().getString(R.string.msg_single_site_upload);
-                        }
-
-                        FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title,msg);
-
-                        hideDialog();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        Timber.e(e);
-                        String title = "Site upload failed";
-                        String msg;
-                        FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, e.getMessage());
-                        hideDialog();
-                    }
-                });
+//        SiteLocalSource.getInstance()
+//                .getAllByStatus(IS_EDITED)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .flatMapObservable(new Function<Site, ObservableSource<Site>>() {
+//                    @Override
+//                    public ObservableSource<Site> apply(Site site) throws Exception {
+//                        return SiteRemoteSource.getInstance().updateSite(site).subscribeOn(Schedulers.io());
+//                    }
+//                })
+//                .toList()
+//                .doOnSubscribe(new Consumer<Disposable>() {
+//                    @Override
+//                    public void accept(Disposable disposable) throws Exception {
+//                        showDialog();
+//                    }
+//                })
+//                .subscribe(new DisposableSingleObserver<List<Site>>() {
+//                    @Override
+//                    public void onSuccess(List<Site> sites) {
+//                        String title = "Site Uploaded";
+//                        String msg;
+//                        if (sites.size() > 1) {
+//                            msg = Collect.getInstance().getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size()); //todo: never use context here but .. need to finish feature fast..someone refacotr this later
+//                        } else {
+//                            msg = Collect.getInstance().getString(R.string.msg_single_site_upload);
+//                        }
+//
+//                        FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title,msg);
+//
+//                        hideDialog();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        e.printStackTrace();
+//                        Timber.e(e);
+//                        String title = "Site upload failed";
+//                        String msg;
+//                        FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, e.getMessage());
+//                        hideDialog();
+//                    }
+//                });
     }
 
 

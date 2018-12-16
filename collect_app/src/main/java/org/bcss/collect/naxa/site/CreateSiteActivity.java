@@ -366,6 +366,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         }, TimeUnit.SECONDS.toMillis(2));
 
         createSiteViewModel.setFormDeployedFrom(site.getStagedFormDeployedFrom(), site.getGeneralFormDeployedFrom(), site.getScheduleFormDeployedForm());
+        createSiteViewModel.setIsSiteVerified(site.getIsSiteVerified());
     }
 
     private void setText(TextInputLayout textInputLayout, String text) {

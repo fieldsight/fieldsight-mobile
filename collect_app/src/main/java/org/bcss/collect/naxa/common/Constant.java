@@ -119,6 +119,8 @@ public class Constant {
         public static final int ALL_FORMS = 8;
         public static final int EDU_MATERIALS = 9;
         public static final int PREV_SUBMISSION = 10;
+        public static final int EDITED_SITES = 11;
+        public static final int OFFLINE_SITES = 12;
     }
 
 
