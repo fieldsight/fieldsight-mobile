@@ -105,9 +105,8 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
 
     }
 
-    public Completable deleteSyncedSites() {
-        return localSource.deleteSyncedSites();
+
+    public void deleteSyncedSitesAsync() {
+        localSource.deleteSyncedSitesAsync();
     }
-
-
 }

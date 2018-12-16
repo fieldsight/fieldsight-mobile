@@ -451,7 +451,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     private void showConfirmationDialog() {
         DialogFactory.createActionDialog(requireActivity(), "Upload selected site(s)", "Upload selected site(s) along with their filled form(s) ?")
-                .setPositiveButton("Yes", (dialog, which) -> {
+                .setPositiveButton("Yes, upload Site(s) and Form(s)", (dialog, which) -> {
                     uploadSelectedSites(siteListAdapter.getSelected(), true);
                 })
                 .setNegativeButton("No, Upload Site(s) only", (dialog, which) -> {

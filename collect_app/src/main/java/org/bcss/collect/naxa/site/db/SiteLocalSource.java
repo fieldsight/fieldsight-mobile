@@ -89,7 +89,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         AsyncTask.execute(() -> dao.insert(items));
     }
 
-    public Completable saveAsCompletable(Site...sites){
+    public Completable saveAsCompletable(Site... sites) {
         return Completable.fromAction(() -> dao.insert(sites));
     }
 
@@ -140,15 +140,11 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         });
     }
 
-    public Completable deleteSyncedSites() {
-        return Completable.fromAction(new Action() {
-            @Override
-            public void run() throws Exception {
-                dao.deleteSyncedSites(IS_ONLINE);
-            }
+
+    public void deleteSyncedSitesAsync() {
+        AsyncTask.execute(() -> {
+            dao.deleteSyncedSites(IS_ONLINE);
         });
-
-
     }
 
     public Single<Site> getAllByStatus(int siteStatus) {

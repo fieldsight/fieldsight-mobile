@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.CompletableSource;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Single;
@@ -91,10 +92,11 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .map(new Function<MySiteResponse, List<MySites>>() {
                     @Override
                     public List<MySites> apply(MySiteResponse mySiteResponse) throws Exception {
-
+                        siteRepository.deleteSyncedSitesAsync();
                         return mySiteResponse.getResult();
                     }
                 })
+
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(new Function<MySites, Project>() {
                     @Override
@@ -196,7 +198,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     public void accept(Disposable disposable) throws Exception {
 
                         ProjectLocalSource.getInstance().deleteAll();
-                        SiteLocalSource.getInstance().deleteSyncedSites();
+                        SiteLocalSource.getInstance().deleteSyncedSitesAsync();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
                         SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
 
