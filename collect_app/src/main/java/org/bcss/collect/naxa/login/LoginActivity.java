@@ -32,6 +32,7 @@ import org.bcss.collect.naxa.migrate.MigrationHelper;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
+import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 
 import static org.bcss.collect.android.application.Collect.allowClick;
 
@@ -171,7 +172,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         if (hasOldAccount) {
             MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
         } else {
-            DownloadActivity.start(this);
+            DownloadActivityRefresh.start(this);
 //            ProjectListActivity.start(this);
         }
         Toast.makeText(this, "Logged In!", Toast.LENGTH_SHORT).show();

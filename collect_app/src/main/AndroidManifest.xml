@@ -340,10 +340,7 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewTextTitleDetailsActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewImageDetailsActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewVideoDetailsActivity" />
-        <activity
-            android:name="org.bcss.collect.naxa.sync.DownloadActivity"
-            android:exported="true" />
-        <activity android:name="org.bcss.collect.naxa.sync.DownloadActivityNew" />
+        <activity android:name="org.bcss.collect.naxa.sync.DownloadActivityRefresh" />
         <activity
             android:name="org.bcss.collect.naxa.onboarding.DownloadActivity"
             android:exported="true" />

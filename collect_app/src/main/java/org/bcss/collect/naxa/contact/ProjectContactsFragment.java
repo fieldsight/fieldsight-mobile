@@ -22,6 +22,7 @@ import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;
 import org.bcss.collect.naxa.stages.StageViewModel;
+import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DownloadActivity.start(getActivity());
+                        DownloadActivityRefresh.start(getActivity());
                     }
                 });
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),

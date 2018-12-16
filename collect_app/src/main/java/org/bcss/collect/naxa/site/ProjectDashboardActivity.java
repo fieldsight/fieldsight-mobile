@@ -78,6 +78,7 @@ import org.bcss.collect.naxa.profile.UserActivity;
 import org.bcss.collect.naxa.project.MapFragment;
 import org.bcss.collect.naxa.contact.ProjectContactsFragment;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
+import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -590,7 +591,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                         });
                 break;
             case R.id.action_refresh:
-                DownloadActivity.start(this);
+                DownloadActivityRefresh.start(this);
                 break;
         }
         return super.onOptionsItemSelected(item);

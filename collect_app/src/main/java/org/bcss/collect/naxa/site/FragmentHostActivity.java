@@ -29,6 +29,7 @@ import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
+import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -138,7 +139,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 break;
             case R.id.action_refresh:
 
-                DownloadActivity.start(this);
+                DownloadActivityRefresh.start(this);
                 break;
         }
 

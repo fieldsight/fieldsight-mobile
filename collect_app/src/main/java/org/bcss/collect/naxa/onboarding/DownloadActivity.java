@@ -73,7 +73,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     }
 
 
-    public static void start(Context context) {
+    private static void start(Context context) {
         Intent intent = new Intent(context, DownloadActivity.class);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
