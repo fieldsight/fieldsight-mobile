@@ -1,5 +1,10 @@
 package org.bcss.collect.naxa.submissions;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.common.base.Objects;
+
 import java.util.ArrayList;
 
 /**
@@ -7,7 +12,7 @@ import java.util.ArrayList;
  * by nishon.tan@gmail.com
  */
 
-public class ViewModel {
+public class ViewModel implements Parcelable {
 
     private String name;
     private String desc;
@@ -52,4 +57,55 @@ public class ViewModel {
 
         return viewModels;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ViewModel viewModel = (ViewModel) o;
+        return Objects.equal(name, viewModel.name) &&
+                Objects.equal(desc, viewModel.desc) &&
+                Objects.equal(id, viewModel.id) &&
+                Objects.equal(secondaryId, viewModel.secondaryId) &&
+                Objects.equal(pictureUrl, viewModel.pictureUrl);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name, desc, id, secondaryId, pictureUrl);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.desc);
+        dest.writeString(this.id);
+        dest.writeString(this.secondaryId);
+        dest.writeString(this.pictureUrl);
+    }
+
+    protected ViewModel(Parcel in) {
+        this.name = in.readString();
+        this.desc = in.readString();
+        this.id = in.readString();
+        this.secondaryId = in.readString();
+        this.pictureUrl = in.readString();
+    }
+
+    public static final Parcelable.Creator<ViewModel> CREATOR = new Parcelable.Creator<ViewModel>() {
+        @Override
+        public ViewModel createFromParcel(Parcel source) {
+            return new ViewModel(source);
+        }
+
+        @Override
+        public ViewModel[] newArray(int size) {
+            return new ViewModel[size];
+        }
+    };
 }

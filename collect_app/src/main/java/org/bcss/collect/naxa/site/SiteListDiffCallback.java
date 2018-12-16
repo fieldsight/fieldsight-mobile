@@ -38,29 +38,29 @@ public class SiteListDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        Site oldSite = oldList.get(oldItemPosition);
-        Site newSite = newList.get(newItemPosition);
+        Site oldItem = oldList.get(oldItemPosition);
+        Site newItem = newList.get(newItemPosition);
 
-        return oldSite.getId().equals(newSite.getId());
+        return oldItem.getId().equals(newItem.getId());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        Site oldSite = oldList.get(oldItemPosition);
-        Site newSite = newList.get(newItemPosition);
-        return newSite.equals(oldSite);
+        Site oldItem = oldList.get(oldItemPosition);
+        Site newItem = newList.get(newItemPosition);
+        return newItem.equals(oldItem);
     }
 
 
     @Nullable
     @Override
     public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-        Site oldSite = oldList.get(oldItemPosition);
-        Site newSite = newList.get(newItemPosition);
+        Site oldItem = oldList.get(oldItemPosition);
+        Site newItem = newList.get(newItemPosition);
 
         Bundle bundle = new Bundle();
-        if(!oldSite.equals(newSite)){
-            bundle.putParcelable(EXTRA_OBJECT,newSite);
+        if(!oldItem.equals(newItem)){
+            bundle.putParcelable(EXTRA_OBJECT,newItem);
 
         }
 

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -25,6 +26,7 @@ import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.ViewUtils;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
@@ -41,6 +43,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +56,9 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class SiteProfileActivity extends CollectAbstractActivity implements MultiViewAdapter.OnCardClickListener {
@@ -78,6 +84,12 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
     @BindView(R.id.iv_bg_toolbar)
     ImageView ivBgToolbar;
+
+    @BindView(R.id.content_layout)
+    View view;
+
+    @BindView(R.id.progress_circular)
+    ProgressBar progressBar;
 
 
     public static void start(Context context, String siteId) {
@@ -111,28 +123,33 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
         titles.put("type", "Type");
 
         setupToolbar();
+        setupRecyclerView();
 
         SiteLocalSource.getInstance()
                 .getBySiteId(siteId)
                 .observe(this, (loadedSite) -> {
                     if (loadedSite == null) return;
+                    SiteProfileActivity.this.loadedSite = loadedSite;
                     tvSiteName.setText(loadedSite.getName());
                     setSiteImage(loadedSite.getLogo());
                     tvPlaceHolder.setText(loadedSite.getName().substring(0, 1));
-                    sub(loadedSite);
                     collapsingToolbar.setTitle(loadedSite.getName());
-                    SiteProfileActivity.this.loadedSite = loadedSite;
+
+                    sub(loadedSite);
                 });
 
+    }
 
-        ivCircle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (loadedSite.getLogo() != null)
-                    ImageViewerActivity.start(SiteProfileActivity.this, loadedSite.getLogo());
-            }
-        });
 
+    @OnClick(R.id.iv_site)
+    public void loadImageViewer() {
+        if (loadedSite.getLogo() != null)
+            ImageViewerActivity.start(SiteProfileActivity.this, loadedSite.getLogo());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         appBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (scrollRange == -1) {
                 scrollRange = appBarLayout.getTotalScrollRange();
@@ -141,11 +158,16 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
             if (scrollRange + verticalOffset == 0) {
                 ViewUtils.animateViewVisibility(ivCircle, View.GONE);
             } else {
-                ViewUtils.animateViewVisibility(ivCircle, View.VISIBLE);
+                ViewUtils.animateViewVisibility(ivCircle, VISIBLE);
             }
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        appBarLayout.addOnOffsetChangedListener(null);
+    }
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
@@ -158,7 +180,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
     private void setSiteImage(String logo) {
         if (logo == null || logo.length() == 0) {
-            tvPlaceHolder.setVisibility(View.VISIBLE);
+            tvPlaceHolder.setVisibility(VISIBLE);
             return;
         }
         File logoFile = new File(logo);
@@ -174,41 +196,33 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
 
         } else {
-            tvPlaceHolder.setVisibility(View.VISIBLE);
+            tvPlaceHolder.setVisibility(VISIBLE);
         }
     }
 
 
     private void sub(Site loadedSite) {
         setup(loadedSite)
+                .delay(1,TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new io.reactivex.Observer<ArrayList<ViewModel>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        btnEditSite.setVisibility(View.INVISIBLE);
+                        showLoadingLayout();
                     }
 
                     @Override
                     public void onNext(ArrayList<ViewModel> viewModels) {
-                        adapter = new MultiViewAdapter();
-                        adapter.setOnCardClickListener(SiteProfileActivity.this);
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SiteProfileActivity.this, LinearLayoutManager.VERTICAL, false);
-                        rvFormHistory.setLayoutManager(linearLayoutManager);
-                        rvFormHistory.setAdapter(adapter);
-                        rvFormHistory.setItemAnimator(new DefaultItemAnimator());
 
-                        rvFormHistory.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
-                        rvFormHistory.setHasFixedSize(true);
-                        rvFormHistory.setNestedScrollingEnabled(false);
-                        btnEditSite.setVisibility(View.VISIBLE);
-
-                        adapter.addAll(viewModels);
+                        adapter.updateList(viewModels);
+                        showContentLayout();
 
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
+                        FlashBarUtils.showFlashbar(SiteProfileActivity.this,throwable.getMessage());
                         throwable.printStackTrace();
                     }
 
@@ -219,56 +233,64 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                 });
     }
 
+    private void showLoadingLayout() {
+        ViewUtils.animateViewVisibility(view,INVISIBLE);
+        ViewUtils.animateViewVisibility(progressBar, View.VISIBLE);
+    }
+
+    private void showContentLayout() {
+        ViewUtils.animateViewVisibility(view,VISIBLE);
+        ViewUtils.animateViewVisibility(progressBar, View.GONE);
+
+    }
+
     private Observable<ArrayList<ViewModel>> setup(Site loadedSite) {
-        return Observable.fromCallable(new Callable<ArrayList<ViewModel>>() {
-            @Override
-            public ArrayList<ViewModel> call() throws Exception {
-                JSONObject json = new JSONObject(gson.toJson(loadedSite));
-                Iterator<String> iter = json.keys();
-                ViewModel answer;
-                ArrayList<ViewModel> answers = new ArrayList<>();
+        return Observable.fromCallable(() -> {
+            JSONObject json = new JSONObject(gson.toJson(loadedSite));
+            Iterator<String> iter = json.keys();
+            ViewModel answer;
+            ArrayList<ViewModel> answers = new ArrayList<>();
 
-                while (iter.hasNext()) {
-                    String key = iter.next();
-                    String value = String.valueOf(json.get(key));
+            while (iter.hasNext()) {
+                String key = iter.next();
+                String value = String.valueOf(json.get(key));
 
-                    if (titles.containsKey(key)) {
-                        answer = new ViewModel(titles.get(key), value, "id", "id");
-                        answers.add(answer);
-                    }
-
-                    if ("metaAttributes".equals(key)) {
-                        if (value.trim().length() == 0) continue;
-                        JSONObject metaAttrsJSON = new JSONObject(value);
-                        Iterator<String> metaAttrsIter = metaAttrsJSON.keys();
-                        while (metaAttrsIter.hasNext()) {
-                            String metaAttrsKey = metaAttrsIter.next();
-                            String metaAttrsValue = metaAttrsJSON.getString(metaAttrsKey);
-                            Timber.i("key: %s value: %s", metaAttrsKey, metaAttrsValue);
-
-                            answer = new ViewModel(metaAttrsKey.replace("_", " "), metaAttrsValue, "id", "id");
-                            answers.add(answer);
-                        }
-                    }
-
+                if (titles.containsKey(key)) {
+                    answer = new ViewModel(titles.get(key), value, "id", "id");
+                    answers.add(answer);
                 }
 
+                if ("metaAttributes".equals(key)) {
+                    if (value.trim().length() == 0) continue;
+                    JSONObject metaAttrsJSON = new JSONObject(value);
+                    Iterator<String> metaAttrsIter = metaAttrsJSON.keys();
+                    while (metaAttrsIter.hasNext()) {
+                        String metaAttrsKey = metaAttrsIter.next();
+                        String metaAttrsValue = metaAttrsJSON.getString(metaAttrsKey);
+                        Timber.i("key: %s value: %s", metaAttrsKey, metaAttrsValue);
 
-                return answers;
+                        answer = new ViewModel(metaAttrsKey.replace("_", " "), metaAttrsValue, "id", "id");
+                        answers.add(answer);
+                    }
+                }
+
             }
+
+
+            return answers;
         });
     }
 
     private void setupRecyclerView() {
         adapter = new MultiViewAdapter();
-        adapter.setOnCardClickListener(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        adapter.setOnCardClickListener(SiteProfileActivity.this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SiteProfileActivity.this, LinearLayoutManager.VERTICAL, false);
         rvFormHistory.setLayoutManager(linearLayoutManager);
         rvFormHistory.setAdapter(adapter);
         rvFormHistory.setItemAnimator(new DefaultItemAnimator());
 
         rvFormHistory.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayoutManager.VERTICAL));
-        rvFormHistory.setHasFixedSize(true);
+
         rvFormHistory.setNestedScrollingEnabled(false);
     }
 

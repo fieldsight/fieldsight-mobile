@@ -53,6 +53,8 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:visibility="invisible"
+        android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:behavior_overlapTop="40dp"
@@ -60,7 +62,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/content_layout"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
@@ -142,6 +144,14 @@
         android:id="@+id/iv_site"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:src="@drawable/circle_green"
+        app:layout_anchor="@id/content_layout"
+        app:layout_anchorGravity="top|center" />
+
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/circle_green"
         app:layout_anchor="@id/content_layout"
         app:layout_anchorGravity="top|center" />

@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.submissions;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -10,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,6 +175,15 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         void onCardClicked(ViewModel viewModel);
     }
 
+    public void updateList(List<ViewModel> newList) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TitleDescModelDiffCallback(this.listOfItems, newList));
+
+        this.listOfItems.clear();
+        this.listOfItems.addAll(newList);
+
+        diffResult.dispatchUpdatesTo(this);
+
+    }
 
 }
 
