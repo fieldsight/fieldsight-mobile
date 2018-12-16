@@ -335,7 +335,7 @@ public class DownloadViewModel extends ViewModel {
 
     }
 
-    private void downloadOneItem(int syncableItem) {
+    public void downloadOneItem(int syncableItem) {
         switch (syncableItem) {
             case GENERAL_FORMS:
                 fetchGeneralForms();

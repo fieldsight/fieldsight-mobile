@@ -140,6 +140,12 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         return syncableItems.size();
     }
 
+
+    public ArrayList<Sync> getAll() {
+        return syncableItems;
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.image_background)

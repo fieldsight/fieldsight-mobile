@@ -1,69 +1,41 @@
 package org.bcss.collect.naxa.common.utilities;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
-import com.andrognito.flashbar.Flashbar;
-import com.andrognito.flashbar.anim.FlashAnim;
-import com.karumi.dexter.listener.single.SnackbarOnDeniedPermissionListener;
-
-
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
+import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 
 import java.util.concurrent.TimeUnit;
 
-import de.mateware.snacky.Snacky;
+import timber.log.Timber;
 
 public class FlashBarUtils {
-
-    private static final int LONG_DURATION_MS = (int) TimeUnit.SECONDS.toMillis(5);
-
 
     public static void showOutOfSyncMsg(@NonNull int outOfSyncUid, @NonNull Activity context, @NonNull String message) {
         if (message.isEmpty()) {
             return;
         }
 
+        try {
+            View rootView = context.getWindow().getDecorView().getRootView();
+            Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_INDEFINITE);
+            snack.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+            snack.setAction("Resolve", v -> {
+                DownloadActivityRefresh.start(context,outOfSyncUid);
+            });
 
-
-
-
-        Flashbar.Builder bar = new Flashbar.Builder(context)
-                .gravity(Flashbar.Gravity.BOTTOM)
-                .title("Out of sync")
-                .message(message)
-                .dismissOnTapOutside()
-                .enableSwipeToDismiss()
-                .castShadow(false)
-                .titleColorRes(R.color.white)
-                .enableSwipeToDismiss()
-                .backgroundDrawable(R.drawable.flashbar_frame)
-                .icon(R.drawable.information_outline)
-                .iconColorFilterRes(R.color.white)
-                .showIcon()
-                .positiveActionTextColorRes(R.color.colorGreenPrimaryLight)
-                .positiveActionText("Resolve")
-                .positiveActionTapListener(flashbar -> DownloadActivity.start(context, outOfSyncUid))
-                .enterAnimation(FlashAnim.with(context)
-                        .animateBar()
-                        .duration(400)
-                        .alpha()
-                        .overshoot())
-                .exitAnimation(FlashAnim.with(context)
-                        .animateBar()
-                        .duration(750)
-                        .accelerateDecelerate());
-
-
-        new Handler().postDelayed(() -> bar.build().show(), 500);
-
-
+            SnackbarHelper.configSnackbar(context, snack);
+            snack.show();
+        } catch (Exception e) {
+            Timber.e(e);
+            ToastUtils.showLongToast(message);
+        }
     }
 
 
@@ -78,30 +50,21 @@ public class FlashBarUtils {
             return;
         }
 
-        Flashbar.Builder bar = new Flashbar.Builder(context)
-                .gravity(Flashbar.Gravity.BOTTOM)
-                .dismissOnTapOutside()
-                .title(message)
-                .messageColor(R.color.white)
-                .castShadow(false)
-                .backgroundColorRes(R.color.colorPrimary)
-                .duration(LONG_DURATION_MS)
-                .enterAnimation(FlashAnim.with(context)
-                        .animateBar()
-                        .duration(400)
-                        .alpha()
-                        .overshoot())
-                .exitAnimation(FlashAnim.with(context)
-                        .animateBar()
-                        .duration(750)
-                        .accelerateDecelerate());
 
-        if (progressIcon) {
-            bar.showProgress(Flashbar.ProgressPosition.LEFT);
+        try {
+            View rootView = context.getWindow().getDecorView().getRootView();
+            Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
+            snack.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+            snack.setAction("Resolve", v -> {
+
+            });
+            SnackbarHelper.configSnackbar(context, snack);
+            snack.show();
+        } catch (Exception e) {
+            Timber.e(e);
+            ToastUtils.showLongToast(message);
+
+
         }
-
-
-        bar.build().show();
-
     }
 }

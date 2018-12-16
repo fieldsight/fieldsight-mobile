@@ -62,7 +62,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
     private String siteInJson;
     private MultiViewAdapter adapter;
     RecyclerView rvFormHistory;
-    ArrayList<ViewModel> answers = new ArrayList<>();
+
     private TextView tvSiteName;
     private CollapsingToolbarLayout collapsingToolbar;
     private AppBarLayout appBarLayout;
@@ -229,6 +229,8 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                 JSONObject json = new JSONObject(gson.toJson(loadedSite));
                 Iterator<String> iter = json.keys();
                 ViewModel answer;
+                ArrayList<ViewModel> answers = new ArrayList<>();
+
                 while (iter.hasNext()) {
                     String key = iter.next();
                     String value = String.valueOf(json.get(key));

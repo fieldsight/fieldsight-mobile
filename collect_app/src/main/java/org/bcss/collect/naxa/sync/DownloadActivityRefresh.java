@@ -1,8 +1,10 @@
 package org.bcss.collect.naxa.sync;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -38,6 +40,7 @@ import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
+import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 
@@ -54,10 +57,17 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
     private DownloadListAdapterNew adapter;
     private DownloadViewModel viewModel;
+    private int outOfSyncId;
 
 
     public static void start(Context context) {
         Intent intent = new Intent(context, DownloadActivityRefresh.class);
+        context.startActivity(intent);
+    }
+
+    public static void start(Activity context, int outOfSyncUid) {
+        Intent intent = new Intent(context, DownloadActivityRefresh.class);
+        intent.putExtra(EXTRA_MESSAGE, outOfSyncUid);
         context.startActivity(intent);
     }
 
@@ -98,7 +108,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                         String msg = String.format("Upload %s Edited Site(s)", sites.size());
                         if (sites.size() > 0) {
                             SyncLocalSource.getINSTANCE().saveAsAsync(new Sync(EDITED_SITES, PENDING, "Edited Site(s)", msg));
-                        }else {
+                        } else {
                             SyncLocalSource.getINSTANCE().deleteById(EDITED_SITES);
                         }
                     }
@@ -158,6 +168,14 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                         downloadButton.setText(R.string.download);
                     }
                 });
+
+        try {
+            outOfSyncId = getIntent().getExtras().getInt(EXTRA_MESSAGE);
+            viewModel.downloadOneItem(outOfSyncId);
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupViewModel() {
