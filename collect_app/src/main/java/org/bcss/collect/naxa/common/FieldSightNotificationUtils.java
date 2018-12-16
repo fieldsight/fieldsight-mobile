@@ -126,7 +126,13 @@ public class FieldSightNotificationUtils {
     }
 
 
+    public void cancelNotification(int id) {
+        NotificationManager manager = getManager();
 
+        if (manager != null) {
+            manager.cancel(id);
+        }
+    }
 
     public enum ProgressType {
         UPLOAD,

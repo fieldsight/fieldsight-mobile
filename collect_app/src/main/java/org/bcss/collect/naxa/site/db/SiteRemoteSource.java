@@ -86,10 +86,11 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     }
 
 
-    public void uploadEditedSites(List<Site> sites) {
+    public Observable<List<Site>> uploadEditedSites(List<Site> sites) {
         InstancesDao instancesDao = new InstancesDao();
 
 
+        return Observable.just(sites);
     }
 
 

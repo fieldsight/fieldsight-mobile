@@ -590,7 +590,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private void loadValueIntoSiteTypeSpinner(List<SiteType> siteTypes) {
         for (int pos = 0; pos < siteTypes.size(); pos++) {
             SiteType siteType = siteTypes.get(pos);
-            if (siteType.getId().equals(loadedSite.getRegionId())) {
+            if (loadedSite != null && siteType.getId().equals(loadedSite.getRegionId())) {
                 spinnerSiteCluster.setSelection(pos);
                 break;
             }
@@ -613,7 +613,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private void loadValueIntoClusterSpinner(ArrayList<SiteRegion> clusters) {
         for (int pos = 0; pos < clusters.size(); pos++) {
             SiteRegion siteRegion = clusters.get(pos);
-            if (siteRegion.getId().equals(loadedSite.getRegionId())) {
+            if (loadedSite != null && siteRegion.getId().equals(loadedSite.getRegionId())) {
                 spinnerSiteCluster.setSelection(pos);
                 break;
             }

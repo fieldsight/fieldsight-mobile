@@ -121,9 +121,7 @@ public class InstanceRemoteSource {
         // Create new answer folder.
         String time = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss",
                 Locale.ENGLISH).format(Calendar.getInstance().getTime());
-
         String instancePath = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
-
         return instancePath + File.separator + formName + "_"
                 + time;
     }

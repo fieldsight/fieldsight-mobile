@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.site;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -67,6 +68,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
@@ -432,11 +434,8 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
             switch (item.getItemId()) {
                 case R.id.action_delete_sites:
                     return true;
-
                 case R.id.action_upload_sites:
-                    uploadSelectedSites(siteListAdapter.getSelected());
-
-                    actionMode.finish();
+                    showConfirmationDialog();
                     return true;
 
                 default:
@@ -450,62 +449,66 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }
     }
 
+    private void showConfirmationDialog() {
+        DialogFactory.createActionDialog(requireActivity(), "Upload selected site(s)", "Upload selected site(s) along with their filled form(s) ?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    uploadSelectedSites(siteListAdapter.getSelected(), true);
+                })
+                .setNegativeButton("No, Upload Site(s) only", (dialog, which) -> {
+                    uploadSelectedSites(siteListAdapter.getSelected(), false);
+                })
+                .setOnDismissListener(dialog -> actionMode.finish())
+                .setNeutralButton(R.string.dialog_action_dismiss, null)
+                .show();
 
-    private void uploadSelectedSites(ArrayList<Site> selected) {
+    }
+
+
+    private void uploadSelectedSites(ArrayList<Site> selected, boolean uploadForms) {
 
         String progressMessage = "Uploading site(s)";
-        String completedMessage = "Site(s) Uploaded";
-        String failedMessage = "Site(s) upload failed";
-        final int progressNotifyId = 987876756;
 
-        SiteRemoteSource.getInstance()
-                .uploadMultipleSites(selected)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        final int progressNotifyId = FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
+
+
+        Observable<Site> createSiteObservable = SiteRemoteSource.getInstance().uploadMultipleSites(selected);
+        createSiteObservable
+                .filter(site -> uploadForms)
                 .map(site -> getNotUploadedFormForSite(site.getId()))
                 .flatMapIterable((Function<ArrayList<Long>, Iterable<Long>>) longs -> longs)
                 .toList()
-
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<List<Long>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
-//                        FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
                     }
 
                     @Override
                     public void onSuccess(List<Long> instanceIDs) {
-                        NotificationUtils.cancelNotification(progressNotifyId);
-                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(completedMessage, completedMessage);
-
-                        if (isAdded()) {
-                            DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
-                                    .setPositiveButton("Upload ", (dialog, which) -> {
-                                        Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
-                                        i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
-                                        startActivityForResult(i, INSTANCE_UPLOADER);
-                                    }).setNegativeButton("Not now", null).show();
-                        } else {
-                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp("Unable to start upload", "Unable to start upload for offline site");
+                        if (uploadForms && instanceIDs.size() > 0) {
+                            Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
+                            i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
+                            startActivityForResult(i, INSTANCE_UPLOADER);
                         }
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         String errorMessage = e.getMessage();
-                        NotificationUtils.cancelNotification(progressNotifyId);
-                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(failedMessage, errorMessage);
+                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
 
                         if (e instanceof HttpException) {
                             ResponseBody responseBody = ((HttpException) e).response().errorBody();
                             errorMessage = getErrorMessage(responseBody);
                         }
 
-                        e.printStackTrace();
                         if (isAdded()) {
                             DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
+                        } else {
+                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), errorMessage);
                         }
                     }
                 });
