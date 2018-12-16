@@ -357,6 +357,7 @@
 
 
             <Button
+                android:textAllCaps="true"
                 android:drawableStart="@drawable/ic_cloud_upload"
                 android:drawableLeft="@drawable/ic_cloud_upload"
                 android:text="@string/upload"

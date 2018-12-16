@@ -33,7 +33,7 @@
     <string name="msg_temporary_network_error">Temporary network error</string>
     <string name="btn_text_off_not_finalized">Not Finalized</string>
     <string name="btn_text_on_finalized">Finalized</string>
-    <string name="btn_text_delete_site">Delete Site</string>
+    <string name="btn_text_delete_site">Delete</string>
     <string name="upload">Upload</string>
     <string name="all_msg_logout_no__internet">Active Internet required to logout</string>
     <string name="toolbar_form_types">Form Types</string>

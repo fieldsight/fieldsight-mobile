@@ -32,7 +32,7 @@ public interface SiteDao {
     Single<List<Site>> getSiteByProjectIdAsSingle(String projectID);
 
     @Query("SELECT * from sites WHERE id= :siteId")
-    LiveData<List<Site>> getSiteById(String siteId);
+    LiveData<Site> getSiteById(String siteId);
 
     @Query("UPDATE sites SET isSiteVerified =:siteStatus WHERE id=:siteId")
     int updateSiteStatus(String siteId, int siteStatus);

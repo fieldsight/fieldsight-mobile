@@ -93,7 +93,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         View rootView =
                 inflater.inflate(R.layout.general_forms_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-        viewModel = FragmentHostActivity.obtainViewModel(getActivity());
+        viewModel = FragmentHostActivity.obtainViewModel(requireActivity());
 
         setToolbarText();
         return rootView;

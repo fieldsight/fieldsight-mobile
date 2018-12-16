@@ -45,7 +45,7 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
         return localSource.searchSites(searchQuery);
     }
 
-    public LiveData<List<Site>> getSiteById(String id) {
+    public LiveData<Site> getSiteById(String id) {
         return localSource.getBySiteId(id);
     }
 

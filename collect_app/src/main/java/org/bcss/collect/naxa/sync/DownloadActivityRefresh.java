@@ -57,7 +57,6 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
     private DownloadListAdapterNew adapter;
     private DownloadViewModel viewModel;
-    private int outOfSyncId;
 
 
     public static void start(Context context) {
@@ -170,7 +169,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 });
 
         try {
-            outOfSyncId = getIntent().getExtras().getInt(EXTRA_MESSAGE);
+            int outOfSyncId = getIntent().getExtras().getInt(EXTRA_MESSAGE);
             viewModel.downloadOneItem(outOfSyncId);
 
         } catch (NullPointerException e) {

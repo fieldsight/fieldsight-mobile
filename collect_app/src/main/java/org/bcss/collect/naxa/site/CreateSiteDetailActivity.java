@@ -216,12 +216,12 @@ public class CreateSiteDetailActivity extends CollectAbstractActivity {
         createSiteDetailViewModel
                 .getSiteRepository()
                 .getSiteById(site.getId())
-                .observe(this, new Observer<List<Site>>() {
+                .observe(this, new Observer<Site>() {
                     @Override
-                    public void onChanged(@Nullable List<Site> sites) {
-                        if (sites == null || sites.size() == 0) return;
+                    public void onChanged(@Nullable Site nSite) {
+                        if (nSite == null) return;
 
-                        nSite = sites.get(0);
+
                         ilSiteIdentifier.getEditText().setText(nSite.getIdentifier());
                         ilSiteName.getEditText().setText(nSite.getName());
                         ilPhone.getEditText().setText(nSite.getPhone());

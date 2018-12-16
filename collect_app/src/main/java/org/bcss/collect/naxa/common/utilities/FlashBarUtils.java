@@ -24,7 +24,7 @@ public class FlashBarUtils {
 
         try {
             View rootView = context.getWindow().getDecorView().getRootView();
-            Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_INDEFINITE);
+            Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
             snack.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
             snack.setAction("Resolve", v -> {
                 DownloadActivityRefresh.start(context,outOfSyncUid);
@@ -43,6 +43,11 @@ public class FlashBarUtils {
         showFlashbar(context, message, false);
     }
 
+
+    public static void showFlashbar(@NonNull Activity context, @NonNull String message) {
+        showFlashbar(context, message, false);
+    }
+
     public static void showFlashbar(@NonNull Activity context, @NonNull String message, boolean progressIcon) {
 
 
@@ -54,10 +59,6 @@ public class FlashBarUtils {
         try {
             View rootView = context.getWindow().getDecorView().getRootView();
             Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
-            snack.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-            snack.setAction("Resolve", v -> {
-
-            });
             SnackbarHelper.configSnackbar(context, snack);
             snack.show();
         } catch (Exception e) {

@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.site;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -116,44 +117,37 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         View rootView = inflater.inflate(R.layout.fragment_dashboard_site, container, false);
         //Constants.MY_FRAG = 1;
         unbinder = ButterKnife.bind(this, rootView);
-
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
-        Timber.i(loadedSite.toString());
-
         bindUI(rootView);
-        hideSendButtonIfMockedSite(rootView);
-        setupPopup();
-        setupToolbar();
 
-        tvSiteAddress.setText(loadedSite.getAddress());
-        tvSiteName.setText(loadedSite.getName());
-        showOrHide(tvSiteType, loadedSite.getTypeLabel());
+        SiteLocalSource.getInstance().getBySiteId(loadedSite.getId()).observe(requireActivity(), site -> {
+            if(site==null)return;
+            hideSendButtonIfMockedSite(rootView);
+            setupPopup();
+            setupToolbar();
 
-        tvSiteType.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
+            tvSiteAddress.setText(loadedSite.getAddress());
+            tvSiteName.setText(loadedSite.getName());
+            showOrHide(tvSiteType, loadedSite.getTypeLabel());
+
+            tvSiteType.setOnLongClickListener(view -> {
                 ToastUtils.showLongToast(loadedSite.getTypeId());
                 return true;
-            }
+            });
+
+            tvSiteType.setOnClickListener(view -> DialogFactory.createMessageDialog(getActivity(),
+                    "Information", String.format("Only %s type sub stages will be displayed for %s", loadedSite.getTypeLabel(), loadedSite.getName())).show());
+
+
+            rootView.findViewById(R.id.site_option_btn_delete_site)
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showDeleteWarningDialog();
+                        }
+                    });
+            setupFinalizedButton();
         });
-
-        tvSiteType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogFactory.createMessageDialog(getActivity(),
-                        "Information", String.format("Only %s type sub stages will be displayed for %s", loadedSite.getTypeLabel(), loadedSite.getName())).show();
-            }
-        });
-
-
-        rootView.findViewById(R.id.site_option_btn_delete_site)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showDeleteWarningDialog();
-                    }
-                });
-        setupFinalizedButton();
 
         return rootView;
     }
@@ -173,27 +167,24 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void deleteSite(Site loadedSite) {
 
-        SiteLocalSource.getInstance().delete(loadedSite).observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(@Nullable Integer affectedRows) {
+        SiteLocalSource.getInstance().delete(loadedSite).observe(this, affectedRows -> {
 
-                if (affectedRows == null) {
-                    ToastUtils.showShortToast(R.string.dialog_unexpected_error_title);
-                    return;
-                }
+            if (affectedRows == null) {
+                ToastUtils.showShortToast(R.string.dialog_unexpected_error_title);
+                return;
+            }
 
-                switch (affectedRows) {
-                    case 1:
-                        ToastUtils.showShortToast(getString(R.string.msg_delete_sucess, loadedSite.getName()));
-                        new Handler().postDelayed(() -> getActivity().onBackPressed(), 500);
-                        break;
-                    case -1:
-                        ToastUtils.showShortToast(getString(R.string.msg_delete_failed, loadedSite.getName()));
-                        break;
-                    default:
-                        ToastUtils.showShortToast(getString(R.string.dialog_unexpected_error_title));
-                        break;
-                }
+            switch (affectedRows) {
+                case 1:
+                    ToastUtils.showShortToast(getString(R.string.msg_delete_sucess, loadedSite.getName()));
+                    new Handler().postDelayed(() -> getActivity().onBackPressed(), 500);
+                    break;
+                case -1:
+                    ToastUtils.showShortToast(getString(R.string.msg_delete_failed, loadedSite.getName()));
+                    break;
+                default:
+                    ToastUtils.showShortToast(getString(R.string.dialog_unexpected_error_title));
+                    break;
             }
         });
 
@@ -218,7 +209,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 switch (item.getItemId()) {
 
                     case R.id.popup_open_edit:
-                        SiteProfileActivity.start(requireActivity(),loadedSite.getId());
+                        SiteProfileActivity.start(requireActivity(), loadedSite.getId());
 
                         break;
                     case R.id.popup_open_in_map:
@@ -277,7 +268,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void hideSendButtonIfMockedSite(View rootView) {
 
-        Boolean isOfflineSite = loadedSite.getIsSiteVerified() != Constant.SiteStatus.IS_ONLINE;
+        Boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
 
         if (isOfflineSite) {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);
@@ -380,7 +371,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                     @Override
                     public void onNext(ArrayList<Long> instanceIDs) {
                         NotificationUtils.cancelNotification(progressNotifyId);
-                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(completedMessage,completedMessage);
+                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(completedMessage, completedMessage);
 
 
                         if (isAdded()) {

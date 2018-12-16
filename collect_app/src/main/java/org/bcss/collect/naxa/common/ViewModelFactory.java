@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 
 
 import org.bcss.collect.naxa.contact.ContactLocalSource;
@@ -29,6 +31,8 @@ import org.bcss.collect.naxa.scheduled.data.ScheduledFormsLocalSource;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
 import org.bcss.collect.naxa.site.CreateSiteDetailViewModel;
 import org.bcss.collect.naxa.site.CreateSiteViewModel;
+import org.bcss.collect.naxa.site.FragmentHostActivity;
+import org.bcss.collect.naxa.site.FragmentHostViewModel;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.site.db.SiteRepository;
@@ -154,8 +158,23 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(DownloadViewModel.class)) {
             //noinspection unchecked
             return (T) new DownloadViewModel();
+        }else if (modelClass.isAssignableFrom(FragmentHostViewModel.class)) {
+            //noinspection unchecked
+            return (T) new FragmentHostViewModel();
         }
 
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());
+    }
+
+
+    public static FragmentHostViewModel obtainViewModel(FragmentActivity activity) {
+        // Use a Factory to inject dependencies into the ViewModel
+
+        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
+
+        FragmentHostViewModel viewModel =
+                ViewModelProviders.of(activity, factory).get(FragmentHostViewModel.class);
+
+        return viewModel;
     }
 }

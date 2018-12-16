@@ -114,17 +114,14 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
         SiteLocalSource.getInstance()
                 .getBySiteId(siteId)
-                .observe(this, new Observer<List<Site>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Site> sites) {
-                        if (sites == null) return;
-                        loadedSite = sites.get(0);
-                        tvSiteName.setText(loadedSite.getName());
-                        setSiteImage(loadedSite.getLogo());
-                        tvPlaceHolder.setText(loadedSite.getName().substring(0, 1));
-                        sub(loadedSite);
-                        collapsingToolbar.setTitle(loadedSite.getName());
-                    }
+                .observe(this, (loadedSite) -> {
+                    if (loadedSite == null) return;
+                    tvSiteName.setText(loadedSite.getName());
+                    setSiteImage(loadedSite.getLogo());
+                    tvPlaceHolder.setText(loadedSite.getName().substring(0, 1));
+                    sub(loadedSite);
+                    collapsingToolbar.setTitle(loadedSite.getName());
+                    SiteProfileActivity.this.loadedSite = loadedSite;
                 });
 
 
@@ -302,6 +299,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
     @OnClick(R.id.btn_edit_site)
     public void onViewClicked() {
+
         ProjectLocalSource.getInstance().getProjectById(loadedSite.getProject())
                 .observe(this, project -> {
                     if (project == null) {

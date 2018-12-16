@@ -52,6 +52,7 @@ import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.McqOption;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
@@ -212,12 +213,13 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     if (createSiteFormStatus == null) return;
                     switch (createSiteFormStatus) {
                         case SUCCESS:
-                            ToastUtils.showShortToastInMiddle("Offline Site Created");
-                            finish();
+                            FlashBarUtils.showFlashbar(CreateSiteActivity.this, "Offline Site Created");
+                            finishWithDelay();
                             break;
                         case UPDATE_SUCESS:
-                            ToastUtils.showShortToastInMiddle("Site Updated");
-                            finish();
+                            FlashBarUtils.showFlashbar(CreateSiteActivity.this, "Site Information Updated");
+                            finishWithDelay();
+
                             break;
                         case ERROR:
                             DialogFactory.createGenericErrorDialog(this, "").show();
@@ -233,6 +235,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
                             break;
                         case EMPTY_SITE_IDENTIFIER:
+
                             tiSiteIdentifier.requestFocus();
                             tiSiteIdentifier.setError(getString(R.string.error_field_required));
 
@@ -341,6 +344,10 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
         createSiteViewModel.getProjectMutableLiveData().setValue(project);
 
+    }
+
+    private void finishWithDelay() {
+        new Handler().postDelayed(this::finish, 1000);
     }
 
 

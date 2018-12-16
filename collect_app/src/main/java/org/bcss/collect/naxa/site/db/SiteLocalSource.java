@@ -65,9 +65,11 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteFromFilter(projectId, cluster);
     }
 
-    public LiveData<List<Site>> getBySiteId(String siteId) {
+    public LiveData<Site> getBySiteId(String siteId) {
         return dao.getSiteById(siteId);
     }
+
+
 
     //todo return affected rows count
     public LiveData<Integer> delete(Site site) {
@@ -146,9 +148,9 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         });
     }
 
-    public void updateSiteIdAsync(String siteId,int siteStatus) {
+    public void updateSiteIdAsync(String siteId, int siteStatus) {
         AsyncTask.execute(() -> {
-            dao.updateSiteStatus(siteId,siteStatus);
+            dao.updateSiteStatus(siteId, siteStatus);
         });
     }
 
