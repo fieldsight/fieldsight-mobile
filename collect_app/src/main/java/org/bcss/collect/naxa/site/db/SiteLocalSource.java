@@ -146,6 +146,12 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         });
     }
 
+    public void updateSiteIdAsync(String siteId,int siteStatus) {
+        AsyncTask.execute(() -> {
+            dao.updateSiteStatus(siteId,siteStatus);
+        });
+    }
+
     public Single<List<Site>> getAllByStatus(int siteStatus) {
         return dao.getAllByStatus(siteStatus);
     }

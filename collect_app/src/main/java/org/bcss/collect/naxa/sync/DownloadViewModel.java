@@ -24,6 +24,7 @@ import org.bcss.collect.naxa.project.data.ProjectSitesRemoteSource;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
 import org.bcss.collect.naxa.site.SiteTypeRemoteSource;
+import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.StageRemoteSource;
 import org.greenrobot.eventbus.EventBus;
@@ -45,8 +46,10 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.GENERAL_FORMS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.SCHEDULED_FORMS;
@@ -245,7 +248,7 @@ public class DownloadViewModel extends ViewModel {
                 case DownloadProgress.STATUS_PROGRESS_UPDATE:
                     DownloadProgress progress = (DownloadProgress) resultData.getSerializable(EXTRA_OBJECT);
                     Timber.i(progress.getMessage());
-                    SyncLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS,progress.getTotal(),progress.getProgress());
+                    SyncLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
                     break;
                 case DownloadProgress.STATUS_ERROR:
                     EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_ERROR));
@@ -363,6 +366,11 @@ public class DownloadViewModel extends ViewModel {
                 break;
             case PREV_SUBMISSION:
                 LastSubmissionRemoteSource.getInstance().getAll();
+                break;
+            case EDITED_SITES:
+                SiteRemoteSource.getInstance().updateAllEditedSite();
+                break;
+            case OFFLINE_SITES:
                 break;
 
         }

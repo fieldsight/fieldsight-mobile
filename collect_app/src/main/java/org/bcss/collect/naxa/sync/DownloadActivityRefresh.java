@@ -95,26 +95,11 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 .subscribe(new DisposableSingleObserver<List<Site>>() {
                     @Override
                     public void onSuccess(List<Site> sites) {
-                        String msg = String.format("Upload %s Edited Site(s)",sites.size());
+                        String msg = String.format("Upload %s Edited Site(s)", sites.size());
                         if (sites.size() > 0) {
-                            SyncLocalSource.getINSTANCE()
-                                    .save(new Sync(EDITED_SITES, PENDING, "Edited Site(s)", msg))
-                                    .subscribe(new CompletableObserver() {
-                                        @Override
-                                        public void onSubscribe(Disposable d) {
-
-                                        }
-
-                                        @Override
-                                        public void onComplete() {
-
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-
-                                        }
-                                    });
+                            SyncLocalSource.getINSTANCE().saveAsAsync(new Sync(EDITED_SITES, PENDING, "Edited Site(s)", msg));
+                        }else {
+                            SyncLocalSource.getINSTANCE().deleteById(EDITED_SITES);
                         }
                     }
 
@@ -132,25 +117,10 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                     @Override
                     public void onSuccess(List<Site> sites) {
                         if (sites.size() > 0) {
-                            String msg = String.format("Upload %s Offline Site(s)",sites.size());
-                            SyncLocalSource.getINSTANCE()
-                                    .save(new Sync(OFFLINE_SITES, PENDING, "Offline Site(s)", msg))
-                                    .subscribe(new CompletableObserver() {
-                                        @Override
-                                        public void onSubscribe(Disposable d) {
-
-                                        }
-
-                                        @Override
-                                        public void onComplete() {
-
-                                        }
-
-                                        @Override
-                                        public void onError(Throwable e) {
-
-                                        }
-                                    });
+                            String msg = String.format("Upload %s Offline Site(s)", sites.size());
+                            SyncLocalSource.getINSTANCE().saveAsAsync(new Sync(OFFLINE_SITES, PENDING, "Offline Site(s)", msg));
+                        } else {
+                            SyncLocalSource.getINSTANCE().deleteById(OFFLINE_SITES);
                         }
                     }
 

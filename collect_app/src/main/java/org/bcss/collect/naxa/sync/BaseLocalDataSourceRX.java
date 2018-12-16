@@ -15,5 +15,9 @@ interface BaseLocalDataSourceRX<T> {
 
     Completable save(ArrayList<T> items);
 
+    void saveAsAsync(T... items);
+
+
+
     void updateAll(ArrayList<T> items);
 }

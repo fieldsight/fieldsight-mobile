@@ -48,6 +48,9 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
     @Query("UPDATE sync set downloadingStatus=:running WHERE uid=:uid")
     public abstract void markSelectedAsRunning(int uid, int running);
 
+    @Query("UPDATE sync set downloadingStatus=:pending")
+    public abstract void markAllAsPending(int pending);
+
     @Query("UPDATE sync set syncTotal=:total,syncProgress=:progress WHERE uid=:uid  ")
     public abstract void updateProgress(int uid, int total, int progress);
 
@@ -61,4 +64,7 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     public abstract void insertOrIgnore(Sync... items);
+
+    @Query("DELETE from sync where uid=:uid")
+    public abstract void deleteById(int uid);
 }

@@ -53,9 +53,17 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
         });
     }
 
+
     @Override
     public Completable save(ArrayList<Sync> items) {
         throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public void saveAsAsync(Sync... items) {
+        AsyncTask.execute(() -> {
+            syncDAO.insertOrIgnore(items);
+        });
     }
 
     @Override
@@ -155,6 +163,12 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     }
 
+    public void markAllAsPending() {
+        AsyncTask.execute(() -> {
+            syncDAO.markAllAsPending(PENDING);
+        });
+    }
+
     public void markAsCompleted(int uid) {
         AsyncTask.execute(() -> {
             syncDAO.markSelectedAsCompleted(uid, Constant.DownloadStatus.COMPLETED, formattedDate());
@@ -173,17 +187,6 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
         return formattedDate;
     }
 
-    void markAllAsPending() {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                for (Sync sync : getData()) {
-                    markAsPending(sync.getUid());
-                }
-            }
-        });
-
-    }
 
     private Sync[] getData() {
 
@@ -199,5 +202,11 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     public Completable init() {
         return save(getData());
+    }
+
+    public void deleteById(int uid) {
+        AsyncTask.execute(() -> {
+            syncDAO.deleteById(uid);
+        });
     }
 }
