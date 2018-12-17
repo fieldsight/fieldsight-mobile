@@ -41,6 +41,7 @@ import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.firebase.NotificationUtils;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
 import org.bcss.collect.naxa.login.model.Site;
@@ -54,12 +55,15 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnLongClick;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -121,7 +125,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         bindUI(rootView);
 
         SiteLocalSource.getInstance().getBySiteId(loadedSite.getId()).observe(requireActivity(), site -> {
-            if(site==null)return;
+            if (site == null) return;
             hideSendButtonIfMockedSite(rootView);
             setupPopup();
             setupToolbar();
@@ -342,70 +346,70 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     }
 
     @OnClick(R.id.site_option_btn_upload_site)
-    public void uploadSite() {
+    public void showConfirmationDialog() {
+        DialogFactory.createActionDialog(requireActivity(), "Upload selected site(s)", "Upload selected site(s) along with their filled form(s) ?")
+                .setPositiveButton("Yes, upload Site(s) and Form(s)", (dialog, which) -> {
+                    uploadSelectedSites(Collections.singletonList(loadedSite), true);
+                })
+                .setNegativeButton("No, Upload Site(s) only", (dialog, which) -> {
+                    uploadSelectedSites(Collections.singletonList(loadedSite), false);
+                })
+                .setNeutralButton(R.string.dialog_action_dismiss, null)
+                .show();
+
+    }
+
+
+    private void uploadSelectedSites(List<Site> selected, boolean uploadForms) {
 
         String progressMessage = "Uploading site(s)";
-        String completedMessage = "Site(s) Uploaded";
-        String failedMessage = "Site(s) upload failed";
-        final int progressNotifyId = 987876756;
 
-        ArrayList<Site> list = new ArrayList<>();
-        list.add(loadedSite);
-        SiteRemoteSource.getInstance()
-                .uploadMultipleSites(list)
+        final int progressNotifyId = FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
+
+
+        Observable<Site> createSiteObservable = SiteRemoteSource.getInstance().uploadMultipleSites(selected);
+        createSiteObservable
+                .filter(site -> uploadForms)
+                .map(site -> getNotUploadedFormForSite(site.getId()))
+                .flatMapIterable((Function<ArrayList<Long>, Iterable<Long>>) longs -> longs)
+                .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<Site, ArrayList<Long>>() {
+                .subscribe(new SingleObserver<List<Long>>() {
                     @Override
-                    public ArrayList<Long> apply(Site site) throws Exception {
-                        return getNotUploadedFormForSite(site.getId());
-                    }
-                })
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-//                        FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressNotifyId, progressMessage);
-                    }
-                })
-                .subscribe(new DisposableObserver<ArrayList<Long>>() {
-                    @Override
-                    public void onNext(ArrayList<Long> instanceIDs) {
-                        NotificationUtils.cancelNotification(progressNotifyId);
-                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(completedMessage, completedMessage);
+                    public void onSubscribe(Disposable d) {
 
+                    }
 
-                        if (isAdded()) {
-                            DialogFactory.createActionDialog(getActivity(), "Upload instances", "Upload form instance(s) belonging to offline site(s)")
-                                    .setPositiveButton("Upload ", (dialog, which) -> {
-                                        Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
-                                        i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
-                                        startActivityForResult(i, INSTANCE_UPLOADER);
-                                    }).setNegativeButton("Not now", null).show();
-                        } else {
-                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp("Unable to start upload", "Unable to start upload for offline site");
+                    @Override
+                    public void onSuccess(List<Long> instanceIDs) {
+                        if (uploadForms && instanceIDs.size() > 0) {
+                            Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
+                            i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
+                            startActivityForResult(i, INSTANCE_UPLOADER);
+                        }
+
+                        if (uploadForms && instanceIDs.size() == 0) {
+                            FlashBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         String errorMessage = e.getMessage();
-                        NotificationUtils.cancelNotification(progressNotifyId);
-                        FieldSightNotificationUtils.getINSTANCE().notifyNormal(failedMessage, errorMessage);
+                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
 
                         if (e instanceof HttpException) {
                             ResponseBody responseBody = ((HttpException) e).response().errorBody();
                             errorMessage = getErrorMessage(responseBody);
                         }
 
-                        e.printStackTrace();
                         if (isAdded()) {
                             DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
+                        } else {
+                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), errorMessage);
                         }
-                    }
-
-                    @Override
-                    public void onComplete() {
-
                     }
                 });
     }

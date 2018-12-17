@@ -492,6 +492,10 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                             i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
                             startActivityForResult(i, INSTANCE_UPLOADER);
                         }
+
+                        if (uploadForms && instanceIDs.size() == 0) {
+                            FlashBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                        }
                     }
 
                     @Override
