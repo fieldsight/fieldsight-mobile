@@ -67,4 +67,10 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
 
     @Query("DELETE from sync where uid=:uid")
     public abstract void deleteById(int uid);
+
+//    public static final int PENDING = 1;
+//    public static final int FAILED = 2;
+    @Query("UPDATE sync SET downloadingStatus = 2, lastSyncDateTime =:date WHERE downloadingStatus= 3")
+    public abstract void setAllRunningTaskAsFailed(String date);
+
 }

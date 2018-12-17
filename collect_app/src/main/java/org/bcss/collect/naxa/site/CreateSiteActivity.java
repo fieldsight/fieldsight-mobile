@@ -352,7 +352,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
 
     private void loadFormWithValuesSet(Site site) {
-        toolbarGeneral.setTitle("Update Site");
+        toolbarGeneral.setTitle("Edit Site");
 
 
         setText(tiSiteIdentifier, site.getIdentifier());

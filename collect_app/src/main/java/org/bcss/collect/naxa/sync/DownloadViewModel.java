@@ -377,4 +377,7 @@ public class DownloadViewModel extends ViewModel {
     }
 
 
+    void setAllRunningTaskAsFailed() {
+        SyncLocalSource.getINSTANCE().setAllRunningTaskAsFailed();
+    }
 }

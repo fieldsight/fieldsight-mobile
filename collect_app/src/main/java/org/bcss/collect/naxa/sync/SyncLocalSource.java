@@ -209,4 +209,10 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
             syncDAO.deleteById(uid);
         });
     }
+
+    public void setAllRunningTaskAsFailed() {
+        AsyncTask.execute(()->{
+            syncDAO.setAllRunningTaskAsFailed(formattedDate());
+        });
+    }
 }

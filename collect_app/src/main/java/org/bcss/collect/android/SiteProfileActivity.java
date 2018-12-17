@@ -218,6 +218,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                         adapter.updateList(viewModels);
                         showContentLayout();
 
+
                     }
 
                     @Override

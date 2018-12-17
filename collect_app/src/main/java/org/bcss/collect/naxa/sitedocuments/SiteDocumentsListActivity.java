@@ -77,7 +77,10 @@ public class SiteDocumentsListActivity extends CollectAbstractActivity implement
         rvSiteDocuments.setAdapter(adapter);
         rvSiteDocuments.setEmptyView(emptyLayout, getString(R.string.empty_message_site_documents), null);
         rvSiteDocuments.addItemDecoration(new GridItemDecoration(16, 2));
-        adapter.addAll(loadedSite.getSiteDocuments());
+        if(loadedSite.getSiteDocuments() != null){
+            adapter.addAll(loadedSite.getSiteDocuments());
+        }
+
     }
 
     @Override

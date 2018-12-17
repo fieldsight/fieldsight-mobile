@@ -5,8 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-
-
     tools:context=".SiteProfileActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -18,7 +16,7 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             app:contentScrim="@color/colorPrimary"
             app:expandedTitleMarginBottom="94dp"
             app:expandedTitleTextAppearance="@android:color/transparent"
@@ -26,6 +24,7 @@
 
 
             <ImageView
+                android:foreground="@color/colorTransparentBlue"
                 android:id="@+id/iv_bg_toolbar"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
@@ -33,19 +32,10 @@
                 android:src="@drawable/sand_city_illustration"
                 tools:ignore="ContentDescription" />
 
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorTransparentBlue"
-                android:scaleType="centerCrop"
-                android:tint="@color/colorTransparentBlue"
-                tools:ignore="ContentDescription" />
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-
                 app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/ic_arrow_back" />
 
@@ -53,7 +43,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
-        android:visibility="invisible"
+
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,7 +52,6 @@
 
 
         <RelativeLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
@@ -71,35 +60,41 @@
             tools:showIn="@layout/activity_site_profile">
 
             <android.support.design.card.MaterialCardView
+                android:layout_centerHorizontal="true"
                 android:id="@+id/card_intro"
+                android:minHeight="140dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="140dp"
                 app:cardCornerRadius="@dimen/corner_radius">
 
-                <android.support.constraint.ConstraintLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <TextView
+                        android:textAlignment="center"
+                        android:layout_centerInParent="true"
                         android:id="@+id/tv_site_name"
-                        style="@style/Base.TextAppearance.AppCompat.Headline"
+                        style="@style/TextAppearance.MaterialComponents.Headline5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="50dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:text="Site Name"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.502"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:minLines="1"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        />
+
+                    <Button
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/tv_site_name"
+                        android:id="@+id/btn_edit_site"
+                        style="@style/Base.Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Edit Site"
+                        android:textAllCaps="true" />
 
 
-                </android.support.constraint.ConstraintLayout>
+                </RelativeLayout>
             </android.support.design.card.MaterialCardView>
 
             <android.support.design.card.MaterialCardView
@@ -123,13 +118,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
-                    <Button
-                        android:textAllCaps="true"
-                        android:id="@+id/btn_edit_site"
-                        style="@style/Base.Widget.AppCompat.Button.Colored"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Edit Site" />
+
                 </LinearLayout>
 
             </android.support.design.card.MaterialCardView>

@@ -16,6 +16,7 @@ public class SnackbarHelper {
     static void configSnackbar(Context context, Snackbar snack) {
         addMargins(snack);
         setRoundBordersBg(context, snack);
+
         ViewCompat.setElevation(snack.getView(), 6f);
     }
 

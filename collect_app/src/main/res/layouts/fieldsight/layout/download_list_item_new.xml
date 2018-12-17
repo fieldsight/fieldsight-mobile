@@ -7,10 +7,10 @@
         android:id="@+id/download_list_item_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/instance_list_icon_top_bottom_margin"
         android:layout_marginLeft="@dimen/instance_list_icon_left_right_margin"
-        android:layout_marginRight="@dimen/instance_list_icon_left_right_margin"
         android:layout_marginTop="@dimen/instance_list_icon_top_bottom_margin"
+        android:layout_marginRight="@dimen/instance_list_icon_left_right_margin"
+        android:layout_marginBottom="@dimen/instance_list_icon_top_bottom_margin"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
         app:contentPadding="@dimen/instance_list_card_view_padding">
@@ -37,17 +37,17 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:animateLayoutChanges="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
                 android:minHeight="?android:attr/listPreferredItemHeight"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/instance_list_text_padding"
-                android:paddingEnd="@dimen/instance_list_text_padding"
-                android:paddingLeft="@dimen/instance_list_text_padding"
-                android:paddingRight="@dimen/instance_list_text_padding"
                 android:paddingStart="@dimen/instance_list_text_padding"
-                android:paddingTop="@dimen/instance_list_text_padding">
+                android:paddingLeft="@dimen/instance_list_text_padding"
+                android:paddingTop="@dimen/instance_list_text_padding"
+                android:paddingEnd="@dimen/instance_list_text_padding"
+                android:paddingRight="@dimen/instance_list_text_padding"
+                android:paddingBottom="@dimen/instance_list_text_padding">
 
                 <RelativeLayout
                     android:id="@+id/text_holder"
@@ -59,11 +59,11 @@
                         android:id="@+id/display_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:layout_toLeftOf="@+id/checkbox"
                         android:layout_toStartOf="@+id/checkbox"
+                        android:layout_toLeftOf="@+id/checkbox"
                         android:gravity="center_vertical"
                         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -71,11 +71,11 @@
                         android:id="@+id/display_subtext"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
                         android:layout_below="@+id/display_name"
-                        android:layout_toLeftOf="@+id/checkbox"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_toStartOf="@+id/checkbox"
+                        android:layout_toLeftOf="@+id/checkbox"
                         android:gravity="center_vertical"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -84,14 +84,26 @@
                         android:id="@+id/update_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
                         android:layout_below="@+id/display_subtext"
-                        android:layout_toLeftOf="@+id/checkbox"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_toStartOf="@+id/checkbox"
-                        android:text="@string/newer_version_of_a_form_info"
-                        android:textColor="@color/red"
-                        />
+                        android:layout_toLeftOf="@+id/checkbox"
+                        android:textColor="@color/red" />
+
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/tv_out_of_sync"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/update_info"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toStartOf="@+id/checkbox"
+                        android:layout_toLeftOf="@+id/checkbox"
+                        android:text="There is a newer version of this available"
+                        android:textColor="@color/yellow_flagged" />
 
                     <CheckBox
                         android:id="@+id/checkbox"
@@ -120,8 +132,8 @@
 
 
                 <ProgressBar
-                    style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
                     android:id="@+id/progress_bar"
+                    style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/text_holder"
@@ -132,12 +144,12 @@
 
                     android:id="@+id/btn_cancel_sync"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:text="@string/cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/progress_bar"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_below="@id/progress_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:text="@string/cancel" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

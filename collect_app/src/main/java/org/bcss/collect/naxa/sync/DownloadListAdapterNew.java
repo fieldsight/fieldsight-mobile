@@ -78,7 +78,7 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         viewHolder.checkbox.setChecked(item.isChecked());
         viewHolder.progressBar.setMax(item.getSyncTotal());
 
-
+        viewHolder.tvOutOfSync.setVisibility(item.isOutOfSync() ? View.VISIBLE : View.GONE);
         switch (item.getDownloadingStatus()) {
             case PENDING:
                 viewHolder.btnCancelSync.setVisibility(View.GONE);
@@ -90,7 +90,6 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
                 viewHolder.btnCancelSync.setVisibility(View.GONE);
                 viewHolder.statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
                 viewHolder.textView.setVisibility(View.GONE);
-
 //                if(item.getUid() != Constant.DownloadUID.ALL_FORMS){
                 if (true) {
                     viewHolder.progressBar.setIndeterminate(true);
@@ -167,6 +166,9 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
 
         @BindView(R.id.update_info)
         TextView textView;
+
+        @BindView(R.id.tv_out_of_sync)
+        TextView tvOutOfSync;
 
 
         ViewHolder(View view) {

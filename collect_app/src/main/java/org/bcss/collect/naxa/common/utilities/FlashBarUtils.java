@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.common.utilities;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,8 @@ import timber.log.Timber;
 
 public class FlashBarUtils {
 
+
+
     public static void showOutOfSyncMsg(@NonNull int outOfSyncUid, @NonNull Activity context, @NonNull String message) {
         if (message.isEmpty()) {
             return;
@@ -31,7 +34,13 @@ public class FlashBarUtils {
             });
 
             SnackbarHelper.configSnackbar(context, snack);
-            snack.show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    snack.show();
+                }
+            },1000);
+
         } catch (Exception e) {
             Timber.e(e);
             ToastUtils.showLongToast(message);

@@ -76,6 +76,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                     @Override
                     public void onChanged(@Nullable Integer integer) {
                         if (integer != null && integer > 0) {
+
                             FlashBarUtils.showOutOfSyncMsg(ALL_FORMS, FragmentHostActivity.this, "Form(s) information is out of sync");
                         }
                     }
