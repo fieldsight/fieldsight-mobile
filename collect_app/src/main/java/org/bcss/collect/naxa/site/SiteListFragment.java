@@ -487,6 +487,8 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
                     @Override
                     public void onSuccess(List<Long> instanceIDs) {
+                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
+
                         if (uploadForms && instanceIDs.size() > 0) {
                             Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
                             i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));

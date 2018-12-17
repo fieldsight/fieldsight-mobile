@@ -1,12 +1,15 @@
 package org.bcss.collect.naxa.project;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+
+import java.util.TimerTask;
 
 public class NotificationTestActivity extends CollectAbstractActivity {
 
@@ -32,7 +35,11 @@ public class NotificationTestActivity extends CollectAbstractActivity {
     }
 
     public void showDownload(View view) {
-        FieldSightNotificationUtils.getINSTANCE().notifyProgress("A long running task", "running", FieldSightNotificationUtils.ProgressType.DOWNLOAD);
+        int id = FieldSightNotificationUtils.getINSTANCE().notifyProgress("A long running task", "running", FieldSightNotificationUtils.ProgressType.DOWNLOAD);
+        new Handler().postDelayed(() -> {
+            FieldSightNotificationUtils.getINSTANCE().cancelNotification(id);
+        }, 2000);
+
     }
 
 }

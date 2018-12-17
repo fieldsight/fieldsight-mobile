@@ -70,6 +70,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
@@ -375,14 +376,11 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Long>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
+                .subscribe(new DisposableSingleObserver<List<Long>>() {
                     @Override
                     public void onSuccess(List<Long> instanceIDs) {
+                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
+
                         if (uploadForms && instanceIDs.size() > 0) {
                             Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
                             i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
