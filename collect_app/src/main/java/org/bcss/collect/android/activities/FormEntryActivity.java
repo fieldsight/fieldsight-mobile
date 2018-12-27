@@ -1872,8 +1872,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         List<IconMenuItem> items;
         if ((boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_SAVE_MID)) {
-            items = ImmutableList.of(new IconMenuItem(R.drawable.ic_save, R.string.keep_changes),
-                    new IconMenuItem(R.drawable.ic_delete, R.string.do_not_save));
+            items = ImmutableList.of(new IconMenuItem(R.drawable.ic_save, R.string.keep_changes), new IconMenuItem(R.drawable.ic_delete, R.string.do_not_save));
         } else {
             items = ImmutableList.of(new IconMenuItem(R.drawable.ic_delete, R.string.do_not_save));
         }
@@ -2138,8 +2137,9 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             return;
         }
 
-        String navigation = (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_NAVIGATION);
-        showNavigationButtons = navigation.contains(PreferenceKeys.NAVIGATION_BUTTONS);
+//        String navigation = (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_NAVIGATION);
+//        showNavigationButtons = navigation.contains(PreferenceKeys.NAVIGATION_BUTTONS);
+        showNavigationButtons = true;
         backButton.setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
         nextButton.setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
 

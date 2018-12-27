@@ -21,7 +21,7 @@ public class AnimationUtils {
     }
 
     public static void runLayoutAnimation(final RecyclerView recyclerView) {
-
+        if (true) return;
         final Context context = recyclerView.getContext();
         final LayoutAnimationController controller =
                 android.view.animation.AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);

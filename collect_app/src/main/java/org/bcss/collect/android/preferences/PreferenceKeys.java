@@ -117,8 +117,8 @@ public final class PreferenceKeys {
         hashMap.put(KEY_APP_THEME,                  Collect.getInstance().getString(R.string.app_theme_light));
         hashMap.put(KEY_APP_LANGUAGE,               "");
         hashMap.put(KEY_FONT_SIZE,                  Collect.DEFAULT_FONTSIZE);
-        hashMap.put(KEY_NAVIGATION,                 CONSTRAINT_BEHAVIOR_ON_SWIPE);
-        hashMap.put(KEY_SHOW_SPLASH,                false);
+        hashMap.put(KEY_NAVIGATION,                 NAVIGATION_BUTTONS);
+        hashMap.put(KEY_SHOW_SPLASH,                true);
         hashMap.put(KEY_SPLASH_PATH,                Collect.getInstance().getString(R.string.default_splash_path));
         hashMap.put(KEY_MAP_SDK,                    GOOGLE_MAPS);
         hashMap.put(KEY_MAP_BASEMAP,                GOOGLE_MAPS_BASEMAP_DEFAULT);

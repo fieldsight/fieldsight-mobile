@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.notificationslist;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,8 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 
 import java.util.ArrayList;
 
@@ -49,7 +52,6 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
     @BindView(R.id.root_layout_empty_layout)
     RelativeLayout emptyLayout;
-
 
 
     private NotificationListViewModel viewModel;

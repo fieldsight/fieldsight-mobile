@@ -38,6 +38,7 @@ import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
@@ -363,6 +364,7 @@ public class FlaggedFormActivity extends CollectAbstractActivity implements View
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
         download(loadedFieldSightNotification);
     }
 
@@ -495,8 +497,6 @@ public class FlaggedFormActivity extends CollectAbstractActivity implements View
                 LinearLayoutManager.VERTICAL, false));
 
         notificationImageAdapter.setOnItemClickListener(this);
-        //       recyclerViewImages.addItemDecoration(new LinePagerIndicatorDecoration());
-
         recyclerViewImages.setNestedScrollingEnabled(false);
     }
 
@@ -510,14 +510,13 @@ public class FlaggedFormActivity extends CollectAbstractActivity implements View
         Call<NotificationDetail> call = apiService.getNotificationDetail(BASE_URL + url);
         call.enqueue(new Callback<NotificationDetail>() {
             @Override
-            public void onResponse(Call<NotificationDetail> call, Response<NotificationDetail> response) {
+            public void onResponse(@NonNull Call<NotificationDetail> call, @NonNull Response<NotificationDetail> response) {
                 handleDetailsResponse(response);
             }
 
             @Override
-            public void onFailure(Call<NotificationDetail> call, Throwable t) {
-
-                DialogFactory.createDataSyncErrorDialog(FlaggedFormActivity.this, "Failed to load images", String.valueOf(500)).show();
+            public void onFailure(@NonNull Call<NotificationDetail> call, @NonNull Throwable t) {
+                FlashBarUtils.showFlashbar(FlaggedFormActivity.this,"Failed to load images");
             }
         });
     }
@@ -539,7 +538,7 @@ public class FlaggedFormActivity extends CollectAbstractActivity implements View
 
     @Override
     public void onItemClick(View view, int position, List<NotificationImage> urls) {
-        Timber.i(" Load item at %s siteName the list of size %s ", position, urls.size());
+        Timber.i(" Load item at %s from the list of size %s ", position, urls.size());
         loadSlideShowLayout(position, new ArrayList<NotificationImage>(urls));
 
     }

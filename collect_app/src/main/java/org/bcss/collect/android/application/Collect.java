@@ -308,7 +308,7 @@ public class Collect extends Application implements HasActivityInjector {
 
         initProperties();
 
-        if (false) {
+        if (true) {
             Fabric.with(this, new Crashlytics());
     //        if (BuildConfig.BUILD_TYPE.equals("odkCollectRelease")) {
             Timber.plant(new CrashReportingTree());

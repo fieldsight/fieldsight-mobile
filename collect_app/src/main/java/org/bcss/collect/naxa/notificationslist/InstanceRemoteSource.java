@@ -14,15 +14,21 @@ import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
+import org.bcss.collect.naxa.network.ApiInterface;
+import org.bcss.collect.naxa.network.ServiceGenerator;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class InstanceRemoteSource {
@@ -42,6 +48,31 @@ public class InstanceRemoteSource {
         return downloadInstance(mapNotificationToInstance(fieldSightNotification), downloadUrl);
     }
 
+    void downloadAttachedMedia(FieldSightNotification loadedFieldSightNotification) {
+        ServiceGenerator.getRxClient()
+                .create(ApiInterface.class)
+                .getInstanceMediaList(loadedFieldSightNotification.getFormSubmissionId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<HashMap<String, String>>() {
+                    @Override
+                    public void onNext(HashMap<String, String> stringStringHashMap) {
+                        stringStringHashMap.size();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
     private Observable<Uri> downloadInstance(Instance.Builder instance, String downloadUrl) {
 
         return Observable.just(instance)
@@ -53,7 +84,7 @@ public class InstanceRemoteSource {
                                     formatFileName(instance1.build().getDisplayName()).concat(".xml"),
                                     pathToDownload,
                                     "*/*",
-                                    true)
+                                    false)
                             .map(processOneInstance(instance1));
                 });
     }

@@ -18,6 +18,7 @@ import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.submissions.FormHistoryResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -215,4 +216,8 @@ public interface ApiInterface {
                                          @Part("latitude") RequestBody lat,
                                          @Part("longitude") RequestBody lon
     );
+
+
+    @GET(APIEndpoint.GET_INSTANCE_SUBMISSION_ATTACHMENTS)
+    Observable<HashMap<String,String>> getInstanceMediaList(@Path(value = "instance_submission_id", encoded = true) String instanceSubmissionId);
 }

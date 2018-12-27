@@ -89,7 +89,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
         Context context = getApplicationContext();
 
-        Timber.i(msg);
+        Timber.i("Firebase notification %s", msg);
 
         if (remoteMessage.getData().size() > 0) {
             Map<String, String> notificationData = remoteMessage.getData();

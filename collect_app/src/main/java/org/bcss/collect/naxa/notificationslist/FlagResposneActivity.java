@@ -4,22 +4,17 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -27,24 +22,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.commons.io.FilenameUtils;
-import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.provider.FormsProviderAPI;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.tasks.DownloadFormListTask;
 import org.bcss.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.android.utilities.ApplicationConstants;
-import org.bcss.collect.android.utilities.FileUtil;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
@@ -52,16 +38,11 @@ import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
@@ -69,8 +50,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-import static org.bcss.collect.android.activities.FormEntryActivity.EXTRA_TESTING_PATH;
-import static org.bcss.collect.android.utilities.QRCodeUtils.QR_CODE_FILEPATH;
 import static org.bcss.collect.naxa.network.APIEndpoint.BASE_URL;
 
 
@@ -270,7 +249,8 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        download(loadedFieldSightNotification);
+        InstanceRemoteSource.getINSTANCE().downloadAttachedMedia(loadedFieldSightNotification);
+        //download(loadedFieldSightNotification);
     }
 
     private void download(FieldSightNotification notificationFormDetail) {
@@ -296,7 +276,10 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
         filesToDownload.add(formDetails);
         showDialog();
         startFormsDownload(filesToDownload, notificationFormDetail);
+
+
     }
+
 
     private void showDialog() {
         dialog = DialogFactory.createProgressDialogHorizontal(FlagResposneActivity.this, "Loading Form");
@@ -330,38 +313,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
                 for (FormDetails formDetails : result.keySet()) {
                     String successKey = result.get(formDetails);
                     if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
-                        InstanceRemoteSource.getINSTANCE().downloadInstances(notification)
-//                        FlagFormRemoteSource.getINSTANCE()
-//                                .getODKInstance(notification)
-                                .observeOn(Schedulers.io())
-                                .subscribeOn(AndroidSchedulers.mainThread())
-                                .doOnSubscribe(d -> {
-                                    changeDialogMsg("Downloading filled form");
-                                })
-                                .subscribe(new DisposableObserver<Uri>() {
-                                    @Override
-                                    public void onNext(Uri instanceUri) {
-                                        hideDialog();
-
-
-                                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
-                                        toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
-                                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
-                                        startActivity(toEdit);
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable throwable) {
-                                        throwable.printStackTrace();
-                                        hideDialog();
-                                        showErrorDialog(throwable.getMessage());
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-
-                                    }
-                                });
+                        downloadOneInstance(notification);
                         break;
                     } else {
                         hideDialog();
@@ -383,6 +335,40 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
         });
 
         downloadFormsTask.execute(filesToDownload);
+    }
+
+    private void downloadOneInstance(FieldSightNotification notification) {
+        InstanceRemoteSource.getINSTANCE()
+                .downloadInstances(notification)
+                .observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(d -> {
+                    changeDialogMsg("Downloading filled form");
+                })
+                .subscribe(new DisposableObserver<Uri>() {
+                    @Override
+                    public void onNext(Uri instanceUri) {
+                        hideDialog();
+
+
+                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
+                        toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
+                        startActivity(toEdit);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                        hideDialog();
+                        showErrorDialog(throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
 
