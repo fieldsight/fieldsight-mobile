@@ -134,6 +134,12 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     }
 
+
+    public void markAsFailed(int uid, String message) {
+        AsyncTask.execute(() -> syncDAO.markFailedWithMsg(uid, Constant.DownloadStatus.FAILED, formattedDate(), message));
+
+    }
+
     private void updateErrorMessage(int uid, String errorMessage) {
         AsyncTask.execute(new Runnable() {
             @Override
@@ -211,7 +217,7 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
     }
 
     public void setAllRunningTaskAsFailed() {
-        AsyncTask.execute(()->{
+        AsyncTask.execute(() -> {
             syncDAO.setAllRunningTaskAsFailed(formattedDate());
         });
     }

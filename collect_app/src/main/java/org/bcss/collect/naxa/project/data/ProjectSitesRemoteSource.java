@@ -222,14 +222,11 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
                         syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
+                        String message = e.getMessage();
+                        SyncLocalSource.getINSTANCE().markAsFailed(Constant.DownloadUID.PROJECT_SITES,message);
 
-                        SyncLocalSource.getINSTANCE()
-                                .markAsFailed(Constant.DownloadUID.PROJECT_SITES);
 
-                        if (e instanceof RetrofitException) {
-                            String message = ((RetrofitException) e).getMessage();
-                            SyncLocalSource.getINSTANCE().addErrorMessage(PROJECT_SITES, message);
-                        }
+
                     }
 
                     @Override
