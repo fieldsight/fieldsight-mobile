@@ -60,7 +60,7 @@ import java.io.File;
                 SubmissionDetail.class
 
         },
-        version = 6)
+        version = 7)
 @TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
@@ -101,10 +101,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             FieldSightDatabase.class, DB_PATH)
-
-                            .addMigrations(MIGRATION_4_5,MIGRATION_5_6)
-                            .fallbackToDestructiveMigrationFrom(1)
-
+                            .addMigrations(MIGRATION_4_5, MIGRATION_5_6,MIGRATION_6_7)
                             .build();
                 }
             }
@@ -126,6 +123,14 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("DELETE FROM sync");
+        }
+    };
+
+    private static final Migration MIGRATION_6_7 = new Migration(6, 7) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE FieldSightNotification "
+                    + " ADD COLUMN `formVersion` TEXT ");
         }
     };
 

@@ -316,7 +316,7 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionDetailActivity" />
         <activity android:name="org.bcss.collect.naxa.notificationslist.NotificationListActivity" />
         <activity android:name="org.bcss.collect.naxa.flagform.FlaggedFormDetailActivity" />
-        <activity android:name="org.bcss.collect.naxa.notificationslist.FlagResposneActivity" />
+        <activity android:name="org.bcss.collect.naxa.notificationslist.FlaggedInstanceActivity" />
         <activity
             android:name="org.bcss.collect.naxa.site.SiteDetailActivity"
             android:exported="true" />
@@ -372,10 +372,10 @@ the specific language governing permissions and limitations under the License.
             android:name=".SiteProfileActivity"
             android:label="@string/title_activity_site_profile"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name="org.bcss.collect.naxa.notificationslist.FlaggedFormActivity" />
         <activity
             android:exported="true"
             android:name="org.bcss.collect.naxa.project.NotificationTestActivity" />
+        <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivityNew" />
     </application>
 
 </manifest>

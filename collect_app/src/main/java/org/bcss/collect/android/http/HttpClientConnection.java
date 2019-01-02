@@ -561,7 +561,7 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
 
     private static void setFieldSightHeaders(HttpRequest req) {
         String token = FieldSightUserSession.getAuthToken();
-        req.setHeader(FIELDSIGHT_AUTH_HEADER, "Token 72f3e7cae9eadf2bdf3a35306df31d0d698a3c55");
+        req.setHeader(FIELDSIGHT_AUTH_HEADER, token);
     }
 
 

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.dao.FormsDao;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.provider.FormsProviderAPI;
@@ -37,6 +39,8 @@ import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.submissions.PreviousSubmissionDetailActivity;
+import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +57,7 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.network.APIEndpoint.BASE_URL;
 
 
-public class FlagResposneActivity extends CollectAbstractActivity implements View.OnClickListener, NotificationImageAdapter.OnItemClickListener {
+public class FlaggedInstanceActivity extends CollectAbstractActivity implements View.OnClickListener, NotificationImageAdapter.OnItemClickListener {
 
     private static String TAG = "Comment Activity";
     //constants for form status
@@ -78,10 +82,11 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     private ProgressDialog dialog;
     private HashMap<String, Boolean> formResult;
     private Dialog errorDialog;
+    private FormsDao formsDao;
 
 
     public static void start(Context context, FieldSightNotification fieldSightNotification) {
-        Intent intent = new Intent(context, FlagResposneActivity.class);
+        Intent intent = new Intent(context, FlaggedInstanceActivity.class);
         intent.putExtra(Constant.EXTRA_OBJECT, fieldSightNotification);
         context.startActivity(intent);
     }
@@ -102,7 +107,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
         bindUI();
         setupToolbar();
 
-
+        formsDao = new FormsDao();
         formBox.setOnClickListener(this);
 
         loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
@@ -249,11 +254,38 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        InstanceRemoteSource.getINSTANCE().downloadAttachedMedia(loadedFieldSightNotification);
-        //download(loadedFieldSightNotification);
+        boolean emptyVersion = TextUtils.isEmpty(loadedFieldSightNotification.getFormVersion());
+
+        if (emptyVersion) {
+            DialogFactory.createActionDialog(this, "Empty Version", "")
+                    .setPositiveButton("Fill new form", (dialog, which) -> openNewForm(loadedFieldSightNotification.getIdString()))
+                    .setNegativeButton(R.string.dialog_action_dismiss, null)
+                    .show();
+            return;
+        }
+
+
+        if (hasFormVersion()) {
+            downloadInstance(loadedFieldSightNotification);
+        } else {
+            downloadFormAndInstance(loadedFieldSightNotification);
+        }
+
     }
 
-    private void download(FieldSightNotification notificationFormDetail) {
+    private boolean hasFormVersion() {
+
+        String jrformId = loadedFieldSightNotification.getIdString();
+        String jrformVersion = loadedFieldSightNotification.getFormVersion();
+        Cursor cursor = formsDao.getFormsCursor(jrformId, jrformVersion);
+        if (cursor != null) {
+            return cursor.getCount() > 0;
+        }
+        return false;
+    }
+
+
+    private void downloadFormAndInstance(FieldSightNotification notificationFormDetail) {
 
         String fsFormId = notificationFormDetail.getFsFormId();
         String siteId = notificationFormDetail.getSiteId();
@@ -282,7 +314,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
 
 
     private void showDialog() {
-        dialog = DialogFactory.createProgressDialogHorizontal(FlagResposneActivity.this, "Loading Form");
+        dialog = DialogFactory.createProgressDialogHorizontal(FlaggedInstanceActivity.this, "Loading Form");
         dialog.show();
     }
 
@@ -296,6 +328,10 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     }
 
     private void changeDialogMsg(String message) {
+        if (dialog == null || !dialog.isShowing()) {
+            showDialog();
+        }
+
         if (dialog != null && dialog.isShowing()) {
             dialog.setTitle(message);
         }
@@ -313,11 +349,11 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
                 for (FormDetails formDetails : result.keySet()) {
                     String successKey = result.get(formDetails);
                     if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
-                        downloadOneInstance(notification);
+                        downloadInstance(notification);
                         break;
                     } else {
                         hideDialog();
-                        showErrorDialog("Failed to download form");
+                        showErrorDialog("Failed to downloadFormAndInstance form");
                     }
                 }
             }
@@ -330,14 +366,14 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
             @Override
             public void formsDownloadingCancelled() {
                 hideDialog();
-                showErrorDialog("Form download was canceled");
+                showErrorDialog("Form downloadFormAndInstance was canceled");
             }
         });
 
         downloadFormsTask.execute(filesToDownload);
     }
 
-    private void downloadOneInstance(FieldSightNotification notification) {
+    private void downloadInstance(FieldSightNotification notification) {
         InstanceRemoteSource.getINSTANCE()
                 .downloadInstances(notification)
                 .observeOn(Schedulers.io())
@@ -376,7 +412,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                errorDialog = DialogFactory.createGenericErrorDialog(FlagResposneActivity.this, errorMessage);
+                errorDialog = DialogFactory.createGenericErrorDialog(FlaggedInstanceActivity.this, errorMessage);
 
                 errorDialog.show();
             }
@@ -418,7 +454,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
             @Override
             public void onFailure(Call<NotificationDetail> call, Throwable t) {
 
-                DialogFactory.createDataSyncErrorDialog(FlagResposneActivity.this, "Failed to load images", String.valueOf(500)).show();
+                DialogFactory.createDataSyncErrorDialog(FlaggedInstanceActivity.this, "Failed to load images", String.valueOf(500)).show();
             }
         });
     }
@@ -426,7 +462,7 @@ public class FlagResposneActivity extends CollectAbstractActivity implements Vie
     private void handleDetailsResponse(Response<NotificationDetail> response) {
 
         if (response.code() != 200 || response.body() == null) {
-            DialogFactory.createDataSyncErrorDialog(FlagResposneActivity.this, "Failed to load images", String.valueOf(500)).show();
+            DialogFactory.createDataSyncErrorDialog(FlaggedInstanceActivity.this, "Failed to load images", String.valueOf(500)).show();
             return;
         }
 

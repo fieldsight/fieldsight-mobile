@@ -6,10 +6,8 @@ import android.net.Uri;
 import android.os.Environment;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.FormsDao;
 import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.data.FieldSightNotification;
@@ -30,6 +28,9 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
+import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class InstanceRemoteSource {
     private static InstanceRemoteSource INSTANCE;
@@ -77,11 +78,18 @@ public class InstanceRemoteSource {
 
         return Observable.just(instance)
                 .flatMap((Function<Instance.Builder, ObservableSource<Uri>>) instance1 -> {
-                    String pathToDownload = getInstanceFolderPath(formatFileName(instance1.build().getDisplayName()));
+                    String instanceName = instance1.build().getDisplayName();
+                    String formattedInstanceName = addDateTimeToFileName(instanceName);
+                    formattedInstanceName = formatFileName(formattedInstanceName);
+                    //todo: value returned from getExternalStorageDiectory is twice, so removing one
+                    String pathToDownload = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
+
+                    pathToDownload = pathToDownload + File.separator + formattedInstanceName;
+                    pathToDownload = formatFileName(pathToDownload);
 
                     return new RxDownloader(Collect.getInstance())
                             .download(downloadUrl,
-                                    formatFileName(instance1.build().getDisplayName()).concat(".xml"),
+                                    formattedInstanceName.concat(".xml"),
                                     pathToDownload,
                                     "*/*",
                                     false)
@@ -93,18 +101,6 @@ public class InstanceRemoteSource {
         return path -> {
             path = path.replace("file://", "");
             instance.instanceFilePath(path);
-            instance.lastStatusChangeDate(System.currentTimeMillis());
-
-            String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + " = ? ";
-            String[] selectionArgs = new String[]{instance.build().getJrFormId()};
-            // retrieve the form definition
-            Cursor formCursor = new FormsDao().getFormsCursor(selection, selectionArgs);
-            formCursor.moveToFirst();
-
-            String jrVersion = getColumnString(formCursor, FormsProviderAPI.FormsColumns.JR_VERSION);
-            instance.jrVersion(jrVersion);
-
-
             return saveInstance(instance.build());
         };
     }
@@ -113,6 +109,7 @@ public class InstanceRemoteSource {
         InstancesDao dao = new InstancesDao();
         ContentValues values = dao.getValuesFromInstanceObject(instance);
         Uri instanceUri = dao.saveInstance(values);
+        Timber.i("DUCK Saving flagged Instance /n %s", instance.toString());
         Timber.i("Downloaded and saved instance at %s", instanceUri);
         return instanceUri;
 
@@ -120,23 +117,27 @@ public class InstanceRemoteSource {
 
 
     private Instance.Builder mapNotificationToInstance(FieldSightNotification notificationFormDetail) {
-        String fsFormId = notificationFormDetail.getFsFormId();//todo: project site fsFormId unhandled
-        String siteId = notificationFormDetail.getSiteId();
+        String siteId = notificationFormDetail.getSiteId() == null ? "0" : notificationFormDetail.getSiteId();//survey form have 0 as siteId
+        String fsFormIdProject = notificationFormDetail.getFsFormIdProject();
         String formName = notificationFormDetail.getFormName();
-        String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
         String jrFormId = notificationFormDetail.getIdString();
-        Long date = System.currentTimeMillis();
-        String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_submission/%s", fsFormSubmissionId);
+        String fsFormId = notificationFormDetail.getFsFormId();
+        String formVersion = notificationFormDetail.getFormVersion();
+        String url = InstancesDao.generateSubmissionUrl(
+                fsFormIdProject != null ? PROJECT : SITE,
+                siteId, fsFormId);
 
-        Instance.Builder flaggedInstance = new Instance.Builder()
+
+        return new Instance.Builder()
                 .status(InstanceProviderAPI.STATUS_COMPLETE)
                 .jrFormId(jrFormId)
-                .fieldSightSiteId(siteId == null ? "0" : siteId)//survey form have 0 as siteId
+                .jrVersion(formVersion)
+                .submissionUri(url)
+                .fieldSightSiteId(siteId)
                 .displayName(formName)
                 .canEditWhenComplete("true")
+                .lastStatusChangeDate(System.currentTimeMillis())
                 .displaySubtext("");
-
-        return flaggedInstance;
     }
 
     private String formatFileName(String text) {
@@ -149,12 +150,16 @@ public class InstanceRemoteSource {
 
 
     private String getInstanceFolderPath(String formName) {
-        // Create new answer folder.
-        String time = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss",
-                Locale.ENGLISH).format(Calendar.getInstance().getTime());
+
+        String time = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.ENGLISH).format(Calendar.getInstance().getTime());
         String instancePath = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
-        return instancePath + File.separator + formName + "_"
-                + time;
+        return instancePath + File.separator + formName + "_" + time;
     }
+
+    private String addDateTimeToFileName(String formName) {
+        String time = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.ENGLISH).format(Calendar.getInstance().getTime());
+        return formName + "_" + time;
+    }
+
 
 }

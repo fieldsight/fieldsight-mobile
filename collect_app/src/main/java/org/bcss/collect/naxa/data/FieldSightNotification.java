@@ -33,6 +33,7 @@ public class FieldSightNotification implements Parcelable {
     private String formType;
     private boolean isRead;
     private String formSubmissionId;
+    private String formVersion;
 
     public String getFormSubmissionId() {
         return formSubmissionId;
@@ -45,7 +46,7 @@ public class FieldSightNotification implements Parcelable {
     public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString,
                                   String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId,
                                   String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment,
-                                  String formType, boolean isRead,String formSubmissionId) {
+                                  String formType, boolean isRead, String formSubmissionId, String formVersion) {
         this.id = id;
         this.notificationType = notificationType;
         this.notifiedDate = notifiedDate;
@@ -65,7 +66,16 @@ public class FieldSightNotification implements Parcelable {
         this.comment = comment;
         this.formType = formType;
         this.isRead = isRead;
+        this.formVersion = formVersion;
         this.formSubmissionId = formSubmissionId;
+    }
+
+    public String getFormVersion() {
+        return formVersion;
+    }
+
+    public void setFormVersion(String formVerion) {
+        this.formVersion = formVerion;
     }
 
     public String getNotifiedTime() {
@@ -247,6 +257,7 @@ public class FieldSightNotification implements Parcelable {
         dest.writeString(this.comment);
         dest.writeString(this.formType);
         dest.writeString(this.formSubmissionId);
+        dest.writeString(this.formVersion);
         dest.writeByte(this.isRead ? (byte) 1 : (byte) 0);
     }
 
@@ -270,6 +281,7 @@ public class FieldSightNotification implements Parcelable {
         this.comment = in.readString();
         this.formType = in.readString();
         this.formSubmissionId = in.readString();
+        this.formVersion = in.readString();
         this.isRead = in.readByte() != 0;
     }
 

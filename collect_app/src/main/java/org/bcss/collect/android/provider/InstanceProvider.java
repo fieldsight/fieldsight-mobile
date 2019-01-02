@@ -52,7 +52,7 @@ public class InstanceProvider extends ContentProvider {
     private static final UriMatcher URI_MATCHER;
 
     private static InstancesDatabaseHelper dbHelper;
-    
+
     private synchronized InstancesDatabaseHelper getDbHelper() {
         // wrapper to test and reset/set the dbHelper based upon the attachment state of the device.
         try {
@@ -169,9 +169,9 @@ public class InstanceProvider extends ContentProvider {
             }
 
             long rowId = -1;
-            try{
+            try {
                 rowId = instancesDatabaseHelper.getWritableDatabase().insertOrThrow(INSTANCES_TABLE_NAME, null, values);
-            }catch (SQLException ex){
+            } catch (SQLException ex) {
                 ex.printStackTrace();
             }
             if (rowId > 0) {
@@ -308,7 +308,7 @@ public class InstanceProvider extends ContentProvider {
                     } else {
                         String[] newWhereArgs;
                         if (whereArgs == null || whereArgs.length == 0) {
-                            newWhereArgs = new String[] {instanceId};
+                            newWhereArgs = new String[]{instanceId};
                         } else {
                             newWhereArgs = new String[whereArgs.length + 1];
                             newWhereArgs[0] = instanceId;
@@ -382,7 +382,7 @@ public class InstanceProvider extends ContentProvider {
 
                     String[] newWhereArgs;
                     if (whereArgs == null || whereArgs.length == 0) {
-                        newWhereArgs = new String[] {instanceId};
+                        newWhereArgs = new String[]{instanceId};
                     } else {
                         newWhereArgs = new String[whereArgs.length + 1];
                         newWhereArgs[0] = instanceId;

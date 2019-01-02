@@ -16,6 +16,8 @@
 
 package org.bcss.collect.android.dto;
 
+import android.support.annotation.NonNull;
+
 /**
  * This class represents a single row from the instances table which is located in
  * {@link org.bcss.collect.android.provider.InstanceProvider#DATABASE_NAME}
@@ -183,5 +185,24 @@ public class Instance {
     public Long getDatabaseId() {
         return databaseId;
 
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Instance{" +
+                "displayName='" + displayName + '\'' + '\n'+
+                ", submissionUri='" + submissionUri + '\'' +'\n'+
+                ", canEditWhenComplete='" + canEditWhenComplete + '\'' +'\n'+
+                ", instanceFilePath='" + instanceFilePath + '\'' +'\n'+
+                ", jrFormId='" + jrFormId + '\'' +'\n'+
+                ", jrVersion='" + jrVersion + '\'' +'\n'+
+                ", status='" + status + '\'' +'\n'+
+                ", lastStatusChangeDate=" + lastStatusChangeDate +'\n'+
+                ", displaySubtext='" + displaySubtext + '\'' +'\n'+
+                ", deletedDate=" + deletedDate +'\n'+
+                ", fieldSightSiteId='" + fieldSightSiteId + '\'' +'\n'+
+                ", databaseId=" + databaseId +'\n'+
+                '}';
     }
 }

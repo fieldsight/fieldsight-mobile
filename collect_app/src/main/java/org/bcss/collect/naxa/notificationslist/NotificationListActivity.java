@@ -1,6 +1,5 @@
 package org.bcss.collect.naxa.notificationslist;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,8 +26,6 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
-import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.site.db.SiteLocalSource;
 
 import java.util.ArrayList;
 
@@ -139,7 +135,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     public void onClickPrimaryAction(FieldSightNotification fieldSightNotification) {
         switch (fieldSightNotification.getNotificationType()) {
             case Constant.NotificationType.FORM_FLAG:
-                FlagResposneActivity.start(this, fieldSightNotification);
+                FlaggedInstanceActivity.start(this, fieldSightNotification);
                 break;
         }
     }

@@ -328,6 +328,7 @@ public class InstancesDao {
     public CursorLoader getFinalizedInstancesCursorLoaderHideOfflineSite(CharSequence charSequence, String sortOrder) {
         CursorLoader cursorLoader;
 
+
         String selection =
                 "(" + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                         + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "

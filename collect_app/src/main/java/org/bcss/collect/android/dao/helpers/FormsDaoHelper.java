@@ -19,6 +19,8 @@ import android.database.Cursor;
 import org.bcss.collect.android.dao.FormsDao;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 
+import timber.log.Timber;
+
 public final class FormsDaoHelper {
 
     private FormsDaoHelper() {
@@ -36,6 +38,7 @@ public final class FormsDaoHelper {
     }
 
     public static String getFormPath(String selection, String[] selectionArgs) {
+        Timber.i(" jrFormId: %s jsFormVersion: %s", selectionArgs[0], selectionArgs[1]);
         FormsDao formsDao = new FormsDao();
         String formPath = null;
         try (Cursor c = formsDao.getFormsCursor(selection, selectionArgs)) {
