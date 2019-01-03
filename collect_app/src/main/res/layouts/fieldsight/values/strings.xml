@@ -51,7 +51,7 @@
     <string name="dialog_action_delete">Delete</string>
     <string name="dialog_action_hide">Hide</string>
     <string name="dialog_unexpected_error_title">An unexpected error occurred.</string>
-    <string name="dialog_action_dismiss">Dismiss</string>
+    <string name="dialog_action_dismiss">Cancel</string>
     <string name="forms_msg_none_available">Nothing available to display.\\n\\nTry Refreshing or Contact Web Admin.</string>
     <string name="toolbar_general_forms">General Form(s)</string>
     <string name="form_not_present">Unable to load this form because it is not present or was deleted</string>
@@ -211,6 +211,13 @@
     <string name="save">Save</string>
     <string name="msg_select_one_option">Select one option</string>
     <string name="title_activity_site_profile">SiteProfileActivity</string>
+    <string name="dialog_title_cant_open_flagged_form">Cannot open form</string>
+    <string name="dialog_text_cant_edit_flag_form">This submission is for an older version of the form and cannot be opened for editing</string>
+    <string name="dialog_action_view_data">View Data</string>
+    <string name="dialog_action_make_new_submission">Make a New Submission</string>
+    <string name="dialog_title_missing_flag_form">Missing local copy</string>
+    <string name="dialog_text_missing_flag_form">You do not have a local copy of the submission in this device, do you want to download it ?</string>
+    <string name="dialog_action_download">Download</string>
 
 
     <!--Notification sitelist ends here-->

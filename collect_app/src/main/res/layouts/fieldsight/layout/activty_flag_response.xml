@@ -54,6 +54,7 @@
                 android:layout_height="wrap_content">
 
                 <RelativeLayout
+                    android:layout_toLeftOf="@id/relativeLayout_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -75,12 +76,14 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:gravity="center"
-                            android:maxLines="1"
+                            android:gravity="start"
+                            android:minLines="1"
+                            android:maxLines="2"
                             android:text=""
                             android:textColor="@color/black"
                             android:textSize="16sp"
-                            android:textStyle="bold" />
+                            android:textStyle="bold"
+                            tools:text="asdasdasdasdasdasdasdasdasdasdasdasdasd" />
 
                         <!--//Form Desc-->
 

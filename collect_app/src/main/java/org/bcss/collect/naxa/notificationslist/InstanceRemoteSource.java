@@ -23,9 +23,7 @@ import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -49,28 +47,14 @@ public class InstanceRemoteSource {
         return downloadInstance(mapNotificationToInstance(fieldSightNotification), downloadUrl);
     }
 
-    void downloadAttachedMedia(FieldSightNotification loadedFieldSightNotification) {
-        ServiceGenerator.getRxClient()
+    Observable<HashMap<String, String>> downloadAttachedMedia(FieldSightNotification loadedFieldSightNotification) {
+
+
+       return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getInstanceMediaList(loadedFieldSightNotification.getFormSubmissionId())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<HashMap<String, String>>() {
-                    @Override
-                    public void onNext(HashMap<String, String> stringStringHashMap) {
-                        stringStringHashMap.size();
-                    }
+               .subscribeOn(Schedulers.io());
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
 
@@ -109,7 +93,6 @@ public class InstanceRemoteSource {
         InstancesDao dao = new InstancesDao();
         ContentValues values = dao.getValuesFromInstanceObject(instance);
         Uri instanceUri = dao.saveInstance(values);
-        Timber.i("DUCK Saving flagged Instance /n %s", instance.toString());
         Timber.i("Downloaded and saved instance at %s", instanceUri);
         return instanceUri;
 

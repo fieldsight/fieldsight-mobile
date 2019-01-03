@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
@@ -30,23 +32,31 @@ import org.bcss.collect.android.dao.FormsDao;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.provider.FormsProviderAPI;
+import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.tasks.DownloadFormListTask;
 import org.bcss.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
-import org.bcss.collect.naxa.submissions.PreviousSubmissionDetailActivity;
-import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
@@ -257,19 +267,39 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         boolean emptyVersion = TextUtils.isEmpty(loadedFieldSightNotification.getFormVersion());
 
         if (emptyVersion) {
-            DialogFactory.createActionDialog(this, "Empty Version", "")
-                    .setPositiveButton("Fill new form", (dialog, which) -> openNewForm(loadedFieldSightNotification.getIdString()))
-                    .setNegativeButton(R.string.dialog_action_dismiss, null)
+            DialogFactory.createActionDialog(this, getString(R.string.dialog_title_cant_open_flagged_form), getString(R.string.dialog_text_cant_edit_flag_form))
+                    .setPositiveButton(R.string.dialog_action_view_data, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_action_make_new_submission, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            openNewForm(loadedFieldSightNotification.getFsFormId());
+                        }
+                    })
+                    .setNeutralButton(R.string.dialog_action_dismiss, null)
                     .show();
             return;
         }
 
 
-        if (hasFormVersion()) {
-            downloadInstance(loadedFieldSightNotification);
-        } else {
-            downloadFormAndInstance(loadedFieldSightNotification);
-        }
+        DialogFactory.createActionDialog(this, getString(R.string.dialog_title_missing_flag_form), getString(R.string.dialog_text_missing_flag_form))
+                .setPositiveButton(R.string.dialog_action_download, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (hasFormVersion()) {
+                            downloadInstance(loadedFieldSightNotification);
+                        } else {
+                            downloadFormAndInstance(loadedFieldSightNotification);
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.dialog_action_dismiss, null)
+                .show();
+
 
     }
 
@@ -374,37 +404,101 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
     }
 
     private void downloadInstance(FieldSightNotification notification) {
-        InstanceRemoteSource.getINSTANCE()
+
+
+        Observable<Uri> observable = InstanceRemoteSource.getINSTANCE()
                 .downloadInstances(notification)
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(d -> {
-                    changeDialogMsg("Downloading filled form");
+                .flatMap((Function<Uri, ObservableSource<Uri>>) uri -> {
+
+                    String pathToDownload = getFilePathFromUri(uri);
+
+                    return InstanceRemoteSource.getINSTANCE()
+                            .downloadAttachedMedia(notification)
+                            .map(HashMap::entrySet)
+                            .flatMapIterable(entries -> entries)
+                            .flatMap((Function<Map.Entry<String, String>, ObservableSource<String>>) filenameFilePathMap -> {
+                                String fileName = filenameFilePathMap.getKey();
+                                String downloadUrl = filenameFilePathMap.getValue();
+
+                                Timber.i("Downloading %s from %s and saving in %s", fileName, downloadUrl, pathToDownload);
+                                return new RxDownloader(Collect.getInstance())
+                                        .download(downloadUrl,
+                                                fileName,
+                                                pathToDownload,
+                                                "*/*",
+                                                true);
+                            })
+                            .flatMap((Function<String, ObservableSource<Uri>>) s -> Observable.just(uri));
                 })
-                .subscribe(new DisposableObserver<Uri>() {
-                    @Override
-                    public void onNext(Uri instanceUri) {
-                        hideDialog();
 
 
-                        Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
-                        toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
-                        toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
-                        startActivity(toEdit);
-                    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        throwable.printStackTrace();
-                        hideDialog();
-                        showErrorDialog(throwable.getMessage());
-                    }
+        observable.subscribe(new Observer<Uri>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                changeDialogMsg("Downloading filled form");
+            }
 
-                    @Override
-                    public void onComplete() {
+            @Override
+            public void onNext(Uri instanceUri) {
+                hideDialog();
 
-                    }
-                });
+
+                Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
+                toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
+                startActivity(toEdit);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                throwable.printStackTrace();
+                hideDialog();
+                showErrorDialog(throwable.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                hideDialog();
+            }
+        });
+    }
+
+    @Nullable
+    private String getFilePathFromUri(Uri instanceUri) {
+
+        String instanceFolderPath = null;
+        String uriMimeType = null;
+
+        if (instanceUri != null) {
+            uriMimeType = getContentResolver().getType(instanceUri);
+        }
+
+        if (uriMimeType != null
+                && uriMimeType.equals(InstanceProviderAPI.InstanceColumns.CONTENT_ITEM_TYPE)) {
+            Cursor instance = null;
+            try {
+                instance = getContentResolver().query(instanceUri,
+                        null, null, null, null);
+                if (instance != null && instance.getCount() == 1) {
+                    instance.moveToFirst();
+                    instanceFolderPath = instance
+                            .getString(instance
+                                    .getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
+                    String fileName = FilenameUtils.getName(instanceFolderPath);
+                    instanceFolderPath = instanceFolderPath.replace(fileName, "");
+                }
+            } finally {
+                if (instance != null) {
+                    instance.close();
+                }
+            }
+        }
+
+
+        return instanceFolderPath;
     }
 
 
