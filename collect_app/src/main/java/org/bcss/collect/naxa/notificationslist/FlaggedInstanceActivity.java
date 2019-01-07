@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -36,6 +37,7 @@ import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.tasks.DownloadFormListTask;
 import org.bcss.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.android.utilities.ApplicationConstants;
+import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
@@ -405,65 +407,80 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
     private void downloadInstance(FieldSightNotification notification) {
 
-
-        Observable<Uri> observable = InstanceRemoteSource.getINSTANCE()
-                .downloadInstances(notification)
-                .observeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .flatMap((Function<Uri, ObservableSource<Uri>>) uri -> {
-
-                    String pathToDownload = getFilePathFromUri(uri);
-
-                    return InstanceRemoteSource.getINSTANCE()
-                            .downloadAttachedMedia(notification)
-                            .map(HashMap::entrySet)
-                            .flatMapIterable(entries -> entries)
-                            .flatMap((Function<Map.Entry<String, String>, ObservableSource<String>>) filenameFilePathMap -> {
-                                String fileName = filenameFilePathMap.getKey();
-                                String downloadUrl = filenameFilePathMap.getValue();
-
-                                Timber.i("Downloading %s from %s and saving in %s", fileName, downloadUrl, pathToDownload);
-                                return new RxDownloader(Collect.getInstance())
-                                        .download(downloadUrl,
-                                                fileName,
-                                                pathToDownload,
-                                                "*/*",
-                                                true);
-                            })
-                            .flatMap((Function<String, ObservableSource<Uri>>) s -> Observable.just(uri));
-                })
+        String[] nameAndPath = InstanceRemoteSource.getINSTANCE().getNameAndPath(notification.getFormName());
+        String formName = nameAndPath[0];
+        String pathToDownload = nameAndPath[1];
 
 
+        Observable<String> attachedMediaObservable = InstanceRemoteSource.getINSTANCE()
+                .downloadAttachedMedia(notification.getFormSubmissionId())
+                .map(HashMap::entrySet)
+                .flatMapIterable(entries -> entries)
+                .flatMap(new Function<Map.Entry<String, String>, ObservableSource<String>>() {
+                    @Override
+                    public ObservableSource<String> apply(Map.Entry<String, String> filenameFilePathMap) throws Exception {
+                        String fileName = filenameFilePathMap.getKey();
+                        String downloadUrl = filenameFilePathMap.getValue();
 
-        observable.subscribe(new Observer<Uri>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                changeDialogMsg("Downloading filled form");
-            }
+                        Timber.i("Downloading %s from %s and saving in %s", fileName, downloadUrl, pathToDownload);
 
-            @Override
-            public void onNext(Uri instanceUri) {
-                hideDialog();
+                        return new RxDownloader(FlaggedInstanceActivity.this)
+                                .download(downloadUrl,
+                                        fileName,
+                                        pathToDownload,
+                                        "*/*",
+                                        true);
+                    }
+                });
 
 
-                Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
-                toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
-                toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
-                startActivity(toEdit);
-            }
+        Observable<Uri> instanceObservable = InstanceRemoteSource.getINSTANCE()
+                .downloadInstances(notification, nameAndPath);
 
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
-                hideDialog();
-                showErrorDialog(throwable.getMessage());
-            }
+        Observable.concat(attachedMediaObservable, instanceObservable)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Comparable<? extends Comparable<?>>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        changeDialogMsg("Downloading flagged form");
+                    }
 
-            @Override
-            public void onComplete() {
-                hideDialog();
-            }
-        });
+                    @Override
+                    public void onNext(Comparable<? extends Comparable<?>> comparable) {
+                        if (comparable instanceof Uri) {
+                            hideDialog();
+                            Uri instanceUri = (Uri) comparable;
+
+                            Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
+                            toEdit.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                            toEdit.putExtra("EditedFormID", instanceUri.getLastPathSegment());
+                            startActivity(toEdit);
+                        }
+
+
+                        Timber.i("onNext");
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        Timber.i("onError");
+                        throwable.printStackTrace();
+                        hideDialog();
+                        showErrorDialog(throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Timber.i("OnComplete");
+                        hideDialog();
+                    }
+                });
+
+    }
+
+    private String createInstanceFolder(FieldSightNotification notification) {
+        return null;
     }
 
     @Nullable

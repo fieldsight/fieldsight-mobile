@@ -42,51 +42,54 @@ public class InstanceRemoteSource {
     }
 
 
-    Observable<Uri> downloadInstances(FieldSightNotification fieldSightNotification) {
+    Observable<Uri> downloadInstances(FieldSightNotification fieldSightNotification, String[] nameAndPath) {
         String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_submission/%s", fieldSightNotification.getFormSubmissionId());
-        return downloadInstance(mapNotificationToInstance(fieldSightNotification), downloadUrl);
+        return downloadInstance(mapNotificationToInstance(fieldSightNotification), downloadUrl, nameAndPath);
     }
 
-    Observable<HashMap<String, String>> downloadAttachedMedia(FieldSightNotification loadedFieldSightNotification) {
+    public String[] getNameAndPath(String instanceName) {
 
+        String formattedInstanceName = addDateTimeToFileName(instanceName);
+        formattedInstanceName = formatFileName(formattedInstanceName);
+        String pathToDownload = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");  //todo: value returned from getExternalStorageDiectory is twice, so removing one
 
-       return ServiceGenerator.getRxClient()
-                .create(ApiInterface.class)
-                .getInstanceMediaList(loadedFieldSightNotification.getFormSubmissionId())
-               .subscribeOn(Schedulers.io());
+        pathToDownload = pathToDownload + File.separator + formattedInstanceName;
+        pathToDownload = formatFileName(pathToDownload);
 
+        return new String[]{formattedInstanceName, pathToDownload};
     }
 
-
-    private Observable<Uri> downloadInstance(Instance.Builder instance, String downloadUrl) {
+    private Observable<Uri> downloadInstance(Instance.Builder instance, String downloadUrl, String[] nameAndPath) {
 
         return Observable.just(instance)
                 .flatMap((Function<Instance.Builder, ObservableSource<Uri>>) instance1 -> {
-                    String instanceName = instance1.build().getDisplayName();
-                    String formattedInstanceName = addDateTimeToFileName(instanceName);
-                    formattedInstanceName = formatFileName(formattedInstanceName);
-                    //todo: value returned from getExternalStorageDiectory is twice, so removing one
-                    String pathToDownload = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
 
-                    pathToDownload = pathToDownload + File.separator + formattedInstanceName;
-                    pathToDownload = formatFileName(pathToDownload);
+                    String instanceName = nameAndPath[0];
+                    String pathToDownload = nameAndPath[1];
+
+                    String mimeType = "*/*";
 
                     return new RxDownloader(Collect.getInstance())
                             .download(downloadUrl,
-                                    formattedInstanceName.concat(".xml"),
+                                    instanceName,
                                     pathToDownload,
-                                    "*/*",
+                                    mimeType,
                                     false)
-                            .map(processOneInstance(instance1));
+                            .map(path -> {
+                                path = path.replace("file://", "");
+                                instance.instanceFilePath(path);
+                                return saveInstance(instance.build());
+                            });
                 });
     }
 
-    private Function<String, Uri> processOneInstance(Instance.Builder instance) {
-        return path -> {
-            path = path.replace("file://", "");
-            instance.instanceFilePath(path);
-            return saveInstance(instance.build());
-        };
+
+    Observable<HashMap<String, String>> downloadAttachedMedia(String fsSubmissionId) {
+        return ServiceGenerator.getRxClient()
+                .create(ApiInterface.class)
+                .getInstanceMediaList(fsSubmissionId)
+                .subscribeOn(Schedulers.io());
+
     }
 
     private Uri saveInstance(Instance instance) {
@@ -95,7 +98,6 @@ public class InstanceRemoteSource {
         Uri instanceUri = dao.saveInstance(values);
         Timber.i("Downloaded and saved instance at %s", instanceUri);
         return instanceUri;
-
     }
 
 
