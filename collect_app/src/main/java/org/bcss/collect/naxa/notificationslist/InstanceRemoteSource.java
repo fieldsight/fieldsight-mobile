@@ -69,7 +69,7 @@ public class InstanceRemoteSource {
 
                     String mimeType = "*/*";
 
-                    return new RxDownloader(Collect.getInstance())
+                    return RxDownloader.getINSTANCE(Collect.getInstance())
                             .download(downloadUrl,
                                     instanceName,
                                     pathToDownload,

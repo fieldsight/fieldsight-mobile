@@ -14,7 +14,7 @@
         android:orientation="vertical"
         tools:context=".bcss_activities.CommentSessionActivity">
 
-        <include layout="@layout/general_toolbar"/>
+        <include layout="@layout/general_toolbar" />
 
         <TextView
             android:layout_width="match_parent"
@@ -38,15 +38,14 @@
             android:visibility="gone" />
 
         <android.support.v7.widget.CardView
-            app:cardCornerRadius="@dimen/corner_radius"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginBottom="3dp"
             android:elevation="3dp"
-          >
+            app:cardCornerRadius="@dimen/corner_radius">
 
             <RelativeLayout
                 android:id="@+id/relative_layout_comment_open_form"
@@ -54,11 +53,11 @@
                 android:layout_height="wrap_content">
 
                 <RelativeLayout
-                    android:layout_toLeftOf="@id/relativeLayout_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true">
+                    android:layout_toLeftOf="@id/relativeLayout_status">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -77,8 +76,8 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:gravity="start"
-                            android:minLines="1"
                             android:maxLines="2"
+                            android:minLines="1"
                             android:text=""
                             android:textColor="@color/black"
                             android:textSize="16sp"
@@ -107,8 +106,8 @@
                                 android:id="@+id/img_btn_status"
                                 android:layout_width="10dp"
                                 android:layout_height="10dp"
-                                android:layout_alignParentLeft="true"
                                 android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
                                 android:layout_centerVertical="true" />
 
                             <!--//Form Status text-->
@@ -135,15 +134,15 @@
                 <RelativeLayout
                     android:id="@+id/relativeLayout_status"
                     android:layout_width="100dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="140dp"
+
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true">
+                    android:layout_alignParentRight="true">
 
                     <ImageView
                         android:id="@+id/btn_stage_form_image"
                         android:layout_width="60dp"
-                        android:layout_height="120dp"
+                        android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_form_white" />
@@ -164,10 +163,10 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginBottom="15dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
             android:layout_marginTop="15dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="15dp"
             android:background="#cfcfcf" />
 
 

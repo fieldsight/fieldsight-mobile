@@ -424,7 +424,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
                         Timber.i("Downloading %s from %s and saving in %s", fileName, downloadUrl, pathToDownload);
 
-                        return new RxDownloader(FlaggedInstanceActivity.this)
+                        return RxDownloader.getINSTANCE(FlaggedInstanceActivity.this)
                                 .download(downloadUrl,
                                         fileName,
                                         pathToDownload,

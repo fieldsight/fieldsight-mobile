@@ -24,6 +24,7 @@ import io.reactivex.subjects.PublishSubject;
 public class RxDownloader {
 
     private static final String DEFAULT_MIME_TYPE = "*/*";
+    private static RxDownloader INSTANCE;
 
     private Context context;
     private LongSparseArray<PublishSubject<String>> subjectMap = new LongSparseArray<>();
@@ -34,6 +35,14 @@ public class RxDownloader {
         DownloadStatusReceiver downloadStatusReceiver = new DownloadStatusReceiver();
         IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         context.registerReceiver(downloadStatusReceiver, intentFilter);
+    }
+
+    public static RxDownloader getINSTANCE(@NonNull Context context) {
+        if (INSTANCE == null) {
+            INSTANCE = new RxDownloader(context);
+        }
+
+        return INSTANCE;
     }
 
     @NonNull
