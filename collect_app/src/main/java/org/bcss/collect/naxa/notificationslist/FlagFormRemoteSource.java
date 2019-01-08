@@ -6,14 +6,14 @@ import android.net.Uri;
 import android.os.Environment;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.FormsDao;
-import org.bcss.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.tasks.DownloadFormsTask;
+import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -32,8 +32,8 @@ import io.reactivex.SingleOnSubscribe;
 import io.reactivex.functions.Function;
 import timber.log.Timber;
 
-import static org.bcss.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
-import static org.bcss.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
+import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
+import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
 
 public class FlagFormRemoteSource {
     private static FlagFormRemoteSource INSTANCE;

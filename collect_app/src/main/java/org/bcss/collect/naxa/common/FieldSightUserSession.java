@@ -15,15 +15,15 @@ import com.google.gson.Gson;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.FormsDao;
-import org.bcss.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.listeners.DeleteFormsListener;
 import org.bcss.collect.android.listeners.DeleteInstancesListener;
 import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.tasks.DeleteFormsTask;
-import org.bcss.collect.android.tasks.DeleteInstancesTask;
+import org.odk.collect.android.tasks.DeleteFormsTask;
+import org.odk.collect.android.tasks.DeleteInstancesTask;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.firebase.FCMParameter;
@@ -50,7 +50,7 @@ public class FieldSightUserSession {
     }
 
     public static String getAuthToken() {
-        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
+        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, FieldSighDebug.Token);
     }
 
     public static void saveAuthToken(String token) {

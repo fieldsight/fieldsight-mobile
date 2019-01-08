@@ -50,12 +50,12 @@ import android.view.ViewGroup;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.fragments.dialogs.ErrorDialog;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.fragments.dialogs.ErrorDialog;
-import org.bcss.collect.android.utilities.CameraUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.CameraUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.io.IOException;

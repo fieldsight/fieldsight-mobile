@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.GridItemDecoration;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.login.model.Site;

@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.GlideApp;
 
 import java.io.File;

@@ -21,7 +21,7 @@ package org.bcss.collect.android.external;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.apache.commons.io.FileUtils;
-import org.bcss.collect.android.tasks.FormLoaderTask;
+import org.odk.collect.android.tasks.FormLoaderTask;
 
 import java.io.File;
 import java.io.IOException;

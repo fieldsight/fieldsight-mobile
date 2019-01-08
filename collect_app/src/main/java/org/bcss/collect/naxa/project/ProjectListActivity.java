@@ -39,10 +39,10 @@ import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.application.ForceUpdateChecker;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.RxSearchObservable;

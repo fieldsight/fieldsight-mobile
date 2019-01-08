@@ -2,9 +2,9 @@ package org.bcss.collect.naxa.site.db;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
@@ -196,8 +196,8 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         }
 
         RequestBody SiteNameRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getName());
-        RequestBody latRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getLatitude()));
-        RequestBody lonRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getLongitude()));
+        RequestBody latRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getLatitude());
+        RequestBody lonRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getLongitude());
         RequestBody identifierRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getIdentifier());
         RequestBody SitePhoneRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPhone());
         RequestBody SiteAddressRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getAddress());
@@ -216,7 +216,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 ;
     }
 
-    public Observable<Site> updateSite(Site siteLocationPojo) {
+    private Observable<Site> updateSite(Site siteLocationPojo) {
         RequestBody requestBody;
         MultipartBody.Part body = null;
 

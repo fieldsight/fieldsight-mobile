@@ -16,7 +16,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;

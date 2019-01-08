@@ -7,7 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.bcss.collect.android.activities.InjectableActivity;
+import org.odk.collect.android.activities.InjectableActivity;
 
 import javax.inject.Inject;
 

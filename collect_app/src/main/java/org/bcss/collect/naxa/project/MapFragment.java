@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.spatial.MapHelper;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;

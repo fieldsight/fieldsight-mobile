@@ -17,7 +17,7 @@ package org.bcss.collect.android.fragments.dialogs;/*
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.fragments.dialogs.CustomDatePickerDialog;
 import org.bcss.collect.android.logic.DatePickerDetails;
-import org.bcss.collect.android.utilities.DateTimeUtils;
+import org.odk.collect.android.utilities.DateTimeUtils;
 import org.javarosa.core.model.FormIndex;
 import org.joda.time.LocalDateTime;
 import org.joda.time.chrono.IslamicChronology;

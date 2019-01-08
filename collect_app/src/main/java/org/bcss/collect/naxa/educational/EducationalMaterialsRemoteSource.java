@@ -4,7 +4,7 @@ import android.os.Environment;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.FileUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;

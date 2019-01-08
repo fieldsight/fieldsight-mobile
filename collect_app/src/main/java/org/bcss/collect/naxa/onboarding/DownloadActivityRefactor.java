@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.ArrayList;
 

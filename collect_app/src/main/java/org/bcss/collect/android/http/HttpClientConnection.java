@@ -25,8 +25,8 @@ import org.apache.commons.io.IOUtils;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.utilities.ResponseMessageParser;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.ResponseMessageParser;
 import org.bcss.collect.naxa.ResponseUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.opendatakit.httpclientandroidlib.Header;
@@ -115,21 +115,21 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
     }
 
     private enum ContentTypeMapping {
-        XML("xml",  ContentType.TEXT_XML),
+        XML("xml", ContentType.TEXT_XML),
         _3GPP("3gpp", ContentType.create("audio/3gpp")),
-        _3GP("3gp",  ContentType.create("video/3gpp")),
-        AVI("avi",  ContentType.create("video/avi")),
-        AMR("amr",  ContentType.create("audio/amr")),
-        CSV("csv",  ContentType.create("text/csv")),
-        JPG("jpg",  ContentType.create("image/jpeg")),
-        MP3("mp3",  ContentType.create("audio/mp3")),
-        MP4("mp4",  ContentType.create("video/mp4")),
-        OGA("oga",  ContentType.create("audio/ogg")),
-        OGG("ogg",  ContentType.create("audio/ogg")),
-        OGV("ogv",  ContentType.create("video/ogg")),
-        WAV("wav",  ContentType.create("audio/wav")),
+        _3GP("3gp", ContentType.create("video/3gpp")),
+        AVI("avi", ContentType.create("video/avi")),
+        AMR("amr", ContentType.create("audio/amr")),
+        CSV("csv", ContentType.create("text/csv")),
+        JPG("jpg", ContentType.create("image/jpeg")),
+        MP3("mp3", ContentType.create("audio/mp3")),
+        MP4("mp4", ContentType.create("video/mp4")),
+        OGA("oga", ContentType.create("audio/ogg")),
+        OGG("ogg", ContentType.create("audio/ogg")),
+        OGV("ogv", ContentType.create("video/ogg")),
+        WAV("wav", ContentType.create("audio/wav")),
         WEBM("webm", ContentType.create("video/webm")),
-        XLS("xls",  ContentType.create("application/vnd.ms-excel"));
+        XLS("xls", ContentType.create("application/vnd.ms-excel"));
 
         private String extension;
         private ContentType contentType;
@@ -237,7 +237,8 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
     }
 
     @Override
-    public @NonNull HttpHeadResult head(@NonNull URI uri, @Nullable HttpCredentialsInterface credentials) throws Exception {
+    public @NonNull
+    HttpHeadResult head(@NonNull URI uri, @Nullable HttpCredentialsInterface credentials) throws Exception {
         addCredentialsForHost(uri, credentials);
         clearCookieStore();
 
@@ -298,10 +299,11 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
     }
 
     @Override
-    public @NonNull ResponseMessageParser uploadSubmissionFile(@NonNull List<File> fileList,
-                                                      @NonNull File submissionFile,
-                                                      @NonNull URI uri,
-                                                      @Nullable HttpCredentialsInterface credentials) throws IOException {
+    public @NonNull
+    ResponseMessageParser uploadSubmissionFile(@NonNull List<File> fileList,
+                                               @NonNull File submissionFile,
+                                               @NonNull URI uri,
+                                               @Nullable HttpCredentialsInterface credentials) throws IOException {
         addCredentialsForHost(uri, credentials);
         clearCookieStore();
 

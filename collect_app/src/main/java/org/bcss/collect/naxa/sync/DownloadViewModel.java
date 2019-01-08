@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.os.Handler;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;

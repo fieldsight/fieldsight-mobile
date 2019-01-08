@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.logic.HierarchyElement;
-import org.bcss.collect.android.utilities.TextUtils;
+import org.odk.collect.android.utilities.TextUtils;
 
 import java.util.List;
 

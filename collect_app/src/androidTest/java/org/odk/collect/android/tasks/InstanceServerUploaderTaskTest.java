@@ -2,10 +2,10 @@ package org.odk.collect.android.tasks;
 
 import android.net.Uri;
 
-import org.bcss.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.tasks.InstanceServerUploaderTask;
-import org.bcss.collect.android.tasks.InstanceUploaderTask;
-import org.bcss.collect.android.test.MockedServerTest;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.tasks.InstanceServerUploaderTask;
+import org.odk.collect.android.tasks.InstanceUploaderTask;
+import org.odk.collect.android.test.MockedServerTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +16,12 @@ import java.io.File;
 
 import okhttp3.mockwebserver.RecordedRequest;
 
-import static org.bcss.collect.android.test.TestUtils.resetInstancesContentProvider;
+import static org.odk.collect.android.test.TestUtils.resetInstancesContentProvider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.bcss.collect.android.test.TestUtils.assertMatches;
-import static org.bcss.collect.android.test.TestUtils.cleanUpTempFiles;
-import static org.bcss.collect.android.test.TestUtils.createTempFile;
+import static org.odk.collect.android.test.TestUtils.assertMatches;
+import static org.odk.collect.android.test.TestUtils.cleanUpTempFiles;
+import static org.odk.collect.android.test.TestUtils.createTempFile;
 
 public class InstanceServerUploaderTaskTest extends MockedServerTest {
     private InstancesDao dao;

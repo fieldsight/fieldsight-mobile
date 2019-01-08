@@ -42,18 +42,18 @@ import com.google.zxing.integration.android.IntentResult;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.MainMenuActivity;
-import org.bcss.collect.android.activities.ScannerWithFlashlightActivity;
+import org.odk.collect.android.activities.MainMenuActivity;
+import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.ActionListener;
 import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.preferences.AdminPreferencesActivity;
-import org.bcss.collect.android.utilities.CompressionUtils;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.utilities.LocaleHelper;
-import org.bcss.collect.android.utilities.QRCodeUtils;
-import org.bcss.collect.android.utilities.SharedPreferencesUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.preferences.AdminPreferencesActivity;
+import org.odk.collect.android.utilities.CompressionUtils;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.LocaleHelper;
+import org.odk.collect.android.utilities.QRCodeUtils;
+import org.odk.collect.android.utilities.SharedPreferencesUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 
 import java.io.File;
@@ -74,10 +74,10 @@ import timber.log.Timber;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static org.bcss.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
-import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_PASSWORD;
-import static org.bcss.collect.android.utilities.PermissionUtils.requestCameraPermission;
-import static org.bcss.collect.android.utilities.QRCodeUtils.QR_CODE_FILEPATH;
+import static org.odk.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PASSWORD;
+import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermission;
+import static org.odk.collect.android.utilities.QRCodeUtils.QR_CODE_FILEPATH;
 
 public class ShowQRCodeFragment extends Fragment {
 

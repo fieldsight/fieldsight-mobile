@@ -32,9 +32,9 @@
 //import android.widget.Spinner;
 //
 //import org.bcss.collect.android.R;
-//import org.bcss.collect.android.activities.FormEntryActivity;
-//import org.bcss.collect.android.activities.GeoPointActivity;
-//import org.bcss.collect.android.utilities.ToastUtils;
+//import org.odk.collect.android.activities.FormEntryActivity;
+//import org.odk.collect.android.activities.GeoPointActivity;
+//import org.odk.collect.android.utilities.ToastUtils;
 //import org.bcss.collect.naxa.common.AppBarStateChangeListener;
 //import org.bcss.collect.naxa.common.Constant;
 //import org.bcss.collect.naxa.common.DialogFactory;

@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.generalforms.data.FormResponse;
 import org.bcss.collect.naxa.generalforms.data.GetResponce;

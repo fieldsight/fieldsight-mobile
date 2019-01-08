@@ -38,7 +38,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.R.string;
 import org.bcss.collect.android.adapters.RankingListAdapter;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.RankingItemTouchHelperCallback;
+import org.odk.collect.android.utilities.RankingItemTouchHelperCallback;
 
 import java.io.Serializable;
 import java.util.List;

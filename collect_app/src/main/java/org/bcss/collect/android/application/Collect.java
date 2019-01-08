@@ -51,14 +51,14 @@ import org.bcss.collect.android.injection.config.DaggerAppComponent;
 import org.bcss.collect.android.jobs.CollectJobCreator;
 import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.logic.PropertyManager;
-import org.bcss.collect.android.preferences.AdminSharedPreferences;
-import org.bcss.collect.android.preferences.AutoSendPreferenceMigrator;
-import org.bcss.collect.android.preferences.FormMetadataMigrator;
-import org.bcss.collect.android.preferences.GeneralSharedPreferences;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.utilities.LocaleHelper;
-import org.bcss.collect.android.utilities.NotificationUtils;
-import org.bcss.collect.android.utilities.PRNGFixes;
+import org.odk.collect.android.preferences.AdminSharedPreferences;
+import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
+import org.odk.collect.android.preferences.FormMetadataMigrator;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.LocaleHelper;
+import org.odk.collect.android.utilities.NotificationUtils;
+import org.odk.collect.android.utilities.PRNGFixes;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.login.APIErrorUtils;
 
@@ -81,9 +81,9 @@ import timber.log.Timber;
 
 import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
 import static org.bcss.collect.android.logic.PropertyManager.SCHEME_USERNAME;
-import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_APP_LANGUAGE;
-import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_FONT_SIZE;
-import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_APP_LANGUAGE;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_FONT_SIZE;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
 
 
 /**

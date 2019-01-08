@@ -37,10 +37,10 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
-import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_METADATA_EMAIL;
-import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_METADATA_PHONENUMBER;
-import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_METADATA_USERNAME;
-import static org.bcss.collect.android.utilities.PermissionUtils.checkIfReadPhoneStatePermissionGranted;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_EMAIL;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_PHONENUMBER;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_USERNAME;
+import static org.odk.collect.android.utilities.PermissionUtils.checkIfReadPhoneStatePermissionGranted;
 
 /**
  * Returns device properties and metadata to JavaRosa

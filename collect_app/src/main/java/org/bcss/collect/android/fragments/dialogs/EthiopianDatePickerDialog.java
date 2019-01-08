@@ -21,7 +21,7 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.chrono.EthiopicChronology;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.logic.DatePickerDetails;
-import org.bcss.collect.android.utilities.DateTimeUtils;
+import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.Arrays;
 

@@ -13,10 +13,10 @@ import android.widget.TextView;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.generalforms.data.Em;
 import org.bcss.collect.naxa.generalforms.data.EmImage;

@@ -8,7 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 

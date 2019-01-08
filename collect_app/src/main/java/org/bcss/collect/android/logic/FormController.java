@@ -19,7 +19,7 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.analytics.HitBuilders;
 
 import org.bcss.collect.android.exception.JavaRosaException;
-import org.bcss.collect.android.utilities.TimerLogger;
+import org.odk.collect.android.utilities.TimerLogger;
 import org.bcss.collect.android.views.ODKView;
 import org.javarosa.core.model.CoreModelModule;
 import org.javarosa.core.model.FormDef;

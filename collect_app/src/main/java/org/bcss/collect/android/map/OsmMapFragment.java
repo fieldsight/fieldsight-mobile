@@ -37,8 +37,8 @@ import android.view.ViewGroup;
 import com.google.android.gms.location.LocationListener;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.location.client.LocationClient;
-import org.bcss.collect.android.location.client.LocationClients;
+import org.odk.collect.android.location.client.LocationClient;
+import org.odk.collect.android.location.client.LocationClients;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.events.MapListener;

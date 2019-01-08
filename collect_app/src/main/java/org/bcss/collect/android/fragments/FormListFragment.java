@@ -16,10 +16,10 @@ package org.bcss.collect.android.fragments;
 
 import org.bcss.collect.android.provider.FormsProviderAPI;
 
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_ASC;
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_DESC;
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_ASC;
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_DESC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_ASC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_DESC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_ASC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_DESC;
 
 public abstract class FormListFragment extends FileManagerFragment {
     protected String getSortingOrder() {

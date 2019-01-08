@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.bcss.collect.android.activities.GeoTraceActivity;
+import org.odk.collect.android.activities.GeoTraceActivity;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
 import org.bcss.collect.android.map.GoogleMapFragment;

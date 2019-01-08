@@ -106,16 +106,16 @@ the specific language governing permissions and limitations under the License.
         </provider>
 
         <activity
-            android:name=".activities.MainMenuActivity"
+            android:name="org.odk.collect.android.activities.MainMenuActivity"
             android:configChanges="locale|orientation|screenSize"
             android:exported="true" />
         <activity
-            android:name=".activities.ScannerWithFlashlightActivity"
+            android:name="org.odk.collect.android.activities.ScannerWithFlashlightActivity"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".activities.FormEntryActivity"
+            android:name="org.odk.collect.android.activities.FormEntryActivity"
             android:configChanges="orientation"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -129,19 +129,19 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.NotificationActivity"
+            android:name="org.odk.collect.android.activities.NotificationActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
         <activity
-            android:name=".activities.DrawActivity"
+            android:name="org.odk.collect.android.activities.DrawActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".activities.GoogleDriveActivity"
+            android:name="org.odk.collect.android.activities.GoogleDriveActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activities.InstanceChooserList">
+        <activity android:name="org.odk.collect.android.activities.InstanceChooserList">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -151,7 +151,7 @@ the specific language governing permissions and limitations under the License.
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.FormChooserList">
+        <activity android:name="org.odk.collect.android.activities.FormChooserList">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -162,7 +162,7 @@ the specific language governing permissions and limitations under the License.
                 <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.FormDownloadList">
+        <activity android:name="org.odk.collect.android.activities.FormDownloadList">
             <intent-filter>
                 <action android:name="org.bcss.collect.android.FORM_DOWNLOAD" />
 
@@ -172,13 +172,13 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.FileManagerTabs"
+            android:name="org.odk.collect.android.activities.FileManagerTabs"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".activities.GoogleSheetsUploaderActivity"
+            android:name="org.odk.collect.android.activities.GoogleSheetsUploaderActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".activities.InstanceUploaderList"
+            android:name="org.odk.collect.android.activities.InstanceUploaderList"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -187,15 +187,15 @@ the specific language governing permissions and limitations under the License.
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.AboutActivity" />
-        <activity android:name=".preferences.PreferencesActivity" />
+        <activity android:name="org.odk.collect.android.activities.AboutActivity" />
+        <activity android:name="org.odk.collect.android.preferences.PreferencesActivity" />
         <activity
-            android:name=".preferences.AdminPreferencesActivity"
+            android:name="org.odk.collect.android.preferences.AdminPreferencesActivity"
             android:exported="true" />
-        <activity android:name=".activities.ViewFormHierarchyActivity" />
-        <activity android:name=".activities.EditFormHierarchyActivity" />
-        <activity android:name=".activities.GeoPointActivity" />
-        <activity android:name=".activities.InstanceUploaderActivity">
+        <activity android:name="org.odk.collect.android.activities.ViewFormHierarchyActivity" />
+        <activity android:name="org.odk.collect.android.activities.EditFormHierarchyActivity" />
+        <activity android:name="org.odk.collect.android.activities.GeoPointActivity" />
+        <activity android:name="org.odk.collect.android.activities.InstanceUploaderActivity">
             <intent-filter>
                 <action android:name="org.bcss.collect.android.INSTANCE_UPLOAD" />
 
@@ -205,17 +205,17 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.GeoPointOsmMapActivity"
+            android:name="org.odk.collect.android.activities.GeoPointOsmMapActivity"
             android:configChanges="orientation" />
         <activity
-            android:name=".activities.GeoShapeOsmMapActivity"
+            android:name="org.odk.collect.android.activities.GeoShapeOsmMapActivity"
             android:configChanges="orientation" />
         <activity
-            android:name=".activities.GeoTraceActivity"
+            android:name="org.odk.collect.android.activities.GeoTraceActivity"
             android:configChanges="orientation" />
-        <activity android:name=".activities.BearingActivity" />
+        <activity android:name="org.odk.collect.android.activities.BearingActivity" />
         <activity
-            android:name=".activities.SplashScreenActivity"
+            android:name="org.odk.collect.android.activities.SplashScreenActivity"
             android:theme="@android:style/Theme.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -226,7 +226,7 @@ the specific language governing permissions and limitations under the License.
         </activity>
         <!-- Enable Shortcuts for Command Actions -->
         <activity
-            android:name=".activities.AndroidShortcuts"
+            android:name="org.odk.collect.android.activities.AndroidShortcuts"
             android:label="ODK Form"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -235,8 +235,8 @@ the specific language governing permissions and limitations under the License.
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CaptureSelfieActivity" />
-        <activity android:name=".activities.CaptureSelfieActivityNewApi" />
+        <activity android:name="org.odk.collect.android.activities.CaptureSelfieActivity" />
+        <activity android:name="org.odk.collect.android.activities.CaptureSelfieActivityNewApi" />
 
         <!--
         Register AnalyticsReceiver and AnalyticsService to support background
@@ -285,11 +285,11 @@ the specific language governing permissions and limitations under the License.
             android:required="false" />
 
         <activity
-            android:name=".location.GeoActivity"
+            android:name="org.odk.collect.android.location.GeoActivity"
             android:configChanges="orientation"
             android:exported="true" />
-        <activity android:name=".activities.WebViewActivity" />
-        <activity android:name=".activities.CaptureSelfieVideoActivityNewApi" />
+        <activity android:name="org.odk.collect.android.activities.WebViewActivity" />
+        <activity android:name="org.odk.collect.android.activities.CaptureSelfieVideoActivityNewApi" />
         <activity
             android:name="org.bcss.collect.naxa.login.LoginActivity"
             android:noHistory="true"
@@ -332,11 +332,13 @@ the specific language governing permissions and limitations under the License.
             android:name="org.bcss.collect.naxa.sitedocuments.ImageViewerActivity"
             android:label="@string/title_activity_image_viewer"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity" />
+        <activity
+            android:exported="true"
+            android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EducationalMaterialActivity" />
         <activity android:name="org.bcss.collect.naxa.onboarding.DownloadActivityRefactor" />
         <activity android:name="org.bcss.collect.naxa.project.AppUpdateActivity" />
-        <activity android:name=".activities.GeoShapeActivity" />
+        <activity android:name="org.odk.collect.android.activities.GeoShapeActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewTextTitleDetailsActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewImageDetailsActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewVideoDetailsActivity" />
@@ -346,7 +348,7 @@ the specific language governing permissions and limitations under the License.
             android:exported="true" />
 
         <receiver
-            android:name=".tasks.sms.SmsSentBroadcastReceiver"
+            android:name="org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -354,7 +356,7 @@ the specific language governing permissions and limitations under the License.
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".tasks.sms.SmsNotificationReceiver"
+            android:name="org.odk.collect.android.tasks.sms.SmsNotificationReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

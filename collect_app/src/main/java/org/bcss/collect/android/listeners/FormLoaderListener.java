@@ -15,8 +15,8 @@
 package org.bcss.collect.android.listeners;
 
 import org.javarosa.core.model.FormDef;
-import org.bcss.collect.android.tasks.FormLoaderTask;
-import org.bcss.collect.android.tasks.ProgressNotifier;
+import org.odk.collect.android.tasks.FormLoaderTask;
+import org.odk.collect.android.tasks.ProgressNotifier;
 
 /**
  * @author Carl Hartung (carlhartung@gmail.com)

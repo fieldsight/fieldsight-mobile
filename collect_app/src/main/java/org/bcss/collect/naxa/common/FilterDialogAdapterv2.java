@@ -28,7 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.utilities.ThemeUtils;
+import org.odk.collect.android.utilities.ThemeUtils;
 import org.bcss.collect.naxa.common.FilterOption.FilterType;
 
 import java.util.ArrayList;

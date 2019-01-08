@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;

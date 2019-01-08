@@ -23,11 +23,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.provider.FormsProviderAPI;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;

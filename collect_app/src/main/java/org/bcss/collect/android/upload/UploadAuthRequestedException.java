@@ -16,7 +16,7 @@ package org.bcss.collect.android.upload;
 
 import android.net.Uri;
 
-import org.bcss.collect.android.tasks.InstanceUploaderTask;
+import org.odk.collect.android.tasks.InstanceUploaderTask;
 
 /**
  * Thrown to indicate that the server an upload attempt was made to is requesting authentication.

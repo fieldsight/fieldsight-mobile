@@ -25,7 +25,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.FormsDao;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 

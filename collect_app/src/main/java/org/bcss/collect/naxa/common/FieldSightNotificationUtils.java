@@ -10,7 +10,7 @@ import android.support.v4.app.NotificationCompat;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.IconUtils;
+import org.odk.collect.android.utilities.IconUtils;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 
 import java.util.concurrent.atomic.AtomicInteger;

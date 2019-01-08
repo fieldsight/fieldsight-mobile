@@ -3,10 +3,10 @@ package org.bcss.collect.android.http;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.bcss.collect.android.utilities.DocumentFetchResult;
+import org.odk.collect.android.utilities.DocumentFetchResult;
 import org.kxml2.io.KXmlParser;
 import org.kxml2.kdom.Document;
-import org.bcss.collect.android.utilities.WebCredentialsUtils;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.io.InputStream;

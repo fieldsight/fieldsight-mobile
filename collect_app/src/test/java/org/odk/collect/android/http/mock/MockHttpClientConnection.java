@@ -7,7 +7,7 @@ import org.bcss.collect.android.http.HttpCredentialsInterface;
 import org.bcss.collect.android.http.HttpGetResult;
 import org.bcss.collect.android.http.HttpHeadResult;
 import org.bcss.collect.android.http.OpenRosaHttpInterface;
-import org.bcss.collect.android.utilities.ResponseMessageParser;
+import org.odk.collect.android.utilities.ResponseMessageParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

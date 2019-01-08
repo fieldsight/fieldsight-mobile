@@ -41,12 +41,12 @@ import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.activities.GeoPointActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.GeoPointActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.utilities.PermissionUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ImageFileUtils;
@@ -84,7 +84,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
+import static org.odk.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.MetaAttrsType.NUMBER;
 import static org.bcss.collect.naxa.common.ViewUtils.loadLocalImage;

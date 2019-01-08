@@ -19,16 +19,16 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
-import org.bcss.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.http.HttpHeadResult;
 import org.bcss.collect.android.http.OpenRosaHttpInterface;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.preferences.PreferenceKeys;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.utilities.ResponseMessageParser;
-import org.bcss.collect.android.utilities.WebCredentialsUtils;
+import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.ResponseMessageParser;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteUploadHistoryLocalSource;
@@ -48,7 +48,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import timber.log.Timber;
 
-import static org.bcss.collect.android.dao.InstancesDao.checkContainsFakeSiteID;
+import static org.odk.collect.android.dao.InstancesDao.checkContainsFakeSiteID;
 
 public class InstanceServerUploader extends InstanceUploader {
     private static final String URL_PATH_SEP = "/";

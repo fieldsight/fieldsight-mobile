@@ -1,11 +1,9 @@
 package org.bcss.collect.android;
 
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,12 +20,10 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.utilities.ToastUtils;
-import org.bcss.collect.naxa.common.GlideApp;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.site.CreateSiteActivity;
@@ -41,8 +37,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -51,14 +45,11 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class SiteProfileActivity extends CollectAbstractActivity implements MultiViewAdapter.OnCardClickListener {
@@ -157,8 +148,10 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
             if (scrollRange + verticalOffset == 0) {
                 ViewUtils.animateViewVisibility(ivCircle, View.GONE);
+                ViewUtils.animateViewVisibility(tvPlaceHolder, View.GONE);
             } else {
                 ViewUtils.animateViewVisibility(ivCircle, VISIBLE);
+                ViewUtils.animateViewVisibility(tvPlaceHolder, VISIBLE);
             }
         });
     }

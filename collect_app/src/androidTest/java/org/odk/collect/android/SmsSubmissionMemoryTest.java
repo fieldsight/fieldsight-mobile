@@ -7,10 +7,10 @@ import android.text.format.Formatter;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.tasks.sms.SmsService;
-import org.bcss.collect.android.tasks.sms.SmsSubmissionManager;
-import org.bcss.collect.android.tasks.sms.models.Message;
-import org.bcss.collect.android.tasks.sms.models.SmsSubmission;
+import org.odk.collect.android.tasks.sms.SmsService;
+import org.odk.collect.android.tasks.sms.SmsSubmissionManager;
+import org.odk.collect.android.tasks.sms.models.Message;
+import org.odk.collect.android.tasks.sms.models.SmsSubmission;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.security.SecureRandom;

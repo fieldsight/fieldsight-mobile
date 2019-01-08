@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.DialogFactory;
 //import org.bcss.collect.naxa.common.Login;
 import org.bcss.collect.naxa.common.Login;

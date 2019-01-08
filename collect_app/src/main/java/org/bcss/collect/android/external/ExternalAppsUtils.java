@@ -22,7 +22,7 @@ import android.content.Intent;
 import android.database.Cursor;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.exception.ExternalParamsException;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.javarosa.core.model.FormDef;

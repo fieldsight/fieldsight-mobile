@@ -1,8 +1,8 @@
 package org.odk.collect.android.utilities;
 
-import org.bcss.collect.android.test.MockedServerTest;
-import org.bcss.collect.android.utilities.DocumentFetchResult;
-import org.bcss.collect.android.utilities.WebCredentialsUtils;
+import org.odk.collect.android.test.MockedServerTest;
+import org.odk.collect.android.utilities.DocumentFetchResult;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.bcss.collect.android.http.CollectServerClient;
@@ -12,7 +12,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
 
 import static junit.framework.Assert.assertTrue;
-import static org.bcss.collect.android.test.TestUtils.assertMatches;
+import static org.odk.collect.android.test.TestUtils.assertMatches;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 

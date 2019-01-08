@@ -39,3 +39,4 @@ captures/
 # Config for the official ODK Collect build
 collect_app/src/odkCollectRelease/
 
+/collect_app/src/main/java/org/bcss/collect/naxa/common/FieldSighDebug.java

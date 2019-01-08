@@ -8,7 +8,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 
 import timber.log.Timber;
