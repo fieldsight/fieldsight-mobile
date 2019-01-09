@@ -67,6 +67,10 @@ if (secretsFile.exists()) {
     secrets.load(new FileInputStream(secretsFile))
 }
 
+def versionMajor = 2
+def versionMinor = 5
+def versionPatch = 11
+
 android {
     compileSdkVersion(28)
 
@@ -74,10 +78,11 @@ android {
         applicationId('org.bcss.collect.android')
         minSdkVersion(16)
         targetSdkVersion(26)
-//        versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
+        //versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
+        //versionName getVersionName()
         versionCode 43
-        versionName "2.4.11-shila"
-//        versionName getVersionName()
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        System.out.println(versionName+" "+versionCode)
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
