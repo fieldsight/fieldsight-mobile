@@ -63,10 +63,10 @@ public class SearchAdapter extends BaseAdapter {
             mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             v = mLayoutInflater.inflate(R.layout.list_item_search, parent, false);
-            holder.tvSiteName = (TextView) v.findViewById(R.id.search_item_site_name);
-            holder.tvSiteId = (TextView) v.findViewById(R.id.search_item_site_identifier);
-            holder.tvSiteAddress = (TextView) v.findViewById(R.id.search_item_site_address);
-            holder.tvPhoneNumber = (TextView) v.findViewById(R.id.search_item_site_phone_number);
+            holder.tvSiteName = v.findViewById(R.id.search_item_site_name);
+            holder.tvSiteId = v.findViewById(R.id.search_item_site_identifier);
+            holder.tvSiteAddress = v.findViewById(R.id.search_item_site_address);
+            holder.tvPhoneNumber = v.findViewById(R.id.search_item_site_phone_number);
             holder.tvIconText = v.findViewById(R.id.title_desc_tv_icon_text);
 
             v.setTag(holder);

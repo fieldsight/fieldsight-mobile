@@ -1,7 +1,5 @@
 package org.bcss.collect.naxa.demo;
 
-import android.util.Pair;
-
 import com.google.gson.Gson;
 
 import org.bcss.collect.android.application.Collect;

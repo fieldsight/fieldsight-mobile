@@ -33,20 +33,20 @@ import android.widget.TextView;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.ViewSentListAdapter;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.listeners.DiskSyncListener;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.bcss.collect.naxa.login.model.Site;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
-import org.bcss.collect.naxa.login.model.Site;
 
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePermissions;
-import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 /**
  * Responsible for displaying all the valid instances in the instance directory.

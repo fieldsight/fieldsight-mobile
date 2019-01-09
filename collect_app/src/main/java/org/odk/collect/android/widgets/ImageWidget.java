@@ -22,16 +22,16 @@ import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 
-import org.odk.collect.android.activities.CaptureSelfieActivity;
-import org.odk.collect.android.activities.CaptureSelfieActivityNewApi;
-import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.utilities.FileUtils;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.PermissionListener;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.activities.CaptureSelfieActivity;
+import org.odk.collect.android.activities.CaptureSelfieActivityNewApi;
+import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.utilities.CameraUtils;
+import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
 import java.util.Locale;

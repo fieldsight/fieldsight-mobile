@@ -19,8 +19,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
-import org.javarosa.form.api.FormEntryPrompt;
+
 import org.bcss.collect.android.R;
+import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.DrawActivity;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;

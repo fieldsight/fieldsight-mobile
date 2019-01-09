@@ -1,17 +1,16 @@
 package org.bcss.collect.naxa.project.data;
 
-import org.bcss.collect.naxa.common.GSONInstance;
-import org.bcss.collect.naxa.common.event.DataSyncEvent;
-import org.bcss.collect.naxa.common.rx.RetrofitException;
-import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
-import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.common.event.DataSyncEvent;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.MySites;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.site.data.SiteRegion;
@@ -27,9 +26,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
-import io.reactivex.CompletableSource;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Single;
@@ -40,9 +37,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
     private static ProjectSitesRemoteSource INSTANCE;
@@ -70,7 +64,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .getUser()
                 .flatMap(new Function<MeResponse, ObservableSource<MySiteResponse>>() {
                     @Override
-                    public ObservableSource<MySiteResponse> apply(MeResponse meResponse) throws Exception {
+                    public ObservableSource<MySiteResponse> apply(MeResponse meResponse) {
 
                         if (!meResponse.getData().getIsSupervisor()) {
                             throw new BadUserException(meResponse.getData().getFullName() + " has not been assigned as a site supervisor.");
@@ -85,13 +79,13 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 })
                 .concatMap(new Function<MySiteResponse, Observable<MySiteResponse>>() {
                     @Override
-                    public Observable<MySiteResponse> apply(MySiteResponse mySiteResponse) throws Exception {
+                    public Observable<MySiteResponse> apply(MySiteResponse mySiteResponse) {
                         return Observable.just(mySiteResponse);
                     }
                 })
                 .map(new Function<MySiteResponse, List<MySites>>() {
                     @Override
-                    public List<MySites> apply(MySiteResponse mySiteResponse) throws Exception {
+                    public List<MySites> apply(MySiteResponse mySiteResponse) {
                         siteRepository.deleteSyncedSitesAsync();
                         return mySiteResponse.getResult();
                     }
@@ -100,7 +94,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
                 .map(new Function<MySites, Project>() {
                     @Override
-                    public Project apply(MySites mySites) throws Exception {
+                    public Project apply(MySites mySites) {
                         siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
                         return mySites.getProject();
                     }
@@ -108,7 +102,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .toList()
                 .map(new Function<List<Project>, Set<Project>>() {
                     @Override
-                    public Set<Project> apply(List<Project> projects) throws Exception {
+                    public Set<Project> apply(List<Project> projects) {
                         ArrayList<Project> uniqueList = new ArrayList<>();
                         ArrayList<String> projectIds = new ArrayList<>();
                         for (Project project : projects) {
@@ -124,21 +118,21 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .toObservable()
                 .flatMapIterable(new Function<Set<Project>, Iterable<Project>>() {
                     @Override
-                    public Iterable<Project> apply(Set<Project> projects) throws Exception {
+                    public Iterable<Project> apply(Set<Project> projects) {
 
                         return projects;
                     }
                 })
                 .flatMap(new Function<Project, ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(Project project) throws Exception {
+                    public ObservableSource<?> apply(Project project) {
                         projectLocalSource.save(project);
 
                         Observable<Project> siteRegionObservable = ServiceGenerator.getRxClient().create(ApiInterface.class)
                                 .getRegionsByProjectId(project.getId())
                                 .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
                                     @Override
-                                    public ObservableSource<Project> apply(List<SiteRegion> siteRegions) throws Exception {
+                                    public ObservableSource<Project> apply(List<SiteRegion> siteRegions) {
                                         siteRegions.add(new SiteRegion("", "Unassigned ", ""));
                                         String value = GSONInstance.getInstance().toJson(siteRegions);
                                         ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
@@ -161,7 +155,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .getAssignedSites(url)
                 .concatMap(new Function<MySiteResponse, ObservableSource<MySiteResponse>>() {
                     @Override
-                    public ObservableSource<MySiteResponse> apply(MySiteResponse mySiteResponse) throws Exception {
+                    public ObservableSource<MySiteResponse> apply(MySiteResponse mySiteResponse) {
                         if (mySiteResponse.getNext() == null) {
                             return Observable.just(mySiteResponse);
                         }
@@ -188,14 +182,14 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .subscribeOn(Schedulers.io())
                 .doOnDispose(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                         SyncLocalSource.getINSTANCE()
                                 .markAsFailed(Constant.DownloadUID.PROJECT_SITES);
                     }
                 })
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
-                    public void accept(Disposable disposable) throws Exception {
+                    public void accept(Disposable disposable) {
 
                         ProjectLocalSource.getInstance().deleteAll();
                         SiteLocalSource.getInstance().deleteSyncedSitesAsync();

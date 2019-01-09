@@ -18,9 +18,9 @@ package org.odk.collect.android.widgets;
 
 import android.content.Context;
 
+import org.bcss.collect.android.fragments.dialogs.IslamicDatePickerDialog;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
-import org.bcss.collect.android.fragments.dialogs.IslamicDatePickerDialog;
 
 import static org.bcss.collect.android.fragments.dialogs.CustomDatePickerDialog.DATE_PICKER_DIALOG;
 

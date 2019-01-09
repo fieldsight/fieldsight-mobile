@@ -8,7 +8,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 
-
 import org.bcss.collect.naxa.contact.ContactLocalSource;
 import org.bcss.collect.naxa.contact.ContactRemoteSource;
 import org.bcss.collect.naxa.contact.ContactRepository;
@@ -30,9 +29,7 @@ import org.bcss.collect.naxa.scheduled.data.ScheduledFormRepository;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormViewModel;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsLocalSource;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
-import org.bcss.collect.naxa.site.CreateSiteDetailViewModel;
 import org.bcss.collect.naxa.site.CreateSiteViewModel;
-import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.FragmentHostViewModel;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
@@ -146,9 +143,6 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(NotificationListViewModel.class)) {
             //noinspection unchecked
             return (T) new NotificationListViewModel(notificationRepository);
-        } else if (modelClass.isAssignableFrom(CreateSiteDetailViewModel.class)) {
-            //noinspection unchecked
-            return (T) new CreateSiteDetailViewModel(siteRepository);
         } else if (modelClass.isAssignableFrom(ProjectContactViewModel.class)) {
             //noinspection unchecked
             return (T) new ProjectContactViewModel(contactRepository);

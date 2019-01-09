@@ -24,12 +24,12 @@ import android.database.sqlite.SQLiteException;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.external.ExternalDataManager;
 import org.bcss.collect.android.external.ExternalDataUtil;
 import org.bcss.collect.android.external.ExternalSQLiteOpenHelper;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;

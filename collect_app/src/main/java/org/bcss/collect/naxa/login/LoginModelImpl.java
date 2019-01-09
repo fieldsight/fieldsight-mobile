@@ -1,9 +1,7 @@
 package org.bcss.collect.naxa.login;
 
-import com.crashlytics.android.Crashlytics;
-
-import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.model.AuthResponse;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -35,7 +33,7 @@ public class LoginModelImpl implements LoginModel {
                 .getAuthToken(username, password)
                 .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
                     @Override
-                    public ObservableSource<FCMParameter> apply(AuthResponse authResponse) throws Exception {
+                    public ObservableSource<FCMParameter> apply(AuthResponse authResponse) {
 
                         ServiceGenerator.clearInstance();
 
@@ -44,7 +42,7 @@ public class LoginModelImpl implements LoginModel {
                                 .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true))
                                 .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
                                     @Override
-                                    public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
+                                    public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) {
                                         if ("false".equals(fcmParameter.getIs_active())) {
                                             throw new FirebaseTokenException("Failed to add token in server");
                                         }

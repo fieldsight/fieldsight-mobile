@@ -3,7 +3,6 @@ package org.bcss.collect.naxa.site;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -29,15 +28,8 @@ import com.google.common.primitives.Longs;
 import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.activities.InstanceUploaderActivity;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.utilities.ArrayUtils;
-import org.odk.collect.android.utilities.ThemeUtils;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
@@ -46,7 +38,6 @@ import org.bcss.collect.naxa.common.FilterOption;
 import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
-import org.bcss.collect.naxa.firebase.NotificationUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.data.SiteRegion;
@@ -54,10 +45,13 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.survey.SurveyFormsActivity;
 import org.json.JSONObject;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.activities.InstanceUploaderActivity;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -68,16 +62,14 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 import timber.log.Timber;
 
-import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
-import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 
 public class SiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener {
 
@@ -299,9 +291,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     public MutableLiveData<ArrayList<FilterOption>> getFilterOptionForSites() {
 
-        ArrayList<Pair> sites = new ArrayList<>();
-        sites.add(Pair.create(Constant.SiteStatus.IS_OFFLINE, "Offline site(s)"));
-        sites.add(Pair.create(Constant.SiteStatus.IS_ONLINE, "All site(s)"));
 
         Type type = new TypeToken<ArrayList<SiteRegion>>() {
         }.getType();
@@ -318,7 +307,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 .toList()
                 .map(new Function<List<Pair>, List<Pair>>() {
                     @Override
-                    public List<Pair> apply(List<Pair> pairs) throws Exception {
+                    public List<Pair> apply(List<Pair> pairs) {
                         pairs.add(Pair.create("0", "All sites"));
 
                         return pairs;

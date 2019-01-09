@@ -18,6 +18,7 @@ package org.odk.collect.android.utilities;
 
 import android.content.Context;
 
+import org.bcss.collect.android.logic.FormController;
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.DateData;
@@ -27,7 +28,6 @@ import org.javarosa.core.model.data.MultipleItemsData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.dao.ItemsetDao;
-import org.bcss.collect.android.logic.FormController;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;

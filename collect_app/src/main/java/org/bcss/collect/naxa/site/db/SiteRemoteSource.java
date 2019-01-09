@@ -2,21 +2,18 @@ package org.bcss.collect.naxa.site.db;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
-import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.database.SiteUploadHistory;
-import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
-import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.sync.DisposableManager;
 import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.util.List;
@@ -24,9 +21,6 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -36,7 +30,6 @@ import okhttp3.RequestBody;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
@@ -120,14 +113,6 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     }
 
 
-    public Observable<List<Site>> uploadEditedSites(List<Site> sites) {
-        InstancesDao instancesDao = new InstancesDao();
-
-
-        return Observable.just(sites);
-    }
-
-
     public Observable<Site> uploadMultipleSites(List<Site> sites) {
 
         ToastUtils.showLongToast("Uploading site(s)");
@@ -138,34 +123,34 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 .filter(site -> site.getIsSiteVerified() == IS_OFFLINE)
                 .flatMap(new Function<Site, Observable<Site>>() {
                     @Override
-                    public Observable<Site> apply(Site oldSite) throws Exception {
+                    public Observable<Site> apply(Site oldSite) {
                         return uploadSite(oldSite)
                                 .flatMap(new Function<Site, ObservableSource<Site>>() {
                                     @Override
-                                    public ObservableSource<Site> apply(Site newSite) throws Exception {
+                                    public ObservableSource<Site> apply(Site newSite) {
                                         String oldSiteId = oldSite.getId();
                                         String newSiteId = newSite.getId();
                                         return SiteLocalSource.getInstance().setSiteAsVerified(oldSiteId)
                                                 .flatMap(new Function<Integer, ObservableSource<Integer>>() {
                                                     @Override
-                                                    public ObservableSource<Integer> apply(Integer integer) throws Exception {
+                                                    public ObservableSource<Integer> apply(Integer integer) {
                                                         return SiteLocalSource.getInstance().updateSiteId(oldSiteId, newSiteId);
                                                     }
                                                 })
                                                 .flatMap(new Function<Integer, Observable<Long[]>>() {
                                                     @Override
-                                                    public Observable<Long[]> apply(Integer affectedRowsCount) throws Exception {
+                                                    public Observable<Long[]> apply(Integer affectedRowsCount) {
                                                         return SiteUploadHistoryLocalSource.getInstance().saveAsObservable(new SiteUploadHistory(newSiteId, oldSiteId));
                                                     }
                                                 }).flatMap(new Function<Long[], ObservableSource<Integer>>() {
                                                     @Override
-                                                    public ObservableSource<Integer> apply(Long[] updatedRows) throws Exception {
+                                                    public ObservableSource<Integer> apply(Long[] updatedRows) {
                                                         return instancesDao.cascadedSiteIds(oldSiteId, newSiteId);
                                                     }
                                                 })
                                                 .map(new Function<Integer, Site>() {
                                                     @Override
-                                                    public Site apply(Integer integer) throws Exception {
+                                                    public Site apply(Integer integer) {
                                                         return newSite;
                                                     }
                                                 });

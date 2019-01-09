@@ -1,8 +1,8 @@
 package org.odk.collect.android.utilities;
 
+import org.bcss.collect.android.application.Collect;
 import org.junit.Before;
 import org.junit.Test;
-import org.bcss.collect.android.application.Collect;
 import org.odk.collect.android.test.MockedServerTest;
 import org.opendatakit.httpclientandroidlib.client.HttpClient;
 import org.opendatakit.httpclientandroidlib.client.methods.HttpGet;
@@ -76,7 +76,7 @@ public class WebUtilsTest extends MockedServerTest {
     }
 
     @Test
-    public void getXmlDocument_request_shouldReportInvalidUrl() throws Exception {
+    public void getXmlDocument_request_shouldReportInvalidUrl() {
         // when
         DocumentFetchResult res = WebUtils.getXmlDocument("NOT_A_URL", httpContext(), httpClient());
 
@@ -86,7 +86,7 @@ public class WebUtilsTest extends MockedServerTest {
     }
 
     @Test
-    public void getXmlDocument_request_shouldReportInvalidHost() throws Exception {
+    public void getXmlDocument_request_shouldReportInvalidHost() {
         // when
         DocumentFetchResult res = WebUtils.getXmlDocument("file:/some/path", httpContext(), httpClient());
 

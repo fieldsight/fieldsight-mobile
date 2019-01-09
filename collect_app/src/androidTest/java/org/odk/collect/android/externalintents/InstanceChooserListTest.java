@@ -9,8 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.activities.InstanceChooserList;
 
-import java.io.IOException;
-
 import static org.odk.collect.android.externalintents.ExportedActivitiesUtils.testDirectories;
 
 @Suppress
@@ -23,7 +21,7 @@ public class InstanceChooserListTest {
             new ExportedActivityTestRule<>(InstanceChooserList.class);
 
     @Test
-    public void instanceChooserListMakesDirsTest() throws IOException {
+    public void instanceChooserListMakesDirsTest() {
         testDirectories();
     }
 

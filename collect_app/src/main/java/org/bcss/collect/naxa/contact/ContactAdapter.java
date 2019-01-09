@@ -17,14 +17,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.GlideApp;
 
-
 import java.util.List;
-import java.util.logging.Handler;
 
 import io.reactivex.annotations.NonNull;
 
@@ -51,16 +47,15 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView tvFullName, tvUserName, tvPhone;
         private ImageView ivProfilePicture;
-        private ImageButton btnCall;
+
         private CardView card;
 
         public MyViewHolder(View view) {
             super(view);
 
-            ivProfilePicture = (ImageView) view.findViewById(R.id.imageView2);
-            tvFullName = (TextView) view.findViewById(R.id.contact_name);
-            tvUserName = (TextView) view.findViewById(R.id.contact_username);
-            btnCall = (ImageButton) view.findViewById(R.id.frag_contact_btn_call);
+            ivProfilePicture = view.findViewById(R.id.imageView2);
+            tvFullName = view.findViewById(R.id.contact_name);
+            tvUserName = view.findViewById(R.id.contact_username);
             card = view.findViewById(R.id.card_contact_list_item);
 
             card.setOnClickListener(new View.OnClickListener() {

@@ -98,12 +98,12 @@ public class DriveHelperTest {
         doReturn(mockedRequest).when(mockedDriveService).generateRequest(anyString(), anyString());
 
         driveHelper.getFilesFromDrive(anyString(), anyString());
-        verify(mockedDriveService, times(1)).fetchAllFiles(any(Drive.Files.List.class), ArgumentMatchers.<File>anyList());
+        verify(mockedDriveService, times(1)).fetchAllFiles(any(Drive.Files.List.class), ArgumentMatchers.anyList());
 
         clearInvocations(mockedDriveService);
 
         driveHelper.getFilesFromDrive(null, null);
-        verify(mockedDriveService, times(0)).fetchAllFiles(any(Drive.Files.List.class), ArgumentMatchers.<File>anyList());
+        verify(mockedDriveService, times(0)).fetchAllFiles(any(Drive.Files.List.class), ArgumentMatchers.anyList());
     }
 
     @Test

@@ -28,17 +28,17 @@ import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
 import org.bcss.collect.android.listeners.DiskSyncListener;
 import org.bcss.collect.android.listeners.PermissionListener;
+import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
+import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
-import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
-import org.bcss.collect.android.R;
 
 import timber.log.Timber;
 

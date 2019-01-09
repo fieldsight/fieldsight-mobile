@@ -35,21 +35,21 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.FormDownloadListAdapter;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
+import org.bcss.collect.android.http.HttpCredentialsInterface;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.listeners.FormListDownloaderListener;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.logic.FormDetails;
+import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
-import org.odk.collect.android.utilities.AuthDialogUtility;
-import org.odk.collect.android.utilities.ToastUtils;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.http.HttpCredentialsInterface;
-import org.bcss.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.DialogUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
 import java.net.URI;

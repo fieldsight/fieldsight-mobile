@@ -2,16 +2,16 @@ package org.odk.collect.android.tasks;
 
 import android.net.Uri;
 
-import java.io.File;
-
+import org.bcss.collect.android.dto.Instance;
+import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.odk.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.InstanceUploader.Outcome;
 import org.odk.collect.android.test.MockedServerTest;
+
+import java.io.File;
 
 import okhttp3.mockwebserver.RecordedRequest;
 
@@ -32,7 +32,7 @@ public class InstanceServerUploaderTest extends MockedServerTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         cleanUpTempFiles();
         resetInstancesContentProvider();
     }

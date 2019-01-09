@@ -30,7 +30,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
-
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.fragments.ShowQRCodeFragment;
 import org.bcss.collect.android.fragments.dialogs.MovingBackwardsDialog;
@@ -39,6 +38,7 @@ import org.odk.collect.android.utilities.ToastUtils;
 
 import static android.content.Context.MODE_PRIVATE;
 import static org.bcss.collect.android.fragments.dialogs.MovingBackwardsDialog.MOVING_BACKWARDS_DIALOG_TAG;
+import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_CHANGE_ADMIN_PASSWORD;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_EDIT_SAVED;
@@ -46,7 +46,6 @@ import static org.odk.collect.android.preferences.AdminKeys.KEY_IMPORT_SETTINGS;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_JUMP_TO;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_MOVING_BACKWARDS;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_SAVE_MID;
-import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
 import static org.odk.collect.android.preferences.PreferenceKeys.CONSTRAINT_BEHAVIOR_ON_SWIPE;
 
 public class AdminPreferencesFragment extends BasePreferenceFragment implements Preference.OnPreferenceClickListener {

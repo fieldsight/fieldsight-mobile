@@ -56,7 +56,7 @@ public class ImageFileUtils {
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"),
-                        Long.valueOf(id));
+                        Long.parseLong(id));
 
                 return getDataColumn(context, contentUri, null, null);
             }

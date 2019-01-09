@@ -18,7 +18,6 @@ package org.odk.collect.android.utilities;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.robolectric.RobolectricTestRunner;
 
 import static junit.framework.Assert.assertFalse;

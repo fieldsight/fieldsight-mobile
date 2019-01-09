@@ -20,17 +20,17 @@ import android.net.Uri;
 import android.util.Base64;
 
 import org.apache.commons.io.IOUtils;
-import org.kxml2.io.KXmlSerializer;
-import org.kxml2.kdom.Document;
-import org.kxml2.kdom.Element;
-import org.kxml2.kdom.Node;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
 import org.bcss.collect.android.exception.EncryptionException;
 import org.bcss.collect.android.logic.FormController.InstanceMetadata;
 import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.kxml2.io.KXmlSerializer;
+import org.kxml2.kdom.Document;
+import org.kxml2.kdom.Element;
+import org.kxml2.kdom.Node;
+import org.odk.collect.android.dao.FormsDao;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

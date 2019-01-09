@@ -22,19 +22,17 @@ import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 
-import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
 import org.odk.collect.android.utilities.CameraUtils;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
-import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermission;
 import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermission;
 
 /**

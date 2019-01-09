@@ -20,23 +20,22 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
+import org.bcss.collect.android.http.CollectServerClient;
 import org.bcss.collect.android.listeners.FormDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.logic.MediaFile;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Element;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.http.CollectServerClient;
+import org.odk.collect.android.dao.FormsDao;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -314,7 +313,7 @@ public class FormDownloader {
      * object representing the downloaded file.
      */
     private FileResult downloadXform(String formName, String url)
-            throws IOException, TaskCancelledException, Exception {
+            throws Exception {
         // clean up friendly form name...
         String rootName = formName.replaceAll("[^\\p{L}\\p{Digit}]", " ");
         rootName = rootName.replaceAll("\\p{javaWhitespace}+", " ");
@@ -375,7 +374,7 @@ public class FormDownloader {
      * @param downloadUrl the url to get the contents from.
      */
     private void downloadFile(File file, String downloadUrl)
-            throws IOException, TaskCancelledException, URISyntaxException, Exception {
+            throws Exception {
         File tempFile = File.createTempFile(file.getName(), TEMP_DOWNLOAD_EXTENSION,
                 new File(Collect.CACHE_PATH));
 

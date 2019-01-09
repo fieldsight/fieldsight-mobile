@@ -11,8 +11,8 @@ public class MigrationHelper {
 
 
     public final String ROOT = Environment.getExternalStorageDirectory() + File.separator;
-    private final String OLD_FOLDER = "bcss";
-    private final String NEW_FOLDER = "fieldsight";
+    private static final String OLD_FOLDER = "bcss";
+    private static final String NEW_FOLDER = "fieldsight";
     private final String MIGRATE_FROM = ROOT + OLD_FOLDER;
     private final String MIGRATE_TO = ROOT + NEW_FOLDER;
     private final String usernameOrEmail;
@@ -120,11 +120,10 @@ public class MigrationHelper {
         return oldPath.replace(strToReplace, NEW_FOLDER);
     }
 
-    String fixSitePhotosPath(String oldPath){
+    String fixSitePhotosPath(String oldPath) {
         String strToReplace = Folder.OLD_SITE_PHOTOS;
-        return oldPath.replace(strToReplace,Folder.NEW_SITE_PHOTOS);
+        return oldPath.replace(strToReplace, Folder.NEW_SITE_PHOTOS);
     }
-
 
 
     public static class Table {
@@ -133,8 +132,8 @@ public class MigrationHelper {
         public static final String notifications = "table_notify";
         public static final String all_contacts = "table_contact";
 
-        public static String instances = "instances";
-        public static String forms = "forms";
+        public final static String instances = "instances";
+        public final static String forms = "forms";
     }
 
     public static class Folder {

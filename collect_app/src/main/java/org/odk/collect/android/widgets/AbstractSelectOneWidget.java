@@ -20,11 +20,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.widget.RadioButton;
 
+import org.bcss.collect.android.adapters.SelectOneListAdapter;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.exception.JavaRosaException;
 import org.bcss.collect.android.listeners.AdvanceToNextListener;
 import org.bcss.collect.android.logic.FormController;
-import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
@@ -32,7 +32,7 @@ import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.adapters.SelectOneListAdapter;
+import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
 
 import timber.log.Timber;
 

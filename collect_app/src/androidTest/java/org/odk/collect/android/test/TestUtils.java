@@ -8,10 +8,10 @@ import android.support.test.espresso.util.HumanReadables;
 import android.support.test.espresso.util.TreeIterables;
 import android.view.View;
 
-import org.hamcrest.Matcher;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.hamcrest.Matcher;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
 
 import java.io.Closeable;
 import java.io.File;

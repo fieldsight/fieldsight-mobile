@@ -20,10 +20,10 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.util.TypedValue;
 
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.BooleanData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
 import org.odk.collect.android.utilities.ViewIds;
 
 public class BooleanWidget extends QuestionWidget {

@@ -22,8 +22,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.support.media.ExifInterface;
 
-import org.javarosa.core.model.instance.TreeElement;
 import org.bcss.collect.android.R;
+import org.javarosa.core.model.instance.TreeElement;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.widgets.QuestionWidget;
 

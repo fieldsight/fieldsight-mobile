@@ -2,7 +2,6 @@ package org.bcss.collect.naxa.notificationslist;
 
 import android.arch.lifecycle.LiveData;
 
-
 import org.bcss.collect.naxa.common.BaseRepository;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;

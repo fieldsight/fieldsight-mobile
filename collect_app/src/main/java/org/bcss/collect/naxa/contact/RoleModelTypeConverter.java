@@ -5,7 +5,6 @@ import android.arch.persistence.room.TypeConverter;
 import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.naxa.common.GSONInstance;
-import org.bcss.collect.naxa.site.data.SiteRegion;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

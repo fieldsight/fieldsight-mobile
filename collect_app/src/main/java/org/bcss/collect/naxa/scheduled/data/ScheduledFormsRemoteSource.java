@@ -3,7 +3,6 @@ package org.bcss.collect.naxa.scheduled.data;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.Constant;
@@ -17,6 +16,7 @@ import org.bcss.collect.naxa.onboarding.XMLForm;
 import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -94,10 +94,10 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                 .getScheduleForms(createdFromProject, creatorsId)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
+                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) {
                         return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
                             @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                            public ObservableSource<?> apply(Throwable throwable) {
                                 if (throwable instanceof IOException) {
                                     return throwableObservable;
                                 }
@@ -145,13 +145,13 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                 .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
                 .flatMap(new Function<XMLForm, Observable<ArrayList<ScheduleForm>>>() {
                     @Override
-                    public Observable<ArrayList<ScheduleForm>> apply(XMLForm xmlForm) throws Exception {
+                    public Observable<ArrayList<ScheduleForm>> apply(XMLForm xmlForm) {
                         return downloadProjectSchedule(xmlForm);
                     }
                 })
                 .map(new Function<ArrayList<ScheduleForm>, ArrayList<ScheduleForm>>() {
                     @Override
-                    public ArrayList<ScheduleForm> apply(ArrayList<ScheduleForm> scheduleForms) throws Exception {
+                    public ArrayList<ScheduleForm> apply(ArrayList<ScheduleForm> scheduleForms) {
                         for (ScheduleForm scheduleForm : scheduleForms) {
                             String deployedFrom = scheduleForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
                             scheduleForm.setFormDeployedFrom(deployedFrom);
@@ -164,7 +164,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                 .toList()
                 .map(new Function<List<ArrayList<ScheduleForm>>, ArrayList<ScheduleForm>>() {
                     @Override
-                    public ArrayList<ScheduleForm> apply(List<ArrayList<ScheduleForm>> arrayLists) throws Exception {
+                    public ArrayList<ScheduleForm> apply(List<ArrayList<ScheduleForm>> arrayLists) {
                         ArrayList<ScheduleForm> scheduleForms = new ArrayList<>(0);
 
                         for (ArrayList<ScheduleForm> scheduleFormsList : arrayLists) {

@@ -7,8 +7,6 @@ import org.bcss.collect.naxa.login.model.Project;
 
 import java.util.List;
 
-import io.reactivex.Maybe;
-
 public class ProjectViewModel extends ViewModel {
 
     private ProjectRepository projectRepository;

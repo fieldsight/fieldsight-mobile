@@ -1,6 +1,5 @@
 package org.odk.collect.android.preferences;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -26,7 +25,7 @@ public class AutoSendPreferenceMigrator {
         migrate(autoSendWifi, autoSendNetwork);
     }
 
-    public static void migrate(JSONObject generalPrefsJson) throws JSONException {
+    public static void migrate(JSONObject generalPrefsJson) {
 
         boolean autoSendWifi = false;
         if (generalPrefsJson.has(KEY_AUTOSEND_WIFI)) {

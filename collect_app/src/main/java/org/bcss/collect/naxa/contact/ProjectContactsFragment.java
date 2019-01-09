@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,11 +16,7 @@ import android.view.ViewGroup;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Phone;
-import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
-import org.bcss.collect.naxa.onboarding.DownloadActivity;
-import org.bcss.collect.naxa.project.data.ProjectViewModel;
-import org.bcss.collect.naxa.stages.StageViewModel;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 
 import java.util.ArrayList;
@@ -94,10 +89,6 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
                         DownloadActivityRefresh.start(getActivity());
                     }
                 });
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
-
-//        recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setAdapter(contactAdapter);
     }
 
@@ -105,7 +96,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     public void onContactClicked(FieldSightContactModel contactModel) {
         ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.getInstance();
         contactDetailsBottomSheetFragmentDialog.setContact(contactModel);
-        contactDetailsBottomSheetFragmentDialog.show(getFragmentManager(), "Contact Bottom Sheet");
+        contactDetailsBottomSheetFragmentDialog.show(requireFragmentManager(), "Contact Bottom Sheet");
     }
 
     @Override

@@ -17,7 +17,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -27,17 +26,11 @@ import android.widget.Toast;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.tasks.DownloadFormListTask;
-import org.odk.collect.android.tasks.DownloadFormsTask;
-import org.odk.collect.android.utilities.ApplicationConstants;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
@@ -45,6 +38,11 @@ import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.tasks.DownloadFormListTask;
+import org.odk.collect.android.tasks.DownloadFormsTask;
+import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,10 +54,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -141,18 +136,18 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
     private void bindUI() {
 
         //layout element ids
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        noMessage = (TextView) findViewById(R.id.textView6);
-        tvFormName = (TextView) findViewById(R.id.tv_form_name);
-        tvFormDesc = (TextView) findViewById(R.id.tv_form_desc);
-        imbStatus = (ImageButton) findViewById(R.id.img_btn_status);
-        tvFormStatus = (TextView) findViewById(R.id.tv_form_status);
-        tvComment = (TextView) findViewById(R.id.tv_comments_txt);
-        recyclerViewImages = (RecyclerView) findViewById(R.id.comment_session_rv_images);
+        toolbar = findViewById(R.id.toolbar);
+        noMessage = findViewById(R.id.textView6);
+        tvFormName = findViewById(R.id.tv_form_name);
+        tvFormDesc = findViewById(R.id.tv_form_desc);
+        imbStatus = findViewById(R.id.img_btn_status);
+        tvFormStatus = findViewById(R.id.tv_form_status);
+        tvComment = findViewById(R.id.tv_comments_txt);
+        recyclerViewImages = findViewById(R.id.comment_session_rv_images);
 
 
-        relativeStatus = (RelativeLayout) findViewById(R.id.relativeLayout_status);
-        formBox = (RelativeLayout) findViewById(R.id.relative_layout_comment_open_form);
+        relativeStatus = findViewById(R.id.relativeLayout_status);
+        formBox = findViewById(R.id.relative_layout_comment_open_form);
     }
 
     private void setupData(FieldSightNotification fieldSightNotification) {
@@ -265,7 +260,6 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
     @Override
     public void onClick(View v) {
-        int id = v.getId();
         boolean emptyVersion = TextUtils.isEmpty(loadedFieldSightNotification.getFormVersion());
 
         if (emptyVersion) {
@@ -319,8 +313,6 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
     private void downloadFormAndInstance(FieldSightNotification notificationFormDetail) {
 
-        String fsFormId = notificationFormDetail.getFsFormId();
-        String siteId = notificationFormDetail.getSiteId();
         String formName = notificationFormDetail.getFormName();
         String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
         String jrFormId = "";
@@ -408,7 +400,6 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
     private void downloadInstance(FieldSightNotification notification) {
 
         String[] nameAndPath = InstanceRemoteSource.getINSTANCE().getNameAndPath(notification.getFormName());
-        String formName = nameAndPath[0];
         String pathToDownload = nameAndPath[1];
 
 
@@ -418,7 +409,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 .flatMapIterable(entries -> entries)
                 .flatMap(new Function<Map.Entry<String, String>, ObservableSource<String>>() {
                     @Override
-                    public ObservableSource<String> apply(Map.Entry<String, String> filenameFilePathMap) throws Exception {
+                    public ObservableSource<String> apply(Map.Entry<String, String> filenameFilePathMap) {
                         String fileName = filenameFilePathMap.getKey();
                         String downloadUrl = filenameFilePathMap.getValue();
 

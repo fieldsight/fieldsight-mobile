@@ -22,9 +22,9 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.fragments.Camera2Fragment;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.bcss.collect.android.R;
 
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfCameraPermissionGranted;
 

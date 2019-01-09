@@ -1,34 +1,25 @@
 package org.bcss.collect.naxa.onboarding;
 
-import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.os.Handler;
 
-import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
-import org.bcss.collect.naxa.project.data.ProjectLocalSource;
-import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormDetails;
-import org.odk.collect.android.tasks.DownloadFormListTask;
-import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
-import org.bcss.collect.naxa.generalforms.data.GeneralFormLocalSource;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormRemoteSource;
-import org.bcss.collect.naxa.generalforms.data.GeneralFormRepository;
 import org.bcss.collect.naxa.login.model.Project;
-import org.bcss.collect.naxa.project.data.ProjectRepository;
+import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.project.data.ProjectSitesRemoteSource;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
-import org.bcss.collect.naxa.site.db.SiteRepository;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.StageRemoteSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -39,14 +30,11 @@ import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_ERROR;
@@ -87,7 +75,7 @@ public class DownloadModelImpl implements DownloadModel {
                 })
                 .flatMap(new Function<Object, SingleSource<?>>() {
                     @Override
-                    public SingleSource<?> apply(Object o) throws Exception {
+                    public SingleSource<?> apply(Object o) {
                         return GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
                     }
                 })
@@ -136,7 +124,7 @@ public class DownloadModelImpl implements DownloadModel {
                 })
                 .flatMap(new Function<List<DownloadProgress>, Single<ArrayList<ScheduleForm>>>() {
                     @Override
-                    public Single<ArrayList<ScheduleForm>> apply(List<DownloadProgress> downloadProgresses) throws Exception {
+                    public Single<ArrayList<ScheduleForm>> apply(List<DownloadProgress> downloadProgresses) {
                         return ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
                     }
                 })
@@ -184,7 +172,7 @@ public class DownloadModelImpl implements DownloadModel {
                 })
                 .flatMap(new Function<Object, SingleSource<ArrayList<Stage>>>() {
                     @Override
-                    public SingleSource<ArrayList<Stage>> apply(Object o) throws Exception {
+                    public SingleSource<ArrayList<Stage>> apply(Object o) {
                         return StageRemoteSource.getInstance().fetchAllStages();
                     }
                 })
@@ -273,7 +261,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .toObservable()
                 .flatMap(new Function<List<DownloadProgress>, ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(List<DownloadProgress> downloadProgresses) throws Exception {
+                    public ObservableSource<?> apply(List<DownloadProgress> downloadProgresses) {
                         Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
                         Single<ArrayList<ScheduleForm>> scheduled = ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
                         Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();

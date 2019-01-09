@@ -30,11 +30,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.TimeData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.joda.time.DateTime;
-import org.bcss.collect.android.R;
 import org.odk.collect.android.widgets.interfaces.ButtonWidget;
 
 import java.lang.reflect.Constructor;

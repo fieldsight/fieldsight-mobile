@@ -3,13 +3,13 @@ package org.odk.collect.android.test;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
+import org.bcss.collect.android.application.Collect;
 import org.junit.After;
 import org.junit.Before;
-import org.bcss.collect.android.application.Collect;
 import org.odk.collect.android.preferences.PreferenceKeys;
+
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;

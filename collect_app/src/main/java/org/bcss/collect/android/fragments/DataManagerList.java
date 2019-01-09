@@ -28,20 +28,17 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import org.odk.collect.android.dao.InstancesDao;
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.DeleteInstancesListener;
 import org.bcss.collect.android.listeners.DiskSyncListener;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.bcss.collect.naxa.login.model.Site;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 import org.odk.collect.android.tasks.InstanceSyncTask;
-import org.odk.collect.android.utilities.ToastUtils;
-import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
-
-import java.util.Arrays;
-import java.util.List;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -235,7 +232,7 @@ public class DataManagerList extends InstanceListFragment
     }
 
     private void deleteSmsSubmissions(Long[] ids) {
-        List<Long> list = Arrays.asList(ids);
+        Long[] list = ids;
 
         for (Long id : list) {
             smsSubmissionManager.forgetSubmission(String.valueOf(id));

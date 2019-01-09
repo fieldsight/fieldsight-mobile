@@ -11,7 +11,6 @@ import org.odk.collect.android.utilities.ResponseMessageParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -44,13 +43,13 @@ public class MockHttpClientConnection implements OpenRosaHttpInterface {
 
     @NonNull
     @Override
-    public HttpHeadResult head(@NonNull URI uri, @Nullable HttpCredentialsInterface credentials) throws Exception {
+    public HttpHeadResult head(@NonNull URI uri, @Nullable HttpCredentialsInterface credentials) {
         return new HttpHeadResult(0, new HashMap<String, String>());
     }
 
     @NonNull
     @Override
-    public ResponseMessageParser uploadSubmissionFile(@NonNull List<File> fileList, @NonNull File submissionFile, @NonNull URI uri, @Nullable HttpCredentialsInterface credentials) throws IOException {
+    public ResponseMessageParser uploadSubmissionFile(@NonNull List<File> fileList, @NonNull File submissionFile, @NonNull URI uri, @Nullable HttpCredentialsInterface credentials) {
         return null;
     }
 }

@@ -31,13 +31,13 @@ import android.widget.TextView;
 
 import com.google.android.gms.location.LocationListener;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.spatial.MapHelper;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
-import org.bcss.collect.android.spatial.MapHelper;
 import org.odk.collect.android.utilities.GeoPointUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
-import org.bcss.collect.android.R;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.util.GeoPoint;

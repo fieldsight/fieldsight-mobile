@@ -22,11 +22,11 @@ import android.os.Bundle;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.fragments.dialogs.SimpleDialog;
 import org.bcss.collect.android.listeners.InstanceUploaderListener;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ArrayUtils;

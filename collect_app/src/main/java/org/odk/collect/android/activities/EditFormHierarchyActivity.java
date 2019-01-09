@@ -18,13 +18,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.KeyEvent;
 
-import org.javarosa.core.model.FormIndex;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.HierarchyListAdapter;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.exception.JavaRosaException;
 import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.logic.HierarchyElement;
+import org.javarosa.core.model.FormIndex;
 
 import java.util.ArrayList;
 

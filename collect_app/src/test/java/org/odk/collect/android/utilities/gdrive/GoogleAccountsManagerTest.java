@@ -6,15 +6,15 @@ import android.content.Intent;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
-import org.odk.collect.android.utilities.ThemeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.preferences.ServerPreferencesFragment;
 import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.ThemeUtils;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;

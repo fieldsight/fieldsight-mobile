@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -20,21 +18,19 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.DialogFactory;
-//import org.bcss.collect.naxa.common.Login;
 import org.bcss.collect.naxa.common.Login;
 import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.migrate.MigrationHelper;
 import org.bcss.collect.naxa.network.APIEndpoint;
-import org.bcss.collect.naxa.onboarding.DownloadActivity;
-import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import static org.bcss.collect.android.application.Collect.allowClick;
+
+//import org.bcss.collect.naxa.common.Login;
 
 /**
  * A login screen that offers login via email/password.
@@ -56,12 +52,12 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = findViewById(R.id.email);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         rootLayout = findViewById(R.id.root_layout_activity_login);
 
-        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
 
             @Override

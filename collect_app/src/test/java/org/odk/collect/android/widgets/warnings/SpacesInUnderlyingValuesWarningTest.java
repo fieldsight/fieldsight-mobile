@@ -1,6 +1,7 @@
 package org.odk.collect.android.widgets.warnings;
 
 import com.google.common.collect.Lists;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

@@ -170,7 +170,7 @@ public class GoogleLocationClientTest {
 
     private class OnConnectedAnswer implements Answer<Object> {
         @Override
-        public Object answer(InvocationOnMock invocation) throws Throwable {
+        public Object answer(InvocationOnMock invocation) {
             googleLocationClient.onConnected(null);
             return null;
         }
@@ -178,7 +178,7 @@ public class GoogleLocationClientTest {
 
     private class OnConnectionFailedAnswer implements Answer<Object> {
         @Override
-        public Object answer(InvocationOnMock invocation) throws Throwable {
+        public Object answer(InvocationOnMock invocation) {
             googleLocationClient.onConnectionFailed(new ConnectionResult(0));
             return null;
         }
@@ -186,7 +186,7 @@ public class GoogleLocationClientTest {
 
     private class OnDisconnectedAnswer implements Answer<Object> {
         @Override
-        public Object answer(InvocationOnMock invocation) throws Throwable {
+        public Object answer(InvocationOnMock invocation) {
             googleLocationClient.onConnectionSuspended(0);
             return null;
         }

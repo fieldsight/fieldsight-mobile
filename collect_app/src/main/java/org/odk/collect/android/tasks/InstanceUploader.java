@@ -22,12 +22,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.listeners.InstanceUploaderListener;
+import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;

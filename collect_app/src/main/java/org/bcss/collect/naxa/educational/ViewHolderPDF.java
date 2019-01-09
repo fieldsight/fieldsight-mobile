@@ -18,8 +18,8 @@ public class ViewHolderPDF extends RecyclerView.ViewHolder{
 
     public ViewHolderPDF(View itemView) {
         super(itemView);
-        label1 = (TextView)itemView.findViewById(R.id.tv_title);
-        linearClick = (LinearLayout)itemView.findViewById(R.id.linear_layout_click);
+        label1 = itemView.findViewById(R.id.tv_title);
+        linearClick = itemView.findViewById(R.id.linear_layout_click);
 //        label2 = (TextView)itemView.findViewById(R.id.tv_desc);
     }
 
@@ -28,7 +28,7 @@ public class ViewHolderPDF extends RecyclerView.ViewHolder{
     }
 
     public void setLabel1(TextView label1) {
-        this.label1 = label1;
+        ViewHolderPDF.label1 = label1;
     }
 
 //    public TextView getLabel2() {

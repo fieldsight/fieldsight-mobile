@@ -3,7 +3,6 @@ package org.bcss.collect.naxa.onboarding;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.CheckBox;

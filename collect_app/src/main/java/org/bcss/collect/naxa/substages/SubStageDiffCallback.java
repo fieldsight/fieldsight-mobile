@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
 import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
-import org.bcss.collect.naxa.stages.data.SubStage;
 
 import java.util.List;
 

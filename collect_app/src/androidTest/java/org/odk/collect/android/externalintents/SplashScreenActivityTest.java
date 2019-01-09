@@ -7,8 +7,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.odk.collect.android.activities.SplashScreenActivity;
 
-import java.io.IOException;
-
 import static org.odk.collect.android.externalintents.ExportedActivitiesUtils.testDirectories;
 
 @Suppress
@@ -20,7 +18,7 @@ public class SplashScreenActivityTest {
             new ExportedActivityTestRule<>(SplashScreenActivity.class);
 
     @Test
-    public void splashScreenActivityMakesDirsTest() throws IOException {
+    public void splashScreenActivityMakesDirsTest() {
         testDirectories();
     }
 

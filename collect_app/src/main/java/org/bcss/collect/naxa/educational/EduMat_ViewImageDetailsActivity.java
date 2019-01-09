@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,8 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.GlideApp;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.io.File;
 
@@ -29,7 +28,7 @@ public class EduMat_ViewImageDetailsActivity extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edu_mat_view_image_detail_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
 
         setSupportActionBar(toolbar);
@@ -40,9 +39,9 @@ public class EduMat_ViewImageDetailsActivity extends CollectAbstractActivity {
             }
         });
 
-        ImageView imageView = (ImageView) findViewById(R.id.image_url);
-        TextView imageTitle = (TextView) findViewById(R.id.image_title);
-        TextView imageDesc = (TextView) findViewById(R.id.image_desc);
+        ImageView imageView = findViewById(R.id.image_url);
+        TextView imageTitle = findViewById(R.id.image_title);
+        TextView imageDesc = findViewById(R.id.image_desc);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -54,13 +53,13 @@ public class EduMat_ViewImageDetailsActivity extends CollectAbstractActivity {
             getSupportActionBar().setTitle(image_title);
 
 
-            if (!image_url_off.equals("") || image_url_off != null) {
+            if (image_url_off != null) {
                 File f = new File(image_url_off);
                 Bitmap bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
                 imageView.setImageBitmap(bmp);
-            }else {
+            } else {
                 GlideApp.with(EduMat_ViewImageDetailsActivity.this)
-                        .load( image_url_on)
+                        .load(image_url_on)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
             }

@@ -21,13 +21,13 @@ import android.os.Environment;
 import android.support.test.InstrumentationRegistry;
 
 import org.apache.commons.io.IOUtils;
+import org.bcss.collect.android.listeners.FormLoaderListener;
+import org.bcss.collect.android.logic.FormController;
 import org.javarosa.core.model.FormDef;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.bcss.collect.android.listeners.FormLoaderListener;
-import org.bcss.collect.android.logic.FormController;
 import org.odk.collect.android.tasks.FormLoaderTask;
 
 import java.io.File;

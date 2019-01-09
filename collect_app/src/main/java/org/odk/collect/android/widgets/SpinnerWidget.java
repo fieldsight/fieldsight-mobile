@@ -31,14 +31,13 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.external.ExternalDataUtil;
 import org.bcss.collect.android.listeners.AdvanceToNextListener;
 import org.bcss.collect.android.views.ScrolledToTopSpinner;
-import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-
+import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
 
 import java.util.List;
 

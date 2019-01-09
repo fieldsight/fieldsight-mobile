@@ -97,18 +97,18 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
                 .flatMapIterable((Function<List<Stage>, Iterable<Stage>>) stages -> stages)
                 .flatMap(new Function<Stage, Observable<Stage>>() {
                     @Override
-                    public Observable<Stage> apply(Stage stage) throws Exception {
+                    public Observable<Stage> apply(Stage stage) {
                         return SubStageLocalSource.getInstance()
                                 .getByStageIdMaybe(stage.getId(), siteTypeId)
                                 .filter(new Predicate<List<SubStage>>() {
                                     @Override
-                                    public boolean test(List<SubStage> subStages) throws Exception {
+                                    public boolean test(List<SubStage> subStages) {
 
                                         return subStages.size() > 0;
                                     }
                                 }).map(new Function<List<SubStage>, Stage>() {
                                     @Override
-                                    public Stage apply(List<SubStage> subStages) throws Exception {
+                                    public Stage apply(List<SubStage> subStages) {
                                         return stage;
                                     }
                                 });
@@ -127,18 +127,18 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
                 .flatMapIterable((Function<List<Stage>, Iterable<Stage>>) stages -> stages)
                 .flatMap(new Function<Stage, Observable<Stage>>() {
                     @Override
-                    public Observable<Stage> apply(Stage stage) throws Exception {
+                    public Observable<Stage> apply(Stage stage) {
                         return SubStageLocalSource.getInstance()
                                 .getByStageIdMaybe(stage.getId(), siteTypeId)
                                 .filter(new Predicate<List<SubStage>>() {
                                     @Override
-                                    public boolean test(List<SubStage> subStages) throws Exception {
+                                    public boolean test(List<SubStage> subStages) {
 
                                         return subStages.size() > 0;
                                     }
                                 }).map(new Function<List<SubStage>, Stage>() {
                                     @Override
-                                    public Stage apply(List<SubStage> subStages) throws Exception {
+                                    public Stage apply(List<SubStage> subStages) {
                                         return stage;
                                     }
                                 });

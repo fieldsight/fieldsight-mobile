@@ -18,13 +18,13 @@ import android.content.Context;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.external.ExternalDataUtil;
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.ItemsetBinding;
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathExpression;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.external.ExternalDataUtil;
 
 import java.util.List;
 import java.util.Locale;

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Environment;
 
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
@@ -14,6 +13,7 @@ import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.odk.collect.android.dao.InstancesDao;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

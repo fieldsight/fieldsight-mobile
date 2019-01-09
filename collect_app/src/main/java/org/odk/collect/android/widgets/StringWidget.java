@@ -32,7 +32,6 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ViewIds;
 
-
 import timber.log.Timber;
 
 /**

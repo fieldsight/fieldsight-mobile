@@ -12,24 +12,23 @@ import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
 import com.google.android.gms.analytics.HitBuilders;
 
-import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.jobs.SmsSenderJob;
-import org.bcss.collect.android.logic.FormInfo;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.tasks.sms.models.SmsSubmission;
-import org.odk.collect.android.utilities.ArrayUtils;
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.events.RxEventBus;
 import org.bcss.collect.android.events.SmsRxEvent;
+import org.bcss.collect.android.jobs.SmsSenderJob;
+import org.bcss.collect.android.logic.FormInfo;
+import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.bcss.collect.android.upload.InstanceServerUploader;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.tasks.sms.models.Message;
 import org.odk.collect.android.tasks.sms.models.SmsProgress;
-import org.bcss.collect.android.upload.InstanceServerUploader;
-
+import org.odk.collect.android.tasks.sms.models.SmsSubmission;
+import org.odk.collect.android.utilities.ArrayUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,8 +46,6 @@ import timber.log.Timber;
 import static android.app.Activity.RESULT_OK;
 import static android.telephony.SmsManager.RESULT_ERROR_NO_SERVICE;
 import static android.telephony.SmsManager.RESULT_ERROR_RADIO_OFF;
-import static org.odk.collect.android.utilities.FileUtil.getFileContents;
-import static org.odk.collect.android.utilities.FileUtil.getSmsInstancePath;
 import static org.odk.collect.android.utilities.FileUtil.getFileContents;
 import static org.odk.collect.android.utilities.FileUtil.getSmsInstancePath;
 

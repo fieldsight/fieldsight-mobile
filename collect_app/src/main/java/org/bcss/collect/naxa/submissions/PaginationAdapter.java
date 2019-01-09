@@ -208,9 +208,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public FormVH(View itemView) {
             super(itemView);
-            rootLayout = (CardView) itemView.findViewById(R.id.card_view_item_recycler_view);
-            tvTitle = (TextView) itemView.findViewById(R.id.item_text);
-            tvSubmissionDateTime = (TextView) itemView.findViewById(R.id.tv_item_submitted_by);
+            rootLayout = itemView.findViewById(R.id.card_view_item_recycler_view);
+            tvTitle = itemView.findViewById(R.id.item_text);
+            tvSubmissionDateTime = itemView.findViewById(R.id.tv_item_submitted_by);
         }
     }
 

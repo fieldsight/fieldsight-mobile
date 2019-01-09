@@ -42,9 +42,12 @@ import com.google.android.gms.analytics.HitBuilders;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.InstanceUploaderAdapter;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.listeners.DiskSyncListener;
 import org.bcss.collect.android.listeners.PermissionListener;
+import org.bcss.collect.android.upload.AutoSendWorker;
+import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.preferences.Transport;
@@ -53,11 +56,8 @@ import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
 import org.odk.collect.android.tasks.sms.SmsService;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.tasks.sms.models.SmsSubmission;
-import org.bcss.collect.android.upload.AutoSendWorker;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.reactivestreams.Publisher;
 
 import java.util.List;
@@ -72,6 +72,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 import static org.odk.collect.android.tasks.sms.SmsSender.SMS_INSTANCE_ID;
@@ -79,7 +80,6 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
 import static org.odk.collect.android.utilities.PermissionUtils.requestReadPhoneStatePermission;
 import static org.odk.collect.android.utilities.PermissionUtils.requestSendSMSPermission;
 import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePermissions;
-import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 
 
@@ -397,8 +397,7 @@ public class InstanceUploaderList extends InstanceListActivity implements
                 showSentAndUnsentChoices();
                 return true;
             case R.id.menu_filter:
-                //todo logger
-                showSiteProjectChoices();
+
                 return true;
             case android.R.id.home:
                 super.onBackPressed();
@@ -407,12 +406,6 @@ public class InstanceUploaderList extends InstanceListActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    private void showSiteProjectChoices() {
-
-
-        Publisher<List<Site>> pub = LiveDataReactiveStreams.toPublisher(this, SiteLocalSource.getInstance().getAll());
-
-    }
 
     private void createPreferencesMenu() {
         Intent i = new Intent(this, PreferencesActivity.class);

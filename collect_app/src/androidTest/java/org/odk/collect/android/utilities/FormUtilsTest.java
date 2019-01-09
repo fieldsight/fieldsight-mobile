@@ -21,10 +21,10 @@ import android.database.MatrixCursor;
 import android.provider.BaseColumns;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.bcss.collect.android.dto.Form;
 import org.bcss.collect.android.provider.FormsProviderAPI;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;

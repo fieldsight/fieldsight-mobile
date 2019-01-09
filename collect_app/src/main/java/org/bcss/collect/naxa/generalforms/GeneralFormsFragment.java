@@ -1,30 +1,19 @@
 package org.bcss.collect.naxa.generalforms;
 
 import android.arch.lifecycle.Observer;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.LinearLayout;
 
-import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
-import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
-import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightFormListFragment;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
@@ -32,9 +21,15 @@ import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
+import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +43,6 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
 import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class GeneralFormsFragment extends FieldSightFormListFragment implements OnFormItemClickListener<GeneralForm> {
@@ -128,6 +121,11 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
                 .observe(this, new Observer<List<GeneralFormAndSubmission>>() {
                     @Override
                     public void onChanged(@Nullable List<GeneralFormAndSubmission> generalFormAndSubmissions) {
+
+                        if (generalFormAndSubmissions == null) {
+                            return;
+                        }
+
                         if (generalFormsAdapter.getItemCount() == 0) {
                             runLayoutAnimation(recyclerView);
                         }

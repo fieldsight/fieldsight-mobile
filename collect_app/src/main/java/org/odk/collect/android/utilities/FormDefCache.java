@@ -1,8 +1,8 @@
 package org.odk.collect.android.utilities;
 
+import org.bcss.collect.android.application.Collect;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.util.externalizable.ExtUtil;
-import org.bcss.collect.android.application.Collect;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

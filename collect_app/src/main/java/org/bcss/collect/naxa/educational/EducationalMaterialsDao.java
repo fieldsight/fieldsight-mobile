@@ -7,7 +7,6 @@ import android.arch.persistence.room.Query;
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
 import org.bcss.collect.naxa.generalforms.data.Em;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Single;

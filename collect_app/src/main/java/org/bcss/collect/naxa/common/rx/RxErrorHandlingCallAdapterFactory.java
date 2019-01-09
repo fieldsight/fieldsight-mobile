@@ -60,7 +60,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             if (result instanceof Single) {
                 return ((Single) result).onErrorResumeNext(new Function<Throwable, SingleSource>() {
                     @Override
-                    public SingleSource apply(@NonNull Throwable throwable) throws Exception {
+                    public SingleSource apply(@NonNull Throwable throwable) {
                         return Single.error(asRetrofitException(throwable));
                     }
                 });
@@ -68,7 +68,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             if (result instanceof Observable) {
                 return ((Observable) result).onErrorResumeNext(new Function<Throwable, ObservableSource>() {
                     @Override
-                    public ObservableSource apply(@NonNull Throwable throwable) throws Exception {
+                    public ObservableSource apply(@NonNull Throwable throwable) {
                         return Observable.error(asRetrofitException(throwable));
                     }
                 });
@@ -77,7 +77,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             if (result instanceof Completable) {
                 return ((Completable) result).onErrorResumeNext(new Function<Throwable, CompletableSource>() {
                     @Override
-                    public CompletableSource apply(@NonNull Throwable throwable) throws Exception {
+                    public CompletableSource apply(@NonNull Throwable throwable) {
                         return Completable.error(asRetrofitException(throwable));
                     }
                 });

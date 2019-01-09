@@ -29,12 +29,12 @@ import android.view.Window;
 
 import com.google.android.gms.location.LocationListener;
 
+import org.bcss.collect.android.R;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
 import org.odk.collect.android.utilities.GeoPointUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
-import org.bcss.collect.android.R;
 
 import java.text.DecimalFormat;
 import java.util.Timer;

@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
-
 import org.bcss.collect.android.application.Collect;
 
 import java.io.IOException;

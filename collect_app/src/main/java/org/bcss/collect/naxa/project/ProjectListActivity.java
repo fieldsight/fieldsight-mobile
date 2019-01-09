@@ -39,10 +39,8 @@ import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.application.ForceUpdateChecker;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.RxSearchObservable;
@@ -53,7 +51,6 @@ import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
-import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
@@ -64,6 +61,8 @@ import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -235,7 +234,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
         ArrayList<Site> sitesStored = new ArrayList<>();
         View view = this.getLayoutInflater().inflate(R.layout.view_toolbar_search, null);
 
-        LinearLayout parentToolbarSearch = view.findViewById(R.id.parent_toolbar_search);
         ImageView btnHomeSearchToolbar = view.findViewById(R.id.img_tool_back);
         final EditText edtToolSearch = view.findViewById(R.id.edt_tool_search);
         ImageView imgToolMic = view.findViewById(R.id.img_tool_mic);
@@ -292,7 +290,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 Site mySiteLocationPojo = searchAdapter.getMySiteLocationPojo(position);
-                String site = String.valueOf(adapterView.getItemAtPosition(position));
                 listSearch.setVisibility(View.GONE);
                 toolbarSearchDialog.dismiss();
                 FragmentHostActivity.start(ProjectListActivity.this, mySiteLocationPojo);
@@ -303,7 +300,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .map(new Function<String, String>() {
                     @Override
-                    public String apply(final String s) throws Exception {
+                    public String apply(final String s) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -324,7 +321,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 .distinctUntilChanged()
                 .switchMap(new Function<String, ObservableSource<List<Site>>>() {
                     @Override
-                    public ObservableSource<List<Site>> apply(String userQuery) throws Exception {
+                    public ObservableSource<List<Site>> apply(String userQuery) {
                         List<Site> filteredSites = new SiteViewModel(Collect.getInstance()).searchSites(userQuery.trim());
                         return Observable.just(filteredSites);
                     }

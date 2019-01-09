@@ -3,10 +3,8 @@ package org.bcss.collect.naxa.stages.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 
 import com.google.common.base.Objects;
@@ -18,8 +16,6 @@ import org.bcss.collect.naxa.generalforms.data.FormResponse;
 import org.bcss.collect.naxa.stages.StringListTypeConvertor;
 
 import java.util.List;
-
-import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 //
 //@Entity(tableName = "substage",

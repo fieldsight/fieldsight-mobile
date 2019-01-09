@@ -21,11 +21,11 @@ import com.google.android.gms.auth.GoogleAuthException;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
 import org.bcss.collect.android.dto.Form;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.upload.InstanceGoogleSheetsUploader;
 import org.bcss.collect.android.upload.UploadException;
+import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
 import java.io.IOException;

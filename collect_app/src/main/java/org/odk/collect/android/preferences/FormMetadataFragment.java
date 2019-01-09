@@ -8,11 +8,11 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.logic.PropertyManager;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.Validator;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.PermissionListener;
 
 import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_DEVICE_ID;
 import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_EMAIL;

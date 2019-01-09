@@ -18,9 +18,9 @@ package org.odk.collect.android.tasks;
 
 import android.os.AsyncTask;
 
-import org.javarosa.core.model.FormIndex;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.logic.FormController;
+import org.javarosa.core.model.FormIndex;
 
 import java.io.File;
 import java.io.FileInputStream;

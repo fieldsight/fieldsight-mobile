@@ -33,11 +33,11 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.javarosa.core.model.FormIndex;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.R.string;
 import org.bcss.collect.android.adapters.RankingListAdapter;
 import org.bcss.collect.android.application.Collect;
+import org.javarosa.core.model.FormIndex;
 import org.odk.collect.android.utilities.RankingItemTouchHelperCallback;
 
 import java.io.Serializable;

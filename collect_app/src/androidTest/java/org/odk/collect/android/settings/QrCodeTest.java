@@ -22,9 +22,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.google.zxing.ChecksumException;
 import com.google.zxing.FormatException;
 import com.google.zxing.NotFoundException;
-import com.google.zxing.WriterException;
 
-import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
@@ -53,7 +51,7 @@ public class QrCodeTest {
     private final GeneralSharedPreferences preferences = GeneralSharedPreferences.getInstance();
 
     @Test
-    public void importSettingsFromQrCode() throws JSONException, IOException, WriterException, DataFormatException, ChecksumException, NotFoundException, FormatException {
+    public void importSettingsFromQrCode() throws IOException, DataFormatException, ChecksumException, NotFoundException, FormatException {
         // reset preferences
         preferences.loadDefaultPreferences();
 

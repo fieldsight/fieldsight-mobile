@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -28,7 +27,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubmissionResponse> {
 
@@ -79,7 +77,7 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
 
 
                         if (e instanceof RetrofitException) {
-                            String message = ((RetrofitException) e).getMessage();
+                            String message = e.getMessage();
                             SyncLocalSource.getINSTANCE().addErrorMessage(PREV_SUBMISSION, message);
                         }
                     }
@@ -93,10 +91,10 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
                 .getAllFormResponses(url)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
+                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) {
                         return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
                             @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                            public ObservableSource<?> apply(Throwable throwable) {
                                 if (throwable instanceof SocketTimeoutException) {
                                     return throwableObservable.delay(10, TimeUnit.SECONDS);
                                 }
@@ -108,13 +106,13 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
                 })
                 .doOnNext(new Consumer<LastSubmissionResponse>() {
                     @Override
-                    public void accept(LastSubmissionResponse lastSubmissionResponse) throws Exception {
+                    public void accept(LastSubmissionResponse lastSubmissionResponse) {
                         LastSubmissionLocalSource.getInstance().save((ArrayList<SubmissionDetail>) lastSubmissionResponse.getSubmissionDetails());
                     }
                 })
                 .concatMap(new Function<LastSubmissionResponse, ObservableSource<LastSubmissionResponse>>() {
                     @Override
-                    public ObservableSource<LastSubmissionResponse> apply(LastSubmissionResponse lastSubmissionResponse) throws Exception {
+                    public ObservableSource<LastSubmissionResponse> apply(LastSubmissionResponse lastSubmissionResponse) {
                         if (lastSubmissionResponse.getNext() == null) {
                             return Observable.just(lastSubmissionResponse);
                         }

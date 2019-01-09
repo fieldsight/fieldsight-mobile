@@ -1,7 +1,5 @@
 package org.bcss.collect.naxa.common;
 
-import android.support.v7.widget.RecyclerView;
-
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

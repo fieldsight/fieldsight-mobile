@@ -31,12 +31,12 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.drive.DriveScopes;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.preferences.ServerPreferencesFragment;
 import org.odk.collect.android.utilities.ThemeUtils;
-import org.bcss.collect.android.R;
 
 import java.util.Collections;
 

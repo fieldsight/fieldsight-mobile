@@ -5,14 +5,13 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
 public class FileUtilsTest {
     @Test
-    public void md5HashIsCorrect() throws NoSuchAlgorithmException, IOException {
+    public void md5HashIsCorrect() throws IOException {
         String contents = "Hello, world";
         File tempFile = File.createTempFile("hello", "txt");
         tempFile.deleteOnExit();

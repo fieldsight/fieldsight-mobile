@@ -7,8 +7,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.odk.collect.android.activities.MainMenuActivity;
 
-import java.io.IOException;
-
 import static org.odk.collect.android.externalintents.ExportedActivitiesUtils.testDirectories;
 
 @Suppress
@@ -20,7 +18,7 @@ public class MainMenuActivityTest {
             new ExportedActivityTestRule<>(MainMenuActivity.class);
 
     @Test
-    public void mainMenuActivityMakesDirsTest() throws IOException {
+    public void mainMenuActivityMakesDirsTest() {
         testDirectories();
     }
 

@@ -27,12 +27,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.bcss.collect.android.BuildConfig;
 import org.odk.collect.android.widgets.DateTimeWidget;
 import org.odk.collect.android.widgets.DateWidget;
 import org.odk.collect.android.widgets.TimeWidget;
-
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 

@@ -27,18 +27,18 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.javarosa.core.model.FormIndex;
-import org.javarosa.core.model.GroupDef;
-import org.javarosa.form.api.FormEntryCaption;
-import org.javarosa.form.api.FormEntryController;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.HierarchyListAdapter;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.logic.HierarchyElement;
-import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.bcss.collect.android.views.ODKView;
+import org.javarosa.core.model.FormIndex;
+import org.javarosa.core.model.GroupDef;
+import org.javarosa.form.api.FormEntryCaption;
+import org.javarosa.form.api.FormEntryController;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.utilities.FormEntryPromptUtils;
 
 import java.util.ArrayList;
 import java.util.List;

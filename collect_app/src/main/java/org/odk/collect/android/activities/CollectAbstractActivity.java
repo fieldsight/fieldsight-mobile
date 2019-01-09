@@ -22,9 +22,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.injection.config.AppComponent;
-import org.bcss.collect.android.R;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
 

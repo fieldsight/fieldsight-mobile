@@ -339,6 +339,11 @@ public class ScheduleForm {
                 Objects.equal(formDeployedFrom, that.formDeployedFrom);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(formDeployedFrom, scheduleId, fsFormId, formResponse, em, latestSubmission, scheduleLevel, startDate, endDate, frequency, scheduleName, siteId, idString, lastSubmissionBy, lastSubmissionDateTime, projectId, isFormDeployed, frequencyArrayInString, formDetails, jrFormId, siteName, formName, formDescFromXML, hash, lastFilledDateTime);
+    }
+
     public String getLastSubmissionBy() {
         return lastSubmissionBy;
     }

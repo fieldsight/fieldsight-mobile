@@ -25,8 +25,8 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.dao.FormsDao;
 import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
+import org.odk.collect.android.dao.FormsDao;
 
 import java.util.ArrayList;
 

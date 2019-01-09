@@ -20,7 +20,6 @@ import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -76,7 +75,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
                                     .flatMapIterable((Function<List<GeneralForm>, Iterable<GeneralForm>>) generalForms1 -> generalForms1)
                                     .flatMap(new Function<GeneralForm, Observable<GeneralFormAndSubmission>>() {
                                         @Override
-                                        public Observable<GeneralFormAndSubmission> apply(GeneralForm generalForm) throws Exception {
+                                        public Observable<GeneralFormAndSubmission> apply(GeneralForm generalForm) {
                                             Maybe<SubmissionDetail> submissionDetailsSource;
 
                                             if (SITE.equals(generalForm.getFormDeployedFrom())) {
@@ -88,7 +87,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
                                                     .defaultIfEmpty(new SubmissionDetail())
                                                     .map(new Function<SubmissionDetail, GeneralFormAndSubmission>() {
                                                         @Override
-                                                        public GeneralFormAndSubmission apply(SubmissionDetail submissionDetail) throws Exception {
+                                                        public GeneralFormAndSubmission apply(SubmissionDetail submissionDetail) {
                                                             GeneralFormAndSubmission generalFormAndSubmission = new GeneralFormAndSubmission();
                                                             generalFormAndSubmission.setGeneralForm(generalForm);
                                                             generalFormAndSubmission.setSubmissionDetail(submissionDetail);
@@ -140,7 +139,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
                                     .flatMapIterable((Function<List<GeneralForm>, Iterable<GeneralForm>>) generalForms1 -> generalForms1)
                                     .flatMap(new Function<GeneralForm, Observable<GeneralFormAndSubmission>>() {
                                         @Override
-                                        public Observable<GeneralFormAndSubmission> apply(GeneralForm generalForm) throws Exception {
+                                        public Observable<GeneralFormAndSubmission> apply(GeneralForm generalForm) {
                                             Maybe<SubmissionDetail> submissionDetailsSource;
 
                                             if (SITE.equals(generalForm.getFormDeployedFrom())) {
@@ -153,7 +152,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
                                                     .defaultIfEmpty(new SubmissionDetail())
                                                     .map(new Function<SubmissionDetail, GeneralFormAndSubmission>() {
                                                         @Override
-                                                        public GeneralFormAndSubmission apply(SubmissionDetail submissionDetail) throws Exception {
+                                                        public GeneralFormAndSubmission apply(SubmissionDetail submissionDetail) {
                                                             GeneralFormAndSubmission generalFormAndSubmission = new GeneralFormAndSubmission();
                                                             generalFormAndSubmission.setGeneralForm(generalForm);
                                                             generalFormAndSubmission.setSubmissionDetail(submissionDetail);

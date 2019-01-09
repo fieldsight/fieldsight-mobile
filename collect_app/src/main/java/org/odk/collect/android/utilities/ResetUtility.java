@@ -19,9 +19,9 @@ package org.odk.collect.android.utilities;
 import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.database.ItemsetDbAdapter;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.database.ItemsetDbAdapter;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.osmdroid.config.Configuration;
@@ -52,17 +52,17 @@ public class ResetUtility {
                     break;
                 case ResetAction.RESET_LAYERS:
                     if (deleteFolderContents(Collect.OFFLINE_LAYERS)) {
-                        failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_LAYERS));
+                        failedResetActions.remove(ResetAction.RESET_LAYERS);
                     }
                     break;
                 case ResetAction.RESET_CACHE:
                     if (deleteFolderContents(Collect.CACHE_PATH)) {
-                        failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_CACHE));
+                        failedResetActions.remove(ResetAction.RESET_CACHE);
                     }
                     break;
                 case ResetAction.RESET_OSM_DROID:
                     if (deleteFolderContents(Configuration.getInstance().getOsmdroidTileCache().getPath())) {
-                        failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_OSM_DROID));
+                        failedResetActions.remove(ResetAction.RESET_OSM_DROID);
                     }
                     break;
             }
@@ -84,7 +84,7 @@ public class ResetUtility {
         new LocaleHelper().updateLocale(context);
 
         if (deletedSettingsFolderContest && deletedSettingsFile) {
-            failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_PREFERENCES));
+            failedResetActions.remove(ResetAction.RESET_PREFERENCES);
         }
 
         Collect.getInstance().initProperties();
@@ -94,7 +94,7 @@ public class ResetUtility {
         new InstancesDao().deleteInstancesDatabase();
 
         if (deleteFolderContents(Collect.INSTANCES_PATH)) {
-            failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_INSTANCES));
+            failedResetActions.remove(ResetAction.RESET_INSTANCES);
         }
     }
 
@@ -104,7 +104,7 @@ public class ResetUtility {
         File itemsetDbFile = new File(Collect.METADATA_PATH + File.separator + ItemsetDbAdapter.DATABASE_NAME);
 
         if (deleteFolderContents(Collect.FORMS_PATH) && (!itemsetDbFile.exists() || itemsetDbFile.delete())) {
-            failedResetActions.remove(failedResetActions.indexOf(ResetAction.RESET_FORMS));
+            failedResetActions.remove(ResetAction.RESET_FORMS);
         }
     }
 

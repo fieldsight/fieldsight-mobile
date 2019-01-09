@@ -42,11 +42,11 @@ import com.google.zxing.integration.android.IntentResult;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.MainMenuActivity;
-import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.ActionListener;
 import org.bcss.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.activities.MainMenuActivity;
+import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.utilities.CompressionUtils;
 import org.odk.collect.android.utilities.FileUtils;
@@ -54,7 +54,6 @@ import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.QRCodeUtils;
 import org.odk.collect.android.utilities.SharedPreferencesUtils;
 import org.odk.collect.android.utilities.ToastUtils;
-
 
 import java.io.File;
 import java.io.IOException;

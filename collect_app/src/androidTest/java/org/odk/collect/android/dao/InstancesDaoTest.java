@@ -19,18 +19,17 @@ package org.odk.collect.android.dao;
 import android.database.Cursor;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.dto.Instance;
+import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
 
 import java.util.List;
 
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)

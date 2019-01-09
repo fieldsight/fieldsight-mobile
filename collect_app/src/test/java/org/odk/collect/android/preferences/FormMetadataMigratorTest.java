@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.odk.collect.android.preferences.FormMetadataMigrator.SOURCE_TARGET_VALUE_PAIRS;
 import static org.odk.collect.android.preferences.FormMetadataMigrator.migrate;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_EMAIL;
@@ -25,8 +27,6 @@ import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_PH
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_USERNAME;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 
 /** Tests the FormMetadataFragment */

@@ -65,7 +65,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
                     Observable.just(subStages)
                             .map(new Function<List<SubStage>, List<SubStage>>() {
                                 @Override
-                                public List<SubStage> apply(List<SubStage> subStages) throws Exception {
+                                public List<SubStage> apply(List<SubStage> subStages) {
                                     ArrayList<SubStage> filteredSubstages = new ArrayList<>();
 
                                     for (SubStage subStage : subStages) {
@@ -83,7 +83,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
                             .flatMapIterable((Function<List<SubStage>, Iterable<SubStage>>) subStages1 -> subStages1)
                             .flatMap(new Function<SubStage, ObservableSource<SubStageAndSubmission>>() {
                                 @Override
-                                public ObservableSource<SubStageAndSubmission> apply(SubStage subStage) throws Exception {
+                                public ObservableSource<SubStageAndSubmission> apply(SubStage subStage) {
                                     Maybe<SubmissionDetail> submissionDetailsSource;
 
                                     if (SITE.equals(subStage.getSubStageDeployedFrom())) {
@@ -97,7 +97,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
                                             .defaultIfEmpty(new SubmissionDetail())
                                             .map(new Function<SubmissionDetail, SubStageAndSubmission>() {
                                                 @Override
-                                                public SubStageAndSubmission apply(SubmissionDetail submissionDetail) throws Exception {
+                                                public SubStageAndSubmission apply(SubmissionDetail submissionDetail) {
                                                     SubStageAndSubmission subStageAndSubmission = new SubStageAndSubmission();
                                                     subStageAndSubmission.setSubStage(subStage);
                                                     subStageAndSubmission.setSubmissionDetail(submissionDetail);
@@ -148,7 +148,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
         return dao.getByStageIdMaybe(id).toObservable()
                 .flatMap(new Function<List<SubStage>, ObservableSource<List<SubStage>>>() {
                     @Override
-                    public ObservableSource<List<SubStage>> apply(List<SubStage> subStages) throws Exception {
+                    public ObservableSource<List<SubStage>> apply(List<SubStage> subStages) {
                         ArrayList<SubStage> filteredSubstages = new ArrayList<>();
 
                         for (SubStage subStage : subStages) {

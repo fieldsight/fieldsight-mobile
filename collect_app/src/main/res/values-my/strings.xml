@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <string name="show_password">စကားဝွက္ျပပါ</string>
   <string name="activity_not_found">လုပ္ေဆာင္ရန္ အလုပ္ မေတြ့ပါ 1%s</string>
   <string name="view_image">ပုံၾကည့္ပါ</string>

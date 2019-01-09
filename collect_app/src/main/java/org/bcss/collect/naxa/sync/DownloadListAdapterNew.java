@@ -18,10 +18,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.utilities.DateTimeUtils;
-import org.odk.collect.android.utilities.ThemeUtils;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.common.Constant;
+import org.odk.collect.android.utilities.DateTimeUtils;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.util.ArrayList;
 import java.util.List;

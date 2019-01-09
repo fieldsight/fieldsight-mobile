@@ -27,7 +27,6 @@ import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.odk.collect.android.utilities.ToastUtils;
 
-
 import java.io.File;
 import java.io.IOException;
 

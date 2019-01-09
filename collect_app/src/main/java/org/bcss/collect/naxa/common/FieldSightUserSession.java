@@ -15,15 +15,11 @@ import com.google.gson.Gson;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.listeners.DeleteFormsListener;
 import org.bcss.collect.android.listeners.DeleteInstancesListener;
 import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.tasks.DeleteFormsTask;
-import org.odk.collect.android.tasks.DeleteInstancesTask;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.firebase.FCMParameter;
@@ -32,6 +28,10 @@ import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.tasks.DeleteFormsTask;
+import org.odk.collect.android.tasks.DeleteInstancesTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -152,6 +152,7 @@ public class FieldSightUserSession {
 
         } catch (IllegalArgumentException e) {
 //            Crashlytics.log(e.getMessage());
+
         }
 
 
@@ -167,7 +168,7 @@ public class FieldSightUserSession {
 
         ServiceGenerator.clearInstance();
 
-        SyncRepository.INSTANCE = null; //todo: done to resolve sync screen blank bug; need to fix in future
+        SyncRepository.instance = null; //todo: done to resolve sync screen blank bug; need to fix in future
 
     }
 
@@ -185,7 +186,7 @@ public class FieldSightUserSession {
         if (userString == null || userString.length() == 0) {
             throw new IllegalArgumentException("User information is missing from cache");
         }
-        return new Gson().fromJson(userString, User.class);
+        return GSONInstance.getInstance().fromJson(userString, User.class);
     }
 
     private static void deleteAllForms(Context context) {

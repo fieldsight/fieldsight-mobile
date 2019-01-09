@@ -33,6 +33,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.external.ExternalDataUtil;
+import org.bcss.collect.android.external.ExternalSelectChoice;
+import org.bcss.collect.android.views.AudioButton.AudioHandler;
+import org.bcss.collect.android.views.ExpandedHeightGridView;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
@@ -42,14 +46,10 @@ import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-
-import org.bcss.collect.android.external.ExternalDataUtil;
-import org.bcss.collect.android.external.ExternalSelectChoice;
 import org.odk.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.views.AudioButton.AudioHandler;
-import org.bcss.collect.android.views.ExpandedHeightGridView;
 import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
 import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

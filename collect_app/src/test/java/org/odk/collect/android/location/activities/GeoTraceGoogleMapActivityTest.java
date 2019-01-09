@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.bcss.collect.android.BuildConfig;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.bcss.collect.android.BuildConfig;
 import org.odk.collect.android.activities.GeoTraceGoogleMapActivity;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
@@ -20,7 +20,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;

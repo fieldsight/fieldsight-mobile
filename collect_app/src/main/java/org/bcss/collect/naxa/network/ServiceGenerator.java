@@ -5,29 +5,22 @@ import android.text.TextUtils;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.naman14.spider.SpiderInterceptor;
 
-import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.rx.RxErrorHandlingCallAdapterFactory;
-import org.bcss.collect.naxa.sync.SyncRepository;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
-import okhttp3.Call;
-import okhttp3.Dispatcher;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import timber.log.Timber;
 
 
 public class ServiceGenerator {

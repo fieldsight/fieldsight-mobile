@@ -6,8 +6,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 
-import org.javarosa.core.model.SelectChoice;
 import org.bcss.collect.android.R;
+import org.javarosa.core.model.SelectChoice;
 import org.odk.collect.android.utilities.UnderlyingValuesConcat;
 import org.odk.collect.android.widgets.QuestionWidget;
 

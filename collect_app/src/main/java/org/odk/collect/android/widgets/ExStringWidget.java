@@ -33,21 +33,21 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 
-import org.odk.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.exception.ExternalParamsException;
 import org.bcss.collect.android.external.ExternalAppsUtils;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.javarosa.xpath.parser.XPathSyntaxException;
+import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.DependencyProvider;
 import org.odk.collect.android.utilities.ObjectUtils;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
-import org.javarosa.xpath.parser.XPathSyntaxException;
-import org.bcss.collect.android.R;
 
 import java.util.Map;
 

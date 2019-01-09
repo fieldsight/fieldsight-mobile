@@ -25,7 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
+import org.bcss.collect.android.adapters.AbstractSelectListAdapter;
 import org.bcss.collect.android.external.ExternalDataUtil;
 import org.bcss.collect.android.external.ExternalSelectChoice;
 import org.bcss.collect.android.views.MediaLayout;
@@ -33,7 +33,7 @@ import org.javarosa.core.model.SelectChoice;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.adapters.AbstractSelectListAdapter;
+import org.odk.collect.android.activities.FormEntryActivity;
 
 import java.util.ArrayList;
 import java.util.List;

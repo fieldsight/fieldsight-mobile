@@ -18,9 +18,9 @@ public class ViewHolderText extends RecyclerView.ViewHolder{
 
     public ViewHolderText(View itemView) {
         super(itemView);
-        label1 = (TextView)itemView.findViewById(R.id.tv_title);
-        label2 = (TextView)itemView.findViewById(R.id.tv_desc);
-        linearClick = (LinearLayout) itemView.findViewById(R.id.linear_layout_click);
+        label1 = itemView.findViewById(R.id.tv_title);
+        label2 = itemView.findViewById(R.id.tv_desc);
+        linearClick = itemView.findViewById(R.id.linear_layout_click);
     }
 
     public TextView getLabel1() {
@@ -28,7 +28,7 @@ public class ViewHolderText extends RecyclerView.ViewHolder{
     }
 
     public void setLabel1(TextView label1) {
-        this.label1 = label1;
+        ViewHolderText.label1 = label1;
     }
 
     public TextView getLabel2() {
@@ -36,6 +36,6 @@ public class ViewHolderText extends RecyclerView.ViewHolder{
     }
 
     public void setLabel2(TextView label2) {
-        this.label2 = label2;
+        ViewHolderText.label2 = label2;
     }
 }

@@ -3,7 +3,6 @@ package org.bcss.collect.naxa.generalforms;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
-import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 
 import java.util.List;

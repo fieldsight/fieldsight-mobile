@@ -18,7 +18,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,17 +29,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.utilities.ThemeUtils;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.FilterOption.FilterType;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import timber.log.Timber;
 
 public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_SPINNER = 1, VIEW_TYPE_BUTTON = 2, VIEW_TYPE_LIST = 3;
+    private static final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_SPINNER = 1, VIEW_TYPE_BUTTON = 2, VIEW_TYPE_LIST = 3;
     private final FilterDialogAdapter.RecyclerViewClickListener listener;
     private final FilterType selectedSortingOrder;
     private final RecyclerView recyclerView;

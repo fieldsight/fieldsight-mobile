@@ -22,20 +22,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.external.ExternalDataUtil;
+import org.bcss.collect.android.fragments.dialogs.RankingWidgetDialog;
 import org.bcss.collect.android.logic.FormController;
-import org.odk.collect.android.widgets.interfaces.BinaryWidget;
-import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.fragments.dialogs.RankingWidgetDialog;
-
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.widgets.interfaces.BinaryWidget;
+import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
 
 import java.util.ArrayList;
 import java.util.List;

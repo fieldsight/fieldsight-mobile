@@ -16,13 +16,9 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
-import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
-import org.bcss.collect.naxa.network.ServiceGenerator;
-import org.bcss.collect.naxa.project.ProjectListActivity;
-import org.bcss.collect.naxa.sync.SyncRepository;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,11 +161,11 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 .flatMapIterable((Function<List<SyncableItem>, Iterable<SyncableItem>>) syncableItems1 -> syncableItems1)
                 .flatMap(new Function<SyncableItem, ObservableSource<SyncableItem>>() {
                     @Override
-                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) throws Exception {
+                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) {
                         return notificaitonCountForm
                                 .map(new Function<Integer, SyncableItem>() {
                                     @Override
-                                    public SyncableItem apply(Integer integer) throws Exception {
+                                    public SyncableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.ALL_FORMS:
                                                 syncableItem.setOutOfSync(integer > 0);
@@ -183,11 +179,11 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 })
                 .flatMap(new Function<SyncableItem, ObservableSource<SyncableItem>>() {
                     @Override
-                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) throws Exception {
+                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) {
                         return notificaitonCountSites
                                 .map(new Function<Integer, SyncableItem>() {
                                     @Override
-                                    public SyncableItem apply(Integer integer) throws Exception {
+                                    public SyncableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.PROJECT_SITES:
                                                 syncableItem.setOutOfSync(integer > 0);
@@ -201,11 +197,11 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                 })
                 .flatMap(new Function<SyncableItem, ObservableSource<SyncableItem>>() {
                     @Override
-                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) throws Exception {
+                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) {
                         return notificaitonCountPreviousSubmission
                                 .map(new Function<Integer, SyncableItem>() {
                                     @Override
-                                    public SyncableItem apply(Integer integer) throws Exception {
+                                    public SyncableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.PREV_SUBMISSION:
                                                 syncableItem.setOutOfSync(integer > 0);

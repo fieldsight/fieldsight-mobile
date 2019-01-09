@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.database.Cursor;
 
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.exception.ExternalParamsException;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.javarosa.core.model.FormDef;
@@ -39,6 +38,7 @@ import org.javarosa.xpath.expr.XPathExpression;
 import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.javarosa.xpath.expr.XPathPathExpr;
 import org.javarosa.xpath.parser.XPathSyntaxException;
+import org.odk.collect.android.dao.InstancesDao;
 
 import java.io.Serializable;
 import java.util.Collections;

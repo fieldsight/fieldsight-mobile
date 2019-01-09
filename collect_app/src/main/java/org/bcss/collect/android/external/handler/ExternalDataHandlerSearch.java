@@ -21,6 +21,8 @@ package org.bcss.collect.android.external.handler;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.R.string;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.exception.ExternalDataException;
 import org.bcss.collect.android.external.ExternalDataManager;
@@ -30,8 +32,6 @@ import org.bcss.collect.android.external.ExternalSelectChoice;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.R.string;
 
 import java.util.ArrayList;
 import java.util.HashSet;

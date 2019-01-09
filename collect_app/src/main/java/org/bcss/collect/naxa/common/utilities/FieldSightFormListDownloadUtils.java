@@ -16,39 +16,8 @@ package org.bcss.collect.naxa.common.utilities;
  * limitations under the License.
  */
 
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-
-import org.odk.collect.android.utilities.DocumentFetchResult;
-import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.FormDownloader;
-import org.odk.collect.android.utilities.WebCredentialsUtils;
-import org.bcss.collect.naxa.common.SiteOverideLocalSource;
-import org.bcss.collect.naxa.common.database.SiteOveride;
-import org.bcss.collect.naxa.onboarding.XMLForm;
-import org.bcss.collect.naxa.survey.SurveyForm;
-import org.bcss.collect.naxa.survey.SurveyFormLocalSource;
-import org.javarosa.xform.parse.XFormParser;
-import org.kxml2.kdom.Element;
-
-import java.io.File;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import timber.log.Timber;
-
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -56,21 +25,30 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 
-import org.javarosa.xform.parse.XFormParser;
-import org.kxml2.kdom.Element;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
 import org.bcss.collect.android.http.CollectServerClient;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.logic.ManifestFile;
 import org.bcss.collect.android.logic.MediaFile;
-import org.odk.collect.android.preferences.PreferenceKeys;
+import org.bcss.collect.naxa.common.SiteOverideLocalSource;
+import org.bcss.collect.naxa.common.database.SiteOveride;
+import org.bcss.collect.naxa.onboarding.XMLForm;
+import org.bcss.collect.naxa.survey.SurveyForm;
+import org.bcss.collect.naxa.survey.SurveyFormLocalSource;
+import org.javarosa.xform.parse.XFormParser;
+import org.kxml2.kdom.Element;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.utilities.DocumentFetchResult;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.FormDownloader;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -564,9 +542,7 @@ public class FieldSightFormListDownloadUtils {
                         return true;
                     }
                 }
-            } else if (!newMediaFiles.isEmpty()) {
-                return true;
-            }
+            } else return !newMediaFiles.isEmpty();
         }
 
         return false;

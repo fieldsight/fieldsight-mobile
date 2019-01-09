@@ -37,14 +37,14 @@ public class WebViewActivity extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
 
         String url = getIntent().getStringExtra(CustomTabHelper.OPEN_URL);
-        webView = (WebView) findViewById(R.id.webView);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        webView = findViewById(R.id.webView);
+        progressBar = findViewById(R.id.progressBar);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override

@@ -4,8 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
-
-
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.StageLocalSource;
 import org.bcss.collect.naxa.stages.data.StageRemoteSource;

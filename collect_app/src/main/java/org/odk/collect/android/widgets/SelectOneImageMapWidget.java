@@ -20,12 +20,12 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.webkit.WebView;
 
+import org.bcss.collect.android.listeners.AdvanceToNextListener;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
-import org.bcss.collect.android.listeners.AdvanceToNextListener;
 
 /**
  * A widget which is responsible for multi select questions represented by

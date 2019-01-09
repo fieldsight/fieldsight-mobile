@@ -21,6 +21,10 @@ import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.database.ItemsetDbAdapter;
+import org.bcss.collect.android.logic.FormController;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.condition.EvaluationContext;
@@ -29,10 +33,6 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.XPathNodeset;
 import org.javarosa.xpath.expr.XPathExpression;
 import org.javarosa.xpath.parser.XPathSyntaxException;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.database.ItemsetDbAdapter;
-import org.bcss.collect.android.logic.FormController;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.XPathParseTool;
 

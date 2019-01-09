@@ -14,13 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Connectivity;
 import org.bcss.collect.naxa.common.GlideApp;
-
 
 import java.io.File;
 import java.util.List;
@@ -35,7 +33,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
     // The items to display in your RecyclerView
     private List<Object> items;
 
-    private final int TEXT_VIEW = 0, IMAGE = 1, VIDEO = 2, PDF = 3;
+    private static final int TEXT_VIEW = 0, IMAGE = 1, VIDEO = 2, PDF = 3;
     private Context context;
 
     // Provide a suitable constructor (depends on the kind of dataset)

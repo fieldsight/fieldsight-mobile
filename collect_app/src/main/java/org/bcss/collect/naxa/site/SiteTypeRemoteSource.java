@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.site;
 
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
-import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.sync.DisposableManager;
@@ -17,7 +16,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
@@ -37,7 +35,7 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
         fetchSiteTypes()
                 .doOnDispose(new Action() {
                     @Override
-                    public void run() throws Exception {
+                    public void run() {
                          SyncLocalSource.getINSTANCE().markAsPending(SITE_TYPES);
                     }
                 })
@@ -64,7 +62,7 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                         SyncRepository.getInstance().setError(SITE_TYPES);
                         e.printStackTrace();
 
-                        String message = ((RetrofitException) e).getMessage();
+                        String message = e.getMessage();
                         SyncLocalSource.getINSTANCE().addErrorMessage(SITE_TYPES, message);
 
 

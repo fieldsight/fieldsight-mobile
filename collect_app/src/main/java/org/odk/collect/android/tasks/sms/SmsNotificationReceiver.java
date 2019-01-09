@@ -9,9 +9,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.InstanceUploaderList;
 import org.bcss.collect.android.application.Collect;
-
+import org.odk.collect.android.activities.InstanceUploaderList;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.tasks.sms.models.SmsProgress;
 import org.odk.collect.android.tasks.sms.models.SmsSubmission;

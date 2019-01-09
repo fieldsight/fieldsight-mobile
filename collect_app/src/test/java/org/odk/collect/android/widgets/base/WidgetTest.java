@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-
 import org.robolectric.RobolectricTestRunner;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;

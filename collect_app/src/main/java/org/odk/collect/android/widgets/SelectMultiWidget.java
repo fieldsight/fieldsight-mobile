@@ -18,13 +18,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
-import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
-import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
+import org.bcss.collect.android.adapters.SelectMultipleListAdapter;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.adapters.SelectMultipleListAdapter;
+import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
+import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
 
 import java.util.ArrayList;
 import java.util.List;

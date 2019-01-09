@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
-import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 
 import java.util.List;
 

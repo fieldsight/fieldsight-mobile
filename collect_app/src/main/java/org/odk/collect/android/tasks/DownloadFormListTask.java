@@ -19,8 +19,8 @@ import android.support.annotation.Nullable;
 
 import org.bcss.collect.android.listeners.FormListDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
-import org.odk.collect.android.utilities.DownloadFormListUtils;
 import org.bcss.collect.naxa.onboarding.XMLForm;
+import org.odk.collect.android.utilities.DownloadFormListUtils;
 
 import java.util.HashMap;
 

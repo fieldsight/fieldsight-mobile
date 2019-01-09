@@ -1,6 +1,5 @@
 package org.odk.collect.android.utilities.gdrive;
 
-import com.google.api.services.sheets.v4.model.Request;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
 import com.google.api.services.sheets.v4.model.ValueRange;
@@ -99,6 +98,6 @@ public class SheetsHelperTest {
     }
 
     private void assertBatchUpdateCalled(int timesInvocations) throws IOException {
-        verify(sheetsService, times(timesInvocations)).batchUpdate(anyString(), ArgumentMatchers.<Request>anyList());
+        verify(sheetsService, times(timesInvocations)).batchUpdate(anyString(), ArgumentMatchers.anyList());
     }
 }

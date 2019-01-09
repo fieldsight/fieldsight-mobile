@@ -16,12 +16,12 @@
 
 package org.bcss.collect.android.fragments.dialogs;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.app.AlertDialog;
 
 import org.bcss.collect.android.R;
 

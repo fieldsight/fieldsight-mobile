@@ -23,15 +23,15 @@ import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.provider.FormsProviderAPI;
+import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.application.Collect;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.PreferenceKeys;
-import org.bcss.collect.android.provider.FormsProviderAPI;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ResetUtility;
 import org.osmdroid.config.Configuration;
 
@@ -49,7 +49,7 @@ import static org.junit.Assert.assertTrue;
 public class ResetAppStateTestCase {
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() {
         resetAppState(Arrays.asList(
                 ResetUtility.ResetAction.RESET_PREFERENCES, ResetUtility.ResetAction.RESET_INSTANCES,
                 ResetUtility.ResetAction.RESET_FORMS, ResetUtility.ResetAction.RESET_LAYERS,
@@ -58,7 +58,7 @@ public class ResetAppStateTestCase {
     }
 
     @After
-    public void tearDown() throws IOException {
+    public void tearDown() {
         resetAppState(Arrays.asList(
                 ResetUtility.ResetAction.RESET_PREFERENCES, ResetUtility.ResetAction.RESET_INSTANCES,
                 ResetUtility.ResetAction.RESET_FORMS, ResetUtility.ResetAction.RESET_LAYERS,
@@ -91,7 +91,7 @@ public class ResetAppStateTestCase {
     }
 
     @Test
-    public void resetInstancesTest() throws IOException {
+    public void resetInstancesTest() {
         saveTestInstanceFiles();
         setupTestInstancesDatabase();
         resetAppState(Collections.singletonList(ResetUtility.ResetAction.RESET_INSTANCES));
@@ -211,7 +211,7 @@ public class ResetAppStateTestCase {
         assertTrue(new File(Collect.CACHE_PATH + "/testFile3").createNewFile());
     }
 
-    private void saveTestOSMDroidFiles() throws IOException {
+    private void saveTestOSMDroidFiles() {
         assertTrue(new File(Configuration.getInstance().getOsmdroidTileCache().getPath() + "/testFile1").mkdirs());
         assertTrue(new File(Configuration.getInstance().getOsmdroidTileCache().getPath() + "/testFile2").mkdirs());
         assertTrue(new File(Configuration.getInstance().getOsmdroidTileCache().getPath() + "/testFile3").mkdirs());

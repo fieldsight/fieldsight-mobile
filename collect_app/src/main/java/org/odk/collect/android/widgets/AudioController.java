@@ -31,7 +31,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.odk.collect.android.activities.FormEntryActivity;
 
-
 import java.io.File;
 import java.io.IOException;
 

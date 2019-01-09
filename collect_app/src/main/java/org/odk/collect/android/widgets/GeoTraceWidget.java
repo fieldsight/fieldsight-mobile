@@ -25,15 +25,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.preferences.PreferenceKeys;
-import org.odk.collect.android.utilities.PlayServicesUtil;
-import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.GeoTraceActivity;
+import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.utilities.PlayServicesUtil;
+import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;

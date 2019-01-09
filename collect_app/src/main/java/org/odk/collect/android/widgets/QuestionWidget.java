@@ -39,10 +39,13 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.AudioPlayListener;
 import org.bcss.collect.android.logic.FormController;
+import org.bcss.collect.android.views.MediaLayout;
+import org.javarosa.core.model.FormIndex;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GuidanceHint;
 import org.odk.collect.android.preferences.PreferenceKeys;
@@ -53,11 +56,8 @@ import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.TextUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ViewIds;
-import org.bcss.collect.android.views.MediaLayout;
 import org.odk.collect.android.widgets.interfaces.ButtonWidget;
 import org.odk.collect.android.widgets.interfaces.Widget;
-import org.javarosa.core.model.FormIndex;
-import org.javarosa.form.api.FormEntryPrompt;
 
 import java.util.ArrayList;
 import java.util.List;

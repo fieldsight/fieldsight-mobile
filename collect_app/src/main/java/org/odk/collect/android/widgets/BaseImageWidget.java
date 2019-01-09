@@ -34,12 +34,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
 import org.odk.collect.android.activities.DrawActivity;
-import org.bcss.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaManager;

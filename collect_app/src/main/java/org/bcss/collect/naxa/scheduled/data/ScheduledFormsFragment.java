@@ -12,24 +12,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
-import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
-import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightFormListFragment;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.scheduled.ScheduledFormsAdapter;
+import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,6 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class ScheduledFormsFragment extends FieldSightFormListFragment implements OnFormItemClickListener<ScheduleForm> {

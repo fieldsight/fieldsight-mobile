@@ -26,12 +26,12 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import org.javarosa.core.model.SelectChoice;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.bcss.collect.android.views.MediaLayout;
 import org.bcss.collect.android.views.ODKView;
+import org.javarosa.core.model.SelectChoice;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.utilities.FormEntryPromptUtils;
 import org.odk.collect.android.widgets.SelectWidget;
 
 import java.util.ArrayList;

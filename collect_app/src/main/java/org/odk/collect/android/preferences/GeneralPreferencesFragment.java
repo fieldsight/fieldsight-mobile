@@ -27,7 +27,6 @@ import org.bcss.collect.android.R;
 
 import java.util.Collection;
 
-import static org.odk.collect.android.preferences.AdminKeys.KEY_EDIT_SAVED;
 import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public class GeneralPreferencesFragment extends BasePreferenceFragment implements Preference.OnPreferenceClickListener {

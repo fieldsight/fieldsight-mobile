@@ -8,11 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Form;
 import org.bcss.collect.android.dto.Instance;
-import org.odk.collect.android.utilities.FileUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.login.model.Project;
@@ -21,6 +18,9 @@ import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.project.data.ProjectRepository;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
 import java.lang.reflect.Type;

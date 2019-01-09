@@ -24,14 +24,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.external.ExternalDataUtil;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.external.ExternalDataUtil;
 import org.odk.collect.android.widgets.interfaces.ButtonWidget;
 import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
 import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;

@@ -24,13 +24,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.map.GoogleMapFragment;
 import org.bcss.collect.android.map.MapFragment;
 import org.bcss.collect.android.map.MapPoint;
 import org.bcss.collect.android.map.OsmMapFragment;
-import org.bcss.collect.android.R;
-import org.odk.collect.android.preferences.PreferenceKeys;
 import org.bcss.collect.android.spatial.MapHelper;
+import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoShapeWidget;
 import org.osmdroid.tileprovider.IRegisterReceiver;

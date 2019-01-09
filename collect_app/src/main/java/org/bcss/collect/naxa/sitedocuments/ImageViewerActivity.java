@@ -4,16 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.CircularProgressDrawable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.GlideApp;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.io.File;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

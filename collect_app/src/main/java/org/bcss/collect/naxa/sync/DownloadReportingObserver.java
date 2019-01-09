@@ -1,7 +1,5 @@
 package org.bcss.collect.naxa.sync;
 
-import org.bcss.collect.naxa.common.Constant;
-
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 

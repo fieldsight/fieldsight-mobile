@@ -5,7 +5,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -17,15 +16,14 @@ import android.view.View;
 import android.widget.Button;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.ServiceGenerator;
-import org.bcss.collect.naxa.onboarding.SyncableItem;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.CompletableObserver;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
@@ -48,7 +45,6 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
@@ -210,11 +206,11 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 .flatMapIterable((Function<List<Sync>, Iterable<Sync>>) syncableItems1 -> syncableItems1)
                 .flatMap(new Function<Sync, ObservableSource<Sync>>() {
                     @Override
-                    public ObservableSource<Sync> apply(Sync syncableItem) throws Exception {
+                    public ObservableSource<Sync> apply(Sync syncableItem) {
                         return notificaitonCountForm
                                 .map(new Function<Integer, Sync>() {
                                     @Override
-                                    public Sync apply(Integer integer) throws Exception {
+                                    public Sync apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.ALL_FORMS:
                                                 syncableItem.setOutOfSync(integer > 0);
@@ -228,11 +224,11 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 })
                 .flatMap(new Function<Sync, ObservableSource<Sync>>() {
                     @Override
-                    public ObservableSource<Sync> apply(Sync syncableItem) throws Exception {
+                    public ObservableSource<Sync> apply(Sync syncableItem) {
                         return notificaitonCountSites
                                 .map(new Function<Integer, Sync>() {
                                     @Override
-                                    public Sync apply(Integer integer) throws Exception {
+                                    public Sync apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.PROJECT_SITES:
                                                 syncableItem.setOutOfSync(integer > 0);
@@ -246,11 +242,11 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 })
                 .flatMap(new Function<Sync, ObservableSource<Sync>>() {
                     @Override
-                    public ObservableSource<Sync> apply(Sync syncableItem) throws Exception {
+                    public ObservableSource<Sync> apply(Sync syncableItem) {
                         return notificaitonCountPreviousSubmission
                                 .map(new Function<Integer, Sync>() {
                                     @Override
-                                    public Sync apply(Integer integer) throws Exception {
+                                    public Sync apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.PREV_SUBMISSION:
                                                 syncableItem.setOutOfSync(integer > 0);

@@ -7,7 +7,6 @@ import android.arch.persistence.room.Transaction;
 
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
-import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 
 import java.util.ArrayList;
 import java.util.List;

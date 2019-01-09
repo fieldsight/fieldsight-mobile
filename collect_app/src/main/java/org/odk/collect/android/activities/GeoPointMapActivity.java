@@ -37,13 +37,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.spatial.MapHelper;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
-import org.bcss.collect.android.spatial.MapHelper;
 import org.odk.collect.android.utilities.GeoPointUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
-import org.bcss.collect.android.R;
 
 import java.text.DecimalFormat;
 

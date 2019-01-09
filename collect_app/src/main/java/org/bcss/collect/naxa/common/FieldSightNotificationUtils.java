@@ -1,17 +1,17 @@
 package org.bcss.collect.naxa.common;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.app.NotificationChannel;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.utilities.IconUtils;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
+import org.odk.collect.android.utilities.IconUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,14 +20,10 @@ public class FieldSightNotificationUtils {
     private NotificationManager notifManager;
     private static final String CHANNEL_ID = "fieldsight_notification_channel";
 
-    private static FieldSightNotificationUtils INSTANCE;
+    private final static FieldSightNotificationUtils INSTANCE = new FieldSightNotificationUtils();
     private static AtomicInteger notificationUID;
 
     public static FieldSightNotificationUtils getINSTANCE() {
-        if (INSTANCE == null) {
-            INSTANCE = new FieldSightNotificationUtils();
-        }
-
         return INSTANCE;
     }
 

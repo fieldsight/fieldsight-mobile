@@ -10,9 +10,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.bcss.collect.naxa.generalforms.EmImageTypeConverter;
-import org.bcss.collect.naxa.stages.StringListTypeConvertor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "educational_materials")

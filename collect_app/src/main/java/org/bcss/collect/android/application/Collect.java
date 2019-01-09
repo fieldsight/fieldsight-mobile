@@ -51,6 +51,8 @@ import org.bcss.collect.android.injection.config.DaggerAppComponent;
 import org.bcss.collect.android.jobs.CollectJobCreator;
 import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.logic.PropertyManager;
+import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+import org.bcss.collect.naxa.login.APIErrorUtils;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.FormMetadataMigrator;
@@ -59,8 +61,6 @@ import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PRNGFixes;
-import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
-import org.bcss.collect.naxa.login.APIErrorUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -107,8 +107,8 @@ public class Collect extends Application implements HasActivityInjector {
     public static final int DEFAULT_FONTSIZE_INT = 21;
     public static final String OFFLINE_LAYERS = ODK_ROOT + File.separator + "layers";
     public static final String SETTINGS = ODK_ROOT + File.separator + "settings";
-    public static String PDF = ODK_ROOT + File.separator + "educational" + File.separator + "pdf" + File.separator;
-    public static String IMAGES = ODK_ROOT + File.separator + "educational" + File.separator + "images" + File.separator;
+    public static final String PDF = ODK_ROOT + File.separator + "educational" + File.separator + "pdf" + File.separator;
+    public static final String IMAGES = ODK_ROOT + File.separator + "educational" + File.separator + "images" + File.separator;
 
     public static final int CLICK_DEBOUNCE_MS = 1000;
 
@@ -178,7 +178,7 @@ public class Collect extends Application implements HasActivityInjector {
     private void setGlobalRxErrorConsumer(){
         RxJavaPlugins.setErrorHandler(new Consumer<Throwable>() {
             @Override
-            public void accept(Throwable e) throws Exception {
+            public void accept(Throwable e) {
 
                 String message;
 
@@ -222,9 +222,7 @@ public class Collect extends Application implements HasActivityInjector {
             dirPath = dirPath.substring(Collect.ODK_ROOT.length());
             String[] parts = dirPath.split(File.separatorChar == '\\' ? "\\\\" : File.separator);
             // [appName, instances, tableId, instanceId ]
-            if (parts.length == 4 && parts[1].equals("instances")) {
-                return true;
-            }
+            return parts.length == 4 && parts[1].equals("instances");
         }
         return false;
     }

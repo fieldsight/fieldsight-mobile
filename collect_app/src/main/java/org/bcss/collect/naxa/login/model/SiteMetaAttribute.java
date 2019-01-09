@@ -9,7 +9,6 @@ import com.google.gson.annotations.SerializedName;
 
 import org.bcss.collect.naxa.common.GSONInstance;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SiteMetaAttribute implements Parcelable {

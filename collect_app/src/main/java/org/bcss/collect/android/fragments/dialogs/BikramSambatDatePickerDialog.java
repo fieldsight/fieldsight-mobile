@@ -19,7 +19,6 @@ package org.bcss.collect.android.fragments.dialogs;
 import org.bcss.collect.android.logic.DatePickerDetails;
 import org.javarosa.core.model.FormIndex;
 import org.joda.time.LocalDateTime;
-import org.bcss.collect.android.logic.DatePickerDetails;
 
 import java.util.Arrays;
 

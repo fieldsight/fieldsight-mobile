@@ -21,12 +21,12 @@ import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.bcss.collect.android.application.Collect;
 import org.javarosa.core.model.instance.TreeElement;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.application.Collect;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.widgets.ImageWidget;
 

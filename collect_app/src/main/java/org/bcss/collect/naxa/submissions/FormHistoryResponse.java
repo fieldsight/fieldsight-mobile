@@ -1,11 +1,11 @@
 package org.bcss.collect.naxa.submissions;
 
-import java.util.List;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.bcss.collect.naxa.generalforms.data.FormResponse;
+
+import java.util.List;
 
 public class FormHistoryResponse {
 

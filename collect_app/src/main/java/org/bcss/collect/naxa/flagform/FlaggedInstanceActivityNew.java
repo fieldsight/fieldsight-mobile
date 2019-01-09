@@ -1,33 +1,23 @@
 package org.bcss.collect.naxa.flagform;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
-import org.bcss.collect.naxa.site.CreateSiteDetailViewModel;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 public class FlaggedInstanceActivityNew extends CollectAbstractActivity {
 

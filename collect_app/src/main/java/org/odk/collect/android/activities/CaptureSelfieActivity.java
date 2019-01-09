@@ -25,9 +25,9 @@ import android.widget.FrameLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.views.CameraPreview;
 import org.odk.collect.android.utilities.CameraUtils;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.bcss.collect.android.views.CameraPreview;
 
 import timber.log.Timber;
 

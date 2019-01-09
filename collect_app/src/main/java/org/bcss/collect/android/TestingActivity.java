@@ -5,8 +5,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
@@ -14,6 +12,8 @@ import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.List;
 import java.util.Random;
@@ -31,10 +31,10 @@ public class TestingActivity extends CollectAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_testing);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,7 +51,7 @@ public class TestingActivity extends CollectAbstractActivity {
                 .toObservable()
                 .map(new Function<List<Project>, Site>() {
                     @Override
-                    public Site apply(List<Project> projects) throws Exception {
+                    public Site apply(List<Project> projects) {
                         String projId = projects.get(0).getId();
                         Site site = new SiteBuilder()
                                 .setGeneralFormDeployedFrom(PROJECT)
@@ -91,23 +91,15 @@ public class TestingActivity extends CollectAbstractActivity {
                 });
     }
 
-
-    private String rndChar() {
-        int rnd = (int) (Math.random() * 52); // or use Random or whatever
-        char base = (rnd < 26) ? 'A' : 'a';
-        return String.valueOf((char) (base + rnd % 26));
-    }
-
     protected String getSaltString() {
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+         String saltchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
         while (salt.length() < 4) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
+            int index = (int) (rnd.nextFloat() * saltchars.length());
+            salt.append(saltchars.charAt(index));
         }
-        String saltStr = salt.toString();
-        return saltStr;
+        return salt.toString();
 
     }
 }

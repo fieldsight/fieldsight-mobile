@@ -20,10 +20,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.activities.MainMenuActivity;
 import org.bcss.collect.android.fragments.dialogs.MovingBackwardsDialog;
 import org.bcss.collect.android.fragments.dialogs.ResetSettingsResultDialog;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.io.File;

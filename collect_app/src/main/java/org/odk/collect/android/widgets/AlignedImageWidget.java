@@ -24,11 +24,10 @@ import android.widget.Button;
 import com.google.android.gms.analytics.HitBuilders;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.javarosa.form.api.FormEntryPrompt;
-
+import org.odk.collect.android.activities.FormEntryActivity;
 
 import timber.log.Timber;
 

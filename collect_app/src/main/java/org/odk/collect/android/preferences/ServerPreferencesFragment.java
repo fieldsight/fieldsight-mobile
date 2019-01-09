@@ -43,6 +43,8 @@ import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.http.CollectServerClient;
+import org.bcss.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.preferences.filters.ControlCharacterFilter;
 import org.odk.collect.android.preferences.filters.WhitespaceFilter;
 import org.odk.collect.android.utilities.FileUtils;
@@ -51,13 +53,12 @@ import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.Validator;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
-import org.bcss.collect.android.http.CollectServerClient;
-import org.bcss.collect.android.listeners.OnBackPressedListener;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;

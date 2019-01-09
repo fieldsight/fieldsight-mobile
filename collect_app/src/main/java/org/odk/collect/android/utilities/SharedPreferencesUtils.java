@@ -16,11 +16,12 @@ package org.odk.collect.android.utilities;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.ActionListener;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import net.bytebuddy.utility.RandomString;
 
+import org.bcss.collect.android.database.ItemsetDbAdapter;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.QuestionDef;
@@ -19,7 +20,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.bcss.collect.android.database.ItemsetDbAdapter;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.XPathParseTool;
 import org.odk.collect.android.widgets.base.QuestionWidgetTest;
@@ -177,21 +177,21 @@ public class ItemsetWidgetTest extends QuestionWidgetTest<ItemsetWidget, StringD
 
             when(cursor.moveToNext()).thenAnswer(new Answer<Boolean>() {
                 @Override
-                public Boolean answer(InvocationOnMock invocation) throws Throwable {
+                public Boolean answer(InvocationOnMock invocation) {
                     return ++cursorIndex < choices.size();
                 }
             });
 
             when(cursor.getColumnIndex("name")).thenAnswer(new Answer<Integer>() {
                 @Override
-                public Integer answer(InvocationOnMock invocation) throws Throwable {
+                public Integer answer(InvocationOnMock invocation) {
                     return cursorIndex;
                 }
             });
 
             when(cursor.getString(anyInt())).thenAnswer(new Answer<String>() {
                 @Override
-                public String answer(InvocationOnMock invocation) throws Throwable {
+                public String answer(InvocationOnMock invocation) {
                     Object[] arguments = invocation.getArguments();
                     Object first = arguments[0];
                     if (first instanceof Integer) {

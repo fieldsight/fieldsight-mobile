@@ -15,7 +15,6 @@ import org.bcss.collect.naxa.site.db.SiteRepository;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 import io.reactivex.CompletableObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -25,16 +24,16 @@ import io.reactivex.schedulers.Schedulers;
 public class CreateSiteViewModel extends ViewModel {
 
     private SiteRepository siteRepository;
-    private SingleLiveEvent<CreateSiteFormStatus> formStatus = new SingleLiveEvent<CreateSiteFormStatus>();
-    private MutableLiveData<Site> siteMutableLiveData = new MutableLiveData<Site>();
-    private MutableLiveData<Project> projectMutableLiveData = new MutableLiveData<Project>();
+    private final SingleLiveEvent<CreateSiteFormStatus> formStatus = new SingleLiveEvent<CreateSiteFormStatus>();
+    private final MutableLiveData<Site> siteMutableLiveData = new MutableLiveData<Site>();
+    private final MutableLiveData<Project> projectMutableLiveData = new MutableLiveData<Project>();
 
-    private MutableLiveData<List<SiteMetaAttribute>> metaAttributes = new MutableLiveData<>();
-    private MutableLiveData<ArrayList<Integer>> metaAttributesViewIds = new MutableLiveData<>();
-    private MutableLiveData<String> metaAttributesAnswer = new MutableLiveData<>();
+    private final MutableLiveData<List<SiteMetaAttribute>> metaAttributes = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Integer>> metaAttributesViewIds = new MutableLiveData<>();
+    private final MutableLiveData<String> metaAttributesAnswer = new MutableLiveData<>();
 
-    private MutableLiveData<ArrayList<SiteRegion>> siteClusterMutableLiveData = new MutableLiveData<>();
-    private MutableLiveData<List<SiteType>> siteTypesMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<SiteRegion>> siteClusterMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<SiteType>> siteTypesMutableLiveData = new MutableLiveData<>();
 
 
     public CreateSiteViewModel(SiteRepository siteRepository) {

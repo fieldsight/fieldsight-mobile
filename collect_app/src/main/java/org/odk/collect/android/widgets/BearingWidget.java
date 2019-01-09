@@ -29,13 +29,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 
-import org.odk.collect.android.activities.BearingActivity;
-import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.widgets.interfaces.BinaryWidget;
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
+import org.odk.collect.android.activities.BearingActivity;
+import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 

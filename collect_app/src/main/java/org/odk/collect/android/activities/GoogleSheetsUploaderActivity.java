@@ -34,16 +34,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-import org.odk.collect.android.dao.InstancesDao;
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.listeners.InstanceUploaderListener;
-import org.odk.collect.android.preferences.PreferenceKeys;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.tasks.InstanceGoogleSheetsUploaderTask;
 import org.odk.collect.android.utilities.ArrayUtils;
+import org.odk.collect.android.utilities.InstanceUploaderUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
-import org.bcss.collect.android.R;
-import org.odk.collect.android.tasks.InstanceGoogleSheetsUploaderTask;
-import org.odk.collect.android.utilities.InstanceUploaderUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;

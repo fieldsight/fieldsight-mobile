@@ -2,7 +2,6 @@ package org.bcss.collect.naxa.notificationslist;
 
 import android.support.v7.util.DiffUtil;
 
-
 import org.bcss.collect.naxa.data.FieldSightNotification;
 
 import java.util.ArrayList;

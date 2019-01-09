@@ -22,15 +22,15 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
-import org.javarosa.xform.parse.XFormParser;
-import org.kxml2.kdom.Element;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.FormsDao;
 import org.bcss.collect.android.http.CollectServerClient;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.logic.ManifestFile;
 import org.bcss.collect.android.logic.MediaFile;
+import org.javarosa.xform.parse.XFormParser;
+import org.kxml2.kdom.Element;
+import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.preferences.PreferenceKeys;
 
 import java.io.File;
@@ -434,9 +434,7 @@ public class DownloadFormListUtils {
                         return true;
                     }
                 }
-            } else if (!newMediaFiles.isEmpty()) {
-                return true;
-            }
+            } else return !newMediaFiles.isEmpty();
         }
 
         return false;

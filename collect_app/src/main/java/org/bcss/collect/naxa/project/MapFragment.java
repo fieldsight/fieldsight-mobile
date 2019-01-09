@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.spatial.MapHelper;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
@@ -32,9 +31,7 @@ import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.FolderOverlay;
 import org.osmdroid.views.overlay.MapEventsOverlay;
-import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.reactivestreams.Publisher;
@@ -49,12 +46,9 @@ import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -161,7 +155,6 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         LiveData<List<Site>> livedata = new SiteViewModel(Collect.getInstance())
                 .getSiteByProject(loadedProject);
 
-        Publisher<List<Site>> pub = LiveDataReactiveStreams.toPublisher(this, livedata);
 
         SiteLocalSource.getInstance().getByIdAsSingle(loadedProject.getId())
                 .toObservable()

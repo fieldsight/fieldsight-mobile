@@ -22,13 +22,12 @@ import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.login.model.User;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.io.File;
 

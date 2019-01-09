@@ -1,14 +1,10 @@
 package org.bcss.collect.naxa.educational;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.bcss.collect.android.R;
 
@@ -24,9 +20,9 @@ public class ViewHolderImage extends RecyclerView.ViewHolder{
 
     public ViewHolderImage(View itemView) {
         super(itemView);
-        imageView = (ImageView)itemView.findViewById(R.id.image_view);
-        iTitle = (TextView)itemView.findViewById(R.id.image_title);
-        linearClick = (LinearLayout) itemView.findViewById(R.id.linear_layout_click);
+        imageView = itemView.findViewById(R.id.image_view);
+        iTitle = itemView.findViewById(R.id.image_title);
+        linearClick = itemView.findViewById(R.id.linear_layout_click);
     }
 
     public ImageView getImageView() {
@@ -34,7 +30,7 @@ public class ViewHolderImage extends RecyclerView.ViewHolder{
     }
 
     public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
+        ViewHolderImage.imageView = imageView;
     }
 
     public TextView getiTitle() {

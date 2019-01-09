@@ -3,18 +3,18 @@ package org.odk.collect.android.utilities;
 import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.odk.collect.android.utilities.ArrayUtils.toPrimitive;
 import static org.odk.collect.android.utilities.ArrayUtils.toObject;
+import static org.odk.collect.android.utilities.ArrayUtils.toPrimitive;
 
 public class ArrayUtilsTest {
 
     @Test
-    public void toPrimitiveCreatesPrimitiveLongArray() throws Exception {
+    public void toPrimitiveCreatesPrimitiveLongArray() {
         assertArrayEquals(new long[] {1, 2, 3, 4, 5}, toPrimitive(new Long[] {1L, 2L, 3L, 4L, 5L}));
     }
 
     @Test
-    public void nullToPrimitiveCreatesEmptyPrimitiveLongArray() throws Exception {
+    public void nullToPrimitiveCreatesEmptyPrimitiveLongArray() {
         assertArrayEquals(new long[0], toPrimitive(null));
     }
 
@@ -34,12 +34,12 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void toObjectCreatesLongArray() throws Exception {
+    public void toObjectCreatesLongArray() {
         assertArrayEquals(new Long[] {1L, 2L, 3L, 4L, 5L}, toObject(new long[] {1, 2, 3, 4, 5}));
     }
 
     @Test
-    public void nullBecomesEmptyLongArray() throws Exception {
+    public void nullBecomesEmptyLongArray() {
         assertArrayEquals(new Long[0], toObject(null));
     }
 }

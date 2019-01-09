@@ -21,12 +21,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.logic.DatePickerDetails;
 import org.javarosa.core.model.data.DateData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.joda.time.LocalDateTime;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 

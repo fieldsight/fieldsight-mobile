@@ -4,9 +4,9 @@ package org.odk.collect.android.utilities;
 import android.os.AsyncTask;
 import android.os.SystemClock;
 
+import org.bcss.collect.android.logic.FormController;
 import org.javarosa.core.model.instance.TreeReference;
 import org.javarosa.form.api.FormEntryController;
-import org.bcss.collect.android.logic.FormController;
 import org.odk.collect.android.tasks.TimerSaveTask;
 
 import java.io.File;

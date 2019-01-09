@@ -2,7 +2,6 @@ package org.bcss.collect.naxa.common;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
 /**
  * Created on 11/16/17

@@ -132,7 +132,7 @@ public class SiteDocumentsAdapter extends RecyclerView.Adapter<SiteDocumentsAdap
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.tv_site_document_caption);
+            textView = itemView.findViewById(R.id.tv_site_document_caption);
             imageView = itemView.findViewById(R.id.iv_site_document_preview);
             rootLayout = itemView.findViewById(R.id.root_layout_site_document);
         }

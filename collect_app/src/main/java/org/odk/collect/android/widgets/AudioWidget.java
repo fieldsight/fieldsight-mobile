@@ -29,15 +29,16 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.listeners.PermissionListener;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.StringData;
+import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtil;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
-import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
+
 import java.io.File;
 import java.util.Locale;
 

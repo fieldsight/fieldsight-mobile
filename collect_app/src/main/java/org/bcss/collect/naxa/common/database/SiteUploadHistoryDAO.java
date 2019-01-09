@@ -6,9 +6,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import org.bcss.collect.naxa.login.model.Site;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao

@@ -3,12 +3,12 @@ package org.odk.collect.android.utilities;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 
-import org.odk.collect.android.activities.MainMenuActivity;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.bcss.collect.android.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.R;
+import org.odk.collect.android.activities.MainMenuActivity;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 

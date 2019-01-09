@@ -30,26 +30,25 @@ import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.logic.FormDetails;
 import org.odk.collect.android.activities.FormDownloadList;
 import org.odk.collect.android.activities.NotificationActivity;
-import org.bcss.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
-import org.bcss.collect.android.logic.FormDetails;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.utilities.DownloadFormListUtils;
 import org.odk.collect.android.utilities.FormDownloader;
 import org.odk.collect.android.utilities.NotificationUtils;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.odk.collect.android.activities.FormDownloadList.DISPLAY_ONLY_UPDATED_FORMS;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_AUTOMATIC_UPDATE;
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.JR_FORM_ID;
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.LAST_DETECTED_FORM_VERSION_HASH;
+import static org.odk.collect.android.activities.FormDownloadList.DISPLAY_ONLY_UPDATED_FORMS;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_AUTOMATIC_UPDATE;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes.FORMS_DOWNLOADED_NOTIFICATION;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes.FORM_UPDATES_AVAILABLE_NOTIFICATION;
 import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;

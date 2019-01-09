@@ -20,11 +20,12 @@ import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.RangeQuestion;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
 
 public class RatingWidget extends QuestionWidget {
 

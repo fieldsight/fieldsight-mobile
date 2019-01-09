@@ -8,10 +8,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 
-import java.util.logging.Handler;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 

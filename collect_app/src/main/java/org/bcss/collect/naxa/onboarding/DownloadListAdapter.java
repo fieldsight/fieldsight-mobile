@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
-import org.odk.collect.android.utilities.DateTimeUtils;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;

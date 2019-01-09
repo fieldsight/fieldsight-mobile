@@ -37,6 +37,12 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.exception.ExternalParamsException;
+import org.bcss.collect.android.exception.JavaRosaException;
+import org.bcss.collect.android.external.ExternalAppsUtils;
+import org.bcss.collect.android.logic.FormController;
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.IFormElement;
@@ -45,12 +51,6 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.instance.TreeReference;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.exception.ExternalParamsException;
-import org.bcss.collect.android.exception.JavaRosaException;
-import org.bcss.collect.android.external.ExternalAppsUtils;
-import org.bcss.collect.android.logic.FormController;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.ViewIds;
@@ -288,7 +288,7 @@ public class ODKView extends FrameLayout implements OnLongClickListener {
 
     @NonNull
     public static String getGroupsPath(FormEntryCaption[] groups) {
-        StringBuilder path = new StringBuilder("");
+        StringBuilder path = new StringBuilder();
         if (groups != null) {
             String longText;
             int multiplicity;

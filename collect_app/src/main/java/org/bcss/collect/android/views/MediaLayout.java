@@ -36,10 +36,10 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.listeners.AudioPlayListener;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
-import org.bcss.collect.android.listeners.AudioPlayListener;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;

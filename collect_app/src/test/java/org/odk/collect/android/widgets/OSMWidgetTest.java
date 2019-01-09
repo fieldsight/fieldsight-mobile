@@ -6,13 +6,12 @@ import com.google.common.collect.ImmutableList;
 
 import net.bytebuddy.utility.RandomString;
 
+import org.bcss.collect.android.logic.FormController;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.data.StringData;
-import org.javarosa.core.model.osm.OSMTag;
 import org.junit.Before;
 import org.mockito.Mock;
-import org.bcss.collect.android.logic.FormController;
 import org.odk.collect.android.widgets.base.BinaryWidgetTest;
 import org.robolectric.RuntimeEnvironment;
 
@@ -74,7 +73,7 @@ public class OSMWidgetTest extends BinaryWidgetTest<OSMWidget, StringData> {
         when(mediaFolder.getName()).thenReturn("test-media");
 
         when(formEntryPrompt.getQuestion()).thenReturn(questionDef);
-        when(questionDef.getOsmTags()).thenReturn(ImmutableList.<OSMTag>of());
+        when(questionDef.getOsmTags()).thenReturn(ImmutableList.of());
 
         fileName = RandomString.make();
     }

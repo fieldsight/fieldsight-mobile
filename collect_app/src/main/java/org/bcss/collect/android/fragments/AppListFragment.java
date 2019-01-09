@@ -31,13 +31,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-
 import org.bcss.collect.android.R;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.adapters.SortDialogAdapter;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.RecyclerViewClickListener;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.util.ArrayList;

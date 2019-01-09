@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import org.bcss.collect.naxa.common.BaseRepository;
 import org.bcss.collect.naxa.generalforms.data.Em;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

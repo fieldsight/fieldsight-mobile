@@ -2,8 +2,6 @@ package org.bcss.collect.naxa.common;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -11,12 +9,9 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 
 import javax.annotation.Nullable;
-
-import timber.log.Timber;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 

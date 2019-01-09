@@ -19,22 +19,22 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.javarosa.core.services.transport.payload.ByteArrayPayload;
-import org.javarosa.form.api.FormEntryController;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.exception.EncryptionException;
 import org.bcss.collect.android.listeners.FormSavedListener;
 import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.javarosa.core.services.transport.payload.ByteArrayPayload;
+import org.javarosa.form.api.FormEntryController;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.utilities.EncryptionUtils;
 import org.odk.collect.android.utilities.EncryptionUtils.EncryptedFormInformation;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaManager;
-import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 
 import java.io.File;
 import java.io.IOException;

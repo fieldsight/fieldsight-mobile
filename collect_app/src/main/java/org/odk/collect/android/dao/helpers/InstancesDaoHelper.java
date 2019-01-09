@@ -18,11 +18,11 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.logic.FormController;
+import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
 
 import timber.log.Timber;
 

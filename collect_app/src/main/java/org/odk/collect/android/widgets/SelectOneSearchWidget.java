@@ -17,8 +17,8 @@ package org.odk.collect.android.widgets;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
-import org.javarosa.form.api.FormEntryPrompt;
 import org.bcss.collect.android.listeners.AudioPlayListener;
+import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 
 /**

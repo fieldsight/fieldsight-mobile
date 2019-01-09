@@ -4,11 +4,11 @@ import android.support.annotation.NonNull;
 
 import net.bytebuddy.utility.RandomString;
 
-import org.odk.collect.android.widgets.base.FileWidgetTest;
 import org.javarosa.core.model.data.StringData;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.odk.collect.android.widgets.base.FileWidgetTest;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 

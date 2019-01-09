@@ -32,13 +32,12 @@ import android.widget.LinearLayout;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
-import org.odk.collect.android.utilities.DialogUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
-
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.utilities.DialogUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +49,6 @@ import timber.log.Timber;
 import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SPLASH_PATH;
 import static org.odk.collect.android.utilities.PermissionUtils.requestPhoneAndStoragePermission;
 import static org.odk.collect.android.utilities.PermissionUtils.requestReadPhoneStatePermission;
-import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePermissions;
 
 public class SplashScreenActivity extends Activity {
 

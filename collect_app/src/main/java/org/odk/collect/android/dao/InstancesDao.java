@@ -24,11 +24,10 @@ import android.support.v4.content.CursorLoader;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.utilities.ApplicationConstants;
 import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.site.db.SiteUploadHistoryLocalSource;
+import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -602,7 +601,7 @@ public class InstancesDao {
                 .flatMapIterable((Function<List<Instance>, Iterable<Instance>>) instances -> instances)
                 .map(new Function<Instance, Integer>() {
                     @Override
-                    public Integer apply(Instance instance) throws Exception {
+                    public Integer apply(Instance instance) {
                         String url = instance.getSubmissionUri();
                         String deployedFrom = getFormDeployedFrom(url);
                         String fsFormId = getFsFormIdFromUrl(url);

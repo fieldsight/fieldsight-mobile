@@ -24,12 +24,12 @@ import android.net.Uri;
 import android.os.Build;
 
 import org.apache.commons.io.IOUtils;
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Document;
 import org.kxml2.kdom.Element;
 import org.kxml2.kdom.Node;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -75,7 +75,7 @@ public class FileUtils {
     private FileUtils() {
     }
 
-    public static String getMimeType(String fileUrl) throws IOException {
+    public static String getMimeType(String fileUrl) {
         FileNameMap fileNameMap = URLConnection.getFileNameMap();
         return fileNameMap.getContentTypeFor(fileUrl);
     }
@@ -352,7 +352,7 @@ public class FileUtils {
             }
 
             fields.put(FORMID, (id == null) ? cur.getNamespace() : id);
-            fields.put(VERSION, (version == null) ? null : version);
+            fields.put(VERSION, version);
         } else {
             throw new IllegalStateException(xmlFile.getAbsolutePath() + " could not be parsed");
         }
@@ -728,7 +728,6 @@ public class FileUtils {
             }
         }
         if (!createOrExistsDir(destDir)) return false;
-        String[] a = srcDir.list();
         File[] files = srcDir.listFiles();
 
         for (File file : files) {

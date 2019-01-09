@@ -33,11 +33,10 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.external.ExternalDataUtil;
 import org.bcss.collect.android.external.ExternalSelectChoice;
-import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.ViewIds;
-import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
+import org.bcss.collect.android.listeners.AdvanceToNextListener;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
@@ -47,8 +46,9 @@ import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.AdvanceToNextListener;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.ViewIds;
+import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
 
 import java.io.File;
 import java.util.ArrayList;

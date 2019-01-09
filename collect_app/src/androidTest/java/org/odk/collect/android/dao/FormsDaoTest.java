@@ -20,13 +20,13 @@ import android.database.Cursor;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.dto.Form;
+import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dto.Form;
-import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.utilities.ResetUtility;
 
 import java.io.File;
