@@ -50,7 +50,7 @@ public class FieldSightUserSession {
     }
 
     public static String getAuthToken() {
-        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
+        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, FieldSightDebug.TOKEN);
     }
 
     public static void saveAuthToken(String token) {
