@@ -91,18 +91,14 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             if (throwable instanceof HttpException) {
                 HttpException httpException = (HttpException) throwable;
                 Response response = httpException.response();
-
-
                 return RetrofitException.httpError(response.raw().request().url().toString(), response, retrofit);
 
 
             }
             // A network error happened
             if (throwable instanceof IOException) {
-
                 FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp("Failed To Sync","A Network Error Happened");
                 return RetrofitException.networkError((IOException) throwable);
-
 
             }
 

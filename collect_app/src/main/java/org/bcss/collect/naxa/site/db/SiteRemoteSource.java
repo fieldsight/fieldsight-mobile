@@ -212,11 +212,10 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 .create(ApiInterface.class)
                 .uploadSite(APIEndpoint.ADD_SITE_URL, body, isSurvey
                         , SiteNameRequest, latRequest, lonRequest, identifierRequest, SitePhoneRequest,
-                        SiteAddressRequest, SitePublicDescRequest, projectIdRequest, siteTypeRequest, regionId, metaAttrs)
-                ;
+                        SiteAddressRequest, SitePublicDescRequest, projectIdRequest, siteTypeRequest, regionId, metaAttrs);
     }
 
-    public Observable<Site> updateSite(Site siteLocationPojo) {
+    private Observable<Site> updateSite(Site siteLocationPojo) {
         RequestBody requestBody;
         MultipartBody.Part body = null;
 

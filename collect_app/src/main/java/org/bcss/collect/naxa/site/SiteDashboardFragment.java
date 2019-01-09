@@ -41,6 +41,7 @@ import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.firebase.NotificationUtils;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
@@ -398,11 +399,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                         String errorMessage = e.getMessage();
                         FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
 
-                        if (e instanceof HttpException) {
-                            ResponseBody responseBody = ((HttpException) e).response().errorBody();
-                            errorMessage = getErrorMessage(responseBody);
-                        }
-
                         if (isAdded()) {
                             DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
                         } else {
@@ -446,14 +442,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     }
 
-    private String getErrorMessage(ResponseBody responseBody) {
-        try {
-            JSONObject jsonObject = new JSONObject(responseBody.string());
-            return jsonObject.getString("non_field_errors");
-        } catch (Exception e) {
-            return e.getMessage();
-        }
-    }
 
 
     private void toForms() {

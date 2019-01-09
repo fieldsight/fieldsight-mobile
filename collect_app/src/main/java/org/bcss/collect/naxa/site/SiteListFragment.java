@@ -506,11 +506,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         String errorMessage = e.getMessage();
                         FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
 
-                        if (e instanceof HttpException) {
-                            ResponseBody responseBody = ((HttpException) e).response().errorBody();
-                            errorMessage = getErrorMessage(responseBody);
-                        }
-
                         if (isAdded()) {
                             DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
                         } else {
@@ -518,15 +513,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         }
                     }
                 });
-    }
-
-    private String getErrorMessage(ResponseBody responseBody) {
-        try {
-            JSONObject jsonObject = new JSONObject(responseBody.string());
-            return jsonObject.getString("non_field_errors");
-        } catch (Exception e) {
-            return e.getMessage();
-        }
     }
 
     private ArrayList<Long> getNotUploadedFormForSite(String siteId) {
