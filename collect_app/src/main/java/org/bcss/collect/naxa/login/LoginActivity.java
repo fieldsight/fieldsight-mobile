@@ -172,8 +172,8 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         if (hasOldAccount) {
             MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
         } else {
-            DownloadActivityRefresh.start(this);
-//            ProjectListActivity.start(this);
+//            DownloadActivityRefresh.start(this);
+            ProjectListActivity.start(this);
         }
         Toast.makeText(this, "Logged In!", Toast.LENGTH_SHORT).show();
 

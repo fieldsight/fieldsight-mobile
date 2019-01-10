@@ -25,7 +25,7 @@
         android:rotation="90"
         app:backgroundTint="@color/primaryColor"
         app:layout_behavior="@string/scroll_fab_behaviour"
-        app:srcCompat="@drawable/ic_arrow_back"
+        app:srcCompat="@drawable/ic_arrow_back_legacy"
         app:useCompatPadding="true" />
 
 

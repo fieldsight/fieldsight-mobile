@@ -8,7 +8,7 @@
     app:contentInsetEnd="0dp"
     app:contentInsetStart="0dp"
     app:contentInsetStartWithNavigation="0dp"
-    app:navigationIcon="@drawable/ic_arrow_back"
+    app:navigationIcon="@drawable/ic_arrow_back_legacy"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     style="@style/BlueGradientBackground"
     app:theme="@style/WhiteText"

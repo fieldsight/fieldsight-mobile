@@ -16,6 +16,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
@@ -33,6 +34,13 @@ public class LoginModelImpl implements LoginModel {
 
         ServiceGenerator.createService(ApiInterface.class)
                 .getAuthToken(username, password)
+                .filter(new Predicate<AuthResponse>() {
+                    @Override
+                    public boolean test(AuthResponse authResponse) throws Exception {
+                        FieldSightUserSession.saveAuthToken(authResponse.getToken());
+                        return false;
+                    }
+                })
                 .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
                     @Override
                     public ObservableSource<FCMParameter> apply(AuthResponse authResponse) throws Exception {
@@ -91,7 +99,7 @@ public class LoginModelImpl implements LoginModel {
 
                     @Override
                     public void onComplete() {
-
+                        onLoginFinishedListener.onSuccess();
                     }
                 });
     }

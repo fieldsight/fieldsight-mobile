@@ -38,8 +38,6 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.toolbar_progress_bar)
-    ProgressBar toolbarProgressBar;
     @BindView(R.id.appbar_general)
     AppBarLayout appbarGeneral;
     @BindView(R.id.rv_notification_list)

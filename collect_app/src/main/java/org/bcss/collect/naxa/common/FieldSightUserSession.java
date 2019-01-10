@@ -35,6 +35,7 @@ import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -190,10 +191,7 @@ public class FieldSightUserSession {
                                             }
                                         });
                             }
-                        })
-
-
-                ;
+                        });
 
         Observable.concat(deleteFCM, purgeSharedPref.toObservable(), purgeDatabase.toObservable())
                 .subscribeOn(Schedulers.io())
@@ -202,7 +200,11 @@ public class FieldSightUserSession {
                     @Override
                     public void onNext(Response<Void> voidResponse) {
 
-                        removeFormsAndInstances(context, deletedForms -> logoutListener.logoutTasksCompleted());
+                        removeFormsAndInstances(context, deletedForms -> {
+                            ServiceGenerator.clearInstance();
+                            SyncRepository.INSTANCE = null;
+                            logoutListener.logoutTasksCompleted();
+                        });
                     }
 
                     @Override

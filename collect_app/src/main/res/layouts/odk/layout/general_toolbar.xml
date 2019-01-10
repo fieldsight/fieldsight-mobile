@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:background="@color/green"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ProgressBar
             android:layout_marginRight="4dp"

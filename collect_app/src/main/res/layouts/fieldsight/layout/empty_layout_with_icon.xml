@@ -8,13 +8,6 @@
     android:background="@color/background_grey">
 
 
-    <ImageView
-        android:layout_width="@dimen/icon_width_height"
-        android:layout_height="@dimen/icon_width_height"
-        android:layout_above="@id/primary_text"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_hourglass_empty" />
 
     <TextView
         android:id="@+id/primary_text"
