@@ -23,7 +23,6 @@ import android.widget.RelativeLayout;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.GlideApp;
@@ -35,7 +34,6 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.observers.DisposableObserver;
 
 public class UserActivity extends CollectAbstractActivity {
@@ -85,7 +83,7 @@ public class UserActivity extends CollectAbstractActivity {
     @BindView(R.id.relativeLayout)
     RelativeLayout relativeLayout;
     @BindView(R.id.civProfilePic)
-    CircleImageView civProfilePic;
+    ImageView civProfilePic;
     @BindView(R.id.fab_picture_edit)
     FloatingActionButton fabPictureEdit;
     @BindView(R.id.iv_back)

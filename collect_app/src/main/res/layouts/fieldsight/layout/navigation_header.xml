@@ -23,7 +23,8 @@
             android:layout_height="250dp" />
 
 
-        <de.hdodenhof.circleimageview.CircleImageView
+
+        <ImageView
             android:id="@+id/image_profile"
             android:layout_width="60dp"
             android:layout_height="60dp"

@@ -52,7 +52,8 @@ ext {
     leakyCanaryVersion = '1.5.4'
     daggerVersion = '2.16'
     rxLifecycleVersion = '2.2.1'
-    roomVersion = '1.0.0'
+    roomVersion = '1.1.1'
+    glideVersion = '4.8.0'
     archLifecycleVersion = '1.1.0'
     workManagerVersion = "1.0.0-alpha10"
     playServicesVersion = '10.0.1'

@@ -79,6 +79,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 import retrofit2.HttpException;
 import timber.log.Timber;
 
+import static org.bcss.collect.android.BuildConfig.DEBUG;
 import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
 import static org.bcss.collect.android.logic.PropertyManager.SCHEME_USERNAME;
 import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_APP_LANGUAGE;
@@ -175,7 +176,7 @@ public class Collect extends Application implements HasActivityInjector {
     }
 
 
-    private void setGlobalRxErrorConsumer(){
+    private void setGlobalRxErrorConsumer() {
         RxJavaPlugins.setErrorHandler(new Consumer<Throwable>() {
             @Override
             public void accept(Throwable e) throws Exception {
@@ -197,7 +198,7 @@ public class Collect extends Application implements HasActivityInjector {
                             break;
                     }
                 } else if (e instanceof SSLException) {
-                    message = "An SSL exception occurred" ;
+                    message = "An SSL exception occurred";
                 } else {
                     message = "Generic error occurred: " + e.getMessage();
 
@@ -274,7 +275,9 @@ public class Collect extends Application implements HasActivityInjector {
         super.onCreate();
         singleton = this;
 
-        Stetho.initializeWithDefaults(this);
+        if (DEBUG) {
+            Stetho.initializeWithDefaults(this);
+        }
 
         setupFirebaseRemoteConfig();
         applicationComponent = DaggerAppComponent.builder()
@@ -308,9 +311,8 @@ public class Collect extends Application implements HasActivityInjector {
 
         initProperties();
 
-        if (false) {
+        if (BuildConfig.BUILD_TYPE.equals("fieldSightCollectRelease")) {
             Fabric.with(this, new Crashlytics());
-    //        if (BuildConfig.BUILD_TYPE.equals("odkCollectRelease")) {
             Timber.plant(new CrashReportingTree());
 
         } else {
@@ -320,6 +322,7 @@ public class Collect extends Application implements HasActivityInjector {
         setupLeakCanary();
 //        setGlobalRxErrorConsumer();
     }
+
 
     protected RefWatcher setupLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -366,6 +369,7 @@ public class Collect extends Application implements HasActivityInjector {
                 Crashlytics.logException(t);
             }
         }
+
     }
 
     public void initProperties() {

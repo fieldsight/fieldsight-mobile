@@ -92,6 +92,7 @@ import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -257,29 +258,28 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     }
 
     private void setupNavigationHeader() {
+        try {
+            User user = FieldSightUserSession.getUser();
+            ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFullName());
+            ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
 
-        String userString = SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_KEY.USER, null);
-        if (userString == null) {
-            return;
-        }
+            ImageView ivProfilePicture = navigationHeader.findViewById(R.id.image_profile);
 
-        User user = new Gson().fromJson(userString, User.class);
-        ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFullName());
-        ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
-
-        ImageView ivProfilePicture = (ImageView) navigationHeader.findViewById(R.id.image_profile);
-        GlideApp.with(this).load(user.getProfilepic()).into(ivProfilePicture);
+            ViewUtils.loadRemoteImage(this, user.getProfilepic())
+                    .circleCrop()
+                    .into(ivProfilePicture);
 
 
-        navigationHeader.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            navigationHeader.setOnClickListener(v -> {
                 toggleNavDrawer();
-                new Handler().postDelayed(() -> {
-                    UserActivity.start(ProjectDashboardActivity.this);
-                }, 250);
-            }
-        });
+                new Handler()
+                        .postDelayed(() -> {
+                            UserActivity.start(ProjectDashboardActivity.this);
+                        }, 250);
+            });
+        } catch (IllegalArgumentException e) {
+            Timber.e(e);
+        }
 
 
     }

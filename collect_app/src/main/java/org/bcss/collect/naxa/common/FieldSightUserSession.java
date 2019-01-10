@@ -232,7 +232,7 @@ public class FieldSightUserSession {
 
 
     @NonNull
-    public static User getUser() {
+    public static User getUser() throws IllegalArgumentException{
         String userString = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, null);
         if (userString == null || userString.length() == 0) {
             throw new IllegalArgumentException("User information is missing from cache");

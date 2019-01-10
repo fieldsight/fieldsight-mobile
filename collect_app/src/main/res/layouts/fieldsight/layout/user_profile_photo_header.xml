@@ -4,13 +4,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/civProfilePic"
         android:layout_width="140dp"
         android:layout_height="140dp"
         android:src="@drawable/bcss_old_man"
-        app:civ_border_color="#ffffff"
-        app:civ_border_width="3dp" />
+   />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_picture_edit"
