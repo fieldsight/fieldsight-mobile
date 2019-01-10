@@ -376,6 +376,12 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 .flatMapIterable((Function<ArrayList<Long>, Iterable<Long>>) longs -> longs)
                 .toList()
                 .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        FlashBarUtils.showFlashbar(requireActivity(), progressMessage);
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableSingleObserver<List<Long>>() {
                     @Override
@@ -395,10 +401,10 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
-                        String errorMessage = e.getMessage();
-                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
+                        Timber.e(e);
+                        String errorMessage = RetrofitException.getMessage(e);
 
+                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
                         if (isAdded()) {
                             DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
                         } else {
@@ -407,6 +413,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                     }
                 });
     }
+
 
     private ArrayList<Long> getNotUploadedFormForSite(String siteId) {
         String selection;
@@ -441,7 +448,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         return instanceIDs;
 
     }
-
 
 
     private void toForms() {

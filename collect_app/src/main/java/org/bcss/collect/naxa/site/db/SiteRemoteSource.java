@@ -130,7 +130,6 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
     public Observable<Site> uploadMultipleSites(List<Site> sites) {
 
-        ToastUtils.showLongToast("Uploading site(s)");
 
         InstancesDao instancesDao = new InstancesDao();
         return Observable.just(sites)

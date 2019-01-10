@@ -137,5 +137,25 @@ public class RetrofitException extends RuntimeException {
         Converter<ResponseBody, T> converter = retrofit.responseBodyConverter(type, new Annotation[0]);
         return converter.convert(response.errorBody());
     }
+
+    public static String getMessage(Throwable e) {
+        String[] message = new String[]{e.getMessage(), e.getMessage()};
+
+        if (e instanceof RetrofitException) {
+            RetrofitException retrofitException = ((RetrofitException) e);
+            switch (retrofitException.getKind()) {
+                case NETWORK:
+
+                    message = new String[]{"Connection lost", String.format("A %s occurred while communicating to the server", retrofitException.getCause().getMessage())};
+                    break;
+                case HTTP:
+                    message = new String[]{"", e.getMessage()};
+                    break;
+                case UNEXPECTED:
+                    break;
+            }
+        }
+        return message[1];
+    }
 }
 

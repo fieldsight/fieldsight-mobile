@@ -20,6 +20,7 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.ViewModelFactory;
@@ -29,6 +30,7 @@ import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
+import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -67,7 +69,6 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 .beginTransaction()
                 .add(R.id.fragment_container, SiteDashboardFragment.newInstance(loadedSite), "frag0")
                 .commit();
-
 
 
         FieldSightNotificationLocalSource.getInstance()
@@ -124,8 +125,9 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new DisposableSingleObserver<Boolean>() {
                             @Override
-                            public void onSuccess(Boolean aBoolean) {
-                                if (aBoolean) {
+                            public void onSuccess(Boolean hasInternet) {
+                                if (hasInternet) {
+
                                     FieldSightUserSession.createLogoutDialog(FragmentHostActivity.this);
                                 } else {
                                     FieldSightUserSession.stopLogoutDialog(FragmentHostActivity.this);
@@ -134,7 +136,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
                             @Override
                             public void onError(Throwable e) {
-
+                                FieldSightUserSession.stopLogoutDialog(FragmentHostActivity.this);
                             }
                         });
                 break;

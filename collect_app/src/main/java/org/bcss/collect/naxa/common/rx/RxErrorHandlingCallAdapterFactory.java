@@ -44,18 +44,20 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
         private final Retrofit retrofit;
         private final CallAdapter<R, Object> wrapped;
 
-        public RxCallAdapterWrapper(Retrofit retrofit, CallAdapter<R, Object> wrapped) {
+        RxCallAdapterWrapper(Retrofit retrofit, CallAdapter<R, Object> wrapped) {
             this.retrofit = retrofit;
             this.wrapped = wrapped;
         }
 
+        @NonNull
         @Override
         public Type responseType() {
             return wrapped.responseType();
         }
 
+        @NonNull
         @Override
-        public Object adapt(Call<R> call) {
+        public Object adapt(@NonNull Call<R> call) {
             Object result = wrapped.adapt(call);
             if (result instanceof Single) {
                 return ((Single) result).onErrorResumeNext(new Function<Throwable, SingleSource>() {
@@ -92,14 +94,11 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
                 HttpException httpException = (HttpException) throwable;
                 Response response = httpException.response();
                 return RetrofitException.httpError(response.raw().request().url().toString(), response, retrofit);
-
-
             }
+
             // A network error happened
             if (throwable instanceof IOException) {
-                FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp("Failed To Sync","A Network Error Happened");
                 return RetrofitException.networkError((IOException) throwable);
-
             }
 
             // We don't know what happened. We need to simply convert to an unknown error

@@ -17,7 +17,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -167,27 +166,17 @@ public final class DialogFactory {
     }
 
 
-    public static Dialog showCustomLayoutDialog(Context context, View view) {
-        Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(false);
-        dialog.setContentView(view);
+    private static AlertDialog.Builder showCustomLayoutDialog(Context context, View view) {
 
-        return dialog;
-    }
+        return new AlertDialog.Builder(context)
+                .setView(view)
+                .setCancelable(false);
+//        Dialog dialog = new Dialog(context);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setCancelable(false);
+//        dialog.setContentView(view);
 
-    public static void showAPIUrlDialog(Context context) {
-
-
-        String baseUrl = SharedPreferenceUtils.getFromPrefs(context, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_BASE_URL, APIEndpoint.BASE_URL);
-
-        View viewInflated = LayoutInflater.from(Collect.getInstance()).inflate(R.layout.dialog_site_project_filter, null, false);
-        TextInputLayout textInputLayout = viewInflated.findViewById(R.id.text_input_layout);
-
-        textInputLayout.getEditText().setText(baseUrl);
-
-        Dialog dialog = showCustomLayoutDialog(context, viewInflated);
-        dialog.show();
+//        return dialog;
     }
 
 
@@ -200,5 +189,13 @@ public final class DialogFactory {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, listener, curYear, curMonth, curDay);
         return datePickerDialog;
+    }
+
+    public static AlertDialog.Builder createActionConsentDialog(Context context, String title, String message) {
+        View viewInflated = LayoutInflater.from(Collect.getInstance()).inflate(R.layout.dialog_site_project_filter, null, false);
+        TextInputLayout textInputLayout = viewInflated.findViewById(R.id.text_input_layout);
+        AlertDialog.Builder dialog = showCustomLayoutDialog(context, viewInflated);
+
+        return dialog;
     }
 }

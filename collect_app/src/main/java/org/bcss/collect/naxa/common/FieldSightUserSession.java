@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.common;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,21 +27,26 @@ import org.bcss.collect.android.tasks.DeleteFormsTask;
 import org.bcss.collect.android.tasks.DeleteInstancesTask;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
-import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 import timber.log.Timber;
-
-import static org.bcss.collect.naxa.network.APIEndpoint.REMOVE_FCM;
 
 public class FieldSightUserSession {
 
@@ -50,7 +56,7 @@ public class FieldSightUserSession {
     }
 
     public static String getAuthToken() {
-        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, FieldSightDebug.TOKEN);
+        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
     }
 
     public static void saveAuthToken(String token) {
@@ -102,18 +108,21 @@ public class FieldSightUserSession {
 
 
     public static void stopLogoutDialog(Context context) {
+
         DialogFactory.createMessageDialog(context, "Can't logout", "An active internet connection required").show();
     }
 
-    private static void logout(Context context) {
 
-
+    private static void removeFormsAndInstances(Context context, DeleteFormsListener listener) {
         DeleteInstancesTask deleteInstancesTask = new DeleteInstancesTask();
         deleteInstancesTask.setContentResolver(context.getContentResolver());
         deleteInstancesTask.setDeleteListener(new DeleteInstancesListener() {
             @Override
             public void deleteComplete(int deletedInstances) {
-                deleteAllForms(context);
+                DeleteFormsTask deleteFormsTask = new DeleteFormsTask();
+                deleteFormsTask.setContentResolver(context.getContentResolver());
+                deleteFormsTask.setDeleteListener(listener);
+                deleteFormsTask.execute(getAllFormsIds());
             }
 
             @Override
@@ -122,52 +131,76 @@ public class FieldSightUserSession {
             }
         });
 
+
         deleteInstancesTask.execute(getAllInstancedsIds());
 
-        try {
-            User user = getUser();
-            ServiceGenerator
-                    .createService(ApiInterface.class)
-                    .postFCMUserParameter(REMOVE_FCM, getFCM(user.getUser_name(), false))
-                    .subscribe(new Observer<FCMParameter>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-                        }
-
-                        @Override
-                        public void onNext(FCMParameter fcmParameter) {
-                            Timber.i(fcmParameter.toString());
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            e.printStackTrace();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-
-        } catch (IllegalArgumentException e) {
-//            Crashlytics.log(e.getMessage());
-        }
+    }
 
 
-        AsyncTask.execute(() -> {
+    public interface OnLogoutListener {
+        void logoutTasksCompleted();
+
+        void logoutTaskFailed(String message);
+    }
+
+    private static void logout(Context context, OnLogoutListener logoutListener) {
+
+        Completable purgeDatabase = Completable.fromAction(() -> {
             FieldSightDatabase.getDatabase(context).clearAllTables();
             FieldSightConfigDatabase.getDatabase(context).clearAllTables();
         });
 
-        //bug: fcm token is not generating when issued getToken() hence we exclude it from deletion here
-        String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
-        SharedPreferenceUtils.deleteAll(context);
-        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcmToken);
 
-        ServiceGenerator.clearInstance();
+        Completable purgeSharedPref = Completable.fromAction(new Action() {
+            @Override
+            public void run() {
+                SharedPreferenceUtils.deleteAll(context);
+            }
+        });
 
-        SyncRepository.INSTANCE = null; //todo: done to resolve sync screen blank bug; need to fix in future
+
+        Observable<Response<Void>> deleteFCM = Observable.just(getUser())
+                .flatMap(new Function<User, Observable<Response<Void>>>() {
+                    @Override
+                    public Observable<Response<Void>> apply(User user) throws Exception {
+                        return ServiceGenerator
+                                .createService(ApiInterface.class)
+                                .deleteFCMUserParameter(getFCM(user.getUser_name(), false))
+                                .map(new Function<Response<Void>, Response<Void>>() {
+                                    @Override
+                                    public Response<Void> apply(Response<Void> voidResponse) throws Exception {
+                                        if (voidResponse.code() != 200) {
+                                            throw new RuntimeException("FCM removal did not return 200");
+                                        }
+                                        return voidResponse;
+                                    }
+                                });
+                    }
+                });
+
+        Observable.concat(deleteFCM, purgeSharedPref.toObservable(), purgeDatabase.toObservable())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<Response<Void>>() {
+                    @Override
+                    public void onNext(Response<Void> voidResponse) {
+
+                        removeFormsAndInstances(context, deletedForms -> logoutListener.logoutTasksCompleted());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.e(e);
+                        logoutListener.logoutTaskFailed(e.getMessage());
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
 
     }
 
@@ -189,19 +222,7 @@ public class FieldSightUserSession {
     }
 
     private static void deleteAllForms(Context context) {
-        DeleteFormsTask deleteFormsTask = new DeleteFormsTask();
-        deleteFormsTask.setContentResolver(context.getContentResolver());
-        deleteFormsTask.setDeleteListener(new DeleteFormsListener() {
-            @Override
-            public void deleteComplete(int deletedForms) {
-                Timber.i("%s forms has been deleted", deletedForms);
-                Intent intent = new Intent(context, LoginActivity.class)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                context.startActivity(intent);
 
-            }
-        });
-        deleteFormsTask.execute(getAllFormsIds());
     }
 
     private static Long[] getAllFormsIds() {
@@ -256,7 +277,9 @@ public class FieldSightUserSession {
         return ids.toArray(longs);
     }
 
-    public static void createLogoutDialog(Context context) {
+
+    public static void createLogoutDialog(Activity context) {
+
 
         String dialogTitle = context.getApplicationContext().getString(R.string.dialog_title_warning_logout);
         String dialogMsg;
@@ -269,13 +292,24 @@ public class FieldSightUserSession {
 
         dialogMsg = FieldSightUserSession.getLogoutMessage();
 
+        DialogFactory.createActionDialog(context, dialogTitle, dialogMsg)
+                .setPositiveButton(posMsg, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        logout(context, new OnLogoutListener() {
+                            @Override
+                            public void logoutTasksCompleted() {
+                                Intent intent = new Intent(context, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                context.startActivity(intent);
+                            }
 
-        DialogFactory.createActionDialog(context, dialogTitle, dialogMsg).setPositiveButton(posMsg, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                logout(context);
-            }
-        }).setNegativeButton(negMsg, null).setIcon(wrapped).show();
+                            @Override
+                            public void logoutTaskFailed(String message) {
+                                FlashBarUtils.showFlashbar(context, "Logout failed");
+                            }
+                        });
+                    }
+                }).setNegativeButton(negMsg, null).setIcon(wrapped).show();
 
     }
 

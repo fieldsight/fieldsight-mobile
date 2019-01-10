@@ -200,6 +200,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                             @Override
                             public void onError(Throwable e) {
                                 showProgress(false);
+                                FieldSightUserSession.stopLogoutDialog(ProjectListActivity.this);
                             }
                         });
                 break;

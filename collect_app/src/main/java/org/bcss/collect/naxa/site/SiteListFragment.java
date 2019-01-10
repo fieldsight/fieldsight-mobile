@@ -44,6 +44,7 @@ import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
 import org.bcss.collect.naxa.common.FilterOption;
 import org.bcss.collect.naxa.common.GSONInstance;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.firebase.NotificationUtils;
@@ -503,7 +504,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        String errorMessage = e.getMessage();
+                        String errorMessage = RetrofitException.getMessage(e);
                         FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
 
                         if (isAdded()) {

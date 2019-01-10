@@ -26,6 +26,7 @@ import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -45,6 +46,7 @@ import static org.bcss.collect.naxa.network.APIEndpoint.GET_PROJECT_SITES;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_SITE_TYPES;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_STAGE_SUB_STAGE;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_USER_PROFILE;
+import static org.bcss.collect.naxa.network.APIEndpoint.REMOVE_FCM;
 
 public interface ApiInterface {
 
@@ -156,6 +158,10 @@ public interface ApiInterface {
     @POST()
     Observable<FCMParameter> postFCMUserParameter(@Url String url, @Body FCMParameter fcmParameter);
 
+
+    @POST(REMOVE_FCM)
+    Observable<Response<Void>> deleteFCMUserParameter(@Body FCMParameter fcmParameter);
+
     @GET
     Call<NotificationDetail> getNotificationDetail(@Url String url);
 
@@ -219,5 +225,5 @@ public interface ApiInterface {
 
 
     @GET(APIEndpoint.GET_INSTANCE_SUBMISSION_ATTACHMENTS)
-    Observable<HashMap<String,String>> getInstanceMediaList(@Path(value = "instance_submission_id", encoded = true) String instanceSubmissionId);
+    Observable<HashMap<String, String>> getInstanceMediaList(@Path(value = "instance_submission_id", encoded = true) String instanceSubmissionId);
 }

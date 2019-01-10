@@ -571,6 +571,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
                 break;
             case R.id.action_logout:
+
                 ReactiveNetwork.checkInternetConnectivity()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -586,7 +587,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
                             @Override
                             public void onError(Throwable e) {
-
+                                FieldSightUserSession.stopLogoutDialog(ProjectDashboardActivity.this);
                             }
                         });
                 break;
@@ -598,7 +599,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     }
 
     public void loadToolBarSearch() {
-
 
         //  ArrayList<String> sitesStored = SharedPreference.loadList(this, Utils.PREFS_NAME, Utils.KEY_SITES);
         ArrayList<Site> sitesStored = new ArrayList<>();
