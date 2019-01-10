@@ -17,28 +17,43 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-
-    <ProgressBar
-        android:id="@+id/toolbar_progress_bar"
-        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+    <RelativeLayout
+        android:id="@+id/fl_toolbar_progress_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="-5dp"
-        android:layout_marginBottom="-6.75dp"
-        android:indeterminate="true"
-        android:visibility="gone" />
+        android:background="@color/green"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_toLeftOf="@id/toolbar_message"
+            android:layout_toStartOf="@id/toolbar_message"
+            android:layout_centerVertical="true"
+            android:layout_width="10dp"
+            android:layout_height="10dp" />
+
+        <TextView
+            android:id="@+id/toolbar_message"
+            android:textColor="@color/white"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/please_wait_long"
+            android:textAlignment="center" />
 
 
-    <TextView
-        android:id="@+id/tv_toolbar_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
-        android:text="@string/refresh"
-        android:textAlignment="center"
-        android:visibility="gone" />
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:layout_marginTop="2dp"
+            android:indeterminate="true"
+            android:visibility="gone" />
 
 
+    </RelativeLayout>
 </android.support.design.widget.AppBarLayout>
+

@@ -93,10 +93,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbarGeneral;
-    @BindView(R.id.tv_toolbar_message)
-    TextView tvToolbarMessage;
-    @BindView(R.id.toolbar_progress_bar)
-    ProgressBar toolbarProgressBar;
+
     @BindView(R.id.appbar_general)
     AppBarLayout appbarGeneral;
     @BindView(R.id.tvLocation)

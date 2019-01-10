@@ -51,11 +51,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.tv_toolbar_message)
-    TextView tvToolbarMessage;
 
-    @BindView(R.id.toolbar_progress_bar)
-    ProgressBar toolbarProgressBar;
 
     @BindView(R.id.appbar_general)
     AppBarLayout appbarGeneral;

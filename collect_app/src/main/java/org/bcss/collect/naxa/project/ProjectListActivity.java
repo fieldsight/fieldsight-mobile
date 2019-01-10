@@ -87,10 +87,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.tv_toolbar_message)
-    TextView tvToolbarMessage;
-    @BindView(R.id.toolbar_progress_bar)
-    ProgressBar toolbarProgressBar;
+
     @BindView(R.id.appbar_general)
     AppBarLayout appbarGeneral;
     @BindView(R.id.my_projects_list)
@@ -137,8 +134,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 });
 
 
-
-
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
@@ -181,14 +176,14 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 NotificationListActivity.start(this);
                 break;
             case R.id.action_logout:
-                showProgress(true);
+                showProgress();
                 ReactiveNetwork.checkInternetConnectivity()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new DisposableSingleObserver<Boolean>() {
                             @Override
                             public void onSuccess(Boolean aBoolean) {
-                                showProgress(false);
+                                hideProgress();
 
                                 if (aBoolean) {
                                     FieldSightUserSession.createLogoutDialog(ProjectListActivity.this);
@@ -199,7 +194,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
                             @Override
                             public void onError(Throwable e) {
-                                showProgress(false);
+                                hideProgress();
                                 FieldSightUserSession.stopLogoutDialog(ProjectListActivity.this);
                             }
                         });
@@ -209,9 +204,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
         return super.onOptionsItemSelected(item);
     }
 
-    private void showProgress(boolean show) {
-        toolbarProgressBar.setVisibility(show ? View.VISIBLE : View.GONE);
-    }
 
     private void setupProjectlist() {
         projectlistAdapter = new MyProjectsAdapter(new ArrayList<>(0), this);

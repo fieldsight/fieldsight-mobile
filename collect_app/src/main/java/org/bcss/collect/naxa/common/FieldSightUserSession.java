@@ -15,6 +15,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dao.FormsDao;
 import org.bcss.collect.android.dao.InstancesDao;
@@ -37,6 +38,7 @@ import org.bcss.collect.naxa.network.ServiceGenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -119,6 +121,11 @@ public class FieldSightUserSession {
         deleteInstancesTask.setDeleteListener(new DeleteInstancesListener() {
             @Override
             public void deleteComplete(int deletedInstances) {
+                try {
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(5));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 DeleteFormsTask deleteFormsTask = new DeleteFormsTask();
                 deleteFormsTask.setContentResolver(context.getContentResolver());
                 deleteFormsTask.setDeleteListener(listener);
@@ -159,24 +166,34 @@ public class FieldSightUserSession {
         });
 
 
-        Observable<Response<Void>> deleteFCM = Observable.just(getUser())
-                .flatMap(new Function<User, Observable<Response<Void>>>() {
-                    @Override
-                    public Observable<Response<Void>> apply(User user) throws Exception {
-                        return ServiceGenerator
-                                .createService(ApiInterface.class)
-                                .deleteFCMUserParameter(getFCM(user.getUser_name(), false))
-                                .map(new Function<Response<Void>, Response<Void>>() {
-                                    @Override
-                                    public Response<Void> apply(Response<Void> voidResponse) throws Exception {
-                                        if (voidResponse.code() != 200) {
-                                            throw new RuntimeException("FCM removal did not return 200");
-                                        }
-                                        return voidResponse;
-                                    }
-                                });
-                    }
-                });
+        Observable<Response<Void>> deleteFCM =
+                Observable.just(1)
+                        .map(new Function<Integer, User>() {
+                            @Override
+                            public User apply(Integer integer) throws Exception {
+                                return getUser();
+                            }
+                        })
+                        .flatMap(new Function<User, Observable<Response<Void>>>() {
+                            @Override
+                            public Observable<Response<Void>> apply(User user) throws Exception {
+                                return ServiceGenerator
+                                        .createService(ApiInterface.class)
+                                        .deleteFCMUserParameter(getFCM(user.getUser_name(), false))
+                                        .map(new Function<Response<Void>, Response<Void>>() {
+                                            @Override
+                                            public Response<Void> apply(Response<Void> voidResponse) throws Exception {
+                                                if (voidResponse.code() != 200) {
+                                                    throw new RuntimeException("FCM removal did not return 200");
+                                                }
+                                                return voidResponse;
+                                            }
+                                        });
+                            }
+                        })
+
+
+                ;
 
         Observable.concat(deleteFCM, purgeSharedPref.toObservable(), purgeDatabase.toObservable())
                 .subscribeOn(Schedulers.io())
@@ -296,15 +313,22 @@ public class FieldSightUserSession {
                 .setPositiveButton(posMsg, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
+                        ((CollectAbstractActivity) context).showProgress();
+
                         logout(context, new OnLogoutListener() {
                             @Override
                             public void logoutTasksCompleted() {
+
+                                ((CollectAbstractActivity) context).hideProgress();
                                 Intent intent = new Intent(context, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 context.startActivity(intent);
                             }
 
                             @Override
                             public void logoutTaskFailed(String message) {
+
+                                ((CollectAbstractActivity) context).hideProgress();
                                 FlashBarUtils.showFlashbar(context, "Logout failed");
                             }
                         });

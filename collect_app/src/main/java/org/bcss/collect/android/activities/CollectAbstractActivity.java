@@ -16,17 +16,25 @@
 
 package org.bcss.collect.android.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.injection.config.AppComponent;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.utilities.LocaleHelper;
 import org.bcss.collect.android.utilities.ThemeUtils;
+import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+
+import timber.log.Timber;
 
 import static org.bcss.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
 import static org.bcss.collect.android.utilities.PermissionUtils.finishAllActivities;
@@ -36,6 +44,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
 
     private boolean isInstanceStateSaved;
     protected ThemeUtils themeUtils;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,5 +97,37 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(new LocaleHelper().updateLocale(base));
+    }
+
+    public void showProgress() {
+        try {
+            RelativeLayout relativeLayout = findViewById(R.id.fl_toolbar_progress_wrapper);
+            if (relativeLayout != null) {
+                relativeLayout.setVisibility(View.VISIBLE);
+            } else {
+                progressDialog = DialogFactory.createProgressDialogHorizontal(this, getString(R.string.please_wait));
+                progressDialog.show();
+            }
+        } catch (Exception e) {
+            FlashBarUtils.showFlashbar(this, e.getMessage());
+            Timber.e(e);
+        }
+
+    }
+
+    public void hideProgress() {
+        try {
+            RelativeLayout relativeLayout = findViewById(R.id.fl_toolbar_progress_wrapper);
+            if (relativeLayout != null) {
+                relativeLayout.setVisibility(View.GONE);
+            } else {
+                if (progressDialog != null && progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
+            }
+        } catch (Exception e) {
+            FlashBarUtils.showFlashbar(this, e.getMessage());
+            Timber.e(e);
+        }
     }
 }
