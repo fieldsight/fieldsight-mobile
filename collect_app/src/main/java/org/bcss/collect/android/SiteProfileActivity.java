@@ -187,7 +187,6 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                     .into(ivCircle);
 
             ViewUtils.loadLocalImage(this, logo)
-                    .circleCrop()
                     .into(ivBgToolbar);
 
 
