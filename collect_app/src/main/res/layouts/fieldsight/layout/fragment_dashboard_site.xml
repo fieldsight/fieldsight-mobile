@@ -358,8 +358,8 @@
 
             <Button
                 android:textAllCaps="true"
-                android:drawableStart="@drawable/ic_cloud_upload"
-                android:drawableLeft="@drawable/ic_cloud_upload"
+                android:drawableStart="@drawable/ic_cloud_upload_legacy"
+                android:drawableLeft="@drawable/ic_cloud_upload_legacy"
                 android:text="@string/upload"
                 android:id="@+id/site_option_btn_upload_site"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
@@ -389,8 +389,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_delete_forever"
-                android:drawableLeft="@drawable/ic_delete_forever"
+                android:drawableStart="@drawable/ic_delete_forever_legacy"
+                android:drawableLeft="@drawable/ic_delete_forever_legacy"
                 android:text="@string/btn_text_delete_site"
                 android:textAllCaps="true"
                 android:textSize="16sp" />

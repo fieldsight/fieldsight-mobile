@@ -27,7 +27,7 @@
                 android:title="@string/nav_delete_saved_form" />
             <item
                 android:id="@+id/nav_send_final_form"
-                android:icon="@drawable/ic_cloud_upload"
+                android:icon="@drawable/ic_cloud_upload_legacy"
                 android:title="@string/nav_send_final_form" />
             <item
                 android:id="@+id/nav_edit_saved_form"

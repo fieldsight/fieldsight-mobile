@@ -129,8 +129,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"
-        android:drawableLeft="@drawable/ic_camera_black"
-        android:drawableStart="@drawable/ic_camera_black"
+        android:drawableLeft="@drawable/ic_camera_black_legacy"
+        android:drawableStart="@drawable/ic_camera_black_legacy"
         android:text="@string/btn_add_site_photo" />
 
     <Button
@@ -140,7 +140,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_large"
-        android:drawableLeft="@drawable/ic_location_city_black_24dp"
-        android:drawableStart="@drawable/ic_location_city_black_24dp"
+        android:drawableLeft="@drawable/ic_location_city_black_24dp_legacy"
+        android:drawableStart="@drawable/ic_location_city_black_24dp_legacy"
         android:text="@string/get_location" />
 </merge>
