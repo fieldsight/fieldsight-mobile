@@ -17,25 +17,22 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.utilities.ThemeUtils;
-import org.bcss.collect.naxa.common.FilterOption.FilterType;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.util.ArrayList;
 
 
 public class FilterDialogAdapterv2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_BUTTON = 2;
+    private static final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_BUTTON = 2;
     private final FilterDialogAdapterv2.RecyclerViewClickListener listener;
 
     private final RecyclerView recyclerView;

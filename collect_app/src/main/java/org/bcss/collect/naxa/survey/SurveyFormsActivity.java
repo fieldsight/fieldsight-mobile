@@ -14,27 +14,22 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.provider.FormsProviderAPI;
-import org.bcss.collect.android.utilities.ToastUtils;
-import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.login.model.Project;
-import org.bcss.collect.naxa.site.CreateSiteViewModel;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.List;
 

@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.sms.base.BaseSmsTest;
 import org.odk.collect.android.sms.base.SampleData;
-import org.bcss.collect.android.tasks.sms.SmsSubmissionManager;
-import org.bcss.collect.android.tasks.sms.models.Message;
-import org.bcss.collect.android.tasks.sms.models.SmsSubmission;
+import org.odk.collect.android.tasks.sms.SmsSubmissionManager;
+import org.odk.collect.android.tasks.sms.models.Message;
+import org.odk.collect.android.tasks.sms.models.SmsSubmission;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 

@@ -14,8 +14,8 @@
 
 package org.bcss.collect.android.listeners;
 
-import org.bcss.collect.android.tasks.ProgressNotifier;
-import org.bcss.collect.android.tasks.SaveResult;
+import org.odk.collect.android.tasks.ProgressNotifier;
+import org.odk.collect.android.tasks.SaveResult;
 
 /**
  * @author Carl Hartung (carlhartung@gmail.com)

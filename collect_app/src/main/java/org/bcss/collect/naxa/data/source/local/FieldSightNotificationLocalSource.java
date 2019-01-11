@@ -181,6 +181,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 message = generateFormStatusChangeMsg(notification).toString();
                 break;
             case SITE_FORM:
+
                 boolean isNewForm = NEW_FORM.equalsIgnoreCase(notification.getFormStatus());
                 String siteOrProjectName = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
                 title = context.getString(R.string.notify_title_form_deployed, notification.getFormType());

@@ -23,9 +23,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 
 import org.bcss.collect.android.views.MediaLayout;
-import org.bcss.collect.android.widgets.SelectWidget;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.helper.Selection;
+import org.odk.collect.android.widgets.SelectWidget;
 
 import java.util.List;
 

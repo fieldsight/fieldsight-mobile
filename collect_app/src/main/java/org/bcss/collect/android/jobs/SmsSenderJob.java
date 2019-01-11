@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.evernote.android.job.Job;
 
-import org.bcss.collect.android.tasks.sms.SmsSender;
+import org.odk.collect.android.tasks.sms.SmsSender;
 
 /***
  * Background job that adheres to the fire and forget architecture pattern

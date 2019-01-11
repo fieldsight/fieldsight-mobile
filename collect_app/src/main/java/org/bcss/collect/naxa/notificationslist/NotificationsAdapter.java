@@ -28,9 +28,9 @@ import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STA
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_PROJECT;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
-import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
 
 
@@ -67,7 +67,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         FieldSightNotification fieldSightNotification = FieldSightNotifications.get(viewHolder.getAdapterPosition());
-        Context context = viewHolder.rootLayout.getContext().getApplicationContext();
         viewHolder.ivNotificationIcon.setImageDrawable(getNotificationImage(fieldSightNotification.getNotificationType()));
         Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance().generateNotificationContent(fieldSightNotification);
         String title = titleContent.first;

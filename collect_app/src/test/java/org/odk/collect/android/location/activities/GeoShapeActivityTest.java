@@ -14,6 +14,7 @@
 
 package org.odk.collect.android.location.activities;
 
+import org.bcss.collect.android.map.GoogleMapFragment;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,10 +22,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.bcss.collect.android.activities.GeoShapeActivity;
+import org.odk.collect.android.activities.GeoShapeActivity;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
-import org.bcss.collect.android.map.GoogleMapFragment;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;

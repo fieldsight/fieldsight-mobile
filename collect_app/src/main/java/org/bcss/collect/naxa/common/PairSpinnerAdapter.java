@@ -1,15 +1,11 @@
 package org.bcss.collect.naxa.common;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import org.bcss.collect.naxa.site.SiteType;
 
 import java.util.List;
 

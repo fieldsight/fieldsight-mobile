@@ -4,7 +4,7 @@ import android.arch.lifecycle.ViewModel;
 
 import org.bcss.collect.android.injection.config.architecture.ViewModelKey;
 import org.bcss.collect.android.injection.config.scopes.PerViewModel;
-import org.bcss.collect.android.location.GeoViewModel;
+import org.odk.collect.android.location.GeoViewModel;
 
 import dagger.Binds;
 import dagger.Module;

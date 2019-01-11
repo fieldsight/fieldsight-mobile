@@ -6,8 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import org.bcss.collect.android.tasks.MediaLoadingTask;
-import org.bcss.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.tasks.MediaLoadingTask;
 
 public class MediaLoadingFragment extends Fragment {
 

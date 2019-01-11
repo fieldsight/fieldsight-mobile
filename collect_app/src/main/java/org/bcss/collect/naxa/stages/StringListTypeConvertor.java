@@ -23,7 +23,7 @@ public class StringListTypeConvertor {
     }
 
     @TypeConverter
-    public static String ListToString(List<String> someObjects) {
+    public static String listToString(List<String> someObjects) {
         return GSONInstance.getInstance().toJson(someObjects);
     }
 }

@@ -18,7 +18,6 @@ import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormDAO;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
-
 import org.bcss.collect.naxa.login.model.SiteMetaAttributesTypeConverter;
 import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
 import org.bcss.collect.naxa.onboarding.SyncableItem;
@@ -96,16 +95,19 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 
     public static FieldSightDatabase getDatabase(final Context context) {
-        if (INSTANCE == null) {
-            synchronized (FieldSightDatabase.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            FieldSightDatabase.class, DB_PATH)
-                            .addMigrations(MIGRATION_4_5, MIGRATION_5_6,MIGRATION_6_7)
-                            .build();
-                }
+        if (INSTANCE != null) {
+            return INSTANCE;
+        }
+
+        synchronized (FieldSightDatabase.class) {
+            if (INSTANCE == null) {
+                INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                        FieldSightDatabase.class, DB_PATH)
+                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                        .build();
             }
         }
+
         return INSTANCE;
     }
 

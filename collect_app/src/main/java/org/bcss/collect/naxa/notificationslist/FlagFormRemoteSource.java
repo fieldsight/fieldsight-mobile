@@ -6,17 +6,17 @@ import android.net.Uri;
 import android.os.Environment;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.FormsDao;
-import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.tasks.DownloadFormsTask;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -28,12 +28,11 @@ import java.util.Locale;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Single;
-import io.reactivex.SingleOnSubscribe;
 import io.reactivex.functions.Function;
 import timber.log.Timber;
 
-import static org.bcss.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
-import static org.bcss.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
+import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
+import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
 
 public class FlagFormRemoteSource {
     private static FlagFormRemoteSource INSTANCE;
@@ -68,7 +67,7 @@ public class FlagFormRemoteSource {
                 .toObservable()
                 .flatMap(new Function<String, ObservableSource<Uri>>() {
                     @Override
-                    public ObservableSource<Uri> apply(String s) throws Exception {
+                    public ObservableSource<Uri> apply(String s) {
                         return getODKInstance(fieldSightNotification);
                     }
                 });
@@ -108,7 +107,7 @@ public class FlagFormRemoteSource {
     private Single<String> getODKForm(String fsFormId, String siteId, String formName, String fsFormSubmissionId, String jrFormId) {
 
 
-        return Single.create((SingleOnSubscribe<String>) emitter -> {
+        return Single.create(emitter -> {
             String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
             ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
             DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask();
@@ -170,12 +169,10 @@ public class FlagFormRemoteSource {
 
     public Observable<Uri> getODKInstance(FieldSightNotification notificationFormDetail) {
 
-        String fsFormId = notificationFormDetail.getFsFormId();//todo: project site fsFormId unhandled
         String siteId = notificationFormDetail.getSiteId();
         String formName = notificationFormDetail.getFormName();
         String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
         String jrFormId = notificationFormDetail.getIdString();
-        Long date = System.currentTimeMillis();
         String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_submission/%s", fsFormSubmissionId);
 
         Instance.Builder flaggedInstance = new Instance.Builder()
@@ -199,7 +196,7 @@ public class FlagFormRemoteSource {
                                     true)
                             .map(new Function<String, Uri>() {
                                 @Override
-                                public Uri apply(String path) throws Exception {
+                                public Uri apply(String path) {
                                     path = path.replace("file://", "");
 
                                     instance.instanceFilePath(path);
@@ -265,7 +262,7 @@ public class FlagFormRemoteSource {
                                     true)
                             .map(new Function<String, Uri>() {
                                 @Override
-                                public Uri apply(String path) throws Exception {
+                                public Uri apply(String path) {
                                     path = path.replace("file:///", "");
 
                                     instance.instanceFilePath(path);

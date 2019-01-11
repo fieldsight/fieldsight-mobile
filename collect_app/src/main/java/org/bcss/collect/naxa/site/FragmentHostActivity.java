@@ -1,27 +1,20 @@
 package org.bcss.collect.naxa.site;
 
-import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
@@ -29,17 +22,13 @@ import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
-import org.bcss.collect.naxa.onboarding.DownloadActivity;
-import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
-import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -52,8 +41,6 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         Intent intent = new Intent(context, FragmentHostActivity.class);
         intent.putExtra(EXTRA_OBJECT, site);
         context.startActivity(intent);
-
-
     }
 
     @Override
@@ -155,10 +142,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
         ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
 
-        GeneralFormViewModel viewModel =
-                ViewModelProviders.of(activity, factory).get(GeneralFormViewModel.class);
-
-        return viewModel;
+        return ViewModelProviders.of(activity, factory).get(GeneralFormViewModel.class);
     }
 
 

@@ -97,7 +97,7 @@ public class DownloadViewModelNew extends ViewModel {
                             .toList();
                 })
                 .flatMap(new Function<Object, SingleSource<?>>() {
-                    public SingleSource<?> apply(Object o) throws Exception {
+                    public SingleSource<?> apply(Object o) {
                         return GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
                     }
                 });
@@ -131,7 +131,7 @@ public class DownloadViewModelNew extends ViewModel {
                 })
                 .flatMap(new Function<List<DownloadProgress>, Single<ArrayList<ScheduleForm>>>() {
                     @Override
-                    public Single<ArrayList<ScheduleForm>> apply(List<DownloadProgress> downloadProgresses) throws Exception {
+                    public Single<ArrayList<ScheduleForm>> apply(List<DownloadProgress> downloadProgresses) {
                         return ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
                     }
                 })
@@ -151,7 +151,7 @@ public class DownloadViewModelNew extends ViewModel {
                     public void onError(Throwable e) {
                         SyncLocalSource.getINSTANCE().markAsFailed(SCHEDULED_FORMS);
                         if (e instanceof RetrofitException) {
-                            String message = ((RetrofitException) e).getMessage();
+                            String message = e.getMessage();
                             SyncLocalSource.getINSTANCE().addErrorMessage(SCHEDULED_FORMS, message);
                         }
                     }
@@ -184,7 +184,7 @@ public class DownloadViewModelNew extends ViewModel {
                 })
                 .flatMap(new Function<Object, SingleSource<ArrayList<Stage>>>() {
                     @Override
-                    public SingleSource<ArrayList<Stage>> apply(Object o) throws Exception {
+                    public SingleSource<ArrayList<Stage>> apply(Object o) {
                         return StageRemoteSource.getInstance().fetchAllStages();
                     }
                 })
@@ -204,7 +204,7 @@ public class DownloadViewModelNew extends ViewModel {
                     public void onError(Throwable e) {
                         SyncLocalSource.getINSTANCE().markAsFailed(STAGED_FORMS);
                         if (e instanceof RetrofitException) {
-                            String message = ((RetrofitException) e).getMessage();
+                            String message = e.getMessage();
                             SyncLocalSource.getINSTANCE().addErrorMessage(STAGED_FORMS, message);
                         }
                     }
@@ -271,7 +271,7 @@ public class DownloadViewModelNew extends ViewModel {
                 .toObservable()
                 .flatMap(new Function<List<DownloadProgress>, ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(List<DownloadProgress> downloadProgresses) throws Exception {
+                    public ObservableSource<?> apply(List<DownloadProgress> downloadProgresses) {
                         Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
                         Single<ArrayList<ScheduleForm>> scheduled = ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
                         Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();
@@ -297,7 +297,7 @@ public class DownloadViewModelNew extends ViewModel {
                         SyncRepository.getInstance().setError(ALL_FORMS);
                         SyncLocalSource.getINSTANCE().markAsFailed(ALL_FORMS);
                         if (e instanceof RetrofitException) {
-                            String message = ((RetrofitException) e).getMessage();
+                            String message = e.getMessage();
                             SyncLocalSource.getINSTANCE().addErrorMessage(ALL_FORMS, message);
                         }
                     }

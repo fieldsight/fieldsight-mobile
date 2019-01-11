@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <string name="show_password">पासवर्ड दिखायें </string>
   <string name="activity_not_found">%s:के नियंत्रण के लिए कोई गतिविधि नहीं  मिली</string>
   <string name="view_image">इमेज देखें</string>

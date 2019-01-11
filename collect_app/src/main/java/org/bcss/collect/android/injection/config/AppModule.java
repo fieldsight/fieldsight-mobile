@@ -4,18 +4,18 @@ import android.app.Application;
 import android.content.Context;
 import android.telephony.SmsManager;
 
-import org.bcss.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.injection.ViewModelBuilder;
-import org.bcss.collect.android.injection.config.architecture.ViewModelFactoryModule;
-import org.bcss.collect.android.injection.config.scopes.PerApplication;
-import org.bcss.collect.android.dao.FormsDao;
 import org.bcss.collect.android.events.RxEventBus;
 import org.bcss.collect.android.http.CollectServerClient;
 import org.bcss.collect.android.http.HttpClientConnection;
 import org.bcss.collect.android.http.OpenRosaHttpInterface;
-import org.bcss.collect.android.tasks.sms.SmsSubmissionManager;
-import org.bcss.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
-import org.bcss.collect.android.utilities.WebCredentialsUtils;
+import org.bcss.collect.android.injection.ViewModelBuilder;
+import org.bcss.collect.android.injection.config.architecture.ViewModelFactoryModule;
+import org.bcss.collect.android.injection.config.scopes.PerApplication;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.tasks.sms.SmsSubmissionManager;
+import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 
 import dagger.Module;
 import dagger.Provides;

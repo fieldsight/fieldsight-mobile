@@ -1,9 +1,7 @@
 package org.bcss.collect.naxa.common;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 //https://stackoverflow.com/questions/46563485/diffresult-dispatching-lead-to-inconsistency-detected-invalid-view-holder-adap
 public class LinearLayoutManagerWrapper extends LinearLayoutManager {

@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.stages.data;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StageBuilder {
     private String id;

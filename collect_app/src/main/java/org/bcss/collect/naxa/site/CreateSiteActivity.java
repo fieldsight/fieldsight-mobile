@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresPermission;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TextInputLayout;
@@ -32,7 +31,6 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -41,12 +39,8 @@ import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.activities.GeoPointActivity;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.utilities.PermissionUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ImageFileUtils;
@@ -60,12 +54,14 @@ import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.GeoPointActivity;
+import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -75,7 +71,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -84,10 +79,10 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.bcss.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.MetaAttrsType.NUMBER;
 import static org.bcss.collect.naxa.common.ViewUtils.loadLocalImage;
+import static org.odk.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
 
 public class CreateSiteActivity extends CollectAbstractActivity {
 
@@ -124,13 +119,12 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private CreateSiteViewModel createSiteViewModel;
 
 
-    private Project project;
     private File photoToUpload;
 
-    private String latitude, longitude, accurary;
+    private String accurary;
     private Uri phototoUploadUri;
     private Site loadedSite;
-    private boolean isUpdate = false;
+    private boolean isUpdate;
 
 
     public static void start(Context context, @NonNull Project project, @Nullable Site site) {
@@ -150,6 +144,8 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         ButterKnife.bind(this);
 
 
+        Project project = null;
+
         try {
             project = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
         } catch (NullPointerException e) {
@@ -159,7 +155,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         }
 
 
-        int sucessColor = ContextCompat.getColor(CreateSiteActivity.this, R.color.colorGreenPrimaryLight);
+        int sucessColor = ContextCompat.getColor(this, R.color.colorGreenPrimaryLight);
 
 
         setupViewModel();
@@ -207,14 +203,16 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         createSiteViewModel
                 .getFormStatus()
                 .observe(this, createSiteFormStatus -> {
-                    if (createSiteFormStatus == null) return;
+                    if (createSiteFormStatus == null) {
+                        return;
+                    }
                     switch (createSiteFormStatus) {
                         case SUCCESS:
-                            FlashBarUtils.showFlashbar(CreateSiteActivity.this, "Offline Site Created");
+                            FlashBarUtils.showFlashbar(this, "Offline Site Created");
                             finishWithDelay();
                             break;
                         case UPDATE_SUCESS:
-                            FlashBarUtils.showFlashbar(CreateSiteActivity.this, "Site Information Updated");
+                            FlashBarUtils.showFlashbar(this, "Site Information Updated");
                             finishWithDelay();
 
                             break;
@@ -303,7 +301,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
                                             @Override
                                             public void onError(Throwable e) {
-                                                e.printStackTrace();
+                                                Timber.e(e);
                                                 createSiteViewModel.getFormStatus().setValue(CreateSiteFormStatus.ERROR);
                                             }
 
@@ -374,7 +372,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     }
 
     private void setText(TextInputLayout textInputLayout, String text) {
-        if (text == null || text.trim().length() == 0) return;
+        if (text == null || text.trim().length() == 0) {
+            return;
+        }
         textInputLayout.getEditText().setText(text);
         switch (textInputLayout.getId()) {
             case R.id.ILSiteIdentifier:
@@ -473,7 +473,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
 
 
@@ -540,7 +540,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     public void afterTextChanged(Editable s) {
 
                         String text = s.toString();
-                        if (textInputLayout.getError() != null) textInputLayout.setError(null);
+                        if (textInputLayout.getError() != null) {
+                            textInputLayout.setError(null);
+                        }
 
                         switch (textInputLayout.getId()) {
                             case R.id.ILSiteIdentifier:
@@ -693,7 +695,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 .flatMapIterable((Function<ArrayList<Integer>, Iterable<Integer>>) viewIds -> viewIds)
                 .filter(new Predicate<Integer>() {
                     @Override
-                    public boolean test(Integer layoutId) throws Exception {
+                    public boolean test(Integer layoutId) {
                         View view = findViewById(layoutId);
                         String answer;
                         boolean isValid = true;
@@ -811,9 +813,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
             cursor = getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
-            return cursor.getString(column_index);
+            return cursor.getString(columnIndex);
         } catch (Exception e) {
             Timber.e("getPathFromURI Exception : %s ", e.toString());
             return "";
@@ -828,7 +830,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) return;
+        if (resultCode != RESULT_OK) {
+            return;
+        }
 
         switch (requestCode) {
             case Constant.Key.RC_CAMERA:
@@ -843,8 +847,8 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             case Constant.Key.GEOPOINT_RESULT_CODE:
                 String location = data.getStringExtra(LOCATION_RESULT);
                 String[] locationSplit = location.split(" ");
-                latitude = locationSplit[0];
-                longitude = locationSplit[1];
+                String latitude = locationSplit[0];
+                String longitude = locationSplit[1];
                 accurary = locationSplit[3];
                 createSiteViewModel.setLocation(latitude, longitude);
                 break;
@@ -889,6 +893,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     }
                 }
             } catch (JSONException e) {
+                Timber.e(e);
                 e.printStackTrace();
             }
         }

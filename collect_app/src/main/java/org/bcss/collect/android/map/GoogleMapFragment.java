@@ -37,9 +37,9 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.location.client.LocationClient;
-import org.bcss.collect.android.location.client.LocationClients;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.location.client.LocationClient;
+import org.odk.collect.android.location.client.LocationClients;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

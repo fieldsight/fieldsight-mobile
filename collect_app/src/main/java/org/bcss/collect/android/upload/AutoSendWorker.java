@@ -29,24 +29,24 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.analytics.HitBuilders;
 
-import org.bcss.collect.android.http.HttpClientConnection;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.NotificationActivity;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.FormsDao;
-import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Form;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.exception.MultipleFoldersFoundException;
+import org.bcss.collect.android.http.HttpClientConnection;
 import org.bcss.collect.android.logic.PropertyManager;
-import org.bcss.collect.android.utilities.IconUtils;
-import org.bcss.collect.android.utilities.PermissionUtils;
-import org.bcss.collect.android.utilities.WebCredentialsUtils;
-import org.bcss.collect.android.utilities.InstanceUploaderUtils;
-import org.bcss.collect.android.preferences.GeneralSharedPreferences;
-import org.bcss.collect.android.preferences.PreferenceKeys;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.bcss.collect.android.utilities.gdrive.GoogleAccountsManager;
+import org.odk.collect.android.activities.NotificationActivity;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.utilities.IconUtils;
+import org.odk.collect.android.utilities.InstanceUploaderUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
+import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ import androidx.work.WorkerParameters;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.AUTO_SEND;
-import static org.bcss.collect.android.utilities.ApplicationConstants.RequestCodes.FORMS_UPLOADED_NOTIFICATION;
+import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes.FORMS_UPLOADED_NOTIFICATION;
 
 public class AutoSendWorker extends Worker {
     private static final int AUTO_SEND_RESULT_NOTIFICATION_ID = 1328974928;

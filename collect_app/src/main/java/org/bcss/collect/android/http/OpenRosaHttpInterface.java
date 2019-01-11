@@ -19,8 +19,7 @@ package org.bcss.collect.android.http;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.bcss.collect.android.utilities.ResponseMessageParser;
-
+import org.odk.collect.android.utilities.ResponseMessageParser;
 
 import java.io.File;
 import java.io.IOException;

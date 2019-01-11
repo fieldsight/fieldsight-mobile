@@ -6,9 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -32,7 +31,7 @@ public class AppUpdateActivity extends CollectAbstractActivity {
 
     @OnClick(R.id.act_update_app_btn_not_now)
     public void closeActivity(){
-        super.onBackPressed();;
+        super.onBackPressed();
     }
 
 }

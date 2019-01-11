@@ -26,14 +26,14 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import org.javarosa.core.model.FormIndex;
-import org.joda.time.LocalDateTime;
-import org.joda.time.chrono.GregorianChronology;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.logic.DatePickerDetails;
 import org.bcss.collect.android.logic.FormController;
-import org.bcss.collect.android.utilities.DateTimeUtils;
+import org.javarosa.core.model.FormIndex;
+import org.joda.time.LocalDateTime;
+import org.joda.time.chrono.GregorianChronology;
+import org.odk.collect.android.utilities.DateTimeUtils;
 
 /**
  * @author Grzegorz Orczykowski (gorczykowski@soldevelo.com)

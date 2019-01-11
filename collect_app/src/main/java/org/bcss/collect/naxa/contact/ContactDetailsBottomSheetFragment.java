@@ -10,9 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.GlideApp;
@@ -96,7 +93,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
     private void BindAndSetOrHide(TextView textView, int viewId, String string) {
         textView = rootView.findViewById(viewId);
         if (TextUtils.isEmpty(string)) {
-            textView.setVisibility(rootView.GONE);
+            textView.setVisibility(View.GONE);
         } else {
             textView.setText(string);
         }
@@ -105,8 +102,8 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
     private void BindAndSetOrHide(TextView textView, int viewId, String string, int iconId) {
         textView = rootView.findViewById(viewId);
         if (TextUtils.isEmpty(string)) {
-            textView.setVisibility(rootView.GONE);
-            rootView.findViewById(iconId).setVisibility(rootView.GONE);
+            textView.setVisibility(View.GONE);
+            rootView.findViewById(iconId).setVisibility(View.GONE);
         } else {
             textView.setText(string);
         }

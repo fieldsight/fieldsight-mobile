@@ -24,14 +24,14 @@ import android.view.View;
 import android.widget.ListView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.dao.FormsDao;
 import org.bcss.collect.android.listeners.DeleteFormsListener;
 import org.bcss.collect.android.listeners.DiskSyncListener;
 import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
-import org.bcss.collect.android.tasks.DeleteFormsTask;
-import org.bcss.collect.android.tasks.DiskSyncTask;
-import org.bcss.collect.android.utilities.ToastUtils;
-import org.bcss.collect.android.utilities.VersionHidingCursorAdapter;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.tasks.DeleteFormsTask;
+import org.odk.collect.android.tasks.DiskSyncTask;
+import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
 
 import timber.log.Timber;
 

@@ -2,9 +2,6 @@ package org.bcss.collect.android.injection.config;
 
 import android.app.Application;
 
-import org.bcss.collect.android.activities.FormDownloadList;
-import org.bcss.collect.android.activities.FormEntryActivity;
-import org.bcss.collect.android.activities.InstanceUploaderList;
 import org.bcss.collect.android.adapters.InstanceUploaderAdapter;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.fragments.DataManagerList;
@@ -12,16 +9,19 @@ import org.bcss.collect.android.http.CollectServerClient;
 import org.bcss.collect.android.injection.ActivityBuilder;
 import org.bcss.collect.android.injection.config.scopes.PerApplication;
 import org.bcss.collect.android.logic.PropertyManager;
-import org.bcss.collect.android.preferences.ServerPreferencesFragment;
-import org.bcss.collect.android.tasks.InstanceServerUploaderTask;
-import org.bcss.collect.android.tasks.sms.SmsNotificationReceiver;
-import org.bcss.collect.android.tasks.sms.SmsSender;
-import org.bcss.collect.android.tasks.sms.SmsSentBroadcastReceiver;
-import org.bcss.collect.android.tasks.sms.SmsService;
-import org.bcss.collect.android.utilities.AuthDialogUtility;
-import org.bcss.collect.android.utilities.DownloadFormListUtils;
-import org.bcss.collect.android.utilities.FormDownloader;
 import org.bcss.collect.naxa.common.utilities.FieldSightFormListDownloadUtils;
+import org.odk.collect.android.activities.FormDownloadList;
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.activities.InstanceUploaderList;
+import org.odk.collect.android.preferences.ServerPreferencesFragment;
+import org.odk.collect.android.tasks.InstanceServerUploaderTask;
+import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
+import org.odk.collect.android.tasks.sms.SmsSender;
+import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
+import org.odk.collect.android.tasks.sms.SmsService;
+import org.odk.collect.android.utilities.AuthDialogUtility;
+import org.odk.collect.android.utilities.DownloadFormListUtils;
+import org.odk.collect.android.utilities.FormDownloader;
 
 import dagger.BindsInstance;
 import dagger.Component;

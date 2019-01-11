@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.contact.ContactRemoteSource;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
@@ -18,6 +17,7 @@ import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.previoussubmission.LastSubmissionRemoteSource;
 import org.bcss.collect.naxa.site.SiteTypeRemoteSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;

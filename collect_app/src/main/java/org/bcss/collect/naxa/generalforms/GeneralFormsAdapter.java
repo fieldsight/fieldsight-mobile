@@ -17,12 +17,12 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.DateTimeUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
+import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,12 +80,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         if (generalForm.getName() != null) {
             viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1).toUpperCase());
         }
-
-        Integer count = generalForm.getResponsesCount();
-
         setSubmissionText(viewHolder, submissionDetail, generalForm);
-
-
     }
 
     private void setSubmissionText(ViewHolder viewHolder, SubmissionDetail submissionDetail, GeneralForm generalForm) {

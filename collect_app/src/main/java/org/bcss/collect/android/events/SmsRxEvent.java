@@ -1,6 +1,6 @@
 package org.bcss.collect.android.events;
 
-import org.bcss.collect.android.tasks.sms.models.SmsProgress;
+import org.odk.collect.android.tasks.sms.models.SmsProgress;
 
 import java.util.Date;
 

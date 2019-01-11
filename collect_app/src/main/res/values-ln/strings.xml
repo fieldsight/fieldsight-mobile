@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <string name="show_password">lakisa kombo ebombami</string>
   <string name="view_image">lakisa bilili</string>
   <string name="aligned_image_capture">bongisa bilili</string>

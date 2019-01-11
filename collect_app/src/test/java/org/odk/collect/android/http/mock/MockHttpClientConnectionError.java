@@ -12,7 +12,7 @@ public class MockHttpClientConnectionError extends MockHttpClientConnection {
 
     @Override
     @NonNull
-    public HttpGetResult get(@NonNull URI uri, @Nullable String contentType, @Nullable HttpCredentialsInterface credentials) throws Exception {
+    public HttpGetResult get(@NonNull URI uri, @Nullable String contentType, @Nullable HttpCredentialsInterface credentials) {
         return null;
     }
 }

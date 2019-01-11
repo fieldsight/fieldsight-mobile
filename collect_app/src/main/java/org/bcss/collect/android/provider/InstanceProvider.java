@@ -30,7 +30,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.database.helpers.InstancesDatabaseHelper;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.bcss.collect.android.utilities.MediaUtils;
+import org.odk.collect.android.utilities.MediaUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -41,7 +41,7 @@ import java.util.Locale;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.database.helpers.InstancesDatabaseHelper.INSTANCES_TABLE_NAME;
-import static org.bcss.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
+import static org.odk.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
 
 public class InstanceProvider extends ContentProvider {
     private static HashMap<String, String> sInstancesProjectionMap;

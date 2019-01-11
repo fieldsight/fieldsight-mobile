@@ -5,7 +5,6 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.BaseRepository;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormRepository;
 import org.bcss.collect.naxa.login.model.Project;
@@ -13,8 +12,6 @@ import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Maybe;
 
 public class ProjectRepository implements BaseRepository<Project> {
 

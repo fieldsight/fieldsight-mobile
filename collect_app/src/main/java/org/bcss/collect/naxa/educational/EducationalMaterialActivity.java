@@ -7,16 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-
 import android.support.v4.view.ViewPager;
 import android.widget.TextView;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.activities.FormEntryActivity;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.generalforms.data.Em;
 import org.bcss.collect.naxa.generalforms.data.EmImage;
@@ -24,6 +20,9 @@ import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.SubStageAndSubmission;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -35,14 +34,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -170,7 +165,7 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
         fsFormIds.add(id);
 
         intent.putExtra(EXTRA_MESSAGE, 0);
-        intent.putStringArrayListExtra(EXTRA_OBJECT, (ArrayList<String>) fsFormIds);
+        intent.putStringArrayListExtra(EXTRA_OBJECT, fsFormIds);
         formEntryActivity.startActivity(intent);
     }
 
@@ -207,13 +202,13 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
                 .flatMapIterable((Function<ArrayList<String>, Iterable<String>>) strings -> strings)
                 .flatMap(new Function<String, Observable<Em>>() {
                     @Override
-                    public Observable<Em> apply(String fsFormId) throws Exception {
+                    public Observable<Em> apply(String fsFormId) {
                         return EducationalMaterialsLocalSource.getInstance().getByFsFormId(fsFormId).toObservable();
                     }
                 })
                 .map(new Function<Em, Fragment>() {
                     @Override
-                    public Fragment apply(Em educationMaterial) throws Exception {
+                    public Fragment apply(Em educationMaterial) {
                         ArrayList<Object> itemsListSiteTrue = new ArrayList<>();
 
                         itemsListSiteTrue.add(

@@ -21,7 +21,6 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
@@ -34,17 +33,13 @@ import android.widget.TextView;
 import com.google.android.gms.location.LocationListener;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.location.client.LocationClient;
-import org.bcss.collect.android.location.client.LocationClients;
 import org.bcss.collect.android.spatial.MapHelper;
-import org.bcss.collect.android.utilities.GeoPointUtils;
-import org.bcss.collect.android.utilities.ToastUtils;
-import org.bcss.collect.android.widgets.GeoPointWidget;
-import org.bcss.collect.naxa.generalforms.data.FormResponse;
-import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.location.client.LocationClient;
+import org.odk.collect.android.location.client.LocationClients;
+import org.odk.collect.android.utilities.GeoPointUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.util.GeoPoint;
@@ -54,7 +49,6 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 
 import timber.log.Timber;
 

@@ -25,8 +25,7 @@ import org.bcss.collect.android.R;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
-import org.bcss.collect.android.utilities.ToastUtils;
-
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.io.IOException;

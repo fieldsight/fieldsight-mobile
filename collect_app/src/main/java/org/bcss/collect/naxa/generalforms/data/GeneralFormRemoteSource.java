@@ -3,7 +3,6 @@ package org.bcss.collect.naxa.generalforms.data;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.greenrobot.eventbus.EventBus;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.Constant;
@@ -17,6 +16,7 @@ import org.bcss.collect.naxa.onboarding.XMLForm;
 import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -68,10 +68,10 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .getGeneralFormsObservable(createdFromProject, creatorsId)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) throws Exception {
+                    public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) {
                         return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
                             @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                            public ObservableSource<?> apply(Throwable throwable) {
                                 if (throwable instanceof IOException) {
                                     return throwableObservable;
                                 }

@@ -9,8 +9,6 @@ import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.api.client.util.Preconditions.checkNotNull;
-
 public class GeneralFormRepository implements BaseRepository<GeneralForm> {
 
     private static GeneralFormRepository INSTANCE = null;

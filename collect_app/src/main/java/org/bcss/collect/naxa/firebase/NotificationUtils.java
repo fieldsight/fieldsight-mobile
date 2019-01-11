@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NotificationUtils {
 
 
-    public static int DEFAULT_DOWNLOAD_NOTIFICATION_ID = 1;
+    public final static int DEFAULT_DOWNLOAD_NOTIFICATION_ID = 1;
     private static int uniqueMessageId = DEFAULT_DOWNLOAD_NOTIFICATION_ID + 1;
     private static NotificationManager mNotifyManager;
     private static NotificationCompat.Builder mBuilder;

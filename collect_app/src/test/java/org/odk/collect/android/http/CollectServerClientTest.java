@@ -1,13 +1,13 @@
 package org.odk.collect.android.http;
 
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.http.CollectServerClient;
+import org.bcss.collect.android.injection.DaggerTestComponent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.injection.DaggerTestComponent;
 import org.odk.collect.android.injection.TestComponent;
-import org.bcss.collect.android.utilities.DocumentFetchResult;
+import org.odk.collect.android.utilities.DocumentFetchResult;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -15,12 +14,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
-import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.onboarding.DownloadActivity;
-import org.bcss.collect.naxa.project.ProjectListActivity;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -78,8 +78,8 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         public TitleDescVH(View itemView) {
             super(itemView);
-            tvTitle = (TextView) itemView.findViewById(R.id.tv_list_item_title);
-            tvDesc = (TextView) itemView.findViewById(R.id.tv_list_item_desc);
+            tvTitle = itemView.findViewById(R.id.tv_list_item_title);
+            tvDesc = itemView.findViewById(R.id.tv_list_item_desc);
             tvTitle.setTextSize(18);
             tvDesc.setTextSize(18);
         }
@@ -161,8 +161,8 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         public URLVH(View itemView) {
             super(itemView);
-            tvTitle = (TextView) itemView.findViewById(R.id.tv_list_item_title);
-            tvUrl = (TextView) itemView.findViewById(R.id.tv_list_item_url);
+            tvTitle = itemView.findViewById(R.id.tv_list_item_title);
+            tvUrl = itemView.findViewById(R.id.tv_list_item_url);
 
         }
     }

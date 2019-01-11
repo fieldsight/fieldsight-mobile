@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,12 +14,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.generalforms.data.FormResponse;
 import org.bcss.collect.naxa.generalforms.data.GetResponce;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_history_detail);
 
-        FormResponse model = (FormResponse) getIntent().getParcelableExtra(EXTRA_OBJECT);
+        FormResponse model = getIntent().getParcelableExtra(EXTRA_OBJECT);
 
 
         bindUI();
@@ -61,10 +60,10 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
 
     private void bindUI() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar_share_view);
-        tvQuestionAnswer = (TextView) findViewById(R.id.tv_question_answer);
-        rvFormHistory = (RecyclerView) findViewById(R.id.form_history_detail_recycler_view);
-        nestedScroll = (NestedScrollView) findViewById(R.id.form_history_nested_scroll);
+        toolbar = findViewById(R.id.toolbar_share_view);
+        tvQuestionAnswer = findViewById(R.id.tv_question_answer);
+        rvFormHistory = findViewById(R.id.form_history_detail_recycler_view);
+        nestedScroll = findViewById(R.id.form_history_nested_scroll);
     }
 
     private void setupToolBar(FormResponse model) {

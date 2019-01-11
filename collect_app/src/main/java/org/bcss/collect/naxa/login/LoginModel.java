@@ -1,7 +1,5 @@
 package org.bcss.collect.naxa.login;
 
-import org.bcss.collect.naxa.login.model.MeResponse;
-
 public interface LoginModel {
 
     interface OnLoginFinishedListener {

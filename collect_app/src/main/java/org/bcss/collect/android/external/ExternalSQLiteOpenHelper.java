@@ -26,7 +26,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.database.DatabaseContext;
 import org.bcss.collect.android.exception.ExternalDataException;
-import org.bcss.collect.android.tasks.FormLoaderTask;
+import org.odk.collect.android.tasks.FormLoaderTask;
 
 import java.io.File;
 import java.io.FileInputStream;

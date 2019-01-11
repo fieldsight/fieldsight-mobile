@@ -1,11 +1,9 @@
 package org.bcss.collect.android;
 
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,12 +20,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.utilities.ToastUtils;
-import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.site.CreateSiteActivity;
@@ -36,13 +30,13 @@ import org.bcss.collect.naxa.sitedocuments.ImageViewerActivity;
 import org.bcss.collect.naxa.submissions.MultiViewAdapter;
 import org.bcss.collect.naxa.submissions.ViewModel;
 import org.json.JSONObject;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -51,21 +45,18 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class SiteProfileActivity extends CollectAbstractActivity implements MultiViewAdapter.OnCardClickListener {
 
     Gson gson;
     Site loadedSite;
-    private String siteInJson;
     private MultiViewAdapter adapter;
     RecyclerView rvFormHistory;
 
@@ -128,8 +119,10 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
         SiteLocalSource.getInstance()
                 .getBySiteId(siteId)
                 .observe(this, (loadedSite) -> {
-                    if (loadedSite == null) return;
-                    SiteProfileActivity.this.loadedSite = loadedSite;
+                    if (loadedSite == null) {
+                        return;
+                    }
+                    this.loadedSite = loadedSite;
                     tvSiteName.setText(loadedSite.getName());
                     setSiteImage(loadedSite.getLogo());
                     tvPlaceHolder.setText(loadedSite.getName().substring(0, 1));
@@ -143,8 +136,9 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
     @OnClick(R.id.iv_site)
     public void loadImageViewer() {
-        if (loadedSite.getLogo() != null)
-            ImageViewerActivity.start(SiteProfileActivity.this, loadedSite.getLogo());
+        if (loadedSite.getLogo() != null) {
+            ImageViewerActivity.start(this, loadedSite.getLogo());
+        }
     }
 
     @Override
@@ -156,9 +150,11 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
             }
 
             if (scrollRange + verticalOffset == 0) {
-                ViewUtils.animateViewVisibility(ivCircle, View.GONE);
+                ViewUtils.animateViewVisibility(ivCircle, GONE);
+                ViewUtils.animateViewVisibility(tvPlaceHolder, GONE);
             } else {
                 ViewUtils.animateViewVisibility(ivCircle, VISIBLE);
+                ViewUtils.animateViewVisibility(tvPlaceHolder, VISIBLE);
             }
         });
     }
@@ -185,12 +181,12 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
         }
         File logoFile = new File(logo);
         if (logoFile.exists()) {
-            tvPlaceHolder.setVisibility(View.GONE);
-            ViewUtils.loadLocalImage(SiteProfileActivity.this, logo)
+            tvPlaceHolder.setVisibility(GONE);
+            ViewUtils.loadLocalImage(this, logo)
                     .circleCrop()
                     .into(ivCircle);
 
-            ViewUtils.loadLocalImage(SiteProfileActivity.this, logo)
+            ViewUtils.loadLocalImage(this, logo)
                     .circleCrop()
                     .into(ivBgToolbar);
 
@@ -203,7 +199,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
     private void sub(Site loadedSite) {
         setup(loadedSite)
-                .delay(1,TimeUnit.SECONDS)
+                .delay(1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new io.reactivex.Observer<ArrayList<ViewModel>>() {
@@ -223,8 +219,9 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
                     @Override
                     public void onError(Throwable throwable) {
-                        FlashBarUtils.showFlashbar(SiteProfileActivity.this,throwable.getMessage());
-                        throwable.printStackTrace();
+                        FlashBarUtils.showFlashbar(SiteProfileActivity.this, throwable.getMessage());
+
+                        Timber.e(throwable);
                     }
 
                     @Override
@@ -235,13 +232,13 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
     }
 
     private void showLoadingLayout() {
-        ViewUtils.animateViewVisibility(view,INVISIBLE);
-        ViewUtils.animateViewVisibility(progressBar, View.VISIBLE);
+        ViewUtils.animateViewVisibility(view, INVISIBLE);
+        ViewUtils.animateViewVisibility(progressBar, VISIBLE);
     }
 
     private void showContentLayout() {
-        ViewUtils.animateViewVisibility(view,VISIBLE);
-        ViewUtils.animateViewVisibility(progressBar, View.GONE);
+        ViewUtils.animateViewVisibility(view, VISIBLE);
+        ViewUtils.animateViewVisibility(progressBar, GONE);
 
     }
 
@@ -262,7 +259,9 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                 }
 
                 if ("metaAttributes".equals(key)) {
-                    if (value.trim().length() == 0) continue;
+                    if (value.trim().length() == 0){
+                        continue;
+                    }
                     JSONObject metaAttrsJSON = new JSONObject(value);
                     Iterator<String> metaAttrsIter = metaAttrsJSON.keys();
                     while (metaAttrsIter.hasNext()) {
@@ -284,8 +283,8 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
     private void setupRecyclerView() {
         adapter = new MultiViewAdapter();
-        adapter.setOnCardClickListener(SiteProfileActivity.this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(SiteProfileActivity.this, LinearLayoutManager.VERTICAL, false);
+        adapter.setOnCardClickListener(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvFormHistory.setLayoutManager(linearLayoutManager);
         rvFormHistory.setAdapter(adapter);
         rvFormHistory.setItemAnimator(new DefaultItemAnimator());
@@ -330,7 +329,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                         return;
                     }
 
-                    CreateSiteActivity.start(SiteProfileActivity.this, project, loadedSite);
+                    CreateSiteActivity.start(this, project, loadedSite);
                 });
 
     }

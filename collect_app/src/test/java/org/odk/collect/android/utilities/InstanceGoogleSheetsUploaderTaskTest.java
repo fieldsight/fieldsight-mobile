@@ -1,10 +1,10 @@
 package org.odk.collect.android.utilities;
 
+import org.bcss.collect.android.upload.InstanceGoogleSheetsUploader;
+import org.junit.Test;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import org.bcss.collect.android.upload.InstanceGoogleSheetsUploader;
 
 public class InstanceGoogleSheetsUploaderTaskTest {
     @Test

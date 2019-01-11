@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,13 +21,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.activities.CollectAbstractActivity;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.PaginationScrollListener;
 import org.bcss.collect.naxa.generalforms.data.FormResponse;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.Collections;
 import java.util.Comparator;

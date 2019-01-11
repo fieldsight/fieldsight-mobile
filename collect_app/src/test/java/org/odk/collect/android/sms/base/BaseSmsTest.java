@@ -7,14 +7,14 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.bcss.collect.android.preferences.PreferenceKeys;
-import org.bcss.collect.android.tasks.sms.SmsSubmissionManager;
-import org.bcss.collect.android.tasks.sms.models.SmsSubmission;
+import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.tasks.sms.SmsSubmissionManager;
+import org.odk.collect.android.tasks.sms.models.SmsSubmission;
 import org.robolectric.RuntimeEnvironment;
 
 import java.lang.reflect.Type;
 
-import static org.bcss.collect.android.tasks.sms.SmsSubmissionManager.KEY_SUBMISSION;
+import static org.odk.collect.android.tasks.sms.SmsSubmissionManager.KEY_SUBMISSION;
 
 public abstract class BaseSmsTest {
     public static final String GATEWAY = "1918-344-4545";

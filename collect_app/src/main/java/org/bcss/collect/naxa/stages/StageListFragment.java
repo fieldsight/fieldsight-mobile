@@ -1,8 +1,6 @@
 package org.bcss.collect.naxa.stages;
 
 
-import android.arch.lifecycle.LiveDataReactiveStreams;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,20 +17,18 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import org.bcss.collect.naxa.stages.data.SubStage;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.bcss.collect.android.R;
-import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
+import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.substages.SubStageListFragment;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;

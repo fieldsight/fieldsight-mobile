@@ -4,7 +4,6 @@ import android.os.Environment;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.FileUtils;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
@@ -22,6 +21,7 @@ import org.bcss.collect.naxa.stages.data.SubStage;
 import org.bcss.collect.naxa.sync.DisposableManager;
 import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,7 +29,6 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -39,7 +38,6 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em> {
 
@@ -65,7 +63,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
         Observable.merge(scheduledFormEducational(), generalFormEducational(), substageFormEducational())
                 .map(new Function<Em, ArrayList<String>>() {
                     @Override
-                    public ArrayList<String> apply(Em em) throws Exception {
+                    public ArrayList<String> apply(Em em) {
                         ArrayList<String> nameAndUrl = new ArrayList<>();
                         if (em.getPdf() != null) {
                             String pdfUrl = em.getPdf();
@@ -84,7 +82,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 .flatMapIterable((Function<ArrayList<String>, Iterable<String>>) urls -> urls)
                 .filter(new Predicate<String>() {
                     @Override
-                    public boolean test(String s) throws Exception {
+                    public boolean test(String s) {
                         String fileName = FilenameUtils.getName(s);
                         String extension = FilenameUtils.getExtension(s);
                         boolean isFileAlreadyDownloaded;
@@ -142,7 +140,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                         SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS);
 
                         if (e instanceof RetrofitException) {
-                            String message = ((RetrofitException) e).getMessage();
+                            String message = e.getMessage();
                             SyncLocalSource.getINSTANCE().addErrorMessage(EDU_MATERIALS, message);
                         }
                     }
@@ -176,13 +174,13 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 .flatMapIterable((Function<ArrayList<ScheduleForm>, Iterable<ScheduleForm>>) scheduleForms -> scheduleForms)
                 .filter(new Predicate<ScheduleForm>() {
                     @Override
-                    public boolean test(ScheduleForm scheduleForm) throws Exception {
+                    public boolean test(ScheduleForm scheduleForm) {
                         return scheduleForm.getEm() != null;
                     }
                 })
                 .map(new Function<ScheduleForm, Em>() {
                     @Override
-                    public Em apply(ScheduleForm scheduleForm) throws Exception {
+                    public Em apply(ScheduleForm scheduleForm) {
                         Em em = scheduleForm.getEm();
                         if (em != null) {
                             em.setFsFormId(scheduleForm.getFsFormId());
@@ -204,13 +202,13 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 .flatMapIterable((Function<ArrayList<SubStage>, Iterable<SubStage>>) subStages -> subStages)
                 .filter(new Predicate<SubStage>() {
                     @Override
-                    public boolean test(SubStage subStage) throws Exception {
+                    public boolean test(SubStage subStage) {
                         return subStage.getEm() != null;
                     }
                 })
                 .map(new Function<SubStage, Em>() {
                     @Override
-                    public Em apply(SubStage subStage) throws Exception {
+                    public Em apply(SubStage subStage) {
                         Em em = subStage.getEm();
                         if (em != null) {
                             em.setFsFormId(subStage.getFsFormId());
@@ -232,13 +230,13 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 .flatMapIterable((Function<ArrayList<GeneralForm>, Iterable<GeneralForm>>) generalForms -> generalForms)
                 .filter(new Predicate<GeneralForm>() {
                     @Override
-                    public boolean test(GeneralForm generalForm) throws Exception {
+                    public boolean test(GeneralForm generalForm) {
                         return generalForm.getEm() != null;
                     }
                 })
                 .map(new Function<GeneralForm, Em>() {
                     @Override
-                    public Em apply(GeneralForm generalForm) throws Exception {
+                    public Em apply(GeneralForm generalForm) {
                         Em em = generalForm.getEm();
                         if (em != null) {
                             em.setFsFormId(generalForm.getFsFormId());

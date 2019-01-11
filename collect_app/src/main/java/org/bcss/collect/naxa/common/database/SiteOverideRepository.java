@@ -1,9 +1,7 @@
 package org.bcss.collect.naxa.common.database;
 
 import android.arch.lifecycle.LiveData;
-import android.os.AsyncTask;
 
-import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.BaseRepository;
 
 import java.util.ArrayList;

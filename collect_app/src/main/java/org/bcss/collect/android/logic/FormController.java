@@ -18,8 +18,8 @@ import android.support.annotation.Nullable;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.exception.JavaRosaException;
-import org.bcss.collect.android.utilities.TimerLogger;
 import org.bcss.collect.android.views.ODKView;
 import org.javarosa.core.model.CoreModelModule;
 import org.javarosa.core.model.FormDef;
@@ -50,7 +50,7 @@ import org.javarosa.model.xform.XPathReference;
 import org.javarosa.xform.parse.XFormParser;
 import org.javarosa.xpath.XPathParseTool;
 import org.javarosa.xpath.expr.XPathExpression;
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.utilities.TimerLogger;
 
 import java.io.File;
 import java.io.IOException;

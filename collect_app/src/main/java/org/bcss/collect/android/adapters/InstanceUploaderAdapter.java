@@ -13,17 +13,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.events.RxEventBus;
 import org.bcss.collect.android.events.SmsRxEvent;
-import org.bcss.collect.android.preferences.GeneralSharedPreferences;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.tasks.sms.SmsService;
-import org.bcss.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
-import org.bcss.collect.android.tasks.sms.models.SmsSubmission;
-import org.bcss.collect.android.utilities.ThemeUtils;
-import org.bcss.collect.android.R;
 import org.bcss.collect.android.views.ProgressBar;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.tasks.sms.SmsService;
+import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
+import org.odk.collect.android.tasks.sms.models.SmsSubmission;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import javax.inject.Inject;
 
@@ -33,9 +33,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static org.bcss.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.STATUS_SUBMISSION_FAILED;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.STATUS_SUBMITTED;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 
 public class InstanceUploaderAdapter extends CursorAdapter {
 

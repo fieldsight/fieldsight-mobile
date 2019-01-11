@@ -25,9 +25,9 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 
-import org.javarosa.core.model.SelectChoice;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.widgets.AbstractSelectOneWidget;
+import org.javarosa.core.model.SelectChoice;
+import org.odk.collect.android.widgets.AbstractSelectOneWidget;
 
 import java.util.List;
 

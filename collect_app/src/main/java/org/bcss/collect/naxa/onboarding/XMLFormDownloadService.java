@@ -15,7 +15,6 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.listeners.FormListDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
-import org.bcss.collect.android.tasks.DownloadFormsTask;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.exception.DownloadRunningException;
 import org.bcss.collect.naxa.login.model.Project;
@@ -23,17 +22,16 @@ import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.bcss.collect.naxa.task.FieldSightDownloadFormListTask;
+import org.odk.collect.android.tasks.DownloadFormsTask;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.SingleSource;
@@ -43,11 +41,11 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.bcss.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
-import static org.bcss.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_RECEIVER;
+import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
+import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
 
 /**
  * Created on 11/18/17
@@ -89,6 +87,11 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        if (intent == null) {
+            ToastUtils.showLongToast("Failed to start form download task");
+            stopSelf();
+            return;
+        }
 
         formsToDownlaod = new LinkedList<>();
         message = new Bundle();
@@ -106,10 +109,10 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                 .toObservable()
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
-                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) throws Exception {
+                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) {
                         return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
                             @Override
-                            public ObservableSource<?> apply(Throwable throwable) throws Exception {
+                            public ObservableSource<?> apply(Throwable throwable) {
                                 if (throwable instanceof DownloadRunningException) {
                                     Timber.i("Polling for project sites");
                                     return Observable.timer(3, TimeUnit.SECONDS);
@@ -123,7 +126,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                 })
                 .flatMapSingle(new Function<SyncableItem, SingleSource<List<Project>>>() {
                     @Override
-                    public SingleSource<List<Project>> apply(SyncableItem syncableItem) throws Exception {
+                    public SingleSource<List<Project>> apply(SyncableItem syncableItem) {
                         return ProjectLocalSource.getInstance()
                                 .getProjectsMaybe();
                     }
@@ -182,8 +185,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                         Timber.i("onComplete ");
                     }
                 });
-
-
 
 
     }
@@ -258,9 +259,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
     }
 
     private void broadcastDownloadProgress(String currentFile, int progress, int total) {
-
-        XMLForm xmlForm = formsToDownlaod.get(0);
-
 
         DownloadProgress downloadProgress = new DownloadProgress(currentFile, progress, total, currentFile, false);
 

@@ -3,7 +3,7 @@ package org.bcss.collect.android.injection;
 import android.app.Activity;
 
 import org.bcss.collect.android.injection.config.scopes.PerActivity;
-import org.bcss.collect.android.location.GeoActivity;
+import org.odk.collect.android.location.GeoActivity;
 
 import dagger.Module;
 

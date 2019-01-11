@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
@@ -18,7 +17,7 @@ public class ForceUpdateChecker {
     public static final String KEY_CURRENT_VERSION = "force_update_current_version";
     public static final String KEY_UPDATE_URL = "force_update_store_url";
 
-    private OnUpdateNeededListener onUpdateNeededListener;
+    private final OnUpdateNeededListener onUpdateNeededListener;
     private Context context;
 
     public interface OnUpdateNeededListener {

@@ -1,20 +1,18 @@
 package org.odk.collect.android.utilities;
 
-import org.bcss.collect.android.test.MockedServerTest;
-import org.bcss.collect.android.utilities.DocumentFetchResult;
-import org.bcss.collect.android.utilities.WebCredentialsUtils;
-import org.junit.Before;
-import org.junit.Test;
 import org.bcss.collect.android.http.CollectServerClient;
 import org.bcss.collect.android.http.HttpClientConnection;
+import org.junit.Before;
+import org.junit.Test;
+import org.odk.collect.android.test.MockedServerTest;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
 
 import static junit.framework.Assert.assertTrue;
-import static org.bcss.collect.android.test.TestUtils.assertMatches;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.odk.collect.android.test.TestUtils.assertMatches;
 
 public class CollectServerClientTest extends MockedServerTest {
 
@@ -79,7 +77,7 @@ public class CollectServerClientTest extends MockedServerTest {
     }
 
     @Test
-    public void getXmlDocument_request_shouldReportInvalidUrl() throws Exception {
+    public void getXmlDocument_request_shouldReportInvalidUrl() {
         // when
         DocumentFetchResult res = collectServerClient.getXmlDocument("NOT_A_URL");
 
@@ -89,7 +87,7 @@ public class CollectServerClientTest extends MockedServerTest {
     }
 
     @Test
-    public void getXmlDocument_request_shouldReportInvalidHost() throws Exception {
+    public void getXmlDocument_request_shouldReportInvalidHost() {
         // when
         DocumentFetchResult res = collectServerClient.getXmlDocument("file:/some/path");
 

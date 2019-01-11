@@ -15,12 +15,12 @@ package org.bcss.collect.android.fragments;
 
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_ASC;
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_DESC;
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_ASC;
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_DESC;
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_STATUS_ASC;
-import static org.bcss.collect.android.utilities.ApplicationConstants.SortingOrder.BY_STATUS_DESC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_ASC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_DESC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_ASC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_NAME_DESC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_STATUS_ASC;
+import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_STATUS_DESC;
 
 public abstract class InstanceListFragment extends FileManagerFragment {
     protected String getSortingOrder() {

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,12 +17,12 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.DateTimeUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
+import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,8 +3,6 @@ package org.bcss.collect.naxa.sync;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
-import org.bcss.collect.naxa.sync.Sync;
-
 import java.util.List;
 
 public class DownloadableItemsDiffCallbackNew extends DiffUtil.Callback {

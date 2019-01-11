@@ -27,7 +27,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
 

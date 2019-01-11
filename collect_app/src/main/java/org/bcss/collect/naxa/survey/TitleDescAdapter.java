@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.survey;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,10 +62,10 @@ public class TitleDescAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         public TitleDescVH(View itemView) {
             super(itemView);
-            rootLayout = (RelativeLayout) itemView.findViewById(R.id.card_view_list_item_title_desc);
-            tvTitle = (TextView) itemView.findViewById(R.id.tv_list_item_title);
-            tvDesc = (TextView) itemView.findViewById(R.id.tv_list_item_desc);
-            tvIconText = (TextView) itemView.findViewById(R.id.title_desc_tv_icon_text);
+            rootLayout = itemView.findViewById(R.id.card_view_list_item_title_desc);
+            tvTitle = itemView.findViewById(R.id.tv_list_item_title);
+            tvDesc = itemView.findViewById(R.id.tv_list_item_desc);
+            tvIconText = itemView.findViewById(R.id.title_desc_tv_icon_text);
         }
     }
 

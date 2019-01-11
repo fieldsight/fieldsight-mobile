@@ -1,6 +1,5 @@
 package org.bcss.collect.naxa.site;
 
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
@@ -26,7 +25,7 @@ import java.util.List;
 
 public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final int VIEW_TYPE_SURVEY_FORM = 0, VIEW_TYPE_SITE = 1;
+    private static final int VIEW_TYPE_SURVEY_FORM = 0, VIEW_TYPE_SITE = 1;
 
     private final List<Site> siteList;
     private final List<Site> filetredsitelist;
@@ -197,17 +196,17 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         SiteViewHolder(View view) {
             super(view);
-            siteName = (TextView) view.findViewById(R.id.tv_site_name);
-            identifier = (TextView) view.findViewById(R.id.tv_identifier);
-            message = (TextView) view.findViewById(R.id.txt_secondary);
-            iconText = (TextView) view.findViewById(R.id.icon_text);
-            offlinetag = (TextView) view.findViewById(R.id.timestamp);
-            iconBack = (RelativeLayout) view.findViewById(R.id.icon_back);
-            iconFront = (RelativeLayout) view.findViewById(R.id.icon_front);
-            iconImp = (ImageView) view.findViewById(R.id.icon_star);
-            imgProfile = (ImageView) view.findViewById(R.id.icon_profile);
-            messageContainer = (LinearLayout) view.findViewById(R.id.message_container);
-            iconContainer = (RelativeLayout) view.findViewById(R.id.icon_container);
+            siteName = view.findViewById(R.id.tv_site_name);
+            identifier = view.findViewById(R.id.tv_identifier);
+            message = view.findViewById(R.id.txt_secondary);
+            iconText = view.findViewById(R.id.icon_text);
+            offlinetag = view.findViewById(R.id.timestamp);
+            iconBack = view.findViewById(R.id.icon_back);
+            iconFront = view.findViewById(R.id.icon_front);
+            iconImp = view.findViewById(R.id.icon_star);
+            imgProfile = view.findViewById(R.id.icon_profile);
+            messageContainer = view.findViewById(R.id.message_container);
+            iconContainer = view.findViewById(R.id.icon_container);
             rootLayout = view.findViewById(R.id.root_layout_message_list_row);
 
             rootLayout.setOnLongClickListener(this);

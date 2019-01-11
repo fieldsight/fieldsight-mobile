@@ -29,10 +29,9 @@ import android.widget.TextView;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.logic.FormController;
-import org.bcss.collect.android.utilities.ThemeUtils;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.SelectChoice;
-
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

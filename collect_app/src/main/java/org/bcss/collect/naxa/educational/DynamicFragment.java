@@ -1,16 +1,12 @@
 package org.bcss.collect.naxa.educational;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.bcss.collect.android.R;
 
@@ -31,7 +26,7 @@ import java.util.List;
 
 public class DynamicFragment extends Fragment {
 
-    private TextView emDownloadStatus;
+
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     RelativeLayout noDataLayout;
@@ -43,8 +38,7 @@ public class DynamicFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dynamic_fragment, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.NewsList);
-        emDownloadStatus = (TextView) rootView.findViewById(R.id.download_status);
+        recyclerView = rootView.findViewById(R.id.NewsList);
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);

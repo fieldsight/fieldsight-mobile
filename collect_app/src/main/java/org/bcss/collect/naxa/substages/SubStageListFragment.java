@@ -1,42 +1,35 @@
 package org.bcss.collect.naxa.substages;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.utilities.DateTimeUtils;
-import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.FieldSightFormListFragment;
+import org.bcss.collect.naxa.common.OnFormItemClickListener;
+import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.common.event.DataSyncEvent;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
-import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
+import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.stages.data.SubStage;
 import org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.utilities.ToastUtils;
-import org.bcss.collect.naxa.common.FieldSightFormListFragment;
-import org.bcss.collect.naxa.common.OnFormItemClickListener;
-import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
-import org.bcss.collect.naxa.common.event.DataSyncEvent;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.common.ViewModelFactory;
-import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.stages.data.SubStage;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 
@@ -52,7 +45,6 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_FORM_DEPLOYED_FORM;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_ID;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_POSITION;
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class SubStageListFragment extends FieldSightFormListFragment implements OnFormItemClickListener<SubStage> {

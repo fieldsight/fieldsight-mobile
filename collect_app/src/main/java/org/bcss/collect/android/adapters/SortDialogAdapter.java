@@ -27,8 +27,8 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.listeners.RecyclerViewClickListener;
-import org.bcss.collect.android.utilities.ApplicationConstants;
-import org.bcss.collect.android.utilities.ThemeUtils;
+import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.ThemeUtils;
 
 import timber.log.Timber;
 

@@ -4,7 +4,6 @@ import android.arch.persistence.room.Embedded;
 
 import com.google.common.base.Objects;
 
-import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 
 public class ScheduledFormAndSubmission {

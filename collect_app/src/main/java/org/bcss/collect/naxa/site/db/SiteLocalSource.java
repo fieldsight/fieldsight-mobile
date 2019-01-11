@@ -125,7 +125,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     public Observable<Integer> updateSiteId(String oldSiteId, String newSiteId) {
         return Observable.fromCallable(new Callable<Integer>() {
             @Override
-            public Integer call() throws Exception {
+            public Integer call() {
                 return dao.updateSiteId(oldSiteId, newSiteId);
             }
         });
@@ -135,7 +135,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     public Observable<Integer> updateSiteStatus(String siteId, int newStatus) {
         return Observable.fromCallable(new Callable<Integer>() {
             @Override
-            public Integer call() throws Exception {
+            public Integer call() {
                 return dao.updateSiteStatus(siteId, newStatus);
             }
         });

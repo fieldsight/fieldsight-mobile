@@ -15,7 +15,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.stages.StringListTypeConvertor;
 
 import java.util.List;
@@ -399,6 +398,11 @@ public class Site implements Parcelable {
 
     public void setRegionId(String regionId) {
         this.regionId = regionId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, siteUploadError, metaAttributes, siteDocuments, regionId, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
     }
 
     @Override

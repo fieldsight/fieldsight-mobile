@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-
 import com.bumptech.glide.Glide;
 
 import org.bcss.collect.android.R;
@@ -71,7 +70,7 @@ public class NotificationImageAdapter extends RecyclerView.Adapter<NotificationI
 
         public ViewHolder(View itemView) {
             super(itemView);
-            image = (ImageView) itemView.findViewById(R.id.list_item_notificaiton_iv);
+            image = itemView.findViewById(R.id.list_item_notificaiton_iv);
 
         }
     }

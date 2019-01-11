@@ -20,9 +20,9 @@ public class ViewHolderVideo extends RecyclerView.ViewHolder{
 
     public ViewHolderVideo(View itemView) {
         super(itemView);
-        videoView = (VideoView)itemView.findViewById(R.id.video_src);
-        vTitle = (TextView)itemView.findViewById(R.id.video_title);
-        linearClick = (LinearLayout) itemView.findViewById(R.id.linear_layout_click);
+        videoView = itemView.findViewById(R.id.video_src);
+        vTitle = itemView.findViewById(R.id.video_title);
+        linearClick = itemView.findViewById(R.id.linear_layout_click);
 //        vDesc = (TextView)itemView.findViewById(R.id.video_desc);
     }
 
@@ -31,7 +31,7 @@ public class ViewHolderVideo extends RecyclerView.ViewHolder{
     }
 
     public void setVideoView(VideoView videoView) {
-        this.videoView = videoView;
+        ViewHolderVideo.videoView = videoView;
     }
 
     public TextView getvTitle() {
@@ -39,6 +39,6 @@ public class ViewHolderVideo extends RecyclerView.ViewHolder{
     }
 
     public void setvTitle(TextView vTitle) {
-        this.vTitle = vTitle;
+        ViewHolderVideo.vTitle = vTitle;
     }
 }

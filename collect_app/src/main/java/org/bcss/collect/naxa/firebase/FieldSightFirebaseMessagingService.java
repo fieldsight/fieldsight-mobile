@@ -44,9 +44,9 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     String projectId;
     String projectName;
     String formStatus;
-    String role;
+
     String jrFormId;
-    String isFormDeployed, notificationDescriptions;
+    String notificationDescriptions;
     String submissionId;
     String submissionDateTime;
 
@@ -88,7 +88,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
         String msg = remoteMessage.getData().toString();
 
-        Context context = getApplicationContext();
 
         Timber.i("Firebase notification %s", msg);
 
@@ -105,13 +104,12 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setProjectId(projectId)
                     .setProjectName(projectName)
                     .setFormStatus(formStatus)
-                    .setRole(role)
+
                     .setNotifiedDate(date_str)
                     .setNotifiedTime(localTime)
                     .setIdString(jrFormId)
                     .setComment(formComment)
                     .setFormType(formType)
-                    .setIsFormDeployed(isFormDeployed)
                     .setIsFormDeployed(isDeployed)
                     .setFormSubmissionId(fsFormSubmissionId)
                     .setFsFormIdProject(fsFormIdProject)

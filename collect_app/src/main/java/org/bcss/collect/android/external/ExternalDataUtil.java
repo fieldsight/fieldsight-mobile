@@ -22,6 +22,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.exception.ExternalDataException;
+import org.bcss.collect.android.external.handler.ExternalDataHandlerSearch;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.core.model.instance.FormInstance;
@@ -31,10 +35,6 @@ import org.javarosa.xpath.XPathParseTool;
 import org.javarosa.xpath.expr.XPathExpression;
 import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.javarosa.xpath.parser.XPathSyntaxException;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.exception.ExternalDataException;
-import org.bcss.collect.android.external.handler.ExternalDataHandlerSearch;
 
 import java.util.ArrayList;
 import java.util.Arrays;

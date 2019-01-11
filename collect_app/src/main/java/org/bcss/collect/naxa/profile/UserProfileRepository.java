@@ -5,13 +5,10 @@ import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 
-import java.io.File;
-
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 import static org.bcss.collect.naxa.network.ServiceGenerator.getRxClient;

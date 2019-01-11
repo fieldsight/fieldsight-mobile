@@ -3,9 +3,9 @@ package org.odk.collect.android.sms.base;
 import android.app.Activity;
 import android.telephony.SmsManager;
 
-import org.bcss.collect.android.tasks.sms.SmsService;
-import org.bcss.collect.android.tasks.sms.models.Message;
-import org.bcss.collect.android.tasks.sms.models.SmsSubmission;
+import org.odk.collect.android.tasks.sms.SmsService;
+import org.odk.collect.android.tasks.sms.models.Message;
+import org.odk.collect.android.tasks.sms.models.SmsSubmission;
 
 import java.util.ArrayList;
 import java.util.Date;

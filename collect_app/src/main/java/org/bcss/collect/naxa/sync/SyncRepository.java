@@ -26,7 +26,7 @@ import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 public class SyncRepository {
 
     private SyncDao syncDao;
-    public static SyncRepository INSTANCE;
+    public static SyncRepository instance;
     private final String CHECKED = "checked";
     public final String PROGRESS = "progress";
     private final String DATE = "date";
@@ -40,11 +40,16 @@ public class SyncRepository {
     }
 
     public static SyncRepository getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SyncRepository(Collect.getInstance());
+        if (instance == null) {
+            synchronized (SyncRepository.class) {
+                if (instance == null) {
+                    instance = new SyncRepository(Collect.getInstance());
+                }
+            }
+
         }
 
-        return INSTANCE;
+        return instance;
     }
 
     public void insert(SyncableItem... items) {

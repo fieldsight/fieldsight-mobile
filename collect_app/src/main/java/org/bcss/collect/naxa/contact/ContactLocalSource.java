@@ -6,8 +6,6 @@ import android.os.AsyncTask;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
-import org.bcss.collect.naxa.site.db.SiteDao;
-import org.bcss.collect.naxa.site.db.SiteLocalSource;
 
 import java.util.ArrayList;
 import java.util.List;

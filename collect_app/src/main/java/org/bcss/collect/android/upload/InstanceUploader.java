@@ -21,11 +21,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dao.FormsDao;
-import org.bcss.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
 import java.util.List;

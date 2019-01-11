@@ -24,7 +24,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.database.DatabaseContext;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.utilities.CustomSQLiteQueryBuilder;
+import org.odk.collect.android.utilities.CustomSQLiteQueryBuilder;
 
 import timber.log.Timber;
 

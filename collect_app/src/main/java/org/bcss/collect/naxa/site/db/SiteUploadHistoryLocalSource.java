@@ -42,7 +42,7 @@ public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUpl
     public Completable saveUsingCompletable(SiteUploadHistory... items) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 dao.insert(items);
             }
         });
@@ -58,7 +58,7 @@ public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUpl
     public Observable<Long[]> saveAsObservable(SiteUploadHistory...siteUploadHistories){
         return Observable.fromCallable(new Callable<Long[]>() {
             @Override
-            public Long[] call() throws Exception {
+            public Long[] call() {
                 return dao.insertAndReturnIds(siteUploadHistories);
             }
         });
@@ -68,7 +68,7 @@ public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUpl
     public Completable saveAsCompletable(SiteUploadHistory... items) {
         return Completable.fromAction(new Action() {
             @Override
-            public void run() throws Exception {
+            public void run() {
                 dao.insert(items);
             }
         });

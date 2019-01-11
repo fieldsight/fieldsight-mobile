@@ -218,6 +218,7 @@
     <string name="dialog_title_missing_flag_form">Missing local copy</string>
     <string name="dialog_text_missing_flag_form">You do not have a local copy of the submission in this device, do you want to download it ?</string>
     <string name="dialog_action_download">Download</string>
+    <string name="btn_edit_site">Edit Site</string>
 
 
     <!--Notification sitelist ends here-->

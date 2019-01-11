@@ -5,13 +5,13 @@ import android.content.Intent;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.tasks.sms.SmsSentBroadcastReceiver;
+import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowApplication;
 
 import java.util.List;
 
-import static org.bcss.collect.android.tasks.sms.SmsSender.SMS_SEND_ACTION;
+import static org.odk.collect.android.tasks.sms.SmsSender.SMS_SEND_ACTION;
 
 @RunWith(RobolectricTestRunner.class)
 public class SmsSentBroadcastReceiverTest {

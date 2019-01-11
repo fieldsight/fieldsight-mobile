@@ -30,14 +30,14 @@
 //import org.kxml2.kdom.Element;
 //import org.bcss.collect.android.R;
 //import org.bcss.collect.android.application.Collect;
-//import org.bcss.collect.android.dao.FormsDao;
+//import org.odk.collect.android.dao.FormsDao;
 //import org.bcss.collect.android.logic.FormDetails;
 //import org.bcss.collect.android.logic.ManifestFile;
 //import org.bcss.collect.android.logic.MediaFile;
-//import org.bcss.collect.android.preferences.PreferenceKeys;
-//import org.bcss.collect.android.utilities.DocumentFetchResult;
-//import org.bcss.collect.android.utilities.FileUtils;
-//import org.bcss.collect.android.utilities.FormDownloader;
+//import org.odk.collect.android.preferences.PreferenceKeys;
+//import org.odk.collect.android.utilities.DocumentFetchResult;
+//import org.odk.collect.android.utilities.FileUtils;
+//import org.odk.collect.android.utilities.FormDownloader;
 //
 //import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 //import org.bcss.collect.naxa.common.database.SiteOveride;

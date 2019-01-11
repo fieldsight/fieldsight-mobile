@@ -1,7 +1,5 @@
 package org.bcss.collect.naxa.site;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,22 +26,13 @@ import com.google.common.primitives.Longs;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.SiteProfileActivity;
-import org.bcss.collect.android.activities.FileManagerTabs;
-import org.bcss.collect.android.activities.FormEntryActivity;
-import org.bcss.collect.android.activities.InstanceChooserList;
-import org.bcss.collect.android.activities.InstanceUploaderActivity;
-import org.bcss.collect.android.activities.InstanceUploaderList;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.utilities.ApplicationConstants;
-import org.bcss.collect.android.utilities.ToastUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.firebase.NotificationUtils;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.project.MapActivity;
@@ -53,10 +42,16 @@ import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.sitedocuments.SiteDocumentsListActivity;
 import org.bcss.collect.naxa.stages.StageListFragment;
 import org.json.JSONObject;
+import org.odk.collect.android.activities.FileManagerTabs;
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.activities.InstanceChooserList;
+import org.odk.collect.android.activities.InstanceUploaderActivity;
+import org.odk.collect.android.activities.InstanceUploaderList;
+import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,25 +60,23 @@ import butterknife.OnClick;
 import butterknife.OnLongClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
-import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 import timber.log.Timber;
 
-import static org.bcss.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.ViewUtils.showOrHide;
+import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 
 public class SiteDashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -199,7 +192,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.toolbar_form_types);
         toolbar.setSubtitle(loadedSite.getName());
     }
@@ -210,8 +203,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         popup.getMenuInflater().inflate(R.menu.popup_menu_site_option, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
-                Bundle bundle = new Bundle();
-
                 switch (item.getItemId()) {
 
                     case R.id.popup_open_edit:

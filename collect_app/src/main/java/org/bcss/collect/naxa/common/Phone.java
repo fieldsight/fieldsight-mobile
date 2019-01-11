@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 
 /**

@@ -16,7 +16,7 @@ public class ViewHolderSimpleTextOnly extends RecyclerView.ViewHolder{
 
     public ViewHolderSimpleTextOnly(View itemView) {
         super(itemView);
-        sTextView = (TextView)itemView.findViewById(R.id.simple_title);
+        sTextView = itemView.findViewById(R.id.simple_title);
     }
 
     public TextView getsTextView() {

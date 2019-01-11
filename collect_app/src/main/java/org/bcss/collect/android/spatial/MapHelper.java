@@ -35,8 +35,8 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.preferences.PreferenceKeys;
-import org.bcss.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;

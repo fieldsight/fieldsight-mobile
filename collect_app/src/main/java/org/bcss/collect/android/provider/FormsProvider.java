@@ -31,8 +31,8 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.database.ItemsetDbAdapter;
 import org.bcss.collect.android.database.helpers.FormsDatabaseHelper;
 import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
-import org.bcss.collect.android.utilities.FileUtils;
-import org.bcss.collect.android.utilities.MediaUtils;
+import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.MediaUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -44,7 +44,7 @@ import java.util.Map;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.database.helpers.FormsDatabaseHelper.FORMS_TABLE_NAME;
-import static org.bcss.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
+import static org.odk.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
 
 public class FormsProvider extends ContentProvider {
     private static HashMap<String, String> sFormsProjectionMap;

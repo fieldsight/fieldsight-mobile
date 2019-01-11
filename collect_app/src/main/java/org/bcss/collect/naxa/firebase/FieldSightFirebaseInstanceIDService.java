@@ -4,7 +4,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 
 import timber.log.Timber;

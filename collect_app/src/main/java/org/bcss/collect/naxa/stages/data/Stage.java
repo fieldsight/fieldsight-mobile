@@ -2,7 +2,6 @@ package org.bcss.collect.naxa.stages.data;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
@@ -11,7 +10,6 @@ import com.google.gson.annotations.SerializedName;
 import org.bcss.collect.naxa.common.Constant;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity(tableName = "stages",
