@@ -185,16 +185,18 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
         return InstancesDao.generateSubmissionUrl(formDeployedFrom, creatorsId, fsFormId);
     }
 
+
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
 
         String[] projection = new String[]{FormsProviderAPI.FormsColumns._ID, FormsProviderAPI.FormsColumns.FORM_FILE_PATH};
         String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
         String[] selectionArgs = new String[]{jrFormId};
-        String sortOrder = FormsProviderAPI.FormsColumns.JR_VERSION + " DESC LIMIT 1";
+        String sortOrder = FormsProviderAPI.FormsColumns._ID + " DESC LIMIT 1";
 
         Cursor cursor = getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI,
                 projection,
-                selection, selectionArgs, null);
+                selection, selectionArgs, sortOrder);
+
         cursor.moveToFirst();
         int columnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns._ID);
         long formId = Long.parseLong(cursor.getString(columnIndex));

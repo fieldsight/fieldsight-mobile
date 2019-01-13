@@ -55,9 +55,9 @@ public class FieldSightFormListFragment extends Fragment {
         String[] projection = new String[]{FormsProviderAPI.FormsColumns._ID, FormsProviderAPI.FormsColumns.FORM_FILE_PATH};
         String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
         String[] selectionArgs = new String[]{jrFormId};
-        String sortOrder = FormsProviderAPI.FormsColumns.DATE + " DESC LIMIT 1";
+        String sortOrder = FormsProviderAPI.FormsColumns._ID + " DESC LIMIT 1";
 
-        Cursor cursor = getActivity().getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI,
+        Cursor cursor = requireActivity().getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI,
                 projection,
                 selection, selectionArgs, sortOrder);
 
