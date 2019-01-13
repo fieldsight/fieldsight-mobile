@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.project;
 
 import android.app.Dialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,7 +39,6 @@ import com.crashlytics.android.Crashlytics;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.application.ForceUpdateChecker;
-import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
@@ -51,8 +49,6 @@ import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.logout.LogoutDialog;
-import org.bcss.collect.naxa.logout.NoInternetDialog;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;

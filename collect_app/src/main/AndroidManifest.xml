@@ -374,10 +374,6 @@ the specific language governing permissions and limitations under the License.
             android:name="org.bcss.collect.naxa.project.NotificationTestActivity"
             android:exported="true" />
         <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivityNew" />
-        <activity
-            android:name="org.bcss.collect.naxa.logout.LogoutAcitivty"
-            android:label="@string/title_activity_logout_acitivty"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
