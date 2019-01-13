@@ -16,6 +16,7 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
@@ -107,25 +108,17 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
                 break;
             case R.id.action_logout:
-                ReactiveNetwork.checkInternetConnectivity()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new DisposableSingleObserver<Boolean>() {
-                            @Override
-                            public void onSuccess(Boolean hasInternet) {
-                                if (hasInternet) {
+                InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {
+                    @Override
+                    public void onConnectionSuccess() {
+                        FieldSightUserSession.createLogoutDialog(FragmentHostActivity.this);
+                    }
 
-                                    FieldSightUserSession.createLogoutDialog(FragmentHostActivity.this);
-                                } else {
-                                    FieldSightUserSession.stopLogoutDialog(FragmentHostActivity.this);
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                FieldSightUserSession.stopLogoutDialog(FragmentHostActivity.this);
-                            }
-                        });
+                    @Override
+                    public void onConnectionFailure() {
+                        FieldSightUserSession.stopLogoutDialog(FragmentHostActivity.this);
+                    }
+                });
                 break;
             case R.id.action_refresh:
 

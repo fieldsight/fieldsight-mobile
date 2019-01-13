@@ -292,6 +292,9 @@ public class FieldSightUserSession {
 
     public static void createLogoutDialog(Activity context) {
 
+        /*
+        * 1.
+         */
 
         String dialogTitle = context.getApplicationContext().getString(R.string.dialog_title_warning_logout);
         String dialogMsg;
