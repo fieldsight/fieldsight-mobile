@@ -20,7 +20,7 @@
     </style>
 
     <style name="RiseUpDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+        <!--<item name="android:windowAnimationStyle">@style/DialogAnimation</item>-->
 
     </style>
 

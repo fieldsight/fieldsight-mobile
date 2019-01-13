@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.common;
 
 import android.app.Activity;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,9 +26,11 @@ import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.LoginActivity;
+import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
@@ -37,6 +40,8 @@ import org.odk.collect.android.tasks.DeleteInstancesTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -44,6 +49,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Response;
 import timber.log.Timber;
@@ -86,9 +92,56 @@ public class FieldSightUserSession {
         return new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
     }
 
-    private static String getLogoutMessage() {
-        int offlineSitesNumber = 0;
-        int unsentFormCount = new InstancesDao().getUnsentInstancesCursor().getCount();
+    public static MutableLiveData<String[]> getLogoutMessage() {
+
+        MutableLiveData<String[]> message = new MutableLiveData<>();
+        Context context = Collect.getInstance();
+        message.setValue(new String[]{
+                "",
+                "",
+                ""
+        });
+
+
+        SiteLocalSource.getInstance().getAllByStatus(Constant.SiteStatus.IS_OFFLINE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<Site>>() {
+                    @Override
+                    public void onSuccess(List<Site> sites) {
+                        String msg;
+                        int unsentFormCount = new InstancesDao().getUnsentInstancesCursor().getCount();
+                        int offlineSitesNumber = sites.size();
+
+                        if (offlineSitesNumber == 0 && unsentFormCount == 0) {
+                            msg = context.getString(R.string.logout_message_none);
+                        } else if (offlineSitesNumber == 0) {
+                            msg = context.getString(R.string.logout_message_only_filled_forms, unsentFormCount);
+                        } else if (unsentFormCount == 0) {
+                            msg = context.getString(R.string.logout_message_only_offline_sites, offlineSitesNumber);
+                        } else {
+                            msg = context.getString(R.string.logout_message_all, offlineSitesNumber, unsentFormCount);
+                        }
+
+
+                        message.setValue(new String[]{
+                                msg,
+                                String.valueOf(unsentFormCount),
+                                String.valueOf(offlineSitesNumber)
+                        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
+        return message;
+    }
+
+    private static String getLogoutMessage(int offlineSitesNumber, int unsentFormCount) {
+
 
         String msg;
         Context context = Collect.getInstance();
@@ -104,6 +157,70 @@ public class FieldSightUserSession {
         }
 
         return msg;
+    }
+
+
+    public static void showLogoutDialog(Activity context) {
+
+        ((CollectAbstractActivity) context).showProgress();
+
+        SiteLocalSource.getInstance()
+                .getAllByStatus(Constant.SiteStatus.IS_OFFLINE)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<List<Site>>() {
+                    @Override
+                    public void onSuccess(List<Site> sites) {
+                        int unsentFormCount = new InstancesDao().getUnsentInstancesCursor().getCount();
+                        int offlineSitesNumber = sites.size();
+
+                        boolean isSafeToLogout = (unsentFormCount + offlineSitesNumber) == 0;
+                        if (isSafeToLogout) {
+
+                            logout(context, new OnLogoutListener() {
+                                @Override
+                                public void logoutTaskSuccess() {
+
+                                    ((CollectAbstractActivity) context).hideProgress();
+                                    Intent intent = new Intent(context, LoginActivity.class)
+                                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    context.startActivity(intent);
+                                }
+
+                                @Override
+                                public void logoutTaskFailed(String message) {
+                                    Timber.e(message);
+                                    ((CollectAbstractActivity) context).hideProgress();
+                                    FlashBarUtils.showFlashbar(context, "Logout failed ");
+                                }
+
+                                @Override
+                                public void taskComplete() {
+                                    ((CollectAbstractActivity) context).hideProgress();
+                                }
+                            });
+                        } else {
+                            ((CollectAbstractActivity) context).hideProgress();
+                            DialogFactory.createMessageDialog(context,
+                                    context.getString(R.string.msg_stop_logout),
+                                    getLogoutMessage(offlineSitesNumber, unsentFormCount))
+                                    .show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.e(e);
+                        ((CollectAbstractActivity) context).hideProgress();
+                        DialogFactory.createMessageDialog(context,
+                                context.getString(R.string.msg_stop_logout),
+                                context.getString(R.string.dialog_unexpected_error_title))
+                                .show();
+                    }
+                });
+
+
     }
 
 
@@ -137,11 +254,12 @@ public class FieldSightUserSession {
     }
 
 
-
     public interface OnLogoutListener {
-        void logoutTasksCompleted();
+        void logoutTaskSuccess();
 
         void logoutTaskFailed(String message);
+
+        void taskComplete();
     }
 
     private static void logout(Context context, OnLogoutListener logoutListener) {
@@ -196,7 +314,8 @@ public class FieldSightUserSession {
                         removeFormsAndInstances(context, deletedForms -> {
                             ServiceGenerator.clearInstance();
                             SyncRepository.instance = null;
-                            logoutListener.logoutTasksCompleted();
+                            logoutListener.logoutTaskSuccess();
+                            logoutListener.taskComplete();
                         });
                     }
 
@@ -204,6 +323,7 @@ public class FieldSightUserSession {
                     public void onError(Throwable e) {
                         Timber.e(e);
                         logoutListener.logoutTaskFailed(e.getMessage());
+                        logoutListener.taskComplete();
 
                     }
 
@@ -225,7 +345,7 @@ public class FieldSightUserSession {
 
 
     @NonNull
-    public static User getUser() throws IllegalArgumentException{
+    public static User getUser() throws IllegalArgumentException {
         String userString = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, null);
         if (userString == null || userString.length() == 0) {
             throw new IllegalArgumentException("User information is missing from cache");
@@ -290,14 +410,35 @@ public class FieldSightUserSession {
     }
 
 
-    public static void createLogoutDialog(Activity context) {
-
-        /*
-        * 1.
-         */
-
+    public static void createLogoutDialogV2(Activity context, String dialogMessage) {
         String dialogTitle = context.getApplicationContext().getString(R.string.dialog_title_warning_logout);
         String dialogMsg;
+        String posMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_pos);
+        String negMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_neg);
+
+        @ColorInt int color = context.getResources().getColor(R.color.primaryColor);
+        Drawable drawable = context.getResources().getDrawable(android.R.drawable.ic_dialog_alert);
+        Drawable wrapped = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(wrapped, color);
+
+
+        DialogFactory.createMessageDialog(context, context.getString(R.string.msg_stop_logout), dialogMessage)
+
+                .show();
+
+        /**
+         * 1. Show list of offline sites
+         * 2. Show a list of forms
+         * 3. Upload them
+         * 4. If Failed show just restart the process
+         */
+
+    }
+
+    @Deprecated
+    public static void createLogoutDialog(Activity context, String dialogMsg) {
+
+        String dialogTitle = context.getApplicationContext().getString(R.string.dialog_title_warning_logout);
         String posMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_pos);
         String negMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_neg);
         @ColorInt int color = context.getResources().getColor(R.color.primaryColor);
@@ -305,20 +446,18 @@ public class FieldSightUserSession {
         Drawable wrapped = DrawableCompat.wrap(drawable);
         DrawableCompat.setTint(wrapped, color);
 
-        dialogMsg = FieldSightUserSession.getLogoutMessage();
 
         DialogFactory.createActionDialog(context, dialogTitle, dialogMsg)
                 .setPositiveButton(posMsg, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        ((CollectAbstractActivity) context).showProgress();
 
                         logout(context, new OnLogoutListener() {
                             @Override
-                            public void logoutTasksCompleted() {
+                            public void logoutTaskSuccess() {
 
-                                ((CollectAbstractActivity) context).hideProgress();
+
                                 Intent intent = new Intent(context, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 context.startActivity(intent);
                             }
@@ -326,8 +465,13 @@ public class FieldSightUserSession {
                             @Override
                             public void logoutTaskFailed(String message) {
 
-                                ((CollectAbstractActivity) context).hideProgress();
+
                                 FlashBarUtils.showFlashbar(context, "Logout failed");
+                            }
+
+                            @Override
+                            public void taskComplete() {
+                                ((CollectAbstractActivity) context).hideProgress();
                             }
                         });
                     }

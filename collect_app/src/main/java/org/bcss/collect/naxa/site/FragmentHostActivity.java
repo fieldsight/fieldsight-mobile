@@ -23,6 +23,7 @@ import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
+import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
@@ -108,15 +109,21 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
                 break;
             case R.id.action_logout:
+//                showProgress();
                 InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {
                     @Override
                     public void onConnectionSuccess() {
-                        FieldSightUserSession.createLogoutDialog(FragmentHostActivity.this);
+                        FieldSightUserSession.showLogoutDialog(FragmentHostActivity.this);
                     }
 
                     @Override
                     public void onConnectionFailure() {
                         FieldSightUserSession.stopLogoutDialog(FragmentHostActivity.this);
+                    }
+
+                    @Override
+                    public void onCheckComplete() {
+                        hideProgress();
                     }
                 });
                 break;

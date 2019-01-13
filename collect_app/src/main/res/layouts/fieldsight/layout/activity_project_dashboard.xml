@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    tools:openDrawer="end">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -21,6 +21,7 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:transitionName="@string/shared_transition_toolbar">
 
+
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/act_dashboard_collapsing_toolbar_layout"
                 android:layout_width="match_parent"
@@ -28,6 +29,8 @@
                 app:contentScrim="@drawable/toolbar_gradient"
                 app:expandedTitleMarginBottom="94dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
 
                 <ImageView
                     android:id="@+id/iv_bg_toolbar"
@@ -59,9 +62,21 @@
                     app:title="Project Name"
                     app:titleTextColor="@android:color/white" />
 
-                <include layout="@layout/search_layout_dashboard" />
+                    <include
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="?actionBarSize"
+                        layout="@layout/toolbar_progressbar"/>
+
+
+                <include
+
+
+                    layout="@layout/search_layout_dashboard" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
+
+
         </android.support.design.widget.AppBarLayout>
 
 

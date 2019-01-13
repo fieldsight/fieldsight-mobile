@@ -59,6 +59,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.AppBarStateChangeListener;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.GlideApp;
+import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.NonSwipeableViewPager;
 import org.bcss.collect.naxa.common.RxSearchObservable;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
@@ -70,6 +71,7 @@ import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.profile.UserActivity;
 import org.bcss.collect.naxa.project.MapFragment;
+import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -570,25 +572,23 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
 
                 break;
             case R.id.action_logout:
+                showProgress();
+                InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {
+                    @Override
+                    public void onConnectionSuccess() {
+                        FieldSightUserSession.showLogoutDialog(ProjectDashboardActivity.this);
+                    }
 
-                ReactiveNetwork.checkInternetConnectivity()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new DisposableSingleObserver<Boolean>() {
-                            @Override
-                            public void onSuccess(Boolean hasInternet) {
-                                if (hasInternet) {
-                                    FieldSightUserSession.createLogoutDialog(ProjectDashboardActivity.this);
-                                } else {
-                                    FieldSightUserSession.stopLogoutDialog(ProjectDashboardActivity.this);
-                                }
-                            }
+                    @Override
+                    public void onConnectionFailure() {
+                        FieldSightUserSession.stopLogoutDialog(ProjectDashboardActivity.this);
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                FieldSightUserSession.stopLogoutDialog(ProjectDashboardActivity.this);
-                            }
-                        });
+                    @Override
+                    public void onCheckComplete() {
+                        hideProgress();
+                    }
+                });
                 break;
             case R.id.action_refresh:
                 DownloadActivityRefresh.start(this);

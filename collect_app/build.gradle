@@ -82,7 +82,7 @@ android {
         //versionName getVersionName()
         versionCode 43
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-        System.out.println(versionName+" "+versionCode)
+        System.out.println(versionName + " " + versionCode)
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true

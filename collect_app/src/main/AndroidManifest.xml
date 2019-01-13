@@ -330,8 +330,8 @@ the specific language governing permissions and limitations under the License.
             android:label="@string/title_activity_image_viewer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:exported="true"
-            android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity" />
+            android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity"
+            android:exported="true" />
         <activity android:name="org.bcss.collect.naxa.educational.EducationalMaterialActivity" />
         <activity android:name="org.bcss.collect.naxa.project.AppUpdateActivity" />
         <activity android:name="org.odk.collect.android.activities.GeoShapeActivity" />
@@ -366,14 +366,18 @@ the specific language governing permissions and limitations under the License.
             android:label="@string/title_activity_testing"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:exported="true"
             android:name=".SiteProfileActivity"
-            android:label="@string/title_activity_site_profile"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
             android:exported="true"
-            android:name="org.bcss.collect.naxa.project.NotificationTestActivity" />
+            android:label="@string/title_activity_site_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="org.bcss.collect.naxa.project.NotificationTestActivity"
+            android:exported="true" />
         <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivityNew" />
+        <activity
+            android:name="org.bcss.collect.naxa.logout.LogoutAcitivty"
+            android:label="@string/title_activity_logout_acitivty"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

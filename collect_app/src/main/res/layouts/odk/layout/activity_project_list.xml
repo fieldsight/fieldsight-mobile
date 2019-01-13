@@ -8,8 +8,6 @@
     <include layout="@layout/general_toolbar" />
 
 
-
-
     <org.bcss.collect.naxa.common.RecyclerViewEmptySupport
 
         android:id="@+id/my_projects_list"

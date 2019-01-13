@@ -3,10 +3,11 @@
     android:id="@+id/appbar_general"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
+
     android:elevation="@dimen/elevation_appbar"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     android:transitionName="@string/shared_transition_toolbar">
+
 
 
     <android.support.v7.widget.Toolbar
@@ -17,43 +18,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-    <RelativeLayout
-        android:id="@+id/fl_toolbar_progress_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/green"
-        android:orientation="horizontal"
-        android:visibility="gone">
+    <include layout="@layout/toolbar_progressbar"/>
 
-        <ProgressBar
-            android:layout_marginRight="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_toLeftOf="@id/toolbar_message"
-            android:layout_toStartOf="@id/toolbar_message"
-            android:layout_centerVertical="true"
-            android:layout_width="10dp"
-            android:layout_height="10dp" />
-
-        <TextView
-            android:id="@+id/toolbar_message"
-            android:textColor="@color/white"
-            style="@style/TextAppearance.AppCompat.Caption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/please_wait_long"
-            android:textAlignment="center" />
-
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="18dp"
-            android:layout_marginTop="2dp"
-            android:indeterminate="true"
-            android:visibility="gone" />
-
-
-    </RelativeLayout>
 </android.support.design.widget.AppBarLayout>
 

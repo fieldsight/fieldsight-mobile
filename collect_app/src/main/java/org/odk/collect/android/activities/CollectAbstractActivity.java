@@ -29,9 +29,11 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.injection.config.AppComponent;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import timber.log.Timber;
 
@@ -102,7 +104,8 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         try {
             RelativeLayout relativeLayout = findViewById(R.id.fl_toolbar_progress_wrapper);
             if (relativeLayout != null) {
-                relativeLayout.setVisibility(View.VISIBLE);
+                ViewUtils.animateViewVisibility(relativeLayout,View.VISIBLE);
+//                relativeLayout.setVisibility(View.VISIBLE);
             } else {
                 progressDialog = DialogFactory.createProgressDialogHorizontal(this, getString(R.string.please_wait));
                 progressDialog.show();
@@ -118,9 +121,11 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         try {
             RelativeLayout relativeLayout = findViewById(R.id.fl_toolbar_progress_wrapper);
             if (relativeLayout != null) {
-                relativeLayout.setVisibility(View.GONE);
+                ViewUtils.animateViewVisibility(relativeLayout,View.GONE);
+//                relativeLayout.setVisibility(View.GONE);
             } else {
                 if (progressDialog != null && progressDialog.isShowing()) {
+                    ToastUtils.showLongToast("Dismiss");
                     progressDialog.dismiss();
                 }
             }

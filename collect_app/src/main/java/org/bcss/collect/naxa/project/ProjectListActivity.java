@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.project;
 
 import android.app.Dialog;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,16 +33,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.application.ForceUpdateChecker;
+import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.RxSearchObservable;
 import org.bcss.collect.naxa.common.ViewModelFactory;
@@ -50,6 +51,8 @@ import org.bcss.collect.naxa.common.event.DataSyncEvent;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.logout.LogoutDialog;
+import org.bcss.collect.naxa.logout.NoInternetDialog;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;
@@ -76,7 +79,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -112,7 +114,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
         setupWindowTransition();
         ButterKnife.bind(this);
         setupToolbar();
-        setupProjectlist();
+        setupProjectList();
 
         ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
 
@@ -176,27 +178,23 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 break;
             case R.id.action_logout:
                 showProgress();
-                ReactiveNetwork.checkInternetConnectivity()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new DisposableSingleObserver<Boolean>() {
-                            @Override
-                            public void onSuccess(Boolean aBoolean) {
-                                hideProgress();
+                InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {
+                    @Override
+                    public void onConnectionSuccess() {
+                        FieldSightUserSession.showLogoutDialog(ProjectListActivity.this);
+                    }
 
-                                if (aBoolean) {
-                                    FieldSightUserSession.createLogoutDialog(ProjectListActivity.this);
-                                } else {
-                                    FieldSightUserSession.stopLogoutDialog(ProjectListActivity.this);
-                                }
-                            }
+                    @Override
+                    public void onConnectionFailure() {
+                        FieldSightUserSession.stopLogoutDialog(ProjectListActivity.this);
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                hideProgress();
-                                FieldSightUserSession.stopLogoutDialog(ProjectListActivity.this);
-                            }
-                        });
+                    @Override
+                    public void onCheckComplete() {
+                        hideProgress();
+                    }
+                });
+
                 break;
 
         }
@@ -204,7 +202,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     }
 
 
-    private void setupProjectlist() {
+    private void setupProjectList() {
         projectlistAdapter = new MyProjectsAdapter(new ArrayList<>(0), this);
         RecyclerView.LayoutManager myProjectLayoutManager = new LinearLayoutManager(getApplicationContext());
         rvProjects.setLayoutManager(myProjectLayoutManager);
