@@ -1,5 +1,7 @@
 package org.bcss.collect.naxa.contact;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -12,8 +14,10 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.Phone;
+import org.odk.collect.android.utilities.PermissionUtils;
 
 
 public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment {
@@ -80,11 +84,17 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
         BindAndSetOrHide(wechat, R.id.tv_contactdetail_wechat, contactDetail.getWechat(), R.id.iv_wechat_icon);
 
+        boolean isValidPhoneNumber = !TextUtils.isEmpty(contactDetail.getPhone());
+
+        rootView.findViewById(R.id.btn_phone_call).setVisibility(isValidPhoneNumber ? View.VISIBLE : View.GONE);
+
         rootView.findViewById(R.id.btn_phone_call)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new Phone(Collect.getInstance().getApplicationContext()).ringNumber(contactDetail.getFull_name(),contactDetail.getPhone());
+
+                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactDetail.getPhone(), null)));
+
                     }
                 });
 

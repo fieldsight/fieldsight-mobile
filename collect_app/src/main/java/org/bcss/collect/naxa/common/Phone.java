@@ -31,6 +31,8 @@ public class Phone {
 
     }
 
+
+
     public void ringNumber(String ContactName, String phoneNumber) {
 
 
@@ -42,7 +44,7 @@ public class Phone {
 
             } else {
                 String msg = "Phone number ( %s ) provided by %s is invalid";
-                showMessage(String.format(msg, phoneNumber,ContactName));
+                showMessage(String.format(msg, phoneNumber, ContactName));
             }
 
             return;
@@ -67,8 +69,7 @@ public class Phone {
 
     private boolean hasDeviceCallPermission() {
 
-        if (ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
 

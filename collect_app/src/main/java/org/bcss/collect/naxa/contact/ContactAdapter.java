@@ -169,6 +169,5 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     public interface ContactDetailListener {
         void onContactClicked(FieldSightContactModel contactModel);
 
-        void onPhoneButtonClick(FieldSightContactModel contactModel);
     }
 }

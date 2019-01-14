@@ -15,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.naxa.common.Phone;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
+import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,10 +102,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
         contactDetailsBottomSheetFragmentDialog.show(requireFragmentManager(), "Contact Bottom Sheet");
     }
 
-    @Override
-    public void onPhoneButtonClick(FieldSightContactModel contactModel) {
-        phone.ringNumber(contactModel.getFull_name(), contactModel.getPhone());
-    }
+
 
     @Override
     public void onDestroyView() {

@@ -354,10 +354,6 @@ public class FieldSightUserSession {
         return SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, "");
     }
 
-    private static void deleteAllForms(Context context) {
-
-    }
-
     private static Long[] getAllFormsIds() {
         Cursor results = null;
         ArrayList<Long> ids = new ArrayList<>();

@@ -19,6 +19,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.listeners.PermissionListener;
+import org.bcss.collect.naxa.contact.ProjectContactsFragment;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormChooserList;
 import org.odk.collect.android.activities.FormDownloadList;
@@ -277,6 +278,8 @@ public class PermissionUtils {
                 .check();
     }
 
+
+
     public static void requestPhoneAndStoragePermission(@NonNull Activity activity, @NonNull PermissionListener action) {
         MultiplePermissionsListener multiplePermissionsListener = new MultiplePermissionsListener() {
             @Override
@@ -304,6 +307,9 @@ public class PermissionUtils {
                 .withErrorListener(error -> Timber.i(error.name()))
                 .check();
     }
+
+
+
 
     public static boolean checkIfStoragePermissionsGranted(Context context) {
         int read = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -388,4 +394,5 @@ public class PermissionUtils {
 
         DialogUtils.showDialog(builder.create(), activity);
     }
+
 }

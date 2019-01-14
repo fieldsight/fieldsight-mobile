@@ -22,7 +22,7 @@ public class RetrofitException extends RuntimeException {
         String message;
         switch (response.code()) {
             case 400:
-                message = getReadableNonFieldErrorMessage(response.errorBody());
+                message = getReadableErrorMessage(response.errorBody());
                 break;
             default:
                 message = response.code() + " " + response.message();
@@ -32,10 +32,22 @@ public class RetrofitException extends RuntimeException {
         return new RetrofitException(message, url, response, Kind.HTTP, null, retrofit);
     }
 
+
+    private static String getReadableErrorMessage(ResponseBody responseBody) {
+        String message = "";
+        try {
+            message = responseBody.string();
+        } catch (NullPointerException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return message;
+    }
+
     /**
      * @return non-field error in unordered list
      */
-    private static String getReadableNonFieldErrorMessage(ResponseBody responseBody) {
+    private static String getReadableNonFieldErrorMessage(ResponseBody responseBody,String defaultMessage) {
         try {
             JSONObject jsonObject = new JSONObject(responseBody.string());
             String listOfErrors = jsonObject.getString("non_field_errors");
@@ -51,7 +63,8 @@ public class RetrofitException extends RuntimeException {
 
             return builder.toString();
         } catch (Exception e) {
-            return e.getMessage();
+            Timber.e(e);
+            return defaultMessage;
         }
     }
 
