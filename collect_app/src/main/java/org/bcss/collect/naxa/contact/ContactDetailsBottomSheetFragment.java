@@ -13,11 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.naxa.common.GlideApp;
-import org.bcss.collect.naxa.common.Phone;
-import org.odk.collect.android.utilities.PermissionUtils;
+import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 
 
 public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment {
@@ -92,12 +89,23 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactDetail.getPhone(), null)));
+                        Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactDetail.getPhone(),null));
+                        if(canDeviceHandleCall(callIntent)){
+                            startActivity(callIntent);
+                        }
 
                     }
                 });
 
+    }
+
+    private boolean canDeviceHandleCall(Intent callIntent) {
+        if (callIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            return true;
+        }
+
+        FlashBarUtils.showFlashbar(requireActivity(),"Device does not support phone calls");
+        return false;
     }
 
     private void BindAndSetOrHide(TextView textView, int viewId, String string) {

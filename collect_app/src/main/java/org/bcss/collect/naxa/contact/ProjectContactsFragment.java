@@ -15,12 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.naxa.common.Phone;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
-import org.odk.collect.android.utilities.PermissionUtils;
-import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +30,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     private ContactAdapter contactAdapter;
 
     private ProjectContactViewModel viewModel;
-    Phone phone;
+
 
     @BindView(R.id.root_layout_empty_layout)
     View emptyLayout;
@@ -54,7 +50,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
         unbinder = ButterKnife.bind(this, view);
         setupRecycleView();
 
-        phone = new Phone(getActivity());
+
         ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
         viewModel = ViewModelProviders.of(getActivity(), factory).get(ProjectContactViewModel.class);
         viewModel.getContacts()
