@@ -197,14 +197,13 @@
                     android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_large"
                     android:layout_marginEnd="@dimen/margin_large"
-                    android:layout_toStartOf="@id/img_card_main_3"
-                    android:layout_toLeftOf="@id/img_card_main_3"
                     android:maxLines="3"
                     android:minLines="1"
                     android:text="@string/desc_general_forms" />
 
 
                 <ImageView
+                    android:id="@+id/card_image"
                     android:layout_width="96dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
@@ -258,8 +257,7 @@
                     android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:layout_marginEnd="@dimen/margin_large"
-                    android:layout_toStartOf="@id/img_card_main_3"
-                    android:layout_toLeftOf="@id/img_card_main_3"
+
                     android:maxLines="3"
                     android:minLines="1"
                     android:text="@string/desc_schedule_forms" />
@@ -321,14 +319,15 @@
                     android:layout_marginStart="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:layout_marginEnd="@dimen/margin_large"
-                    android:layout_toStartOf="@id/img_card_main_3"
-                    android:layout_toLeftOf="@id/img_card_main_3"
+                    android:layout_toStartOf="@id/card_image_3"
+                    android:layout_toLeftOf="@id/card_image_3"
                     android:maxLines="3"
                     android:minLines="1"
                     android:text="@string/desc_staged_forms" />
 
 
                 <ImageView
+                    android:id="@+id/card_image_3"
                     android:layout_width="96dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"

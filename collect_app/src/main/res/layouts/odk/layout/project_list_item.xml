@@ -4,9 +4,9 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="165dp"
-    android:layout_marginEnd="@dimen/margin_medium"
     android:layout_marginStart="@dimen/margin_medium"
     android:layout_marginTop="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/margin_medium"
     card_view:cardCornerRadius="@dimen/corner_radius"
     card_view:cardElevation="@dimen/cardview_default_elevation">
 
@@ -23,11 +23,11 @@
             style="@style/TextAppearance.AppCompat.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_large"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:layout_toLeftOf="@+id/img_card_main_3"
-            android:layout_toStartOf="@+id/img_card_main_3"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_toStartOf="@+id/iv_org_logo"
+            android:layout_toLeftOf="@+id/iv_org_logo"
             android:ellipsize="end"
             android:maxLines="2"
             android:minLines="1"
@@ -38,11 +38,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_project_list_name"
-            android:layout_marginEnd="@dimen/margin_large"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_toLeftOf="@id/img_card_main_3"
-            android:layout_toStartOf="@id/img_card_main_3"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_toStartOf="@id/iv_org_logo"
+            android:layout_toLeftOf="@id/iv_org_logo"
             android:maxLines="3"
             android:minLines="1" />
 
@@ -51,31 +51,29 @@
             android:id="@+id/view_card_main3_line"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-
             android:layout_marginTop="120dp"
-
             android:background="@color/color_grey_light" />
 
 
-        <android.support.v7.widget.CardView
+        <View
+            android:layout_marginRight="96dp"
+            android:layout_marginEnd="96dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/color_grey_light" />
 
-            android:id="@+id/img_card_main_3"
+        <ImageView
+            android:id="@+id/iv_org_logo"
             android:layout_width="96dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            app:cardCornerRadius="3dp"
-            app:cardPreventCornerOverlap="true">
 
+            android:padding="@dimen/margin_medium"
+            app:ignore="ContentDescription" />
 
-            <ImageView
-                android:id="@+id/iv_org_logo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="@dimen/margin_medium"
-                app:ignore="ContentDescription" />
-
-        </android.support.v7.widget.CardView>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>
