@@ -19,6 +19,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
+import org.odk.collect.android.utilities.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         String content = titleContent.second;
         viewHolder.tvTitle.setText(title);
         viewHolder.tvDesc.setText(content);
+        viewHolder.tvDate.setText(fieldSightNotification.getNotifiedDate());
     }
 
     private Drawable getNotificationImage(String notificationType) {
@@ -111,7 +113,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         TextView tvTitle, tvDesc;
         RelativeLayout rootLayout;
-        ImageView ivNotificationIcon, ivCircle;
+        ImageView ivNotificationIcon;
+        TextView tvDate;
 
         public ViewHolder(View view) {
             super(view);
@@ -120,6 +123,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             tvDesc = view.findViewById(R.id.tv_list_item_desc);
             ivNotificationIcon = view.findViewById(R.id.iv_notification_icon);
             rootLayout = view.findViewById(R.id.card_view_list_item_title_desc);
+            tvDate = view.findViewById(R.id.tv_notification_date);
             rootLayout.setOnClickListener(this);
         }
 

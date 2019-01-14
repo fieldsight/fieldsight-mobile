@@ -6,7 +6,6 @@ package org.bcss.collect.naxa.contact;
  */
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -28,29 +27,23 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 
     private List<FieldSightContactModel> contactList;
     private ContactDetailListener contactDetailListener;
-    private FragmentActivity fragmentActivity;
-    private ImageButton btnCall;
+    private Context context;
 
 
-    Context context;
-    View itemView;
-    Typeface face, face1;
-
-
-    public ContactAdapter(List<FieldSightContactModel> contactList, @NonNull ContactDetailListener contactDetailListener, Context context) {
+    ContactAdapter(List<FieldSightContactModel> contactList, @NonNull ContactDetailListener contactDetailListener, Context context) {
         this.contactList = contactList;
         this.contactDetailListener = contactDetailListener;
         this.context = context;
     }
 
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView tvFullName, tvUserName, tvPhone;
         private ImageView ivProfilePicture;
 
         private CardView card;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
 
             ivProfilePicture = view.findViewById(R.id.imageView2);
@@ -72,7 +65,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     @android.support.annotation.NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@android.support.annotation.NonNull ViewGroup parent, int viewType) {
-        itemView = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.contact_list_item, parent, false);
 
         context = parent.getContext();
@@ -82,11 +75,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@android.support.annotation.NonNull final MyViewHolder holder, int position) {
         final FieldSightContactModel contact = contactList.get(position);
         holder.tvFullName.setText(contact.getFull_name());
         holder.tvUserName.setText(contact.getEmail());
-/*
+        /*
         //open tvSkype
         holder.tvSkype.setOnClickListener(new View.OnClickListener() {
             @Override
