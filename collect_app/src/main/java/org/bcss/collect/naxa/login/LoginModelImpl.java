@@ -32,13 +32,6 @@ public class LoginModelImpl implements LoginModel {
 
         ServiceGenerator.createService(ApiInterface.class)
                 .getAuthToken(username, password)
-                .filter(new Predicate<AuthResponse>() {
-                    @Override
-                    public boolean test(AuthResponse authResponse) throws Exception {
-                        FieldSightUserSession.saveAuthToken(authResponse.getToken());
-                        return false;
-                    }
-                })
                 .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
                     @Override
                     public ObservableSource<FCMParameter> apply(AuthResponse authResponse) {

@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.text.TextUtils;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -48,6 +49,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -280,12 +282,9 @@ public class FieldSightUserSession {
 
         Observable<Response<Void>> deleteFCM =
                 Observable.just(1)
-                        .map(new Function<Integer, User>() {
-                            @Override
-                            public User apply(Integer integer) throws Exception {
-                                return getUser();
-                            }
-                        })
+                        .map(integer -> getUserString())
+                        .filter(s -> !TextUtils.isEmpty(s))
+                        .map(s -> getUser())
                         .flatMap(new Function<User, Observable<Response<Void>>>() {
                             @Override
                             public Observable<Response<Void>> apply(User user) throws Exception {
@@ -311,12 +310,6 @@ public class FieldSightUserSession {
                     @Override
                     public void onNext(Response<Void> voidResponse) {
 
-                        removeFormsAndInstances(context, deletedForms -> {
-                            ServiceGenerator.clearInstance();
-                            SyncRepository.instance = null;
-                            logoutListener.logoutTaskSuccess();
-                            logoutListener.taskComplete();
-                        });
                     }
 
                     @Override
@@ -324,12 +317,16 @@ public class FieldSightUserSession {
                         Timber.e(e);
                         logoutListener.logoutTaskFailed(e.getMessage());
                         logoutListener.taskComplete();
-
                     }
 
                     @Override
                     public void onComplete() {
-
+                        removeFormsAndInstances(context, deletedForms -> {
+                            ServiceGenerator.clearInstance();
+                            SyncRepository.instance = null;
+                            logoutListener.logoutTaskSuccess();
+                            logoutListener.taskComplete();
+                        });
                     }
                 });
 
@@ -346,11 +343,15 @@ public class FieldSightUserSession {
 
     @NonNull
     public static User getUser() throws IllegalArgumentException {
-        String userString = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, null);
+        String userString = getUserString();
         if (userString == null || userString.length() == 0) {
             throw new IllegalArgumentException("User information is missing from cache");
         }
         return GSONInstance.getInstance().fromJson(userString, User.class);
+    }
+
+    private static String getUserString() {
+        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, "");
     }
 
     private static void deleteAllForms(Context context) {
