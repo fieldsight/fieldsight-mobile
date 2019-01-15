@@ -93,7 +93,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
             mEmailView.setText(BuildConfig.username);
             mPasswordView.setText(BuildConfig.password);
 
-            mEmailSignInButton.performClick();
+//            mEmailSignInButton.performClick();
         }
     }
 

@@ -309,7 +309,7 @@ public class Collect extends Application implements HasActivityInjector {
 
         initProperties();
 
-        if (BuildConfig.BUILD_TYPE.equals("fieldSightCollectRelease")) {
+        if (true) {
             Fabric.with(this, new Crashlytics());
             Timber.plant(new CrashReportingTree());
 

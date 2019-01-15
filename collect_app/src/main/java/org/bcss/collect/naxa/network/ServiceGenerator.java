@@ -32,15 +32,10 @@ public class ServiceGenerator {
 
 
     public static void clearInstance() {
-        if (retrofit != null) {
-            retrofit = null;
-        }
-        if (cacheablesRetrofit != null) {
-            cacheablesRetrofit = null;
-        }
-        if (rxRetrofit != null) {
-            rxRetrofit = null;
-        }
+        retrofit = null;
+        cacheablesRetrofit = null;
+        rxRetrofit = null;
+        okHttp = null;
     }
 
     private static Interceptor createAuthInterceptor(final String token) {
@@ -58,7 +53,9 @@ public class ServiceGenerator {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
         String token = FieldSightUserSession.getAuthToken();
 
-        if (!TextUtils.isEmpty(token)) {
+        boolean isTokenEmpty = token == null || token.trim().length() == 0;
+
+        if (!isTokenEmpty) {
             okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
         }
 
@@ -106,7 +103,7 @@ public class ServiceGenerator {
             retrofit = new Retrofit.Builder()
                     .client(createOkHttpClient())
                     .baseUrl(APIEndpoint.BASE_URL)
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
@@ -142,7 +139,6 @@ public class ServiceGenerator {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
-
 
 
         return rxRetrofit;

@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.common;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.WorkerThread;
 
 public class SharedPreferenceUtils {
 
@@ -40,11 +41,11 @@ public class SharedPreferenceUtils {
         editor.commit();
     }
 
+
     public static void deleteAll(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.commit();
+        editor.clear().commit();
     }
 
 

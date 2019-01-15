@@ -183,6 +183,7 @@ public class FieldSightUserSession {
                                 @Override
                                 public void logoutTaskSuccess() {
 
+
                                     ((CollectAbstractActivity) context).hideProgress();
                                     Intent intent = new Intent(context, LoginActivity.class)
                                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -478,6 +479,6 @@ public class FieldSightUserSession {
 
     public static boolean isLoggedIn() {
         String token = getAuthToken();
-        return token != null && token.length() > 0;
+        return token != null && token.trim().length() > 0;
     }
 }
