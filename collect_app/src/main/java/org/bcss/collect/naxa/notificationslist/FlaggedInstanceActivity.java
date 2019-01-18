@@ -640,7 +640,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
         Toast.makeText(context, "Opening saved form.", Toast.LENGTH_LONG).show();
 
-        cursorInstanceForm.moveToFirst();
+        cursorInstanceForm.moveToLast();
         long idFormsTable = Long.parseLong(cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
         Log.d(TAG, "Opening saved form with _ID" + idFormsTable);
 
