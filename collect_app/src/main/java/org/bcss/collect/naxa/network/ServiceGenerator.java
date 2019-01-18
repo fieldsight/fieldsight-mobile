@@ -62,7 +62,7 @@ public class ServiceGenerator {
         okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS);
         okHttpClientBuilder.writeTimeout(10, TimeUnit.SECONDS);
         okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);
-        okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
+//        okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
 
 
         return okHttpClientBuilder

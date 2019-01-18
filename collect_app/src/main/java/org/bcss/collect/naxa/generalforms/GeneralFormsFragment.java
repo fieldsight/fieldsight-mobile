@@ -174,9 +174,6 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         }
     }
 
-
-
-
     @Override
     public void onFormItemLongClicked(GeneralForm generalForm) {
 

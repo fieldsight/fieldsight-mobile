@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -46,6 +47,7 @@ import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -265,6 +267,13 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
     @Override
     public void onClick(View v) {
+
+        if (true) {
+            handleFlagForm(loadedFieldSightNotification.getFsFormId(), loadedFieldSightNotification.getIdString(), loadedFieldSightNotification.getSiteId());
+            return;
+        }
+
+
         boolean emptyVersion = TextUtils.isEmpty(loadedFieldSightNotification.getFormVersion());
 
         if (emptyVersion) {
@@ -587,5 +596,87 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         bundle.putSerializable("images", urls);
         bundle.putInt("position", position);
 
+    }
+
+
+    /**
+     * find the form primary key then open the saved instance of that form (if present)
+     * other wise open the form blank
+     */
+    private void handleFlagForm(String fsFormId, String jrFormId, String siteId) {
+
+        Uri uri = InstanceProviderAPI.InstanceColumns.CONTENT_URI;
+        String selection = InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + " LIKE ?"
+                + " AND " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " =? ";
+        String[] selectionArgs = new String[]{"%/"+fsFormId+"/%", siteId};
+
+        Cursor cursorInstanceForm = null;
+        try {
+            cursorInstanceForm = context.getContentResolver()
+                    .query(uri, null,
+                            selection,
+                            selectionArgs, null);
+
+            Timber.i("Found %s instances", cursorInstanceForm.getCount());
+            int count = cursorInstanceForm.getCount();
+            if (count >= 1) {
+                //todo atm opens the latest saved need to compare timestamp with server submission to open exact instance
+                openSavedForm(cursorInstanceForm);
+            } else {
+                openNewForm(jrFormId);
+            }
+        } catch (NullPointerException | CursorIndexOutOfBoundsException e) {
+            ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
+        } finally {
+            if (cursorInstanceForm != null) {
+                cursorInstanceForm.close();
+            }
+        }
+
+    }
+
+
+    private void openSavedForm(Cursor cursorInstanceForm) {
+
+        Toast.makeText(context, "Opening saved form.", Toast.LENGTH_LONG).show();
+
+        cursorInstanceForm.moveToFirst();
+        long idFormsTable = Long.parseLong(cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
+        Log.d(TAG, "Opening saved form with _ID" + idFormsTable);
+
+        Uri instanceUri =
+                ContentUris.withAppendedId(InstanceProviderAPI.InstanceColumns.CONTENT_URI,
+                        idFormsTable);
+
+
+        String action = getIntent().getAction();
+        if (Intent.ACTION_PICK.equals(action)) {
+            // caller is waiting on a picked form
+            setResult(RESULT_OK, new Intent().setData(instanceUri));
+        } else {
+            // the form can be edited if it is incomplete or if, when it was
+            // marked as complete, it was determined that it could be edited
+            // later.
+            String status = cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS));
+            String strCanEditWhenComplete =
+                    cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns.CAN_EDIT_WHEN_COMPLETE));
+
+            boolean canEdit = status.equals(InstanceProviderAPI.STATUS_INCOMPLETE)
+                    || Boolean.parseBoolean(strCanEditWhenComplete);
+            if (!canEdit) {
+                //this form cannot be edited
+                return;
+            }
+
+            // caller wants to view/edit a form, so launch FormEntryActivity
+            //send the slected id to the upload button
+            //Susan
+
+            Long selectedFormId = cursorInstanceForm.getLong(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID));
+            Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
+            toEdit.putExtra("EditedFormID", selectedFormId);
+            startActivity(toEdit);
+        }
+        finish();
     }
 }

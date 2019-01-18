@@ -10,6 +10,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.text.TextUtils;
 
 import org.apache.commons.io.IOUtils;
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.junit.Before;
@@ -38,6 +39,7 @@ import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertFalse;
 import static org.odk.collect.android.activities.FormEntryActivity.EXTRA_TESTING_PATH;

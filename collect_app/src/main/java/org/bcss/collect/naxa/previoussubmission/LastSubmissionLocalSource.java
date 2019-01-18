@@ -53,11 +53,11 @@ public class LastSubmissionLocalSource implements BaseLocalDataSource<Submission
     }
 
     public Maybe<SubmissionDetail> getBySiteFsId(String fsFormId){
-        return dao.getBySiteFsId(fsFormId);
+        return dao.getBySiteFsId("gibberish");
     }
 
     public Maybe<SubmissionDetail> getByProjectFsId(String fsFormId){
-        return dao.getByProjectFsId(fsFormId);
+        return dao.getByProjectFsId("gibberish");
     }
 
 

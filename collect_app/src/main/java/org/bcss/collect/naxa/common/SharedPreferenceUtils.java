@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.WorkerThread;
 
@@ -25,11 +26,10 @@ public class SharedPreferenceUtils {
     public static boolean isFormSaveCacheSafe(String submissionUrl, String siteId) {
         String cachedSubmisionUrl = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
                 SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, "");
-
         String cachedSiteId = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
                 SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, "");
 
-        return siteId.equals(cachedSiteId) && cachedSubmisionUrl.equals(submissionUrl);
+        return siteId.equals(cachedSiteId) && submissionUrl.equals(cachedSubmisionUrl);
 
     }
 

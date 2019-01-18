@@ -276,7 +276,7 @@ public class Collect extends Application implements HasActivityInjector {
         singleton = this;
 
         if (DEBUG) {
-            Stetho.initializeWithDefaults(this);
+//            Stetho.initializeWithDefaults(this);
         }
 
         setupFirebaseRemoteConfig();
