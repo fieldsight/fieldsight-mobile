@@ -43,7 +43,7 @@ public class InstanceRemoteSource {
 
 
     Observable<Uri> downloadInstances(FieldSightNotification fieldSightNotification, String[] nameAndPath) {
-        String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_submission/%s", fieldSightNotification.getFormSubmissionId());
+        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_submission/%s", fieldSightNotification.getFormSubmissionId());
         return downloadInstance(mapNotificationToInstance(fieldSightNotification), downloadUrl, nameAndPath);
     }
 

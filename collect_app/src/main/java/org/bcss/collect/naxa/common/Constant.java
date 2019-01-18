@@ -8,6 +8,7 @@ public class Constant {
     public static final String EXTRA_POSITION = "extra_position";
     public static final String EXTRA_FORM_DEPLOYED_FORM = "deployed_from";
     public static final String DEFAULT_SITE_TYPE = "0";
+    public static final String KEY_BASE_URL = "fieldsight_server_url";
     public static int selectedFragmentId;
     public static final String EXTRA_RECEIVER = "extra_receiver";
     public static final String KEY_ANIM_TYPE = "anim_type";

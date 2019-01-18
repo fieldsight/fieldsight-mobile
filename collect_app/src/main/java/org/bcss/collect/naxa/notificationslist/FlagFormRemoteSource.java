@@ -54,7 +54,7 @@ public class FlagFormRemoteSource {
     Observable<String> getXMLInstance(String submissionId) {
         String INSTANCES_PATH = Collect.FORMS_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
 
-        String url = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_xml_version/%s", submissionId);
+        String url = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_xml_version/%s", submissionId);
 
 
         return new RxDownloader(Collect.getInstance())
@@ -85,7 +85,7 @@ public class FlagFormRemoteSource {
 
 
     public void getODKForm(String formName, String fsSubmissionId, String jrFormId, DownloadFormsTaskListener listener) {
-        String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_xml_version/%s", fsSubmissionId);
+        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance())+ "/forms/api/instance/download_xml_version/%s", fsSubmissionId);
         DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask();
         ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
         FormDetails formDetails = new FormDetails(formName,
@@ -108,7 +108,7 @@ public class FlagFormRemoteSource {
 
 
         return Single.create(emitter -> {
-            String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
+            String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
             ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
             DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask();
 
@@ -173,7 +173,7 @@ public class FlagFormRemoteSource {
         String formName = notificationFormDetail.getFormName();
         String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
         String jrFormId = notificationFormDetail.getIdString();
-        String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_submission/%s", fsFormSubmissionId);
+        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_submission/%s", fsFormSubmissionId);
 
         Instance.Builder flaggedInstance = new Instance.Builder()
                 .status(InstanceProviderAPI.STATUS_COMPLETE)

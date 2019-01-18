@@ -564,7 +564,7 @@ public class InstancesDao {
 
     public static String generateSubmissionUrl(String formDeployedFrom, String siteId, String fsFormId) {
 
-        String submissionUrl = APIEndpoint.BASE_URL + APIEndpoint.FORM_SUBMISSION_PAGE;
+        String submissionUrl = FieldSightUserSession.getServerUrl(Collect.getInstance()) + APIEndpoint.FORM_SUBMISSION_PAGE;
 
         switch (formDeployedFrom) {
             case PROJECT:

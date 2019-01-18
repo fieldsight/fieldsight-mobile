@@ -481,4 +481,12 @@ public class FieldSightUserSession {
         String token = getAuthToken();
         return token != null && token.trim().length() > 0;
     }
+
+    public static String getServerUrl(Context context) {
+        return SharedPreferenceUtils.getFromPrefs(context, Constant.KEY_BASE_URL, APIEndpoint.BASE_URL);
+    }
+
+    public static void setServerUrl(Context context, String newUrl) {
+        SharedPreferenceUtils.saveToPrefs(context, Constant.KEY_BASE_URL, newUrl);
+    }
 }

@@ -24,15 +24,15 @@
         app:showAsAction="always" />
 
     <item
-        android:visible="false"
-        app:showAsAction="never"
         android:id="@+id/action_app_settings"
-        android:title="@string/menu_title_settings" />
+        android:title="@string/menu_title_settings"
+        android:visible="false"
+        app:showAsAction="never" />
 
     <item
-        app:showAsAction="never"
         android:id="@+id/action_logout"
-        android:title="@string/menu_title_logout" />
+        android:title="@string/menu_title_logout"
+        app:showAsAction="never" />
 
 
 </menu>

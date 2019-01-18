@@ -111,7 +111,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
         titles.put("phone", "Phone Number");
         titles.put("publicDesc", "Public Description");
         titles.put("region", "Region");
-        titles.put("type", "Type");
+        titles.put("type_label", "Type");
 
         setupToolbar();
         setupRecyclerView();

@@ -316,7 +316,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         String formName = notificationFormDetail.getFormName();
         String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
         String jrFormId = "";
-        String downloadUrl = String.format(APIEndpoint.BASE_URL + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
+        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
 
         ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
         FormDetails formDetails = new FormDetails(formName,
@@ -546,7 +546,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
 
         ApiInterface apiService = ServiceGenerator.createService(ApiInterface.class);
-        Call<NotificationDetail> call = apiService.getNotificationDetail(BASE_URL + url);
+        Call<NotificationDetail> call = apiService.getNotificationDetail(FieldSightUserSession.getServerUrl(Collect.getInstance()) + url);
         call.enqueue(new Callback<NotificationDetail>() {
             @Override
             public void onResponse(Call<NotificationDetail> call, Response<NotificationDetail> response) {

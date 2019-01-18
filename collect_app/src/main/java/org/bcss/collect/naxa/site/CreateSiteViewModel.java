@@ -35,6 +35,8 @@ public class CreateSiteViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<SiteRegion>> siteClusterMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<SiteType>> siteTypesMutableLiveData = new MutableLiveData<>();
 
+    private CreateSiteViewModel() {}
+
 
     public CreateSiteViewModel(SiteRepository siteRepository) {
 

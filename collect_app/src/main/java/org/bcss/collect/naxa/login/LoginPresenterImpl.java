@@ -60,6 +60,11 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
     }
 
+    @Override
+    public void showChangeServerUI() {
+
+    }
+
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic

@@ -12,10 +12,12 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.listeners.FormListDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.exception.DownloadRunningException;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -155,12 +157,12 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                             XMLForm = new XMLFormBuilder()
                                     .setFormCreatorsId(projectId)
                                     .setIsCreatedFromProject(false)
-                                    .setDownloadUrl(APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(projectId))
+                                    .setDownloadUrl(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/" + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(projectId))
                                     .createXMLForm();
 
                             formsToDownlaod.add(XMLForm);
 
-                            XMLForm = new XMLFormBuilder().setFormCreatorsId(projectId).setIsCreatedFromProject(true).setDownloadUrl(APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(projectId)).createXMLForm();
+                            XMLForm = new XMLFormBuilder().setFormCreatorsId(projectId).setIsCreatedFromProject(true).setDownloadUrl((Collect.getInstance()) + "/" + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(projectId)).createXMLForm();
                             formsToDownlaod.add(XMLForm);
 
                         }

@@ -102,7 +102,7 @@ public class ServiceGenerator {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .client(createOkHttpClient())
-                    .baseUrl(APIEndpoint.BASE_URL)
+                    .baseUrl(FieldSightUserSession.getServerUrl(Collect.getInstance()))
                     .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
@@ -116,7 +116,7 @@ public class ServiceGenerator {
         if (cacheablesRetrofit == null) {
             cacheablesRetrofit = new Retrofit.Builder()
                     .client(createCacheablesOkHttpClient())
-                    .baseUrl(APIEndpoint.BASE_URL)
+                    .baseUrl(FieldSightUserSession.getServerUrl(Collect.getInstance()))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
@@ -134,7 +134,7 @@ public class ServiceGenerator {
         if (rxRetrofit == null) {
             rxRetrofit = new Retrofit.Builder()
                     .client(okHttp)
-                    .baseUrl(APIEndpoint.BASE_URL)
+                    .baseUrl(FieldSightUserSession.getServerUrl(Collect.getInstance()))
                     .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();

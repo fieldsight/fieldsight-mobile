@@ -15,6 +15,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.Login;
+import org.bcss.collect.naxa.common.SettingsActivity;
 import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.migrate.MigrationHelper;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -46,6 +49,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
     private LoginPresenter loginPresenter;
     private Button mEmailSignInButton;
     private RelativeLayout rootLayout;
+    private ImageButton btnChangeUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         mPasswordView = findViewById(R.id.password);
         rootLayout = findViewById(R.id.root_layout_activity_login);
 
+        btnChangeUrl = findViewById(R.id.btn_change_server_url);
         mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
 
@@ -69,6 +74,16 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
             }
         });
 
+
+        btnChangeUrl.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (allowClick(getClass().getName())) {
+                    hideKeyboardInActivity(LoginActivity.this);
+                    startActivity(new Intent(LoginActivity.this,SettingsActivity.class));
+                }
+            }
+        });
         mLoginFormView = findViewById(R.id.logo);
         mProgressView = findViewById(R.id.login_progress);
 
@@ -90,8 +105,8 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
         if (BuildConfig.DEBUG) {
             hideKeyboardInActivity(this);
-            mEmailView.setText(BuildConfig.username);
-            mPasswordView.setText(BuildConfig.password);
+//            mEmailView.setText(BuildConfig.username);
+//            mPasswordView.setText(BuildConfig.password);
 
 //            mEmailSignInButton.performClick();
         }

@@ -30,6 +30,8 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobManagerCreateException;
 import com.facebook.stetho.Stetho;
@@ -309,8 +311,9 @@ public class Collect extends Application implements HasActivityInjector {
 
         initProperties();
 
+//        if (BuildConfig.BUILD_TYPE.equals("fieldSightCollectRelease")) {
         if (true) {
-            Fabric.with(this, new Crashlytics());
+            setupCrashlytics();
             Timber.plant(new CrashReportingTree());
 
         } else {
@@ -318,7 +321,14 @@ public class Collect extends Application implements HasActivityInjector {
         }
 
         setupLeakCanary();
-//        setGlobalRxErrorConsumer();
+    }
+
+    private void setupCrashlytics() {
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().build())
+                .build();
+
+        Fabric.with(this, crashlyticsKit);
     }
 
 

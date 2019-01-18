@@ -30,6 +30,10 @@ public class SiteTypeSpinnerAdapter extends ArrayAdapter<SiteType> {
         this.values = values;
     }
 
+    public List<SiteType> getValues(){
+        return values;
+    }
+
     public int getCount() {
         int count = super.getCount();
         return count > 0 ? count - 1 : count;

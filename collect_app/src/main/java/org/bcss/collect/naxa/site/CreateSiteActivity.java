@@ -178,24 +178,40 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         createSiteViewModel.setMetaAttributes(project.getSiteMetaAttributes());
 
 
-        createSiteViewModel.getSiteClusterMutableLiveData().observe(this, siteRegions -> {
-            showSiteClusterSpinner(siteRegions);
+        createSiteViewModel.getSiteClusterMutableLiveData().observe(this, this::showSiteClusterSpinner);
 
-//            if (loadedSite != null && siteRegions != null) {
-//                int selectedItemIndex = 0;
-//                if (loadedSite.getRegion() != null) {
-//                    for (int i = 0; i <= siteRegions.size(); i++) {
-//                        if (loadedSite.getRegion().equals(siteRegions.get(i).getId())) {
-//                            selectedItemIndex = Integer.parseInt(siteRegions.get(i).getId());
-//                            break;
-//                        }
-//                    }
-//                }
+
+        createSiteViewModel.getSiteTypesMutableLiveData()
+                .observe(this, new Observer<List<SiteType>>() {
+                    @Override
+                    public void onChanged(@Nullable List<SiteType> siteTypes) {
+                        if (siteTypes == null) {
+                            return;
+                        }
+
+                        showSiteTypeSpinner(siteTypes);
+
+//                        if (loadedSite != null ) {
+//                            String siteTypeId = loadedSite.getTypeId();
+//                            int selectedPosition = -1;
 //
-//                spinnerSiteCluster.setSelection(selectedItemIndex);
-//            }
-        });
-
+//                            for (int i = 0; i < siteTypes.size(); i++) {
+//                                if (siteTypeId.equals(siteTypes.get(i).getId())) {
+//                                    selectedPosition = i;
+//                                }
+//                            }
+//
+//                            ToastUtils.showLongToast(String.valueOf(selectedPosition)
+//                                    + " " + loadedSite.getTypeId()
+//                                    + " " + loadedSite.getTypeLabel()
+//
+//                            );
+//
+//                            spinnerSiteType.setSelection(selectedPosition);
+//
+//                        }
+                    }
+                });
 
         createSiteViewModel.getSiteTypesMutableLiveData()
                 .observe(this, this::showSiteTypeSpinner);
@@ -589,16 +605,18 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             spinnerSiteType.setAdapter(spinnerAdapter);
             spinnerSiteType.setSelection(spinnerAdapter.getCount());
 
-            loadValueIntoSiteTypeSpinner(siteTypes);
+            loadValueIntoSiteTypeSpinner(spinnerAdapter.getValues());
+//            spinnerSiteCluster.setSelection(0);
         }
+
 
     }
 
     private void loadValueIntoSiteTypeSpinner(List<SiteType> siteTypes) {
         for (int pos = 0; pos < siteTypes.size(); pos++) {
             SiteType siteType = siteTypes.get(pos);
-            if (loadedSite != null && siteType.getId().equals(loadedSite.getRegionId())) {
-                spinnerSiteCluster.setSelection(pos);
+            if (loadedSite != null && siteType.getId().equals(loadedSite.getTypeId())) {
+                spinnerSiteType.setSelection(pos);
                 break;
             }
         }

@@ -88,6 +88,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private ToggleButton btnToggleFinalized;
     private TextView tvSiteType;
     private Unbinder unbinder;
+    private View rootView;
 
     public SiteDashboardFragment() {
 
@@ -111,42 +112,55 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     @Nullable
     @Override
+    public void onResume() {
+        super.onResume();
+        SiteLocalSource.getInstance().getBySiteId(loadedSite.getId())
+                .observe(this, site -> {
+                    if (site == null) {
+                        return;
+                    }
+
+                    hideSendButtonIfMockedSite(rootView);
+                    setupPopup();
+                    setupToolbar();
+
+                    tvSiteAddress.setText(loadedSite.getAddress());
+                    tvSiteName.setText(loadedSite.getName());
+                    showOrHide(tvSiteType, loadedSite.getTypeLabel());
+
+                    tvSiteType.setOnLongClickListener(view -> {
+                        ToastUtils.showLongToast(loadedSite.getTypeId());
+                        return true;
+                    });
+
+                    tvSiteType.setOnClickListener(view -> DialogFactory.createMessageDialog(getActivity(),
+                            "Information", String.format("Only %s type sub stages will be displayed for %s", loadedSite.getTypeLabel(), loadedSite.getName())).show());
+
+
+                    rootView.findViewById(R.id.site_option_btn_delete_site)
+                            .setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    showDeleteWarningDialog();
+                                }
+                            });
+                    setupFinalizedButton();
+                });
+    }
+
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dashboard_site, container, false);
+         rootView = inflater.inflate(R.layout.fragment_dashboard_site, container, false);
         //Constants.MY_FRAG = 1;
         unbinder = ButterKnife.bind(this, rootView);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
+
+
         bindUI(rootView);
 
-        SiteLocalSource.getInstance().getBySiteId(loadedSite.getId()).observe(requireActivity(), site -> {
-            if (site == null) return;
-            hideSendButtonIfMockedSite(rootView);
-            setupPopup();
-            setupToolbar();
 
-            tvSiteAddress.setText(loadedSite.getAddress());
-            tvSiteName.setText(loadedSite.getName());
-            showOrHide(tvSiteType, loadedSite.getTypeLabel());
-
-            tvSiteType.setOnLongClickListener(view -> {
-                ToastUtils.showLongToast(loadedSite.getTypeId());
-                return true;
-            });
-
-            tvSiteType.setOnClickListener(view -> DialogFactory.createMessageDialog(getActivity(),
-                    "Information", String.format("Only %s type sub stages will be displayed for %s", loadedSite.getTypeLabel(), loadedSite.getName())).show());
-
-
-            rootView.findViewById(R.id.site_option_btn_delete_site)
-                    .setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            showDeleteWarningDialog();
-                        }
-                    });
-            setupFinalizedButton();
-        });
 
         return rootView;
     }
