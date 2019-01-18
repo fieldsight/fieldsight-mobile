@@ -33,7 +33,10 @@ import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
@@ -52,9 +55,11 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -542,33 +547,25 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
     private void getNotificationDetail() throws NullPointerException {
 
-        String url = loadedFieldSightNotification.getDetails_url();
+        String url = FieldSightUserSession.getServerUrl(Collect.getInstance()) + loadedFieldSightNotification.getDetails_url();
 
+        ServiceGenerator.getRxClient().create(ApiInterface.class)
+                .getNotificationDetail(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableSingleObserver<NotificationDetail>() {
+                    @Override
+                    public void onSuccess(NotificationDetail notificationDetail) {
+                        loadImageInView(notificationDetail.getImages());
+                    }
 
-        ApiInterface apiService = ServiceGenerator.createService(ApiInterface.class);
-        Call<NotificationDetail> call = apiService.getNotificationDetail(FieldSightUserSession.getServerUrl(Collect.getInstance()) + url);
-        call.enqueue(new Callback<NotificationDetail>() {
-            @Override
-            public void onResponse(Call<NotificationDetail> call, Response<NotificationDetail> response) {
-                handleDetailsResponse(response);
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        String errorMessage = RetrofitException.getMessage(e);
+                        DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_site_upload_fail), errorMessage).show();
 
-            @Override
-            public void onFailure(Call<NotificationDetail> call, Throwable t) {
-
-                DialogFactory.createDataSyncErrorDialog(FlaggedInstanceActivity.this, "Failed to load images", String.valueOf(500)).show();
-            }
-        });
-    }
-
-    private void handleDetailsResponse(Response<NotificationDetail> response) {
-
-        if (response.code() != 200 || response.body() == null) {
-            DialogFactory.createDataSyncErrorDialog(FlaggedInstanceActivity.this, "Failed to load images", String.valueOf(500)).show();
-            return;
-        }
-
-        loadImageInView(response.body().getImages());
+                    }
+                });
     }
 
     private void loadImageInView(List<NotificationImage> urls) {
@@ -581,6 +578,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         Timber.i(" Load item at %s siteName the list of size %s ", position, urls.size());
         loadSlideShowLayout(position, new ArrayList<NotificationImage>(urls));
 
+
     }
 
     private void loadSlideShowLayout(int position, ArrayList<NotificationImage> urls) {
@@ -588,6 +586,6 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         Bundle bundle = new Bundle();
         bundle.putSerializable("images", urls);
         bundle.putInt("position", position);
-        DialogFactory.createGenericErrorDialog(this, "Failed to load image").show();
+
     }
 }

@@ -25,6 +25,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.site.db.SiteUploadHistoryLocalSource;
 import org.odk.collect.android.utilities.ApplicationConstants;

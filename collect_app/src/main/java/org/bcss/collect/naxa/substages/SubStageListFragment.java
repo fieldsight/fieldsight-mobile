@@ -45,6 +45,7 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_FORM_DEPLOYED_FORM;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_ID;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_POSITION;
+import static org.bcss.collect.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
 import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class SubStageListFragment extends FieldSightFormListFragment implements OnFormItemClickListener<SubStage> {
@@ -151,10 +152,9 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
     }
 
 
-
     @Override
     public void onGuideBookButtonClicked(SubStage subStage, int position) {
-        EducationalMaterialActivity.startFromSubstage(getActivity(),listAdapter.getAll(),position);
+        EducationalMaterialActivity.startFromSubstage(getActivity(), listAdapter.getAll(), position);
     }
 
     @Override
@@ -166,7 +166,10 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 
-        fillODKForm(subStage.getJrFormId());
+        if (isFormSaveCacheSafe(submissionUrl, loadedSite.getId())) {
+            fillODKForm(subStage.getJrFormId());
+        }
+
     }
 
     @Override

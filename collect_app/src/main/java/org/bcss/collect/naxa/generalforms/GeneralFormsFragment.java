@@ -43,6 +43,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.bcss.collect.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
 import static org.bcss.collect.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class GeneralFormsFragment extends FieldSightFormListFragment implements OnFormItemClickListener<GeneralForm> {
@@ -168,8 +169,12 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 
-        fillODKForm(generalForm.getIdString());
+        if(isFormSaveCacheSafe(submissionUrl,loadedSite.getId())){
+            fillODKForm(generalForm.getIdString());
+        }
     }
+
+
 
 
     @Override

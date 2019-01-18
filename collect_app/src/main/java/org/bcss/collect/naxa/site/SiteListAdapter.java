@@ -216,7 +216,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         @Override
         public boolean onLongClick(View view) {
 
-            if (Constant.SiteStatus.IS_ONLINE != siteList.get(getAdapterPosition()).getIsSiteVerified()) {
+            if (Constant.SiteStatus.IS_ONLINE != siteList.get(getAdapterPosition()).getIsSiteVerified() && Constant.SiteStatus.IS_EDITED != siteList.get(getAdapterPosition()).getIsSiteVerified() ) {
                 listener.onRowLongClicked(getAdapterPosition());
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 return true;

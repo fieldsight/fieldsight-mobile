@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.WorkerThread;
 
+import org.bcss.collect.android.application.Collect;
+
 public class SharedPreferenceUtils {
 
     public static class PREF_KEY {
@@ -17,6 +19,17 @@ public class SharedPreferenceUtils {
         public static final String KEY_URL = "url";
         public static final String KEY_SITE_ID = "site_id";
         public static final String KEY_BASE_URL = "base_url";
+
+    }
+
+    public static boolean isFormSaveCacheSafe(String submissionUrl, String siteId) {
+        String cachedSubmisionUrl = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
+                SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, "");
+
+        String cachedSiteId = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
+                SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, "");
+
+        return siteId.equals(cachedSiteId) && cachedSubmisionUrl.equals(submissionUrl);
 
     }
 

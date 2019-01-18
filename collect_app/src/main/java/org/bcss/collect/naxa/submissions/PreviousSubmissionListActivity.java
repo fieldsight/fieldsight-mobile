@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.PaginationScrollListener;
 import org.bcss.collect.naxa.generalforms.data.FormResponse;
 import org.bcss.collect.naxa.network.ApiInterface;
@@ -97,7 +98,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         tableName = bundle.getString(Constant.BundleKey.KEY_TABLE_NAME);
 
         offlineLatestResponse = null;
-        urlFirstPage = BASE_URL + "/forms/api/responses/" + fsFormId + "/" + siteId;
+        urlFirstPage = FieldSightUserSession.getServerUrl(this) + "/forms/api/responses/" + fsFormId + "/" + siteId;
         count = bundle.getString("count");
 
         bindUI();

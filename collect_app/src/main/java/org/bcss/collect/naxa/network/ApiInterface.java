@@ -162,7 +162,7 @@ public interface ApiInterface {
     Observable<Response<Void>> deleteFCMUserParameter(@Body FCMParameter fcmParameter);
 
     @GET
-    Call<NotificationDetail> getNotificationDetail(@Url String url);
+    Single<NotificationDetail> getNotificationDetail(@Url String url);
 
     @GET(GET_ALL_CONTACTS)
     Observable<ArrayList<FieldSightContactModel>> getAllContacts();

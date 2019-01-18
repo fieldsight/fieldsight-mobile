@@ -154,15 +154,20 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                         for (String projectId : projectIds) {
                             XMLForm XMLForm;
 
+                            String baseurl = FieldSightUserSession.getServerUrl(Collect.getInstance());
                             XMLForm = new XMLFormBuilder()
                                     .setFormCreatorsId(projectId)
                                     .setIsCreatedFromProject(false)
-                                    .setDownloadUrl(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/" + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(projectId))
+                                    .setDownloadUrl(baseurl + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(projectId))
                                     .createXMLForm();
 
                             formsToDownlaod.add(XMLForm);
 
-                            XMLForm = new XMLFormBuilder().setFormCreatorsId(projectId).setIsCreatedFromProject(true).setDownloadUrl((Collect.getInstance()) + "/" + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(projectId)).createXMLForm();
+                            XMLForm = new XMLFormBuilder()
+                                    .setFormCreatorsId(projectId)
+                                    .setIsCreatedFromProject(true)
+                                    .setDownloadUrl(baseurl + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(projectId))
+                                    .createXMLForm();
                             formsToDownlaod.add(XMLForm);
 
                         }

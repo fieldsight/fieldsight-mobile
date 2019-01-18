@@ -173,7 +173,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
         instanceServerUploaderTask = (InstanceServerUploaderTask) getLastCustomNonConfigurationInstance();
 
         if (instanceServerUploaderTask == null) {
-            // set up dialog and upload task
+            // set up dialog and upload taskre
             showDialog(PROGRESS_DIALOG);
             instanceServerUploaderTask = new InstanceServerUploaderTask();
 

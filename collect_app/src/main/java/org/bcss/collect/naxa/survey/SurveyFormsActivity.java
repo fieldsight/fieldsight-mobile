@@ -40,6 +40,7 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.bcss.collect.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
 
 public class SurveyFormsActivity extends CollectAbstractActivity implements TitleDescAdapter.OnCardClickListener {
 
@@ -142,9 +143,11 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
         String projectIdForSurveyForm = "0";
         String submissionUrl = generateSubmissionUrl(PROJECT, projectIdForSurveyForm, surveyForm.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
-        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, "0");
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, projectIdForSurveyForm);
 
-        fillODKForm(surveyForm.getIdString());
+        if(isFormSaveCacheSafe(submissionUrl,projectIdForSurveyForm)){
+            fillODKForm(surveyForm.getIdString());
+        }
     }
 
     private void setupViewModel() {

@@ -29,6 +29,7 @@ import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
+import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
