@@ -86,7 +86,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .map(new Function<MySiteResponse, List<MySites>>() {
                     @Override
                     public List<MySites> apply(MySiteResponse mySiteResponse) {
-                        siteRepository.deleteSyncedSitesAsync();
+
                         return mySiteResponse.getResult();
                     }
                 })
@@ -195,7 +195,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         SiteLocalSource.getInstance().deleteSyncedSitesAsync();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
                         SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
-
                         SyncLocalSource.getINSTANCE()
                                 .markAsRunning(Constant.DownloadUID.PROJECT_SITES);
                     }
