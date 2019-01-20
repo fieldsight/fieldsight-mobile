@@ -23,6 +23,7 @@ import android.widget.Toast;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.Login;
 import org.bcss.collect.naxa.common.SettingsActivity;
 import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
@@ -80,7 +81,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
             public void onClick(View v) {
                 if (allowClick(getClass().getName())) {
                     hideKeyboardInActivity(LoginActivity.this);
-                    startActivity(new Intent(LoginActivity.this,SettingsActivity.class));
+                    startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
                 }
             }
         });
@@ -92,7 +93,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
             @Override
             public void onClick(View v) {
                 if (allowClick(getClass().getName())) {
-                    String url = APIEndpoint.PASSWORD_RESET;
+                    String url = FieldSightUserSession.getServerUrl(LoginActivity.this) + APIEndpoint.PASSWORD_RESET;
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     startActivity(i);
