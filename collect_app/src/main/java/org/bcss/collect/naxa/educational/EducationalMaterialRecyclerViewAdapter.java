@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Connectivity;
 import org.bcss.collect.naxa.common.GlideApp;
@@ -197,7 +199,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 Log.d(TAG, "configureViewHolderImage: " + edu_image_model.getThumbImageOff());
                 File f = new File(edu_image_model.getThumbImageOff());
                 ViewHolderImage.imageView.setImageURI(Uri.fromFile(f));
-            }else {
+            } else {
                 if (Connectivity.isConnected(context)) {
                     GlideApp.with(context.getApplicationContext())
                             .load(edu_image_model.getThumbImageOn())
@@ -308,7 +310,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 public void onClick(View v) {
 
                     File file = new File(edu_pdf_model.getPdfUrlOff());
-                    Uri path = Uri.fromFile(file);
+                    Uri path = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
                     Log.d("SUSAN", "PDFonTouch: " + path);
                     Intent target = new Intent(Intent.ACTION_VIEW);
                     target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
