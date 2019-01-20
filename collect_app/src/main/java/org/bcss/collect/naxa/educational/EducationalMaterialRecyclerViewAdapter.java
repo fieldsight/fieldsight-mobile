@@ -198,7 +198,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
             if (edu_image_model.getThumbImageOff() != null || !edu_image_model.getThumbImageOff().equals("")) {
                 Log.d(TAG, "configureViewHolderImage: " + edu_image_model.getThumbImageOff());
                 File f = new File(edu_image_model.getThumbImageOff());
-                ViewHolderImage.imageView.setImageURI(Uri.fromFile(f));
+                ViewHolderImage.imageView.setImageURI(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", f));
             } else {
                 if (Connectivity.isConnected(context)) {
                     GlideApp.with(context.getApplicationContext())
@@ -357,7 +357,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 @Override
                 public void onClick(View v) {
                     File file = new File(edu_pdf_model.getPdfUrlOff());
-                    Uri path = Uri.fromFile(file);
+                    Uri path = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", file);
                     Log.d("SUSAN", "PDFonTouch: " + path);
                     Intent target = new Intent(Intent.ACTION_VIEW);
                     target.setDataAndType(path, "application/pdf");
