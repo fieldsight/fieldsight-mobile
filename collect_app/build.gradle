@@ -147,7 +147,7 @@ android {
 
             debuggable(true)
             testCoverageEnabled(true)
-            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "false")
+            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
 
             buildConfigField 'String', "username", username
             buildConfigField 'String', "password", password
