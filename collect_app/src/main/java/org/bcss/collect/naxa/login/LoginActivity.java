@@ -106,9 +106,8 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
 
         if (BuildConfig.DEBUG) {
             hideKeyboardInActivity(this);
-//            mEmailView.setText(BuildConfig.username);
-//            mPasswordView.setText(BuildConfig.password);
-
+            mEmailView.setText(BuildConfig.username);
+            mPasswordView.setText(BuildConfig.password);
 //            mEmailSignInButton.performClick();
         }
     }

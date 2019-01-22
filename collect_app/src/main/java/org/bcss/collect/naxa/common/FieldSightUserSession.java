@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -43,14 +42,12 @@ import org.odk.collect.android.tasks.DeleteInstancesTask;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -73,26 +70,40 @@ public class FieldSightUserSession {
     }
 
 
-    public static FCMParameter getFCM(String username, boolean deviceStatus) {
+    public static FCMParameter getFCM(String username, boolean deviceStatus, int retryAttempt) {
+        String fcmToken = loadFCMWithRetry(retryAttempt);
         String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
-        String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
 
         if (fcmToken == null) {
-            AsyncTask.execute(() -> {
-                try {
-                    FirebaseInstanceId.getInstance().deleteInstanceId();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
+            throw new FirebaseTokenException("Fire base token is null");
         }
-
-        if (fcmToken == null) {
-            throw new FirebaseTokenException("firebase token is null");
-        }
-
         return new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
+    }
+
+    private static String loadFCMWithRetry(int maxTries) {
+
+        int count = 0;
+        String fcmToken = null;
+        while (true) {
+            try {
+
+                fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
+                        SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM,
+                        null);
+
+                if (fcmToken == null) {
+                    Timber.d("Generating new firebase toke");
+                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                } else {
+                    Timber.d("Firebase token refreshed to %s", fcmToken);
+                    break;
+                }
+
+            } catch (IOException e) {
+                if (++count == maxTries) break;
+            }
+        }
+        return fcmToken;
     }
 
     public static MutableLiveData<String[]> getLogoutMessage() {
@@ -292,7 +303,7 @@ public class FieldSightUserSession {
                             public Observable<Response<Void>> apply(User user) throws Exception {
                                 return ServiceGenerator
                                         .createService(ApiInterface.class)
-                                        .deleteFCMUserParameter(getFCM(user.getUser_name(), false))
+                                        .deleteFCMUserParameter(getFCM(user.getUser_name(), false, 3))
                                         .map(new Function<Response<Void>, Response<Void>>() {
                                             @Override
                                             public Response<Void> apply(Response<Void> voidResponse) throws Exception {

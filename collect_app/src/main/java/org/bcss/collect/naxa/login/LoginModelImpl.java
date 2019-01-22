@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.login;
 
+import org.bcss.collect.naxa.common.AppLogger;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.firebase.FCMParameter;
@@ -14,7 +15,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
@@ -40,7 +40,7 @@ public class LoginModelImpl implements LoginModel {
 
                         return ServiceGenerator
                                 .createService(ApiInterface.class)
-                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true))
+                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true, 3))
                                 .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
                                     @Override
                                     public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) {
@@ -65,7 +65,7 @@ public class LoginModelImpl implements LoginModel {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        AppLogger.error(e);
                         if (e instanceof HttpException) {
                             HttpException httpException = (HttpException) e;
                             int statusCode = httpException.response().code();
@@ -85,6 +85,7 @@ public class LoginModelImpl implements LoginModel {
                             onLoginFinishedListener.onError("Generic error occurred: " + e.getMessage());
 
                         }
+
 
                     }
 
