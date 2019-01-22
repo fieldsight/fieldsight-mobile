@@ -36,7 +36,7 @@ public class ODKFormRemoteSource {
                         SyncLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
                         break;
                     case DownloadProgress.STATUS_ERROR:
-                        emitter.onError(null);
+                        emitter.onError(new RuntimeException("An error occurred while downloading forms"));
                         break;
                     case DownloadProgress.STATUS_FINISHED_FORM:
                         emitter.onComplete();
@@ -44,7 +44,7 @@ public class ODKFormRemoteSource {
                 }
             });
 
-            XMLFormDownloadService.start(Collect.getInstance(), xmlFormDownloadReceiver);
+            XMLFormDownloadService.start(Collect.getInstance(), xmlFormDownloadReceiver);ODKFormRemoteSource
         });
     }
 
