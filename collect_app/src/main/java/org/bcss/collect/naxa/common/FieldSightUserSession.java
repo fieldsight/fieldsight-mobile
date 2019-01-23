@@ -40,8 +40,10 @@ import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -71,6 +73,7 @@ public class FieldSightUserSession {
 
 
     public static FCMParameter getFCM(String username, boolean deviceStatus, int retryAttempt) {
+        retryAttempt = 10;
         String fcmToken = loadFCMWithRetry(retryAttempt);
         String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
 
@@ -86,20 +89,27 @@ public class FieldSightUserSession {
         String fcmToken = null;
         while (true) {
             try {
-
                 fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
                         SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM,
                         null);
 
                 if (fcmToken == null) {
-                    Timber.d("Generating new firebase toke");
+                    Timber.d("loadFCMWithRetry() Generating new firebase token");
                     FirebaseInstanceId.getInstance().deleteInstanceId();
                 } else {
-                    Timber.d("Firebase token refreshed to %s", fcmToken);
+                    Timber.d("loadFCMWithRetry() Firebase token refreshed to %s", fcmToken);
                     break;
                 }
-
-            } catch (IOException e) {
+                long timeout = TimeUnit.SECONDS.toMillis(count);
+                Timber.d("loadFCMWithRetry() Delaying another check for %s seconds", timeout);
+                Thread.sleep(timeout);
+                if (count == 3) throw new InterruptedException();
+                if (++count == maxTries) {
+                    Timber.e("Failed to load fcm on %s tries", count);
+                    break;
+                }
+            } catch (IOException | InterruptedException e) {
+                Timber.e(e, "loadFCMWithRetry() count %s", count);
                 if (++count == maxTries) break;
             }
         }
