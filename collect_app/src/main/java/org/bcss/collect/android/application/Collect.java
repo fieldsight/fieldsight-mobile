@@ -327,8 +327,11 @@ public class Collect extends Application implements HasActivityInjector {
     private void setupCrashlytics() {
         try {
             String email = FieldSightUserSession.getUser().getEmail();
+            String username = FieldSightUserSession.getUser().getUser_name();
             Crashlytics.setString("email",email);
+            Crashlytics.setString("username",username);
             Crashlytics.setUserEmail(email);
+            Crashlytics.setUserName(username);
             Timber.i("Added %s to error report", email);
 
         } catch (Exception e) {
