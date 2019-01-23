@@ -69,7 +69,7 @@ if (secretsFile.exists()) {
 
 def versionMajor = 2
 def versionMinor = 5
-def versionPatch = 1
+def versionPatch = 2
 
 android {
     compileSdkVersion(28)
@@ -80,7 +80,7 @@ android {
         targetSdkVersion(26)
         //versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         //versionName getVersionName()
-        versionCode 45
+        versionCode 46
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         System.out.println(versionName + " " + versionCode)
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
@@ -123,6 +123,8 @@ android {
             minifyEnabled false
             shrinkResources false
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
+            buildConfigField 'String', "username", username
+            buildConfigField 'String', "password", password
         }
         // Release build for the official ODK Collect app
         odkCollectRelease {

@@ -44,7 +44,7 @@ public class ODKFormRemoteSource {
                 }
             });
 
-            XMLFormDownloadService.start(Collect.getInstance(), xmlFormDownloadReceiver);ODKFormRemoteSource
+            XMLFormDownloadService.start(Collect.getInstance(), xmlFormDownloadReceiver);
         });
     }
 
