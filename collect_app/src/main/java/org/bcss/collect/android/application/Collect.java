@@ -275,7 +275,7 @@ public class Collect extends Application implements HasActivityInjector {
         singleton = this;
 
         if (DEBUG) {
-            Stetho.initializeWithDefaults(this);
+//            Stetho.initializeWithDefaults(this);
         }
 
         setupFirebaseRemoteConfig();
@@ -313,7 +313,7 @@ public class Collect extends Application implements HasActivityInjector {
 //        if (BuildConfig.BUILD_TYPE.equals("release")) {
         if (true) {
             setupCrashlytics();
-            Timber.plant(new Timber.DebugTree());
+            Timber.plant(new CrashReportingTree());
         } else {
             Timber.plant(new Timber.DebugTree());
         }
