@@ -103,7 +103,6 @@ public class FieldSightUserSession {
                 long timeout = TimeUnit.SECONDS.toMillis(count);
                 Timber.d("loadFCMWithRetry() Delaying another check for %s seconds", timeout);
                 Thread.sleep(timeout);
-                if (count == 3) throw new InterruptedException();
                 if (++count == maxTries) {
                     Timber.e("Failed to load fcm on %s tries", count);
                     break;
