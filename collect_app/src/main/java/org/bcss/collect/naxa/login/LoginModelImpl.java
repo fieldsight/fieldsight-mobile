@@ -1,6 +1,5 @@
 package org.bcss.collect.naxa.login;
 
-import org.bcss.collect.naxa.common.AppLogger;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.firebase.FCMParameter;
@@ -18,6 +17,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.HttpException;
+import timber.log.Timber;
 
 public class LoginModelImpl implements LoginModel {
 
@@ -65,8 +65,8 @@ public class LoginModelImpl implements LoginModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        AppLogger.error(e);
-                        if (e instanceof HttpException) {
+                        Timber.e(e);
+                         if (e instanceof HttpException) {
                             HttpException httpException = (HttpException) e;
                             int statusCode = httpException.response().code();
                             switch (statusCode) {
