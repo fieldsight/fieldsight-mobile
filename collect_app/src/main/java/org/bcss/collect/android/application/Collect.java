@@ -54,6 +54,7 @@ import org.bcss.collect.android.jobs.CollectJobCreator;
 import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.login.APIErrorUtils;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
@@ -314,9 +315,8 @@ public class Collect extends Application implements HasActivityInjector {
 //        if (BuildConfig.BUILD_TYPE.equals("fieldSightCollectRelease")) {
         if (true) {
             setupCrashlytics();
-//            Timber.plant(new CrashReportingTree());
-            Timber.plant(new Timber.DebugTree());
-
+            Timber.plant(new CrashReportingTree());
+//            Timber.plant(new Timber.DebugTree());
         } else {
             Timber.plant(new Timber.DebugTree());
         }
@@ -325,11 +325,19 @@ public class Collect extends Application implements HasActivityInjector {
     }
 
     private void setupCrashlytics() {
-        Crashlytics crashlyticsKit = new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder().build())
-                .build();
+        try {
+            String email = FieldSightUserSession.getUser().getEmail();
+            String username = FieldSightUserSession.getUser().getUser_name();
+            Crashlytics.setString("email",email);
+            Crashlytics.setString("username",username);
+            Crashlytics.setUserEmail(email);
+            Crashlytics.setUserName(username);
+            Timber.i("Added %s to error report", email);
 
-        Fabric.with(this, crashlyticsKit);
+        } catch (Exception e) {
+            Timber.e(e, "Failed to add email to error report");
+        }
+        Fabric.with(this, new Crashlytics());
     }
 
 
