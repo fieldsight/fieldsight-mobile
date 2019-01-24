@@ -310,7 +310,7 @@ public class InstancesDao {
                 + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                 + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
                 + "("
-                + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12"
+                + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12 "
                 + "OR " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE '%fake%'"
                 + ")";
 
