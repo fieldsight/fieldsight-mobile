@@ -7,7 +7,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/comment_session_root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -82,11 +81,12 @@
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            tools:text="asdasdasdasdasdasdasdasdasdasdasdasdasd" />
+                            tools:text="Form Name" />
 
                         <!--//Form Desc-->
 
                         <TextView
+                            tools:text="Form Description"
                             android:id="@+id/tv_form_desc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -113,6 +113,7 @@
                             <!--//Form Status text-->
 
                             <TextView
+                                tools:text="Form Flag"
                                 android:id="@+id/tv_form_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
