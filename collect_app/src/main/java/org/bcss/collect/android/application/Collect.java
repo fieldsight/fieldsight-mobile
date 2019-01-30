@@ -274,7 +274,7 @@ public class Collect extends Application implements HasActivityInjector {
         super.onCreate();
         singleton = this;
 
-        if (DEBUG) {
+        if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
         }
 
@@ -310,8 +310,7 @@ public class Collect extends Application implements HasActivityInjector {
 
         initProperties();
 
-//        if (BuildConfig.BUILD_TYPE.equals("release")) {
-        if (false) {
+        if (BuildConfig.BUILD_TYPE.equals("release")) {
             setupCrashlytics();
             Timber.plant(new CrashReportingTree());
         } else {
@@ -325,8 +324,8 @@ public class Collect extends Application implements HasActivityInjector {
         try {
             String email = FieldSightUserSession.getUser().getEmail();
             String username = FieldSightUserSession.getUser().getUser_name();
-            Crashlytics.setString("email",email);
-            Crashlytics.setString("username",username);
+            Crashlytics.setString("email", email);
+            Crashlytics.setString("username", username);
             Crashlytics.setUserEmail(email);
             Crashlytics.setUserName(username);
             Timber.i("Added %s to error report", email);
