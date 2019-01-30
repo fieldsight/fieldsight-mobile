@@ -105,6 +105,7 @@ public class ResponseMessageParser {
             isValid = false;
         }
 
+        return fieldSightInstanceId;
     }
 
     public int getResponseCode() {
