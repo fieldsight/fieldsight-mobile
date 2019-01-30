@@ -20,19 +20,22 @@ import timber.log.Timber;
 
 public class ResponseMessageParser {
     private static final String MESSAGE_XML_TAG = "message";
+    private static final String FIELDSIGHT_INSTANCE_ID_XML_TAG = "finstanceID";
     private final String httpResponse;
     private final int responseCode;
     private final String reasonPhrase;
 
     public boolean isValid;
     public String messageResponse;
+    public String fieldSightInstanceId;
 
     public ResponseMessageParser(String httpResponse, int responseCode, String reasonPhrase) {
         this.httpResponse = httpResponse;
         this.responseCode = responseCode;
         this.reasonPhrase = reasonPhrase;
         this.messageResponse = parseXMLMessage();
-        if (messageResponse != null) {
+        this.fieldSightInstanceId = parseForFieldSightInstanceId();
+        if (messageResponse != null && fieldSightInstanceId != null) {
             this.isValid = true;
         }
     }
@@ -72,6 +75,36 @@ public class ResponseMessageParser {
         }
 
         return message;
+    }
+
+    private String parseForFieldSightInstanceId() {
+        String fieldSightInstanceId = null;
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder;
+
+        try {
+            builder = dbFactory.newDocumentBuilder();
+            Document doc = null;
+
+            if (httpResponse.contains("OpenRosaResponse")) {
+                doc = builder.parse(new ByteArrayInputStream(httpResponse.getBytes()));
+                doc.getDocumentElement().normalize();
+
+                if (doc.getElementsByTagName(FIELDSIGHT_INSTANCE_ID_XML_TAG).item(0) != null) {
+
+                    fieldSightInstanceId = doc.getElementsByTagName(FIELDSIGHT_INSTANCE_ID_XML_TAG).item(0).getTextContent();
+                } else {
+                    isValid = false;
+                }
+            }
+
+            return fieldSightInstanceId;
+
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            Timber.e(e, "Error parsing XML message due to %s ", e.getMessage());
+            isValid = false;
+        }
+
     }
 
     public int getResponseCode() {
