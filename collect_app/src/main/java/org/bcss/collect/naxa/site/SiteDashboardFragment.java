@@ -152,14 +152,13 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-         rootView = inflater.inflate(R.layout.fragment_dashboard_site, container, false);
+        rootView = inflater.inflate(R.layout.fragment_dashboard_site, container, false);
         //Constants.MY_FRAG = 1;
         unbinder = ButterKnife.bind(this, rootView);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
 
 
         bindUI(rootView);
-
 
 
         return rootView;
@@ -410,7 +409,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                         String errorMessage = RetrofitException.getMessage(e);
 
                         FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
-                        if (isAdded()) {
+                        if (isAdded() && getActivity() != null) {
                             DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
                         } else {
                             FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), errorMessage);
