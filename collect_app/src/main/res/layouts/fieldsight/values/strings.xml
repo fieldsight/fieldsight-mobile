@@ -231,6 +231,7 @@
     <string name="airplane_on">You have turned on the airplane mode.</string>
     <string name="title_activity_logout_acitivty">LogoutAcitivty</string>
     <string name="msg_stop_logout">Can\'t logout</string>
+    <string name="msg_flag_resposne_site_info_missing">Download site information from sync screen to view more site details here</string>
 
     <!--Notification sitelist ends here-->
 

@@ -76,6 +76,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     private String notificationDetailsUrl = "";
 
     private String isDeployedFromProject;
+    private String siteIdentifier;
 
 
     @Override
@@ -104,7 +105,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setProjectId(projectId)
                     .setProjectName(projectName)
                     .setFormStatus(formStatus)
-
+                    .setSiteIdentifier(siteIdentifier)
                     .setNotifiedDate(date_str)
                     .setNotifiedTime(localTime)
                     .setIdString(jrFormId)
@@ -185,6 +186,9 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                 }
                 if (siteData.has("id")) {
                     siteId = siteData.getString("id");
+                }
+                if (siteData.has("identifier")) {
+                    siteIdentifier = siteData.getString("identifier");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

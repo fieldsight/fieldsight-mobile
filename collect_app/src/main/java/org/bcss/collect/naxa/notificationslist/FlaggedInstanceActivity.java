@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,9 +41,13 @@ import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.site.FragmentHostActivity;
+import org.bcss.collect.naxa.site.SiteListAdapter;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.tasks.DownloadFormListTask;
@@ -97,6 +103,13 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
     private HashMap<String, Boolean> formResult;
     private Dialog errorDialog;
     private FormsDao formsDao;
+    private TextView tvSiteIdentifier;
+    private TextView tvSiteName;
+    private TextView tvIconText;
+    private TextView tvSiteAddress;
+    private ImageView ivCircleSite;
+    private TextView tvSiteMissing;
+    private RelativeLayout cardViewSite;
 
 
     public static void start(Context context, FieldSightNotification fieldSightNotification) {
@@ -127,6 +140,42 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
         formResult = new HashMap<>();
         setupData(loadedFieldSightNotification);
+        setupSiteCard(loadedFieldSightNotification);
+
+    }
+
+    private void setupSiteCard(FieldSightNotification loadedFieldSightNotification) {
+        String siteName = loadedFieldSightNotification.getSiteName();
+        String siteIdentifier = loadedFieldSightNotification.getSiteIdentifier();
+
+        SiteLocalSource.getInstance().getBySiteId(loadedFieldSightNotification.getSiteId())
+                .observe(this, site -> {
+                    if (site == null) {
+                        cardViewSite.setVisibility(View.GONE);
+                        tvSiteMissing.setVisibility(View.VISIBLE);
+                        return;
+                    }
+
+                    cardViewSite.setVisibility(View.VISIBLE);
+                    tvSiteMissing.setVisibility(View.GONE);
+
+                    setSiteData(site.getName(), site.getIdentifier(), site.getAddress());
+
+                    cardViewSite.setOnClickListener(v -> FragmentHostActivity.start(FlaggedInstanceActivity.this, site));
+                });
+
+
+    }
+
+    private void setSiteData(String siteName, String siteIdentifier, String address) {
+        tvSiteName.setText(siteName);
+        if (siteName != null && siteName.trim().length() > 0) {
+            tvIconText.setText(siteName.substring(0, 1));
+        }
+        tvSiteIdentifier.setText(siteIdentifier);
+        tvSiteAddress.setText(address);
+        ivCircleSite.setImageResource(R.drawable.circle_blue);
+
 
     }
 
@@ -151,6 +200,15 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         tvFormStatus = findViewById(R.id.tv_form_status);
         tvComment = findViewById(R.id.tv_comments_txt);
         recyclerViewImages = findViewById(R.id.comment_session_rv_images);
+
+        tvSiteName = findViewById(R.id.tv_site_name);
+        tvSiteIdentifier = findViewById(R.id.tv_identifier);
+        ivCircleSite = findViewById(R.id.icon_profile);
+        tvIconText = findViewById(R.id.icon_text);
+        tvSiteAddress = findViewById(R.id.txt_secondary);
+
+        cardViewSite = findViewById(R.id.root_layout_message_list_row);
+        tvSiteMissing = findViewById(R.id.tv_msg_site_missing);
 
 
         relativeStatus = findViewById(R.id.relativeLayout_status);
@@ -267,12 +325,14 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
     @Override
     public void onClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.relative_layout_comment_open_form:
+                handleFlagForm(loadedFieldSightNotification.getFsFormId(), loadedFieldSightNotification.getIdString(), loadedFieldSightNotification.getSiteId());
+                break;
+        }
         if (true) {
-            handleFlagForm(loadedFieldSightNotification.getFsFormId(), loadedFieldSightNotification.getIdString(), loadedFieldSightNotification.getSiteId());
             return;
         }
-
 
         boolean emptyVersion = TextUtils.isEmpty(loadedFieldSightNotification.getFormVersion());
 
@@ -608,7 +668,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         Uri uri = InstanceProviderAPI.InstanceColumns.CONTENT_URI;
         String selection = InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + " LIKE ?"
                 + " AND " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " =? ";
-        String[] selectionArgs = new String[]{"%/"+fsFormId+"/%", siteId};
+        String[] selectionArgs = new String[]{"%/" + fsFormId + "/%", siteId};
 
         Cursor cursorInstanceForm = null;
         try {
