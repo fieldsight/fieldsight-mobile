@@ -36,6 +36,7 @@ public class Instance {
     private final String displaySubtext;
     private final Long deletedDate;
     private final String fieldSightSiteId;
+    private final String fieldSightInstanceId;
 
 
     private final Long databaseId;
@@ -52,6 +53,7 @@ public class Instance {
         displaySubtext = builder.displaySubtext;
         deletedDate = builder.deletedDate;
         fieldSightSiteId = builder.fieldSightSiteId;
+        fieldSightInstanceId = builder.fieldSightInstanceId;
         databaseId = builder.databaseId;
 
     }
@@ -68,6 +70,7 @@ public class Instance {
         private String displaySubtext;
         private Long deletedDate;
         private String fieldSightSiteId;
+        private String fieldSightInstanceId;
 
         private Long databaseId;
 
@@ -132,6 +135,11 @@ public class Instance {
             return this;
         }
 
+        public Builder fieldSightInstanceId(String fieldSightInstanceId) {
+            this.fieldSightInstanceId = fieldSightInstanceId;
+            return this;
+        }
+
         public Instance build() {
             return new Instance(this);
         }
@@ -182,6 +190,10 @@ public class Instance {
         return fieldSightSiteId;
     }
 
+    public String getFieldSightInstanceId() {
+        return fieldSightInstanceId;
+    }
+
     public Long getDatabaseId() {
         return databaseId;
 
@@ -191,18 +203,19 @@ public class Instance {
     @Override
     public String toString() {
         return "Instance{" +
-                "displayName='" + displayName + '\'' + '\n'+
-                ", submissionUri='" + submissionUri + '\'' +'\n'+
-                ", canEditWhenComplete='" + canEditWhenComplete + '\'' +'\n'+
-                ", instanceFilePath='" + instanceFilePath + '\'' +'\n'+
-                ", jrFormId='" + jrFormId + '\'' +'\n'+
-                ", jrVersion='" + jrVersion + '\'' +'\n'+
-                ", status='" + status + '\'' +'\n'+
-                ", lastStatusChangeDate=" + lastStatusChangeDate +'\n'+
-                ", displaySubtext='" + displaySubtext + '\'' +'\n'+
-                ", deletedDate=" + deletedDate +'\n'+
-                ", fieldSightSiteId='" + fieldSightSiteId + '\'' +'\n'+
-                ", databaseId=" + databaseId +'\n'+
+                "displayName='" + displayName + '\'' + '\n' +
+                ", submissionUri='" + submissionUri + '\'' + '\n' +
+                ", canEditWhenComplete='" + canEditWhenComplete + '\'' + '\n' +
+                ", instanceFilePath='" + instanceFilePath + '\'' + '\n' +
+                ", jrFormId='" + jrFormId + '\'' + '\n' +
+                ", jrVersion='" + jrVersion + '\'' + '\n' +
+                ", status='" + status + '\'' + '\n' +
+                ", lastStatusChangeDate=" + lastStatusChangeDate + '\n' +
+                ", displaySubtext='" + displaySubtext + '\'' + '\n' +
+                ", deletedDate=" + deletedDate + '\n' +
+                ", fieldSightSiteId='" + fieldSightSiteId + '\'' + '\n' +
+                ", fieldSightInstanceId='" + fieldSightInstanceId + '\'' + '\n' +
+                ", databaseId=" + databaseId + '\n' +
                 '}';
     }
 }

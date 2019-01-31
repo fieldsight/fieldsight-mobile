@@ -216,6 +216,7 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + INSTANCES_TABLE_NAME + " ("
                 + _ID + " integer primary key, "
                 + FS_SITE_ID + " text not null, "
+                + FS_SUBMISSION_INSTANCE_ID + " text, "
                 + DISPLAY_NAME + " text not null, "
                 + SUBMISSION_URI + " text, "
                 + CAN_EDIT_WHEN_COMPLETE + " text, "
