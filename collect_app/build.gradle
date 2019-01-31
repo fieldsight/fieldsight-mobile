@@ -126,6 +126,16 @@ android {
             buildConfigField 'String', "username", username
             buildConfigField 'String', "password", password
         }
+        internal {
+            debuggable false
+            minifyEnabled false
+            shrinkResources false
+            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
+            buildConfigField 'String', "username", username
+            buildConfigField 'String', "password", password
+        }
+
+
         // Release build for the official ODK Collect app
         odkCollectRelease {
             if (secrets.getProperty('RELEASE_STORE_FILE')) {

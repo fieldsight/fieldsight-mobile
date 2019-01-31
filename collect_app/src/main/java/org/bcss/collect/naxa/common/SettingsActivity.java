@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.common;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -7,13 +8,16 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.MenuItem;
 import android.webkit.URLUtil;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,7 +64,18 @@ public class SettingsActivity extends CollectAbstractActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Settings");
+        getSupportActionBar().setTitle("Server");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @OnClick(R.id.btn_save)
@@ -68,8 +83,9 @@ public class SettingsActivity extends CollectAbstractActivity {
         String url = textInputLayoutBaseUrl.getEditText().getText().toString();
         if (isValidUrl(url)) {
             FieldSightUserSession.setServerUrl(this, url);
-            FlashBarUtils.showFlashbar(this, "server url has been changed");
+            ToastUtils.showLongToast("Server Changed");
             ServiceGenerator.clearInstance();
+            onBackPressed();
         } else {
             textInputLayoutBaseUrl.getEditText().setError("This url is invalid");
         }
@@ -83,8 +99,8 @@ public class SettingsActivity extends CollectAbstractActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
+        startActivity(new Intent(this, LoginActivity.class));
+        overridePendingTransition(0,0);
     }
 
     private boolean isValidUrl(String url) {
