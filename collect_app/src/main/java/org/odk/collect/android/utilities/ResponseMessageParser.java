@@ -1,6 +1,8 @@
 package org.odk.collect.android.utilities;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
@@ -42,6 +44,10 @@ public class ResponseMessageParser {
 
     public boolean isValid() {
         return this.isValid;
+    }
+
+    public String getFieldSightInstanceId() {
+        return this.fieldSightInstanceId;
     }
 
     public String getMessageResponse() {
@@ -90,12 +96,14 @@ public class ResponseMessageParser {
                 doc = builder.parse(new ByteArrayInputStream(httpResponse.getBytes()));
                 doc.getDocumentElement().normalize();
 
-                if (doc.getElementsByTagName(FIELDSIGHT_INSTANCE_ID_XML_TAG).item(0) != null) {
-
-                    fieldSightInstanceId = doc.getElementsByTagName(FIELDSIGHT_INSTANCE_ID_XML_TAG).item(0).getTextContent();
-                } else {
+                NodeList nList = doc.getElementsByTagName("submissionMetadata");
+                try {
+                    fieldSightInstanceId = ((Element) nList.item(0)).getAttribute(FIELDSIGHT_INSTANCE_ID_XML_TAG);
+                } catch (Exception e) {
                     isValid = false;
+                    Timber.e(e, "Failed to retrive fieldsight submission id from submission sucess xml");
                 }
+
             }
 
             return fieldSightInstanceId;

@@ -90,8 +90,16 @@ public abstract class InstanceUploader {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMITTED);
-        contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID,instance.getFieldSightInstanceId());
         Collect.getInstance().getContentResolver().update(instanceDatabaseUri, contentValues, null, null);
+    }
+
+    void saveFieldSightInstanceId(String fsInstanceId, Instance instance) {
+        Uri instanceDatabaseUri = Uri.withAppendedPath(InstanceProviderAPI.InstanceColumns.CONTENT_URI,
+                instance.getDatabaseId().toString());
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID, fsInstanceId);
+        Collect.getInstance().getContentResolver().update(instanceDatabaseUri, contentValues, null, null);
+
     }
 
     void saveFailedStatusToDatabase(Instance instance) {
