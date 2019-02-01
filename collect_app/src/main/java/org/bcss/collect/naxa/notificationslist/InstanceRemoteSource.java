@@ -109,6 +109,8 @@ public class InstanceRemoteSource {
         String jrFormId = notificationFormDetail.getIdString();
         String fsFormId = notificationFormDetail.getFsFormId();
         String formVersion = notificationFormDetail.getFormVersion();
+        String fsInstanceId = notificationFormDetail.getFormSubmissionId();
+
         String url = InstancesDao.generateSubmissionUrl(
                 fsFormIdProject != null ? PROJECT : SITE,
                 siteId, fsFormId);
@@ -117,6 +119,7 @@ public class InstanceRemoteSource {
         return new Instance.Builder()
                 .status(InstanceProviderAPI.STATUS_COMPLETE)
                 .jrFormId(jrFormId)
+                .fieldSightInstanceId(fsInstanceId)
                 .jrVersion(formVersion)
                 .submissionUri(url)
                 .fieldSightSiteId(siteId)

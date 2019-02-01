@@ -337,8 +337,11 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 }
 
                 boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
+                Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded)
                 if (isInstanceDownloadNeeded) {
                     showDownloadInstanceDialog();
+                } else {
+                    loadSavedInstance(loadedFieldSightNotification.getFormSubmissionId(), loadedFieldSightNotification.getIdString());
                 }
 
                 break;
@@ -350,10 +353,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 .setPositiveButton(R.string.dialog_action_download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (hasFormVersion() && hasFormInstance()) {
-                            //no worries load things
-                            handleFlagForm(loadedFieldSightNotification.getFsFormId(), loadedFieldSightNotification.getIdString(), loadedFieldSightNotification.getSiteId());
-                        } else if (hasFormInstance() && !hasFormVersion()) {
+                        if (hasFormInstance() && !hasFormVersion()) {
                             //download form version and load instance
                             downloadFormVersion(loadedFieldSightNotification);
                         } else if (!hasFormInstance() && hasFormVersion()) {
@@ -549,7 +549,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 .subscribe(new Observer<Comparable<? extends Comparable<?>>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        changeDialogMsg("Downloading flagged form");
+                        changeDialogMsg("Downloading instace");
                     }
 
                     @Override

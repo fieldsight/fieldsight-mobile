@@ -563,6 +563,7 @@ public class InstancesDao {
         values.put(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT, instance.getDisplaySubtext());
         values.put(InstanceProviderAPI.InstanceColumns.DELETED_DATE, instance.getDeletedDate());
         values.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, instance.getFieldSightSiteId());
+        values.put(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID, instance.getFieldSightInstanceId());
 
         return values;
     }
