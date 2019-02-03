@@ -35,7 +35,7 @@ public class StageViewModel extends ViewModel {
     }
 
     public Observable<List<Stage>> getStages(boolean forcedUpdate, Site loadedSite) {
-        switch (loadedSite.getGeneralFormDeployedFrom()) {
+        switch (loadedSite.getStagedFormDeployedFrom()) {
             case SITE:
                 return repository.getBySiteIdMaybe(loadedSite.getId(),loadedSite.getTypeId(),loadedSite.getProject());
             case PROJECT:
