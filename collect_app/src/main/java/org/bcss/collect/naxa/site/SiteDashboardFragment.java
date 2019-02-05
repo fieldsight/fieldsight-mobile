@@ -112,14 +112,24 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     @Nullable
     @Override
-    public void onResume() {
-        super.onResume();
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_dashboard_site, container, false);
+        //Constants.MY_FRAG = 1;
+        unbinder = ButterKnife.bind(this, rootView);
+        loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
+
+
+        bindUI(rootView);
+
+        //https://medium.com/@BladeCoder/architecture-components-pitfalls-part-1-9300dd969808
         SiteLocalSource.getInstance().getBySiteId(loadedSite.getId())
-                .observe(this, site -> {
+                .observe(getViewLifecycleOwner(), site -> {
                     if (site == null) {
                         return;
                     }
 
+                    this.loadedSite = site;
                     hideSendButtonIfMockedSite(rootView);
                     setupPopup();
                     setupToolbar();
@@ -146,20 +156,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                             });
                     setupFinalizedButton();
                 });
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle
-            savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_dashboard_site, container, false);
-        //Constants.MY_FRAG = 1;
-        unbinder = ButterKnife.bind(this, rootView);
-        loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
-
-
-        bindUI(rootView);
-
 
         return rootView;
     }
@@ -278,7 +274,8 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void hideSendButtonIfMockedSite(View rootView) {
 
-        Boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
+        boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
+
 
         if (isOfflineSite) {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);
@@ -353,6 +350,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     @OnClick(R.id.site_option_btn_upload_site)
     public void showConfirmationDialog() {
+
         DialogFactory.createActionDialog(requireActivity(), "Upload selected site(s)", "Upload selected site(s) along with their filled form(s) ?")
                 .setPositiveButton("Yes, upload Site(s) and Form(s)", (dialog, which) -> {
                     uploadSelectedSites(Collections.singletonList(loadedSite), true);
