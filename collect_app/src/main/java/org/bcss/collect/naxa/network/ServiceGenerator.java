@@ -97,6 +97,10 @@ public class ServiceGenerator {
             }
         });
 
+        if(BuildConfig.DEBUG){
+            okHttpBuilder.addNetworkInterceptor(new StethoInterceptor());
+        }
+
         return okHttpBuilder.build();
     }
 

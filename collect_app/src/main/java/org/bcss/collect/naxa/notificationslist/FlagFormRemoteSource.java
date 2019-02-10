@@ -87,7 +87,7 @@ public class FlagFormRemoteSource {
 
     public void getODKForm(String formName, String fsSubmissionId, String jrFormId, DownloadFormsTaskListener listener) {
         String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance())+ "/forms/api/instance/download_xml_version/%s", fsSubmissionId);
-        DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask();
+        DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask(true);
         ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
         FormDetails formDetails = new FormDetails(formName,
                 downloadUrl,
@@ -111,7 +111,7 @@ public class FlagFormRemoteSource {
         return Single.create(emitter -> {
             String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
             ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
-            DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask();
+            DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask(true);
 
             FormDetails formDetails = new FormDetails(formName,
                     downloadUrl,

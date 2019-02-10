@@ -473,7 +473,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
     }
 
     private void startFormsDownload(@NonNull ArrayList<FormDetails> filesToDownload, FieldSightNotification notification, boolean loadInstanceAfterDownloadComplete) {
-        downloadFormsTask = new DownloadFormsTask();
+        downloadFormsTask = new DownloadFormsTask(true);
         downloadFormsTask.setDownloaderListener(new DownloadFormsTaskListener() {
             @Override
             public void formsDownloadingComplete(HashMap<FormDetails, String> result) {
@@ -509,6 +509,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
             }
         });
 
+        downloadFormsTask.setDownloadAsTemporary();
         downloadFormsTask.execute(filesToDownload);
     }
 

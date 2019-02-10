@@ -40,6 +40,7 @@ public class Form {
     private final String autoSend;
     private final String autoDelete;
     private final String lastDetectedFormVersionHash;
+    private final String isTempDownload;
 
     private Form(Form.Builder builder) {
         id = builder.id;
@@ -59,6 +60,7 @@ public class Form {
         autoSend = builder.autoSend;
         autoDelete = builder.autoDelete;
         lastDetectedFormVersionHash = builder.lastDetectedFormVersionHash;
+        isTempDownload = builder.isTempDownload;
     }
 
     public static class Builder {
@@ -79,6 +81,7 @@ public class Form {
         private String autoSend;
         private String autoDelete;
         private String lastDetectedFormVersionHash;
+        private String isTempDownload;
 
         public Builder id(int id) {
             this.id = id;
@@ -165,6 +168,11 @@ public class Form {
             return this;
         }
 
+        public Builder isTempDownload(String isTempDownload) {
+            this.isTempDownload = isTempDownload;
+            return this;
+        }
+
         public Form build() {
             return new Form(this);
         }
@@ -236,5 +244,9 @@ public class Form {
 
     public String getLastDetectedFormVersionHash() {
         return lastDetectedFormVersionHash;
+    }
+
+    public String getIsTempDownload() {
+        return isTempDownload;
     }
 }
