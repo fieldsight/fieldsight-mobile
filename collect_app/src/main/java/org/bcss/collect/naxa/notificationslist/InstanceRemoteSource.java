@@ -48,16 +48,17 @@ public class InstanceRemoteSource {
         return downloadInstance(mapNotificationToInstance(fieldSightNotification), downloadUrl, nameAndPath);
     }
 
-    public String[] getNameAndPath(String instanceName) {
+    String[] getNameAndPath(String instanceName) {
 
         String formattedInstanceName = addDateTimeToFileName(instanceName);
         formattedInstanceName = formatFileName(formattedInstanceName);
+
         String pathToDownload = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");  //todo: value returned from getExternalStorageDiectory is twice, so removing one
 
         pathToDownload = pathToDownload + File.separator + formattedInstanceName;
         pathToDownload = formatFileName(pathToDownload);
 
-        return new String[]{formattedInstanceName, pathToDownload};
+        return new String[]{formattedInstanceName.concat(".xml"), pathToDownload};
     }
 
     private Observable<Uri> downloadInstance(Instance.Builder instance, String downloadUrl, String[] nameAndPath) {

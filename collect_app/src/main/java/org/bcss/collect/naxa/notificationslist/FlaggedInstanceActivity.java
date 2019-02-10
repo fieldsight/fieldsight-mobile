@@ -337,7 +337,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 }
 
                 boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
-                Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded)
+                Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
                 if (isInstanceDownloadNeeded) {
                     showDownloadInstanceDialog();
                 } else {
