@@ -118,7 +118,7 @@ public class InstanceRemoteSource {
 
 
         return new Instance.Builder()
-                .status(InstanceProviderAPI.STATUS_COMPLETE)
+                .status(InstanceProviderAPI.STATUS_INCOMPLETE)
                 .jrFormId(jrFormId)
                 .fieldSightInstanceId(fsInstanceId)
                 .jrVersion(formVersion)

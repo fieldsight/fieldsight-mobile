@@ -164,6 +164,15 @@ public class InstanceProvider extends ContentProvider {
                 values.put(InstanceColumns.DISPLAY_SUBTEXT, text);
             }
 
+            if (values.containsKey(InstanceColumns.DISPLAY_SUBTEXT)) {
+                boolean isEmpty = TextUtils.isEmpty(values.getAsString(InstanceColumns.DISPLAY_SUBTEXT));
+                if(isEmpty){
+                    Date today = new Date();
+                    String text = getDisplaySubtext(InstanceProviderAPI.STATUS_INCOMPLETE, today);
+                    values.put(InstanceColumns.DISPLAY_SUBTEXT, text);
+                }
+            }
+
             if (!values.containsKey(InstanceColumns.STATUS)) {
                 values.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
             }

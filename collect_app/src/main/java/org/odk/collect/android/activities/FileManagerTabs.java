@@ -36,7 +36,7 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class FileManagerTabs extends CollectAbstractActivity {
 
-    //private final DataManagerList dataManagerList = DataManagerList.newInstance();
+//    private final DataManagerList dataManagerList = DataManagerList.newInstance();
     private final FormManagerList formManagerList = FormManagerList.newInstance();
 
     private Site loadedSite;

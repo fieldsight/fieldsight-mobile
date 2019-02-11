@@ -354,12 +354,15 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (hasFormInstance() && !hasFormVersion()) {
+                            Timber.i("Downloading form version");
                             //download form version and load instance
                             downloadFormVersion(loadedFieldSightNotification);
                         } else if (!hasFormInstance() && hasFormVersion()) {
+                            Timber.i("Downloading form instance");
                             //download form instance and load instance
                             downloadInstance(loadedFieldSightNotification);
                         } else {
+                            Timber.i("Downloading form instance and form version");
                             downloadFormAndInstance(loadedFieldSightNotification, false);
                         }
                     }
@@ -396,7 +399,6 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
     private void downloadFormVersion(FieldSightNotification loadedFieldSightNotification) {
         downloadFormAndInstance(loadedFieldSightNotification, true);
-
     }
 
     private boolean hasFormVersion() {

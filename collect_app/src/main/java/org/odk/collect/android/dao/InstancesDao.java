@@ -411,6 +411,8 @@ public class InstancesDao {
         return Collect.getInstance().getContentResolver().insert(InstanceProviderAPI.InstanceColumns.CONTENT_URI, values);
     }
 
+
+
     public int updateInstance(ContentValues values, String where, String[] whereArgs) {
         return Collect.getInstance().getContentResolver().update(InstanceProviderAPI.InstanceColumns.CONTENT_URI, values, where, whereArgs);
     }
