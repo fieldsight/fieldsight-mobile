@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
+import org.bcss.collect.naxa.onboarding.SyncableItem;
 
 import java.util.List;
 
@@ -76,5 +77,8 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
 //    public static final int FAILED = 2;
     @Query("UPDATE sync SET downloadingStatus = 2, lastSyncDateTime =:date WHERE downloadingStatus= 3")
     public abstract void setAllRunningTaskAsFailed(String date);
+
+    @Query("SELECT * from sync WHERE uid=:uid")
+    public abstract Single<Sync> getById(int uid);
 
 }

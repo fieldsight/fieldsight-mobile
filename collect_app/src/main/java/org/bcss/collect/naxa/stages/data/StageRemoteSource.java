@@ -17,7 +17,6 @@ import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.substages.data.SubStageLocalSource;
 import org.bcss.collect.naxa.sync.SyncLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
@@ -37,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
 
     private static StageRemoteSource INSTANCE;
-    private SyncRepository syncRepository;
+
 
 
     public static StageRemoteSource getInstance() {
@@ -48,7 +47,7 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
     }
 
     public StageRemoteSource() {
-        this.syncRepository = SyncRepository.getInstance();
+
     }
 
 

@@ -221,4 +221,8 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
             syncDAO.setAllRunningTaskAsFailed(formattedDate());
         });
     }
+
+    public Single<Sync> getStatusById(int projectSites) {
+        return syncDAO.getById(projectSites);
+    }
 }

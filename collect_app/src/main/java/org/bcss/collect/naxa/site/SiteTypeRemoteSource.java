@@ -5,7 +5,6 @@ import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.sync.DisposableManager;
 import org.bcss.collect.naxa.sync.SyncLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.util.List;
 

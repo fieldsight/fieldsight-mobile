@@ -19,7 +19,6 @@ import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.site.db.SiteRepository;
 import org.bcss.collect.naxa.sync.DisposableManager;
 import org.bcss.collect.naxa.sync.SyncLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     private static ProjectSitesRemoteSource INSTANCE;
     private SiteRepository siteRepository;
     private ProjectLocalSource projectLocalSource;
-    private SyncRepository syncRepository;
+
 
     public static ProjectSitesRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -54,7 +53,14 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     public ProjectSitesRemoteSource() {
         siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
         projectLocalSource = ProjectLocalSource.getInstance();
-        syncRepository = SyncRepository.getInstance();
+
+
+
+
+
+
+
+
     }
 
 

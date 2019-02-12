@@ -32,7 +32,6 @@ import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
@@ -40,7 +39,6 @@ import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -345,7 +343,6 @@ public class FieldSightUserSession {
                     public void onComplete() {
                         removeFormsAndInstances(context, deletedForms -> {
                             ServiceGenerator.clearInstance();
-                            SyncRepository.instance = null;
                             logoutListener.logoutTaskSuccess();
                             logoutListener.taskComplete();
                         });

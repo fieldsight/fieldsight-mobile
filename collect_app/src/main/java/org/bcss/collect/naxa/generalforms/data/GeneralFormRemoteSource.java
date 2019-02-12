@@ -15,7 +15,6 @@ import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.onboarding.XMLForm;
 import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
@@ -42,7 +41,6 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     private static GeneralFormRemoteSource INSTANCE;
     private ProjectLocalSource projectLocalSource;
-    private SyncRepository syncRepository;
 
     public static GeneralFormRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -54,7 +52,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     public GeneralFormRemoteSource() {
         this.projectLocalSource = ProjectLocalSource.getInstance();
-        this.syncRepository = SyncRepository.getInstance();
+
     }
 
 

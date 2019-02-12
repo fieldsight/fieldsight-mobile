@@ -10,7 +10,6 @@ import org.bcss.collect.naxa.previoussubmission.model.LastSubmissionResponse;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
 import org.bcss.collect.naxa.sync.DisposableManager;
 import org.bcss.collect.naxa.sync.SyncLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;

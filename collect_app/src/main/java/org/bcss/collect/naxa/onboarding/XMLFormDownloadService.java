@@ -22,7 +22,8 @@ import org.bcss.collect.naxa.common.exception.DownloadRunningException;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
+import org.bcss.collect.naxa.sync.Sync;
+import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.task.FieldSightDownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -99,15 +100,14 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         message = new Bundle();
         receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
 
-        SyncRepository.getInstance()
+        SyncLocalSource.getINSTANCE()
                 .getStatusById(Constant.DownloadUID.PROJECT_SITES)
-                .map(syncableItem -> {
-                    if (syncableItem.isProgressStatus()) {
-                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
-
-                    }
-                    return syncableItem;
-                })
+//                .map(syncableItem -> {
+//                    if (syncableItem.getDownloadingStatus() == Constant.DownloadStatus.RUNNING) {
+//                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
+//                    }
+//                    return syncableItem;
+//                })
                 .toObservable()
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
@@ -126,9 +126,9 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
                     }
                 })
-                .flatMapSingle(new Function<SyncableItem, SingleSource<List<Project>>>() {
+                .flatMapSingle(new Function<Sync, SingleSource<List<Project>>>() {
                     @Override
-                    public SingleSource<List<Project>> apply(SyncableItem syncableItem) {
+                    public SingleSource<List<Project>> apply(Sync syncableItem) {
                         return ProjectLocalSource.getInstance()
                                 .getProjectsMaybe();
                     }

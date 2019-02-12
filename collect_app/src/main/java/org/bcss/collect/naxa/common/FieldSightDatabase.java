@@ -37,7 +37,6 @@ import org.bcss.collect.naxa.stages.data.SubStage;
 import org.bcss.collect.naxa.substages.data.SubStageDAO;
 import org.bcss.collect.naxa.survey.SurveyForm;
 import org.bcss.collect.naxa.survey.SurveyFormDAO;
-import org.bcss.collect.naxa.sync.SyncOLD;
 
 import java.io.File;
 
@@ -70,7 +69,6 @@ public abstract class FieldSightDatabase extends RoomDatabase {
 
     public abstract ProjectDao getProjectDAO();
 
-    public abstract SyncOLD getSyncDAO();
 
     public abstract GeneralFormDAO getProjectGeneralFormDao();
 

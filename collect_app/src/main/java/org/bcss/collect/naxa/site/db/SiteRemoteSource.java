@@ -10,10 +10,8 @@ import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.sync.DisposableManager;
 import org.bcss.collect.naxa.sync.SyncLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.util.List;

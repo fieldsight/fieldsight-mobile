@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.ViewModelFactory;
+import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import butterknife.BindView;
@@ -133,7 +134,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
 
     @OnClick(R.id.fieldsight_migrate_act_btn_proceed_anyway)
     public void openProjectList() {
-        DownloadActivity.runAll(this);
+        DownloadActivityRefresh.start(this);
         finish();
 
     }
