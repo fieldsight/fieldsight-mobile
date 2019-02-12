@@ -102,12 +102,12 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
         SyncLocalSource.getINSTANCE()
                 .getStatusById(Constant.DownloadUID.PROJECT_SITES)
-//                .map(syncableItem -> {
-//                    if (syncableItem.getDownloadingStatus() == Constant.DownloadStatus.RUNNING) {
-//                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
-//                    }
-//                    return syncableItem;
-//                })
+                .map(syncableItem -> {
+                    if (syncableItem.getDownloadingStatus() == Constant.DownloadStatus.RUNNING) {
+                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
+                    }
+                    return syncableItem;
+                })
                 .toObservable()
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
