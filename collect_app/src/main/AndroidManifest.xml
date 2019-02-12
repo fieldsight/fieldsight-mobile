@@ -338,9 +338,6 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewImageDetailsActivity" />
         <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewVideoDetailsActivity" />
         <activity android:name="org.bcss.collect.naxa.sync.DownloadActivityRefresh" />
-        <activity
-            android:name="org.bcss.collect.naxa.onboarding.DownloadActivity"
-            android:exported="true" />
 
         <receiver
             android:name="org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver"

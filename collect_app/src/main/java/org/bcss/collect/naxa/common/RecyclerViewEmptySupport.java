@@ -120,8 +120,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                             Intent intent =  new Intent(Collect.getInstance(),DownloadActivityRefresh.class);
                             intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                             Collect.getInstance().startActivity(intent);
-//                            DownloadActivity.start(Collect.getInstance().getApplicationContext());
-                            //onEmptyLayoutClickListener.onRetryButtonClick();
+//                            //onEmptyLayoutClickListener.onRetryButtonClick();
                         }
                     });
         }

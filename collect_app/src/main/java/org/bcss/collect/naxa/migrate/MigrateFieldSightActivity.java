@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.ViewModelFactory;
-import org.bcss.collect.naxa.onboarding.DownloadActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import butterknife.BindView;
