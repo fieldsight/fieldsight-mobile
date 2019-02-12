@@ -606,19 +606,14 @@ public class InstancesDao {
                         String url = instance.getSubmissionUri();
                         String deployedFrom = getFormDeployedFrom(url);
                         String fsFormId = getFsFormIdFromUrl(url);
-
-                        String oldUrl = generateSubmissionUrl(deployedFrom, oldId, fsFormId);
                         String newUrl = generateSubmissionUrl(deployedFrom, newId, fsFormId);
 
 
                         ContentValues contentValues = new ContentValues();
                         contentValues.put(InstanceProviderAPI.InstanceColumns.SUBMISSION_URI, newUrl);
                         contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, newId);
-
-                        String selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?" +
-                                " AND " +
-                                InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + "=?";
-                        String[] selectionArgs = new String[]{oldId, oldUrl};
+                        String selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?";
+                        String[] selectionArgs = new String[]{oldId};
 
                         return updateInstance(contentValues, selection, selectionArgs);
                     }
