@@ -47,7 +47,6 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) {
-                        SyncRepository.getInstance().showProgress(PROJECT_CONTACTS);
                         SyncLocalSource.getINSTANCE().markAsRunning(PROJECT_CONTACTS);
                     }
                 })
@@ -55,15 +54,12 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
                     @Override
                     public void onNext(ArrayList<FieldSightContactModel> fieldSightContactModels) {
                         ContactLocalSource.getInstance().save(fieldSightContactModels);
-                        SyncRepository.getInstance().setSuccess(PROJECT_CONTACTS);
-
                         SyncLocalSource.getINSTANCE().markAsCompleted(PROJECT_CONTACTS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
-                        SyncRepository.getInstance().setError(PROJECT_CONTACTS);
+
                         SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_CONTACTS);
 
                         String message = e.getMessage();

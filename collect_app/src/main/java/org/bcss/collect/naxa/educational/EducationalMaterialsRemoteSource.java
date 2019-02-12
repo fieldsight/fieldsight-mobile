@@ -118,14 +118,11 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        SyncRepository.getInstance().showProgress(EDU_MATERIALS);
-
                         SyncLocalSource.getINSTANCE().markAsRunning(EDU_MATERIALS);
                     }
 
                     @Override
                     public void onSuccess(List<String> strings) {
-                        SyncRepository.getInstance().setSuccess(EDU_MATERIALS);
                         Timber.i("%s has been downloaded", strings.toString());
 
                         SyncLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
@@ -133,8 +130,6 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(EDU_MATERIALS);
-                        e.printStackTrace();
                         Timber.e(e);
 
                         SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS);

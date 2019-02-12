@@ -43,7 +43,6 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        SyncRepository.getInstance().showProgress(SITE_TYPES);
 
                         SyncLocalSource.getINSTANCE().markAsRunning(SITE_TYPES);
                     }
@@ -52,14 +51,11 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                     public void onSuccess(List<SiteType> siteTypes) {
                         SiteType[] list = siteTypes.toArray(new SiteType[siteTypes.size()]);
                         SiteTypeLocalSource.getInstance().save(list);
-                        SyncRepository.getInstance().setSuccess(SITE_TYPES);
-
                         SyncLocalSource.getINSTANCE().markAsCompleted(SITE_TYPES);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(SITE_TYPES);
                         e.printStackTrace();
 
                         String message = e.getMessage();

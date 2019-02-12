@@ -57,7 +57,6 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
                         LastSubmissionLocalSource.getInstance().deleteAll();
-                        SyncRepository.getInstance().showProgress(PREV_SUBMISSION);
 
                         SyncLocalSource.getINSTANCE().markAsRunning(PREV_SUBMISSION);
                     }
@@ -71,7 +70,6 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(PREV_SUBMISSION);
                         SyncLocalSource.getINSTANCE().markAsFailed(PREV_SUBMISSION);
                         e.printStackTrace();
 

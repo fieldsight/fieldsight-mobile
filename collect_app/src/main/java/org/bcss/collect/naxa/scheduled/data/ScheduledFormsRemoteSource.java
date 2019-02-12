@@ -15,6 +15,7 @@ import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.onboarding.XMLForm;
 import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
+import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
 
@@ -71,12 +72,13 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                     @Override
                     public void onSuccess(ArrayList<ScheduleForm> scheduleForms) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.SCHEDULED_FORMS, EVENT_END));
-                        syncRepository.setSuccess(Constant.DownloadUID.SCHEDULED_FORMS);
+                        SyncLocalSource.getINSTANCE().markAsCompleted(Constant.DownloadUID.SCHEDULED_FORMS);
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        syncRepository.setError(Constant.DownloadUID.SCHEDULED_FORMS);
+                        SyncLocalSource.getINSTANCE().markAsFailed(Constant.DownloadUID.SCHEDULED_FORMS);
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.SCHEDULED_FORMS, EVENT_ERROR));
                     }
                 });

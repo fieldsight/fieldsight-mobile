@@ -317,7 +317,6 @@ public class DownloadViewModel extends ViewModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(ALL_FORMS);
                         SyncLocalSource.getINSTANCE().markAsFailed(ALL_FORMS);
                         if (e instanceof RetrofitException) {
                             String message = e.getMessage();

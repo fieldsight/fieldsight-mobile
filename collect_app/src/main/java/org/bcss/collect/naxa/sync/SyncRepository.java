@@ -60,9 +60,7 @@ public class SyncRepository {
         updateField(uid, CHECKED, bool, null);
     }
 
-    public void showProgress(int uid) {
-        updateField(uid, PROGRESS, true, null);
-    }
+
 
     public void setAllCheckedTrue() {
         updateField(0, STATUS_ALL, true, null);
@@ -72,17 +70,6 @@ public class SyncRepository {
         updateField(uid, STATUS, false, String.valueOf(status));
     }
 
-    public void setSuccess(int uid) {
-        hideProgress(uid);
-        updateDate(uid);
-        updateStatus(uid, Constant.DownloadStatus.COMPLETED);
-    }
-
-    public void setError(int uid) {
-        hideProgress(uid);
-        updateDate(uid);
-        updateStatus(uid, Constant.DownloadStatus.FAILED);
-    }
 
     private void hideProgress(int uid) {
         updateField(uid, PROGRESS, false, null);

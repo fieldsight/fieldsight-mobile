@@ -62,7 +62,6 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 .getAllByStatus(IS_EDITED)
                 .doOnDispose(() -> SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES))
                 .doOnSubscribe(disposable -> {
-                    SyncRepository.getInstance().showProgress(EDITED_SITES);
                     SyncLocalSource.getINSTANCE().markAsRunning(EDITED_SITES);
                 })
                 .flattenAsObservable((Function<List<Site>, Iterable<Site>>) sites -> sites)
@@ -88,10 +87,8 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                             }
 
                             FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, msg);
-                            SyncRepository.getInstance().setSuccess(EDITED_SITES);
                             SyncLocalSource.getINSTANCE().markAsCompleted(EDITED_SITES);
                         } else {
-                            SyncRepository.getInstance().setError(EDITED_SITES);
                             SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES);
                         }
                     }
@@ -100,7 +97,6 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         Timber.e(e);
-                        SyncRepository.getInstance().setError(EDITED_SITES);
                         SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES);
 
                         String message = e.getMessage();

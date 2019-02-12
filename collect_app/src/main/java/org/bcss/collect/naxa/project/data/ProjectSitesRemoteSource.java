@@ -193,7 +193,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         ProjectLocalSource.getInstance().deleteAll();
                         SiteLocalSource.getInstance().deleteSyncedSitesAsync();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
-                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
                         SyncLocalSource.getINSTANCE()
                                 .markAsRunning(Constant.DownloadUID.PROJECT_SITES);
                     }
@@ -203,7 +202,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     public void onNext(List<Object> objects) {
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
                         FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
-                        syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
 
                         SyncLocalSource.getINSTANCE()
                                 .markAsCompleted(Constant.DownloadUID.PROJECT_SITES);
@@ -213,7 +211,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
-                        syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
                         String message = e.getMessage();
                         SyncLocalSource.getINSTANCE().markAsFailed(Constant.DownloadUID.PROJECT_SITES, message);
 
