@@ -23,7 +23,6 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +51,7 @@ public class InstancesDaoTest {
     public void getUnsentInstancesCursorTest() {
         Cursor cursor = instancesDao.getUnsentInstancesCursor();
         List<Instance> instances = instancesDao.getInstancesFromCursor(cursor);
-        assertEquals(9, instances.size());
+        assertEquals(6, instances.size());
 
         assertEquals("Cascading Select Form", instances.get(0).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_INCOMPLETE, instances.get(0).getStatus());
@@ -66,20 +65,11 @@ public class InstancesDaoTest {
         assertEquals("Biggest N of Set", instances.get(3).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
 
-        assertEquals("Offline Project Form 1", instances.get(4).getDisplayName());
+        assertEquals("Project Form", instances.get(4).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(4).getStatus());
 
-        assertEquals("Offline Project Form 2", instances.get(5).getDisplayName());
+        assertEquals("Site Form", instances.get(5).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(5).getStatus());
-
-        assertEquals("Offline Project Form 3", instances.get(6).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(6).getStatus());
-
-        assertEquals("Project Form", instances.get(7).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(7).getStatus());
-
-        assertEquals("Site Form", instances.get(8).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(8).getStatus());
     }
 
     @Test
@@ -99,7 +89,7 @@ public class InstancesDaoTest {
     public void getSavedInstancesCursorTest() {
         Cursor cursor = instancesDao.getSavedInstancesCursor(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC");
         List<Instance> instances = instancesDao.getInstancesFromCursor(cursor);
-        assertEquals(10, instances.size());
+        assertEquals(7, instances.size());
 
         assertEquals("Biggest N of Set", instances.get(0).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_SUBMITTED, instances.get(0).getStatus());
@@ -113,25 +103,17 @@ public class InstancesDaoTest {
         assertEquals("Hypertension Screening", instances.get(3).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_INCOMPLETE, instances.get(3).getStatus());
 
-        assertEquals("Offline Project Form 1", instances.get(4).getDisplayName());
+        assertEquals("Project Form", instances.get(4).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(4).getStatus());
 
-        assertEquals("Offline Project Form 2", instances.get(5).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(4).getStatus());
+        assertEquals("Site Form", instances.get(5).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(5).getStatus());
 
-        assertEquals("Offline Project Form 3", instances.get(6).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(6).getStatus());
-
-        assertEquals("Project Form", instances.get(7).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(7).getStatus());
-
-        assertEquals("Site Form", instances.get(8).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(8).getStatus());
-
-        assertEquals("sample", instances.get(9).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_INCOMPLETE, instances.get(9).getStatus());
+        assertEquals("sample", instances.get(6).getDisplayName());
+        assertEquals(InstanceProviderAPI.STATUS_INCOMPLETE, instances.get(6).getStatus());
     }
 
+    @Test()
     public void generateSubmissionUrl() {
         String projectUrl = InstancesDao.generateSubmissionUrl(Constant.FormDeploymentFrom.PROJECT, "123", "98765");
         String siteUrl = InstancesDao.generateSubmissionUrl(Constant.FormDeploymentFrom.SITE, "7876", "90871");
@@ -139,30 +121,22 @@ public class InstancesDaoTest {
         assertEquals("http://fieldsight.naxa.com.np/forms/submission/project/98765/123", projectUrl);
         assertEquals("http://fieldsight.naxa.com.np/forms/submission/90871/7876", siteUrl);
 
+
     }
 
     @Test
     public void getFinalizedInstancesCursorTest() {
         Cursor cursor = instancesDao.getFinalizedInstancesCursor();
         List<Instance> instances = instancesDao.getInstancesFromCursor(cursor);
-        assertEquals(6, instances.size());
+        assertEquals(3, instances.size());
 
         assertEquals("Biggest N of Set", instances.get(0).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(0).getStatus());
 
-        assertEquals("Offline Project Form 1", instances.get(1).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
-
-        assertEquals("Offline Project Form 2", instances.get(2).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
-
-        assertEquals("Offline Project Form 3", instances.get(3).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
-
-        assertEquals("Project Form", instances.get(4).getDisplayName());
+        assertEquals("Project Form", instances.get(1).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(1).getStatus());
 
-        assertEquals("Site Form", instances.get(5).getDisplayName());
+        assertEquals("Site Form", instances.get(2).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(2).getStatus());
     }
 
@@ -180,7 +154,7 @@ public class InstancesDaoTest {
     public void getAllCompletedUndeletedInstancesCursorTest() {
         Cursor cursor = instancesDao.getAllCompletedUndeletedInstancesCursor();
         List<Instance> instances = instancesDao.getInstancesFromCursor(cursor);
-        assertEquals(7, instances.size());
+        assertEquals(4, instances.size());
 
         assertEquals("Biggest N of Set", instances.get(0).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_SUBMITTED, instances.get(0).getStatus());
@@ -188,23 +162,11 @@ public class InstancesDaoTest {
         assertEquals("Biggest N of Set", instances.get(1).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(1).getStatus());
 
-        assertEquals("Offline Project Form 1", instances.get(2).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
-
-        assertEquals("Offline Project Form 2", instances.get(3).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
-
-        assertEquals("Offline Project Form 3", instances.get(4).getDisplayName());
-        assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
-
-        assertEquals("Project Form", instances.get(5).getDisplayName());
+        assertEquals("Project Form", instances.get(2).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(2).getStatus());
 
-        assertEquals("Site Form", instances.get(6).getDisplayName());
+        assertEquals("Site Form", instances.get(3).getDisplayName());
         assertEquals(InstanceProviderAPI.STATUS_COMPLETE, instances.get(3).getStatus());
-
-
-
     }
 
     @Test
@@ -348,57 +310,7 @@ public class InstancesDaoTest {
                 .displaySubtext("Finalized on Mon, Feb 21, 2018 at 14:24")
                 .build();
         instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance8));
-
-        Instance instance9 = new Instance.Builder()
-                .displayName("Offline Project Form 1")
-                .instanceFilePath(Collect.INSTANCES_PATH + "/Offline_Project_Form_1_2018-02-21_14-24-46/Offline_Project_Form_1_2018-02-21_14-24-46.xml")
-                .jrFormId("FS_OFFLINE_PROJECT_1")
-                .submissionUri("http://fieldsight.naxa.com.np/forms/submission/297461/9849503509-fake")
-                .status(InstanceProviderAPI.STATUS_COMPLETE)
-                .lastStatusChangeDate(1487597090653L)
-                .fieldSightSiteId("9849503509-fake")
-                .displaySubtext("Finalized on Mon, Feb 21, 2018 at 14:24")
-                .build();
-        instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance9));
-
-        Instance instance10 = new Instance.Builder()
-                .displayName("Offline Project Form 2")
-                .instanceFilePath(Collect.INSTANCES_PATH + "/Offline_Project_Form_2_2018-02-21_14-24-46/Offline_Project_Form_2_2018-02-21_14-24-46.xml")
-                .jrFormId("FS_OFFLINE_PROJECT_2")
-                .submissionUri("http://fieldsight.naxa.com.np/forms/submission/397463/9849503509-fake")
-                .status(InstanceProviderAPI.STATUS_COMPLETE)
-                .lastStatusChangeDate(1487597090653L)
-                .fieldSightSiteId("9849503509-fake")
-                .displaySubtext("Finalized on Mon, Feb 21, 2018 at 14:24")
-                .build();
-        instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance10));
-
-        Instance instance11 = new Instance.Builder()
-                .displayName("Offline Project Form 3")
-                .instanceFilePath(Collect.INSTANCES_PATH + "/Offline_Project_Form_3_2018-02-21_14-24-46/Offline_Project_Form_2_2018-02-21_14-24-46.xml")
-                .jrFormId("FS_OFFLINE_PROJECT_3")
-                .submissionUri("http://fieldsight.naxa.com.np/forms/submission/497464/9849503509-fake")
-                .status(InstanceProviderAPI.STATUS_COMPLETE)
-                .lastStatusChangeDate(1487597090653L)
-                .fieldSightSiteId("9849503509-fake")
-                .displaySubtext("Finalized on Mon, Feb 21, 2018 at 14:24")
-                .build();
-        instancesDao.saveInstance(instancesDao.getValuesFromInstanceObject(instance11));
     }
-
-    @Test
-    public void cascadeSiteId() {
-        instancesDao.cascadedSiteIds("9849503509-fake", "4251554")
-                .test()
-                .assertValues(1,1,1)
-                .dispose();
-
-        assertEquals(instancesDao.getBySiteId("4251554").get(0).getSubmissionUri(), "http://fieldsight.naxa.com.np/forms/submission/297461/4251554");
-        assertEquals(instancesDao.getBySiteId("4251554").get(1).getSubmissionUri(), "http://fieldsight.naxa.com.np/forms/submission/397463/4251554");
-        assertEquals(instancesDao.getBySiteId("4251554").get(2).getSubmissionUri(), "http://fieldsight.naxa.com.np/forms/submission/497464/4251554");
-
-    }
-
 
     @After
     public void tearDown() {
