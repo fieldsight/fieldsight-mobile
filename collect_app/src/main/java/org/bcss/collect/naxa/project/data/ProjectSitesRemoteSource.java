@@ -66,10 +66,9 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public ObservableSource<MySiteResponse> apply(MeResponse meResponse) {
 
-                        if (!meResponse.getData().getIsSupervisor()) {
-                            throw new BadUserException(meResponse.getData().getFullName() + " has not been assigned as a site supervisor.");
+                        if (meResponse.getData() == null || !meResponse.getData().getIsSupervisor()) {
+                            throw new BadUserException("You have not been assigned as a site supervisor.");
                         }
-
                         String user = GSONInstance.getInstance().toJson(meResponse.getData());
                         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
 
@@ -216,8 +215,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
                         syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
                         String message = e.getMessage();
-                        SyncLocalSource.getINSTANCE().markAsFailed(Constant.DownloadUID.PROJECT_SITES,message);
-
+                        SyncLocalSource.getINSTANCE().markAsFailed(Constant.DownloadUID.PROJECT_SITES, message);
 
 
                     }

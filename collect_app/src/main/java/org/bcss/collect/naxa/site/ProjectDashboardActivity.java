@@ -54,6 +54,7 @@ import com.crashlytics.android.Crashlytics;
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.gson.Gson;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.AppBarStateChangeListener;
@@ -62,9 +63,11 @@ import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.NonSwipeableViewPager;
 import org.bcss.collect.naxa.common.RxSearchObservable;
+import org.bcss.collect.naxa.common.SettingsActivity;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.contact.ProjectContactsFragment;
+import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
@@ -95,6 +98,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static org.bcss.collect.android.application.Collect.allowClick;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class ProjectDashboardActivity extends CollectAbstractActivity {
@@ -535,6 +539,13 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuItem = menu.findItem(R.id.action_app_settings);
+        menuItem.setVisible((BuildConfig.BUILD_TYPE.equals("internal")));
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -566,11 +577,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 NotificationListActivity.start(this);
 
                 break;
-            case R.id.action_app_settings:
-                ToastUtils.showLongToast("Not implemented yet");
-                //startActivity(new Intent(this, SettingsActivity.class));
 
-                break;
             case R.id.action_logout:
                 showProgress();
                 InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {
@@ -592,6 +599,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
                 break;
             case R.id.action_refresh:
                 DownloadActivityRefresh.start(this);
+                break;
+            case R.id.action_app_settings:
+                if (allowClick(getClass().getName())) {
+
+                    startActivity(new Intent(ProjectDashboardActivity.this, SettingsActivity.class));
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

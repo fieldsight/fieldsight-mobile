@@ -13,8 +13,9 @@ import java.util.List;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
+@Deprecated
 @Dao
-public interface SyncDao {
+public interface SyncOLD {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(SyncableItem... items);
