@@ -161,7 +161,6 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
             Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, formId);
             String action = getIntent().getAction();
 
-
             if (Intent.ACTION_PICK.equals(action)) {
                 // caller is waiting on a picked form
                 setResult(RESULT_OK, new Intent().setData(formUri));
@@ -180,8 +179,6 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
             DialogFactory.createGenericErrorDialog(this, getString(R.string.form_not_present)).show();
             Timber.e("Failed to load xml form  %s", e.getMessage());
         }
-
-
     }
 
     protected String generateSubmissionUrl(String formDeployedFrom, String creatorsId, String fsFormId) {
@@ -192,8 +189,8 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
 
         String[] projection = new String[]{FormsProviderAPI.FormsColumns._ID, FormsProviderAPI.FormsColumns.FORM_FILE_PATH};
-        String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
-        String[] selectionArgs = new String[]{jrFormId};
+        String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=? AND " + FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " =?";
+        String[] selectionArgs = new String[]{jrFormId, "0"};
         String sortOrder = FormsProviderAPI.FormsColumns._ID + " DESC LIMIT 1";
 
         Cursor cursor = getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI,

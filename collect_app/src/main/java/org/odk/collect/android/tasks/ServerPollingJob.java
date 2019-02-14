@@ -93,7 +93,7 @@ public class ServerPollingJob extends Job {
 
             if (!newDetectedForms.isEmpty()) {
                 if (GeneralSharedPreferences.getInstance().getBoolean(KEY_AUTOMATIC_UPDATE, false)) {
-                    final HashMap<FormDetails, String> result = new FormDownloader().downloadForms(newDetectedForms);
+                    final HashMap<FormDetails, String> result = new FormDownloader(false).downloadForms(newDetectedForms);
                     informAboutNewDownloadedForms(Collect.getInstance().getString(R.string.download_forms_result), result);
                 } else {
                     for (FormDetails formDetails : newDetectedForms) {

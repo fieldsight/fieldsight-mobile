@@ -54,9 +54,12 @@ public class FormDownloader {
 
     private FormsDao formsDao;
 
+    private boolean isTempDownload;
+
     @Inject CollectServerClient collectServerClient;
 
-    public FormDownloader() {
+    public FormDownloader(boolean isTempDownload) {
+        this.isTempDownload = isTempDownload;
         Collect.getInstance().getComponent().inject(this);
     }
 
@@ -304,7 +307,8 @@ public class FormDownloader {
         v.put(FormsProviderAPI.FormsColumns.SUBMISSION_URI,          formInfo.get(FileUtils.SUBMISSIONURI));
         v.put(FormsProviderAPI.FormsColumns.BASE64_RSA_PUBLIC_KEY,   formInfo.get(FileUtils.BASE64_RSA_PUBLIC_KEY));
         v.put(FormsProviderAPI.FormsColumns.AUTO_DELETE,             formInfo.get(FileUtils.AUTO_DELETE));
-        v.put(FormsProviderAPI.FormsColumns.AUTO_SEND,             formInfo.get(FileUtils.AUTO_SEND));
+        v.put(FormsProviderAPI.FormsColumns.AUTO_SEND,               formInfo.get(FileUtils.AUTO_SEND));
+        v.put(FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD,        isTempDownload);
         return formsDao.saveForm(v);
     }
 

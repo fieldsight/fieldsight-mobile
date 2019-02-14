@@ -55,6 +55,7 @@ public final class InstanceProviderAPI {
         public static final String JR_FORM_ID = "jrFormId";
         public static final String JR_VERSION = "jrVersion";
         public static final String FS_SITE_ID = "site_id";
+        public static final String FS_SUBMISSION_INSTANCE_ID = "fsInstanceId";
         //public static final String FORM_ID = "formId";
 
         // these are generated for you (but you can insert something else if you want)

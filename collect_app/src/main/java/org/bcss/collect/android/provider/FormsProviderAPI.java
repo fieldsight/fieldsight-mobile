@@ -61,6 +61,7 @@ public final class FormsProviderAPI {
         public static final String DATE = "date";
         public static final String JRCACHE_FILE_PATH = "jrcacheFilePath";
         public static final String FORM_MEDIA_PATH = "formMediaPath";
+        public static final String IS_TEMP_DOWNLOAD = "isTmpDownload";
 
         // this is null on create, and can only be set on an update.
         public static final String LANGUAGE = "language";
