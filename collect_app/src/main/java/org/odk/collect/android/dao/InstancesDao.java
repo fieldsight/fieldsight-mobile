@@ -310,7 +310,7 @@ public class InstancesDao {
                 + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                 + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
                 + "("
-                + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12"
+                + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12 "
                 + "OR " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE '%fake%'"
                 + ")";
 
@@ -382,6 +382,10 @@ public class InstancesDao {
         return getInstancesCursor(null, selection, selectionArgs, null);
     }
 
+    public Cursor getInstancesCursor(String fsInstanceId) {
+        return getInstancesCursor(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID + "=? ", new String[]{fsInstanceId});
+    }
+
     public Cursor getInstanceCursor() {
         return getInstancesCursor(null, null, null, null);
     }
@@ -406,6 +410,8 @@ public class InstancesDao {
     public Uri saveInstance(ContentValues values) {
         return Collect.getInstance().getContentResolver().insert(InstanceProviderAPI.InstanceColumns.CONTENT_URI, values);
     }
+
+
 
     public int updateInstance(ContentValues values, String where, String[] whereArgs) {
         return Collect.getInstance().getContentResolver().update(InstanceProviderAPI.InstanceColumns.CONTENT_URI, values, where, whereArgs);
@@ -559,6 +565,7 @@ public class InstancesDao {
         values.put(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT, instance.getDisplaySubtext());
         values.put(InstanceProviderAPI.InstanceColumns.DELETED_DATE, instance.getDeletedDate());
         values.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, instance.getFieldSightSiteId());
+        values.put(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID, instance.getFieldSightInstanceId());
 
         return values;
     }
@@ -606,14 +613,19 @@ public class InstancesDao {
                         String url = instance.getSubmissionUri();
                         String deployedFrom = getFormDeployedFrom(url);
                         String fsFormId = getFsFormIdFromUrl(url);
+
+                        String oldUrl = generateSubmissionUrl(deployedFrom, oldId, fsFormId);
                         String newUrl = generateSubmissionUrl(deployedFrom, newId, fsFormId);
 
 
                         ContentValues contentValues = new ContentValues();
                         contentValues.put(InstanceProviderAPI.InstanceColumns.SUBMISSION_URI, newUrl);
                         contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, newId);
-                        String selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?";
-                        String[] selectionArgs = new String[]{oldId};
+
+                        String selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?" +
+                                " AND " +
+                                InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + "=?";
+                        String[] selectionArgs = new String[]{oldId, oldUrl};
 
                         return updateInstance(contentValues, selection, selectionArgs);
                     }

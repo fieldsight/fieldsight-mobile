@@ -212,6 +212,7 @@ public class InstanceServerUploader extends InstanceUploader {
                     + (e.getMessage() != null ? e.getMessage() : e.toString()));
         }
 
+        saveFieldSightInstanceId(messageParser.getFieldSightInstanceId(), instance);
         saveSuccessStatusToDatabase(instance);
 
         if (messageParser.isValid()) {
@@ -293,11 +294,8 @@ public class InstanceServerUploader extends InstanceUploader {
         }
 
 
-
         return urlString;
     }
-
-
 
 
     private String getServerSubmissionURL() {

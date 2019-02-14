@@ -34,6 +34,7 @@ import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColu
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.DISPLAY_NAME;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.FS_SITE_ID;
+import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.JR_FORM_ID;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns.JR_VERSION;
@@ -48,7 +49,7 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "instances.db";
     public static final String INSTANCES_TABLE_NAME = "instances";
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     private final String[] instancesTableColumnsInVersion4 = new String[]{_ID, DISPLAY_NAME, SUBMISSION_URI, CAN_EDIT_WHEN_COMPLETE,
             INSTANCE_FILE_PATH, JR_FORM_ID, JR_VERSION, STATUS, LAST_STATUS_CHANGE_DATE, DISPLAY_SUBTEXT, DELETED_DATE};
@@ -75,6 +76,8 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
                 success &= upgradeToVersion3(db);
             case 3:
                 success &= upgradeToVersion4(db);
+            case 4:
+                success &= upgradeToVersion5(db);
                 break;
             default:
                 Timber.i("Unknown version " + oldVersion);
@@ -86,6 +89,7 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
             Timber.e("Upgrading database siteName version " + oldVersion + " to " + newVersion + " failed.");
         }
     }
+
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -154,6 +158,26 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
         return success;
     }
 
+    private boolean upgradeToVersion5(SQLiteDatabase db) {
+        boolean success = true;
+        try {
+            Cursor cursor = db.rawQuery("SELECT * FROM " + INSTANCES_TABLE_NAME + " LIMIT 0", null);
+            int columnIndex = cursor.getColumnIndex(FS_SUBMISSION_INSTANCE_ID);
+            cursor.close();
+
+            // Only add the column if it doesn't already exist
+            if (columnIndex == -1) {
+                db.execSQL("ALTER TABLE " + INSTANCES_TABLE_NAME + " ADD COLUMN "
+                        + FS_SUBMISSION_INSTANCE_ID + " text;");
+            }
+        } catch (SQLiteException e) {
+            Timber.e(e);
+            success = false;
+        }
+        return success;
+    }
+
+
     private boolean downgrade(SQLiteDatabase db, String[] instancesTableColumns) {
         boolean success = true;
         String temporaryTable = INSTANCES_TABLE_NAME + "_tmp";
@@ -192,6 +216,7 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + INSTANCES_TABLE_NAME + " ("
                 + _ID + " integer primary key, "
                 + FS_SITE_ID + " text not null, "
+                + FS_SUBMISSION_INSTANCE_ID + " text, "
                 + DISPLAY_NAME + " text not null, "
                 + SUBMISSION_URI + " text, "
                 + CAN_EDIT_WHEN_COMPLETE + " text, "

@@ -6,6 +6,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
@@ -62,8 +63,10 @@ public class ServiceGenerator {
         okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS);
         okHttpClientBuilder.writeTimeout(10, TimeUnit.SECONDS);
         okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);
-//        okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
 
+        if(BuildConfig.DEBUG){
+            okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
+        }
 
         return okHttpClientBuilder
                 .build();
@@ -93,6 +96,10 @@ public class ServiceGenerator {
                 return chain.proceed(offlineRequest);
             }
         });
+
+        if(BuildConfig.DEBUG){
+            okHttpBuilder.addNetworkInterceptor(new StethoInterceptor());
+        }
 
         return okHttpBuilder.build();
     }

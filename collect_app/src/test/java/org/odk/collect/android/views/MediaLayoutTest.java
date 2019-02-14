@@ -9,6 +9,8 @@ import android.widget.TextView;
 import junit.framework.Assert;
 
 import org.bcss.collect.android.logic.FileReference;
+import org.bcss.collect.android.views.AudioButton;
+import org.bcss.collect.android.views.MediaLayout;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;

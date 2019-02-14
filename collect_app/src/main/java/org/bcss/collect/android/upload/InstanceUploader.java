@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Instance;
+import org.bcss.collect.android.provider.InstanceProvider;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
@@ -36,7 +37,7 @@ public abstract class InstanceUploader {
     /**
      * Uploads the specified instance to the specified destination URL. It may return a custom
      * success message on completion or null if none is available. Errors result in an UploadException.
-     *
+     * <p>
      * Updates the database status for the instance.
      */
     @Nullable
@@ -92,6 +93,15 @@ public abstract class InstanceUploader {
         Collect.getInstance().getContentResolver().update(instanceDatabaseUri, contentValues, null, null);
     }
 
+    void saveFieldSightInstanceId(String fsInstanceId, Instance instance) {
+        Uri instanceDatabaseUri = Uri.withAppendedPath(InstanceProviderAPI.InstanceColumns.CONTENT_URI,
+                instance.getDatabaseId().toString());
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID, fsInstanceId);
+        Collect.getInstance().getContentResolver().update(instanceDatabaseUri, contentValues, null, null);
+
+    }
+
     void saveFailedStatusToDatabase(Instance instance) {
         Uri instanceDatabaseUri = Uri.withAppendedPath(InstanceProviderAPI.InstanceColumns.CONTENT_URI,
                 instance.getDatabaseId().toString());
@@ -104,7 +114,7 @@ public abstract class InstanceUploader {
     /**
      * Returns whether instances of the form specified should be auto-deleted after successful
      * update.
-     *
+     * <p>
      * If the form explicitly sets the auto-delete property, then it overrides the preference.
      */
     public static boolean formShouldBeAutoDeleted(String jrFormId, boolean isAutoDeleteAppSettingEnabled) {

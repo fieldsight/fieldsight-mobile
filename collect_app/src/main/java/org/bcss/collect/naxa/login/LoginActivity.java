@@ -24,7 +24,6 @@ import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.common.Login;
 import org.bcss.collect.naxa.common.SettingsActivity;
 import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.migrate.MigrationHelper;
@@ -75,16 +74,18 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
             }
         });
 
-
-        btnChangeUrl.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (allowClick(getClass().getName())) {
-                    hideKeyboardInActivity(LoginActivity.this);
-                    startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
+        if (!BuildConfig.BUILD_TYPE.equals("release")) {
+            btnChangeUrl.setVisibility(View.VISIBLE);
+            btnChangeUrl.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (allowClick(getClass().getName())) {
+                        hideKeyboardInActivity(LoginActivity.this);
+                        startActivity(new Intent(LoginActivity.this, SettingsActivity.class));
+                    }
                 }
-            }
-        });
+            });
+        }
         mLoginFormView = findViewById(R.id.logo);
         mProgressView = findViewById(R.id.login_progress);
 
@@ -183,7 +184,6 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         if (hasOldAccount) {
             MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
         } else {
-//            DownloadActivityRefresh.start(this);
             ProjectListActivity.start(this);
         }
         Toast.makeText(this, "Logged In!", Toast.LENGTH_SHORT).show();

@@ -25,6 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.ResponseUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.ResponseMessageParser;
@@ -386,7 +387,6 @@ public class HttpClientConnection implements OpenRosaHttpInterface {
                 int responseCode = response.getStatusLine().getStatusCode();
                 HttpEntity httpEntity = response.getEntity();
                 Timber.i("Response code:%d", responseCode);
-                //ResponseUtils.saveHttpResponseToFile(response,submissionFile.getName());
 
                 messageParser = new ResponseMessageParser(
                         EntityUtils.toString(httpEntity),

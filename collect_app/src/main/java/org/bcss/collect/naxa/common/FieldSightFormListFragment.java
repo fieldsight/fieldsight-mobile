@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.provider.FormsProvider;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.dao.InstancesDao;
 
@@ -54,8 +55,8 @@ public class FieldSightFormListFragment extends Fragment {
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
 
         String[] projection = new String[]{FormsProviderAPI.FormsColumns._ID, FormsProviderAPI.FormsColumns.FORM_FILE_PATH};
-        String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
-        String[] selectionArgs = new String[]{jrFormId};
+        String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=? AND " + FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " =?";
+        String[] selectionArgs = new String[]{jrFormId, "0"};
         String sortOrder = FormsProviderAPI.FormsColumns._ID + " DESC LIMIT 1";
 
         Cursor cursor = requireActivity().getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI,

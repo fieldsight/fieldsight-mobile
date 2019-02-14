@@ -25,7 +25,7 @@ import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 
 public class SyncRepository {
 
-    private SyncDao syncDao;
+    private SyncOLD syncOLD;
     public static SyncRepository instance;
     private final String CHECKED = "checked";
     public final String PROGRESS = "progress";
@@ -35,7 +35,7 @@ public class SyncRepository {
 
     public SyncRepository(Application application) {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(application);
-        this.syncDao = database.getSyncDAO();
+        this.syncOLD = database.getSyncDAO();
         init();
     }
 
@@ -53,7 +53,7 @@ public class SyncRepository {
     }
 
     public void insert(SyncableItem... items) {
-        new insertAsyncTask(syncDao).execute(items);
+        new insertAsyncTask(syncOLD).execute(items);
     }
 
     public void setChecked(int uid, boolean bool) {
@@ -102,7 +102,7 @@ public class SyncRepository {
     }
 
     public Single<SyncableItem> getStatusById(int uid) {
-        return syncDao.getById(uid);
+        return syncOLD.getById(uid);
     }
 
     private void updateField(int uid, String code, boolean value, String stringValue) {
@@ -113,19 +113,19 @@ public class SyncRepository {
                     public void onNext(Integer integer) {
                         switch (code) {
                             case CHECKED:
-                                syncDao.updateChecked(uid, value);
+                                syncOLD.updateChecked(uid, value);
                                 break;
                             case PROGRESS:
-                                syncDao.updateProgress(uid, value);
+                                syncOLD.updateProgress(uid, value);
                                 break;
                             case DATE:
-                                syncDao.updateDate(uid, stringValue);
+                                syncOLD.updateDate(uid, stringValue);
                                 break;
                             case STATUS:
-                                syncDao.updateStatus(uid, Integer.parseInt(stringValue));
+                                syncOLD.updateStatus(uid, Integer.parseInt(stringValue));
                                 break;
                             case STATUS_ALL:
-                                syncDao.setAllCheckedTrue(true);
+                                syncOLD.setAllCheckedTrue(true);
                         }
                     }
 
@@ -142,14 +142,14 @@ public class SyncRepository {
     }
 
     public LiveData<List<SyncableItem>> getAllSyncItems() {
-        return syncDao.getAllSyncableItems();
+        return syncOLD.getAllSyncableItems();
     }
 
     public void updateAllUnknown() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDao.updateAllUnknown(Constant.DownloadStatus.FAILED, false);
+                syncOLD.updateAllUnknown(Constant.DownloadStatus.FAILED, false);
             }
         });
 
@@ -157,21 +157,21 @@ public class SyncRepository {
 
     public void setAllRunningTaskAsFailed() {
         AsyncTask.execute(() -> {
-            syncDao.markAllRunningTaskAsFailed(formattedDate());
+            syncOLD.markAllRunningTaskAsFailed(formattedDate());
         });
     }
 
     private static class insertAsyncTask extends AsyncTask<SyncableItem, Void, Void> {
 
-        private SyncDao syncDao;
+        private SyncOLD syncOLD;
 
-        insertAsyncTask(SyncDao dao) {
-            syncDao = dao;
+        insertAsyncTask(SyncOLD dao) {
+            syncOLD = dao;
         }
 
         @Override
         protected Void doInBackground(final SyncableItem... items) {
-            syncDao.insert(items);
+            syncOLD.insert(items);
             return null;
         }
     }
