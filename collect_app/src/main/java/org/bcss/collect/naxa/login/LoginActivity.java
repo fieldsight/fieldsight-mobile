@@ -24,7 +24,6 @@ import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.common.Login;
 import org.bcss.collect.naxa.common.SettingsActivity;
 import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.migrate.MigrationHelper;
