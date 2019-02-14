@@ -99,8 +99,7 @@ public class SettingsActivity extends CollectAbstractActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this, LoginActivity.class));
-        overridePendingTransition(0,0);
+        super.onBackPressed();
     }
 
     private boolean isValidUrl(String url) {
