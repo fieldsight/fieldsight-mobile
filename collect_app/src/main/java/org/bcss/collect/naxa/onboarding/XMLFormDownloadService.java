@@ -358,7 +358,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
             // show dialog box
             // showRefreshing(PROGRESS_DIALOG);
-            DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask();
+            DownloadFormsTask mDownloadFormsTask = new DownloadFormsTask(false);
             mDownloadFormsTask.setDownloaderListener(this);
             mDownloadFormsTask.execute(filesToDownload);
         } else {

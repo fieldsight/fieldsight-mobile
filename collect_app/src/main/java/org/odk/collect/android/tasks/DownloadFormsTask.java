@@ -36,6 +36,11 @@ public class DownloadFormsTask extends
         AsyncTask<ArrayList<FormDetails>, String, HashMap<FormDetails, String>> implements FormDownloaderListener {
 
     private DownloadFormsTaskListener stateListener;
+    private boolean isTempDownload;
+
+    public DownloadFormsTask(boolean isTempDownload) {
+        this.isTempDownload = isTempDownload;
+    }
 
     @Override
     public void progressUpdate(String currentFile, String progress, String total) {
@@ -49,8 +54,9 @@ public class DownloadFormsTask extends
 
     @Override
     protected HashMap<FormDetails, String> doInBackground(ArrayList<FormDetails>... values) {
-        FormDownloader formDownloader = new FormDownloader();
+        FormDownloader formDownloader = new FormDownloader(isTempDownload);
         formDownloader.setDownloaderListener(this);
+
         return formDownloader.downloadForms(values[0]);
     }
 
@@ -89,5 +95,9 @@ public class DownloadFormsTask extends
         synchronized (this) {
             stateListener = sl;
         }
+    }
+
+    public void setDownloadAsTemporary() {
+
     }
 }

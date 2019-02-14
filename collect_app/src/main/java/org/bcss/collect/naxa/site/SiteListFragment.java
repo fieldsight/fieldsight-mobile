@@ -496,7 +496,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         String errorMessage = RetrofitException.getMessage(e);
                         FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
 
-                        if (isAdded()) {
+                        if (isAdded() && getActivity() != null) {
                             DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
                         } else {
                             FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), errorMessage);

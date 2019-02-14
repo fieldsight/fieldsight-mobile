@@ -580,7 +580,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             // show dialog box
             showDialog(PROGRESS_DIALOG);
 
-            downloadFormsTask = new DownloadFormsTask();
+            downloadFormsTask = new DownloadFormsTask(false);
             downloadFormsTask.setDownloaderListener(this);
 
             if (url != null) {

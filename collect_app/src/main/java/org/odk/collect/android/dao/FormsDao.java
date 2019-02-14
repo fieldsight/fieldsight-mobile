@@ -236,6 +236,7 @@ public class FormsDao {
                     int autoSendColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.AUTO_SEND);
                     int autoDeleteColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.AUTO_DELETE);
                     int lastDetectedFormVersionHashColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.LAST_DETECTED_FORM_VERSION_HASH);
+                    int isTempDownload = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD);
 
                     Form form = new Form.Builder()
                             .id(cursor.getInt(idColumnIndex))
@@ -255,6 +256,7 @@ public class FormsDao {
                             .autoSend(cursor.getString(autoSendColumnIndex))
                             .autoDelete(cursor.getString(autoDeleteColumnIndex))
                             .lastDetectedFormVersionHash(cursor.getString(lastDetectedFormVersionHashColumnIndex))
+                            .isTempDownload(cursor.getString(isTempDownload))
                             .build();
 
                     forms.add(form);
@@ -281,6 +283,7 @@ public class FormsDao {
         values.put(FormsProviderAPI.FormsColumns.JRCACHE_FILE_PATH, form.getJrCacheFilePath());
         values.put(FormsProviderAPI.FormsColumns.FORM_MEDIA_PATH, form.getFormMediaPath());
         values.put(FormsProviderAPI.FormsColumns.LANGUAGE, form.getLanguage());
+        values.put(FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD, form.getIsTempDownload());
         return values;
     }
 

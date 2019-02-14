@@ -16,13 +16,13 @@
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/padding_list_row"
         android:paddingLeft="@dimen/padding_list_row"
+        android:paddingTop="@dimen/padding_list_row"
         android:paddingRight="@dimen/padding_list_row"
-        android:paddingTop="@dimen/padding_list_row">
-
+        android:paddingBottom="@dimen/padding_list_row">
 
         <include layout="@layout/item_text_circle" />
+
 
         <LinearLayout
             android:id="@+id/message_container"
@@ -78,14 +78,14 @@
             tools:text="Offline Site" />
 
         <ImageView
-            android:visibility="gone"
             android:id="@+id/icon_star"
-
             android:layout_width="@dimen/icon_star"
+
             android:layout_height="@dimen/icon_star"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:tint="@color/yellow"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_stars" />
 
     </RelativeLayout>

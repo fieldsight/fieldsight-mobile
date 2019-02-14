@@ -36,6 +36,7 @@ import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.DI
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.DISPLAY_SUBTEXT;
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.FORM_FILE_PATH;
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.FORM_MEDIA_PATH;
+import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD;
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.JRCACHE_FILE_PATH;
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.JR_FORM_ID;
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.JR_VERSION;
@@ -51,7 +52,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "forms.db";
     public static final String FORMS_TABLE_NAME = "forms";
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     // These exist in database versions 2 and 3, but not in 4...
     private static final String TEMP_FORMS_TABLE_NAME = "forms_v4";
@@ -82,16 +83,37 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
                 success &= upgradeToVersion5(db);
             case 5:
                 success &= upgradeToVersion6(db);
+            case 6:
+                success &= upgradeToVersion7(db);
                 break;
             default:
                 Timber.i("Unknown version %s", oldVersion);
         }
 
         if (success) {
-            Timber.i("Upgrading database siteName version " + oldVersion + " to " + newVersion + " completed with success.");
+            Timber.i("Upgrading database from version " + oldVersion + " to " + newVersion + " completed with success.");
         } else {
-            Timber.e("Upgrading database siteName version " + oldVersion + " to " + newVersion + " failed.");
+            Timber.e("Upgrading database from version " + oldVersion + " to " + newVersion + " failed.");
         }
+    }
+
+    private boolean upgradeToVersion7(SQLiteDatabase db) {
+        boolean success = true;
+        try {
+            CustomSQLiteQueryBuilder
+                    .begin(db)
+                    .alter()
+                    .table(FORMS_TABLE_NAME)
+                    .addColumn(IS_TEMP_DOWNLOAD, "text")
+                    .end();
+
+            createFormsTable(db, FORMS_TABLE_NAME);
+        } catch (SQLiteException e) {
+            Timber.e(e);
+            success = false;
+        }
+
+        return success;
     }
 
     @Override
@@ -313,6 +335,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
                 + JRCACHE_FILE_PATH + " text not null, "
                 + AUTO_SEND + " text, "
                 + AUTO_DELETE + " text, "
+                + IS_TEMP_DOWNLOAD + " text, "
                 + LAST_DETECTED_FORM_VERSION_HASH + " text);");
     }
 }

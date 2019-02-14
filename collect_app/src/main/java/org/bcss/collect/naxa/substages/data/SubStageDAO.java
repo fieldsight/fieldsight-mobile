@@ -30,10 +30,10 @@ public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
     }
 
 
-    @Query("SELECT * FROM substage WHERE stageId= :stageId")
+    @Query("SELECT * FROM substage WHERE stageId= :stageId ORDER BY `order` ASC")
     public abstract LiveData<List<SubStage>> getByStageId(String stageId);
 
-    @Query("SELECT * FROM substage WHERE stageId= :stageId")
+    @Query("SELECT * FROM substage WHERE stageId= :stageId ORDER BY `order` ASC")
     public abstract Maybe<List<SubStage>> getByStageIdMaybe(String stageId);
 
     @Deprecated
