@@ -117,30 +117,44 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("DELETE FROM sync");
+            try {
+                database.execSQL("DELETE FROM sync");
+            }catch (Exception e){e.printStackTrace();}
         }
     };
 
     private static final Migration MIGRATION_5_6 = new Migration(5, 6) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("DELETE FROM sync");
+            try {
+                database.execSQL("DELETE FROM sync");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     };
 
     private static final Migration MIGRATION_6_7 = new Migration(6, 7) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE FieldSightNotification "
-                    + " ADD COLUMN `formVersion` TEXT ");
+            try {
+                database.execSQL("ALTER TABLE FieldSightNotification "
+                        + " ADD COLUMN `formVersion` TEXT ");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     };
 
     private static final Migration MIGRATION_7_8 = new Migration(7, 8) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE FieldSightNotification "
-                    + " ADD COLUMN `siteIdentifier` TEXT ");
+            try {
+                database.execSQL("ALTER TABLE FieldSightNotification "
+                        + " ADD COLUMN `siteIdentifier` TEXT ");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     };
 
