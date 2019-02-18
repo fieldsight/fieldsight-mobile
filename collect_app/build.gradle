@@ -71,6 +71,7 @@ def versionMajor = 2
 def versionMinor = 5
 def versionPatch = 5
 
+
 android {
     compileSdkVersion(28)
 
