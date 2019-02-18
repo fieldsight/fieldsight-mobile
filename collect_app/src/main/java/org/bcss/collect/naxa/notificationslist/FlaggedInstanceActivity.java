@@ -358,7 +358,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                             //download form version and load instance
                             downloadFormVersion(loadedFieldSightNotification);
                         } else if (!hasFormInstance() && hasFormVersion()) {
-                            Timber.i("Downloading form instance");
+                            Timber.i("Downloading filled form");
                             //download form instance and load instance
                             downloadInstance(loadedFieldSightNotification);
                         } else {
@@ -507,7 +507,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
             @Override
             public void formsDownloadingCancelled() {
                 hideDialog();
-                showErrorDialog("Form downloadFormAndInstance was canceled");
+                showErrorDialog("Form download was canceled");
             }
         });
 
@@ -552,7 +552,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 .subscribe(new Observer<Comparable<? extends Comparable<?>>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        changeDialogMsg("Downloading instace");
+                        changeDialogMsg("Downloading filled form");
                     }
 
                     @Override
@@ -570,6 +570,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                     @Override
                     public void onError(Throwable throwable) {
                         Timber.i("onError");
+                        Timber.e(throwable);
                         throwable.printStackTrace();
                         hideDialog();
                         showErrorDialog(throwable.getMessage());
@@ -629,7 +630,6 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
             @Override
             public void run() {
                 errorDialog = DialogFactory.createGenericErrorDialog(FlaggedInstanceActivity.this, errorMessage);
-
                 errorDialog.show();
             }
         });
