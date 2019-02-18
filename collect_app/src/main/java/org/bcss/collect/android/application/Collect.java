@@ -124,7 +124,7 @@ public class Collect extends Application implements HasActivityInjector {
     private ExternalDataManager externalDataManager;
     private Tracker tracker;
     private AppComponent applicationComponent;
-
+//    public static Context context;
     @Inject
     DispatchingAndroidInjector<Activity> androidInjector;
 

@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.common;
 
+import android.app.AlertDialog;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -7,6 +8,9 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.contact.ContacstDao;
@@ -100,11 +104,26 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         }
 
         synchronized (FieldSightDatabase.class) {
-            if (INSTANCE == null) {
-                INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                        FieldSightDatabase.class, DB_PATH)
-                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
-                        .build();
+            try {
+                if (INSTANCE == null) {
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            FieldSightDatabase.class, DB_PATH)
+                            .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+                            .build();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(Collect.getInstance().getApplicationContext());
+                builder.setTitle("FieldSight")
+                        .setMessage("Unable to migrate to older version, Please update the app")
+                        .setNegativeButton("Close App", (dialogInterface, i) -> {
+                            // quit the app
+                            System.exit(0);
+                        }).setPositiveButton("Update", (dialogInterface, i) -> {
+                            Collect.getInstance().startActivity(new Intent(Intent.ACTION_VIEW,
+                                      Uri.parse("https://play.google.com/store/apps/details?id=org.bcss.collect.android"))
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                        }).create().show();
             }
         }
 
