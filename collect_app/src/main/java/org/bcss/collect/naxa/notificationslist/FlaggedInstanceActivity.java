@@ -494,7 +494,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                         break;
                     } else {
                         hideDialog();
-                        showErrorDialog("Failed to download form");
+                        showErrorDialog(result.get(formDetails));
                     }
                 }
             }
@@ -629,7 +629,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                errorDialog = DialogFactory.createGenericErrorDialog(FlaggedInstanceActivity.this, errorMessage);
+                errorDialog = DialogFactory.createMessageDialog(FlaggedInstanceActivity.this,getString(R.string.msg_download_task_failed), errorMessage);
                 errorDialog.show();
             }
         });
