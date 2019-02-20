@@ -101,9 +101,8 @@ public class RetrofitException extends RuntimeException {
             this.message = message;
         }
 
-        @Override
-        public String toString() {
-            return message+"";
+        public String getMessage() {
+            return message;
         }
     }
 

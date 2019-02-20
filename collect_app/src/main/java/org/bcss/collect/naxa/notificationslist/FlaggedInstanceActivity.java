@@ -571,7 +571,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                         String errorMessage = throwable.getMessage();
                         if (throwable instanceof RetrofitException) {
                             RetrofitException retrofitException = ((RetrofitException) throwable);
-                            errorMessage = retrofitException.getKind().toString();
+                            errorMessage = retrofitException.getKind().getMessage();
                         }
                         showErrorDialog(errorMessage);
 
