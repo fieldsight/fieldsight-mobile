@@ -278,7 +278,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         return formId;
     }
 
-    private void openNewForm(String jsFormId) {
+    private void openNewForm(String jrFormId) {
 
 
         Toast.makeText(context, "No, saved form found.", Toast.LENGTH_LONG).show();
@@ -286,12 +286,13 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
         Cursor cursorForm = context.getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI, null,
                 FormsProviderAPI.FormsColumns.JR_FORM_ID + " =?",
-                new String[]{jsFormId}, null);
+                new String[]{jrFormId}, null);
 
 
         if (cursorForm != null && cursorForm.getCount() != 1) {
             //bad data
             //fix the error later
+            Toast.makeText(context, R.string.msg_form_not_present, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -316,6 +317,33 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         }
 
         cursorForm.close();
+    }
+
+    protected void fillODKForm(String idString) {
+        try {
+            long formId = getFormId(idString);
+            Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, formId);
+            String action = getIntent().getAction();
+
+
+            if (Intent.ACTION_PICK.equals(action)) {
+                // caller is waiting on a picked form
+                setResult(RESULT_OK, new Intent().setData(formUri));
+            } else {
+                // caller wants to view/edit a form, so launch formentryactivity
+                Intent toFormEntry = new Intent(Intent.ACTION_EDIT, formUri);
+                toFormEntry.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(toFormEntry);
+
+            }
+        } catch (CursorIndexOutOfBoundsException e) {
+            DialogFactory.createGenericErrorDialog(this, getString(R.string.msg_form_not_present)).show();
+            Timber.e("Failed to load xml form  %s", e.getMessage());
+        } catch (NullPointerException | NumberFormatException e) {
+            Timber.e(e);
+            DialogFactory.createGenericErrorDialog(this, e.getMessage()).show();
+            Timber.e("Failed to load xml form %s", e.getMessage());
+        }
     }
 
     @Override
@@ -386,7 +414,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 .setNegativeButton(R.string.dialog_action_make_new_submission, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        openNewForm(loadedFieldSightNotification.getFsFormId());
+                        fillODKForm(loadedFieldSightNotification.getIdString());
                     }
                 })
                 .setNeutralButton(R.string.dialog_action_dismiss, null)
@@ -712,7 +740,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
             if (count == 1) {
                 openSavedForm(cursorInstanceForm);
             } else {
-                openNewForm(jrFormId);
+                fillODKForm(jrFormId);
             }
         } catch (NullPointerException | CursorIndexOutOfBoundsException e) {
             ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
@@ -747,7 +775,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 //todo atm opens the latest saved need to compare timestamp with server submission to open exact instance
                 openSavedForm(cursorInstanceForm);
             } else {
-                openNewForm(jrFormId);
+                fillODKForm(jrFormId);
             }
         } catch (NullPointerException | CursorIndexOutOfBoundsException e) {
             ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
