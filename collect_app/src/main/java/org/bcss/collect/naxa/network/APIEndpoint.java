@@ -47,7 +47,7 @@ public class APIEndpoint {
 
     public static final String GET_USER_PROFILE = "/users/api/profile/";
     public static final String GET_INSTANCE_SUBMISSION_ATTACHMENTS = "/forms/api/instance/get_attachments_of_finstance/{instance_submission_id}";
-    public static final String GET_INSTANCE_XML= "/forms/api/instance";
+    public static final String GET_INSTANCE_XML= "/forms/api/instance/download_submission";
     public static final String GET_FORM_XML= "/forms/api/instance/download_xml_version";
 
 

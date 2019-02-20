@@ -403,6 +403,10 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         showAskNewSubmissionConsentDialog(getString(R.string.dialog_text_cant_edit_flag_form));
     }
 
+    private void showOnlyNewFormAvaliableDialog() {
+        showAskNewSubmissionConsentDialog("This older version of the form cannot be downloaded");
+    }
+
     private void showAskNewSubmissionConsentDialog(String message) {
         DialogFactory.createActionDialog(this, getString(R.string.dialog_title_cant_open_flagged_form), message)
                 .setPositiveButton(R.string.dialog_action_view_data, new DialogInterface.OnClickListener() {
@@ -421,12 +425,21 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 .show();
     }
 
-    private void showFormInstanceDownloadFailed() {
+    private void showFormInstanceDownloadFailedDialog() {
         showAskNewSubmissionConsentDialog(getString(R.string.dialog_text_instance_download_failed));
     }
 
     private void downloadFormVersion(FieldSightNotification loadedFieldSightNotification) {
         downloadFormAndInstance(loadedFieldSightNotification, true);
+    }
+
+    private boolean hasFormWithMatchingFormId() {
+        String idString = loadedFieldSightNotification.getIdString();
+        Cursor cursor = formsDao.getFormsCursor(idString);
+        if (cursor != null) {
+            return cursor.getCount() > 0;
+        }
+        return false;
     }
 
     private boolean hasFormVersion() {
@@ -511,20 +524,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                     downloadFormsTask.setDownloaderListener(null);
                 }
 
-                for (FormDetails formDetails : result.keySet()) {
-                    String successKey = result.get(formDetails);
-                    if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
-                        if (loadInstanceAfterDownloadComplete) {
-                            loadSavedInstance(notification.getFormSubmissionId(), notification.getIdString());
-                        } else {
-                            downloadInstance(notification);
-                        }
-                        break;
-                    } else {
-                        hideDialog();
-                        showErrorDialog(result.get(formDetails));
-                    }
-                }
+                handleFormDownloadResposne(result, notification, loadInstanceAfterDownloadComplete);
             }
 
             @Override
@@ -541,6 +541,28 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
         downloadFormsTask.setDownloadAsTemporary();
         downloadFormsTask.execute(filesToDownload);
+    }
+
+    private void handleFormDownloadResposne(HashMap<FormDetails, String> result, FieldSightNotification notification, boolean loadInstanceAfterDownloadComplete) {
+
+        for (FormDetails formDetails : result.keySet()) {
+            String successKey = result.get(formDetails);
+            if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
+                if (loadInstanceAfterDownloadComplete) {
+                    loadSavedInstance(notification.getFormSubmissionId(), notification.getIdString());
+                } else {
+                    downloadInstance(notification);
+                }
+                break;
+            } else {
+                hideDialog();
+                if (hasFormWithMatchingFormId()) {
+                    showOnlyNewFormAvaliableDialog();
+                } else {
+                    showErrorDialog(result.get(formDetails));
+                }
+            }
+        }
     }
 
     private void downloadInstance(FieldSightNotification notification) {
@@ -597,7 +619,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                         Timber.e(throwable);
                         hideDialog();
                         if ((throwable instanceof InstanceDownloadFailedException || throwable instanceof InstanceAttachmentDownloadFailedException) && hasFormVersion()) {
-                            showFormInstanceDownloadFailed();
+                            showFormInstanceDownloadFailedDialog();
                         } else {
                             showErrorDialog(throwable.getMessage());
                         }
