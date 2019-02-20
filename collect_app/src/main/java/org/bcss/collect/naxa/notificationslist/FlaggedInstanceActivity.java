@@ -562,23 +562,17 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                             Uri instanceUri = (Uri) comparable;
                             loadInstance(instanceUri);
                         }
-
-
-                        Timber.i("onNext");
                     }
 
                     @Override
                     public void onError(Throwable throwable) {
-                        Timber.i("onError");
                         Timber.e(throwable);
-                        throwable.printStackTrace();
                         hideDialog();
                         showErrorDialog(throwable.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
-                        Timber.i("OnComplete");
                         hideDialog();
                     }
                 });
