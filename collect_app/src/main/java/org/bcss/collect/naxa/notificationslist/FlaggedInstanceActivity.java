@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,17 +35,15 @@ import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
-import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
+import org.bcss.collect.naxa.common.exception.InstanceDownloadFailedException;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.data.FieldSightNotification;
-import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
-import org.bcss.collect.naxa.site.SiteListAdapter;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
@@ -64,18 +61,12 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
-
-import static org.bcss.collect.naxa.network.APIEndpoint.BASE_URL;
 
 
 public class FlaggedInstanceActivity extends CollectAbstractActivity implements View.OnClickListener, NotificationImageAdapter.OnItemClickListener {
@@ -380,7 +371,11 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
     }
 
     private void showFormIsLegacyDialog() {
-        DialogFactory.createActionDialog(this, getString(R.string.dialog_title_cant_open_flagged_form), getString(R.string.dialog_text_cant_edit_flag_form))
+        showAskNewSubmissionConsentDialog(getString(R.string.dialog_text_cant_edit_flag_form));
+    }
+
+    private void showAskNewSubmissionConsentDialog(String message) {
+        DialogFactory.createActionDialog(this, getString(R.string.dialog_title_cant_open_flagged_form), message)
                 .setPositiveButton(R.string.dialog_action_view_data, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -395,6 +390,10 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 })
                 .setNeutralButton(R.string.dialog_action_dismiss, null)
                 .show();
+    }
+
+    private void showFormInstanceDownloadFailed() {
+        showAskNewSubmissionConsentDialog(getString(R.string.dialog_text_instance_download_failed));
     }
 
     private void downloadFormVersion(FieldSightNotification loadedFieldSightNotification) {
@@ -429,7 +428,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         String formName = notificationFormDetail.getFormName();
         String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
         String jrFormId = "";
-        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
+        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + APIEndpoint.GET_FORM_XML + "/%s", fsFormSubmissionId);
 
         ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
         FormDetails formDetails = new FormDetails(formName,
@@ -568,6 +567,9 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                     public void onError(Throwable throwable) {
                         Timber.e(throwable);
                         hideDialog();
+                        if (throwable instanceof InstanceDownloadFailedException && hasFormVersion()) {
+                            showFormInstanceDownloadFailed();
+                        }
                         showErrorDialog(throwable.getMessage());
                     }
 
@@ -623,7 +625,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                errorDialog = DialogFactory.createMessageDialog(FlaggedInstanceActivity.this,getString(R.string.msg_download_task_failed), errorMessage);
+                errorDialog = DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_download_task_failed), errorMessage);
                 errorDialog.show();
             }
         });

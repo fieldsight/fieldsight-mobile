@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Environment;
 
 import org.bcss.collect.naxa.common.RxDownloader.utils.LongSparseArray;
+import org.bcss.collect.naxa.common.exception.InstanceDownloadFailedException;
+import org.bcss.collect.naxa.network.APIEndpoint;
 
 import java.io.File;
 
@@ -147,7 +149,7 @@ public class RxDownloader {
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0L);
             PublishSubject<String> publishSubject = subjectMap.get(id);
 
-            if (publishSubject == null){
+            if (publishSubject == null) {
                 return;
             }
 
@@ -167,9 +169,16 @@ public class RxDownloader {
             int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
             if (DownloadManager.STATUS_SUCCESSFUL != cursor.getInt(statusIndex)) {
                 int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
+                String downloadUrl = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI));
+                if (downloadUrl.contains(APIEndpoint.GET_INSTANCE_XML)) {
+                    publishSubject.onError(new InstanceDownloadFailedException("Download failed\nreason: " + reason));
+                } else if (downloadUrl.contains(APIEndpoint.GET_INSTANCE_SUBMISSION_ATTACHMENTS)) {
+                    publishSubject.onError(new InstanceDownloadFailedException("Download failed\nreason: " + reason));
+                } else {
+                    publishSubject.onError(new IllegalStateException("Download failed\nreason: " + reason));
+                }
                 cursor.close();
                 downloadManager.remove(id);
-                publishSubject.onError(new IllegalStateException("Download failed\nreason: " + reason));
                 subjectMap.remove(id);
                 return;
             }
