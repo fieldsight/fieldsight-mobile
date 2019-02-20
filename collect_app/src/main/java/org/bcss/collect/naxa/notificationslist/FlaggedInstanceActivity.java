@@ -457,7 +457,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
         String fieldSightInstanceId = loadedFieldSightNotification.getFormSubmissionId();
 
-        Cursor cursor = instancesDao.getInstancesCursor(fieldSightInstanceId);
+        Cursor cursor = instancesDao.getNotDeletedInstancesCursor(fieldSightInstanceId);
         if (cursor != null) {
             return cursor.getCount() == 1;
         }
