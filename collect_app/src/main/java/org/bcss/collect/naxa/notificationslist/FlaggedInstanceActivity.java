@@ -568,7 +568,13 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                     public void onError(Throwable throwable) {
                         Timber.e(throwable);
                         hideDialog();
-                        showErrorDialog(throwable.getMessage());
+                        String errorMessage = throwable.getMessage();
+                        if (throwable instanceof RetrofitException) {
+                            RetrofitException retrofitException = ((RetrofitException) throwable);
+                            errorMessage = retrofitException.getKind().toString();
+                        }
+                        showErrorDialog(errorMessage);
+
                     }
 
                     @Override

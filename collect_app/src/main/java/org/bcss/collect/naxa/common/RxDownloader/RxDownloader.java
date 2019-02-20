@@ -169,6 +169,7 @@ public class RxDownloader {
                 int reason = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_REASON));
                 cursor.close();
                 downloadManager.remove(id);
+                String downloadUrl = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI));
                 publishSubject.onError(new IllegalStateException("Download failed\nreason: " + reason));
                 subjectMap.remove(id);
                 return;

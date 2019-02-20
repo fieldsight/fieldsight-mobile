@@ -84,16 +84,27 @@ public class RetrofitException extends RuntimeException {
         /**
          * An {@link IOException} occurred while communicating to the server.
          */
-        NETWORK,
+        NETWORK("An occurred while communicating to the server."),
         /**
          * A non-200 HTTP status code was received from the server.
          */
-        HTTP,
+        HTTP("A non-200 HTTP status code was received from the server"),
         /**
          * An internal error occurred while attempting to execute a request. It is best practice to
          * re-throw this exception so your application crashes.
          */
-        UNEXPECTED
+        UNEXPECTED("An internal error occurred while attempting to execute a request.");
+
+        private String message;
+
+        Kind(String message) {
+            this.message = message;
+        }
+
+        @Override
+        public String toString() {
+            return message+"";
+        }
     }
 
     private final String url;
