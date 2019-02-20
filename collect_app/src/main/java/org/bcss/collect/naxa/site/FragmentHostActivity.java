@@ -136,7 +136,6 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     public static GeneralFormViewModel obtainViewModel(FragmentActivity activity) {
         // Use a Factory to inject dependencies into the ViewModel
 

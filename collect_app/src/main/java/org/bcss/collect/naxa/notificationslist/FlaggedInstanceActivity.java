@@ -34,6 +34,7 @@ import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.bcss.collect.naxa.BaseActivity;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
@@ -78,7 +79,7 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.network.APIEndpoint.BASE_URL;
 
 
-public class FlaggedInstanceActivity extends CollectAbstractActivity implements View.OnClickListener, NotificationImageAdapter.OnItemClickListener {
+public class FlaggedInstanceActivity extends BaseActivity implements View.OnClickListener, NotificationImageAdapter.OnItemClickListener {
 
     private static String TAG = "Comment Activity";
     //constants for form status
@@ -123,9 +124,8 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setTitle("Form Flagged");
+        initBack();
     }
 
     @Override
@@ -183,13 +183,8 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+    public void onBackClicked(boolean isHome) {
+        finish();
     }
 
     private void bindUI() {
@@ -287,11 +282,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
     }
 
     private void openNewForm(String jsFormId) {
-
-
-        Toast.makeText(context, "No, saved form found.", Toast.LENGTH_LONG).show();
-
-
+        toast("No, saved form found.");
         Cursor cursorForm = context.getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI, null,
                 FormsProviderAPI.FormsColumns.JR_FORM_ID + " =?",
                 new String[]{jsFormId}, null);
