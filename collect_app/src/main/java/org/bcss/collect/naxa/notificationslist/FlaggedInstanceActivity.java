@@ -37,6 +37,7 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
+import org.bcss.collect.naxa.common.exception.InstanceAttachmentDownloadFailedException;
 import org.bcss.collect.naxa.common.exception.InstanceDownloadFailedException;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.data.FieldSightNotification;
@@ -567,10 +568,11 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                     public void onError(Throwable throwable) {
                         Timber.e(throwable);
                         hideDialog();
-                        if (throwable instanceof InstanceDownloadFailedException && hasFormVersion()) {
+                        if ((throwable instanceof InstanceDownloadFailedException || throwable instanceof InstanceAttachmentDownloadFailedException) && hasFormVersion()) {
                             showFormInstanceDownloadFailed();
+                        } else {
+                            showErrorDialog(throwable.getMessage());
                         }
-                        showErrorDialog(throwable.getMessage());
                     }
 
                     @Override
