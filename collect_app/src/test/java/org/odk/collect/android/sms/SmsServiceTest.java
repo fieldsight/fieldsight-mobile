@@ -5,7 +5,7 @@ import android.telephony.SmsManager;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.events.RxEventBus;
-import org.bcss.collect.android.injection.DaggerTestComponent;
+import org.odk.collect.android.injection.DaggerTestComponent;
 import org.bcss.collect.android.logic.FormInfo;
 import org.junit.Before;
 import org.junit.Test;

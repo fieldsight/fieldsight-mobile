@@ -20,6 +20,7 @@ public class FieldSightNotificationBuilder {
     private String comment;
     private String formType;
     private boolean isRead;
+    private boolean isDeployedFromSite;
     private String formSubmissionId;
     private String formVersion;
     private String siteIdentifier;
@@ -125,6 +126,11 @@ public class FieldSightNotificationBuilder {
         return this;
     }
 
+    public FieldSightNotificationBuilder isDeployedFromSite(boolean isDeployedFromSite) {
+        this.isDeployedFromSite = isDeployedFromSite;
+        return this;
+    }
+
     public FieldSightNotificationBuilder setFormVersion(String formVersion) {
         this.formVersion = formVersion;
         return this;
@@ -134,7 +140,7 @@ public class FieldSightNotificationBuilder {
         return new FieldSightNotification(id, notificationType, notifiedDate, notifiedTime,
                 idString, fsFormId, fsFormIdProject, formName, siteId, siteName, projectId,
                 projectName, formStatus, role, isFormDeployed, details_url, comment,
-                formType, isRead, formSubmissionId,formVersion,siteIdentifier);
+                formType, isRead, formSubmissionId,formVersion,siteIdentifier,isDeployedFromSite);
     }
 
     public FieldSightNotificationBuilder setSiteIdentifier(String siteIdentifier) {

@@ -54,7 +54,7 @@
     <string name="dialog_action_dismiss">Cancel</string>
     <string name="forms_msg_none_available">Nothing available to display.\\n\\nTry Refreshing or Contact Web Admin.</string>
     <string name="toolbar_general_forms">General Form(s)</string>
-    <string name="form_not_present">Unable to load this form because it is not present or was deleted</string>
+    <string name="msg_form_not_present">Unable to load this form because it is not present or was deleted</string>
     <string name="search_sites">Search Sites</string>
     <string name="action_upload">Upload</string>
     <string name="action_delete">Delete</string>
@@ -232,6 +232,8 @@
     <string name="title_activity_logout_acitivty">LogoutAcitivty</string>
     <string name="msg_stop_logout">Can\'t logout</string>
     <string name="msg_flag_resposne_site_info_missing">Download site information from sync screen to view more site details here</string>
+    <string name="msg_download_task_failed">Failed to download</string>
+    <string name="dialog_text_instance_download_failed">Failed to download filled form</string>
 
     <!--Notification sitelist ends here-->
 

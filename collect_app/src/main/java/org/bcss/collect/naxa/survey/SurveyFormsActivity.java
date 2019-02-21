@@ -176,7 +176,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
             DialogFactory.createGenericErrorDialog(this, e.getMessage()).show();
             Timber.e("Failed to load xml form %s", e.getMessage());
         } catch (CursorIndexOutOfBoundsException e) {
-            DialogFactory.createGenericErrorDialog(this, getString(R.string.form_not_present)).show();
+            DialogFactory.createGenericErrorDialog(this, getString(R.string.msg_form_not_present)).show();
             Timber.e("Failed to load xml form  %s", e.getMessage());
         }
     }

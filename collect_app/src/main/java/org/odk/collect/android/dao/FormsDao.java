@@ -68,6 +68,20 @@ public class FormsDao {
         return getFormsCursor(null, selection, selectionArgs, order);
     }
 
+    public Cursor getFormsCursor(String formId){
+        String[] selectionArgs;
+        String selection;
+        selectionArgs = new String[]{formId};
+        selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
+
+        // As long as we allow storing multiple forms with the same id and version number, choose
+        // the newest one
+        String order = FormsProviderAPI.FormsColumns.DATE + " DESC";
+
+        return getFormsCursor(null, selection, selectionArgs, order);
+    }
+
+
     private CursorLoader getFormsCursorLoader(String sortOrder, boolean uniqueByFormId) {
         return getFormsCursorLoader(null, null, sortOrder, uniqueByFormId);
     }
