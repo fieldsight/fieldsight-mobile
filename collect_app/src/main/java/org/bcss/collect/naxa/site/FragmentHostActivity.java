@@ -138,9 +138,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
     public static GeneralFormViewModel obtainViewModel(FragmentActivity activity) {
         // Use a Factory to inject dependencies into the ViewModel
-
         ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
-
         return ViewModelProviders.of(activity, factory).get(GeneralFormViewModel.class);
     }
 
