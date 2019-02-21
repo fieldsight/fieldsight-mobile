@@ -119,8 +119,9 @@ public class InstanceRemoteSource {
         String formVersion = notificationFormDetail.getFormVersion();
         String fsInstanceId = notificationFormDetail.getFormSubmissionId();
 
+
         String url = InstancesDao.generateSubmissionUrl(
-                fsFormIdProject != null ? PROJECT : SITE,
+                notificationFormDetail.isDeployedFromSite() ? SITE : PROJECT,
                 siteId, fsFormId);
 
 

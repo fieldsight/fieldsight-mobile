@@ -5,6 +5,7 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -75,7 +76,8 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     private String isDeployed, webDeployedId;
     private String notificationDetailsUrl = "";
 
-    private String isDeployedFromProject;
+    private String isDeployedFromProject;//todo: this needs to be checked and removed coz we are using isDeployedFromSite in flag forms
+    private boolean isDeployedFromSite;
     private String siteIdentifier;
 
 
@@ -115,6 +117,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setFormSubmissionId(fsFormSubmissionId)
                     .setFsFormIdProject(fsFormIdProject)
                     .isRead(false)
+                    .isDeployedFromSite(isDeployedFromSite)
                     .setFormVersion(formVerion)
                     .createFieldSightNotification();
 
@@ -252,6 +255,12 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
         }
         if (notificationData.containsKey("version")) {
             formVerion = notificationData.get("version");
+        }
+        if (notificationData.containsKey("site_level_form")) {
+            String data = notificationData.get("site_level_form");
+            if (!TextUtils.isEmpty(data)) {
+                isDeployedFromSite = Boolean.parseBoolean(data);
+            }
         }
     }
 
