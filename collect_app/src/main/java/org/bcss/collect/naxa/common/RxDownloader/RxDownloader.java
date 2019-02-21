@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Environment;
 
 import org.bcss.collect.naxa.common.RxDownloader.utils.LongSparseArray;
+import org.bcss.collect.naxa.common.exception.InstanceAttachmentDownloadFailedException;
 import org.bcss.collect.naxa.common.exception.InstanceDownloadFailedException;
 import org.bcss.collect.naxa.network.APIEndpoint;
 
@@ -173,7 +174,7 @@ public class RxDownloader {
                 if (downloadUrl.contains(APIEndpoint.GET_INSTANCE_XML)) {
                     publishSubject.onError(new InstanceDownloadFailedException("Download failed\nreason: " + reason));
                 } else if (downloadUrl.contains(APIEndpoint.GET_INSTANCE_SUBMISSION_ATTACHMENTS)) {
-                    publishSubject.onError(new InstanceDownloadFailedException("Download failed\nreason: " + reason));
+                    publishSubject.onError(new InstanceAttachmentDownloadFailedException("Download failed\nreason: " + reason));
                 } else {
                     publishSubject.onError(new IllegalStateException("Download failed\nreason: " + reason));
                 }

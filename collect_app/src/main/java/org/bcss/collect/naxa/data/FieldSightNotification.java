@@ -34,6 +34,7 @@ public class FieldSightNotification implements Parcelable {
     private String formSubmissionId;
     private String formVersion;
     private String siteIdentifier;
+    private boolean isDeployedFromSite;
 
     public String getFormSubmissionId() {
         return formSubmissionId;
@@ -46,7 +47,7 @@ public class FieldSightNotification implements Parcelable {
     public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString,
                                   String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId,
                                   String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment,
-                                  String formType, boolean isRead, String formSubmissionId, String formVersion,String siteIdentifier) {
+                                  String formType, boolean isRead, String formSubmissionId, String formVersion,String siteIdentifier,boolean isDeployedFromSite) {
         this.id = id;
         this.notificationType = notificationType;
         this.notifiedDate = notifiedDate;
@@ -69,6 +70,15 @@ public class FieldSightNotification implements Parcelable {
         this.formVersion = formVersion;
         this.formSubmissionId = formSubmissionId;
         this.siteIdentifier = siteIdentifier;
+        this.isDeployedFromSite = isDeployedFromSite;
+    }
+
+    public boolean isDeployedFromSite() {
+        return isDeployedFromSite;
+    }
+
+    public void setDeployedFromSite(boolean deployedFromSite) {
+        isDeployedFromSite = deployedFromSite;
     }
 
     public String getSiteIdentifier() {
@@ -268,6 +278,7 @@ public class FieldSightNotification implements Parcelable {
         dest.writeString(this.formSubmissionId);
         dest.writeString(this.formVersion);
         dest.writeByte(this.isRead ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isDeployedFromSite ? (byte) 1 : (byte) 0);
         dest.writeString(this.siteIdentifier);
     }
 
@@ -293,6 +304,7 @@ public class FieldSightNotification implements Parcelable {
         this.formSubmissionId = in.readString();
         this.formVersion = in.readString();
         this.isRead = in.readByte() != 0;
+        this.isDeployedFromSite = in.readByte() != 0;
         this.siteIdentifier = in.readString();
     }
 
