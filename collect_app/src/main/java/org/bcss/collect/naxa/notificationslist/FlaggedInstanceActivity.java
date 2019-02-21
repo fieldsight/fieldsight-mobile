@@ -622,7 +622,11 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                         if ((throwable instanceof InstanceDownloadFailedException || throwable instanceof InstanceAttachmentDownloadFailedException) && hasFormVersion()) {
                             showFormInstanceDownloadFailedDialog();
                         } else {
-                            showErrorDialog(throwable.getMessage());
+                            String message = throwable.getMessage();
+                            if (throwable instanceof RetrofitException) {
+                                message = ((RetrofitException) throwable).getKind().getMessage();
+                            }
+                            showErrorDialog(message);
                         }
                     }
 
