@@ -382,8 +382,10 @@ public class InstancesDao {
         return getInstancesCursor(null, selection, selectionArgs, null);
     }
 
-    public Cursor getInstancesCursor(String fsInstanceId) {
-        return getInstancesCursor(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID + "=? ", new String[]{fsInstanceId});
+    public Cursor getNotDeletedInstancesCursor(String fsInstanceId) {
+        return getInstancesCursor(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID + "=? " +
+                "AND " +
+                InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL", new String[]{fsInstanceId});
     }
 
     public Cursor getInstanceCursor() {

@@ -71,6 +71,7 @@ def versionMajor = 2
 def versionMinor = 5
 def versionPatch = 5
 
+
 android {
     compileSdkVersion(28)
 
@@ -162,8 +163,8 @@ android {
     // https://stackoverflow.com/a/27119543/152938
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            String fileName = "internal".equals(variant.buildType.name)? "-${defaultConfig.versionName}-${getGitRevParseInfo()}.apk":"-${defaultConfig.versionName}.apk"
-            outputFileName = new File(outputFileName.replace(".apk",fileName))
+            String fileName = "internal".equals(variant.buildType.name) ? "-${defaultConfig.versionName}-${getGitRevParseInfo()}.apk" : "-${defaultConfig.versionName}.apk"
+            outputFileName = new File(outputFileName.replace(".apk", fileName))
         }
     }
     testVariants.all { variant ->

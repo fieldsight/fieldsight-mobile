@@ -89,6 +89,7 @@ public class FieldSightUserSession {
         String fcmToken = null;
         while (true) {
             try {
+
                 fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
                         SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM,
                         null);
@@ -100,13 +101,16 @@ public class FieldSightUserSession {
                     Timber.d("loadFCMWithRetry() Firebase token refreshed to %s", fcmToken);
                     break;
                 }
+
                 long timeout = TimeUnit.SECONDS.toMillis(count);
                 Timber.d("loadFCMWithRetry() Delaying another check for %s seconds", timeout);
+
                 Thread.sleep(timeout);
                 if (++count == maxTries) {
                     Timber.e("Failed to load fcm on %s tries", count);
                     break;
                 }
+
             } catch (IOException | InterruptedException e) {
                 Timber.e(e, "loadFCMWithRetry() count %s", count);
                 if (++count == maxTries) break;

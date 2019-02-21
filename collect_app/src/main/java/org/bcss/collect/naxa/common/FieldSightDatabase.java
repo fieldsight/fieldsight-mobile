@@ -63,7 +63,7 @@ import java.io.File;
                 SubmissionDetail.class
 
         },
-        version = 8)
+        version = 9)
 @TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
@@ -108,7 +108,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             FieldSightDatabase.class, DB_PATH)
-                            .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+                            .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
                             .build();
                 }
             }catch (Exception e){
@@ -124,7 +124,6 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                                       Uri.parse("https://play.google.com/store/apps/details?id=org.bcss.collect.android"))
                                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                         }).create().show();
-            }
         }
 
         return INSTANCE;
@@ -174,6 +173,16 @@ public abstract class FieldSightDatabase extends RoomDatabase {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    };
+
+
+    private static final Migration MIGRATION_8_9 = new Migration(8, 9) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+
+            database.execSQL("ALTER TABLE FieldSightNotification "
+                    + " ADD COLUMN `isDeployedFromSite` INTEGER NOT NULL default 0");
         }
     };
 
