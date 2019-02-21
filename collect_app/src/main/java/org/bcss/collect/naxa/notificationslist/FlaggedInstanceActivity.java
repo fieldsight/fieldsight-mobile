@@ -618,6 +618,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                     public void onError(Throwable throwable) {
                         Timber.e(throwable);
                         hideDialog();
+
                         if ((throwable instanceof InstanceDownloadFailedException || throwable instanceof InstanceAttachmentDownloadFailedException) && hasFormVersion()) {
                             showFormInstanceDownloadFailedDialog();
                         } else {
