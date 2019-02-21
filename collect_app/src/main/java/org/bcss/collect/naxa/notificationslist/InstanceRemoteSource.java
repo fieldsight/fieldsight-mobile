@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -44,7 +45,7 @@ public class InstanceRemoteSource {
 
 
     Observable<Uri> downloadInstances(FieldSightNotification fieldSightNotification, String[] nameAndPath) {
-        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_submission/%s", fieldSightNotification.getFormSubmissionId());
+        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + APIEndpoint.GET_INSTANCE_XML + "/%s", fieldSightNotification.getFormSubmissionId());
         return downloadInstance(mapNotificationToInstance(fieldSightNotification), downloadUrl, nameAndPath);
     }
 
@@ -77,6 +78,12 @@ public class InstanceRemoteSource {
                                     pathToDownload,
                                     mimeType,
                                     false)
+                            .doOnError(new Consumer<Throwable>() {
+                                @Override
+                                public void accept(Throwable throwable) throws Exception {
+
+                                }
+                            })
                             .map(path -> {
                                 path = path.replace("file://", "");
                                 instance.instanceFilePath(path);
@@ -112,8 +119,9 @@ public class InstanceRemoteSource {
         String formVersion = notificationFormDetail.getFormVersion();
         String fsInstanceId = notificationFormDetail.getFormSubmissionId();
 
+
         String url = InstancesDao.generateSubmissionUrl(
-                fsFormIdProject != null ? PROJECT : SITE,
+                notificationFormDetail.isDeployedFromSite() ? SITE : PROJECT,
                 siteId, fsFormId);
 
 

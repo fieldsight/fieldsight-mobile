@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.provider.FormsProvider;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.dao.InstancesDao;
 
@@ -37,7 +35,7 @@ public class FieldSightFormListFragment extends Fragment {
 
             }
         } catch (CursorIndexOutOfBoundsException e) {
-            DialogFactory.createGenericErrorDialog(getActivity(), getString(R.string.form_not_present)).show();
+            DialogFactory.createGenericErrorDialog(getActivity(), getString(R.string.msg_form_not_present)).show();
             Timber.e("Failed to load xml form  %s", e.getMessage());
         } catch (NullPointerException | NumberFormatException e) {
             e.printStackTrace();

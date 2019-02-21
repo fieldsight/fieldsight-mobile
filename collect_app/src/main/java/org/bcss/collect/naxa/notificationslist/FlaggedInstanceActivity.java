@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,17 +35,16 @@ import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
-import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
+import org.bcss.collect.naxa.common.exception.InstanceAttachmentDownloadFailedException;
+import org.bcss.collect.naxa.common.exception.InstanceDownloadFailedException;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.data.FieldSightNotification;
-import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
-import org.bcss.collect.naxa.site.SiteListAdapter;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
@@ -64,18 +62,12 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
-
-import static org.bcss.collect.naxa.network.APIEndpoint.BASE_URL;
 
 
 public class FlaggedInstanceActivity extends CollectAbstractActivity implements View.OnClickListener, NotificationImageAdapter.OnItemClickListener {
@@ -286,7 +278,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         return formId;
     }
 
-    private void openNewForm(String jsFormId) {
+    private void openNewForm(String jrFormId) {
 
 
         Toast.makeText(context, "No, saved form found.", Toast.LENGTH_LONG).show();
@@ -294,12 +286,13 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
         Cursor cursorForm = context.getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI, null,
                 FormsProviderAPI.FormsColumns.JR_FORM_ID + " =?",
-                new String[]{jsFormId}, null);
+                new String[]{jrFormId}, null);
 
 
         if (cursorForm != null && cursorForm.getCount() != 1) {
             //bad data
             //fix the error later
+            Toast.makeText(context, R.string.msg_form_not_present, Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -324,6 +317,33 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         }
 
         cursorForm.close();
+    }
+
+    protected void fillODKForm(String idString) {
+        try {
+            long formId = getFormId(idString);
+            Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, formId);
+            String action = getIntent().getAction();
+
+
+            if (Intent.ACTION_PICK.equals(action)) {
+                // caller is waiting on a picked form
+                setResult(RESULT_OK, new Intent().setData(formUri));
+            } else {
+                // caller wants to view/edit a form, so launch formentryactivity
+                Intent toFormEntry = new Intent(Intent.ACTION_EDIT, formUri);
+                toFormEntry.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(toFormEntry);
+
+            }
+        } catch (CursorIndexOutOfBoundsException e) {
+            DialogFactory.createGenericErrorDialog(this, getString(R.string.msg_form_not_present)).show();
+            Timber.e("Failed to load xml form  %s", e.getMessage());
+        } catch (NullPointerException | NumberFormatException e) {
+            Timber.e(e);
+            DialogFactory.createGenericErrorDialog(this, e.getMessage()).show();
+            Timber.e("Failed to load xml form %s", e.getMessage());
+        }
     }
 
     @Override
@@ -380,7 +400,15 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
     }
 
     private void showFormIsLegacyDialog() {
-        DialogFactory.createActionDialog(this, getString(R.string.dialog_title_cant_open_flagged_form), getString(R.string.dialog_text_cant_edit_flag_form))
+        showAskNewSubmissionConsentDialog(getString(R.string.dialog_text_cant_edit_flag_form));
+    }
+
+    private void showOnlyNewFormAvaliableDialog() {
+        showAskNewSubmissionConsentDialog("This older version of the form cannot be downloaded");
+    }
+
+    private void showAskNewSubmissionConsentDialog(String message) {
+        DialogFactory.createActionDialog(this, getString(R.string.dialog_title_cant_open_flagged_form), message)
                 .setPositiveButton(R.string.dialog_action_view_data, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -390,15 +418,28 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 .setNegativeButton(R.string.dialog_action_make_new_submission, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        openNewForm(loadedFieldSightNotification.getFsFormId());
+                        fillODKForm(loadedFieldSightNotification.getIdString());
                     }
                 })
                 .setNeutralButton(R.string.dialog_action_dismiss, null)
                 .show();
     }
 
+    private void showFormInstanceDownloadFailedDialog() {
+        showAskNewSubmissionConsentDialog(getString(R.string.dialog_text_instance_download_failed));
+    }
+
     private void downloadFormVersion(FieldSightNotification loadedFieldSightNotification) {
         downloadFormAndInstance(loadedFieldSightNotification, true);
+    }
+
+    private boolean hasFormWithMatchingFormId() {
+        String idString = loadedFieldSightNotification.getIdString();
+        Cursor cursor = formsDao.getFormsCursor(idString);
+        if (cursor != null) {
+            return cursor.getCount() > 0;
+        }
+        return false;
     }
 
     private boolean hasFormVersion() {
@@ -416,7 +457,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
         String fieldSightInstanceId = loadedFieldSightNotification.getFormSubmissionId();
 
-        Cursor cursor = instancesDao.getInstancesCursor(fieldSightInstanceId);
+        Cursor cursor = instancesDao.getNotDeletedInstancesCursor(fieldSightInstanceId);
         if (cursor != null) {
             return cursor.getCount() == 1;
         }
@@ -429,7 +470,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         String formName = notificationFormDetail.getFormName();
         String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
         String jrFormId = "";
-        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_xml_version/%s", fsFormSubmissionId);
+        String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + APIEndpoint.GET_FORM_XML + "/%s", fsFormSubmissionId);
 
         ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
         FormDetails formDetails = new FormDetails(formName,
@@ -483,20 +524,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                     downloadFormsTask.setDownloaderListener(null);
                 }
 
-                for (FormDetails formDetails : result.keySet()) {
-                    String successKey = result.get(formDetails);
-                    if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
-                        if (loadInstanceAfterDownloadComplete) {
-                            loadSavedInstance(notification.getFormSubmissionId(), notification.getIdString());
-                        } else {
-                            downloadInstance(notification);
-                        }
-                        break;
-                    } else {
-                        hideDialog();
-                        showErrorDialog(result.get(formDetails));
-                    }
-                }
+                handleFormDownloadResposne(result, notification, loadInstanceAfterDownloadComplete);
             }
 
             @Override
@@ -513,6 +541,28 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
 
         downloadFormsTask.setDownloadAsTemporary();
         downloadFormsTask.execute(filesToDownload);
+    }
+
+    private void handleFormDownloadResposne(HashMap<FormDetails, String> result, FieldSightNotification notification, boolean loadInstanceAfterDownloadComplete) {
+
+        for (FormDetails formDetails : result.keySet()) {
+            String successKey = result.get(formDetails);
+            if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
+                if (loadInstanceAfterDownloadComplete) {
+                    loadSavedInstance(notification.getFormSubmissionId(), notification.getIdString());
+                } else {
+                    downloadInstance(notification);
+                }
+                break;
+            } else {
+                hideDialog();
+                if (hasFormWithMatchingFormId()) {
+                    showOnlyNewFormAvaliableDialog();
+                } else {
+                    showErrorDialog(result.get(formDetails));
+                }
+            }
+        }
     }
 
     private void downloadInstance(FieldSightNotification notification) {
@@ -568,13 +618,12 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                     public void onError(Throwable throwable) {
                         Timber.e(throwable);
                         hideDialog();
-                        String errorMessage = throwable.getMessage();
-                        if (throwable instanceof RetrofitException) {
-                            RetrofitException retrofitException = ((RetrofitException) throwable);
-                            errorMessage = retrofitException.getKind().getMessage();
-                        }
-                        showErrorDialog(errorMessage);
 
+                        if ((throwable instanceof InstanceDownloadFailedException || throwable instanceof InstanceAttachmentDownloadFailedException) && hasFormVersion()) {
+                            showFormInstanceDownloadFailedDialog();
+                        } else {
+                            showErrorDialog(throwable.getMessage());
+                        }
                     }
 
                     @Override
@@ -629,7 +678,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                errorDialog = DialogFactory.createMessageDialog(FlaggedInstanceActivity.this,getString(R.string.msg_download_task_failed), errorMessage);
+                errorDialog = DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_download_task_failed), errorMessage);
                 errorDialog.show();
             }
         });
@@ -714,7 +763,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
             if (count == 1) {
                 openSavedForm(cursorInstanceForm);
             } else {
-                openNewForm(jrFormId);
+                fillODKForm(jrFormId);
             }
         } catch (NullPointerException | CursorIndexOutOfBoundsException e) {
             ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
@@ -749,7 +798,7 @@ public class FlaggedInstanceActivity extends CollectAbstractActivity implements 
                 //todo atm opens the latest saved need to compare timestamp with server submission to open exact instance
                 openSavedForm(cursorInstanceForm);
             } else {
-                openNewForm(jrFormId);
+                fillODKForm(jrFormId);
             }
         } catch (NullPointerException | CursorIndexOutOfBoundsException e) {
             ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
