@@ -277,7 +277,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         toast("No, saved form found.");
         Cursor cursorForm = context.getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI, null,
                 FormsProviderAPI.FormsColumns.JR_FORM_ID + " =?",
-                new String[]{jrFormId}, null);
+                new String[]{jsFormId}, null);
 
 
         if (cursorForm != null && cursorForm.getCount() != 1) {

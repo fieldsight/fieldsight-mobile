@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.webkit.URLUtil;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.BaseActivity;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -26,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingsActivity extends CollectAbstractActivity {
+public class SettingsActivity extends BaseActivity {
 
     @BindView(R.id.text_input_layout_base_url)
     TextInputLayout textInputLayoutBaseUrl;
@@ -62,20 +63,8 @@ public class SettingsActivity extends CollectAbstractActivity {
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Server");
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+        initBack();
     }
 
     @OnClick(R.id.btn_save)
@@ -85,7 +74,7 @@ public class SettingsActivity extends CollectAbstractActivity {
             FieldSightUserSession.setServerUrl(this, url);
             ToastUtils.showLongToast("Server Changed");
             ServiceGenerator.clearInstance();
-            onBackPressed();
+            onBackClicked(false);
         } else {
             textInputLayoutBaseUrl.getEditText().setError("This url is invalid");
         }
@@ -97,15 +86,14 @@ public class SettingsActivity extends CollectAbstractActivity {
         textInputLayoutBaseUrl.getEditText().setText(FieldSightUserSession.getServerUrl(this));
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
     private boolean isValidUrl(String url) {
         Pattern p = Patterns.WEB_URL;
         Matcher m = p.matcher(url.toLowerCase());
         return m.matches();
     }
 
+    @Override
+    public void onBackClicked(boolean isHome) {
+        this.finish();
+    }
 }
