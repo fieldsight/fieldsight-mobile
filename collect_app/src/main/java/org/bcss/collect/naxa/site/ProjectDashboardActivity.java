@@ -57,6 +57,7 @@ import com.google.gson.Gson;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.BaseActivity;
 import org.bcss.collect.naxa.common.AppBarStateChangeListener;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.GlideApp;
@@ -101,10 +102,10 @@ import timber.log.Timber;
 import static org.bcss.collect.android.application.Collect.allowClick;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
-public class ProjectDashboardActivity extends CollectAbstractActivity {
+public class ProjectDashboardActivity extends BaseActivity {
 
     private Project loadedProject;
-   
+
 
     private NonSwipeableViewPager pager;
     private Toolbar toolbar;
@@ -272,7 +273,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
             ViewUtils.loadRemoteImage(this, user.getProfilepic())
                     .circleCrop()
                     .into(ivProfilePicture);
-
 
 
             navigationHeader.setOnClickListener(v -> {
@@ -464,8 +464,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         setToolbarText(loadedProject.getName());
-
-
     }
 
     public void setToolbarText(String title) {
@@ -526,15 +524,18 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
         pager.setPadding(16, 0, 16, 0);
     }
 
-
     @Override
-    public void onBackPressed() {
+    public void onBackClicked(boolean isHome) {
+        Timber.d("onBackClicked");
         if (mapIsVisible) {
             pager.setCurrentItem(mapExistReachesPosition, true);
         } else if (pager.getCurrentItem() > 0) {
             pager.setCurrentItem(pager.getCurrentItem() - 1, true);
+        } else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (isHome) toggleNavDrawer();
+            else finish();
         }
     }
 
@@ -566,13 +567,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                if (mapIsVisible) {
-                    pager.setCurrentItem(mapExistReachesPosition);
-                } else {
-                    toggleNavDrawer();
-                }
-                break;
             case R.id.action_notificaiton:
                 NotificationListActivity.start(this);
 
