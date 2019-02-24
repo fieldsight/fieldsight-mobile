@@ -108,11 +108,8 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         String totalSubmissionMsg;
 
         if (offlineLatestResponse == null || count == null) {
-
             totalSubmissionMsg = getString(R.string.msg_no_form_submission);
-
         } else {
-
             totalSubmissionMsg = getResources()
                     .getQuantityString(R.plurals.msg_total_submission_info_offline, Integer.parseInt(count), count);
             adapter.add(offlineLatestResponse);
@@ -133,6 +130,11 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
                         lazyLoadFirstPage(TimeUnit.SECONDS.toMillis(1));
                     }
                 });
+
+        setupPagination(listFormHistory);
+        cardSubmissionInfo.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        loadFirstPage(urlFirstPage);
     }
 
     private void lazyLoadFirstPage(long millis) {
@@ -165,7 +167,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
 
                 FormHistoryResponse formHistoryResponse = response.body();
 
-                if (formHistoryResponse == null || formHistoryResponse.getResults().size() <= 0) {
+                if (formHistoryResponse.getResults().size() <= 0) {
                     showNoDataLayout();
                     tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
                     return;
@@ -258,6 +260,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         listFormHistory.setLayoutManager(linearLayoutManager);
         listFormHistory.setAdapter(adapter);
         listFormHistory.setItemAnimator(new DefaultItemAnimator());
+        listFormHistory.setNestedScrollingEnabled(false);
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
