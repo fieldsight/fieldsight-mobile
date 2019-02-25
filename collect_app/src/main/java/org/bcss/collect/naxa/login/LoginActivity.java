@@ -187,7 +187,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
             ProjectListActivity.start(this);
         }
         Toast.makeText(this, "Logged In!", Toast.LENGTH_SHORT).show();
-
+        finish();
     }
 
     @Override
