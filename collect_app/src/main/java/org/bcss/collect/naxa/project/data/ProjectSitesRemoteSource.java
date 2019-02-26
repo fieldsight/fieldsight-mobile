@@ -6,6 +6,7 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.MySites;
@@ -37,6 +38,10 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
+
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
     private static ProjectSitesRemoteSource INSTANCE;
@@ -171,7 +176,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
 
     @Override
     public void getAll() {
-        int uid = Constant.DownloadUID.PROJECT_SITES;
+        int uid = PROJECT_SITES;
 
         Single<List<Object>> observable = fetchProjectAndSites();
 
@@ -183,7 +188,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public void run() {
                         SyncLocalSource.getINSTANCE()
-                                .markAsFailed(Constant.DownloadUID.PROJECT_SITES);
+                                .markAsFailed(PROJECT_SITES);
                     }
                 })
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -193,29 +198,30 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         ProjectLocalSource.getInstance().deleteAll();
                         SiteLocalSource.getInstance().deleteSyncedSitesAsync();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
-                        SyncRepository.getInstance().showProgress(Constant.DownloadUID.PROJECT_SITES);
                         SyncLocalSource.getINSTANCE()
-                                .markAsRunning(Constant.DownloadUID.PROJECT_SITES);
+                                .markAsRunning(PROJECT_SITES);
                     }
                 })
                 .subscribeWith(new DisposableObserver<List<Object>>() {
                     @Override
                     public void onNext(List<Object> objects) {
-                        EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_END));
                         FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
-                        syncRepository.setSuccess(Constant.DownloadUID.PROJECT_SITES);
-
                         SyncLocalSource.getINSTANCE()
-                                .markAsCompleted(Constant.DownloadUID.PROJECT_SITES);
+                                .markAsCompleted(PROJECT_SITES);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
-                        EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_ERROR));
-                        syncRepository.setError(Constant.DownloadUID.PROJECT_SITES);
-                        String message = e.getMessage();
-                        SyncLocalSource.getINSTANCE().markAsFailed(Constant.DownloadUID.PROJECT_SITES, message);
+                        Timber.e(e);
+                        String message;
+                        if (e instanceof RetrofitException) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
+
+                        SyncLocalSource.getINSTANCE().addErrorMessage(PROJECT_SITES, message);
+                        SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_SITES);
 
 
                     }
