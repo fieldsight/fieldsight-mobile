@@ -170,7 +170,6 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         MultipartBody.Part body = null;
 
         File file = FileUtils.getFileByPath(siteLocationPojo.getLogo());
-        siteLocationPojo.setIdentifier(new Random().nextInt(5000) + "");
 
         if (FileUtils.isFileExists(file)) {
             requestBody = RequestBody.create(MediaType.parse("image/*"), file);
