@@ -219,11 +219,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         } else {
                             message = e.getMessage();
                         }
-
-                        SyncLocalSource.getINSTANCE().addErrorMessage(PROJECT_SITES, message);
-                        SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_SITES);
-
-
+                        SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_SITES,message);
                     }
 
                     @Override
