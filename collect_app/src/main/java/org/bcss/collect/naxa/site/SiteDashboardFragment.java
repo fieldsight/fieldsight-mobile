@@ -189,7 +189,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             switch (affectedRows) {
                 case 1:
                     ToastUtils.showShortToast(getString(R.string.msg_delete_sucess, loadedSite.getName()));
-                    new Handler().postDelayed(() -> requireActivity().getSupportFragmentManager().popBackStack(), 500);
+                    new Handler().postDelayed(() -> requireActivity().finish(), 500);
                     break;
                 case -1:
                     ToastUtils.showShortToast(getString(R.string.msg_delete_failed, loadedSite.getName()));
