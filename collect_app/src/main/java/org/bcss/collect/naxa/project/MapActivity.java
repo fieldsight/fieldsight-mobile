@@ -527,10 +527,6 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
 
     @Override
     public void onClientStartFailure() {
-        if (!checkIfLocationPermissionsGranted(this)) {
-            requestLocationPermissions(this, new PermissionListener() {
-                @Override
-                public void granted() {
         showGPSDisabledAlertToUser();
     }
 
