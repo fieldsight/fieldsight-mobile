@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.site;
 
+import android.arch.lifecycle.LiveData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -31,6 +32,7 @@ import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
@@ -89,6 +91,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private TextView tvSiteType;
     private Unbinder unbinder;
     private View rootView;
+    private LiveData<Site> siteLiveData;
 
     public SiteDashboardFragment() {
 
@@ -119,10 +122,11 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         unbinder = ButterKnife.bind(this, rootView);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
 
-
         bindUI(rootView);
 
-        //https://medium.com/@BladeCoder/architecture-components-pitfalls-part-1-9300dd969808
+        /*
+         *https://medium.com/@BladeCoder/architecture-components-pitfalls-part-1-9300dd969808
+         */
         SiteLocalSource.getInstance().getBySiteId(loadedSite.getId())
                 .observe(getViewLifecycleOwner(), site -> {
                     if (site == null) {
@@ -389,16 +393,16 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                     @Override
                     public void onSuccess(List<Long> instanceIDs) {
                         FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
-
-                        if (uploadForms && instanceIDs.size() > 0) {
-                            Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
-                            i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
-                            startActivityForResult(i, INSTANCE_UPLOADER);
+                        if (uploadForms) {
+                            if (instanceIDs.size() > 0) {
+                                Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
+                                i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
+                                startActivityForResult(i, INSTANCE_UPLOADER);
+                            } else {
+                                FlashBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                            }
                         }
 
-                        if (uploadForms && instanceIDs.size() == 0) {
-                            FlashBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
-                        }
                     }
 
                     @Override
