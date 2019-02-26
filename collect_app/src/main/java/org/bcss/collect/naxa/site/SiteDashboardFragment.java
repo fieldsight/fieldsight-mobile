@@ -189,7 +189,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             switch (affectedRows) {
                 case 1:
                     ToastUtils.showShortToast(getString(R.string.msg_delete_sucess, loadedSite.getName()));
-                    new Handler().postDelayed(() -> getActivity().onBackPressed(), 500);
+                    new Handler().postDelayed(() -> requireActivity().getSupportFragmentManager().popBackStack(), 500);
                     break;
                 case -1:
                     ToastUtils.showShortToast(getString(R.string.msg_delete_failed, loadedSite.getName()));
@@ -393,6 +393,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                     @Override
                     public void onSuccess(List<Long> instanceIDs) {
                         FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
+
                         if (uploadForms) {
                             if (instanceIDs.size() > 0) {
                                 Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
@@ -400,7 +401,10 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                                 startActivityForResult(i, INSTANCE_UPLOADER);
                             } else {
                                 FlashBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                                requireActivity().onBackPressed();
                             }
+                        } else {
+                            requireActivity().onBackPressed();
                         }
 
                     }
