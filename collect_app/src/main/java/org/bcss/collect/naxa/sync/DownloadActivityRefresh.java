@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,7 +93,6 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
         setupViewModel();
 
 
-
         int count = (ServiceGenerator.getQueuedAPICount() + ServiceGenerator.getRunningAPICount());
         if (count == 0) {
             viewModel.setAllRunningTaskAsFailed();
@@ -126,7 +126,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                             String msg = String.format("Upload %s Edited Site(s)", sites.size());
                             SyncLocalSource.getINSTANCE().markAsPending(EDITED_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().markAsDisabled(EDITED_SITES,"No, edited sites present");
+                            SyncLocalSource.getINSTANCE().markAsDisabled(EDITED_SITES, "No, edited sites present");
                         }
                     }
 
@@ -147,7 +147,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                             String msg = String.format("Upload %s Offline Site(s)", sites.size());
                             SyncLocalSource.getINSTANCE().markAsPending(OFFLINE_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().markAsDisabled(OFFLINE_SITES,"No, offline sites present");
+                            SyncLocalSource.getINSTANCE().markAsDisabled(OFFLINE_SITES, "No, offline sites present");
                         }
                     }
 
@@ -173,9 +173,11 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 .observe(this, integer -> {
                     if (integer == null) return;
                     if (integer > 0) {
+                        toolbar.setTitle(String.format(Locale.US,"Sync (%d)", integer));
                         toggleButton.setText(getString(R.string.clear_all));
                         downloadButton.setEnabled(true);
                     } else {
+                        toolbar.setTitle("Sync");
                         downloadButton.setEnabled(false);
                         toggleButton.setText(getString(R.string.select_all));
                     }
@@ -286,7 +288,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
                     @Override
                     public void onSuccess(List<Sync> syncableItems) {
-                        if(adapter.getAll().size() == 0){
+                        if (adapter.getAll().size() == 0) {
                             adapter.updateList(syncableItems);
                             AnimationUtils.runLayoutAnimation(recyclerView);
                         }
