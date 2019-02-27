@@ -82,7 +82,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                     public void onSuccess(List<Site> sites) {
 
                         if (sites.size() > 0) {
-                            String title = "Edited Site(s) Uploaded";
+                            String title = Collect.getInstance().getString(R.string.msg_edited_site_uploaded);
                             String msg;
                             if (sites.size() > 1) {
                                 msg = Collect.getInstance().getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size());
@@ -132,7 +132,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                     @Override
                     public void onSuccess(List<Site> sites) {
                         if (sites.size() > 0) {
-                            String title = "Offline Site(s) Uploaded";
+                            String title = Collect.getInstance().getString(R.string.msg_offline_site_uploaded);
                             String msg;
                             if (sites.size() > 1) {
                                 msg = Collect.getInstance().getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size());
