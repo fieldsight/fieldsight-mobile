@@ -69,16 +69,22 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         viewHolder.displaySubtext.setEnabled(enabled);
         viewHolder.cardView.setEnabled(enabled);
         viewHolder.checkbox.setEnabled(enabled);
+
+        GradientDrawable shapeDrawable = (GradientDrawable) viewHolder.imageBackground.getBackground();
+        Context context = viewHolder.progressBar.getContext();
+        ThemeUtils themeUtils = new ThemeUtils(context);
+
+        int color = enabled ? themeUtils.getAccentColor() : ContextCompat.getColor(context, R.color.gray600);
+        shapeDrawable.setColor(color);
+
+
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        GradientDrawable shapeDrawable = (GradientDrawable) viewHolder.imageBackground.getBackground();
         Sync item = syncableItems.get(viewHolder.getAdapterPosition());
-
         Context context = viewHolder.progressBar.getContext();
-        shapeDrawable.setColor(new ThemeUtils(context).getAccentColor());
 
         viewHolder.displayName.setText(item.getTitle());
         viewHolder.displaySubtext.setText(item.getDetail());
@@ -128,6 +134,7 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
                 break;
             case DISABLED:
                 enableOrDisableCard(viewHolder, false);
+                viewHolder.tvUpdatedInfo.setVisibility(View.GONE);
                 viewHolder.statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
                 break;
 

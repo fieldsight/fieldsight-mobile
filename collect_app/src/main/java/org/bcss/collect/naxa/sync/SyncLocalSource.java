@@ -136,8 +136,8 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     }
 
-    void markAsDisabled(int uid) {
-        AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.DISABLED, formattedDate(), "No, offline sites present"));
+    void markAsDisabled(int uid,String message) {
+        AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.DISABLED, formattedDate(), message));
 
     }
 
@@ -176,11 +176,11 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     }
 
-    public void markAsPending(int uid,String message) {
+    public void markAsPending(int uid, String message) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.PENDING);
+                syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.PENDING,  formattedDate(), message);
             }
         });
 
