@@ -141,7 +141,7 @@
 
 
                 <Button
-
+                    android:visibility="gone"
                     android:id="@+id/btn_cancel_sync"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
