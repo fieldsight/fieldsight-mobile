@@ -472,7 +472,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 .beginTransaction()
                 .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation)
                 .replace(R.id.fragment_container, stageListFragment)
-                .addToBackStack("myframsg_uploadg2").commit();
+                .addToBackStack("myfrag2").commit();
 
 
     }
