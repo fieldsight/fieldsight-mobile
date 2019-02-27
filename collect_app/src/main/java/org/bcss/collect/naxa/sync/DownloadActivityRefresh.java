@@ -11,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,8 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -117,9 +120,9 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                     public void onSuccess(List<Site> sites) {
                         String msg = String.format("Upload %s Edited Site(s)", sites.size());
                         if (sites.size() > 0) {
-                            SyncLocalSource.getINSTANCE().saveAsAsync(new Sync(EDITED_SITES, PENDING, "Edited Site(s)", msg));
+                            SyncLocalSource.getINSTANCE().markAsPending(EDITED_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().deleteById(EDITED_SITES);
+                            SyncLocalSource.getINSTANCE().markAsDisabled(EDITED_SITES);
                         }
                     }
 
@@ -138,9 +141,9 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                     public void onSuccess(List<Site> sites) {
                         if (sites.size() > 0) {
                             String msg = String.format("Upload %s Offline Site(s)", sites.size());
-                            SyncLocalSource.getINSTANCE().saveAsAsync(new Sync(OFFLINE_SITES, PENDING, "Offline Site(s)", msg));
+                            SyncLocalSource.getINSTANCE().markAsPending(EDITED_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().deleteById(OFFLINE_SITES);
+                            SyncLocalSource.getINSTANCE().markAsDisabled(OFFLINE_SITES);
                         }
                     }
 
@@ -284,7 +287,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
                 });
     }

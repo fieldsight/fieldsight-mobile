@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.COMPLETED;
+import static org.bcss.collect.naxa.common.Constant.DownloadStatus.DISABLED;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.FAILED;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.RUNNING;
@@ -42,7 +44,7 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         this.syncableItems = syncableItems;
     }
 
-    OnItemClickListener<Sync> onItemClickListener;
+    private OnItemClickListener<Sync> onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener<Sync> onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -77,8 +79,9 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
 
         viewHolder.checkbox.setChecked(item.isChecked());
         viewHolder.progressBar.setMax(item.getSyncTotal());
-
         viewHolder.tvOutOfSync.setVisibility(item.isOutOfSync() ? View.VISIBLE : View.GONE);
+        viewHolder.cardView.setEnabled(true);
+        viewHolder.checkbox.setEnabled(true);
         switch (item.getDownloadingStatus()) {
             case PENDING:
                 viewHolder.btnCancelSync.setVisibility(View.GONE);
@@ -131,6 +134,18 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
                 viewHolder.textView.setText(message);
                 viewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.green));
                 break;
+            case DISABLED:
+                viewHolder.cardView.setEnabled(false);
+                viewHolder.checkbox.setEnabled(false);
+                viewHolder.btnCancelSync.setVisibility(View.GONE);
+                viewHolder.statusIcon.setEnabled(false);
+                viewHolder.displayName.setEnabled(false);
+                viewHolder.displaySubtext.setEnabled(false);
+                viewHolder.statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
+                viewHolder.textView.setVisibility(View.GONE);
+                viewHolder.textView.setTextColor(ContextCompat.getColor(context, R.color.red));
+                break;
+
         }
     }
 
@@ -169,6 +184,9 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
 
         @BindView(R.id.tv_out_of_sync)
         TextView tvOutOfSync;
+
+        @BindView(R.id.download_list_item_card)
+        CardView cardView;
 
 
         ViewHolder(View view) {

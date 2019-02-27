@@ -18,6 +18,8 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
@@ -134,6 +136,11 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     }
 
+    void markAsDisabled(int uid) {
+        AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.DISABLED, formattedDate(), "No, offline sites present"));
+
+    }
+
 
     public void markAsFailed(int uid, String message) {
         AsyncTask.execute(() -> syncDAO.markFailedWithMsg(uid, Constant.DownloadStatus.FAILED, formattedDate(), message));
@@ -169,6 +176,17 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     }
 
+    public void markAsPending(int uid,String message) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.PENDING);
+            }
+        });
+
+    }
+
+
     public void markAllAsPending() {
         AsyncTask.execute(() -> {
             syncDAO.markAllAsPending(PENDING);
@@ -203,6 +221,9 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
                 new Sync(Constant.DownloadUID.EDU_MATERIALS, PENDING, "Educational Materials", "Download educational attached for form(s)"),
                 new Sync(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your project"),
                 new Sync(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
+                new Sync(EDITED_SITES, PENDING, "Edited Site(s)", ""),
+                new Sync(OFFLINE_SITES, PENDING, "Offline Site(s)", ""),
+
         };
     }
 
@@ -215,6 +236,7 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
             syncDAO.deleteById(uid);
         });
     }
+
 
     public void setAllRunningTaskAsFailed() {
         AsyncTask.execute(() -> {
