@@ -91,22 +91,23 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         viewHolder.checkbox.setChecked(item.isChecked());
         viewHolder.progressBar.setMax(item.getSyncTotal());
         viewHolder.tvOutOfSync.setVisibility(item.isOutOfSync() ? View.VISIBLE : View.GONE);
-
+        viewHolder.progressBar.setVisibility(View.GONE);
         enableOrDisableCard(viewHolder, true);
 
         switch (item.getDownloadingStatus()) {
             case PENDING:
+
                 viewHolder.statusIcon.setImageResource(R.drawable.ic_access_time_black_24dp);
                 viewHolder.progressBar.setIndeterminate(false);
                 viewHolder.tvUpdatedInfo.setVisibility(View.GONE);
                 break;
             case RUNNING:
+                viewHolder.progressBar.setVisibility(View.VISIBLE);
+                viewHolder.progressBar.setIndeterminate(true);
                 viewHolder.statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
                 viewHolder.tvUpdatedInfo.setVisibility(View.GONE);
                 //if(item.getUid() != Constant.DownloadUID.ALL_FORMS){
-                if (true) {
-                    viewHolder.progressBar.setIndeterminate(true);
-                } else {
+                if (false) {
                     viewHolder.progressBar.setMax(item.getSyncTotal());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         viewHolder.progressBar.setProgress(item.getSyncProgress(), true);
