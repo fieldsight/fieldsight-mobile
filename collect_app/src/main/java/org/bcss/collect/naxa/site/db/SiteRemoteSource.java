@@ -5,6 +5,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.database.SiteUploadHistory;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
@@ -13,7 +14,6 @@ import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.utilities.FileUtils;
-import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.util.List;
@@ -22,6 +22,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
@@ -30,6 +31,8 @@ import okhttp3.RequestBody;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
@@ -112,10 +115,55 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         DisposableManager.add(dis);
     }
 
+    public void updateAllOfflineSite() {
+        DisposableSingleObserver<List<Site>> dis = SiteLocalSource.getInstance()
+                .getAllByStatus(OFFLINE_SITES)
+                .doOnDispose(() -> SyncLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES))
+                .doOnSubscribe(disposable -> {
+                    SyncRepository.getInstance().showProgress(OFFLINE_SITES);
+                    SyncLocalSource.getINSTANCE().markAsRunning(OFFLINE_SITES);
+                })
+                .toObservable()
+                .flatMap((Function<List<Site>, ObservableSource<Site>>) this::uploadMultipleSites)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .toList()
+                .subscribeWith(new DisposableSingleObserver<List<Site>>() {
+                    @Override
+                    public void onSuccess(List<Site> sites) {
+                        if (sites.size() > 0) {
+                            String title = "Offline Site(s) Uploaded";
+                            String msg;
+                            if (sites.size() > 1) {
+                                msg = Collect.getInstance().getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size());
+                            } else {
+                                msg = Collect.getInstance().getString(R.string.msg_single_site_upload, sites.get(0).getName());
+                            }
+                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, msg);
+                            SyncLocalSource.getINSTANCE().markAsCompleted(OFFLINE_SITES);
+                        } else {
+                            SyncLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.e(e);
+                        String message;
+                        if (e instanceof RetrofitException) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
+                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS, message);
+                    }
+                });
+
+        DisposableManager.add(dis);
+    }
+
 
     public Observable<Site> uploadMultipleSites(List<Site> sites) {
-
-
         InstancesDao instancesDao = new InstancesDao();
         return Observable.just(sites)
                 .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
