@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
@@ -20,7 +19,7 @@ import timber.log.Timber;
 
 public class RetrofitException extends RuntimeException {
     private final static String SERVER_NON_FIELD_ERROR = "non_field_errors";
-    private final static int CODE_BAD_REQUEST= 400;
+    private final static int CODE_BAD_REQUEST = 400;
 
 
     static RetrofitException httpError(String url, Response response, Retrofit retrofit) {
@@ -45,13 +44,19 @@ public class RetrofitException extends RuntimeException {
             JSONObject serverError = new JSONObject(message);
             if (serverError.has(SERVER_NON_FIELD_ERROR)) {
                 message = serverError.getString(SERVER_NON_FIELD_ERROR);
+                message = cleanIfDirty(message);
             }
+
         } catch (NullPointerException | IOException | JSONException e) {
             Timber.e(e);
 
         }
 
         return message;
+    }
+
+    private static String cleanIfDirty(String text) {
+        return text.replace("[", "").replace("]", "").replace("\"", "");
     }
 
     /**
