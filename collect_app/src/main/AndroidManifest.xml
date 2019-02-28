@@ -283,8 +283,9 @@
             android:exported="true" />
         <activity android:name="org.bcss.collect.naxa.site.ProjectDashboardActivity" />
         <activity
+            android:windowSoftInputMode="adjustResize"
             android:name="org.bcss.collect.naxa.site.CreateSiteActivity"
-            android:exported="true" />
+             />
         <activity
             android:name="org.bcss.collect.naxa.survey.SurveyFormsActivity"
             android:exported="true" />

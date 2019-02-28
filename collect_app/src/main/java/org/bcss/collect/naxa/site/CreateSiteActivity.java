@@ -146,6 +146,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
         Project project = null;
 
+
         try {
             project = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
         } catch (NullPointerException e) {
@@ -190,26 +191,6 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                         }
 
                         showSiteTypeSpinner(siteTypes);
-
-//                        if (loadedSite != null ) {
-//                            String siteTypeId = loadedSite.getTypeId();
-//                            int selectedPosition = -1;
-//
-//                            for (int i = 0; i < siteTypes.size(); i++) {
-//                                if (siteTypeId.equals(siteTypes.get(i).getId())) {
-//                                    selectedPosition = i;
-//                                }
-//                            }
-//
-//                            ToastUtils.showLongToast(String.valueOf(selectedPosition)
-//                                    + " " + loadedSite.getTypeId()
-//                                    + " " + loadedSite.getTypeLabel()
-//
-//                            );
-//
-//                            spinnerSiteType.setSelection(selectedPosition);
-//
-//                        }
                     }
                 });
 
@@ -236,7 +217,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                             DialogFactory.createGenericErrorDialog(this, "").show();
                             break;
                         case EMPTY_SITE_NAME:
-                            btnCollectSiteRecordLocation.requestFocus();
+                            tiSiteName.requestFocus();
                             tiSiteName.setError(getString(R.string.error_field_required));
 
                             break;
@@ -246,7 +227,6 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
                             break;
                         case EMPTY_SITE_IDENTIFIER:
-
                             tiSiteIdentifier.requestFocus();
                             tiSiteIdentifier.setError(getString(R.string.error_field_required));
 
