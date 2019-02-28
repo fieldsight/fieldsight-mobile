@@ -1,5 +1,7 @@
 package org.bcss.collect.naxa.login;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
@@ -74,12 +76,12 @@ public class LoginModelImpl implements LoginModel {
                             errorMessage = hasErrorBody ? retrofitException.getMessage() : retrofitException.getKind().getMessage();
                         } else if (e instanceof SSLException) {
                             errorMessage = "A SSL exception occurred";
+                        } else if (e instanceof FirebaseTokenException) {
+                            errorMessage = Collect.getInstance().getString(R.string.dialog_error_register);
                         }
-                        if (e instanceof FirebaseTokenException) {
-                            onLoginFinishedListener.fcmTokenError();
-                        }else {
-                            onLoginFinishedListener.onError(errorMessage);
-                        }
+
+                        onLoginFinishedListener.onError(errorMessage);
+
                     }
 
                     @Override
