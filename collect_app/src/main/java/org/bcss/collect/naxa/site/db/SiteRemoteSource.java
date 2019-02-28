@@ -126,31 +126,19 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 .subscribeWith(new DisposableSingleObserver<List<Site>>() {
                     @Override
                     public void onSuccess(List<Site> sites) {
-                        if (sites.size() > 0) {
-                            String title = Collect.getInstance().getString(R.string.msg_offline_site_uploaded);
-                            String msg;
-                            if (sites.size() > 1) {
-                                msg = Collect.getInstance().getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size());
-                            } else {
-                                msg = Collect.getInstance().getString(R.string.msg_single_site_upload, sites.get(0).getName());
-                            }
-                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, msg);
-                            SyncLocalSource.getINSTANCE().markAsCompleted(OFFLINE_SITES);
-                        } else {
-                            SyncLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES);
-                        }
+                        SyncLocalSource.getINSTANCE().markAsCompleted(OFFLINE_SITES);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
                         String message;
-                        if (e instanceof RetrofitException) {
+                        if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {
                             message = ((RetrofitException) e).getKind().getMessage();
                         } else {
                             message = e.getMessage();
                         }
-                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS, message);
+                        SyncLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES, message);
                     }
                 });
 
