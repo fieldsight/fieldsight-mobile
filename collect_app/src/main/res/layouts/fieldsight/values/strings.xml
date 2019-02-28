@@ -234,6 +234,14 @@
     <string name="msg_flag_resposne_site_info_missing">Download site information from sync screen to view more site details here</string>
     <string name="msg_download_task_failed">Failed to download</string>
     <string name="dialog_text_instance_download_failed">Failed to download filled form</string>
+    <string name="msg_offline_site_uploaded">Offline Site(s) Uploaded</string>
+    <string name="msg_edited_site_uploaded">Edited Site(s) Uploaded</string>
+    <string name="msg_no_form_to_upload">There are no forms to upload</string>
+    <string name="dialog_title_upload_sites">Upload selected site(s)</string>
+    <string name="dialog_msg_upload_sites">Upload selected site(s) along with their filled form(s) ?</string>
+    <string name="dialog_action_upload_site_and_form">Yes, upload Site(s) and Form(s)</string>
+    <string name="dialog_action_only_upload_site">No, Upload Site(s) only</string>
+    <string name="dialog_msg_uploading_sites">Uploading site(s)</string>
 
     <!--Notification sitelist ends here-->
 
