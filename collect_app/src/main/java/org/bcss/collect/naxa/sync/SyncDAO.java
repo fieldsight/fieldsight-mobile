@@ -77,6 +77,6 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
     @Query("UPDATE sync SET downloadingStatus = 2, lastSyncDateTime =:date WHERE downloadingStatus= 3")
     public abstract void setAllRunningTaskAsFailed(String date);
 
-    @Query("UPDATE sync set downloadingStatus=:disabled,lastSyncDateTime =:formattedDate,detail=:message WHERE uid=:uid")
+    @Query("UPDATE sync set downloadingStatus=:disabled,lastSyncDateTime =:formattedDate,detail=:message,checked ='0'  WHERE uid=:uid")
     public abstract void markSelectedAsDisabled(int uid, int disabled, String formattedDate, String message);
 }

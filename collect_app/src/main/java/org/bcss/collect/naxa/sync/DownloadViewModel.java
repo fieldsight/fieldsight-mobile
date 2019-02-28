@@ -369,7 +369,7 @@ public class DownloadViewModel extends ViewModel {
                 SiteRemoteSource.getInstance().updateAllEditedSite();
                 break;
             case OFFLINE_SITES:
-                SiteRemoteSource.getInstance().updateAllOfflineSite();
+                SiteRemoteSource.getInstance().uploadAllOfflineSite();
                 break;
 
         }

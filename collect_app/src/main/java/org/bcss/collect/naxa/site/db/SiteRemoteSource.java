@@ -110,7 +110,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         DisposableManager.add(dis);
     }
 
-    public void updateAllOfflineSite() {
+    public void uploadAllOfflineSite() {
         DisposableSingleObserver<List<Site>> dis = SiteLocalSource.getInstance()
                 .getAllByStatus(Constant.SiteStatus.IS_OFFLINE)
                 .doOnDispose(() -> SyncLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES))
