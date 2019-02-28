@@ -44,6 +44,7 @@ import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
+@Deprecated
 public class DownloadActivity extends CollectAbstractActivity implements DownloadView {
 
 
