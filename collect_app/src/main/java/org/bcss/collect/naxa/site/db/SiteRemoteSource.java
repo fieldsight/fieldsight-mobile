@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.site.db;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.database.SiteUploadHistory;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
@@ -89,23 +90,17 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                             } else {
                                 msg = Collect.getInstance().getString(R.string.msg_single_site_upload, sites.get(0).getName());
                             }
-
                             FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, msg);
-                            SyncRepository.getInstance().setSuccess(EDITED_SITES);
                             SyncLocalSource.getINSTANCE().markAsCompleted(EDITED_SITES);
                         } else {
-                            SyncRepository.getInstance().setError(EDITED_SITES);
                             SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES);
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         Timber.e(e);
-                        SyncRepository.getInstance().setError(EDITED_SITES);
                         SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES);
-
                         String message = e.getMessage();
                         SyncLocalSource.getINSTANCE().addErrorMessage(EDITED_SITES, message);
                     }
@@ -117,7 +112,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
     public void updateAllOfflineSite() {
         DisposableSingleObserver<List<Site>> dis = SiteLocalSource.getInstance()
-                .getAllByStatus(OFFLINE_SITES)
+                .getAllByStatus(Constant.SiteStatus.IS_OFFLINE)
                 .doOnDispose(() -> SyncLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES))
                 .doOnSubscribe(disposable -> {
                     SyncRepository.getInstance().showProgress(OFFLINE_SITES);

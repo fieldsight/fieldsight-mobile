@@ -22,7 +22,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 
-
+@Deprecated
 public class SyncRepository {
 
     private SyncOLD syncOLD;
