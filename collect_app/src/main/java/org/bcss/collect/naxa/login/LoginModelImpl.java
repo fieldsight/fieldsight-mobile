@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.login;
 
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.login.model.AuthResponse;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -43,7 +44,7 @@ public class LoginModelImpl implements LoginModel {
                                 .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true, 3))
                                 .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
                                     @Override
-                                    public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) {
+                                    public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
                                         if ("false".equals(fcmParameter.getIs_active())) {
                                             throw new FirebaseTokenException("Failed to add token in server");
                                         }
@@ -66,27 +67,19 @@ public class LoginModelImpl implements LoginModel {
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
-                         if (e instanceof HttpException) {
-                            HttpException httpException = (HttpException) e;
-                            int statusCode = httpException.response().code();
-                            switch (statusCode) {
-                                case 400:
-                                    String parsedErrorMessage = APIErrorUtils.getNonFieldError(httpException);
-                                    onLoginFinishedListener.onError(parsedErrorMessage);
-                                    break;
-                                default:
-                                    onLoginFinishedListener.onError("Server returned " + statusCode);
-                            }
-                        } else if (e instanceof FirebaseTokenException) {
-                            onLoginFinishedListener.fcmTokenError();
+                        String errorMessage = e.getMessage();
+                        if (e instanceof RetrofitException) {
+                            RetrofitException retrofitException = (RetrofitException) e;
+                            boolean hasErrorBody = retrofitException.getResponse().errorBody() != null;
+                            errorMessage = hasErrorBody ? retrofitException.getMessage() : retrofitException.getKind().getMessage();
                         } else if (e instanceof SSLException) {
-                            onLoginFinishedListener.onError("An SSL exception occurred");
-                        } else {
-                            onLoginFinishedListener.onError("Generic error occurred: " + e.getMessage());
-
+                            errorMessage = "A SSL exception occurred";
                         }
-
-
+                        if (e instanceof FirebaseTokenException) {
+                            onLoginFinishedListener.fcmTokenError();
+                        }else {
+                            onLoginFinishedListener.onError(errorMessage);
+                        }
                     }
 
                     @Override
@@ -95,5 +88,6 @@ public class LoginModelImpl implements LoginModel {
                     }
                 });
     }
+
 
 }
