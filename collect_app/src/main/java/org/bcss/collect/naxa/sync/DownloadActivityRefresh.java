@@ -11,12 +11,16 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.common.util.ArrayUtils;
+
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.OnItemClickListener;
+import org.bcss.collect.naxa.common.AnimationUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
@@ -26,7 +30,10 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,7 +93,6 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
         setupViewModel();
 
 
-
         int count = (ServiceGenerator.getQueuedAPICount() + ServiceGenerator.getRunningAPICount());
         if (count == 0) {
             viewModel.setAllRunningTaskAsFailed();
@@ -115,11 +121,12 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 .subscribe(new DisposableSingleObserver<List<Site>>() {
                     @Override
                     public void onSuccess(List<Site> sites) {
-                        String msg = String.format("Upload %s Edited Site(s)", sites.size());
+
                         if (sites.size() > 0) {
-                            SyncLocalSource.getINSTANCE().saveAsAsync(new Sync(EDITED_SITES, PENDING, "Edited Site(s)", msg));
+                            String msg = String.format("Upload %s Edited Site(s)", sites.size());
+                            SyncLocalSource.getINSTANCE().markAsPending(EDITED_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().deleteById(EDITED_SITES);
+                            SyncLocalSource.getINSTANCE().markAsDisabled(EDITED_SITES, "No, edited sites present");
                         }
                     }
 
@@ -138,9 +145,9 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                     public void onSuccess(List<Site> sites) {
                         if (sites.size() > 0) {
                             String msg = String.format("Upload %s Offline Site(s)", sites.size());
-                            SyncLocalSource.getINSTANCE().saveAsAsync(new Sync(OFFLINE_SITES, PENDING, "Offline Site(s)", msg));
+                            SyncLocalSource.getINSTANCE().markAsPending(OFFLINE_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().deleteById(OFFLINE_SITES);
+                            SyncLocalSource.getINSTANCE().markAsDisabled(OFFLINE_SITES, "No, offline sites present");
                         }
                     }
 
@@ -166,9 +173,11 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 .observe(this, integer -> {
                     if (integer == null) return;
                     if (integer > 0) {
+                        toolbar.setTitle(String.format(Locale.US,"Sync (%d)", integer));
                         toggleButton.setText(getString(R.string.clear_all));
                         downloadButton.setEnabled(true);
                     } else {
+                        toolbar.setTitle("Sync");
                         downloadButton.setEnabled(false);
                         toggleButton.setText(getString(R.string.select_all));
                     }
@@ -279,12 +288,17 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
                     @Override
                     public void onSuccess(List<Sync> syncableItems) {
+                        if (adapter.getAll().size() == 0) {
+                            adapter.updateList(syncableItems);
+                            AnimationUtils.runLayoutAnimation(recyclerView);
+                        }
                         adapter.updateList(syncableItems);
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
                 });
     }
