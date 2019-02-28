@@ -66,8 +66,7 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                             message = e.getMessage();
                         }
 
-                        SyncLocalSource.getINSTANCE().addErrorMessage(SITE_TYPES, message);
-                        SyncLocalSource.getINSTANCE().markAsFailed(SITE_TYPES);
+                        SyncLocalSource.getINSTANCE().markAsFailed(SITE_TYPES,message);
 
                     }
                 });

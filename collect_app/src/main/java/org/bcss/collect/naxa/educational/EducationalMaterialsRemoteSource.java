@@ -139,8 +139,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                             message = e.getMessage();
                         }
 
-                        SyncLocalSource.getINSTANCE().addErrorMessage(EDU_MATERIALS, message);
-                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS);
+                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS,message);
                     }
                 });
 

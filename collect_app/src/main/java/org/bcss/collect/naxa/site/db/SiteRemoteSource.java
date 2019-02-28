@@ -5,6 +5,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.database.SiteUploadHistory;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
@@ -30,6 +31,7 @@ import okhttp3.RequestBody;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
@@ -88,23 +90,24 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                             }
 
                             FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, msg);
-                            SyncRepository.getInstance().setSuccess(EDITED_SITES);
                             SyncLocalSource.getINSTANCE().markAsCompleted(EDITED_SITES);
                         } else {
-                            SyncRepository.getInstance().setError(EDITED_SITES);
+
                             SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES);
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         Timber.e(e);
-                        SyncRepository.getInstance().setError(EDITED_SITES);
-                        SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES);
+                        String message;
+                        if (e instanceof RetrofitException) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
 
-                        String message = e.getMessage();
-                        SyncLocalSource.getINSTANCE().addErrorMessage(EDITED_SITES, message);
+                        SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES,message);3
                     }
                 });
 

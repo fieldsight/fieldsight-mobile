@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.contact;
 
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.sync.DisposableManager;
@@ -15,8 +16,10 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_CONTACTS;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightContactModel> {
 
@@ -47,7 +50,6 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) {
-                        SyncRepository.getInstance().showProgress(PROJECT_CONTACTS);
                         SyncLocalSource.getINSTANCE().markAsRunning(PROJECT_CONTACTS);
                     }
                 })
@@ -55,20 +57,19 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
                     @Override
                     public void onNext(ArrayList<FieldSightContactModel> fieldSightContactModels) {
                         ContactLocalSource.getInstance().save(fieldSightContactModels);
-                        SyncRepository.getInstance().setSuccess(PROJECT_CONTACTS);
-
                         SyncLocalSource.getINSTANCE().markAsCompleted(PROJECT_CONTACTS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
-                        SyncRepository.getInstance().setError(PROJECT_CONTACTS);
-                        SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_CONTACTS);
-
-                        String message = e.getMessage();
-                        SyncLocalSource.getINSTANCE().addErrorMessage(PROJECT_CONTACTS, message);
-
+                        Timber.e(e);
+                        String message;
+                        if (e instanceof RetrofitException) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
+                        SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_CONTACTS,message);
                     }
 
                     @Override

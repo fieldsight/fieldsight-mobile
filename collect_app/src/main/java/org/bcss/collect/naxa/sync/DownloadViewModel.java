@@ -317,12 +317,14 @@ public class DownloadViewModel extends ViewModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(ALL_FORMS);
-                        SyncLocalSource.getINSTANCE().markAsFailed(ALL_FORMS);
+                        String message;
                         if (e instanceof RetrofitException) {
-                            String message = e.getMessage();
-                            SyncLocalSource.getINSTANCE().addErrorMessage(ALL_FORMS, message);
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
                         }
+
+                        SyncLocalSource.getINSTANCE().markAsFailed(ALL_FORMS, message);
                     }
 
                     @Override
