@@ -25,7 +25,9 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
 
 public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubmissionResponse> {
@@ -57,29 +59,26 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
                         LastSubmissionLocalSource.getInstance().deleteAll();
-                        SyncRepository.getInstance().showProgress(PREV_SUBMISSION);
-
                         SyncLocalSource.getINSTANCE().markAsRunning(PREV_SUBMISSION);
                     }
 
                     @Override
                     public void onSuccess(List<LastSubmissionResponse> lastSubmissionResponses) {
                         FieldSightNotificationLocalSource.getInstance().markFormStatusChangeAsRead();
-
                         SyncLocalSource.getINSTANCE().markAsCompleted(PREV_SUBMISSION);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(PREV_SUBMISSION);
-                        SyncLocalSource.getINSTANCE().markAsFailed(PREV_SUBMISSION);
-                        e.printStackTrace();
-
-
+                        Timber.e(e);
+                        String message;
                         if (e instanceof RetrofitException) {
-                            String message = e.getMessage();
-                            SyncLocalSource.getINSTANCE().addErrorMessage(PREV_SUBMISSION, message);
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
                         }
+
+                        SyncLocalSource.getINSTANCE().markAsFailed(PREV_SUBMISSION,message);
                     }
                 });
 

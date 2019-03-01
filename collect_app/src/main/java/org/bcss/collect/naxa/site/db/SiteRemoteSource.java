@@ -34,6 +34,7 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
+
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
@@ -100,9 +101,14 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
-                        SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES);
-                        String message = e.getMessage();
-                        SyncLocalSource.getINSTANCE().addErrorMessage(EDITED_SITES, message);
+                        String message;
+                        if (e instanceof RetrofitException) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
+
+                        SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES,message);3
                     }
                 });
 
