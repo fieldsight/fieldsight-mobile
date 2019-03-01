@@ -11,17 +11,16 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import com.google.android.gms.common.util.ArrayUtils;
+import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.common.AnimationUtils;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.login.model.Site;
@@ -30,8 +29,6 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,11 +42,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableCompletableObserver;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
@@ -66,9 +63,13 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
     Button toggleButton;
     @BindView(R.id.download_button)
     Button downloadButton;
+    @BindView(R.id.layout_network_connectivity)
+    RelativeLayout layoutNetworkConnectivity;
+
 
     private DownloadListAdapterNew adapter;
     private DownloadViewModel viewModel;
+    private DisposableObserver<Boolean> connectivityDisposable;
 
 
     public static void start(Context context) {
@@ -173,7 +174,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 .observe(this, integer -> {
                     if (integer == null) return;
                     if (integer > 0) {
-                        toolbar.setTitle(String.format(Locale.US,"Sync (%d)", integer));
+                        toolbar.setTitle(String.format(Locale.US, "Sync (%d)", integer));
                         toggleButton.setText(getString(R.string.clear_all));
                         downloadButton.setEnabled(true);
                     } else {
@@ -363,16 +364,39 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 });
     }
 
+    private void setupInternetLayout(boolean show) {
+        layoutNetworkConnectivity.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         adapter.setOnItemClickListener(this);
+        connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
+            @Override
+            public void onConnectionSuccess() {
+                setupInternetLayout(false);
+                Timber.d("We have internet");
+            }
+
+            @Override
+            public void onConnectionFailure() {
+                setupInternetLayout(true);
+                Timber.d("We don't have internet");
+            }
+
+            @Override
+            public void onCheckComplete() {
+
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         adapter.setOnItemClickListener(null);
+        connectivityDisposable.dispose();
     }
 
     private void setupToolbar() {
