@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":51,"versionName":"2.5.3","enabled":true,"outputFile":"collect-release-2.5.3.apk","fullName":"release","baseName":"release"},"path":"collect-release-2.5.3.apk","properties":{}}]
-=======
-[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":49,"versionName":"2.5.5","enabled":true,"outputFile":"collect-release-2.5.5.apk","fullName":"release","baseName":"release"},"path":"collect-release-2.5.5.apk","properties":{}}]
->>>>>>> 980a41b8383f2c9266e4ff892ddddc55be64e84f
+[{"outputType":{"type":"APK"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":54,"versionName":"2.6.1","enabled":true,"outputFile":"collect-release-2.6.1.apk","fullName":"release","baseName":"release"},"path":"collect-release-2.6.1.apk","properties":{}}]
