@@ -1,28 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="org.bcss.collect.naxa.onboarding.DownloadActivity">
 
     <include layout="@layout/close_toolbar" />
 
+
     <android.support.v7.widget.RecyclerView
-        android:layout_marginBottom="40dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_above="@+id/button_wrapper"
+        android:layout_below="@id/appbar_close"
         android:id="@+id/activity_download_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
+    <RelativeLayout
+        android:layout_below="@id/appbar_close"
+        android:id="@+id/layout_network_connectivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/yellow_flagged"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/toolbar_message"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_internet_body"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
+
+    </RelativeLayout>
 
     <LinearLayout
-
-        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
         android:id="@+id/button_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
         android:weightSum="2">
 
 
@@ -45,4 +67,4 @@
 
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

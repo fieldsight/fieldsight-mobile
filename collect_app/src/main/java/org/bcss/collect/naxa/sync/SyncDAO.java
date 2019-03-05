@@ -14,7 +14,7 @@ import io.reactivex.Single;
 
 @Dao
 public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
-    @Query("SELECT * from sync ORDER BY title DESC")
+    @Query("SELECT * from sync ORDER BY title ASC")
     public abstract LiveData<List<Sync>> getAll();
 
     @Query("UPDATE sync SET checked='1' WHERE downloadingStatus != 5 ")
