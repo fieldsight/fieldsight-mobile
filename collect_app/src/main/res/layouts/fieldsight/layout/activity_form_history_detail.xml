@@ -12,19 +12,23 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/margin_small" />
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_share_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <!--<android.support.design.widget.AppBarLayout-->
+        <!--android:id="@+id/app_bar_share_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">-->
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_share_view"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-    </android.support.design.widget.AppBarLayout>
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar_share_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?attr/actionBarSize"-->
+            <!--android:background="?attr/colorPrimary"-->
+            <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />-->
+    <!--</android.support.design.widget.AppBarLayout>-->
+
+    <include layout="@layout/close_toolbar"
+        android:id="@+id/app_bar_share_view"/>
+
 
 
     <android.support.v4.widget.NestedScrollView
