@@ -5,8 +5,6 @@ public interface LoginModel {
     interface OnLoginFinishedListener {
         void onError(String message);
 
-        void fcmTokenError();
-
         void onSuccess();
     }
 

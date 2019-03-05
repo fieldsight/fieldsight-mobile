@@ -355,11 +355,11 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     @OnClick(R.id.site_option_btn_upload_site)
     public void showConfirmationDialog() {
 
-        DialogFactory.createActionDialog(requireActivity(), "Upload selected site(s)", "Upload selected site(s) along with their filled form(s) ?")
-                .setPositiveButton("Yes, upload Site(s) and Form(s)", (dialog, which) -> {
+        DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_sites))
+                .setPositiveButton(R.string.dialog_action_upload_site_and_form, (dialog, which) -> {
                     uploadSelectedSites(Collections.singletonList(loadedSite), true);
                 })
-                .setNegativeButton("No, Upload Site(s) only", (dialog, which) -> {
+                .setNegativeButton(R.string.dialog_action_only_upload_site, (dialog, which) -> {
                     uploadSelectedSites(Collections.singletonList(loadedSite), false);
                 })
                 .setNeutralButton(R.string.dialog_action_dismiss, null)
@@ -370,7 +370,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void uploadSelectedSites(List<Site> selected, boolean uploadForms) {
 
-        String progressMessage = "Uploading site(s)";
+        String progressMessage = getString(R.string.dialog_msg_uploading_sites);
 
         final int progressNotifyId = FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
 
@@ -406,7 +406,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                         } else {
                             requireActivity().onBackPressed();
                         }
-
                     }
 
                     @Override
