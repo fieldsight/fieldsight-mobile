@@ -18,6 +18,8 @@ import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -166,7 +168,8 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                                     public ObservableSource<Site> apply(Site newSite) {
                                         String oldSiteId = oldSite.getId();
                                         String newSiteId = newSite.getId();
-                                        return SiteLocalSource.getInstance().setSiteAsVerified(oldSiteId)
+                                        return SiteLocalSource.getInstance()
+                                                .setSiteAsVerified(oldSiteId)
                                                 .flatMap(new Function<Integer, ObservableSource<Integer>>() {
                                                     @Override
                                                     public ObservableSource<Integer> apply(Integer integer) {
