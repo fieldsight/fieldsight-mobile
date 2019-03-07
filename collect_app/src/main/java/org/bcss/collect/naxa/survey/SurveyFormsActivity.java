@@ -189,7 +189,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
 
         String[] projection = new String[]{FormsProviderAPI.FormsColumns._ID, FormsProviderAPI.FormsColumns.FORM_FILE_PATH};
-        String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=? AND " + FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " =?";
+        String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=? AND " + "("+FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " =? OR " + FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " IS NULL)";
         String[] selectionArgs = new String[]{jrFormId, "0"};
         String sortOrder = FormsProviderAPI.FormsColumns._ID + " DESC LIMIT 1";
 
