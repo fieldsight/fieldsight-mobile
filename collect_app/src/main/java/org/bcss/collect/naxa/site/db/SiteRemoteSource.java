@@ -110,7 +110,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                             message = e.getMessage();
                         }
 
-                        SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES,message);3
+                        SyncLocalSource.getINSTANCE().markAsFailed(EDITED_SITES,message);
                     }
                 });
 
