@@ -163,7 +163,7 @@ android {
     // https://stackoverflow.com/a/27119543/152938
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            String fileName = "internal".equals(variant.buildType.name) ? "-${defaultConfig.versionName}-${getGitRevParseInfo()}.apk" : "-${defaultConfig.versionName}.apk"
+            String fileName =  "${defaultConfig.versionName}.apk"
             outputFileName = new File(outputFileName.replace(".apk", fileName))
         }
     }
@@ -223,11 +223,6 @@ android {
 }
 
 
-def getGitRevParseInfo() {
-    def cmd = "git rev-parse HEAD"
-    def proc = cmd.execute()
-    return proc.text.trim()
-}
 
 configurations.all {
     resolutionStrategy {

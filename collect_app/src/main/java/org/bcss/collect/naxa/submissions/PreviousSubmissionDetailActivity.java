@@ -60,7 +60,7 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
 
     private void bindUI() {
-        toolbar = findViewById(R.id.toolbar_share_view);
+        toolbar = findViewById(R.id.toolbar);
         tvQuestionAnswer = findViewById(R.id.tv_question_answer);
         rvFormHistory = findViewById(R.id.form_history_detail_recycler_view);
         nestedScroll = findViewById(R.id.form_history_nested_scroll);
@@ -69,7 +69,7 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
     private void setupToolBar(FormResponse model) {
         toolbar.setTitle("Submitted by " + model.getSubmittedByUsername());
         toolbar.setSubtitle("on " + formatSubmissionDateTime(model.getDate()));
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_close);
         setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
