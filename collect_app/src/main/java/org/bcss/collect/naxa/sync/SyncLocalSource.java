@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.functions.Action;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
@@ -125,16 +126,15 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
         });
     }
 
-    public void markAsRunning(int uid,String message){
+    public void markAsRunning(int uid, String message) {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsRunning(uid,message);
+                syncDAO.markSelectedAsRunning(uid, message);
                 clearErrorMessage(uid);
             }
         });
     }
-
 
 
     public void markAsFailed(int uid) {
@@ -148,11 +148,14 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     }
 
-    void markAsDisabled(int uid,String message) {
+    void markAsDisabled(int uid, String message) {
         AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.DISABLED, formattedDate(), message));
 
     }
 
+    Completable updateProgress(int current, int total) {
+        return Completable.fromAction(() -> syncDAO.updateProgress(ODK_FORMS, total, current));
+    }
 
     public void markAsFailed(int uid, String message) {
         AsyncTask.execute(() -> syncDAO.markFailedWithMsg(uid, Constant.DownloadStatus.FAILED, formattedDate(), message));
@@ -192,7 +195,7 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.PENDING,  formattedDate(), message);
+                syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.PENDING, formattedDate(), message);
             }
         });
 
@@ -235,11 +238,12 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
                 new Sync(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
                 new Sync(EDITED_SITES, PENDING, "Edited Site(s)", ""),
                 new Sync(OFFLINE_SITES, PENDING, "Offline Site(s)", ""),
-                new Sync(ODK_FORMS, PENDING, "TEST ODK", ""),
+                new Sync(ODK_FORMS, PENDING, "ODK Forms", ""),
 
 
         };
     }
+
 
     public Completable init() {
         return save(getData());

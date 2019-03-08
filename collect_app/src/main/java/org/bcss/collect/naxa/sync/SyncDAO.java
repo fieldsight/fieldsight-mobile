@@ -83,4 +83,5 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
     public abstract void markSelectedAsDisabled(int uid, int disabled, String formattedDate, String message);
 
 
+
 }

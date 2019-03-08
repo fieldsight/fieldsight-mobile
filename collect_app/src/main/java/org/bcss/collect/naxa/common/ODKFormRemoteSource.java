@@ -103,7 +103,9 @@ public class ODKFormRemoteSource {
                 String name = strings[0];
                 String current = strings[1];
                 String total = strings[2];
+
                 SyncLocalSource.getINSTANCE().markAsRunning(ODK_FORMS, Arrays.toString(strings));
+
                 if (current.equals(total)) {
                     SyncLocalSource.getINSTANCE().markAsCompleted(ODK_FORMS);
                 }
@@ -310,9 +312,9 @@ public class ODKFormRemoteSource {
         return SyncRepository.getInstance()
                 .getStatusById(PROJECT_SITES)
                 .map(syncableItem -> {
-                    if (syncableItem.isProgressStatus()) {
-                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
-                    }
+//                    if (syncableItem.isProgressStatus()) {
+//                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
+//                    }
                     if (syncableItem.getDownloadingStatus() != Constant.DownloadStatus.COMPLETED) {
                         throw new DownloadRunningException("Download project sites first");
                     }
