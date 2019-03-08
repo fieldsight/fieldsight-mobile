@@ -23,6 +23,7 @@ import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.utilities.FormDownloader;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.ODK_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.FormDownloadList.FORMDETAIL_KEY;
@@ -92,14 +94,24 @@ public class ODKFormRemoteSource {
 
 
     public void downloadODKForms() {
+        SyncLocalSource.getINSTANCE().markAsRunning(ODK_FORMS);
+
         DisposableObserver<String[]> dis = getXMLForms().subscribeWith(new DisposableObserver<String[]>() {
             @Override
             public void onNext(String[] strings) {
                 Timber.d("onNext() %s", Arrays.toString(strings));
+                String name = strings[0];
+                String current = strings[1];
+                String total = strings[2];
+                SyncLocalSource.getINSTANCE().markAsRunning(ODK_FORMS, Arrays.toString(strings));
+                if (current.equals(total)) {
+                    SyncLocalSource.getINSTANCE().markAsCompleted(ODK_FORMS);
+                }
             }
 
             @Override
             public void onError(Throwable e) {
+                SyncLocalSource.getINSTANCE().markAsFailed(ODK_FORMS, e.getMessage());
                 Timber.e(e);
             }
 

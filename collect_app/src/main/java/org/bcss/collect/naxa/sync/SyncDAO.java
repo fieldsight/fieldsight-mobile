@@ -44,13 +44,15 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
     @Query("UPDATE sync set downloadingStatus=:failed,lastSyncDateTime =:now,errorMessage =:message WHERE uid=:uid")
     public abstract void markFailedWithMsg(int uid, int failed, String now, String message);
 
-
     @Query("UPDATE sync set downloadingStatus=:completed,lastSyncDateTime =:now  WHERE uid=:uid")
     public abstract void markSelectedAsCompleted(int uid, int completed, String now);
 
-
     @Query("UPDATE sync set downloadingStatus=:running WHERE uid=:uid")
     public abstract void markSelectedAsRunning(int uid, int running);
+
+
+    @Query("UPDATE sync set downloadingStatus=3,detail=:message  WHERE uid=:uid")
+    public abstract void markSelectedAsRunning(int uid, String message);
 
     @Query("UPDATE sync set downloadingStatus=:pending")
     public abstract void markAllAsPending(int pending);
@@ -79,4 +81,6 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
 
     @Query("UPDATE sync set downloadingStatus=:disabled,lastSyncDateTime =:formattedDate,detail=:message WHERE uid=:uid")
     public abstract void markSelectedAsDisabled(int uid, int disabled, String formattedDate, String message);
+
+
 }

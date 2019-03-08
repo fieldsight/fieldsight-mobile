@@ -123,7 +123,16 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
                 clearErrorMessage(uid);
             }
         });
+    }
 
+    public void markAsRunning(int uid,String message){
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                syncDAO.markSelectedAsRunning(uid,message);
+                clearErrorMessage(uid);
+            }
+        });
     }
 
 
