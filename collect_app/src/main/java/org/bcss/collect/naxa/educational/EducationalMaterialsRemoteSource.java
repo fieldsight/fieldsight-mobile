@@ -19,7 +19,6 @@ import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.SubStage;
 import org.bcss.collect.naxa.sync.DisposableManager;
-import org.bcss.collect.naxa.sync.Sync;
 import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.utilities.FileUtils;

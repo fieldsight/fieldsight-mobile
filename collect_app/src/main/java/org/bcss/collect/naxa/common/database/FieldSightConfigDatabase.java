@@ -6,7 +6,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.naxa.sync.Sync;
+import org.bcss.collect.naxa.sync.DownloadableItem;
 import org.bcss.collect.naxa.sync.SyncDAO;
 
 import java.io.File;
@@ -15,7 +15,7 @@ import java.io.File;
         {
                 SiteOveride.class,
                 ProjectFilter.class,
-                Sync.class,
+                DownloadableItem.class,
                 SiteUploadHistory.class
 
         },

@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.OnItemClickListener;
-import org.bcss.collect.naxa.common.Constant;
 import org.odk.collect.android.utilities.DateTimeUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
 
@@ -37,19 +36,19 @@ import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.RUNNING;
 
 class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew.ViewHolder> {
-    private final ArrayList<Sync> syncableItems;
+    private final ArrayList<DownloadableItem> syncableItems;
 
-    DownloadListAdapterNew(ArrayList<Sync> syncableItems) {
+    DownloadListAdapterNew(ArrayList<DownloadableItem> syncableItems) {
         this.syncableItems = syncableItems;
     }
 
-    private OnItemClickListener<Sync> onItemClickListener;
+    private OnItemClickListener<DownloadableItem> onItemClickListener;
 
-    public void setOnItemClickListener(OnItemClickListener<Sync> onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener<DownloadableItem> onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    public void updateList(List<Sync> newList) {
+    public void updateList(List<DownloadableItem> newList) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DownloadableItemsDiffCallbackNew(newList, syncableItems));
         syncableItems.clear();
         syncableItems.addAll(newList);
@@ -83,7 +82,7 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Sync item = syncableItems.get(viewHolder.getAdapterPosition());
+        DownloadableItem item = syncableItems.get(viewHolder.getAdapterPosition());
         Context context = viewHolder.progressBar.getContext();
 
         viewHolder.displayName.setText(item.getTitle());
@@ -148,7 +147,7 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
     }
 
 
-    public ArrayList<Sync> getAll() {
+    public ArrayList<DownloadableItem> getAll() {
         return syncableItems;
     }
 
@@ -189,17 +188,17 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
 
         @OnClick(R.id.download_list_item_card)
         void onCardClick() {
-            Sync sync = syncableItems.get(getAdapterPosition());
+            DownloadableItem downloadableItem = syncableItems.get(getAdapterPosition());
             if (onItemClickListener != null) {
-                onItemClickListener.onClickPrimaryAction(sync);
+                onItemClickListener.onClickPrimaryAction(downloadableItem);
             }
         }
 
         @OnClick(R.id.btn_cancel_sync)
         void onCardCancelBtnClick() {
-            Sync sync = syncableItems.get(getAdapterPosition());
+            DownloadableItem downloadableItem = syncableItems.get(getAdapterPosition());
             if (onItemClickListener != null) {
-                onItemClickListener.onClickSecondaryAction(sync);
+                onItemClickListener.onClickSecondaryAction(downloadableItem);
             }
         }
     }

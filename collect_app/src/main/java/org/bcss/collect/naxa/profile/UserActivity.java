@@ -195,7 +195,7 @@ public class UserActivity extends CollectAbstractActivity {
                             btnSync.setTextColor(getResources().getColor(R.color.green_approved));
                         } else {
                             btnSync.setClickable(true);
-                            btnSync.setText("Tap to Sync");
+                            btnSync.setText("Tap to DownloadableItem");
                             btnSync.setTextColor(getResources().getColor(R.color.red_rejected));
                         }
                     }

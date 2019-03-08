@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.google.common.base.Objects;
 
-
+@Deprecated
 @Entity(tableName = "sync")
 public class SyncableItem {
 

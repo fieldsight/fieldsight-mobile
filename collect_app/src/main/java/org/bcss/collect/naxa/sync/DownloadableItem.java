@@ -10,7 +10,7 @@ import com.google.common.base.Objects;
 
 
 @Entity(tableName = "sync")
-public class Sync {
+public class DownloadableItem {
 
     @PrimaryKey
     private int uid;
@@ -29,12 +29,12 @@ public class Sync {
     @Ignore
     private boolean isSelected;
 
-    public Sync() {
+    public DownloadableItem() {
 
     }
 
     @Ignore
-    public Sync(int uid, int downloadingStatus, String lastSyncDateTime, String title, String detail) {
+    public DownloadableItem(int uid, int downloadingStatus, String lastSyncDateTime, String title, String detail) {
         this.uid = uid;
         this.downloadingStatus = downloadingStatus;
         this.lastSyncDateTime = lastSyncDateTime;
@@ -45,7 +45,7 @@ public class Sync {
     }
 
     @Ignore
-    public Sync(int uid, int downloadingStatus, String title, String detail) {
+    public DownloadableItem(int uid, int downloadingStatus, String title, String detail) {
         this.uid = uid;
         this.downloadingStatus = downloadingStatus;
         this.title = title;
@@ -149,7 +149,7 @@ public class Sync {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Sync that = (Sync) o;
+        DownloadableItem that = (DownloadableItem) o;
         return uid == that.uid &&
                 downloadingStatus == that.downloadingStatus &&
                 checked == that.checked &&

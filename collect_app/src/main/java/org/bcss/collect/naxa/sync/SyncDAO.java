@@ -13,9 +13,9 @@ import java.util.List;
 import io.reactivex.Single;
 
 @Dao
-public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
+public abstract class SyncDAO implements BaseDaoFieldSight<DownloadableItem> {
     @Query("SELECT * from sync ORDER BY title ASC")
-    public abstract LiveData<List<Sync>> getAll();
+    public abstract LiveData<List<DownloadableItem>> getAll();
 
     @Query("UPDATE sync SET checked='1' WHERE downloadingStatus != 5 ")
     abstract void markAllAsChecked();
@@ -36,7 +36,7 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
     public abstract void markAsChecked(int uid);
 
     @Query("SELECT * from sync where checked = '1'")
-    public abstract Single<List<Sync>> getAllChecked();
+    public abstract Single<List<DownloadableItem>> getAllChecked();
 
     @Query("UPDATE sync set downloadingStatus=:failed,lastSyncDateTime =:now WHERE uid=:uid")
     public abstract void markSelectedAsFailed(int uid, int failed, String now);
@@ -69,7 +69,7 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
     public abstract void updateErrorMessage(int uid, String errorMessage);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    public abstract void insertOrIgnore(Sync... items);
+    public abstract void insertOrIgnore(DownloadableItem... items);
 
     @Query("DELETE from sync where uid=:uid")
     public abstract void deleteById(int uid);

@@ -34,7 +34,8 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
-public class DownloadActivity extends CollectAbstractActivity implements OnItemClickListener<Sync> {
+@Deprecated
+public class DownloadActivity extends CollectAbstractActivity implements OnItemClickListener<DownloadableItem> {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -161,10 +162,10 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
     private void runDownload() {
         SyncLocalSource.getINSTANCE().getAllChecked()
                 .subscribeOn(Schedulers.io())
-                .subscribe(new DisposableSingleObserver<List<Sync>>() {
+                .subscribe(new DisposableSingleObserver<List<DownloadableItem>>() {
                     @Override
-                    public void onSuccess(List<Sync> syncs) {
-                        viewModel.queueSyncTask(syncs);
+                    public void onSuccess(List<DownloadableItem> downloadableItems) {
+                        viewModel.queueSyncTask(downloadableItems);
                         Timber.i("Select completed on sync table");
 
 
@@ -192,15 +193,15 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
         adapter.setOnItemClickListener(null);
     }
 
-    private Sync[] getData() {
+    private DownloadableItem[] getData() {
 
-        return new Sync[]{
-                new Sync(PROJECT_SITES, PENDING, "Project and sites", "Downloads your assigned project and sites"),
-                new Sync(Constant.DownloadUID.ALL_FORMS, PENDING, "Forms", "Downloads all forms for assigned sites"),
-                new Sync(Constant.DownloadUID.SITE_TYPES, PENDING, "Site type(s)", "Download site types to filter staged forms"),
-                new Sync(Constant.DownloadUID.EDU_MATERIALS, PENDING, "Educational Materials", "Download educational attached for form(s)"),
-                new Sync(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your project"),
-                new Sync(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
+        return new DownloadableItem[]{
+                new DownloadableItem(PROJECT_SITES, PENDING, "Project and sites", "Downloads your assigned project and sites"),
+                new DownloadableItem(Constant.DownloadUID.ALL_FORMS, PENDING, "Forms", "Downloads all forms for assigned sites"),
+                new DownloadableItem(Constant.DownloadUID.SITE_TYPES, PENDING, "Site type(s)", "Download site types to filter staged forms"),
+                new DownloadableItem(Constant.DownloadUID.EDU_MATERIALS, PENDING, "Educational Materials", "Download educational attached for form(s)"),
+                new DownloadableItem(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your project"),
+                new DownloadableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
         };
     }
 
@@ -234,20 +235,20 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
     }
 
     @Override
-    public void onClickPrimaryAction(Sync sync) {
+    public void onClickPrimaryAction(DownloadableItem downloadableItem) {
         SyncLocalSource.getINSTANCE()
-                .toggleSingleItem(sync)
+                .toggleSingleItem(downloadableItem)
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        Timber.i("Update completed on sync table");
+                        Timber.i("Update completed on downloadableItem table");
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Timber.e("Update failed on sync table reason: %s", e.getMessage());
+                        Timber.e("Update failed on downloadableItem table reason: %s", e.getMessage());
                         e.printStackTrace();
                     }
                 })
@@ -255,8 +256,8 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
     }
 
     @Override
-    public void onClickSecondaryAction(Sync sync) {
-//        SyncLocalSource.getINSTANCE().toggleSingleItem(sync);
-        SyncLocalSource.getINSTANCE().markAsPending(sync.getUid());
+    public void onClickSecondaryAction(DownloadableItem downloadableItem) {
+//        SyncLocalSource.getINSTANCE().toggleSingleItem(downloadableItem);
+        SyncLocalSource.getINSTANCE().markAsPending(downloadableItem.getUid());
     }
 }

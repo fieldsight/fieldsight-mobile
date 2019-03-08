@@ -231,7 +231,7 @@
     <string name="airplane_on">You have turned on the airplane mode.</string>
     <string name="title_activity_logout_acitivty">LogoutAcitivty</string>
     <string name="msg_stop_logout">Can\'t logout</string>
-    <string name="msg_flag_resposne_site_info_missing">Download site information from sync screen to view more site details here</string>
+    <string name="msg_flag_resposne_site_info_missing">Download site information from downloadableItem screen to view more site details here</string>
     <string name="msg_download_task_failed">Failed to download</string>
     <string name="dialog_text_instance_download_failed">Failed to download filled form</string>
     <string name="msg_offline_site_uploaded">Offline Site(s) Uploaded</string>

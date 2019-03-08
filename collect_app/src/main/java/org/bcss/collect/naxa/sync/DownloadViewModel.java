@@ -62,9 +62,9 @@ public class DownloadViewModel extends ViewModel {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
-    void queueSyncTask(List<Sync> syncs) {
-        for (Sync sync : syncs) {
-            downloadOneItem(sync.getUid());
+    void queueSyncTask(List<DownloadableItem> downloadableItems) {
+        for (DownloadableItem downloadableItem : downloadableItems) {
+            downloadOneItem(downloadableItem.getUid());
         }
 
     }
