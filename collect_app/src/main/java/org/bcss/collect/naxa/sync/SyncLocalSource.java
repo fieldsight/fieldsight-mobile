@@ -19,6 +19,7 @@ import io.reactivex.Single;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.ODK_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
@@ -225,6 +226,8 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
                 new Sync(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
                 new Sync(EDITED_SITES, PENDING, "Edited Site(s)", ""),
                 new Sync(OFFLINE_SITES, PENDING, "Offline Site(s)", ""),
+                new Sync(ODK_FORMS, PENDING, "TEST ODK", ""),
+
 
         };
     }
