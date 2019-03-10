@@ -2,7 +2,6 @@ package org.bcss.collect.naxa.project.data;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
-import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
@@ -18,8 +17,8 @@ import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.site.db.SiteRepository;
-import org.bcss.collect.naxa.sync.DisposableManager;
-import org.bcss.collect.naxa.sync.SyncLocalSource;
+import org.bcss.collect.naxa.common.DisposableManager;
+import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
 
@@ -40,7 +39,6 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
@@ -187,7 +185,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .doOnDispose(new Action() {
                     @Override
                     public void run() {
-                        SyncLocalSource.getINSTANCE()
+                        DownloadableItemLocalSource.getINSTANCE()
                                 .markAsFailed(PROJECT_SITES);
                     }
                 })
@@ -198,7 +196,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         ProjectLocalSource.getInstance().deleteAll();
                         SiteLocalSource.getInstance().deleteSyncedSitesAsync();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
-                        SyncLocalSource.getINSTANCE()
+                        DownloadableItemLocalSource.getINSTANCE()
                                 .markAsRunning(PROJECT_SITES);
                     }
                 })
@@ -206,7 +204,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public void onNext(List<Object> objects) {
                         FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
-                        SyncLocalSource.getINSTANCE()
+                        DownloadableItemLocalSource.getINSTANCE()
                                 .markAsCompleted(PROJECT_SITES);
                     }
 
@@ -219,7 +217,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         } else {
                             message = e.getMessage();
                         }
-                        SyncLocalSource.getINSTANCE().markAsFailed(PROJECT_SITES,message);
+                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(PROJECT_SITES,message);
                     }
 
                     @Override

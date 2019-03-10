@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.sync;
+package org.bcss.collect.naxa.common;
 
 import android.arch.lifecycle.LiveData;
 
@@ -7,7 +7,7 @@ import java.util.List;
 
 import io.reactivex.Completable;
 
-interface BaseLocalDataSourceRX<T> {
+public interface BaseLocalDataSourceRX<T> {
 
     LiveData<List<T>> getAll();
 

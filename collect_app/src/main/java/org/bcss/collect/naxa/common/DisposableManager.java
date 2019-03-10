@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.sync;
+package org.bcss.collect.naxa.common;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -11,7 +11,7 @@ public class DisposableManager {
         getCompositeDisposable().add(disposable);
     }
 
-    static void dispose() {
+    public static void dispose() {
         getCompositeDisposable().clear();
 
     }

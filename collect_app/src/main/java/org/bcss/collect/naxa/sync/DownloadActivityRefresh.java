@@ -99,7 +99,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
             viewModel.setAllRunningTaskAsFailed();
         }
 
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .init()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
@@ -125,9 +125,9 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
                         if (sites.size() > 0) {
                             String msg = String.format("Upload %s Edited Site(s)", sites.size());
-                            SyncLocalSource.getINSTANCE().markAsPending(EDITED_SITES, msg);
+                            DownloadableItemLocalSource.getINSTANCE().markAsPending(EDITED_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().markAsDisabled(EDITED_SITES, "No, edited sites present");
+                            DownloadableItemLocalSource.getINSTANCE().markAsDisabled(EDITED_SITES, "No, edited sites present");
                         }
                     }
 
@@ -146,9 +146,9 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                     public void onSuccess(List<Site> sites) {
                         if (sites.size() > 0) {
                             String msg = String.format("Upload %s Offline Site(s)", sites.size());
-                            SyncLocalSource.getINSTANCE().markAsPending(OFFLINE_SITES, msg);
+                            DownloadableItemLocalSource.getINSTANCE().markAsPending(OFFLINE_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().markAsDisabled(OFFLINE_SITES, "No, offline sites present");
+                            DownloadableItemLocalSource.getINSTANCE().markAsDisabled(OFFLINE_SITES, "No, offline sites present");
                         }
                     }
 
@@ -159,7 +159,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 });
 
 
-        SyncLocalSource.getINSTANCE().getAll()
+        DownloadableItemLocalSource.getINSTANCE().getAll()
                 .observe(this, new Observer<List<DownloadableItem>>() {
                     @Override
                     public void onChanged(@Nullable List<DownloadableItem> downloadableItems) {
@@ -169,7 +169,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 });
 
 
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .selectedItemCountLive()
                 .observe(this, integer -> {
                     if (integer == null) return;
@@ -184,7 +184,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                     }
                 });
 
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .runningItemCountLive()
                 .observe(this, integer -> {
                     if (integer == null) return;
@@ -313,7 +313,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.toggle_button:
-                SyncLocalSource.getINSTANCE()
+                DownloadableItemLocalSource.getINSTANCE()
                         .toggleAllChecked()
                         .subscribeOn(Schedulers.io())
                         .subscribe(new DisposableCompletableObserver() {
@@ -347,7 +347,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
     }
 
     private void runDownload() {
-        SyncLocalSource.getINSTANCE().getAllChecked()
+        DownloadableItemLocalSource.getINSTANCE().getAllChecked()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableSingleObserver<List<DownloadableItem>>() {
                     @Override
@@ -429,7 +429,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
     @Override
     public void onClickPrimaryAction(DownloadableItem downloadableItem) {
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .toggleSingleItem(downloadableItem)
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
@@ -450,7 +450,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
     @Override
     public void onClickSecondaryAction(DownloadableItem downloadableItem) {
-//        SyncLocalSource.getINSTANCE().toggleSingleItem(downloadableItem);
-        SyncLocalSource.getINSTANCE().markAsPending(downloadableItem.getUid());
+//        DownloadableItemLocalSource.getINSTANCE().toggleSingleItem(downloadableItem);
+        DownloadableItemLocalSource.getINSTANCE().markAsPending(downloadableItem.getUid());
     }
 }

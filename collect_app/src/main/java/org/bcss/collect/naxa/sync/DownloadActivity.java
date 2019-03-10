@@ -67,7 +67,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
         setupViewModel();
 
 
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .save(getData())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
@@ -84,11 +84,11 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
                 });
 
 
-        SyncLocalSource.getINSTANCE().getAll()
+        DownloadableItemLocalSource.getINSTANCE().getAll()
                 .observe(this, syncs -> adapter.updateList(syncs));
 
 
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .selectedItemCountLive()
                 .observe(this, integer -> {
                     if (integer == null) return;
@@ -101,7 +101,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
                     }
                 });
 
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .runningItemCountLive()
                 .observe(this, integer -> {
                     if (integer == null) return;
@@ -122,7 +122,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.toggle_button:
-                SyncLocalSource.getINSTANCE()
+                DownloadableItemLocalSource.getINSTANCE()
                         .toggleAllChecked()
                         .subscribeOn(Schedulers.io())
                         .subscribe(new DisposableCompletableObserver() {
@@ -160,7 +160,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
     }
 
     private void runDownload() {
-        SyncLocalSource.getINSTANCE().getAllChecked()
+        DownloadableItemLocalSource.getINSTANCE().getAllChecked()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableSingleObserver<List<DownloadableItem>>() {
                     @Override
@@ -236,7 +236,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
 
     @Override
     public void onClickPrimaryAction(DownloadableItem downloadableItem) {
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .toggleSingleItem(downloadableItem)
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
@@ -257,7 +257,7 @@ public class DownloadActivity extends CollectAbstractActivity implements OnItemC
 
     @Override
     public void onClickSecondaryAction(DownloadableItem downloadableItem) {
-//        SyncLocalSource.getINSTANCE().toggleSingleItem(downloadableItem);
-        SyncLocalSource.getINSTANCE().markAsPending(downloadableItem.getUid());
+//        DownloadableItemLocalSource.getINSTANCE().toggleSingleItem(downloadableItem);
+        DownloadableItemLocalSource.getINSTANCE().markAsPending(downloadableItem.getUid());
     }
 }

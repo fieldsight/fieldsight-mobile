@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.BaseLocalDataSourceRX;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 
@@ -23,21 +24,21 @@ import static org.bcss.collect.naxa.common.Constant.DownloadUID.ODK_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
-public class SyncLocalSource implements BaseLocalDataSourceRX<DownloadableItem> {
+public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<DownloadableItem> {
 
-    private static SyncLocalSource INSTANCE;
-    private SyncDAO syncDAO;
+    private static DownloadableItemLocalSource INSTANCE;
+    private DownloadableItemDAO syncDAO;
 
-    public static SyncLocalSource getINSTANCE() {
+    public static DownloadableItemLocalSource getINSTANCE() {
         if (INSTANCE == null) {
-            INSTANCE = new SyncLocalSource();
+            INSTANCE = new DownloadableItemLocalSource();
         }
 
         return INSTANCE;
     }
 
 
-    private SyncLocalSource() {
+    private DownloadableItemLocalSource() {
 
         FieldSightConfigDatabase database = FieldSightConfigDatabase.getDatabase(Collect.getInstance());//todo inject context
         this.syncDAO = database.getSyncDao();

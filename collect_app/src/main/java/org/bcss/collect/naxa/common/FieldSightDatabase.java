@@ -59,7 +59,7 @@ import java.io.File;
                 SubmissionDetail.class
 
         },
-        version = 10)
+        version = 9)
 @TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {

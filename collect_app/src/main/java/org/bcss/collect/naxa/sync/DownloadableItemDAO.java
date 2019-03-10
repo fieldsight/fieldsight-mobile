@@ -13,7 +13,7 @@ import java.util.List;
 import io.reactivex.Single;
 
 @Dao
-public abstract class SyncDAO implements BaseDaoFieldSight<DownloadableItem> {
+public abstract class DownloadableItemDAO implements BaseDaoFieldSight<DownloadableItem> {
     @Query("SELECT * from sync ORDER BY title ASC")
     public abstract LiveData<List<DownloadableItem>> getAll();
 
@@ -60,10 +60,8 @@ public abstract class SyncDAO implements BaseDaoFieldSight<DownloadableItem> {
     @Query("UPDATE sync set syncTotal=:total,syncProgress=:progress WHERE uid=:uid  ")
     public abstract void updateProgress(int uid, int total, int progress);
 
-
     @Query("SELECT COUNT(checked) from sync where downloadingStatus =:running")
     public abstract LiveData<Integer> runningItemCountLive(int running);
-
 
     @Query("UPDATE sync set errorMessage=:errorMessage WHERE uid=:uid  ")
     public abstract void updateErrorMessage(int uid, String errorMessage);
@@ -75,7 +73,7 @@ public abstract class SyncDAO implements BaseDaoFieldSight<DownloadableItem> {
     public abstract void deleteById(int uid);
 
     //    public static final int PENDING = 1;
-//    public static final int FAILED = 2;
+    //    public static final int FAILED = 2;
     @Query("UPDATE sync SET downloadingStatus = 2, lastSyncDateTime =:date WHERE downloadingStatus= 3")
     public abstract void setAllRunningTaskAsFailed(String date);
 

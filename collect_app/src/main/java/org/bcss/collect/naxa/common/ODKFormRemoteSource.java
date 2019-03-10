@@ -18,12 +18,10 @@ import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadReceiver;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadService;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
-import org.bcss.collect.naxa.sync.DisposableManager;
-import org.bcss.collect.naxa.sync.SyncLocalSource;
+import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.utilities.FormDownloader;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -60,6 +58,7 @@ public class ODKFormRemoteSource {
         return INSTANCE;
     }
 
+    @Deprecated
     public Observable<DownloadProgress> fetchODKForms() {
         int uid = Constant.DownloadUID.ODK_FORMS;
         return Observable.create(emitter -> {
@@ -72,7 +71,7 @@ public class ODKFormRemoteSource {
                     case DownloadProgress.STATUS_PROGRESS_UPDATE:
                         DownloadProgress progress = (DownloadProgress) resultData.getSerializable(EXTRA_OBJECT);
                         emitter.onNext(progress);
-                        SyncLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
+                        DownloadableItemLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
                         break;
                     case DownloadProgress.STATUS_ERROR:
                         emitter.onError(new RuntimeException("An error occurred while downloading forms"));
@@ -94,7 +93,7 @@ public class ODKFormRemoteSource {
 
 
     public void downloadODKForms() {
-        SyncLocalSource.getINSTANCE().markAsRunning(ODK_FORMS);
+        DownloadableItemLocalSource.getINSTANCE().markAsRunning(ODK_FORMS);
 
         DisposableObserver<String[]> dis = getXMLForms().subscribeWith(new DisposableObserver<String[]>() {
             @Override
@@ -104,16 +103,16 @@ public class ODKFormRemoteSource {
                 String current = strings[1];
                 String total = strings[2];
 
-                SyncLocalSource.getINSTANCE().markAsRunning(ODK_FORMS, Arrays.toString(strings));
+                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ODK_FORMS, Arrays.toString(strings));
 
                 if (current.equals(total)) {
-                    SyncLocalSource.getINSTANCE().markAsCompleted(ODK_FORMS);
+                    DownloadableItemLocalSource.getINSTANCE().markAsCompleted(ODK_FORMS);
                 }
             }
 
             @Override
             public void onError(Throwable e) {
-                SyncLocalSource.getINSTANCE().markAsFailed(ODK_FORMS, e.getMessage());
+                DownloadableItemLocalSource.getINSTANCE().markAsFailed(ODK_FORMS, e.getMessage());
                 Timber.e(e);
             }
 
@@ -126,7 +125,7 @@ public class ODKFormRemoteSource {
         DisposableManager.add(dis);
     }
 
-    private Observable<String[]> getXMLForms() {
+    public Observable<String[]> getXMLForms() {
         return checkIfProjectSitesDownloaded()
                 .flatMapSingle((Function<SyncableItem, SingleSource<List<Project>>>) syncableItem -> ProjectLocalSource.getInstance().getProjectsMaybe())
                 .map(mapProjectsToXMLForm())
@@ -312,11 +311,11 @@ public class ODKFormRemoteSource {
         return SyncRepository.getInstance()
                 .getStatusById(PROJECT_SITES)
                 .map(syncableItem -> {
-//                    if (syncableItem.isProgressStatus()) {
-//                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
-//                    }
+                    if (syncableItem.isProgressStatus()) {
+                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
+                    }
                     if (syncableItem.getDownloadingStatus() != Constant.DownloadStatus.COMPLETED) {
-                        throw new DownloadRunningException("Download project sites first");
+//                        throw new FormDownloadFailedException("Download project sites first");
                     }
                     return syncableItem;
                 })

@@ -18,8 +18,8 @@ import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.SubStage;
-import org.bcss.collect.naxa.sync.DisposableManager;
-import org.bcss.collect.naxa.sync.SyncLocalSource;
+import org.bcss.collect.naxa.common.DisposableManager;
+import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.utilities.FileUtils;
 
@@ -118,14 +118,14 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        SyncLocalSource.getINSTANCE().markAsRunning(EDU_MATERIALS);
+                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(EDU_MATERIALS);
                     }
 
                     @Override
                     public void onSuccess(List<String> strings) {
                         SyncRepository.getInstance().setSuccess(EDU_MATERIALS);
                         Timber.i("%s has been downloaded", strings.toString());
-                        SyncLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
+                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
                     }
 
                     @Override
@@ -138,7 +138,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                             message = e.getMessage();
                         }
 
-                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS,message);
+                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS,message);
                     }
                 });
 
