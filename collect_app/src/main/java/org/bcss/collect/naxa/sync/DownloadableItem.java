@@ -18,8 +18,13 @@ public class DownloadableItem {
     private boolean checked;
     private String lastSyncDateTime;
     private String errorMessage;
+
     private int syncProgress;
     private int syncTotal;
+
+    @ColumnInfo(name = "sync_message")
+    private String syncMessage;
+
     @ColumnInfo(name = "is_determinate")
     private boolean isDeterminate = false;
 
@@ -54,6 +59,13 @@ public class DownloadableItem {
         this.checked = false;
     }
 
+    public String getSyncMessage() {
+        return syncMessage;
+    }
+
+    public void setSyncMessage(String syncMessage) {
+        this.syncMessage = syncMessage;
+    }
 
     public String getErrorMessage() {
         return errorMessage;

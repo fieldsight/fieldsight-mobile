@@ -238,9 +238,6 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
                 new DownloadableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
                 new DownloadableItem(EDITED_SITES, PENDING, "Edited Site(s)", ""),
                 new DownloadableItem(OFFLINE_SITES, PENDING, "Offline Site(s)", ""),
-                new DownloadableItem(ODK_FORMS, PENDING, "ODK Forms", ""),
-
-
         };
     }
 
@@ -256,9 +253,13 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
     }
 
 
-    public void setAllRunningTaskAsFailed() {
+    void setAllRunningTaskAsFailed() {
         AsyncTask.execute(() -> {
             syncDAO.setAllRunningTaskAsFailed(formattedDate());
         });
+    }
+
+    public void setProgress(int uid, int current, int total) {
+        AsyncTask.execute(() -> syncDAO.setProgress(uid, current, total));
     }
 }

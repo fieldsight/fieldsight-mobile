@@ -274,28 +274,56 @@ public class DownloadViewModel extends ViewModel {
     }
 
     private void fetchAllFormsV2() {
-        DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS);
+        DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Preparing to start");
+
         Observable<String[]> odkFormsObservable = ODKFormRemoteSource.getInstance().getXMLForms();
         Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
         Single<ArrayList<ScheduleForm>> scheduled = ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
         Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();
 
         DisposableObserver<Serializable> dis = Observable.concat(odkFormsObservable, general.toObservable(), scheduled.toObservable(), stage.toObservable())
+                .doOnEach(new DisposableObserver<Serializable>() {
+                    @Override
+                    public void onNext(Serializable serializable) {
+                        if (serializable instanceof ArrayList) {
+                            //do something
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                })
                 .subscribeWith(new DisposableObserver<Serializable>() {
                     @Override
                     public void onNext(Serializable serializable) {
                         if (serializable instanceof String[]) {
                             //do something
-                            Timber.i("forms progress");
+                            String[] string = (String[]) serializable;
+                            String message = String.format("Downloading %s", string[0]);
+                            int current = Integer.parseInt(string[1]);
+                            int total = Integer.parseInt(string[2]);
+
+                            DownloadableItemLocalSource.getINSTANCE().setProgress(ALL_FORMS, current, total);
+                            DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, message);
+
                         } else if (serializable instanceof ArrayList) {
                             if (isListOfType((Collection<?>) serializable, GeneralForm.class)) {
-                                Timber.i("general progress");
+                                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Syncing General form(s)");
                             } else if (isListOfType((Collection<?>) serializable, ScheduleForm.class)) {
-                                Timber.i("schedule progress");
+                                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Syncing Scheduled form(s)");
                             } else if (isListOfType((Collection<?>) serializable, Stage.class)) {
-                                Timber.i("stage progress");
 
+                                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Syncing Staged form(s)");
+                                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Downloads all forms for assigned sites");
                                 DownloadableItemLocalSource.getINSTANCE().markAsCompleted(ALL_FORMS);
+
                             }
                         }
                     }

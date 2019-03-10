@@ -81,5 +81,7 @@ public abstract class DownloadableItemDAO implements BaseDaoFieldSight<Downloada
     public abstract void markSelectedAsDisabled(int uid, int disabled, String formattedDate, String message);
 
 
-
+    @Query("UPDATE sync set is_determinate=1,syncProgress=:current,syncTotal=:total WHERE uid=:uid")
+    public abstract void setProgress(int uid, int current, int total);
 }
+

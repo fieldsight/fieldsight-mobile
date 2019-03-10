@@ -92,6 +92,7 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
         viewHolder.tvOutOfSync.setVisibility(item.isOutOfSync() ? View.VISIBLE : View.GONE);
         viewHolder.progressBar.setVisibility(View.GONE);
         enableOrDisableCard(viewHolder, true);
+        viewHolder.progressBar.setIndeterminate(true);
 
         switch (item.getDownloadingStatus()) {
             case PENDING:
@@ -102,17 +103,22 @@ class DownloadListAdapterNew extends RecyclerView.Adapter<DownloadListAdapterNew
                 break;
             case RUNNING:
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
-                viewHolder.progressBar.setIndeterminate(true);
+
                 viewHolder.statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
                 viewHolder.tvUpdatedInfo.setVisibility(View.GONE);
                 //if(item.getUid() != Constant.DownloadUID.ALL_FORMS){
-                if (false) {
+                if(item.isDeterminate()){
+                    viewHolder.progressBar.setIndeterminate(false);
                     viewHolder.progressBar.setMax(item.getSyncTotal());
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         viewHolder.progressBar.setProgress(item.getSyncProgress(), true);
                     } else {
                         viewHolder.progressBar.setProgress(item.getSyncProgress());
                     }
+                }else {
+                    viewHolder.progressBar.setProgress(0);
+                    viewHolder.progressBar.setIndeterminate(true);
+
                 }
 
                 break;
