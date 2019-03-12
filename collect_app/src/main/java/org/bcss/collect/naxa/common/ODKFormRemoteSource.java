@@ -314,7 +314,7 @@ public class ODKFormRemoteSource {
                     if (syncableItem.isProgressStatus()) {
                         throw new DownloadRunningException("Waiting until project and sites are downloaded");
                     }
-                    if (syncableItem.getDownloadingStatus() != Constant.DownloadStatus.COMPLETED) {
+                    if (syncableItem.getDownloadingStatus() == Constant.DownloadStatus.PENDING) {
 //                        throw new FormDownloadFailedException("Download project sites first");
                     }
                     return syncableItem;

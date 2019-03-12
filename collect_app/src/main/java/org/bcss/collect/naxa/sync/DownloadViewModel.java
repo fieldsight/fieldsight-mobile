@@ -274,7 +274,7 @@ public class DownloadViewModel extends ViewModel {
     }
 
     private void fetchAllFormsV2() {
-        DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Preparing to start");
+
 
         Observable<String[]> odkFormsObservable = ODKFormRemoteSource.getInstance().getXMLForms();
         Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
@@ -282,24 +282,7 @@ public class DownloadViewModel extends ViewModel {
         Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();
 
         DisposableObserver<Serializable> dis = Observable.concat(odkFormsObservable, general.toObservable(), scheduled.toObservable(), stage.toObservable())
-                .doOnEach(new DisposableObserver<Serializable>() {
-                    @Override
-                    public void onNext(Serializable serializable) {
-                        if (serializable instanceof ArrayList) {
-                            //do something
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                })
+                .doOnSubscribe(disposable -> DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Preparing to start"))
                 .subscribeWith(new DisposableObserver<Serializable>() {
                     @Override
                     public void onNext(Serializable serializable) {
