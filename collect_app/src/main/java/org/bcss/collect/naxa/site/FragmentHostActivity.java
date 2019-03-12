@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +27,7 @@ import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -47,11 +49,22 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_dashboard);
-        loadedSite = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
+
+        Bundle extras = getIntent().getExtras();
+
+        if (extras == null) {
+            ToastUtils.showShortToast(getString(R.string.dialog_unexpected_error_title));
+            finish();
+            return;
+        }
+
+        loadedSite = extras.getParcelable(EXTRA_OBJECT);
         bindUI();
         setupToolbar();
         getSupportFragmentManager()
