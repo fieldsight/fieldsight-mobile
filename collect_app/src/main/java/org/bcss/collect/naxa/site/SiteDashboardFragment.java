@@ -27,6 +27,7 @@ import com.google.common.primitives.Longs;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.SiteProfileActivity;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
@@ -72,6 +73,8 @@ import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 import timber.log.Timber;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
@@ -79,6 +82,8 @@ import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopExitAnimatio
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.ViewUtils.showOrHide;
 import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
+import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
+import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;
 
 public class SiteDashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -223,7 +228,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
                         break;
                     case R.id.popup_open_in_map:
-                        MapActivity.start(getActivity(), loadedSite);
+                        checkPermissionAndOpenMap();
 
                         break;
                     case R.id.popup_view_blue_prints:
@@ -235,6 +240,20 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 return true;
             }
         });
+    }
+    private void checkPermissionAndOpenMap() {
+        if (!checkIfLocationPermissionsGranted(requireActivity())) {
+            requestLocationPermissions(requireActivity(), new PermissionListener() {
+                @Override
+                public void granted() {
+                    MapActivity.start(getActivity(), loadedSite);
+                }
+                @Override
+                public void denied() {
+                    //unused
+                }
+            });
+        }
     }
 
     private void setupFinalizedButton() {
@@ -411,18 +430,36 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
-                        String errorMessage = RetrofitException.getMessage(e);
+                        String message;
+                        if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
 
                         FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
                         if (isAdded() && getActivity() != null) {
-                            DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
+                            DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), message).show();
                         } else {
-                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), errorMessage);
+                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), message);
                         }
                     }
                 });
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == INSTANCE_UPLOADER) {
+            switch (resultCode) {
+                case RESULT_OK:
+                case RESULT_CANCELED:
+                    requireActivity().onBackPressed();
+                    break;
+            }
+        }
+    }
 
     private ArrayList<Long> getNotUploadedFormForSite(String siteId) {
         String selection;
