@@ -33,12 +33,14 @@ import android.widget.TextView;
 import com.google.android.gms.location.LocationListener;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.spatial.MapHelper;
 import org.bcss.collect.naxa.login.model.Site;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
 import org.odk.collect.android.utilities.GeoPointUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.IRegisterReceiver;
@@ -53,6 +55,8 @@ import java.text.DecimalFormat;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
+import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;
 
 /**
  * Version of the GeoPointMapActivity that uses the new OSMDDroid
@@ -109,6 +113,8 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
 
 
     public static void start(Context context, Site loadedSite) {
+
+
         Intent intent = new Intent(context, MapActivity.class);
         intent.putExtra(EXTRA_OBJECT, loadedSite);
         context.startActivity(intent);
@@ -120,6 +126,11 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        if (!checkIfLocationPermissionsGranted(this)) {
+            finish();
+            return;
+        }
 
         if (savedInstanceState != null) {
             locationCount = savedInstanceState.getInt(LOCATION_COUNT);
