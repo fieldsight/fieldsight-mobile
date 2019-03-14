@@ -19,6 +19,7 @@ import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.SubStage;
 import org.bcss.collect.naxa.sync.DisposableManager;
+import org.bcss.collect.naxa.sync.Sync;
 import org.bcss.collect.naxa.sync.SyncLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.utilities.FileUtils;
@@ -118,8 +119,6 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        SyncRepository.getInstance().showProgress(EDU_MATERIALS);
-
                         SyncLocalSource.getINSTANCE().markAsRunning(EDU_MATERIALS);
                     }
 
@@ -127,22 +126,19 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     public void onSuccess(List<String> strings) {
                         SyncRepository.getInstance().setSuccess(EDU_MATERIALS);
                         Timber.i("%s has been downloaded", strings.toString());
-
                         SyncLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(EDU_MATERIALS);
-                        e.printStackTrace();
                         Timber.e(e);
-
-                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS);
-
+                        String message;
                         if (e instanceof RetrofitException) {
-                            String message = e.getMessage();
-                            SyncLocalSource.getINSTANCE().addErrorMessage(EDU_MATERIALS, message);
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
                         }
+                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS, message);
                     }
                 });
 
@@ -168,6 +164,15 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     private Observable<Em> scheduledFormEducational() {
         return ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
+                .map(new Function<List<Project>, List<Project>>() {
+                    @Override
+                    public List<Project> apply(List<Project> projects) throws Exception {
+                        if (projects.isEmpty()) {
+                            throw new RuntimeException("Download project(s) site(s) first");
+                        }
+                        return projects;
+                    }
+                })
                 .toObservable()
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<ScheduleForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms("1", project.getId()))
@@ -194,6 +199,15 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     private Observable<Em> substageFormEducational() {
         return ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
+                .map(new Function<List<Project>, List<Project>>() {
+                    @Override
+                    public List<Project> apply(List<Project> projects) throws Exception {
+                        if (projects.isEmpty()) {
+                            throw new RuntimeException("Download project(s) site(s) first");
+                        }
+                        return projects;
+                    }
+                })
                 .toObservable()
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<Stage>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getStageSubStage("1", project.getId()))
@@ -224,6 +238,15 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
         return ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
+                .map(new Function<List<Project>, List<Project>>() {
+                    @Override
+                    public List<Project> apply(List<Project> projects) throws Exception {
+                        if (projects.isEmpty()) {
+                            throw new RuntimeException("Download project(s) site(s) first");
+                        }
+                        return projects;
+                    }
+                })
                 .toObservable()
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable("1", project.getId()))

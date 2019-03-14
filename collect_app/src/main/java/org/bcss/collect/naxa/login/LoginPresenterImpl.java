@@ -72,11 +72,6 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
     }
 
-    @Override
-    public void fcmTokenError() {
-        loginView.showProgress(false);
-        loginView.showError(Collect.getInstance().getString(R.string.dialog_error_register));
-    }
 
 
     @Override

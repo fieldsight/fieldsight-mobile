@@ -14,13 +14,13 @@ import io.reactivex.Single;
 
 @Dao
 public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
-    @Query("SELECT * from sync ORDER BY title DESC")
+    @Query("SELECT * from sync ORDER BY title ASC")
     public abstract LiveData<List<Sync>> getAll();
 
-    @Query("UPDATE sync SET checked='1' ")
+    @Query("UPDATE sync SET checked='1' WHERE downloadingStatus != 5 ")
     abstract void markAllAsChecked();
 
-    @Query("UPDATE sync SET checked='0'")
+    @Query("UPDATE sync SET checked='0' WHERE downloadingStatus != 5")
     abstract void markAllAsUnChecked();
 
     @Query("SELECT COUNT(checked) from sync where checked = '1'")
@@ -77,4 +77,6 @@ public abstract class SyncDAO implements BaseDaoFieldSight<Sync> {
     @Query("UPDATE sync SET downloadingStatus = 2, lastSyncDateTime =:date WHERE downloadingStatus= 3")
     public abstract void setAllRunningTaskAsFailed(String date);
 
+    @Query("UPDATE sync set downloadingStatus=:disabled,lastSyncDateTime =:formattedDate,detail=:message,checked='0' WHERE uid=:uid")
+    public abstract void markSelectedAsDisabled(int uid, int disabled, String formattedDate, String message);
 }

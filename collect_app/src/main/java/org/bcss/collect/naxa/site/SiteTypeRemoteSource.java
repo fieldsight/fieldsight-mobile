@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.site;
 
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.sync.DisposableManager;
@@ -15,7 +16,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
@@ -43,8 +46,6 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        SyncRepository.getInstance().showProgress(SITE_TYPES);
-
                         SyncLocalSource.getINSTANCE().markAsRunning(SITE_TYPES);
                     }
 
@@ -52,22 +53,20 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                     public void onSuccess(List<SiteType> siteTypes) {
                         SiteType[] list = siteTypes.toArray(new SiteType[siteTypes.size()]);
                         SiteTypeLocalSource.getInstance().save(list);
-                        SyncRepository.getInstance().setSuccess(SITE_TYPES);
-
                         SyncLocalSource.getINSTANCE().markAsCompleted(SITE_TYPES);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        SyncRepository.getInstance().setError(SITE_TYPES);
-                        e.printStackTrace();
+                        Timber.e(e);
+                        String message;
+                        if (e instanceof RetrofitException) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
 
-                        String message = e.getMessage();
-                        SyncLocalSource.getINSTANCE().addErrorMessage(SITE_TYPES, message);
-
-
-                        SyncLocalSource.getINSTANCE().markAsFailed(SITE_TYPES);
-
+                        SyncLocalSource.getINSTANCE().markAsFailed(SITE_TYPES,message);
 
                     }
                 });

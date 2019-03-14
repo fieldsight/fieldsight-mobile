@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.site;
 
+import android.arch.lifecycle.LiveData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,11 +27,13 @@ import com.google.common.primitives.Longs;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.SiteProfileActivity;
+import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
@@ -79,6 +82,8 @@ import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopExitAnimatio
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.ViewUtils.showOrHide;
 import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
+import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
+import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;
 
 public class SiteDashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -91,6 +96,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private TextView tvSiteType;
     private Unbinder unbinder;
     private View rootView;
+    private LiveData<Site> siteLiveData;
 
     public SiteDashboardFragment() {
 
@@ -121,10 +127,11 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         unbinder = ButterKnife.bind(this, rootView);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
 
-
         bindUI(rootView);
 
-        //https://medium.com/@BladeCoder/architecture-components-pitfalls-part-1-9300dd969808
+        /*
+         *https://medium.com/@BladeCoder/architecture-components-pitfalls-part-1-9300dd969808
+         */
         SiteLocalSource.getInstance().getBySiteId(loadedSite.getId())
                 .observe(getViewLifecycleOwner(), site -> {
                     if (site == null) {
@@ -187,7 +194,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             switch (affectedRows) {
                 case 1:
                     ToastUtils.showShortToast(getString(R.string.msg_delete_sucess, loadedSite.getName()));
-                    new Handler().postDelayed(() -> getActivity().onBackPressed(), 500);
+                    new Handler().postDelayed(() -> requireActivity().finish(), 500);
                     break;
                 case -1:
                     ToastUtils.showShortToast(getString(R.string.msg_delete_failed, loadedSite.getName()));
@@ -221,7 +228,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
                         break;
                     case R.id.popup_open_in_map:
-                        MapActivity.start(getActivity(), loadedSite);
+                        checkPermissionAndOpenMap();
 
                         break;
                     case R.id.popup_view_blue_prints:
@@ -233,6 +240,20 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 return true;
             }
         });
+    }
+    private void checkPermissionAndOpenMap() {
+        if (!checkIfLocationPermissionsGranted(requireActivity())) {
+            requestLocationPermissions(requireActivity(), new PermissionListener() {
+                @Override
+                public void granted() {
+                    MapActivity.start(getActivity(), loadedSite);
+                }
+                @Override
+                public void denied() {
+                    //unused
+                }
+            });
+        }
     }
 
     private void setupFinalizedButton() {
@@ -353,11 +374,11 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     @OnClick(R.id.site_option_btn_upload_site)
     public void showConfirmationDialog() {
 
-        DialogFactory.createActionDialog(requireActivity(), "Upload selected site(s)", "Upload selected site(s) along with their filled form(s) ?")
-                .setPositiveButton("Yes, upload Site(s) and Form(s)", (dialog, which) -> {
+        DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_sites))
+                .setPositiveButton(R.string.dialog_action_upload_site_and_form, (dialog, which) -> {
                     uploadSelectedSites(Collections.singletonList(loadedSite), true);
                 })
-                .setNegativeButton("No, Upload Site(s) only", (dialog, which) -> {
+                .setNegativeButton(R.string.dialog_action_only_upload_site, (dialog, which) -> {
                     uploadSelectedSites(Collections.singletonList(loadedSite), false);
                 })
                 .setNeutralButton(R.string.dialog_action_dismiss, null)
@@ -368,7 +389,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void uploadSelectedSites(List<Site> selected, boolean uploadForms) {
 
-        String progressMessage = "Uploading site(s)";
+        String progressMessage = getString(R.string.dialog_msg_uploading_sites);
 
         final int progressNotifyId = FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
 
@@ -409,13 +430,18 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
-                        String errorMessage = RetrofitException.getMessage(e);
+                        String message;
+                        if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
 
                         FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
                         if (isAdded() && getActivity() != null) {
-                            DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
+                            DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), message).show();
                         } else {
-                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), errorMessage);
+                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), message);
                         }
                     }
                 });
