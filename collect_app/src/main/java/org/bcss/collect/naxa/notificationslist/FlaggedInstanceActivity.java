@@ -272,7 +272,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
         return formId;
     }
-  
+
     private void openNewForm(String jsFormId) {
         toast("No, saved form found.");
         Cursor cursorForm = context.getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI, null,
@@ -714,8 +714,15 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                     @Override
                     public void onError(Throwable e) {
-                        String errorMessage = RetrofitException.getMessage(e);
-                        DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_site_upload_fail), errorMessage).show();
+
+                        Timber.e(e);
+                        String message;
+                        if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
+                        DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_site_upload_fail), message).show();
 
                     }
                 });

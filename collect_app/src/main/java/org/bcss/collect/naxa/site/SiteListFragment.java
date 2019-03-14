@@ -493,13 +493,19 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
-                        String errorMessage = RetrofitException.getMessage(e);
-                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
-
-                        if (isAdded() && getActivity() != null) {
-                            DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), errorMessage).show();
+                        Timber.e(e);
+                        String message;
+                        if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {
+                            message = ((RetrofitException) e).getKind().getMessage();
                         } else {
-                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), errorMessage);
+                            message = e.getMessage();
+                        }
+
+                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
+                        if (isAdded() && getActivity() != null) {
+                            DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), message).show();
+                        } else {
+                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), message);
                         }
                     }
                 });

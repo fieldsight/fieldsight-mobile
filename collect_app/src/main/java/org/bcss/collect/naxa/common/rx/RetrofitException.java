@@ -176,6 +176,7 @@ public class RetrofitException extends RuntimeException {
         return converter.convert(response.errorBody());
     }
 
+    @Deprecated
     public static String getMessage(Throwable e) {
         String[] message = new String[]{e.getMessage(), e.getMessage()};
 
