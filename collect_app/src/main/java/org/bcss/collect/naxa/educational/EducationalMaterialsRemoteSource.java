@@ -138,8 +138,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                         } else {
                             message = e.getMessage();
                         }
-
-                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS,message);
+                        SyncLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS, message);
                     }
                 });
 
@@ -165,6 +164,15 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     private Observable<Em> scheduledFormEducational() {
         return ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
+                .map(new Function<List<Project>, List<Project>>() {
+                    @Override
+                    public List<Project> apply(List<Project> projects) throws Exception {
+                        if (projects.isEmpty()) {
+                            throw new RuntimeException("Download project(s) site(s) first");
+                        }
+                        return projects;
+                    }
+                })
                 .toObservable()
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<ScheduleForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms("1", project.getId()))
@@ -191,6 +199,15 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     private Observable<Em> substageFormEducational() {
         return ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
+                .map(new Function<List<Project>, List<Project>>() {
+                    @Override
+                    public List<Project> apply(List<Project> projects) throws Exception {
+                        if (projects.isEmpty()) {
+                            throw new RuntimeException("Download project(s) site(s) first");
+                        }
+                        return projects;
+                    }
+                })
                 .toObservable()
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<Stage>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getStageSubStage("1", project.getId()))
@@ -221,6 +238,15 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
         return ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
+                .map(new Function<List<Project>, List<Project>>() {
+                    @Override
+                    public List<Project> apply(List<Project> projects) throws Exception {
+                        if (projects.isEmpty()) {
+                            throw new RuntimeException("Download project(s) site(s) first");
+                        }
+                        return projects;
+                    }
+                })
                 .toObservable()
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable("1", project.getId()))
