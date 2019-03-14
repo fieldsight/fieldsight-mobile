@@ -73,6 +73,8 @@ import okhttp3.ResponseBody;
 import retrofit2.HttpException;
 import timber.log.Timber;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentEnterAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
@@ -445,6 +447,19 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 });
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == INSTANCE_UPLOADER) {
+            switch (resultCode) {
+                case RESULT_OK:
+                case RESULT_CANCELED:
+                    requireActivity().onBackPressed();
+                    break;
+            }
+        }
+    }
 
     private ArrayList<Long> getNotUploadedFormForSite(String siteId) {
         String selection;
