@@ -6,8 +6,8 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.naxa.sync.Sync;
-import org.bcss.collect.naxa.sync.SyncDAO;
+import org.bcss.collect.naxa.sync.DownloadableItem;
+import org.bcss.collect.naxa.sync.DownloadableItemDAO;
 
 import java.io.File;
 
@@ -15,11 +15,11 @@ import java.io.File;
         {
                 SiteOveride.class,
                 ProjectFilter.class,
-                Sync.class,
+                DownloadableItem.class,
                 SiteUploadHistory.class
 
         },
-        version = 6)
+        version = 8)
 
 public abstract class FieldSightConfigDatabase extends RoomDatabase {
 
@@ -29,7 +29,7 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
 
     public abstract ProjectFilterDAO getProjectFilterDAO();
 
-    public abstract SyncDAO getSyncDao();
+    public abstract DownloadableItemDAO getSyncDao();
 
     public abstract SiteUploadHistoryDAO getSiteUploadHistoryDao();
 

@@ -8,9 +8,8 @@ import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.previoussubmission.model.LastSubmissionResponse;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;
-import org.bcss.collect.naxa.sync.DisposableManager;
-import org.bcss.collect.naxa.sync.SyncLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
+import org.bcss.collect.naxa.common.DisposableManager;
+import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
 
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
 
 public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubmissionResponse> {
@@ -59,13 +57,13 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
                         LastSubmissionLocalSource.getInstance().deleteAll();
-                        SyncLocalSource.getINSTANCE().markAsRunning(PREV_SUBMISSION);
+                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(PREV_SUBMISSION);
                     }
 
                     @Override
                     public void onSuccess(List<LastSubmissionResponse> lastSubmissionResponses) {
                         FieldSightNotificationLocalSource.getInstance().markFormStatusChangeAsRead();
-                        SyncLocalSource.getINSTANCE().markAsCompleted(PREV_SUBMISSION);
+                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(PREV_SUBMISSION);
                     }
 
                     @Override
@@ -78,7 +76,7 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
                             message = e.getMessage();
                         }
 
-                        SyncLocalSource.getINSTANCE().markAsFailed(PREV_SUBMISSION,message);
+                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(PREV_SUBMISSION,message);
                     }
                 });
 

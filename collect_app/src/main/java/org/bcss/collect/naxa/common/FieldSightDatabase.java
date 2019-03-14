@@ -148,7 +148,6 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     private static final Migration MIGRATION_8_9 = new Migration(8, 9) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-
             database.execSQL("ALTER TABLE FieldSightNotification "
                     + " ADD COLUMN `isDeployedFromSite` INTEGER NOT NULL default 0");
         }

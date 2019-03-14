@@ -53,7 +53,7 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 
-public class DownloadActivityRefresh extends CollectAbstractActivity implements OnItemClickListener<Sync> {
+public class DownloadActivityRefresh extends CollectAbstractActivity implements OnItemClickListener<DownloadableItem> {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -99,7 +99,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
             viewModel.setAllRunningTaskAsFailed();
         }
 
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .init()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
@@ -125,9 +125,9 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
                         if (sites.size() > 0) {
                             String msg = String.format("Upload %s Edited Site(s)", sites.size());
-                            SyncLocalSource.getINSTANCE().markAsPending(EDITED_SITES, msg);
+                            DownloadableItemLocalSource.getINSTANCE().markAsPending(EDITED_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().markAsDisabled(EDITED_SITES, "No, edited sites present");
+                            DownloadableItemLocalSource.getINSTANCE().markAsDisabled(EDITED_SITES, "No, edited sites present");
                         }
                     }
 
@@ -146,9 +146,9 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                     public void onSuccess(List<Site> sites) {
                         if (sites.size() > 0) {
                             String msg = String.format("Upload %s Offline Site(s)", sites.size());
-                            SyncLocalSource.getINSTANCE().markAsPending(OFFLINE_SITES, msg);
+                            DownloadableItemLocalSource.getINSTANCE().markAsPending(OFFLINE_SITES, msg);
                         } else {
-                            SyncLocalSource.getINSTANCE().markAsDisabled(OFFLINE_SITES, "No, offline sites present");
+                            DownloadableItemLocalSource.getINSTANCE().markAsDisabled(OFFLINE_SITES, "No, offline sites present");
                         }
                     }
 
@@ -159,17 +159,17 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 });
 
 
-        SyncLocalSource.getINSTANCE().getAll()
-                .observe(this, new Observer<List<Sync>>() {
+        DownloadableItemLocalSource.getINSTANCE().getAll()
+                .observe(this, new Observer<List<DownloadableItem>>() {
                     @Override
-                    public void onChanged(@Nullable List<Sync> syncs) {
+                    public void onChanged(@Nullable List<DownloadableItem> downloadableItems) {
 
-                        addOutOfSyncMessage(syncs);
+                        addOutOfSyncMessage(downloadableItems);
                     }
                 });
 
 
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .selectedItemCountLive()
                 .observe(this, integer -> {
                     if (integer == null) return;
@@ -184,7 +184,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                     }
                 });
 
-        SyncLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getINSTANCE()
                 .runningItemCountLive()
                 .observe(this, integer -> {
                     if (integer == null) return;
@@ -204,7 +204,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
         }
     }
 
-    private void addOutOfSyncMessage(List<Sync> syncs) {
+    private void addOutOfSyncMessage(List<DownloadableItem> downloadableItems) {
 
 
         Observable<Integer> notificaitonCountForm = FieldSightNotificationLocalSource.getInstance().anyFormsOutOfSync().toObservable();
@@ -212,15 +212,15 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
         Observable<Integer> notificaitonCountPreviousSubmission = FieldSightNotificationLocalSource.getInstance().anyFormStatusChangeOutOfSync().toObservable();
 
 
-        Observable.just(syncs)
-                .flatMapIterable((Function<List<Sync>, Iterable<Sync>>) syncableItems1 -> syncableItems1)
-                .flatMap(new Function<Sync, ObservableSource<Sync>>() {
+        Observable.just(downloadableItems)
+                .flatMapIterable((Function<List<DownloadableItem>, Iterable<DownloadableItem>>) syncableItems1 -> syncableItems1)
+                .flatMap(new Function<DownloadableItem, ObservableSource<DownloadableItem>>() {
                     @Override
-                    public ObservableSource<Sync> apply(Sync syncableItem) {
+                    public ObservableSource<DownloadableItem> apply(DownloadableItem syncableItem) {
                         return notificaitonCountForm
-                                .map(new Function<Integer, Sync>() {
+                                .map(new Function<Integer, DownloadableItem>() {
                                     @Override
-                                    public Sync apply(Integer integer) {
+                                    public DownloadableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.ALL_FORMS:
                                                 syncableItem.setOutOfSync(integer > 0);
@@ -232,13 +232,13 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                                 });
                     }
                 })
-                .flatMap(new Function<Sync, ObservableSource<Sync>>() {
+                .flatMap(new Function<DownloadableItem, ObservableSource<DownloadableItem>>() {
                     @Override
-                    public ObservableSource<Sync> apply(Sync syncableItem) {
+                    public ObservableSource<DownloadableItem> apply(DownloadableItem syncableItem) {
                         return notificaitonCountSites
-                                .map(new Function<Integer, Sync>() {
+                                .map(new Function<Integer, DownloadableItem>() {
                                     @Override
-                                    public Sync apply(Integer integer) {
+                                    public DownloadableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.PROJECT_SITES:
                                                 syncableItem.setOutOfSync(integer > 0);
@@ -250,13 +250,13 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                                 });
                     }
                 })
-                .flatMap(new Function<Sync, ObservableSource<Sync>>() {
+                .flatMap(new Function<DownloadableItem, ObservableSource<DownloadableItem>>() {
                     @Override
-                    public ObservableSource<Sync> apply(Sync syncableItem) {
+                    public ObservableSource<DownloadableItem> apply(DownloadableItem syncableItem) {
                         return notificaitonCountPreviousSubmission
-                                .map(new Function<Integer, Sync>() {
+                                .map(new Function<Integer, DownloadableItem>() {
                                     @Override
-                                    public Sync apply(Integer integer) {
+                                    public DownloadableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
                                             case Constant.DownloadUID.PREV_SUBMISSION:
                                                 syncableItem.setOutOfSync(integer > 0);
@@ -281,14 +281,14 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<Sync>>() {
+                .subscribe(new SingleObserver<List<DownloadableItem>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onSuccess(List<Sync> syncableItems) {
+                    public void onSuccess(List<DownloadableItem> syncableItems) {
                         if (adapter.getAll().size() == 0) {
                             adapter.updateList(syncableItems);
                             AnimationUtils.runLayoutAnimation(recyclerView);
@@ -313,7 +313,7 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.toggle_button:
-                SyncLocalSource.getINSTANCE()
+                DownloadableItemLocalSource.getINSTANCE()
                         .toggleAllChecked()
                         .subscribeOn(Schedulers.io())
                         .subscribe(new DisposableCompletableObserver() {
@@ -347,12 +347,12 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
     }
 
     private void runDownload() {
-        SyncLocalSource.getINSTANCE().getAllChecked()
+        DownloadableItemLocalSource.getINSTANCE().getAllChecked()
                 .subscribeOn(Schedulers.io())
-                .subscribe(new DisposableSingleObserver<List<Sync>>() {
+                .subscribe(new DisposableSingleObserver<List<DownloadableItem>>() {
                     @Override
-                    public void onSuccess(List<Sync> syncs) {
-                        viewModel.queueSyncTask(syncs);
+                    public void onSuccess(List<DownloadableItem> downloadableItems) {
+                        viewModel.queueSyncTask(downloadableItems);
                         Timber.i("Select completed on sync table");
                     }
 
@@ -428,9 +428,9 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
     }
 
     @Override
-    public void onClickPrimaryAction(Sync sync) {
-        SyncLocalSource.getINSTANCE()
-                .toggleSingleItem(sync)
+    public void onClickPrimaryAction(DownloadableItem downloadableItem) {
+        DownloadableItemLocalSource.getINSTANCE()
+                .toggleSingleItem(downloadableItem)
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
@@ -449,8 +449,8 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
     }
 
     @Override
-    public void onClickSecondaryAction(Sync sync) {
-//        SyncLocalSource.getINSTANCE().toggleSingleItem(sync);
-        SyncLocalSource.getINSTANCE().markAsPending(sync.getUid());
+    public void onClickSecondaryAction(DownloadableItem downloadableItem) {
+//        DownloadableItemLocalSource.getINSTANCE().toggleSingleItem(downloadableItem);
+        DownloadableItemLocalSource.getINSTANCE().markAsPending(downloadableItem.getUid());
     }
 }

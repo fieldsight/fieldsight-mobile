@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.BaseLocalDataSourceRX;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 
@@ -19,24 +20,25 @@ import io.reactivex.Single;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
+import static org.bcss.collect.naxa.common.Constant.DownloadUID.ODK_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
-public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
+public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<DownloadableItem> {
 
-    private static SyncLocalSource INSTANCE;
-    private SyncDAO syncDAO;
+    private static DownloadableItemLocalSource INSTANCE;
+    private DownloadableItemDAO syncDAO;
 
-    public static SyncLocalSource getINSTANCE() {
+    public static DownloadableItemLocalSource getINSTANCE() {
         if (INSTANCE == null) {
-            INSTANCE = new SyncLocalSource();
+            INSTANCE = new DownloadableItemLocalSource();
         }
 
         return INSTANCE;
     }
 
 
-    private SyncLocalSource() {
+    private DownloadableItemLocalSource() {
 
         FieldSightConfigDatabase database = FieldSightConfigDatabase.getDatabase(Collect.getInstance());//todo inject context
         this.syncDAO = database.getSyncDao();
@@ -44,12 +46,12 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
 
     @Override
-    public LiveData<List<Sync>> getAll() {
+    public LiveData<List<DownloadableItem>> getAll() {
         return syncDAO.getAll();
     }
 
     @Override
-    public Completable save(Sync... items) {
+    public Completable save(DownloadableItem... items) {
         return Completable.fromAction(() -> {
             syncDAO.insertOrIgnore(items);
         });
@@ -57,19 +59,19 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
 
     @Override
-    public Completable save(ArrayList<Sync> items) {
+    public Completable save(ArrayList<DownloadableItem> items) {
         throw new RuntimeException("Not implemented yet");
     }
 
     @Override
-    public void saveAsAsync(Sync... items) {
+    public void saveAsAsync(DownloadableItem... items) {
         AsyncTask.execute(() -> {
             syncDAO.insertOrIgnore(items);
         });
     }
 
     @Override
-    public void updateAll(ArrayList<Sync> items) {
+    public void updateAll(ArrayList<DownloadableItem> items) {
 
     }
 
@@ -99,17 +101,17 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
         return syncDAO.runningItemCountLive(Constant.DownloadStatus.RUNNING);
     }
 
-    Completable toggleSingleItem(Sync sync) {
+    Completable toggleSingleItem(DownloadableItem downloadableItem) {
         return Completable.fromAction(() -> {
-            if (sync.isChecked()) {
-                syncDAO.markAsUnchecked(sync.getUid());
+            if (downloadableItem.isChecked()) {
+                syncDAO.markAsUnchecked(downloadableItem.getUid());
             } else {
-                syncDAO.markAsChecked(sync.getUid());
+                syncDAO.markAsChecked(downloadableItem.getUid());
             }
         });
     }
 
-    Single<List<Sync>> getAllChecked() {
+    Single<List<DownloadableItem>> getAllChecked() {
         return syncDAO.getAllChecked();
     }
 
@@ -122,9 +124,17 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
                 clearErrorMessage(uid);
             }
         });
-
     }
 
+    public void markAsRunning(int uid, String message) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                syncDAO.markSelectedAsRunning(uid, message);
+                clearErrorMessage(uid);
+            }
+        });
+    }
 
 
     public void markAsFailed(int uid) {
@@ -138,11 +148,14 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
 
     }
 
-    void markAsDisabled(int uid,String message) {
+    void markAsDisabled(int uid, String message) {
         AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.DISABLED, formattedDate(), message));
 
     }
 
+    Completable updateProgress(int current, int total) {
+        return Completable.fromAction(() -> syncDAO.updateProgress(ODK_FORMS, total, current));
+    }
 
     public void markAsFailed(int uid, String message) {
         AsyncTask.execute(() -> syncDAO.markFailedWithMsg(uid, Constant.DownloadStatus.FAILED, formattedDate(), message));
@@ -182,7 +195,7 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.PENDING,  formattedDate(), message);
+                syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.PENDING, formattedDate(), message);
             }
         });
 
@@ -214,20 +227,20 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
     }
 
 
-    private Sync[] getData() {
+    private DownloadableItem[] getData() {
 
-        return new Sync[]{
-                new Sync(PROJECT_SITES, PENDING, "Project and sites", "Downloads your assigned project and sites"),
-                new Sync(Constant.DownloadUID.ALL_FORMS, PENDING, "Forms", "Downloads all forms for assigned sites"),
-                new Sync(Constant.DownloadUID.SITE_TYPES, PENDING, "Site type(s)", "Download site types to filter staged forms"),
-                new Sync(Constant.DownloadUID.EDU_MATERIALS, PENDING, "Educational Materials", "Download educational attached for form(s)"),
-                new Sync(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your project"),
-                new Sync(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
-                new Sync(EDITED_SITES, PENDING, "Edited Site(s)", ""),
-                new Sync(OFFLINE_SITES, PENDING, "Offline Site(s)", ""),
-
+        return new DownloadableItem[]{
+                new DownloadableItem(PROJECT_SITES, PENDING, "Project and sites", "Downloads your assigned project and sites"),
+                new DownloadableItem(Constant.DownloadUID.ALL_FORMS, PENDING, "Forms", "Downloads all forms for assigned sites"),
+                new DownloadableItem(Constant.DownloadUID.SITE_TYPES, PENDING, "Site type(s)", "Download site types to filter staged forms"),
+                new DownloadableItem(Constant.DownloadUID.EDU_MATERIALS, PENDING, "Educational Materials", "Download educational attached for form(s)"),
+                new DownloadableItem(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your project"),
+                new DownloadableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
+                new DownloadableItem(EDITED_SITES, PENDING, "Edited Site(s)", ""),
+                new DownloadableItem(OFFLINE_SITES, PENDING, "Offline Site(s)", ""),
         };
     }
+
 
     public Completable init() {
         return save(getData());
@@ -240,9 +253,13 @@ public class SyncLocalSource implements BaseLocalDataSourceRX<Sync> {
     }
 
 
-    public void setAllRunningTaskAsFailed() {
+    void setAllRunningTaskAsFailed() {
         AsyncTask.execute(() -> {
             syncDAO.setAllRunningTaskAsFailed(formattedDate());
         });
+    }
+
+    public void setProgress(int uid, int current, int total) {
+        AsyncTask.execute(() -> syncDAO.setProgress(uid, current, total));
     }
 }
