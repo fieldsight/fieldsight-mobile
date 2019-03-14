@@ -174,11 +174,11 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 .observe(this, integer -> {
                     if (integer == null) return;
                     if (integer > 0) {
-                        toolbar.setTitle(String.format(Locale.US, "DownloadableItem (%d)", integer));
+                        toolbar.setTitle(String.format(Locale.US, "Sync (%d)", integer));
                         toggleButton.setText(getString(R.string.clear_all));
                         downloadButton.setEnabled(true);
                     } else {
-                        toolbar.setTitle("DownloadableItem");
+                        toolbar.setTitle("Sync");
                         downloadButton.setEnabled(false);
                         toggleButton.setText(getString(R.string.select_all));
                     }
@@ -435,13 +435,13 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        Timber.i("Update completed on downloadableItem table");
+                        Timber.i("Update completed on sync table");
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Timber.e("Update failed on downloadableItem table reason: %s", e.getMessage());
+                        Timber.e("Update failed on sync table reason: %s", e.getMessage());
                         e.printStackTrace();
                     }
                 })
