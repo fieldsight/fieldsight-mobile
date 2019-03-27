@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
+import org.bcss.collect.naxa.jobs.LocalNotificationJob;
 import org.odk.collect.android.tasks.ServerPollingJob;
 
 public class CollectJobCreator implements JobCreator {
@@ -34,6 +35,8 @@ public class CollectJobCreator implements JobCreator {
 
             case ServerPollingJob.TAG:
                 return new ServerPollingJob();
+            case LocalNotificationJob.TAG:
+                return new LocalNotificationJob();
 
             default:
                 return null;

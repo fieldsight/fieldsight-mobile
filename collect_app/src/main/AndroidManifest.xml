@@ -353,6 +353,9 @@
             android:exported="true" />
         <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivityNew" />
         <activity android:name="org.bcss.collect.naxa.common.SettingsActivity" />
+        <activity
+            android:name="org.bcss.collect.naxa.preferences.SettingsActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

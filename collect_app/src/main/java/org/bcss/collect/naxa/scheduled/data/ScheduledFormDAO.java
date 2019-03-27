@@ -10,12 +10,18 @@ import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+
+import io.reactivex.Single;
 
 @Dao
 public abstract class ScheduledFormDAO implements BaseDaoFieldSight<ScheduleForm> {
 
     @Query("SELECT * FROM scheduled_form")
     public abstract LiveData<List<ScheduleForm>> getAll();
+
+    @Query("SELECT * FROM scheduled_form")
+    public abstract List<ScheduleForm> getDailyForms();
 
     @Deprecated
     @Query("SELECT * FROM scheduled_form WHERE (siteId =:id OR projectId =:projectId) AND isFormDeployed = 1")

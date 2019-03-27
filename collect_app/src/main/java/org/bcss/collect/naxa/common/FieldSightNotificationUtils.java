@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.common;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -53,6 +55,97 @@ public class FieldSightNotificationUtils {
         NotificationCompat.Builder notification = getNotification(title, body, true, ProgressType.NONE);
         notify(id, notification);
 
+    }
+
+    public void notifyGroup() {
+        //use constant ID for notification used as group summary
+        int SUMMARY_ID = 0;
+        String GROUP_KEY_WORK_EMAIL = "scheduled.forms.reminder";
+        Context context = Collect.getInstance();
+
+        Notification newMessageNotification1 =
+                new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_notification_icon)
+                        .setContentTitle("Daily reminder")
+                        .setContentText("Don't forget to fill your form in road project")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
+
+        Notification newMessageNotification2 =
+                new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_city_black)
+                        .setContentTitle("Daily reminder")
+                        .setContentText("Don't forget to fill your form in school construction Site")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
+
+        Notification newMessageNotification3 =
+                new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_city_black)
+                        .setContentTitle("Daily reminder")
+                        .setContentText("Don't forget to fill your form in factory construction Site")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
+
+        Notification newMessageNotification6 =
+                new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_city_black)
+                        .setContentTitle("Daily reminder")
+                        .setContentText("Don't forget to fill your form in Ramesh Site")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
+
+        Notification newMessageNotification5 =
+                new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_city_black)
+                        .setContentTitle("Daily reminder")
+                        .setContentText("Don't forget to fill your form in Hari maiya Site")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
+
+        Notification newMessageNotification4 =
+                new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_city_black)
+                        .setContentTitle("Daily reminder")
+                        .setContentText("Don't forget to fill your form in Ram kumar")
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        .build();
+
+        Notification summaryNotification =
+                new NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setContentTitle("You have 2 forms")
+                        .setContentText("Two new messages")
+                        .setSmallIcon(R.drawable.ic_city_black)
+                        .setStyle(new NotificationCompat.InboxStyle()
+                                .addLine("Alex Faarborg  Check this out")
+                                .addLine("Jeff Chang    Launch Party")
+                                .setBigContentTitle("2 new messages")
+                                .setSummaryText("Reminder"))
+                        //specify which group this notification belongs to
+                        .setGroup(GROUP_KEY_WORK_EMAIL)
+                        //set this notification as the summary for the group
+                        .setGroupSummary(true)
+                        .build();
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(12, newMessageNotification1);
+        notificationManager.notify(123, newMessageNotification2);
+        notificationManager.notify(1234, newMessageNotification3);
+
+
+        notificationManager.notify(SUMMARY_ID, summaryNotification);
+
+    }
+
+    private Notification generateNotification(int number, String group) {
+        Collect context = Collect.getInstance();
+
+        return new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_city_black)
+                .setContentTitle("Daily reminder")
+                .setContentText("Don't forget to fill your form in Site" + number)
+                .setGroup(group)
+                .build();
     }
 
     public static void createChannels(Context collect) {

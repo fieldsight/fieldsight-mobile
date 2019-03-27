@@ -18,6 +18,7 @@ import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -50,6 +51,11 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
     public LiveData<List<ScheduleForm>> getAll() {
         return dao.getAll();
     }
+
+    public List<ScheduleForm> getDailyForms() {
+        return dao.getDailyForms();
+    }
+
 
     @Override
     public void save(ScheduleForm... items) {

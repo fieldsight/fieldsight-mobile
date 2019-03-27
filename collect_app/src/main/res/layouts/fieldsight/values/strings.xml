@@ -242,6 +242,8 @@
     <string name="dialog_action_upload_site_and_form">Yes, upload Site(s) and Form(s)</string>
     <string name="dialog_action_only_upload_site">No, Upload Site(s) only</string>
     <string name="dialog_msg_uploading_sites">Uploading site(s)</string>
+    <string name="toolbar_settings">Settings</string>
+    <string name="msg_form_reminder_daily">You have %d scheduled form(s) to be filled today</string>
 
     <!--Notification sitelist ends here-->
 
