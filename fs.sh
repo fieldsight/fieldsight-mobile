@@ -3,7 +3,7 @@
 if [ "$#" -ne 1 ]; then
     echo "Need to provide pullrequest(branch) name";
     echo "https://github.com/fieldsight/fieldsight-mobile/pulls";
-    return;
+    exit;
 fi
 # get the current branch name
 BRANCH=$(git branch)
@@ -17,6 +17,6 @@ git pull origin "$1"
 git checkout "$1"
 
 # run adb
-[! -f "gradlew"] && echo "gradlew file not exists" && return
+[! -f "gradlew"] && echo "gradlew file not exists" && exit
 ./gradlew assembleDebug
 ./gradlew installDebug
