@@ -10,7 +10,7 @@ installApp() {
 }
 
 runApp() {
-   adb install ./collect_app/build/outputs/apk/debug/*.apk
+   adb install ./collect_app/build/outputs/apk/debug/.apk
 }
 
 askToTestRelease() {
