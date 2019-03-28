@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+
+installApp() {
+# run adb
+[! -f "gradlew"] && echo "gradlew file not exists" && exit
+# build and run the debug apk
+./gradlew installDebug
+}
+
 #check the branch name is provided in the command or not
 if [ "$#" -ne 1 ]; then
     echo "Need to provide pullrequest(branch) name";
@@ -27,9 +35,3 @@ else
     echo "Failed to pull, please check branch name"
 fi
 
-installApp() {
-# run adb
-[! -f "gradlew"] && echo "gradlew file not exists" && exit
-# build and run the debug apk
-./gradlew installDebug
-}
