@@ -8,17 +8,14 @@ fi
 # get the current branch name
 BRANCH=$(git branch)
 # check the current branch is master or not
-if [! $BRANCH != "master" ]; then
-   git checkout master
-fi
+[[ $BRANCH != "master" ]] && git checkout master
 #pull the branch from origin
 git pull origin "$1"
 
-#checkout to the branch
-git checkout "$1"
-
 if [ $? -eq 0 ]; then
     echo "$1 is fetched successfully";
+    #checkout to the branch
+    git checkout "$1"
     installApp
 else
     echo "Failed to pull, please check branch name"
