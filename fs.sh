@@ -4,6 +4,8 @@ if [ "$#" -ne 1 ]; then
     echo "Need to provide pullrequest(branch) name";
     echo "https://github.com/fieldsight/fieldsight-mobile/pulls";
     exit;
+else $1= "master"
+
 fi
 # get the current branch name
 BRANCH=$(git branch)
@@ -24,7 +26,6 @@ fi
 installApp() {
 # run adb
 [! -f "gradlew"] && echo "gradlew file not exists" && exit
-./gradlew assembleDebug
+# build and run the debug apk
 ./gradlew installDebug
-
 }
