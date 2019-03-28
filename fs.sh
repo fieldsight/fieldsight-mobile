@@ -4,7 +4,11 @@ installApp() {
 # run adb
 [! -f "gradlew"] && echo "gradlew file not exists" && exit
 # build and run the debug apk
-./gradlew installDebug
+./gradlew assembleDebug
+}
+
+runApp() {
+   adb install ./collect_app/build/outputs/apk/debug/*.apk
 }
 
 #check the branch name is provided in the command or not
@@ -30,7 +34,7 @@ if [ $? -eq 0 ]; then
     echo "$1 is fetched successfully";
     #checkout to the branch
     git checkout "$1"
-    installApp
+    runApp
 else
     echo "Failed to pull, please check branch name"
 fi
