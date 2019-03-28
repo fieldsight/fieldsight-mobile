@@ -10,7 +10,9 @@ installApp() {
 }
 
 runApp() {
-   adb install ./collect_app/build/outputs/apk/debug/.apk
+   fileName= find . -name "*.apk" -type f
+   echo fileName;
+   adb install $filename
 }
 
 askToTestRelease() {
