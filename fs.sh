@@ -13,10 +13,21 @@ if [! $BRANCH != "master" ]; then
 fi
 #pull the branch from origin
 git pull origin "$1"
+
 #checkout to the branch
 git checkout "$1"
 
+if [ $? -eq 0 ]; then
+    echo "$1 is fetched successfully";
+    installApp
+else
+    echo "Failed to pull, please check branch name"
+fi
+
+installApp() {
 # run adb
 [! -f "gradlew"] && echo "gradlew file not exists" && exit
 ./gradlew assembleDebug
 ./gradlew installDebug
+
+}
