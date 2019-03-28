@@ -3,10 +3,14 @@
 if [ "$#" -ne 1 ]; then
     echo "Need to provide pullrequest(branch) name";
     echo "https://github.com/fieldsight/fieldsight-mobile/pulls";
-    exit;
-else $1= "master"
-
 fi
+# confirm whether want to test default master
+read -p "Do you want to test realease (y/n)?" choice
+case "$choice" in
+  y|Y ) $1="master";;
+  n|N ) exit;;
+  * ) echo "invalid" && exit;;
+esac
 # get the current branch name
 BRANCH=$(git branch)
 # check the current branch is master or not
