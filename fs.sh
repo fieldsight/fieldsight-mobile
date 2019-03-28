@@ -10,7 +10,8 @@ builApp() {
 }
 
 installApp() {
-   adb install "$(find . -name "*.apk" -type f)"
+   adb install -r -g "$(find . -name "*.apk" -type f)"
+   adb shell am start -n org.bcss.collect.android/org.odk.collect.android.activities.SplashScreenActivity
 }
 
 askToTestRelease() {
