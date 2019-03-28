@@ -13,8 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
-
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.InternetUtils;
@@ -24,14 +22,9 @@ import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
-import org.bcss.collect.naxa.project.ProjectListActivity;
-import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
+import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableSingleObserver;
-import io.reactivex.schedulers.Schedulers;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -142,7 +135,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 break;
             case R.id.action_refresh:
 
-                DownloadActivityRefresh.start(this);
+                ContentDownloadActivity.start(this);
                 break;
         }
 

@@ -56,7 +56,7 @@ import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.ProjectDashboardActivity;
 import org.bcss.collect.naxa.site.SearchAdapter;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
-import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
+import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -167,7 +167,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 }
                 break;
             case R.id.action_refresh:
-                DownloadActivityRefresh.start(this);
+                ContentDownloadActivity.start(this);
                 break;
             case R.id.action_notificaiton:
                 NotificationListActivity.start(this);

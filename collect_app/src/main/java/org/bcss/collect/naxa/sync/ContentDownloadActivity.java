@@ -53,7 +53,7 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 
-public class DownloadActivityRefresh extends CollectAbstractActivity implements OnItemClickListener<DownloadableItem> {
+public class ContentDownloadActivity extends CollectAbstractActivity implements OnItemClickListener<DownloadableItem> {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -73,12 +73,12 @@ public class DownloadActivityRefresh extends CollectAbstractActivity implements 
 
 
     public static void start(Context context) {
-        Intent intent = new Intent(context, DownloadActivityRefresh.class);
+        Intent intent = new Intent(context, ContentDownloadActivity.class);
         context.startActivity(intent);
     }
 
     public static void start(Activity context, int outOfSyncUid) {
-        Intent intent = new Intent(context, DownloadActivityRefresh.class);
+        Intent intent = new Intent(context, ContentDownloadActivity.class);
         intent.putExtra(EXTRA_MESSAGE, outOfSyncUid);
         context.startActivity(intent);
     }

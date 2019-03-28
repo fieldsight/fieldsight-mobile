@@ -8,7 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
+import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import timber.log.Timber;
@@ -27,7 +27,7 @@ public class FlashBarUtils {
             Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
             snack.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
             snack.setAction("Resolve", v -> {
-                DownloadActivityRefresh.start(context,outOfSyncUid);
+                ContentDownloadActivity.start(context,outOfSyncUid);
             });
 
             SnackbarHelper.configSnackbar(context, snack);

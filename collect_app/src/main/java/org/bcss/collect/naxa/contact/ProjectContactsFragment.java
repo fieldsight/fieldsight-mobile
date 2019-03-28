@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.ViewModelFactory;
-import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
+import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DownloadActivityRefresh.start(getActivity());
+                        ContentDownloadActivity.start(getActivity());
                     }
                 });
         recyclerView.setAdapter(contactAdapter);

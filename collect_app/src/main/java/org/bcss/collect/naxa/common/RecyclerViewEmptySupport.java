@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
+import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 
 import javax.annotation.Nullable;
 
@@ -117,7 +117,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                     .setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent =  new Intent(Collect.getInstance(),DownloadActivityRefresh.class);
+                            Intent intent =  new Intent(Collect.getInstance(), ContentDownloadActivity.class);
                             intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                             Collect.getInstance().startActivity(intent);
 //                            DownloadActivity.start(Collect.getInstance().getApplicationContext());

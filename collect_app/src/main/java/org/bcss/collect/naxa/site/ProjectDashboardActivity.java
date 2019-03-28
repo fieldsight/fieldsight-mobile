@@ -51,8 +51,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
-import com.google.gson.Gson;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
@@ -65,20 +63,16 @@ import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.NonSwipeableViewPager;
 import org.bcss.collect.naxa.common.RxSearchObservable;
 import org.bcss.collect.naxa.common.SettingsActivity;
-import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.contact.ProjectContactsFragment;
-import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.profile.UserActivity;
 import org.bcss.collect.naxa.project.MapFragment;
-import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
-import org.bcss.collect.naxa.sync.DownloadActivityRefresh;
-import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderList;
@@ -95,7 +89,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -592,7 +585,7 @@ public class ProjectDashboardActivity extends BaseActivity {
                 });
                 break;
             case R.id.action_refresh:
-                DownloadActivityRefresh.start(this);
+                ContentDownloadActivity.start(this);
                 break;
             case R.id.action_app_settings:
                 if (allowClick(getClass().getName())) {
