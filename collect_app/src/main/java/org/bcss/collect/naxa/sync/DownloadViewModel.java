@@ -414,7 +414,7 @@ public class DownloadViewModel extends ViewModel {
                 fetchStagedForms();
                 break;
             case Constant.DownloadUID.ODK_FORMS:
-                fetchAllFormsV2();
+                fetchAllForms();
                 break;
             case Constant.DownloadUID.PROJECT_SITES:
                 ProjectSitesRemoteSource.getInstance().getAll();
@@ -426,7 +426,7 @@ public class DownloadViewModel extends ViewModel {
                 SiteTypeRemoteSource.getINSTANCE().getAll();
                 break;
             case ALL_FORMS:
-                fetchAllFormsV2();
+                fetchAllForms();
                 break;
             case EDU_MATERIALS:
                 EducationalMaterialsRemoteSource.getInstance().getAll();
