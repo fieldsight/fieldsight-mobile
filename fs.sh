@@ -10,9 +10,7 @@ installApp() {
 }
 
 runApp() {
-   fileName= find . -name "*.apk" -type f
-   echo fileName;
-   adb install $filename
+   adb install "$(find . -name "*.apk" -type f)"
 }
 
 askToTestRelease() {
