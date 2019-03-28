@@ -19,7 +19,7 @@ fi
 # confirm whether want to test default master
 read -p "Do you want to test realease (y/n)?" choice
 case "$choice" in
-  y|Y ) set -- $(1:-"master");;
+  y|Y ) set -- $(1:-master);;
   n|N ) exit;;
   * ) echo "invalid" && exit;;
 esac
