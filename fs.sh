@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BRANCH_NAME = "master"
+BRANCH_NAME="master"
 
 builApp() {
 # run adb
@@ -25,11 +25,13 @@ askToTestRelease() {
 
 #check the branch name is provided in the command or not
 if [ "$#" -ne 1 ]; then
-    echo "Need to provide pullrequest(branch) name";
+    RED='\033[1;33m'
+    NC='\033[0m' #no color
+    echo "${RED}Need to provide pullrequest(branch) name${NC}";
     echo "https://github.com/fieldsight/fieldsight-mobile/pulls";
     # confirm whether want to test default master
     askToTestRelease
-else BRANCH_NAME = $1
+else BRANCH_NAME=$1
 fi
 
 echo "$BRANCH_NAME";
