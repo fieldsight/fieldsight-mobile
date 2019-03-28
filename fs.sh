@@ -2,14 +2,14 @@
 
 BRANCH_NAME = "master"
 
-installApp() {
+builApp() {
 # run adb
 [! -f "gradlew"] && echo "gradlew file not exists" && exit
 # build and run the debug apk
 ./gradlew assembleDebug
 }
 
-runApp() {
+installApp() {
    adb install "$(find . -name "*.apk" -type f)"
 }
 
@@ -46,7 +46,7 @@ if [ $? -eq 0 ]; then
     echo "$1 is fetched successfully";
     #checkout to the branch
     git checkout "$BRANCH_NAME"
-    runApp
+    builApp && installApp
 else
     echo "Failed to pull, please check branch name"
 fi
