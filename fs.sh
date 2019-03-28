@@ -19,10 +19,11 @@ fi
 # confirm whether want to test default master
 read -p "Do you want to test realease (y/n)?" choice
 case "$choice" in
-  y|Y ) $1="master";;
+  y|Y ) set -- $(1:-"master");;
   n|N ) exit;;
   * ) echo "invalid" && exit;;
 esac
+echo "$1";
 # get the current branch name
 BRANCH=$(git branch)
 # check the current branch is master or not
