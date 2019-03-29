@@ -106,6 +106,7 @@
 
     <string name="notify_title_submission_result">Submission Review</string>
     <string name="notify_submission_result"> %1$s form on %2$s has been marked %3$s </string>
+    <string name="notify_submission_result_with_identifier"> %1$s form on %2$s with identifier %3$s has been marked %4$s </string>
 
     <string name="notify_title_new_stages">New Stages</string>
     <string name="notify_new_Stages"> New Stages has been deployed on site  %1$s</string>
@@ -127,7 +128,7 @@
     <string name="title_stage_forms_act">Stage Forms</string>
 
     <string name="notify_form_outstanding">Outstanding</string>
-    <string name="notify_form_flagged">Flagged.</string>
+    <string name="notify_form_flagged">Flagged</string>
     <string name="notify_form_approved">Approved</string>
     <string name="notify_form_rejected">Rejected</string>
 

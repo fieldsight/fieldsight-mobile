@@ -232,47 +232,44 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
         Context context = Collect.getInstance().getApplicationContext();
         String desc;
         SpannableStringBuilder formattedDesc = null;
+        String formStatus = null;
 
         switch (fieldSightNotification.getFormStatus()) {
             case Constant.FormStatus.Flagged:
-                desc = context.getResources().getString(R.string.notify_submission_result,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_flagged));
-
-                formattedDesc = makeSectionOfTextBold(desc,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_flagged));
+                formStatus = context.getResources().getString(R.string.notify_form_flagged);
                 break;
-
             case Constant.FormStatus.Approved:
-
-                desc = context.getResources().getString(R.string.notify_submission_result,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_approved) + ".");
-
-                formattedDesc = makeSectionOfTextBold(desc,
-                        fieldSightNotification.getSiteName(),
-                        fieldSightNotification.getFormName(), context.getResources().getString(R.string.notify_form_approved));
+                formStatus = context.getResources().getString(R.string.notify_form_approved);
                 break;
             case Constant.FormStatus.Rejected:
-                String form_rejected_response = context.getResources().getString(R.string.notify_submission_result,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_rejected) + ".");
-
-                formattedDesc = makeSectionOfTextBold(form_rejected_response,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_rejected));
-                break;
-
-            default:
-                formattedDesc = SpannableStringBuilder.valueOf("Unknown deployment");
+                formStatus = context.getResources().getString(R.string.notify_form_rejected);
                 break;
         }
+
+
+        if (TextUtils.isEmpty(fieldSightNotification.getSiteIdentifier())) {
+            desc = context.getResources().getString(R.string.notify_submission_result,
+                    fieldSightNotification.getFormName(),
+                    fieldSightNotification.getSiteName(),
+                    formStatus);
+
+            formattedDesc = makeSectionOfTextBold(desc,
+                    fieldSightNotification.getFormName(),
+                    fieldSightNotification.getSiteName(),
+                    formStatus);
+        } else {
+            desc = context.getResources().getString(R.string.notify_submission_result_with_identifier,
+                    fieldSightNotification.getFormName(),
+                    fieldSightNotification.getSiteName(),
+                    fieldSightNotification.getSiteIdentifier(),
+                    formStatus);
+            formattedDesc = makeSectionOfTextBold(desc,
+                    fieldSightNotification.getFormName(),
+                    fieldSightNotification.getSiteName(),
+                    formStatus);
+        }
+
+
         return formattedDesc;
     }
 }
