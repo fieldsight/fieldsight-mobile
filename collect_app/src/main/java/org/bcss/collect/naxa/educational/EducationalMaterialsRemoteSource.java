@@ -20,7 +20,7 @@ import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.SubStage;
 import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
+
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
@@ -123,7 +123,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
                     @Override
                     public void onSuccess(List<String> strings) {
-                        SyncRepository.getInstance().setSuccess(EDU_MATERIALS);
+
                         Timber.i("%s has been downloaded", strings.toString());
                         DownloadableItemLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
                     }

@@ -262,4 +262,8 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
     public void setProgress(int uid, int current, int total) {
         AsyncTask.execute(() -> syncDAO.setProgress(uid, current, total));
     }
+
+    public Single<DownloadableItem> getStatusById(int projectSites) {
+        return syncDAO.getStatusById(projectSites);
+    }
 }

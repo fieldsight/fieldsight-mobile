@@ -10,6 +10,7 @@ import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 @Dao
@@ -83,5 +84,9 @@ public abstract class DownloadableItemDAO implements BaseDaoFieldSight<Downloada
 
     @Query("UPDATE sync set is_determinate=1,syncProgress=:current,syncTotal=:total WHERE uid=:uid")
     public abstract void setProgress(int uid, int current, int total);
+
+
+    @Query("SELECT * FROM sync WHERE uid=:uid")
+    public abstract Single<DownloadableItem> getStatusById(int uid);
 }
 
