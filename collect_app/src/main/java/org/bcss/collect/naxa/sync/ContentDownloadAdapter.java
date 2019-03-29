@@ -41,13 +41,13 @@ class ContentDownloadAdapter extends RecyclerView.Adapter<DownloadContentViewHol
             @Override
             void onCancelled(int pos) {
                 super.onCancelled(pos);
-                onItemClickListener.onClickPrimaryAction(syncableItems.get(pos));
+                onItemClickListener.onClickSecondaryAction(syncableItems.get(pos));
             }
 
             @Override
             void viewItemClicked(int pos) {
                 super.viewItemClicked(pos);
-                onItemClickListener.onClickSecondaryAction(syncableItems.get(pos));
+                onItemClickListener.onClickPrimaryAction(syncableItems.get(pos));
             }
         };
     }
