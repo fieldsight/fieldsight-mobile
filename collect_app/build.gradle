@@ -69,7 +69,7 @@ if (secretsFile.exists()) {
 
 def versionMajor = 2
 def versionMinor = 7
-def versionPatch = 1
+def versionPatch = 2
 
 
 
@@ -83,7 +83,7 @@ android {
         //versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         //versionName getVersionName()
         versionCode 59
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}-beta"
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         System.out.println(versionName + " " + versionCode)
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
