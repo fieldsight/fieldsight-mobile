@@ -74,7 +74,7 @@ public class ODKFormRemoteSource {
                         DownloadableItemLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
                         break;
                     case DownloadProgress.STATUS_ERROR:
-                        emitter.onError(new RuntimeException("An error occurred while downloading forms"));
+                        emitter.onError(new RuntimeException(resultData.getString(Constant.EXTRA_MESSAGE)));
                         break;
                     case DownloadProgress.STATUS_FINISHED_FORM:
                         emitter.onComplete();

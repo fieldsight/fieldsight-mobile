@@ -22,8 +22,6 @@ import org.bcss.collect.naxa.common.exception.DownloadRunningException;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
-import org.bcss.collect.naxa.sync.DownloadableItem;
-import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.bcss.collect.naxa.task.FieldSightDownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
@@ -38,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
-import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -102,18 +99,16 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         message = new Bundle();
         receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
 
-        DownloadableItemLocalSource.getINSTANCE()
+        SyncRepository.getInstance()
                 .getStatusById(Constant.DownloadUID.PROJECT_SITES)
-                .toObservable()
-                .map(new Function<DownloadableItem, Object>() {
-                    @Override
-                    public Object apply(DownloadableItem downloadableItem) throws Exception {
-                        if (downloadableItem.getDownloadingStatus() == Constant.DownloadStatus.RUNNING) {
-                            throw new DownloadRunningException("Waiting until project and sites are downloaded");
-                        }
-                        return downloadableItem;
+                .map(syncableItem -> {
+                    if (syncableItem.isProgressStatus()) {
+                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
+
                     }
+                    return syncableItem;
                 })
+                .toObservable()
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(Observable<Throwable> throwableObservable) {
@@ -131,10 +126,20 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
                     }
                 })
-                .flatMapSingle(new Function<Object, SingleSource<List<Project>>>() {
+                .flatMapSingle(new Function<SyncableItem, SingleSource<List<Project>>>() {
                     @Override
-                    public SingleSource<List<Project>> apply(Object o) throws Exception {
-                        return ProjectLocalSource.getInstance().getProjectsMaybe();
+                    public SingleSource<List<Project>> apply(SyncableItem syncableItem) {
+                        return ProjectLocalSource.getInstance()
+                                .getProjectsMaybe();
+                    }
+                })
+                .map(new Function<List<Project>, List<Project>>() {
+                    @Override
+                    public List<Project> apply(List<Project> projects) throws Exception {
+                        if (projects.isEmpty()) {
+                            throw new RuntimeException("Download project(s) site(s) first");
+                        }
+                        return projects;
                     }
                 })
                 .subscribeOn(Schedulers.io())
