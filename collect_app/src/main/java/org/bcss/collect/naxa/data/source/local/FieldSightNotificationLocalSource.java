@@ -31,7 +31,6 @@ import static org.bcss.collect.naxa.common.Constant.NotificationType.NEW_STAGES;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
-import static org.bcss.collect.naxa.common.Truss.makeSectionOfTextBold;
 import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.NEW_FORM;
 
 
@@ -228,51 +227,43 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     }
 
 
-    private SpannableStringBuilder generateFormStatusChangeMsg(FieldSightNotification fieldSightNotification) {
+    private String generateFormStatusChangeMsg(FieldSightNotification fieldSightNotification) {
         Context context = Collect.getInstance().getApplicationContext();
         String desc;
-        SpannableStringBuilder formattedDesc = null;
+        String formStatus = null;
+
+
 
         switch (fieldSightNotification.getFormStatus()) {
             case Constant.FormStatus.Flagged:
-                desc = context.getResources().getString(R.string.notify_submission_result,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_flagged));
-
-                formattedDesc = makeSectionOfTextBold(desc,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_flagged));
+                formStatus = context.getResources().getString(R.string.notify_form_flagged);
                 break;
-
             case Constant.FormStatus.Approved:
-
-                desc = context.getResources().getString(R.string.notify_submission_result,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_approved) + ".");
-
-                formattedDesc = makeSectionOfTextBold(desc,
-                        fieldSightNotification.getSiteName(),
-                        fieldSightNotification.getFormName(), context.getResources().getString(R.string.notify_form_approved));
+                formStatus = context.getResources().getString(R.string.notify_form_approved);
                 break;
             case Constant.FormStatus.Rejected:
-                String form_rejected_response = context.getResources().getString(R.string.notify_submission_result,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_rejected) + ".");
-
-                formattedDesc = makeSectionOfTextBold(form_rejected_response,
-                        fieldSightNotification.getFormName(),
-                        fieldSightNotification.getSiteName(),
-                        context.getResources().getString(R.string.notify_form_rejected));
-                break;
-
-            default:
-                formattedDesc = SpannableStringBuilder.valueOf("Unknown deployment");
+                formStatus = context.getResources().getString(R.string.notify_form_rejected);
                 break;
         }
-        return formattedDesc;
+
+
+        if (fieldSightNotification.getSiteIdentifier() == null) {
+            desc = context.getResources().getString(R.string.notify_submission_result,
+                    fieldSightNotification.getFormName(),
+                    fieldSightNotification.getProjectName(),
+                    formStatus);
+
+
+        } else {
+            desc = context.getResources().getString(R.string.notify_submission_result_with_identifier,
+                    fieldSightNotification.getFormName(),
+                    fieldSightNotification.getSiteName(),
+                    fieldSightNotification.getSiteIdentifier(),
+                    formStatus);
+
+        }
+
+
+        return desc;
     }
 }
