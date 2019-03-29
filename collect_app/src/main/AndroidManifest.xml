@@ -337,7 +337,6 @@
                 <action android:name="org.bcss.collect.android.COLLECT_SMS_NOTIFICATION_ACTION" />
             </intent-filter>
         </receiver>
-
         <activity
             android:name=".TestingActivity"
             android:exported="true"
