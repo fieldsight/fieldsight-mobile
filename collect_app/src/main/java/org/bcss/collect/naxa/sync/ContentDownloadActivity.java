@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,10 +20,8 @@ import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.common.AnimationUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.InternetUtils;
-import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
@@ -67,10 +64,10 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
     RelativeLayout layoutNetworkConnectivity;
 
 
-    private DownloadListAdapterNew adapter;
+    private ContentDownloadAdapter adapter;
     private DownloadViewModel viewModel;
     private DisposableObserver<Boolean> connectivityDisposable;
-
+    boolean isNetworkConnected = true;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, ContentDownloadActivity.class);
@@ -94,10 +91,11 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
         setupViewModel();
 
 
-        int count = (ServiceGenerator.getQueuedAPICount() + ServiceGenerator.getRunningAPICount());
-        if (count == 0) {
-            viewModel.setAllRunningTaskAsFailed();
-        }
+//        int count = (ServiceGenerator.getQueuedAPICount() + ServiceGenerator.getRunningAPICount());
+//        int count = 0;
+//        if (count == 0) {
+//            viewModel.setAllRunningTaskAsFailed();
+//        }
 
         DownloadableItemLocalSource.getINSTANCE()
                 .init()
@@ -202,6 +200,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
+        adapter.setOnItemClickListener(this);
     }
 
     private void addOutOfSyncMessage(List<DownloadableItem> downloadableItems) {
@@ -292,11 +291,10 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                         if (adapter.getAll().size() == 0) {
                             adapter.updateList(syncableItems);
                             AnimationUtils.runLayoutAnimation(recyclerView);
+                        } else {
+                            adapter.updateList(syncableItems);
                         }
-                        adapter.updateList(syncableItems);
-
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
@@ -305,8 +303,8 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
     }
 
     private void setupViewModel() {
-        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
-        viewModel = ViewModelProviders.of(this, factory).get(DownloadViewModel.class);
+//        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
+        viewModel = ViewModelProviders.of(this).get(DownloadViewModel.class);
     }
 
     @OnClick({R.id.toggle_button, R.id.download_button})
@@ -330,6 +328,10 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                         });
                 break;
             case R.id.download_button:
+                if (!isNetworkConnected) {
+                    stopDownload();
+                    return;
+                }
 
                 if (getString(R.string.download).contentEquals(downloadButton.getText())) {
                     runDownload();
@@ -371,18 +373,20 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
     @Override
     protected void onResume() {
         super.onResume();
-        adapter.setOnItemClickListener(this);
+//        adapter.setOnItemClickListener(this);
         connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
             @Override
             public void onConnectionSuccess() {
                 setupInternetLayout(false);
                 Timber.d("We have internet");
+                isNetworkConnected = true;
             }
 
             @Override
             public void onConnectionFailure() {
                 setupInternetLayout(true);
                 Timber.d("We don't have internet");
+                isNetworkConnected = false;
             }
 
             @Override
@@ -395,7 +399,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
     @Override
     protected void onPause() {
         super.onPause();
-        adapter.setOnItemClickListener(null);
+//        adapter.setOnItemClickListener(null);
         connectivityDisposable.dispose();
     }
 
@@ -406,13 +410,13 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
     }
 
     private void setupRecyclerView() {
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
+//        LinearLayoutManager manager = new LinearLayoutManager(this);
+//        manager.setOrientation(LinearLayoutManager.VERTICAL);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
-        recyclerView.addItemDecoration(dividerItemDecoration);
-        adapter = new DownloadListAdapterNew(new ArrayList<>(0));
+//        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+//                layoutManager.getOrientation());
+//        recyclerView.addItemDecoration(dividerItemDecoration);
+        adapter = new ContentDownloadAdapter(new ArrayList<>(0));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
     }
@@ -426,7 +430,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
         }
         return super.onOptionsItemSelected(item);
     }
-
+//    this is triggered when itemview in recycler is clicked
     @Override
     public void onClickPrimaryAction(DownloadableItem downloadableItem) {
         DownloadableItemLocalSource.getINSTANCE()
@@ -448,6 +452,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
         ;
     }
 
+//cancel button if clicked trigger this callback
     @Override
     public void onClickSecondaryAction(DownloadableItem downloadableItem) {
 //        DownloadableItemLocalSource.getINSTANCE().toggleSingleItem(downloadableItem);
