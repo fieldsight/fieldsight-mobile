@@ -133,6 +133,15 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                                 .getProjectsMaybe();
                     }
                 })
+                .map(new Function<List<Project>, List<Project>>() {
+                    @Override
+                    public List<Project> apply(List<Project> projects) throws Exception {
+                        if (projects.isEmpty()) {
+                            throw new RuntimeException("Download project(s) site(s) first");
+                        }
+                        return projects;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Project>>() {
