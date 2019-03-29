@@ -31,7 +31,6 @@ import static org.bcss.collect.naxa.common.Constant.NotificationType.NEW_STAGES;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
-import static org.bcss.collect.naxa.common.Truss.makeSectionOfTextBold;
 import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.NEW_FORM;
 
 
@@ -228,11 +227,12 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     }
 
 
-    private SpannableStringBuilder generateFormStatusChangeMsg(FieldSightNotification fieldSightNotification) {
+    private String generateFormStatusChangeMsg(FieldSightNotification fieldSightNotification) {
         Context context = Collect.getInstance().getApplicationContext();
         String desc;
-        SpannableStringBuilder formattedDesc = null;
         String formStatus = null;
+
+
 
         switch (fieldSightNotification.getFormStatus()) {
             case Constant.FormStatus.Flagged:
@@ -247,29 +247,23 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
         }
 
 
-        if (TextUtils.isEmpty(fieldSightNotification.getSiteIdentifier())) {
+        if (fieldSightNotification.getSiteIdentifier() == null) {
             desc = context.getResources().getString(R.string.notify_submission_result,
                     fieldSightNotification.getFormName(),
-                    fieldSightNotification.getSiteName(),
+                    fieldSightNotification.getProjectName(),
                     formStatus);
 
-            formattedDesc = makeSectionOfTextBold(desc,
-                    fieldSightNotification.getFormName(),
-                    fieldSightNotification.getSiteName(),
-                    formStatus);
+
         } else {
             desc = context.getResources().getString(R.string.notify_submission_result_with_identifier,
                     fieldSightNotification.getFormName(),
                     fieldSightNotification.getSiteName(),
                     fieldSightNotification.getSiteIdentifier(),
                     formStatus);
-            formattedDesc = makeSectionOfTextBold(desc,
-                    fieldSightNotification.getFormName(),
-                    fieldSightNotification.getSiteName(),
-                    formStatus);
+
         }
 
 
-        return formattedDesc;
+        return desc;
     }
 }
