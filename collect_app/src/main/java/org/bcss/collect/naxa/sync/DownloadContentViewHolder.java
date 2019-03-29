@@ -65,11 +65,11 @@ public class DownloadContentViewHolder extends RecyclerView.ViewHolder {
         checkbox.setChecked(item.isChecked());
         progressBar.setMax(item.getSyncTotal());
         tvOutOfSync.setVisibility(item.isOutOfSync() ? View.VISIBLE : View.GONE);
-        progressBar.setVisibility(View.GONE);
-        progressBar.setIndeterminate(true);
+        progressBar.setVisibility(View.VISIBLE);
+
     }
 
-     void enableOrDisableCard(boolean enabled) {
+    void enableOrDisableCard(boolean enabled) {
 //        viewHolder.statusIcon.setEnabled(enabled);
 //        viewHolder.displayName.setEnabled(enabled);
 //        viewHolder.displaySubtext.setEnabled(enabled);
@@ -83,16 +83,19 @@ public class DownloadContentViewHolder extends RecyclerView.ViewHolder {
         shapeDrawable.setColor(color);
     }
 
+    private void showProgress(boolean show){
+        progressBar.setIndeterminate(show);
+    }
+
     void setStatus(DownloadableItem item) {
         switch (item.getDownloadingStatus()) {
             case PENDING:
                 statusIcon.setImageResource(R.drawable.ic_access_time_black_24dp);
-               progressBar.setIndeterminate(false);
+                showProgress(false);
                 tvUpdatedInfo.setVisibility(View.GONE);
                 break;
             case RUNNING:
-                progressBar.setVisibility(View.VISIBLE);
-
+                showProgress(true);
                 statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
                 tvUpdatedInfo.setVisibility(View.GONE);
                 //if(item.getUid() != Constant.DownloadUID.ALL_FORMS){
@@ -112,6 +115,7 @@ public class DownloadContentViewHolder extends RecyclerView.ViewHolder {
 
                 break;
             case FAILED:
+                showProgress(false);
                 String formattedMessage = String.format("Failed %s \nReason: %s", DateTimeUtils.getRelativeTime(item.getLastSyncDateTime(), false), item.getErrorMessage());
                 statusIcon.setImageResource(R.drawable.exclamation);
                 tvUpdatedInfo.setVisibility(View.VISIBLE);
@@ -120,6 +124,7 @@ public class DownloadContentViewHolder extends RecyclerView.ViewHolder {
 
                 break;
             case COMPLETED:
+                showProgress(false);
                 String message = String.format("Synced %s", DateTimeUtils.getRelativeTime(item.getLastSyncDateTime(), false));
                 statusIcon.setImageResource(R.drawable.check);
                 tvUpdatedInfo.setVisibility(View.VISIBLE);
@@ -127,7 +132,8 @@ public class DownloadContentViewHolder extends RecyclerView.ViewHolder {
                 tvUpdatedInfo.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.green));
                 break;
             case DISABLED:
-                enableOrDisableCard( false);
+                showProgress(false);
+                enableOrDisableCard(false);
                 tvUpdatedInfo.setVisibility(View.GONE);
                 statusIcon.setImageResource(R.drawable.ic_refresh_white_2);
                 break;
@@ -135,9 +141,11 @@ public class DownloadContentViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    void  viewItemClicked(int pos) {
+    void viewItemClicked(int pos) {
 //        TODO: do what to do afet viewitem is clicked;
+
     }
+
     void onCancelled(int pos) {
 //        TODO: what to do in on cancelled
     }
