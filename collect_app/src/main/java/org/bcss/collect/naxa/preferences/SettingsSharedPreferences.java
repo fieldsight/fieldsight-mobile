@@ -55,13 +55,14 @@ public class SettingsSharedPreferences {
         return instance;
     }
 
-    public String get(String key) {
+
+    public Object get(String key) {
         if (sharedPreferences == null) {
             return null;
         }
 
-        String defaultValue = null;
-        String value = null;
+        Object defaultValue = null;
+        Object value = null;
 
         try {
             defaultValue = SettingsKeys.defaultvalues.get(key);
@@ -69,8 +70,17 @@ public class SettingsSharedPreferences {
             Timber.e("Default for %s not found", key);
         }
 
-        value = sharedPreferences.getString(key, defaultValue);
-
+        if (defaultValue == null || defaultValue instanceof String) {
+            value = sharedPreferences.getString(key, (String) defaultValue);
+        } else if (defaultValue instanceof Boolean) {
+            value = sharedPreferences.getBoolean(key, (Boolean) defaultValue);
+        } else if (defaultValue instanceof Long) {
+            value = sharedPreferences.getLong(key, (Long) defaultValue);
+        } else if (defaultValue instanceof Integer) {
+            value = sharedPreferences.getInt(key, (Integer) defaultValue);
+        } else if (defaultValue instanceof Float) {
+            value = sharedPreferences.getFloat(key, (Float) defaultValue);
+        }
         return value;
     }
 

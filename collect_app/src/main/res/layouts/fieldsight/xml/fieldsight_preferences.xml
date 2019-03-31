@@ -19,7 +19,6 @@
         <Preference
             android:dependency="switch_notification_daily"
             android:key="notification_time_daily"
-            android:summary="8:00 AM"
             android:title="Send daily notification at" />
 
 
@@ -32,7 +31,6 @@
         <Preference
             android:dependency="switch_notification_weekly"
             android:key="notification_time_weekly"
-            android:summary="Sunday"
             android:title="Send Weekly notification at" />
 
 
@@ -45,7 +43,7 @@
         <Preference
             android:dependency="switch_notification_monthly"
             android:key="notification_time_monthly"
-            android:summary="1st day of the month"
+
             android:title="Send montly notification at" />
 
 

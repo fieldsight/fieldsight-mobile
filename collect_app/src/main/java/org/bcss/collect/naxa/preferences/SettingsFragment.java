@@ -2,7 +2,6 @@ package org.bcss.collect.naxa.preferences;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -11,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.v7.app.AlertDialog;
 import android.text.format.DateFormat;
@@ -19,19 +17,25 @@ import android.util.AttributeSet;
 import android.view.Window;
 import android.widget.TimePicker;
 
+import com.evernote.android.job.JobManager;
+
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.bcss.collect.naxa.jobs.DailyNotificaitonJob;
+import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 import org.bcss.collect.naxa.jobs.LocalNotificationJob;
 import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_SAMPLE;
+import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_SWITCH_DAILY;
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_DAILY;
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_MONTHLY;
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_WEEKLY;
@@ -44,7 +48,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     ThemeUtils themeUtils = new ThemeUtils(SettingsFragment.this.getActivity());
     CustomTimePickerDialog customTimePickerDialog = null;
     private SwitchPreference switchPreferenceMonth, switchPreferenceDaily, switchPreferenceWeek;
-    String[] week = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    String[] weeks = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
 
     @Override
@@ -75,7 +79,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     private String get(String key) {
-        return SettingsSharedPreferences.getInstance().get(key);
+        return (String) SettingsSharedPreferences.getInstance().get(key);
     }
 
     private void setupUpdateButton() {
@@ -125,7 +129,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Choose an day");
 
-        builder.setItems(week, (dialog, which) -> {
+        builder.setItems(weeks, (dialog, which) -> {
             save(KEY_NOTIFICATION_TIME_WEEKLY, String.valueOf(which));
         });
         builder.show();
@@ -133,22 +137,53 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private void setupSharedPreferences() {
         SettingsSharedPreferences.getInstance().register(this);
+
+        String time = String.valueOf(SettingsSharedPreferences.getInstance().get(KEY_NOTIFICATION_TIME_DAILY));
+        findPreference(KEY_NOTIFICATION_TIME_DAILY).setSummary(formatTime(time));
+
+        int weekIndex = Integer.parseInt(String.valueOf(SettingsSharedPreferences.getInstance().get(KEY_NOTIFICATION_TIME_WEEKLY)));
+        findPreference(KEY_NOTIFICATION_TIME_WEEKLY).setSummary(weeks[weekIndex]);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         switch (key) {
             case KEY_NOTIFICATION_TIME_DAILY:
-                String time = SettingsSharedPreferences.getInstance().get(KEY_NOTIFICATION_TIME_DAILY);
-                findPreference(KEY_NOTIFICATION_TIME_DAILY).setSummary(time);
-                DailyNotificaitonJob.schedule(Integer.parseInt(time.split(":")[0]));
+                String time = String.valueOf(SettingsSharedPreferences.getInstance().get(KEY_NOTIFICATION_TIME_DAILY));
+                findPreference(KEY_NOTIFICATION_TIME_DAILY).setSummary(formatTime(time));
+
+                String[] minuteAndTime = time.split(":");
+                int hour = Integer.parseInt(minuteAndTime[0]);
+                int minute = Integer.parseInt(minuteAndTime[1]);
+
+                DailyNotificationJob.schedule(hour, minute);
+
                 break;
             case KEY_NOTIFICATION_TIME_WEEKLY:
-                String index = SettingsSharedPreferences.getInstance().get(KEY_NOTIFICATION_TIME_WEEKLY);
-                findPreference(KEY_NOTIFICATION_TIME_WEEKLY).setSummary(week[Integer.parseInt(index)]);
+                String index = String.valueOf(SettingsSharedPreferences.getInstance().get(KEY_NOTIFICATION_TIME_WEEKLY));
+                findPreference(KEY_NOTIFICATION_TIME_WEEKLY).setSummary(weeks[Integer.parseInt(index)]);
+            case KEY_NOTIFICATION_SWITCH_DAILY:
+                //todo check if true
+                cancelTask(DailyNotificationJob.TAG);
+                break;
         }
     }
 
+    private void cancelTask(String tag) {
+        JobManager.instance().cancelAllForTag(tag);
+    }
+
+    private String formatTime(String time) {
+        try {
+            final SimpleDateFormat sdf = new SimpleDateFormat("H:mm", Locale.getDefault());
+            final Date dateObj = sdf.parse(time);
+            return new SimpleDateFormat("K:mm a", Locale.getDefault()).format(dateObj);
+        } catch (ParseException e) {
+            Timber.e(e);
+        }
+
+        return time;
+    }
 
     private class CustomTimePickerDialog extends TimePickerDialog {
         private final String dialogTitle = getContext().getString(R.string.select_time);

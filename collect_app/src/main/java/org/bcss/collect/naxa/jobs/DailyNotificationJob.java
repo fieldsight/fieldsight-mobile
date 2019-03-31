@@ -14,16 +14,19 @@ import org.bcss.collect.naxa.scheduled.data.ScheduledFormsLocalSource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class DailyNotificaitonJob extends DailyJob {
+public class DailyNotificationJob extends DailyJob {
 
-    public static final String TAG = "DailyNotificaitonJob";
+    public static final String TAG = "DailyNotificationJob";
 
-    public static void schedule(int hourOfDay) {
-        int flexHour = hourOfDay + 1;
+    public static void schedule(int hourOfDay, int minute) {
+
+        long startTime = TimeUnit.HOURS.toMillis(hourOfDay) + TimeUnit.MINUTES.toMillis(minute);
+        long endTime = TimeUnit.MINUTES.toMillis(15);
+
         DailyJob.schedule(new JobRequest.Builder(TAG)
-                        .setUpdateCurrent(true),
-                TimeUnit.HOURS.toMillis(hourOfDay),
-                TimeUnit.HOURS.toMillis(flexHour));
+                        .setUpdateCurrent(true)
+                , startTime, endTime
+        );
     }
 
     @NonNull
