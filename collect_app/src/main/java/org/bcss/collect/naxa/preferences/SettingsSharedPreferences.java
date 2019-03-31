@@ -14,6 +14,7 @@
 
 package org.bcss.collect.naxa.preferences;
 
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -38,6 +39,15 @@ public class SettingsSharedPreferences {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Collect.getInstance());
     }
 
+    public void register(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(listener);
+    }
+
+
+    public void unregister(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
     public static synchronized SettingsSharedPreferences getInstance() {
         if (instance == null) {
             instance = new SettingsSharedPreferences();
@@ -45,31 +55,21 @@ public class SettingsSharedPreferences {
         return instance;
     }
 
-    public Object get(String key) {
+    public String get(String key) {
         if (sharedPreferences == null) {
             return null;
         }
 
-        Object defaultValue = null;
-        Object value = null;
+        String defaultValue = null;
+        String value = null;
 
         try {
-            defaultValue = GENERAL_KEYS.get(key);
+            defaultValue = SettingsKeys.defaultvalues.get(key);
         } catch (Exception e) {
             Timber.e("Default for %s not found", key);
         }
 
-        if (defaultValue == null || defaultValue instanceof String) {
-            value = sharedPreferences.getString(key, (String) defaultValue);
-        } else if (defaultValue instanceof Boolean) {
-            value = sharedPreferences.getBoolean(key, (Boolean) defaultValue);
-        } else if (defaultValue instanceof Long) {
-            value = sharedPreferences.getLong(key, (Long) defaultValue);
-        } else if (defaultValue instanceof Integer) {
-            value = sharedPreferences.getInt(key, (Integer) defaultValue);
-        } else if (defaultValue instanceof Float) {
-            value = sharedPreferences.getFloat(key, (Float) defaultValue);
-        }
+        value = sharedPreferences.getString(key, defaultValue);
 
         return value;
     }
@@ -118,7 +118,6 @@ public class SettingsSharedPreferences {
     public Map<String, ?> getAll() {
         return sharedPreferences.getAll();
     }
-
 
 
     public static class ValidationException extends RuntimeException {

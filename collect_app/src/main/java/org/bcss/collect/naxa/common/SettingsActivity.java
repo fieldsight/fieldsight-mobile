@@ -1,23 +1,16 @@
 package org.bcss.collect.naxa.common;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.view.MenuItem;
-import android.webkit.URLUtil;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.BaseActivity;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ServiceGenerator;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.regex.Matcher;

@@ -33,8 +33,8 @@ public class LocalNotificationJob extends Job {
 //        }
 
         String message = Collect.getInstance().getString(R.string.msg_form_reminder_daily, scheduleForms.size());
-//        FieldSightNotificationUtils.getINSTANCE().notifyNormal(title, message);
-        FieldSightNotificationUtils.getINSTANCE().notifyGroup();
+        FieldSightNotificationUtils.getINSTANCE().notifyNormal(title, message);
+//        FieldSightNotificationUtils.getINSTANCE().notifyGroup();
         return Result.SUCCESS;
     }
 

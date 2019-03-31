@@ -16,11 +16,25 @@
             android:summary="Turn on to receive notifications"
             android:title="Daily Forms" />
 
+        <Preference
+            android:dependency="switch_notification_daily"
+            android:key="notification_time_daily"
+            android:summary="8:00 AM"
+            android:title="Send daily notification at" />
+
+
         <SwitchPreference
             android:defaultValue="true"
             android:key="switch_notification_weekly"
             android:summary="Turn on to receive notifications"
             android:title="Weekly Forms" />
+
+        <Preference
+            android:dependency="switch_notification_weekly"
+            android:key="notification_time_weekly"
+            android:summary="Sunday"
+            android:title="Send Weekly notification at" />
+
 
         <SwitchPreference
             android:defaultValue="true"
@@ -30,18 +44,17 @@
 
         <Preference
             android:dependency="switch_notification_monthly"
-            android:key="notification_time"
-            android:summary="8:00 AM"
-            android:title="Send notification at" />
+            android:key="notification_time_monthly"
+            android:summary="1st day of the month"
+            android:title="Send montly notification at" />
+
 
         <Preference
-            android:dependency="switch_notification_monthly"
             android:key="notification_sample"
             android:title="Show sample" />
 
 
     </PreferenceCategory>
-
 
 
 </PreferenceScreen>
