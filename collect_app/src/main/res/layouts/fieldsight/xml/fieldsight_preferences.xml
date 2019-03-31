@@ -29,6 +29,7 @@
             android:title="Weekly Forms" />
 
         <Preference
+
             android:dependency="switch_notification_weekly"
             android:key="notification_time_weekly"
             android:title="Send Weekly notification at" />

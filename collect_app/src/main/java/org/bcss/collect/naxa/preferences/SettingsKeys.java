@@ -9,6 +9,8 @@ public final class SettingsKeys {
     public static final String KEY_NOTIFICATION_TIME_MONTHLY = "notification_time_monthly";
     public static final String KEY_NOTIFICATION_SAMPLE = "notification_sample";
     public static final String KEY_NOTIFICATION_SWITCH_DAILY = "switch_notification_daily";
+    public static final String KEY_NOTIFICATION_SWITCH_WEEKLY = "switch_notification_weekly";
+    public static final String KEY_NOTIFICATION_SWITCH_MONTHLY = "switch_notification_monthly";
 
 
     public final static HashMap<String, Object> defaultvalues = new HashMap<>();
@@ -19,5 +21,7 @@ public final class SettingsKeys {
         defaultvalues.put(KEY_NOTIFICATION_TIME_MONTHLY, "1");
 
         defaultvalues.put(KEY_NOTIFICATION_SWITCH_DAILY, true);
+        defaultvalues.put(KEY_NOTIFICATION_SWITCH_WEEKLY, true);
+        defaultvalues.put(KEY_NOTIFICATION_SWITCH_MONTHLY, true);
     }
 }

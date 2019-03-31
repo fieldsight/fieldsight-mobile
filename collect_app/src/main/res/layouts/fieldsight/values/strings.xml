@@ -246,6 +246,9 @@
     <string name="msg_form_reminder_daily">You have %d scheduled form(s) to be filled today</string>
     <string name="msg_no_longer_notifcation_receiced">You will no longer receive notifications</string>
     <string name="msg_will_receive_notifications">You will receive all notifications</string>
+    <string name="msg_form_reminder_weekly">You have %d scheduled form(s) to be filled this week</string>
+    <string name="msg_form_reminder_monthly">You have %d scheduled form(s) to be filled this month</string>
+
 
     <!--Notification sitelist ends here-->
 

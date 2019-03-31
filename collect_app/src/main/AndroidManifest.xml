@@ -73,6 +73,9 @@
         android:supportsRtl="true">
         <activity android:name="org.bcss.collect.naxa.formflag.FlaggedFormActivity"></activity>
 
+
+        <receiver android:name="org.bcss.collect.naxa.jobs.alarms.AlarmBroadcastReceiver"/>
+
         <provider
             android:name=".provider.FormsProvider"
             android:authorities="org.bcss.collect.android.provider.odk.forms"
