@@ -23,9 +23,6 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
 import org.bcss.collect.naxa.jobs.DailyNotificationJob;
-import org.bcss.collect.naxa.jobs.LocalNotificationJob;
-import org.bcss.collect.naxa.jobs.MonthlyNotificationJob;
-import org.bcss.collect.naxa.jobs.WeeklyNotificationJob;
 import org.odk.collect.android.tasks.ServerPollingJob;
 
 public class CollectJobCreator implements JobCreator {
@@ -35,18 +32,10 @@ public class CollectJobCreator implements JobCreator {
         switch (tag) {
             case SmsSenderJob.TAG:
                 return new SmsSenderJob();
-
             case ServerPollingJob.TAG:
                 return new ServerPollingJob();
-            case LocalNotificationJob.TAG:
-                return new LocalNotificationJob();
             case DailyNotificationJob.TAG:
                 return new DailyNotificationJob();
-            case WeeklyNotificationJob.TAG:
-                return new WeeklyNotificationJob();
-            case MonthlyNotificationJob.TAG:
-                return new MonthlyNotificationJob();
-
             default:
                 return null;
         }

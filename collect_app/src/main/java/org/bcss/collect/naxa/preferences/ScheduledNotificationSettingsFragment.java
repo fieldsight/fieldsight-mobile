@@ -1,20 +1,18 @@
 package org.bcss.collect.naxa.preferences;
 
-import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.v7.app.AlertDialog;
-import android.widget.TimePicker;
 
 import com.evernote.android.job.JobManager;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.jobs.DailyNotificationJob;
-import org.bcss.collect.naxa.jobs.LocalNotificationJob;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -105,7 +103,6 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
                 break;
 
             case KEY_NOTIFICATION_SAMPLE:
-                LocalNotificationJob.runJobImmediately();
                 break;
         }
         return false;
