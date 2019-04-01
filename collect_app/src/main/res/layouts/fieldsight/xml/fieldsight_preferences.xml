@@ -46,14 +46,7 @@
         <Preference
             android:dependency="switch_notification_monthly"
             android:key="notification_time_monthly"
-
             android:title="Send monthly notification at" />
-
-
-        <Preference
-            android:key="notification_sample"
-            android:title="Show sample" />
-
 
     </PreferenceCategory>
 

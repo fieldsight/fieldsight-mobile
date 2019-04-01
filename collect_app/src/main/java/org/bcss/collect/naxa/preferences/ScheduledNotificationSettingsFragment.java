@@ -21,7 +21,6 @@ import java.util.Locale;
 
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_SAMPLE;
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_DAILY;
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_MONTHLY;
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_WEEKLY;
@@ -52,7 +51,7 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
         findPreference(KEY_NOTIFICATION_TIME_DAILY).setOnPreferenceClickListener(this);
         findPreference(KEY_NOTIFICATION_TIME_WEEKLY).setOnPreferenceClickListener(this);
         findPreference(KEY_NOTIFICATION_TIME_MONTHLY).setOnPreferenceClickListener(this);
-        findPreference(KEY_NOTIFICATION_SAMPLE).setOnPreferenceClickListener(this);
+
     }
 
     private void setupTimePicker() {
@@ -100,9 +99,6 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
                 break;
             case KEY_NOTIFICATION_TIME_MONTHLY:
                 showMonthlyPickerDialog();
-                break;
-
-            case KEY_NOTIFICATION_SAMPLE:
                 break;
         }
         return false;
@@ -182,11 +178,6 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
     public void onDestroy() {
         super.onDestroy();
         SettingsSharedPreferences.getInstance().unregister(this);
-    }
-
-
-    private String get(String key) {
-        return (String) SettingsSharedPreferences.getInstance().get(key);
     }
 
     private String formatTime(String time) {
