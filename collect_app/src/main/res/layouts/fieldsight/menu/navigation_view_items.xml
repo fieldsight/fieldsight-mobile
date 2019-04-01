@@ -36,4 +36,9 @@
         </menu>
     </item>
 
+    <item
+        android:icon="@drawable/ic_setting"
+        android:id="@+id/nav_setting"
+        android:title="@string/toolbar_settings" />
+
 </menu>

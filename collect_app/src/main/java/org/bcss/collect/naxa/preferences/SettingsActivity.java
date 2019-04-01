@@ -12,16 +12,15 @@ public class SettingsActivity extends CollectAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fieldsight_settings);
-
-
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new ScheduledNotificationSettingsFragment())
-                .addToBackStack(null)
-                .commit();
-
+        setupToolbar();
     }
 
-
+    private void setupToolbar() {
+        setSupportActionBar(findViewById(R.id.toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setTitle(R.string.toolbar_settings);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

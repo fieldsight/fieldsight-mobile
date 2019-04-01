@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Preference
-        android:icon="@drawable/ic_launcher_fieldsight"
-        android:key="app_update"
-        android:summary="Check for update"
-        android:title="FieldSight 2.6.2" />
 
     <PreferenceCategory
-        android:icon="@drawable/ic_schedule"
+
         android:title="Notifications">
 
 
@@ -51,4 +46,9 @@
     </PreferenceCategory>
 
 
+    <Preference
+        android:icon="@drawable/ic_launcher_fieldsight"
+        android:key="app_update"
+        android:summary="Check for update"
+        android:title="FieldSight 2.6.2" />
 </PreferenceScreen>
