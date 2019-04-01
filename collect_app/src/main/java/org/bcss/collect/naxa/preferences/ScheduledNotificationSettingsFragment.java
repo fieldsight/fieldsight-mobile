@@ -13,7 +13,6 @@ import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,10 +28,9 @@ import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TI
 public class ScheduledNotificationSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
-    CustomTimePickerDialog customTimePickerDialog = null;
-    private SwitchPreference switchPreferenceMonth, switchPreferenceDaily, switchPreferenceWeek;
-    String[] weeks = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-    String[] months = {"Beginning of the month", "Middle of the month", "End of the month"};
+    private CustomTimePickerDialog customTimePickerDialog = null;
+    private final String[] weeks = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    private final String[] months = {"Beginning of the month", "Middle of the month", "End of the month"};
 
 
     @Override
@@ -64,7 +62,7 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
 
 
     private void setupUpdateButton() {
-        Preference preference = findPreference("app_update");
+        Preference preference = findPreference(SettingsKeys.KEY_APP_UPDATE);
         preference.setOnPreferenceClickListener(this);
         String title = getString(R.string.app_name).concat(": ").concat(BuildConfig.VERSION_NAME);
         preference.setTitle(title);
@@ -73,9 +71,9 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
 
 
     private void setupNotificationToggle() {
-        switchPreferenceDaily = (SwitchPreference) findPreference("switch_notification_daily");
-        switchPreferenceWeek = (SwitchPreference) findPreference("switch_notification_weekly");
-        switchPreferenceMonth = (SwitchPreference) findPreference("switch_notification_monthly");
+        SwitchPreference switchPreferenceDaily = (SwitchPreference) findPreference(SettingsKeys.KEY_NOTIFICATION_SWITCH_DAILY);
+        SwitchPreference switchPreferenceWeek = (SwitchPreference) findPreference(SettingsKeys.KEY_NOTIFICATION_SWITCH_WEEKLY);
+        SwitchPreference switchPreferenceMonth = (SwitchPreference) findPreference(SettingsKeys.KEY_NOTIFICATION_SWITCH_MONTHLY);
 
         switchPreferenceDaily.setSummaryOff(getString(R.string.msg_no_longer_notifcation_receiced));
         switchPreferenceWeek.setSummaryOff(getString(R.string.msg_no_longer_notifcation_receiced));
@@ -106,21 +104,17 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
 
     private void showWeekPickerDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Choose an day");
+        builder.setTitle(R.string.msg_choose_a_day);
 
-        builder.setItems(weeks, (dialog, which) -> {
-            SettingsSharedPreferences.getInstance().save(KEY_NOTIFICATION_TIME_WEEKLY, which);
-        });
+        builder.setItems(weeks, (dialog, which) -> SettingsSharedPreferences.getInstance().save(KEY_NOTIFICATION_TIME_WEEKLY, which));
         builder.show();
     }
 
     private void showMonthlyPickerDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Choose monthly option");
+        builder.setTitle(R.string.msg_choose_month_option);
 
-        builder.setItems(months, (dialog, which) -> {
-            SettingsSharedPreferences.getInstance().save(KEY_NOTIFICATION_TIME_MONTHLY, which);
-        });
+        builder.setItems(months, (dialog, which) -> SettingsSharedPreferences.getInstance().save(KEY_NOTIFICATION_TIME_MONTHLY, which));
         builder.show();
     }
 
@@ -139,9 +133,6 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        boolean shouldDisable = false;
-
-
         switch (key) {
             case KEY_NOTIFICATION_TIME_DAILY:
                 String time = String.valueOf(SettingsSharedPreferences.getInstance().get(KEY_NOTIFICATION_TIME_DAILY));

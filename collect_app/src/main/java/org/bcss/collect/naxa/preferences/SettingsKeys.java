@@ -10,6 +10,7 @@ public final class SettingsKeys {
     public static final String KEY_NOTIFICATION_SWITCH_DAILY = "switch_notification_daily";
     public static final String KEY_NOTIFICATION_SWITCH_WEEKLY = "switch_notification_weekly";
     public static final String KEY_NOTIFICATION_SWITCH_MONTHLY = "switch_notification_monthly";
+    public static final String KEY_APP_UPDATE= "app_update";
 
 
     public final static HashMap<String, Object> defaultvalues = new HashMap<>();

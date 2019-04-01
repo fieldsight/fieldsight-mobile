@@ -249,6 +249,8 @@
     <string name="msg_form_reminder_weekly">You have %d scheduled form(s) to be filled this week</string>
     <string name="msg_form_reminder_monthly">You have %d scheduled form(s) to be filled this month</string>
     <string name="msg_check_for_update">Check for update</string>
+    <string name="msg_choose_a_day">Choose an day</string>
+    <string name="msg_choose_month_option">Choose month option</string>
 
 
     <!--Notification sitelist ends here-->
