@@ -7,7 +7,9 @@
         android:summary="Check for update"
         android:title="FieldSight 2.6.2" />
 
-    <PreferenceCategory android:title="Notifications">
+    <PreferenceCategory
+        android:icon="@drawable/ic_schedule"
+        android:title="Notifications">
 
 
         <SwitchPreference
@@ -19,7 +21,7 @@
         <Preference
             android:dependency="switch_notification_daily"
             android:key="notification_time_daily"
-            android:title="Send daily notification at" />
+            android:title="Send notification at" />
 
 
         <SwitchPreference
@@ -45,7 +47,7 @@
             android:dependency="switch_notification_monthly"
             android:key="notification_time_monthly"
 
-            android:title="Send montly notification at" />
+            android:title="Send monthly notification at" />
 
 
         <Preference

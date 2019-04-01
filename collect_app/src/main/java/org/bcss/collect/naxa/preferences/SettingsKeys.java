@@ -17,9 +17,8 @@ public final class SettingsKeys {
 
     static {
         defaultvalues.put(KEY_NOTIFICATION_TIME_DAILY, "8:00");
-        defaultvalues.put(KEY_NOTIFICATION_TIME_WEEKLY, "0");
-        defaultvalues.put(KEY_NOTIFICATION_TIME_MONTHLY, "1");
-
+        defaultvalues.put(KEY_NOTIFICATION_TIME_WEEKLY, 0);
+        defaultvalues.put(KEY_NOTIFICATION_TIME_MONTHLY, 0);
         defaultvalues.put(KEY_NOTIFICATION_SWITCH_DAILY, true);
         defaultvalues.put(KEY_NOTIFICATION_SWITCH_WEEKLY, true);
         defaultvalues.put(KEY_NOTIFICATION_SWITCH_MONTHLY, true);

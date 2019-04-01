@@ -53,6 +53,7 @@ import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 import org.bcss.collect.naxa.login.APIErrorUtils;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
@@ -318,6 +319,8 @@ public class Collect extends Application implements HasActivityInjector {
         }
 
         setupLeakCanary();
+
+        DailyNotificationJob.schedule();
     }
 
     private void setupCrashlytics() {

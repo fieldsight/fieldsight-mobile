@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.preferences;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.bcss.collect.android.R;
@@ -16,7 +15,7 @@ public class SettingsActivity extends CollectAbstractActivity {
 
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment())
+                .replace(android.R.id.content, new ScheduledNotificationSettingsFragment())
                 .addToBackStack(null)
                 .commit();
 

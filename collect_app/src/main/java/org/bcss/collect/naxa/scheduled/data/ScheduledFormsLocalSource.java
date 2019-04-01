@@ -56,6 +56,14 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
         return dao.getDailyForms();
     }
 
+    public List<ScheduleForm> getWeeklyForms() {
+        return dao.getWeeklyForms();
+    }
+
+    public List<ScheduleForm> getMonthlyForms() {
+        return dao.getMonthlyForms();
+    }
+
 
     @Override
     public void save(ScheduleForm... items) {
