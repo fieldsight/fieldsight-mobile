@@ -94,18 +94,18 @@ public class DailyNotificationJob extends DailyJob {
     private boolean isMonthlySetToday() {
         Integer selectedDatePeriod = (Integer) SettingsSharedPreferences.getInstance().get(SettingsKeys.KEY_NOTIFICATION_TIME_MONTHLY);
         DateTime dateTime = new DateTime();
-        int dayOfWeek = dateTime.getDayOfMonth();
+        int dayOfMonth = dateTime.getDayOfMonth();
         boolean isMonthlySetToday = false;
 
         switch (selectedDatePeriod) {
             case 0:
-                isMonthlySetToday = dayOfWeek <= 10;
+                isMonthlySetToday = dayOfMonth <= 10;
                 break;
             case 1:
-                isMonthlySetToday = dayOfWeek > 10 && dayOfWeek <= 20;
+                isMonthlySetToday = dayOfMonth > 10 && dayOfMonth <= 20;
                 break;
             case 2:
-                isMonthlySetToday = dayOfWeek > 20;
+                isMonthlySetToday = dayOfMonth > 20;
                 break;
         }
         return isMonthlySetToday;
