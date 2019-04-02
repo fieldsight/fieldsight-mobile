@@ -72,6 +72,7 @@ public class ServerPollingJob extends Job {
             return Result.FAILURE;
         }
 
+
         DownloadFormListUtils downloadFormListTask = new DownloadFormListUtils();
         HashMap<String, FormDetails> formList = downloadFormListTask.downloadFormList(true);
 

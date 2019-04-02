@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.common;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -53,6 +55,17 @@ public class FieldSightNotificationUtils {
         NotificationCompat.Builder notification = getNotification(title, body, true, ProgressType.NONE);
         notify(id, notification);
 
+    }
+
+    private Notification generateNotification(int number, String group) {
+        Collect context = Collect.getInstance();
+
+        return new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_city_black)
+                .setContentTitle("Daily reminder")
+                .setContentText("Don't forget to fill your form in Site" + number)
+                .setGroup(group)
+                .build();
     }
 
     public static void createChannels(Context collect) {

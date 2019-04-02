@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory
+
+        android:title="Notifications">
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="switch_notification_daily"
+            android:summary="Turn on to receive notifications"
+            android:title="Daily Forms" />
+
+        <Preference
+            android:dependency="switch_notification_daily"
+            android:key="notification_time_daily"
+            android:title="Send notification at" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="switch_notification_weekly"
+            android:summary="Turn on to receive notifications"
+            android:title="Weekly Forms" />
+
+        <Preference
+
+            android:dependency="switch_notification_weekly"
+            android:key="notification_time_weekly"
+            android:title="Send Weekly notification at" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="switch_notification_monthly"
+            android:summary="Turn on to receive notifications"
+            android:title="Monthly Forms" />
+
+        <Preference
+            android:dependency="switch_notification_monthly"
+            android:key="notification_time_monthly"
+            android:title="Send monthly notification at" />
+
+    </PreferenceCategory>
+
+
+    <Preference
+        android:icon="@drawable/ic_launcher_fieldsight"
+        android:key="app_update"
+        android:summary="Check for update"
+        android:title="FieldSight 2.6.2" />
+</PreferenceScreen>

@@ -103,6 +103,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         FieldSightDatabase.class, DB_PATH)
+                        .allowMainThreadQueries()//used in org.bcss.collect.naxa.jobs.LocalNotificationJob
                         .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8,MIGRATION_8_9)
                         .build();
             }

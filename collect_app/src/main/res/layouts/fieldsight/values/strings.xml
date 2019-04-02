@@ -243,6 +243,16 @@
     <string name="dialog_action_upload_site_and_form">Yes, upload Site(s) and Form(s)</string>
     <string name="dialog_action_only_upload_site">No, Upload Site(s) only</string>
     <string name="dialog_msg_uploading_sites">Uploading site(s)</string>
+    <string name="toolbar_settings">Settings</string>
+    <string name="msg_form_reminder_daily">You have %d scheduled form(s) to be filled today</string>
+    <string name="msg_no_longer_notifcation_receiced">You will no longer receive notifications</string>
+    <string name="msg_will_receive_notifications">You will receive all notifications</string>
+    <string name="msg_form_reminder_weekly">You have %d scheduled form(s) to be filled this week</string>
+    <string name="msg_form_reminder_monthly">You have %d scheduled form(s) to be filled this month</string>
+    <string name="msg_check_for_update">Check for update</string>
+    <string name="msg_choose_a_day">Choose an day</string>
+    <string name="msg_choose_month_option">Choose month option</string>
+
 
     <!--Notification sitelist ends here-->
 

@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
 
+import com.evernote.android.job.DailyJob;
+import com.evernote.android.job.JobManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.bcss.collect.android.R;
@@ -25,6 +27,7 @@ import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
 import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.firebase.FCMParameter;
+import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
@@ -305,6 +308,11 @@ public class FieldSightUserSession {
             }
         });
 
+        try {
+            JobManager.instance().cancelAll();
+        } catch (Exception e) {
+            Timber.e(e);
+        }
 
         Observable<Response<Void>> deleteFCM =
                 Observable.just(1)

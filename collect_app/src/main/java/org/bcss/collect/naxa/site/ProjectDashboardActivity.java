@@ -409,6 +409,9 @@ public class ProjectDashboardActivity extends BaseActivity {
             case R.id.nav_view_site_dashboard:
 
                 break;
+            case R.id.nav_setting:
+                startActivity(new Intent(this, org.bcss.collect.naxa.preferences.SettingsActivity.class));
+                break;
         }
     }
 

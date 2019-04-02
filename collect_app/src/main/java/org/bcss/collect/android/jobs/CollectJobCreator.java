@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
+import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 import org.odk.collect.android.tasks.ServerPollingJob;
 
 public class CollectJobCreator implements JobCreator {
@@ -31,10 +32,10 @@ public class CollectJobCreator implements JobCreator {
         switch (tag) {
             case SmsSenderJob.TAG:
                 return new SmsSenderJob();
-
             case ServerPollingJob.TAG:
                 return new ServerPollingJob();
-
+            case DailyNotificationJob.TAG:
+                return new DailyNotificationJob();
             default:
                 return null;
         }
