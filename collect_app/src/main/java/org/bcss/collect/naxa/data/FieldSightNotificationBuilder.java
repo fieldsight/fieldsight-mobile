@@ -24,6 +24,7 @@ public class FieldSightNotificationBuilder {
     private String formSubmissionId;
     private String formVersion;
     private String siteIdentifier;
+    private String scheduleFormsCount;
 
     public FieldSightNotificationBuilder setId(int id) {
         this.id = id;
@@ -34,6 +35,12 @@ public class FieldSightNotificationBuilder {
         this.notificationType = notificationType;
         return this;
     }
+
+    public FieldSightNotificationBuilder setSheduleFormsCount(String scheduleFormsCount) {
+        this.scheduleFormsCount = scheduleFormsCount;
+        return this;
+    }
+
 
     public FieldSightNotificationBuilder setFormSubmissionId(String formSubmissionId) {
         this.formSubmissionId = formSubmissionId;
@@ -140,7 +147,7 @@ public class FieldSightNotificationBuilder {
         return new FieldSightNotification(id, notificationType, notifiedDate, notifiedTime,
                 idString, fsFormId, fsFormIdProject, formName, siteId, siteName, projectId,
                 projectName, formStatus, role, isFormDeployed, details_url, comment,
-                formType, isRead, formSubmissionId,formVersion,siteIdentifier,isDeployedFromSite);
+                formType, isRead, formSubmissionId, formVersion, siteIdentifier, isDeployedFromSite, scheduleFormsCount);
     }
 
     public FieldSightNotificationBuilder setSiteIdentifier(String siteIdentifier) {

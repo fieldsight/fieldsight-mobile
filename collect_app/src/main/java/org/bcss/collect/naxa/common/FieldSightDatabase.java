@@ -59,7 +59,7 @@ import java.io.File;
                 SubmissionDetail.class
 
         },
-        version = 9)
+        version = 10)
 @TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
@@ -104,7 +104,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         FieldSightDatabase.class, DB_PATH)
                         .allowMainThreadQueries()//used in org.bcss.collect.naxa.jobs.LocalNotificationJob
-                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8,MIGRATION_8_9)
+                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
                         .build();
             }
         }
@@ -151,6 +151,14 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE FieldSightNotification "
                     + " ADD COLUMN `isDeployedFromSite` INTEGER NOT NULL default 0");
+        }
+    };
+
+    private static final Migration MIGRATION_9_10 = new Migration(9, 10) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE FieldSightNotification "
+                    + " ADD COLUMN `schedule_forms_count` TEXT ");
         }
     };
 
