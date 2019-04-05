@@ -69,7 +69,7 @@ if (secretsFile.exists()) {
 
 def versionMajor = 2
 def versionMinor = 8
-def versionPatch = 0
+def versionPatch = 1
 
 
 
