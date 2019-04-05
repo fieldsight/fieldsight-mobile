@@ -17,16 +17,16 @@ import io.reactivex.Single;
 @Dao
 public abstract class ScheduledFormDAO implements BaseDaoFieldSight<ScheduleForm> {
 
-    @Query("SELECT * FROM scheduled_form")
+    @Query("SELECT * FROM scheduled_form wher")
     public abstract LiveData<List<ScheduleForm>> getAll();
 
-    @Query("SELECT * FROM scheduled_form")
+    @Query("SELECT * FROM scheduled_form where scheduleLevel='Daily'")
     public abstract List<ScheduleForm> getDailyForms();
 
-    @Query("SELECT * FROM scheduled_form")
+    @Query("SELECT * FROM scheduled_form where scheduleLevel='Weekly'")
     public abstract List<ScheduleForm> getWeeklyForms();
 
-    @Query("SELECT * FROM scheduled_form")
+    @Query("SELECT * FROM scheduled_form where scheduleLevel='Monthly'")
     public abstract List<ScheduleForm> getMonthlyForms();
 
     @Deprecated

@@ -28,11 +28,14 @@ import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.DAILY_REMINDER;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_PROJECT;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_SITE;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.MONTHLY_REMINDER;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.WEEKLY_REMINDER;
 
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
@@ -94,6 +97,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             case SINGLE_STAGED_FORM_DEPLOYED:
                 icon = ContextCompat.getDrawable(context, R.drawable.ic_form_white);
 //                icon = ContextCompat.getDrawable(context, R.drawable.ic_format_list_bulleted);
+                break;
+            case DAILY_REMINDER:
+            case WEEKLY_REMINDER:
+            case MONTHLY_REMINDER:
+                icon = ContextCompat.getDrawable(context, R.drawable.ic_alarms_24dp);
                 break;
             default:
                 icon = ContextCompat.getDrawable(context, R.drawable.ic_notification_icon);
