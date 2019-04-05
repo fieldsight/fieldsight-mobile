@@ -161,13 +161,15 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
         switch (notification.getNotificationType()) {
             case DAILY_REMINDER:
                 title = "Daily Reminder";
-
+                message = Collect.getInstance().getString(R.string.msg_form_reminder_daily, notification.getScheduleFormsCount());
                 break;
             case WEEKLY_REMINDER:
                 title = "Weekly Reminder";
+                message = Collect.getInstance().getString(R.string.msg_form_reminder_weekly, notification.getScheduleFormsCount());
                 break;
             case MONTHLY_REMINDER:
                 title = "Monthly Reminder";
+                message = Collect.getInstance().getString(R.string.msg_form_reminder_monthly, notification.getScheduleFormsCount());
                 break;
             case SINGLE_STAGE_DEPLOYED:
                 title = context.getString(R.string.notify_title_stage_deployed);
