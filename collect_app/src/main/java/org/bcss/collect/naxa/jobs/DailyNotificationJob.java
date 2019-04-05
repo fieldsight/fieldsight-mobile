@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.jobs;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.evernote.android.job.DailyJob;
 import com.evernote.android.job.JobManager;
@@ -8,8 +9,12 @@ import com.evernote.android.job.JobRequest;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.data.FieldSightNotificationBuilder;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.preferences.SettingsKeys;
 import org.bcss.collect.naxa.preferences.SettingsSharedPreferences;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
@@ -48,34 +53,48 @@ public class DailyNotificationJob extends DailyJob {
     @Override
     protected DailyJobResult onRunDailyJob(Params params) {
         List<ScheduleForm> scheduleForms;
-        String title;
-        String message;
 
+        FieldSightNotification fieldSightNotification;
 
         if (isActivated(SettingsKeys.KEY_NOTIFICATION_SWITCH_DAILY)) {
             scheduleForms = ScheduledFormsLocalSource.getInstance().getDailyForms();
-            title = "Daily Reminder";
-            message = Collect.getInstance().getString(R.string.msg_form_reminder_daily, scheduleForms.size());
-            FieldSightNotificationUtils.getINSTANCE().notifyNormal(title, message);
+            fieldSightNotification = new FieldSightNotificationBuilder()
+                    .setNotificationType(Constant.NotificationType.DAILY_REMINDER)
+                    .setSheduleFormsCount(String.valueOf(scheduleForms.size()))
+                    .createFieldSightNotification();
+
+            saveAndShowNotification(fieldSightNotification);
         }
 
         Timber.i("%s %s", isActivated(SettingsKeys.KEY_NOTIFICATION_SWITCH_WEEKLY), isWeeklySetToday());
         if (isActivated(SettingsKeys.KEY_NOTIFICATION_SWITCH_WEEKLY) && isWeeklySetToday()) {
-            title = "Weekly Reminder";
-            scheduleForms = ScheduledFormsLocalSource.getInstance().getDailyForms();
-            message = Collect.getInstance().getString(R.string.msg_form_reminder_weekly, scheduleForms.size());
-            FieldSightNotificationUtils.getINSTANCE().notifyNormal(title, message);
+            scheduleForms = ScheduledFormsLocalSource.getInstance().getWeeklyForms();
+            fieldSightNotification = new FieldSightNotificationBuilder()
+                    .setNotificationType(Constant.NotificationType.WEEKLY_REMINDER)
+                    .setSheduleFormsCount(String.valueOf(scheduleForms.size()))
+                    .createFieldSightNotification();
+
+            saveAndShowNotification(fieldSightNotification);
         }
 
         if (isActivated(SettingsKeys.KEY_NOTIFICATION_SWITCH_MONTHLY) && isMonthlySetToday()) {
-            title = "Monthly Reminder";
-            scheduleForms = ScheduledFormsLocalSource.getInstance().getDailyForms();
-            message = Collect.getInstance().getString(R.string.msg_form_reminder_monthly, scheduleForms.size());
-            FieldSightNotificationUtils.getINSTANCE().notifyNormal(title, message);
+            scheduleForms = ScheduledFormsLocalSource.getInstance().getMonthlyForms();
+            fieldSightNotification = new FieldSightNotificationBuilder()
+                    .setNotificationType(Constant.NotificationType.MONTHLY_REMINDER)
+                    .setSheduleFormsCount(String.valueOf(scheduleForms.size()))
+                    .createFieldSightNotification();
+
+            saveAndShowNotification(fieldSightNotification);
         }
 
 
         return DailyJobResult.SUCCESS;
+    }
+
+    private void saveAndShowNotification(FieldSightNotification fieldSightNotification) {
+        Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance().generateNotificationContent(fieldSightNotification);
+        FieldSightNotificationLocalSource.getInstance().save(fieldSightNotification);
+        FieldSightNotificationUtils.getINSTANCE().notifyNormal(titleContent.first, titleContent.second);
     }
 
     private boolean isWeeklySetToday() {

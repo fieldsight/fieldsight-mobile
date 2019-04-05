@@ -63,6 +63,10 @@ public class Constant {
         public static final String SITE_FORM = "Form";
         public static final String PROJECT_FORM = "ProjectForm";
         public static final String FORM_FLAG = "Form_Flagged";
+        public static final String DAILY_REMINDER = "daily_schedule_reminder";
+        public static final String WEEKLY_REMINDER = "weekly_schedule_reminder";
+        public static final String MONTHLY_REMINDER = "monthly_schedule_reminder";
+
     }
 
     public static final class FormType {

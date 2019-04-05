@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.data;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
@@ -36,6 +37,9 @@ public class FieldSightNotification implements Parcelable {
     private String siteIdentifier;
     private boolean isDeployedFromSite;
 
+    @ColumnInfo(name = "schedule_forms_count")
+    private String scheduleFormsCount;
+
     public String getFormSubmissionId() {
         return formSubmissionId;
     }
@@ -47,7 +51,7 @@ public class FieldSightNotification implements Parcelable {
     public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString,
                                   String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId,
                                   String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment,
-                                  String formType, boolean isRead, String formSubmissionId, String formVersion,String siteIdentifier,boolean isDeployedFromSite) {
+                                  String formType, boolean isRead, String formSubmissionId, String formVersion, String siteIdentifier, boolean isDeployedFromSite, String scheduleFormsCount) {
         this.id = id;
         this.notificationType = notificationType;
         this.notifiedDate = notifiedDate;
@@ -71,6 +75,7 @@ public class FieldSightNotification implements Parcelable {
         this.formSubmissionId = formSubmissionId;
         this.siteIdentifier = siteIdentifier;
         this.isDeployedFromSite = isDeployedFromSite;
+        this.scheduleFormsCount = scheduleFormsCount;
     }
 
     public boolean isDeployedFromSite() {
@@ -250,6 +255,14 @@ public class FieldSightNotification implements Parcelable {
         this.comment = comment;
     }
 
+    public String getScheduleFormsCount() {
+        return scheduleFormsCount;
+    }
+
+    public void setScheduleFormsCount(String scheduleFormsCount) {
+        this.scheduleFormsCount = scheduleFormsCount;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -280,6 +293,7 @@ public class FieldSightNotification implements Parcelable {
         dest.writeByte(this.isRead ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isDeployedFromSite ? (byte) 1 : (byte) 0);
         dest.writeString(this.siteIdentifier);
+        dest.writeString(this.scheduleFormsCount);
     }
 
     protected FieldSightNotification(Parcel in) {
@@ -306,6 +320,7 @@ public class FieldSightNotification implements Parcelable {
         this.isRead = in.readByte() != 0;
         this.isDeployedFromSite = in.readByte() != 0;
         this.siteIdentifier = in.readString();
+        this.scheduleFormsCount = in.readString();
     }
 
     public static final Creator<FieldSightNotification> CREATOR = new Creator<FieldSightNotification>() {

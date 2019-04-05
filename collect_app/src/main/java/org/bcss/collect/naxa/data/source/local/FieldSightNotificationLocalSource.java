@@ -24,13 +24,16 @@ import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.ASSIGNED_SITE;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.DAILY_REMINDER;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_PROJECT;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_ALTERED_SITE;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.FORM_FLAG;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.MONTHLY_REMINDER;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.NEW_STAGES;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.PROJECT_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.SITE_FORM;
 import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
+import static org.bcss.collect.naxa.common.Constant.NotificationType.WEEKLY_REMINDER;
 import static org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService.NEW_FORM;
 
 
@@ -156,6 +159,18 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
         String title = "";
         String message = "";
         switch (notification.getNotificationType()) {
+            case DAILY_REMINDER:
+                title = "Daily Reminder";
+                message = Collect.getInstance().getString(R.string.msg_form_reminder_daily, notification.getScheduleFormsCount());
+                break;
+            case WEEKLY_REMINDER:
+                title = "Weekly Reminder";
+                message = Collect.getInstance().getString(R.string.msg_form_reminder_weekly, notification.getScheduleFormsCount());
+                break;
+            case MONTHLY_REMINDER:
+                title = "Monthly Reminder";
+                message = Collect.getInstance().getString(R.string.msg_form_reminder_monthly, notification.getScheduleFormsCount());
+                break;
             case SINGLE_STAGE_DEPLOYED:
                 title = context.getString(R.string.notify_title_stage_deployed);
                 String deployedFromSiteMsg = context.getString(R.string.notify_message_stage_deployed_site, notification.getSiteName());
@@ -231,7 +246,6 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
         Context context = Collect.getInstance().getApplicationContext();
         String desc;
         String formStatus = null;
-
 
 
         switch (fieldSightNotification.getFormStatus()) {
