@@ -61,6 +61,67 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     }
 
 
+    private Single<List<Object>> fetchProjectSites() {
+        return ServiceGenerator.getRxClient()
+                .create(ApiInterface.class)
+                .getUser()
+                .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> {
+                    if (meResponse.getData() == null || !meResponse.getData().getIsSupervisor()) {
+                        throw new BadUserException("You have not been assigned as a site supervisor.");
+                    }
+                    String user = GSONInstance.getInstance().toJson(meResponse.getData());
+                    SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
+
+                    return ServiceGenerator.getRxClient().create(ApiInterface.class).getAssignedSites();
+                }).flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
+                .map(mySites -> {
+                    siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
+                    return mySites.getProject();
+                })
+                .toList()
+                .map((Function<List<Project>, Set<Project>>) projects -> {
+                    ArrayList<Project> uniqueList = new ArrayList<>();
+                    ArrayList<String> projectIds = new ArrayList<>();
+                    for (Project project : projects) {
+                        if (!projectIds.contains(project.getId())) {
+                            projectIds.add(project.getId());
+                            uniqueList.add(project);
+                        }
+                    }
+
+                    return new HashSet<>(uniqueList);
+                })
+                .flattenAsObservable(new Function<Set<Project>, Iterable<Project>>() {
+                    @Override
+                    public Iterable<Project> apply(Set<Project> projects) throws Exception {
+                        return projects;
+                    }
+                })
+                .flatMap(new Function<Project, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Project project) throws Exception {
+                        ProjectLocalSource.getInstance().save(project);
+                        Observable<Project> siteRegionObservable = ServiceGenerator.getRxClient().create(ApiInterface.class)
+                                .getRegionsByProjectId(project.getId())
+                                .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
+                                    @Override
+                                    public ObservableSource<Project> apply(List<SiteRegion> siteRegions) {
+                                        siteRegions.add(new SiteRegion("", "Unassigned ", ""));
+                                        String value = GSONInstance.getInstance().toJson(siteRegions);
+                                        ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
+                                        return Observable.just(project);
+                                    }
+                                });
+
+                        return Observable.concat(siteRegionObservable, Observable.just("demo"));
+                    }
+                })
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+
     private Single<List<Object>> fetchProjectAndSites() {
         return ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
@@ -75,7 +136,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         String user = GSONInstance.getInstance().toJson(meResponse.getData());
                         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
 
-                        return getPageAndNext(APIEndpoint.GET_MY_SITES);
+                        return getPageAndNext(APIEndpoint.GET_MY_SITES_v2);
 
                     }
                 })
@@ -217,7 +278,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         } else {
                             message = e.getMessage();
                         }
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(PROJECT_SITES,message);
+                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(PROJECT_SITES, message);
                     }
 
                     @Override

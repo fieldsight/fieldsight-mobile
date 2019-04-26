@@ -3,8 +3,8 @@ package org.bcss.collect.naxa.network;
 public class APIEndpoint {
 
     public final static int NEW_RECORD_CREATED = 201;
-  public static final String BASE_URL = "https://app.fieldsight.org";
-//  public static final String BASE_URL = "http://fieldsight.naxa.com.np";
+//  public static final String BASE_URL = "https://app.fieldsight.org";
+  public static final String BASE_URL = "http://fieldsight.naxa.com.np";
 //  public static final String BASE_URL = "http://192.168.1.107:8001";
 //  public static final String BASE_URL = "http://192.168.1.251:8001";
 
@@ -41,6 +41,7 @@ public class APIEndpoint {
     public static final String GET_CLUSTER_LIST = "/fieldsight/project/region-list/{project_id}/";
     public static final String GET_ALL_SUBMISSION = "/forms/last-submissions/";
     public static final String GET_MY_SITES = "/users/mysites";
+    public static final String GET_MY_SITES_v2 = "users/api/v2/mysites/";
 
     public static final String GET_USER_PROFILE = "/users/api/profile/";
     public static final String GET_INSTANCE_SUBMISSION_ATTACHMENTS = "/forms/api/instance/get_attachments_of_finstance/{instance_submission_id}";

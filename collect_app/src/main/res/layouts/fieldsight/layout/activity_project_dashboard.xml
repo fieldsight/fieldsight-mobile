@@ -83,7 +83,6 @@
         <include layout="@layout/dashboard_tab" />
 
 
-
     </android.support.design.widget.CoordinatorLayout>
 
 

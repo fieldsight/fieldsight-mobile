@@ -6,6 +6,7 @@ import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.login.model.AuthResponse;
 import org.bcss.collect.naxa.login.model.MeResponse;
+import org.bcss.collect.naxa.login.model.MySites;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.notificationslist.NotificationDetail;
@@ -41,6 +42,7 @@ import static org.bcss.collect.naxa.network.APIEndpoint.GET_ALL_CONTACTS;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_CLUSTER_LIST;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_FORM_SCHEDULE;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_GENERAL_FORM;
+import static org.bcss.collect.naxa.network.APIEndpoint.GET_MY_SITES_v2;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_PROJECT_SITES;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_SITE_TYPES;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_STAGE_SUB_STAGE;
@@ -60,6 +62,8 @@ public interface ApiInterface {
     @GET
     Observable<MySiteResponse> getAssignedSites(@Url String url);
 
+    @GET(GET_MY_SITES_v2)
+    Observable<List<MySites>> getAssignedSites();
 
     @FormUrlEncoded
     @POST("/users/api/get-auth-token/")
