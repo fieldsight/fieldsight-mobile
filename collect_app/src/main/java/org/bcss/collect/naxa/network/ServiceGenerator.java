@@ -61,11 +61,11 @@ public class ServiceGenerator {
         }
 
         okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS);
-        okHttpClientBuilder.writeTimeout(1, TimeUnit.HOURS);
-        okHttpClientBuilder.readTimeout(1, TimeUnit.HOURS);
+        okHttpClientBuilder.writeTimeout(3600, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(3600, TimeUnit.SECONDS);
 
 
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
         }
 
@@ -98,7 +98,7 @@ public class ServiceGenerator {
             }
         });
 
-        if(BuildConfig.DEBUG){
+        if (BuildConfig.DEBUG) {
             okHttpBuilder.addNetworkInterceptor(new StethoInterceptor());
         }
 

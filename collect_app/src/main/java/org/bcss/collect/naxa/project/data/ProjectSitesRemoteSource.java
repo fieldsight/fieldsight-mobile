@@ -159,47 +159,53 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public Project apply(MySites mySites) {
                         siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
+                        projectLocalSource.save(mySites.getProject());
+
                         return mySites.getProject();
                     }
                 })
                 .toList()
-                .map(new Function<List<Project>, Set<Project>>() {
+                .map(new Function<List<Project>, Set<Integer>>() {
                     @Override
-                    public Set<Project> apply(List<Project> projects) {
-                        ArrayList<Project> uniqueList = new ArrayList<>();
-                        ArrayList<String> projectIds = new ArrayList<>();
+                    public Set<Integer> apply(List<Project> projects) {
+                        Set<Integer> ids = new HashSet<>();
                         for (Project project : projects) {
-                            if (!projectIds.contains(project.getId())) {
-                                projectIds.add(project.getId());
-                                uniqueList.add(project);
+                            if(ids.contains(Integer.parseInt(project.getId()))){
+                                continue;
                             }
+                            ids.add(Integer.parseInt(project.getId()));
+
                         }
 
-                        return new HashSet<Project>(uniqueList);
+
+                        return new HashSet<Integer>(ids);
                     }
                 })
                 .toObservable()
-                .flatMapIterable(new Function<Set<Project>, Iterable<Project>>() {
+                .flatMapIterable(new Function<Set<Integer>, Iterable<Integer>>() {
                     @Override
-                    public Iterable<Project> apply(Set<Project> projects) {
-
-                        return projects;
+                    public Iterable<Integer> apply(Set<Integer> integers) throws Exception {
+                        return integers;
                     }
                 })
-                .flatMap(new Function<Project, ObservableSource<?>>() {
+                .map(new Function<Integer, Integer>() {
                     @Override
-                    public ObservableSource<?> apply(Project project) {
-                        projectLocalSource.save(project);
-
-                        Observable<Project> siteRegionObservable = ServiceGenerator.getRxClient().create(ApiInterface.class)
-                                .getRegionsByProjectId(project.getId())
-                                .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
+                    public Integer apply(Integer integer) throws Exception {
+                        return integer;
+                    }
+                })
+                .flatMap(new Function<Integer, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Integer id) throws Exception {
+                        Observable<Integer> siteRegionObservable = ServiceGenerator.getRxClient().create(ApiInterface.class)
+                                .getRegionsByProjectId(String.valueOf(id))
+                                .flatMap(new Function<List<SiteRegion>, ObservableSource<Integer>>() {
                                     @Override
-                                    public ObservableSource<Project> apply(List<SiteRegion> siteRegions) {
+                                    public ObservableSource<Integer> apply(List<SiteRegion> siteRegions) {
                                         siteRegions.add(new SiteRegion("", "Unassigned ", ""));
                                         String value = GSONInstance.getInstance().toJson(siteRegions);
-                                        ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
-                                        return Observable.just(project);
+                                        ProjectLocalSource.getInstance().updateSiteClusters(String.valueOf(id), value);
+                                        return Observable.just(id);
                                     }
                                 });
 
