@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.site.db;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.paging.DataSource;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -66,4 +67,7 @@ public interface SiteDao {
 
     @Query("SELECT * from sites WHERE isSiteVerified =:siteStatus")
     Single<List<Site>> getAllByStatus(int siteStatus);
+
+    @Query("SELECT * FROM sites")
+    DataSource.Factory<Integer, Site> getAllPages();
 }

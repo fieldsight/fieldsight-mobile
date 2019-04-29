@@ -2,6 +2,9 @@ package org.bcss.collect.naxa.site.db;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.paging.DataSource;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
 import android.os.AsyncTask;
 
 import org.bcss.collect.android.application.Collect;
@@ -68,7 +71,6 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     public LiveData<Site> getBySiteId(String siteId) {
         return dao.getSiteById(siteId);
     }
-
 
 
     //todo return affected rows count
@@ -156,5 +158,13 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     public Single<List<Site>> getAllByStatus(int siteStatus) {
         return dao.getAllByStatus(siteStatus);
+    }
+
+
+    private LiveData<PagedList<Site>> getPaged() {
+
+        DataSource.Factory<Integer, Site> factory = dao.getAllPages();
+        LivePagedListBuilder<Integer, Site> pagedListBuilder = new LivePagedListBuilder<>(factory, 50);
+        return pagedListBuilder.build();
     }
 }
