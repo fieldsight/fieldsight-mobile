@@ -204,7 +204,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
 
     public void markAllAsPending() {
         AsyncTask.execute(() -> {
-            syncDAO.markAllAsPending(PENDING);
+            syncDAO.markAllAsPending(PENDING, Constant.DownloadStatus.DISABLED);
         });
     }
 
@@ -265,5 +265,14 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
 
     public Single<DownloadableItem> getStatusById(int projectSites) {
         return syncDAO.getStatusById(projectSites);
+    }
+
+    public void markAsUnchecked(int uid) {
+        AsyncTask.execute(() -> syncDAO.markAsUnchecked(uid));
+    }
+
+    public void markAllCheckedAsUnchecked() {
+        AsyncTask.execute(() -> syncDAO.markAllAsUnChecked());
+
     }
 }

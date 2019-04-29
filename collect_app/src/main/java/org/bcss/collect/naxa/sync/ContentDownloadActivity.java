@@ -339,6 +339,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                     stopDownload();
                 }
 
+                DownloadableItemLocalSource.getINSTANCE().markAllCheckedAsUnchecked();
 
                 break;
         }

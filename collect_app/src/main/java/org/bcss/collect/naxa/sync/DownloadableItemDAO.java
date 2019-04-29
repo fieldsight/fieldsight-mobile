@@ -15,7 +15,7 @@ import io.reactivex.Single;
 
 @Dao
 public abstract class DownloadableItemDAO implements BaseDaoFieldSight<DownloadableItem> {
-    @Query("SELECT * from sync ORDER BY title ASC")
+    @Query("SELECT * from sync")
     public abstract LiveData<List<DownloadableItem>> getAll();
 
     @Query("UPDATE sync SET checked='1' WHERE downloadingStatus != 5 ")
@@ -39,6 +39,7 @@ public abstract class DownloadableItemDAO implements BaseDaoFieldSight<Downloada
     @Query("SELECT * from sync where checked = '1'")
     public abstract Single<List<DownloadableItem>> getAllChecked();
 
+
     @Query("UPDATE sync set downloadingStatus=:failed,lastSyncDateTime =:now WHERE uid=:uid")
     public abstract void markSelectedAsFailed(int uid, int failed, String now);
 
@@ -55,8 +56,8 @@ public abstract class DownloadableItemDAO implements BaseDaoFieldSight<Downloada
     @Query("UPDATE sync set downloadingStatus=3,detail=:message  WHERE uid=:uid")
     public abstract void markSelectedAsRunning(int uid, String message);
 
-    @Query("UPDATE sync set downloadingStatus=:pending")
-    public abstract void markAllAsPending(int pending);
+    @Query("UPDATE sync set downloadingStatus=:pending WHERE downloadingStatus!=:deactivated")
+    public abstract void markAllAsPending(int pending, int deactivated);
 
     @Query("UPDATE sync set syncTotal=:total,syncProgress=:progress WHERE uid=:uid  ")
     public abstract void updateProgress(int uid, int total, int progress);
