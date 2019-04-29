@@ -17,6 +17,7 @@ package org.odk.collect.android.activities;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.HierarchyListAdapter;
@@ -96,5 +97,19 @@ public class EditFormHierarchyActivity extends FormHierarchyActivity {
                 }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            FormController fc = Collect.getInstance().getFormController();
+            if (fc != null) {
+                fc.getTimerLogger().exitView();
+                fc.jumpToIndex(startIndex);
+            }
+
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
