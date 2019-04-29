@@ -164,7 +164,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     private LiveData<PagedList<Site>> getPaged() {
 
         DataSource.Factory<Integer, Site> factory = dao.getAllPages();
-        LivePagedListBuilder<Integer, Site> pagedListBuilder = new LivePagedListBuilder<>(factory, 50);
+        LivePagedListBuilder<Integer, Site> pagedListBuilder = new LivePagedListBuilder<>(factory, 2);
         return pagedListBuilder.build();
     }
 }

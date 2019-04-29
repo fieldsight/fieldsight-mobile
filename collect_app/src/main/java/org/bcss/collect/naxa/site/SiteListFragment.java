@@ -74,13 +74,13 @@ import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 
-public class SiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener {
+public class SiteListFragment extends Fragment implements PaginatedSiteListAdapter.SiteListAdapterListener {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     private Project loadedProject;
     private Unbinder unbinder;
-    private SiteListAdapter siteListAdapter;
+    private PaginatedSiteListAdapter siteListAdapter;
     private LiveData<List<Site>> allSitesLiveData;
     private LiveData<List<Site>> offlineSitesLiveData;
     private BottomSheetDialog bottomSheetDialog;
@@ -166,7 +166,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     private void setupRecycleView() {
-        siteListAdapter = new SiteListAdapter(new ArrayList<>(0), this);
+        siteListAdapter = new PaginatedSiteListAdapter(new ArrayList<>(0), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);
