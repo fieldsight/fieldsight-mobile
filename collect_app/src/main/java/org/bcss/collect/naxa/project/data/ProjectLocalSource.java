@@ -55,6 +55,11 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
         AsyncTask.execute(() -> dao.insert(items));
     }
 
+
+    public void save(List<Project> items) {
+        AsyncTask.execute(() -> dao.insert(items));
+    }
+
     @Override
     public void updateAll(ArrayList<Project> items) {
         AsyncTask.execute(() -> dao.updateAll(items));

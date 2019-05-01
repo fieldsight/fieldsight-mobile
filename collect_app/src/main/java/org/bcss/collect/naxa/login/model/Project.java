@@ -27,20 +27,22 @@ public class Project implements Parcelable {
     @Expose
     private String name;
 
-    @Expose
+    @Expose(serialize = false)
     private String description;
 
     @Expose
     private String address;
 
-    @Expose
+
+    @Expose(serialize = false)
     private String lat;
 
-    @Expose
+    @Expose(serialize = false)
     private String lon;
 
-    @Expose
+    @Expose(serialize = false)
     private String siteClusters;
+
 
     @SerializedName("organization_name")
     private String organizationName;
@@ -51,13 +53,13 @@ public class Project implements Parcelable {
     @SerializedName("cluster_sites")
     private Boolean hasClusteredSites;
 
-    @Expose
+    @Expose(serialize = false)
     private Integer typeId;
 
-    @Expose
+    @Expose(serialize = false)
     private String typeLabel;
 
-    @Expose
+    @Expose(serialize = false)
     private String phone;
 
     private boolean isSyncedWithRemote;

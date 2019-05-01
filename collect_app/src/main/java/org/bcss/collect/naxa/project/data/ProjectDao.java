@@ -42,4 +42,10 @@ public abstract class ProjectDao implements BaseDaoFieldSight<Project> {
 
     @Query("SELECT * from project where id=:id")
     public abstract LiveData<Project> getById(String id);
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insert(List<Project> items);
+
 }
+

@@ -161,6 +161,10 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             //noinspection unchecked
             return (T) new FlaggedFormViewModel();
         }
+        else if (modelClass.isAssignableFrom(org.bcss.collect.naxa.project.viewmodel.ProjectViewModel.class)) {
+            //noinspection unchecked
+            return (T) new org.bcss.collect.naxa.project.viewmodel.ProjectViewModel();
+        }
 
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());
     }
