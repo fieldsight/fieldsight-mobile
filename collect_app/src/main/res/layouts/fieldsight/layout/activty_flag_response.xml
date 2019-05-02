@@ -25,17 +25,6 @@
             android:textColor="@color/white"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/red_rejected"
-            android:padding="5dp"
-            android:text="No Comments available !"
-            android:textColor="#ffffff"
-            android:visibility="gone" />
-
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -175,7 +164,7 @@
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:padding="5dp"
-            android:text="Following are the comments on this form." />
+            android:text="@string/comments_default_comment" />
 
         <ImageView
             android:layout_width="match_parent"

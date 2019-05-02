@@ -21,7 +21,7 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
 
 public class FlaggedInstanceActivityNew extends CollectAbstractActivity {
 
-    private TextView noMessage, tvFormName, tvFormDesc, tvComment, tvFormStatus;
+    private TextView  tvFormName, tvFormDesc, tvComment, tvFormStatus;
     private RecyclerView recyclerViewImages;
     private ImageButton imbStatus;
     private RelativeLayout relativeStatus;
@@ -54,7 +54,6 @@ public class FlaggedInstanceActivityNew extends CollectAbstractActivity {
     private void bindUI() {
 
         toolbar = findViewById(R.id.toolbar);
-        noMessage = findViewById(R.id.textView6);
         tvFormName = findViewById(R.id.tv_form_name);
         tvFormDesc = findViewById(R.id.tv_form_desc);
         imbStatus = findViewById(R.id.img_btn_status);
@@ -73,11 +72,8 @@ public class FlaggedInstanceActivityNew extends CollectAbstractActivity {
         String formStatus = fieldSightNotification.getFormStatus();
 
         if (TextUtils.isEmpty(fieldSightNotification.getComment())) {
-            noMessage.setText(R.string.comments_default_comment);
-            noMessage.setVisibility(View.VISIBLE);
             tvComment.setText("");
         } else {
-            noMessage.setVisibility(View.GONE);
             tvComment.setText(comment);
         }
 
