@@ -21,7 +21,7 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
 
 public class FlaggedInstanceActivityNew extends CollectAbstractActivity {
 
-    private TextView  tvFormName, tvFormDesc, tvComment, tvFormStatus;
+    private TextView  tvFormName, tvFormDesc, tvComment, tvFormStatus, tvCommentsLBL;
     private RecyclerView recyclerViewImages;
     private ImageButton imbStatus;
     private RelativeLayout relativeStatus;
@@ -58,6 +58,7 @@ public class FlaggedInstanceActivityNew extends CollectAbstractActivity {
         tvFormDesc = findViewById(R.id.tv_form_desc);
         imbStatus = findViewById(R.id.img_btn_status);
         tvFormStatus = findViewById(R.id.tv_form_status);
+        tvCommentsLBL = findViewById(R.id.tv_comments_lbl);
         tvComment = findViewById(R.id.tv_comments_txt);
         recyclerViewImages = findViewById(R.id.comment_session_rv_images);
         relativeStatus = findViewById(R.id.relativeLayout_status);
@@ -72,8 +73,10 @@ public class FlaggedInstanceActivityNew extends CollectAbstractActivity {
         String formStatus = fieldSightNotification.getFormStatus();
 
         if (TextUtils.isEmpty(fieldSightNotification.getComment())) {
+            tvCommentsLBL.setText(getResources().getString(R.string.comments_default_comment));
             tvComment.setText("");
         } else {
+            tvCommentsLBL.setText(getResources().getString(R.string.comments_following_are_the_comments));
             tvComment.setText(comment);
         }
 
