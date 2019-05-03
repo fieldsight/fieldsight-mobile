@@ -1,13 +1,11 @@
 package org.bcss.collect.naxa.project.data;
 
-import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.ApiV3Interface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 
-import java.util.List;
-
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 
 public class ProjectRemoteSource {
 
@@ -20,7 +18,7 @@ public class ProjectRemoteSource {
         return INSTANCE;
     }
 
-    public Single<List<Project>> getProjects() {
+    public Single<ResponseBody> getProjects() {
         return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
                 .getProjects()
                 .subscribeOn(Schedulers.io());

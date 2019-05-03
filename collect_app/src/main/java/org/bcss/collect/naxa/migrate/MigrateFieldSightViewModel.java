@@ -13,6 +13,7 @@ import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.login.model.ProjectBuilder;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
@@ -44,7 +45,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
         while (cursor.moveToNext()) {
 
-            Project project = new Project();
+            Project project = new ProjectBuilder().createProject();
 
             project.setId(getString(cursor, MigrationHelper.ProjectColumns.KEY_PROJECT_ID));
             project.setTypeId(Integer.valueOf(

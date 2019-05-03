@@ -20,36 +20,13 @@ import java.util.List;
 import static org.bcss.collect.naxa.common.ViewUtils.loadRemoteImage;
 
 
-public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.MyViewHolder> {
+public class MyProjectsAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
 
     private List<Project> myProjectList;
 
     private OnItemClickListener onItemClickListener;
 
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView title, organizationName;
-        private ImageView ivLogo;
-
-        private RelativeLayout rootLayout;
-
-
-        private MyViewHolder(View view) {
-            super(view);
-            title = view.findViewById(R.id.tv_project_list_name);
-            organizationName = view.findViewById(R.id.tv_organization_name);
-            ivLogo = view.findViewById(R.id.iv_org_logo);
-            rootLayout = view.findViewById(R.id.project_list_item_root_layout);
-
-
-            rootLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.onItemClick(myProjectList.get(getAdapterPosition()));
-                }
-            });
-        }
-    }
 
 
     public MyProjectsAdapter(final List<Project> myProjectList, OnItemClickListener onItemClickListener) {
@@ -74,26 +51,27 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ProjectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.project_list_item, parent, false);
 
-        return new MyViewHolder(itemView);
+        return new ProjectViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull  ProjectViewHolder holder, int position) {
         final Project project = myProjectList.get(holder.getAdapterPosition());
 
-        Context context = holder.title.getContext();
-
-        holder.title.setText(project.getName());
-
-        loadRemoteImage(context, project.getOrganizationlogourl()).into(holder.ivLogo);
-
-
-        holder.organizationName.setText(formatOrganizationName(project.getOrganizationName()));
-
+//        Context context = holder.title.getContext();
+//        holder.title.setText(project.getName());
+//        loadRemoteImage(context, project.getOrganizationlogourl()).into(holder.ivLogo);
+//        holder.organizationName.setText(formatOrganizationName(project.getOrganizationName()));
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                onItemClickListener.onItemClick(myProjectList.get(holder.getAdapterPosition()));
+//            }
+//        });
 
     }
 
