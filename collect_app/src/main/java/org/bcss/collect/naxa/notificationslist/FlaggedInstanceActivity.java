@@ -183,7 +183,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
         //layout element ids
         toolbar = findViewById(R.id.toolbar);
-        noMessage = findViewById(R.id.textView6);
         tvFormName = findViewById(R.id.tv_form_name);
         tvFormDesc = findViewById(R.id.tv_form_desc);
         imbStatus = findViewById(R.id.img_btn_status);

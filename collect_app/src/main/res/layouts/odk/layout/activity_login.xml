@@ -57,7 +57,20 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/margin_large"
         app:cardCornerRadius="@dimen/corner_radius"
-        app:cardElevation="@dimen/elevation_card_resting">
+        app:cardElevation="@dimen/elevation_card_resting"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btn_gmail_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gmail login"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -120,6 +133,8 @@
 
 
         </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 

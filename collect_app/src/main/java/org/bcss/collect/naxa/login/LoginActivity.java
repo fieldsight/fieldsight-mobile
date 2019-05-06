@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -19,6 +20,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.SignInButton;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
@@ -38,7 +42,7 @@ import static org.bcss.collect.android.application.Collect.allowClick;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends CollectAbstractActivity implements LoginView {
+public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -50,6 +54,7 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
     private Button mEmailSignInButton;
     private RelativeLayout rootLayout;
     private ImageButton btnChangeUrl;
+    private SignInButton btnGmailLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +69,20 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         btnChangeUrl = findViewById(R.id.btn_change_server_url);
         mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 if (allowClick(getClass().getName())) {
                     hideKeyboardInActivity(LoginActivity.this);
                     attemptLogin();
                 }
+            }
+        });
+
+        btnGmailLogin = findViewById(R.id.btn_gmail_login);
+        btnGmailLogin.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
             }
         });
 
@@ -110,6 +122,20 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
             mEmailView.setText(BuildConfig.username);
             mPasswordView.setText(BuildConfig.password);
         }
+    }
+
+    @Override
+    public void gmailLoginSuccess(GoogleSignInAccount googleSignInAccount) {
+
+        Toast.makeText(this, "Google Sign-in complete", Toast.LENGTH_SHORT).show();
+
+        Log.d(TAG, "gmailLoginSuccess: tokenId "+googleSignInAccount.getIdToken());
+        Log.d(TAG, "gmailLoginSuccess: id "+googleSignInAccount.getId());
+        Log.d(TAG, "gmailLoginSuccess: AuthCode "+googleSignInAccount.getServerAuthCode());
+
+
+
+
     }
 
     /**
