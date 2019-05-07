@@ -139,7 +139,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         new GetAccessTokenTask().execute(account.getServerAuthCode());
     }
 
-    public abstract void gmailLoginSuccess(GoogleSignInAccount googleSignInAccount);
+    public abstract void gmailLoginSuccess(String googleAccessToken, String username);
 
 
     private class GetAccessTokenTask extends AsyncTask<String, Void, GoogleTokenResponse> {
@@ -192,8 +192,8 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         protected void onPostExecute(GoogleTokenResponse tokenResponse) {
             pd.dismiss();
             if (tokenResponse != null) {
-                authenticateUser(tokenResponse.getAccessToken());
-                gmailLoginSuccess(googleSignInAccount);
+//                authenticateUser(tokenResponse.getAccessToken());
+                gmailLoginSuccess(tokenResponse.getAccessToken(), username);
 //                    useAccessTokenToCallAPI( tokenResponse);
                 Log.d(TAG, "onPostExecute: accessToken " + tokenResponse.getAccessToken());
 
@@ -203,68 +203,6 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         }
     }
 
-
-    private void authenticateUser(String googleAccessToken) {
-
-
-        ServiceGenerator.createService(ApiInterface.class)
-                .getAuthToken(googleAccessToken)
-                .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
-                    @Override
-                    public ObservableSource<FCMParameter> apply(AuthResponse authResponse) {
-
-                        ServiceGenerator.clearInstance();
-
-                        return ServiceGenerator
-                                .createService(ApiInterface.class)
-                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true, 3))
-                                .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
-                                    @Override
-                                    public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
-                                        if ("false".equals(fcmParameter.getIs_active())) {
-                                            throw new FirebaseTokenException("Failed to add token in server");
-                                        }
-
-                                        FieldSightUserSession.saveAuthToken(authResponse.getToken());
-                                        return Observable.just(fcmParameter);
-                                    }
-                                })
-                                ;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<FCMParameter>() {
-                    @Override
-                    public void onNext(FCMParameter fcmParameter) {
-//                        onLoginFinishedListener.onSuccess();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.e(e);
-                        String errorMessage = e.getMessage();
-                        if (e instanceof RetrofitException) {
-                            RetrofitException retrofitException = (RetrofitException) e;
-                            boolean hasErrorBody = retrofitException.getResponse().errorBody() != null;
-                            errorMessage = hasErrorBody ? retrofitException.getMessage() : retrofitException.getKind().getMessage();
-                        } else if (e instanceof SSLException) {
-                            errorMessage = "A SSL exception occurred";
-                        } else if (e instanceof FirebaseTokenException) {
-                            errorMessage = Collect.getInstance().getString(R.string.dialog_error_register);
-                        }
-
-//                        onLoginFinishedListener.onError(errorMessage);
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-//                        onLoginFinishedListener.onSuccess();
-                    }
-                });
-    }
 
 
     private void useAccessTokenToCallAPI(@NonNull GoogleTokenResponse tokenResponse) throws IOException {

@@ -60,6 +60,13 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
     }
 
+    @Override
+    public void googleOauthCredentials(String googleAccessToken, String username) {
+        loginModel.loginViaGoogle(googleAccessToken, username,LoginPresenterImpl.this);
+
+    }
+
+
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;

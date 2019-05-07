@@ -35,6 +35,8 @@ import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
+import timber.log.Timber;
+
 import static org.bcss.collect.android.application.Collect.allowClick;
 
 //import org.bcss.collect.naxa.common.Login;
@@ -125,16 +127,9 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
     }
 
     @Override
-    public void gmailLoginSuccess(GoogleSignInAccount googleSignInAccount) {
-
-        Toast.makeText(this, "Google Sign-in complete", Toast.LENGTH_SHORT).show();
-
-        Log.d(TAG, "gmailLoginSuccess: tokenId "+googleSignInAccount.getIdToken());
-        Log.d(TAG, "gmailLoginSuccess: id "+googleSignInAccount.getId());
-        Log.d(TAG, "gmailLoginSuccess: AuthCode "+googleSignInAccount.getServerAuthCode());
-
-
-
+    public void gmailLoginSuccess(String googleAccessToken, String username) {
+        loginPresenter.googleOauthCredentials(googleAccessToken, username);
+        Timber.d("gmailLoginSuccess: Access tokenId "+googleAccessToken);
 
     }
 

@@ -75,7 +75,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST(GET_EXCHANGE_TOKEN)
-    Observable<AuthResponse> getAuthToken(
+    Observable<AuthResponse> getAuthTokenUsingGoogle(
             @Field("access_token") String gmailAccessToken
     );
 
