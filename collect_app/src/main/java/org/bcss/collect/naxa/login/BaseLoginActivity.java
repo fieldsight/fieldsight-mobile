@@ -52,32 +52,24 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
     }
 
     protected void setupGmailLogin() {
-
-        // Configure sign-in to request the user's ID, email address, and basic
-// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         String serverClientId = "1035621646272-qqp0bibmbrhaehd4dhbg98heuurfb1jv.apps.googleusercontent.com";
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
                 .requestServerAuthCode(serverClientId)
                 .requestEmail()
                 .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     protected void gmailSignIn() {
-//        The account selection is cached, so you have to call signOut first to show account chooser every time with GoogleSignIn
+//   The account selection is cached, so you have to call signOut first to show account chooser every time with GoogleSignIn
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        // ...
                         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                         startActivityForResult(signInIntent, RC_SIGN_IN);
                     }
                 });
-
     }
 
 
@@ -103,14 +95,10 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String authCode = account.getServerAuthCode();
-
             Timber.d("handleSignInResult: suthCode " + authCode);
-            // Signed in successfully, show authenticated UI.
             updateUI(account);
         } catch (ApiException e) {
             e.printStackTrace();
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             updateUI(null);
         }
@@ -136,8 +124,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pd = ProgressDialog.show(BaseLoginActivity.this, "", "Loading", true,
-                    false); // Create and show Progress dialog
+
         }
 
         @Override
@@ -169,14 +156,12 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
             }
         }
 
-        // onPostExecute displays the results of the doInBackgroud and also we
-        // can hide progress dialog.
         @Override
         protected void onPostExecute(GoogleTokenResponse tokenResponse) {
-            pd.dismiss();
+   
             if (tokenResponse != null) {
                 gmailLoginSuccess(tokenResponse.getAccessToken(), username);
-//                    useAccessTokenToCallAPI( tokenResponse);
+
                 Log.d(TAG, "onPostExecute: accessToken " + tokenResponse.getAccessToken());
 
             }
