@@ -57,7 +57,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
 // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         String serverClientId = "1035621646272-qqp0bibmbrhaehd4dhbg98heuurfb1jv.apps.googleusercontent.com";
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
+//                .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
                 .requestServerAuthCode(serverClientId)
                 .requestEmail()
                 .build();
@@ -122,7 +122,6 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
             return;
         }
         username = account.getEmail();
-        showProgress();
         new GetAccessTokenTask().execute(account.getServerAuthCode());
     }
 
