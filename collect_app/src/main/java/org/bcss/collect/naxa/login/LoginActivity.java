@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -17,11 +16,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.SignInButton;
 
 import org.bcss.collect.android.BuildConfig;
@@ -33,7 +30,6 @@ import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.migrate.MigrationHelper;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.project.ProjectListActivity;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import timber.log.Timber;
 
@@ -57,6 +53,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
     private RelativeLayout rootLayout;
     private ImageButton btnChangeUrl;
     private SignInButton btnGmailLogin;
+    private boolean isFromGooleSignin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +81,10 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         btnGmailLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                signIn();
+                isFromGooleSignin = true;
+                showProgress(true);
+                gmailSignIn();
+                btnGmailLogin.setEnabled(false);
             }
         });
 
@@ -222,8 +222,8 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
                 .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        attemptLogin();
                         dialog.dismiss();
+                        retryLogin();
                     }
                 })
                 .setNegativeButton(R.string.dialog_action_dismiss, null)
@@ -248,6 +248,14 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
+        }
+    }
+
+    private void retryLogin(){
+        if (isFromGooleSignin){
+            gmailSignIn();
+        }else {
+            attemptLogin();
         }
     }
 }

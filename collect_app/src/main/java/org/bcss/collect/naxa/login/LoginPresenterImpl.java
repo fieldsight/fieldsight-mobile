@@ -62,6 +62,8 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
     @Override
     public void googleOauthCredentials(String googleAccessToken, String username) {
+        loginView.showProgress(true);
+
         loginModel.loginViaGoogle(googleAccessToken, username,LoginPresenterImpl.this);
 
     }

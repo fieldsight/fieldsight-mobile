@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -26,42 +27,21 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
-import org.bcss.collect.naxa.common.rx.RetrofitException;
-import org.bcss.collect.naxa.firebase.FCMParameter;
-import org.bcss.collect.naxa.login.model.AuthResponse;
-import org.bcss.collect.naxa.network.APIEndpoint;
-import org.bcss.collect.naxa.network.ApiInterface;
-import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import javax.net.ssl.SSLException;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 public abstract class BaseLoginActivity extends CollectAbstractActivity {
     protected static final String TAG = "BaseLoginActivity";
 
-    public static final String SCOPES = "https://www.googleapis.com/auth/plus.login "
-            + "https://www.googleapis.com/auth/drive.file";
-
 
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 1;
-    private String username = "" ;
-    private GoogleSignInAccount googleSignInAccount;
+    private String username = "";
 
 
     @Override
@@ -71,13 +51,11 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         setupGmailLogin();
     }
 
-    // gmail Login Start
     protected void setupGmailLogin() {
 
         // Configure sign-in to request the user's ID, email address, and basic
 // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         String serverClientId = "1035621646272-qqp0bibmbrhaehd4dhbg98heuurfb1jv.apps.googleusercontent.com";
-//        String serverClientId = "408539660464-m18d6hs1ok8bcqdifb6da0baaum98i2o.apps.googleusercontent.com";
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
                 .requestServerAuthCode(serverClientId)
@@ -88,9 +66,18 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
-    protected void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+    protected void gmailSignIn() {
+//        The account selection is cached, so you have to call signOut first to show account chooser every time with GoogleSignIn
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                        startActivityForResult(signInIntent, RC_SIGN_IN);
+                    }
+                });
+
     }
 
 
@@ -135,7 +122,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
             return;
         }
         username = account.getEmail();
-        googleSignInAccount = account;
+        showProgress();
         new GetAccessTokenTask().execute(account.getServerAuthCode());
     }
 
@@ -158,9 +145,6 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         protected GoogleTokenResponse doInBackground(String... urls) {
 
             try {
-                String CLIENT_SECRET_FILE = "client_secret.json";
-
-
 // Exchange auth code for access token
                 GoogleClientSecrets clientSecrets =
                         GoogleClientSecrets.load(
@@ -192,7 +176,6 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         protected void onPostExecute(GoogleTokenResponse tokenResponse) {
             pd.dismiss();
             if (tokenResponse != null) {
-//                authenticateUser(tokenResponse.getAccessToken());
                 gmailLoginSuccess(tokenResponse.getAccessToken(), username);
 //                    useAccessTokenToCallAPI( tokenResponse);
                 Log.d(TAG, "onPostExecute: accessToken " + tokenResponse.getAccessToken());
@@ -202,7 +185,6 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
 
         }
     }
-
 
 
     private void useAccessTokenToCallAPI(@NonNull GoogleTokenResponse tokenResponse) throws IOException {
