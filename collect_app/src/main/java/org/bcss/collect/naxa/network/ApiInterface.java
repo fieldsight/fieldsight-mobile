@@ -40,6 +40,7 @@ import retrofit2.http.Url;
 
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_ALL_CONTACTS;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_CLUSTER_LIST;
+import static org.bcss.collect.naxa.network.APIEndpoint.GET_EXCHANGE_TOKEN;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_FORM_SCHEDULE;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_GENERAL_FORM;
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_MY_SITES_v2;
@@ -70,6 +71,12 @@ public interface ApiInterface {
     Observable<AuthResponse> getAuthToken(
             @Field("email_or_username") String username,
             @Field("password") String password
+    );
+
+    @FormUrlEncoded
+    @POST(GET_EXCHANGE_TOKEN)
+    Observable<AuthResponse> getAuthToken(
+            @Field("access_token") String gmailAccessToken
     );
 
     @GET(GET_GENERAL_FORM)

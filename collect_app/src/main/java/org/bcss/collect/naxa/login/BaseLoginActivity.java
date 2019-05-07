@@ -1,14 +1,12 @@
 package org.bcss.collect.naxa.login;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -17,19 +15,41 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.File;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
+import org.bcss.collect.naxa.common.rx.RetrofitException;
+import org.bcss.collect.naxa.firebase.FCMParameter;
+import org.bcss.collect.naxa.login.model.AuthResponse;
+import org.bcss.collect.naxa.network.APIEndpoint;
+import org.bcss.collect.naxa.network.ApiInterface;
+import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.opendatakit.httpclientandroidlib.HttpResponse;
-import org.opendatakit.httpclientandroidlib.NameValuePair;
-import org.opendatakit.httpclientandroidlib.client.ClientProtocolException;
-import org.opendatakit.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
-import org.opendatakit.httpclientandroidlib.client.methods.HttpPost;
-import org.opendatakit.httpclientandroidlib.message.BasicNameValuePair;
-import org.opendatakit.httpclientandroidlib.util.EntityUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStreamReader;
+
+import javax.net.ssl.SSLException;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public abstract class BaseLoginActivity extends CollectAbstractActivity {
     protected static final String TAG = "BaseLoginActivity";
@@ -40,6 +60,8 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 1;
+    private String username = "" ;
+    private GoogleSignInAccount googleSignInAccount;
 
 
     @Override
@@ -54,8 +76,8 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
 
         // Configure sign-in to request the user's ID, email address, and basic
 // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-//        String serverClientId = "408539660464-n0dqb40ul44vmavdmopnua3rig6alnqs.apps.googleusercontent.com";
-        String serverClientId = "408539660464-m18d6hs1ok8bcqdifb6da0baaum98i2o.apps.googleusercontent.com";
+        String serverClientId = "1035621646272-qqp0bibmbrhaehd4dhbg98heuurfb1jv.apps.googleusercontent.com";
+//        String serverClientId = "408539660464-m18d6hs1ok8bcqdifb6da0baaum98i2o.apps.googleusercontent.com";
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
                 .requestServerAuthCode(serverClientId)
@@ -81,20 +103,25 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            try {
+                handleSignInResult(task);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
 
-    protected void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
+    protected void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) throws Exception {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String authCode = account.getServerAuthCode();
 
-            Log.d(TAG, "handleSignInResult: suthCode "+authCode);
+            Timber.d("handleSignInResult: suthCode " + authCode);
             // Signed in successfully, show authenticated UI.
             updateUI(account);
         } catch (ApiException e) {
+            e.printStackTrace();
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
@@ -103,36 +130,164 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
     }
 
 
-
-    public void updateUI(GoogleSignInAccount account) {
+    public void updateUI(GoogleSignInAccount account) throws Exception {
         if (account == null) {
             return;
         }
-
-        gmailLoginSuccess(account);
-
+        username = account.getEmail();
+        googleSignInAccount = account;
+        new GetAccessTokenTask().execute(account.getServerAuthCode());
     }
 
-//    protected void sendAuthCodeToAppsBackend (String authCode){
-//        HttpPost httpPost = new HttpPost("https://yourbackend.example.com/authcode");
-//
-//        try {
-//            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
-//            nameValuePairs.add(new BasicNameValuePair("authCode", authCode));
-//            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-//
-//            HttpResponse response = httpClient.execute(httpPost);
-//            int statusCode = response.getStatusLine().getStatusCode();
-//            final String responseBody = EntityUtils.toString(response.getEntity());
-//        } catch (ClientProtocolException e) {
-//            Log.e(TAG, "Error sending auth code to backend.", e);
-//        } catch (IOException e) {
-//            Log.e(TAG, "Error sending auth code to backend.", e);
-//        }
-//
-//    }
+    public abstract void gmailLoginSuccess(GoogleSignInAccount googleSignInAccount);
 
-    public abstract void gmailLoginSuccess (GoogleSignInAccount googleSignInAccount);
+
+    private class GetAccessTokenTask extends AsyncTask<String, Void, GoogleTokenResponse> {
+        private ProgressDialog pd;
+
+        // onPreExecute called before the doInBackgroud start for display
+        // progress dialog.
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = ProgressDialog.show(BaseLoginActivity.this, "", "Loading", true,
+                    false); // Create and show Progress dialog
+        }
+
+        @Override
+        protected GoogleTokenResponse doInBackground(String... urls) {
+
+            try {
+                String CLIENT_SECRET_FILE = "client_secret.json";
+
+
+// Exchange auth code for access token
+                GoogleClientSecrets clientSecrets =
+                        GoogleClientSecrets.load(
+                                JacksonFactory.getDefaultInstance(), new BufferedReader(
+                                        new InputStreamReader(getResources().openRawResource(R.raw.client_secret))));
+
+                GoogleTokenResponse tokenResponse =
+                        new GoogleAuthorizationCodeTokenRequest(
+                                new NetHttpTransport(),
+                                JacksonFactory.getDefaultInstance(),
+                                "https://www.googleapis.com/oauth2/v4/token",
+                                clientSecrets.getDetails().getClientId(),
+                                clientSecrets.getDetails().getClientSecret(),
+                                urls[0],
+                                "")  // Specify the same redirect URI that you use with your web
+                                // app. If you don't have a web version of your app, you can
+                                // specify an empty string.
+                                .execute();
+
+                return tokenResponse;
+            } catch (IOException e) {
+                return null;
+            }
+        }
+
+        // onPostExecute displays the results of the doInBackgroud and also we
+        // can hide progress dialog.
+        @Override
+        protected void onPostExecute(GoogleTokenResponse tokenResponse) {
+            pd.dismiss();
+            if (tokenResponse != null) {
+                authenticateUser(tokenResponse.getAccessToken());
+                gmailLoginSuccess(googleSignInAccount);
+//                    useAccessTokenToCallAPI( tokenResponse);
+                Log.d(TAG, "onPostExecute: accessToken " + tokenResponse.getAccessToken());
+
+            }
+
+
+        }
+    }
+
+
+    private void authenticateUser(String googleAccessToken) {
+
+
+        ServiceGenerator.createService(ApiInterface.class)
+                .getAuthToken(googleAccessToken)
+                .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
+                    @Override
+                    public ObservableSource<FCMParameter> apply(AuthResponse authResponse) {
+
+                        ServiceGenerator.clearInstance();
+
+                        return ServiceGenerator
+                                .createService(ApiInterface.class)
+                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true, 3))
+                                .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
+                                    @Override
+                                    public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
+                                        if ("false".equals(fcmParameter.getIs_active())) {
+                                            throw new FirebaseTokenException("Failed to add token in server");
+                                        }
+
+                                        FieldSightUserSession.saveAuthToken(authResponse.getToken());
+                                        return Observable.just(fcmParameter);
+                                    }
+                                })
+                                ;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<FCMParameter>() {
+                    @Override
+                    public void onNext(FCMParameter fcmParameter) {
+//                        onLoginFinishedListener.onSuccess();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.e(e);
+                        String errorMessage = e.getMessage();
+                        if (e instanceof RetrofitException) {
+                            RetrofitException retrofitException = (RetrofitException) e;
+                            boolean hasErrorBody = retrofitException.getResponse().errorBody() != null;
+                            errorMessage = hasErrorBody ? retrofitException.getMessage() : retrofitException.getKind().getMessage();
+                        } else if (e instanceof SSLException) {
+                            errorMessage = "A SSL exception occurred";
+                        } else if (e instanceof FirebaseTokenException) {
+                            errorMessage = Collect.getInstance().getString(R.string.dialog_error_register);
+                        }
+
+//                        onLoginFinishedListener.onError(errorMessage);
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+//                        onLoginFinishedListener.onSuccess();
+                    }
+                });
+    }
+
+
+    private void useAccessTokenToCallAPI(@NonNull GoogleTokenResponse tokenResponse) throws IOException {
+        // Use access token to call API
+        GoogleCredential credential = new GoogleCredential().setAccessToken(tokenResponse.getAccessToken());
+        Drive drive =
+                new Drive.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential)
+                        .setApplicationName("Auth Code Exchange Demo")
+                        .build();
+        File file = drive.files().get("appfolder").execute();
+
+// Get profile info from ID token
+        GoogleIdToken idToken = tokenResponse.parseIdToken();
+        GoogleIdToken.Payload payload = idToken.getPayload();
+        String userId = payload.getSubject();  // Use this value as a key to identify a user.
+        String email = payload.getEmail();
+        boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+        String name = (String) payload.get("name");
+        String pictureUrl = (String) payload.get("picture");
+        String locale = (String) payload.get("locale");
+        String familyName = (String) payload.get("family_name");
+        String givenName = (String) payload.get("given_name");
+    }
 
 }
 
