@@ -13,5 +13,7 @@ public interface LoginModel {
 
     void login(String username, String password, OnLoginFinishedListener listener);
 
+    void loginViaGoogle(String googleAccessToken, String username, OnLoginFinishedListener listener);
+
 
 }

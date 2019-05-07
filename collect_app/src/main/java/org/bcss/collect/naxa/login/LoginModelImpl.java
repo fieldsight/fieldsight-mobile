@@ -30,6 +30,67 @@ public class LoginModelImpl implements LoginModel {
         authenticateUser(username, password, listener);
     }
 
+    @Override
+    public void loginViaGoogle(String googleAccessToken, String username,  OnLoginFinishedListener onLoginFinishedListener) {
+        ServiceGenerator.createService(ApiInterface.class)
+                .getAuthTokenUsingGoogle(googleAccessToken)
+                .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
+                    @Override
+                    public ObservableSource<FCMParameter> apply(AuthResponse authResponse) {
+
+                        ServiceGenerator.clearInstance();
+
+                        return ServiceGenerator
+                                .createService(ApiInterface.class)
+                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true, 3))
+                                .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
+                                    @Override
+                                    public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
+                                        if ("false".equals(fcmParameter.getIs_active())) {
+                                            throw new FirebaseTokenException("Failed to add token in server");
+                                        }
+
+                                        FieldSightUserSession.saveAuthToken(authResponse.getToken());
+                                        return Observable.just(fcmParameter);
+                                    }
+                                })
+                                ;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<FCMParameter>() {
+                    @Override
+                    public void onNext(FCMParameter fcmParameter) {
+                        onLoginFinishedListener.onSuccess();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        String errorMessage = e.getMessage();
+                        if (e instanceof RetrofitException) {
+                            RetrofitException retrofitException = (RetrofitException) e;
+                            boolean hasErrorBody = retrofitException.getResponse().errorBody() != null;
+                            errorMessage = hasErrorBody ? retrofitException.getMessage() : retrofitException.getKind().getMessage();
+                        } else if (e instanceof SSLException) {
+                            errorMessage = "A SSL exception occurred";
+                        } else if (e instanceof FirebaseTokenException) {
+                            errorMessage = Collect.getInstance().getString(R.string.dialog_error_register);
+                        }
+                        Timber.e(errorMessage);
+
+                        onLoginFinishedListener.onError(errorMessage);
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                        onLoginFinishedListener.onSuccess();
+                    }
+                });
+    }
+
     private void authenticateUser(String username, String password, OnLoginFinishedListener onLoginFinishedListener) {
 
 

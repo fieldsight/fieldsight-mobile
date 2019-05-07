@@ -16,9 +16,10 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import com.google.android.gms.common.SignInButton;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
@@ -29,7 +30,8 @@ import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.migrate.MigrationHelper;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.project.ProjectListActivity;
-import org.odk.collect.android.activities.CollectAbstractActivity;
+
+import timber.log.Timber;
 
 import static org.bcss.collect.android.application.Collect.allowClick;
 
@@ -38,7 +40,7 @@ import static org.bcss.collect.android.application.Collect.allowClick;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends CollectAbstractActivity implements LoginView {
+public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -50,6 +52,8 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
     private Button mEmailSignInButton;
     private RelativeLayout rootLayout;
     private ImageButton btnChangeUrl;
+    private SignInButton btnGmailLogin;
+    private boolean isFromGooleSignin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +68,23 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         btnChangeUrl = findViewById(R.id.btn_change_server_url);
         mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 if (allowClick(getClass().getName())) {
                     hideKeyboardInActivity(LoginActivity.this);
                     attemptLogin();
                 }
+            }
+        });
+
+        btnGmailLogin = findViewById(R.id.btn_gmail_login);
+        btnGmailLogin.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isFromGooleSignin = true;
+                showProgress(true);
+                gmailSignIn();
+                btnGmailLogin.setEnabled(false);
             }
         });
 
@@ -110,6 +124,13 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
             mEmailView.setText(BuildConfig.username);
             mPasswordView.setText(BuildConfig.password);
         }
+    }
+
+    @Override
+    public void gmailLoginSuccess(String googleAccessToken, String username) {
+        loginPresenter.googleOauthCredentials(googleAccessToken, username);
+        Timber.d("gmailLoginSuccess: Access tokenId "+googleAccessToken);
+
     }
 
     /**
@@ -201,8 +222,8 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
                 .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        attemptLogin();
                         dialog.dismiss();
+                        retryLogin();
                     }
                 })
                 .setNegativeButton(R.string.dialog_action_dismiss, null)
@@ -227,6 +248,14 @@ public class LoginActivity extends CollectAbstractActivity implements LoginView 
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
+        }
+    }
+
+    private void retryLogin(){
+        if (isFromGooleSignin){
+            gmailSignIn();
+        }else {
+            attemptLogin();
         }
     }
 }
