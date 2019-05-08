@@ -14,6 +14,17 @@ ant.condition(property: 'os', value: 'unix') {
     os(family: 'unix')
 }
 
+def getProps(String propName) {
+    def propsFile = rootProject.file('local.properties')
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        return props[propName]
+    } else {
+        return "";
+    }
+}
+
 // Build numbers were manually set until 1067
 def LEGACY_BUILD_NUMBER_OFFSET = 1067
 
@@ -125,16 +136,16 @@ android {
             minifyEnabled false
             shrinkResources false
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
-            buildConfigField 'String', "username", username
-            buildConfigField 'String', "password", password
+            buildConfigField 'String', "username", getProps("username")
+            buildConfigField 'String', "password", getProps("password")
         }
         internal {
             debuggable false
             minifyEnabled false
             shrinkResources false
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
-            buildConfigField 'String', "username", username
-            buildConfigField 'String', "password", password
+            buildConfigField 'String', "username", getProps("username")
+            buildConfigField 'String', "password", getProps("password")
 
         }
 
@@ -155,8 +166,8 @@ android {
             testCoverageEnabled(true)
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
 
-            buildConfigField 'String', "username", username
-            buildConfigField 'String', "password", password
+            buildConfigField 'String', "username", getProps("username")
+            buildConfigField 'String', "password", getProps("password")
 
         }
     }
