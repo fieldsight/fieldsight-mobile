@@ -85,13 +85,15 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
             try {
                 handleSignInResult(task);
             } catch (Exception e) {
+
                 e.printStackTrace();
             }
         }
 
     }
 
-    protected void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) throws Exception {
+    protected void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
+
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String authCode = account.getServerAuthCode();
@@ -99,13 +101,14 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
             updateUI(account);
         } catch (ApiException e) {
             e.printStackTrace();
+            gmailLoginFailed(e.getMessage());
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             updateUI(null);
         }
     }
 
 
-    public void updateUI(GoogleSignInAccount account) throws Exception {
+    public void updateUI(GoogleSignInAccount account)  {
         if (account == null) {
             return;
         }
@@ -114,6 +117,8 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
     }
 
     public abstract void gmailLoginSuccess(String googleAccessToken, String username);
+
+    public abstract void gmailLoginFailed(String errorMsg);
 
 
     private class GetAccessTokenTask extends AsyncTask<String, Void, GoogleTokenResponse> {
@@ -149,7 +154,6 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
                                 // app. If you don't have a web version of your app, you can
                                 // specify an empty string.
                                 .execute();
-
                 return tokenResponse;
             } catch (IOException e) {
                 return null;
@@ -159,9 +163,10 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         @Override
         protected void onPostExecute(GoogleTokenResponse tokenResponse) {
    
-            if (tokenResponse != null) {
+            if (tokenResponse == null) {
+                gmailLoginFailed("Unable to get Gmail auth token");
+            }else {
                 gmailLoginSuccess(tokenResponse.getAccessToken(), username);
-
                 Log.d(TAG, "onPostExecute: accessToken " + tokenResponse.getAccessToken());
 
             }
