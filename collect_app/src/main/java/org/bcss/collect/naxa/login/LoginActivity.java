@@ -133,6 +133,11 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     }
 
+    @Override
+    public void gmailLoginFailed(String errorMsg) {
+        showError(errorMsg);
+    }
+
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
