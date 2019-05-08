@@ -65,6 +65,8 @@
         android:xlargeScreens="true" />
 
     <application
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:name=".application.Collect"
         android:icon="@drawable/ic_launcher_fieldsight"
         android:installLocation="auto"
