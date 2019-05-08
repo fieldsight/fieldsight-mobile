@@ -57,6 +57,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.primitives.Longs;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -88,6 +89,7 @@ import org.bcss.collect.android.upload.AutoSendWorker;
 import org.bcss.collect.android.views.ODKView;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
+import org.bcss.collect.naxa.forms.FieldSightInstanceDAO;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
@@ -144,6 +146,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -151,6 +154,7 @@ import timber.log.Timber;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
+import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_MOVING_BACKWARDS;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
@@ -285,6 +289,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private ActivityAvailability activityAvailability = new ActivityAvailability(this);
 
     private boolean shouldOverrideAnimations;
+    public boolean saveSendAndExit = false;
+
 
     @Inject
     RxEventBus eventBus;
@@ -1261,6 +1267,23 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                                 if (saveAs.getText().length() < 1) {
                                     ToastUtils.showShortToast(R.string.save_as_error);
                                 } else {
+                                    saveDataToDisk(EXIT, instanceComplete
+                                            .isChecked(), saveAs.getText()
+                                            .toString());
+                                }
+                            }
+                        });
+
+                // Create 'send' button
+                endView.findViewById(R.id.save_send_exit_button)
+                        .setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // Form is marked as 'saved' here.
+                                if (saveAs.getText().length() < 1) {
+                                    ToastUtils.showShortToast(R.string.save_as_error);
+                                } else {
+                                    saveSendAndExit = true;
                                     saveDataToDisk(EXIT, instanceComplete
                                             .isChecked(), saveAs.getText()
                                             .toString());
@@ -2456,6 +2479,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     if (AutoSendWorker.formShouldBeAutoSent(formId, GeneralSharedPreferences.isAutoSendEnabled())) {
                         requestAutoSend();
                     }
+                    if (saveSendAndExit) {
+                        FieldSightInstanceDAO fieldSightInstanceDAO = new FieldSightInstanceDAO();
+                        uploadRecentForm(fieldSightInstanceDAO.getRecentFormId(formId));
+                    }
                 } else {
                     // Force writing of audit since we are exiting
                     formController.getTimerLogger().logTimerEvent(TimerLogger.EventTypes.FORM_EXIT, 0, null, false, true);
@@ -2502,6 +2529,12 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
                 break;
         }
+    }
+
+    private void uploadRecentForm(List<Long> recentFormIds) {
+        Intent i = new Intent(this, InstanceUploaderActivity.class);
+        i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(recentFormIds));
+        startActivityForResult(i, INSTANCE_UPLOADER);
     }
 
     @Override
