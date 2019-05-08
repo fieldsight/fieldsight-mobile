@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_large"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:checked="false"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+
+            android:id="@+id/tv_movies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/checkbox"
+
+            android:layout_toRightOf="@id/checkbox"
+            android:paddingTop="3dp"
+            android:text="Education Materials"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_download_item_desc"
+            style="@style/TextAppearance.AppCompat.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_movies"
+            android:layout_toEndOf="@+id/checkbox"
+            android:layout_toRightOf="@+id/checkbox"
+            android:text="Education Materials"
+            android:textColor="@color/color_subtext"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/update_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_download_item_desc"
+            android:layout_toEndOf="@+id/checkbox"
+            android:layout_toRightOf="@+id/checkbox"
+            android:text="Synced just now"
+            android:textColor="@color/green"
+            android:textSize="10dp" />
+
+    </RelativeLayout>
