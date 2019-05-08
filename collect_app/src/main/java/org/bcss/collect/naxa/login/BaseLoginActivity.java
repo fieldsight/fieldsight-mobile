@@ -163,7 +163,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         @Override
         protected void onPostExecute(GoogleTokenResponse tokenResponse) {
    
-            if (tokenResponse != null) {
+            if (tokenResponse == null) {
                 gmailLoginFailed("Unable to get Gmail auth token");
             }else {
                 gmailLoginSuccess(tokenResponse.getAccessToken(), username);
