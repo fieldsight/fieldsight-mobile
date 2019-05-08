@@ -75,6 +75,16 @@ the specific language governing permissions and limitations under the License.
             android:textAllCaps="false"
             android:textSize="21sp" />
 
+        <Button
+            android:id="@+id/save_send_exit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="20dp"
+            android:text="@string/send_data"
+            android:textAllCaps="false"
+            android:textSize="21sp" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

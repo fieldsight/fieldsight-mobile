@@ -423,6 +423,7 @@ public class InstancesDao {
         Collect.getInstance().getContentResolver().delete(InstanceProviderAPI.InstanceColumns.CONTENT_URI, null, null);
     }
 
+
     public int updateSiteId(String newSiteId, String oldSiteId) {
 
 

@@ -530,7 +530,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
         String sortOrder = InstanceProviderAPI.InstanceColumns.DISPLAY_NAME + " ASC";
 
-        Cursor c = getContext().getContentResolver().query(InstanceProviderAPI.InstanceColumns.CONTENT_URI, null, selection,
+        Cursor c = requireContext().getContentResolver().query(InstanceProviderAPI.InstanceColumns.CONTENT_URI, null, selection,
                 selectionArgs, sortOrder);
 
         ArrayList<Long> instanceIDs = new ArrayList<>();
@@ -542,7 +542,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
             instanceIDs.add((long) id);
             i = i + 1;
         }
-
+        c.close();
         return instanceIDs;
 
     }
