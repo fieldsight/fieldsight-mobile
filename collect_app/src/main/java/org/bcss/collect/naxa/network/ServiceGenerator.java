@@ -74,10 +74,7 @@ public class ServiceGenerator {
     }
 
     private static OkHttpClient createCacheablesOkHttpClient() {
-
-
         String token = SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
-
         int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(Collect.getInstance().getCacheDir(), cacheSize);
 

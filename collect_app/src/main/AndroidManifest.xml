@@ -359,6 +359,10 @@
         <activity
             android:name="org.bcss.collect.naxa.preferences.SettingsActivity"
             android:exported="true" />
+        <!-- v3 new activity list-->
+        <activity android:name="org.bcss.collect.naxa.v3.ProjectListActivityV3"
+            android:exported="true"/>
+        <!-- end of new activity list -->
     </application>
 
 </manifest>

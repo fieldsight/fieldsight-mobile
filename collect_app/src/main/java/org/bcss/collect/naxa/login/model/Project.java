@@ -277,4 +277,24 @@ public class Project implements Parcelable {
             return new Project[size];
         }
     };
+
+    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote,List<SiteMetaAttribute> metaAttributes) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.address = address;
+        this.lat = lat;
+        this.lon = lon;
+        this.siteClusters = siteClusters;
+        this.organizationName = organizationName;
+        this.organizationlogourl = organizationlogourl;
+        this.hasClusteredSites = hasClusteredSites;
+        this.typeId = typeId;
+        this.typeLabel = typeLabel;
+        this.phone = phone;
+        this.isSyncedWithRemote = isSyncedWithRemote;
+        this.siteMetaAttributes = metaAttributes;
+
+    }
+
 }

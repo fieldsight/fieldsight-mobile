@@ -50,6 +50,15 @@ public class APIEndpoint {
 
     public static final String GET_EXCHANGE_TOKEN = "/users/api/exchange/google-oauth2/";
 
+  public static class V3 {
 
+    public static final String GET_PROJECTS = "/fv3/api/supervisor/projects/";
+    public static final String GET_SITES = "/fv3/api/supervisor/sites/";
+  }
+
+  public class PARAMS {
+    public static final String PROJECT_ID = "project_id";
+    public static final String REGION_ID = "region_id";
+  }
 
 }

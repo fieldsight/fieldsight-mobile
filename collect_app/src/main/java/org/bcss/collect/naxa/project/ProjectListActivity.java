@@ -116,8 +116,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
         ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
         viewModel = ViewModelProviders.of(this, factory).get(ProjectViewModel.class);
-
-
         viewModel
                 .getAll(false)
                 .observe(ProjectListActivity.this, projects -> {
@@ -129,8 +127,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                     }
 
                 });
-
-
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView) {
