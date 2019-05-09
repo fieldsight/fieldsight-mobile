@@ -235,7 +235,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
                 new DownloadableItem(Constant.DownloadUID.SITE_TYPES, PENDING, "Site type(s)", "Download site types to filter staged forms"),
                 new DownloadableItem(Constant.DownloadUID.EDU_MATERIALS, PENDING, "Educational Materials", "Download educational attached for form(s)"),
                 new DownloadableItem(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your project"),
-                new DownloadableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
+                //new DownloadableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
                 new DownloadableItem(EDITED_SITES, PENDING, "Edited Site(s)", ""),
                 new DownloadableItem(OFFLINE_SITES, PENDING, "Offline Site(s)", ""),
         };

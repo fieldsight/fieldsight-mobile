@@ -19,7 +19,7 @@ import java.io.File;
                 SiteUploadHistory.class
 
         },
-        version = 9)
+        version = 10)
 
 public abstract class FieldSightConfigDatabase extends RoomDatabase {
 
