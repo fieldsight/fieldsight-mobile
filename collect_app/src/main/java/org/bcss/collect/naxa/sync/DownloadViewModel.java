@@ -67,7 +67,7 @@ public class DownloadViewModel extends ViewModel {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
-    void queueSyncTask(List<DownloadableItem> downloadableItems) {
+    public void queueSyncTask(List<DownloadableItem> downloadableItems) {
         for (DownloadableItem downloadableItem : downloadableItems) {
             downloadOneItem(downloadableItem.getUid());
         }
@@ -75,7 +75,7 @@ public class DownloadViewModel extends ViewModel {
     }
 
 
-    void cancelAllTask() {
+    public void cancelAllTask() {
         DisposableManager.dispose();
         DownloadableItemLocalSource.getINSTANCE().markAllAsPending();
     }

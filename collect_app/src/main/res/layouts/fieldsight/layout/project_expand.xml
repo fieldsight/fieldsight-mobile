@@ -101,11 +101,12 @@
             android:padding="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_star" />
+            app:tint="@color/red"
+            app:srcCompat="@android:drawable/stat_sys_download_done" />
 
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/expand_button"
+        <CheckBox
+            android:id="@+id/chkbx_sync"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_marginEnd="8dp"
@@ -127,7 +128,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:progress="20"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/expand_button" />
+            app:layout_constraintTop_toBottomOf="@id/chkbx_sync" />
 
         <TextView
             android:id="@+id/tv_download_counter"

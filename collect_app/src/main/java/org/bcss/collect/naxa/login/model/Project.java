@@ -62,6 +62,17 @@ public class Project implements Parcelable {
 
     private boolean isSyncedWithRemote;
 
+    @Expose
+    @Ignore
+    boolean checked = false;
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 
     @SerializedName("site_meta_attributes")
     private List<SiteMetaAttribute> siteMetaAttributes ;

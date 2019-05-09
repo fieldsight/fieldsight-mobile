@@ -86,6 +86,7 @@ public class ProjectRepository implements BaseRepository<Project> {
     }
 
 //added in v3
+//    TODO before sending daata in the call
     public void getAll(LoadProjectCallback callback) {
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()

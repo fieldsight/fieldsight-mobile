@@ -362,6 +362,7 @@
         <!-- v3 new activity list-->
         <activity android:name="org.bcss.collect.naxa.v3.ProjectListActivityV3"
             android:exported="true"/>
+        <activity android:name="org.bcss.collect.naxa.v3.network.SyncActivity" />
         <!-- end of new activity list -->
     </application>
 
