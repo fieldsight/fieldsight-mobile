@@ -95,6 +95,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     boolean auto = false;
     Set<Project> syncProjectList = new HashSet<>();
     RecyclerView.AdapterDataObserver observer;
+    boolean allSelected = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,15 +113,18 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                     if (projectList.get(i).isChecked())
                         selected++;
                 }
+
                 Timber.d("project list counter is %d", selected);
-                boolean hasProjectSelected = selected > 0;
-                cv_sync_project.setCardBackgroundColor(hasProjectSelected ?
-                        getResources().getColor(R.color.secondaryColor) :
-                        getResources().getColor(R.color.gray600));
-                cv_sync_project.setEnabled(hasProjectSelected);
-                tv_sync_project.setText(hasProjectSelected ?
-                        String.format(Locale.getDefault(), "Sync %d projects", selected) :
-                        "Select Projects");
+                if (selected > 0) {
+                    cv_sync_project.setVisibility(View.VISIBLE);
+                    cv_sync_project.setCardBackgroundColor(getResources().getColor(R.color.secondaryColor));
+                    tv_sync_project.setText(String.format(Locale.getDefault(), "Sync %d projects", selected));
+                } else {
+                    cv_sync_project.setVisibility(View.GONE);
+                    allSelected = false;
+                    invalidateOptionsMenu();
+                }
+
             }
         };
         adapter.registerAdapterDataObserver(observer);
@@ -130,6 +134,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         manageNodata(true);
         cv_sync_project.setOnClickListener(v -> openDownloadAActivity());
     }
+
 
     @Override
     protected void onDestroy() {
@@ -188,16 +193,28 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_refresh).setIcon(allSelected ?
+                R.drawable.ic_cancel_white_24dp :
+                R.drawable.ic_refresh_white);
+        menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
                 break;
             case R.id.action_refresh:
 //                check all the project and make auto true
+                allSelected = !allSelected;
                 for (Project project : projectList) {
-                    project.setChecked(true);
+                    project.setChecked(allSelected);
                 }
                 adapter.notifyDataSetChanged();
+                invalidateOptionsMenu();
                 break;
             case R.id.action_notificaiton:
                 NotificationListActivity.start(this);

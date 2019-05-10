@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.sync.ContentDownloadAdapter;
 import org.bcss.collect.naxa.sync.DownloadViewModel;
+import org.bcss.collect.naxa.v3.adapter.SyncAdapterv3;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import butterknife.BindView;
@@ -24,12 +26,16 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 public class SyncActivity extends CollectAbstractActivity  {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     @BindView(R.id.activity_download_recycler_view)
     RecyclerView recyclerView;
+
     @BindView(R.id.toggle_button)
     Button toggleButton;
+
     @BindView(R.id.download_button)
     Button downloadButton;
+
     @BindView(R.id.layout_network_connectivity)
     RelativeLayout layoutNetworkConnectivity;
 
@@ -37,6 +43,8 @@ public class SyncActivity extends CollectAbstractActivity  {
     private DownloadViewModel viewModel;
     private DisposableObserver<Boolean> connectivityDisposable;
     boolean isNetworkConnected = true;
+
+    SyncAdapterv3 adapterv3;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, SyncActivity.class);
@@ -54,13 +62,13 @@ public class SyncActivity extends CollectAbstractActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
         ButterKnife.bind(this);
+//        TODO: auto should be pass from the project list currently it is set as the fixed
 
-
-
-
-
-
-
+        adapterv3 = new SyncAdapterv3(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapterv3);
     }
+
+
 
 }

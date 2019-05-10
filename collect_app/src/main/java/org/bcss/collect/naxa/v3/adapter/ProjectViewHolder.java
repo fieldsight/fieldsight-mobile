@@ -37,8 +37,8 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
         primary_text.setText(project.getName());
         sub_text.setText(String.format("A project by %s", project.getOrganizationName()));
         project_address.setText(String.format("%s", project.getAddress()));
-
         chkbx_sync.setChecked(project.isChecked());
+        chkbx_sync.setVisibility(project.isChecked() ? View.VISIBLE : View.GONE);
     }
 
     void checkBoxChanged(int index, boolean isChecked) {

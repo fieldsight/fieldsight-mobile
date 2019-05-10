@@ -49,6 +49,7 @@
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:layout_marginBottom="8dp"
+            android:visibility="gone"
             app:cardBackgroundColor="@color/gray600"
             app:cardCornerRadius="2dp"
             app:cardUseCompatPadding="true"

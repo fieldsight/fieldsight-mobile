@@ -11,16 +11,21 @@ import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.common.DisposableManager;
+import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
+import org.bcss.collect.naxa.v3.network.ApiV3Interface;
+import org.bcss.collect.naxa.v3.network.SiteResponse;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -265,5 +270,25 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                         , SiteNameRequest, latRequest, lonRequest, identifierRequest, SitePhoneRequest,
                         SiteAddressRequest, SitePublicDescRequest, projectIdRequest, SiteRequest, regionId, metaAttrs);
 
+    }
+
+    public Single<SiteResponse> getSitesByProjectId(String projectId) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(APIEndpoint.PARAMS.PROJECT_ID, projectId);
+        return getSites(params);
+    }
+
+
+    public Single<SiteResponse> getSitesByRegionId(String regionId) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(APIEndpoint.PARAMS.REGION_ID, regionId);
+        return getSites(params);
+    }
+
+    private Single<SiteResponse> getSites(HashMap<String, String> params) {
+        return ServiceGenerator.getRxClient()
+                .create(ApiV3Interface.class)
+                .getSites(params)
+                .subscribeOn(Schedulers.io());
     }
 }
