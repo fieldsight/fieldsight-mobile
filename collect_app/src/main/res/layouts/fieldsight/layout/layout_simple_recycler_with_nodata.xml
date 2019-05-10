@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -38,6 +40,28 @@
                 android:textColor="@color/secondaryColor"
                 android:textSize="16sp" />
         </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_sync_project"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="@color/gray600"
+            app:cardCornerRadius="2dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="8dp">
+
+            <TextView
+                android:id="@+id/tv_sync_project"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Sync Projects"
+                android:textColor="#F5F5F5" />
+        </android.support.v7.widget.CardView>
 
     </RelativeLayout>
 </LinearLayout>

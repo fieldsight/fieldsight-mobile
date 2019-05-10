@@ -1,8 +1,14 @@
 package org.bcss.collect.naxa.v3;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +18,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
@@ -24,12 +31,15 @@ import org.bcss.collect.naxa.project.data.ProjectRepository;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.bcss.collect.naxa.v3.adapter.ProjectListAdapter;
 import org.bcss.collect.naxa.v3.network.LoadProjectCallback;
+import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.json.JSONArray;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -74,25 +84,58 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.cv_sync_project)
+    CardView cv_sync_project;
+
+    @BindView(R.id.tv_sync_project)
+    TextView tv_sync_project;
+
     ProjectListAdapter adapter = null;
     List<Project> projectList = new ArrayList<>();
     boolean auto = false;
     Set<Project> syncProjectList = new HashSet<>();
+    RecyclerView.AdapterDataObserver observer;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_simple_recycler_with_nodata);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
         setTitle("Projects");
-
         adapter = new ProjectListAdapter(projectList);
+        observer = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                int selected = 0;
+                for (int i = 0; i < projectList.size(); i++) {
+                    if (projectList.get(i).isChecked())
+                        selected++;
+                }
+                Timber.d("project list counter is %d", selected);
+                boolean hasProjectSelected = selected > 0;
+                cv_sync_project.setCardBackgroundColor(hasProjectSelected ?
+                        getResources().getColor(R.color.secondaryColor) :
+                        getResources().getColor(R.color.gray600));
+                cv_sync_project.setEnabled(hasProjectSelected);
+                tv_sync_project.setText(hasProjectSelected ?
+                        String.format(Locale.getDefault(), "Sync %d projects", selected) :
+                        "Select Projects");
+            }
+        };
+        adapter.registerAdapterDataObserver(observer);
         rv_projectlist.setLayoutManager(new LinearLayoutManager(this));
         rv_projectlist.setAdapter(adapter);
         getDataFromServer();
         manageNodata(true);
+        cv_sync_project.setOnClickListener(v -> openDownloadAActivity());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (observer != null)
+            adapter.unregisterAdapterDataObserver(observer);
     }
 
     void manageNodata(boolean loading) {
@@ -119,7 +162,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         });
     }
 
-//    clear the syncprojectlist and add the selected projects
+    //    Clear the sync project list and add the selected projects
     void manageSyncList() {
         syncProjectList.clear();
         for (Project project : projectList) {
@@ -129,12 +172,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         }
     }
 
-    void toggleProjectSelection() {
-
-    }
-
     void openDownloadAActivity() {
-        ContentDownloadActivity.start(this);
+        manageSyncList();
+        if (syncProjectList.size() > 0) {
+            SyncActivity.start(this);
+        } else {
+            ToastUtils.showShortToastInMiddle("Please select at least one projects");
+        }
     }
 
     @Override

@@ -23,8 +23,8 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
         return new ProjectViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.project_expand, viewGroup, false)) {
             @Override
             void checkBoxChanged(int index, boolean isChecked) {
-                super.checkBoxChanged(index, isChecked);
                  projectList.get(index).setChecked(isChecked);
+                 notifyDataSetChanged();
             }
 
             @Override

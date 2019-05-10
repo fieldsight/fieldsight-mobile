@@ -31,7 +31,7 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener((v) ->  itemClicked(getLayoutPosition()));
-        chkbx_sync.setOnCheckedChangeListener((buttonView, isChecked) -> checkBoxChanged(getLayoutPosition(), isChecked));
+        chkbx_sync.setOnClickListener((v -> checkBoxChanged(getLayoutPosition(), ((CheckBox)v).isChecked())));
     }
     void bindView(Project project) {
         primary_text.setText(project.getName());
