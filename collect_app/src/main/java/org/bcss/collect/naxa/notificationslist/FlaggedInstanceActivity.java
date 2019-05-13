@@ -397,12 +397,12 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private void showAskNewSubmissionConsentDialog(String message) {
         DialogFactory.createActionDialog(this, getString(R.string.dialog_title_cant_open_flagged_form), message)
-                .setPositiveButton(R.string.dialog_action_view_data, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
+//                .setPositiveButton(R.string.dialog_action_view_data, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                })
                 .setNegativeButton(R.string.dialog_action_make_new_submission, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
