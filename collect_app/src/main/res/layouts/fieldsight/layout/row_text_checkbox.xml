@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="48dp">
+
+    <CheckBox
+        android:id="@+id/chkbx_sync_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#212121"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/tv_secondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Syncing data"
+            android:textColor="@color/green"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

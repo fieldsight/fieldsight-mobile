@@ -93,7 +93,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     ProjectListAdapter adapter = null;
     List<Project> projectList = new ArrayList<>();
     boolean auto = false;
-    Set<Project> syncProjectList = new HashSet<>();
     RecyclerView.AdapterDataObserver observer;
     boolean allSelected = false;
 
@@ -168,19 +167,25 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     }
 
     //    Clear the sync project list and add the selected projects
-    void manageSyncList() {
-        syncProjectList.clear();
+    ArrayList<Project> manageSyncList() {
+        ArrayList<Project> syncProjectList = new ArrayList<>();
         for (Project project : projectList) {
             if (project.isChecked()) {
                 syncProjectList.add(project);
             }
         }
+        return syncProjectList;
     }
 
     void openDownloadAActivity() {
-        manageSyncList();
+        ArrayList<Project> syncProjectList = manageSyncList();
         if (syncProjectList.size() > 0) {
-            SyncActivity.start(this);
+           Intent intent = new Intent(this, SyncActivity.class);
+           Bundle bundle = new Bundle();
+           bundle.putParcelableArrayList("projects", syncProjectList);
+           bundle.putBoolean("auto", true);
+           intent.putExtra("params", bundle);
+           startActivity(intent);
         } else {
             ToastUtils.showShortToastInMiddle("Please select at least one projects");
         }

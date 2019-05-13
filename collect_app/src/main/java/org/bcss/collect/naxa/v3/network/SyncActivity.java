@@ -8,22 +8,29 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.sync.ContentDownloadAdapter;
 import org.bcss.collect.naxa.sync.DownloadViewModel;
 import org.bcss.collect.naxa.v3.adapter.SyncAdapterv3;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
+
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.observers.DisposableObserver;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 
-public class SyncActivity extends CollectAbstractActivity  {
+public class SyncActivity extends CollectAbstractActivity implements SyncAdapterCallback  {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -43,32 +50,68 @@ public class SyncActivity extends CollectAbstractActivity  {
     private DownloadViewModel viewModel;
     private DisposableObserver<Boolean> connectivityDisposable;
     boolean isNetworkConnected = true;
-
     SyncAdapterv3 adapterv3;
+    boolean auto = true;
 
-    public static void start(Context context) {
-        Intent intent = new Intent(context, SyncActivity.class);
-        context.startActivity(intent);
-    }
-
-    public static void start(Activity context, int outOfSyncUid) {
-        Intent intent = new Intent(context, SyncActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, outOfSyncUid);
-        context.startActivity(intent);
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download);
         ButterKnife.bind(this);
-//        TODO: auto should be pass from the project list currently it is set as the fixed
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        adapterv3 = new SyncAdapterv3(true);
+        /// getting the selected project list from the projectlist activity
+        Bundle bundle = getIntent().getBundleExtra("params");
+        List<Project> projectList = bundle.getParcelableArrayList("projects");
+        auto = bundle.getBoolean("auto", true);
+
+
+        if (projectList == null || projectList.size() == 0 ) {
+            return;
+        }
+        setTitle(String.format(Locale.getDefault(), "Projects (%d)", projectList.size()));
+        adapterv3 = new SyncAdapterv3(auto, projectList);
+        adapterv3.setAdapterCallback(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapterv3);
+
+        findViewById(R.id.download_button).setOnClickListener(v -> {
+            ToastUtils.showShortToast("Download starts");
+        });
+
+        findViewById(R.id.toggle_button).setOnClickListener(v -> {
+            adapterv3.toggleAllSelection();
+        });
+
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
+    @Override
+    public void onRequestInterrupt(Project project) {
+//        TODO: interrupt the download of this project
+    }
+
+    @Override
+    public void childDownloadListSelectionChange(Project project, List<SyncAdapterv3.Syncable> list) {
+//    add this request in download queue
+        Timber.i("SyncActivity data = " + readaableSyncParams(project.getName(), list));
+    }
+
+    private String readaableSyncParams(String projectName, List<SyncAdapterv3.Syncable> list) {
+       String logString = "";
+        for(SyncAdapterv3.Syncable syncable : list) {
+           logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.getSync();
+        }
+        return String.format("%s \n params = %s", projectName, logString);
+    }
 }
