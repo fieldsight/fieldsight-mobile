@@ -5,8 +5,10 @@ import android.os.Environment;
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
+import org.bcss.collect.naxa.common.exception.DownloadRunningException;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.generalforms.data.Em;
 import org.bcss.collect.naxa.generalforms.data.EmImage;
@@ -19,6 +21,7 @@ import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.SubStage;
 import org.bcss.collect.naxa.common.DisposableManager;
+import org.bcss.collect.naxa.sync.DownloadableItem;
 import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
 
 import org.odk.collect.android.utilities.FileUtils;
@@ -26,10 +29,12 @@ import org.odk.collect.android.utilities.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
+import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -138,7 +143,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS,message);
+                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS, message);
 
                     }
                 });
@@ -162,19 +167,47 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
         return savePath;
     }
 
-    private Observable<Em> scheduledFormEducational() {
-        return ProjectLocalSource.getInstance()
-                .getProjectsMaybe()
-                .map(new Function<List<Project>, List<Project>>() {
-                    @Override
-                    public List<Project> apply(List<Project> projects) throws Exception {
-                        if (projects.isEmpty()) {
-                            throw new RuntimeException("Download project(s) site(s) first");
-                        }
-                        return projects;
+    private Observable<DownloadableItem> waitIfProjectsDownloading() {
+        return DownloadableItemLocalSource.getINSTANCE()
+                .getStatusById(Constant.DownloadUID.PROJECT_SITES)
+                .map(syncableItem -> {
+                    if (syncableItem.getDownloadingStatus() == Constant.DownloadStatus.RUNNING) {
+                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
+
                     }
+                    return syncableItem;
                 })
                 .toObservable()
+                .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Observable<Throwable> throwableObservable) {
+                        return throwableObservable.flatMap(new Function<Throwable, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(Throwable throwable) {
+                                if (throwable instanceof DownloadRunningException) {
+                                    Timber.i("Polling for project sites");
+                                    return Observable.timer(3, TimeUnit.SECONDS);
+                                }
+
+                                return Observable.just(throwable);
+                            }
+                        });
+
+                    }
+                });
+    }
+
+    private Observable<Em> scheduledFormEducational() {
+
+        return waitIfProjectsDownloading().
+                flatMapSingle((Function<DownloadableItem, SingleSource<List<Project>>>) syncableItem -> ProjectLocalSource.getInstance()
+                        .getProjectsMaybe())
+                .map(projects -> {
+                    if (projects.isEmpty()) {
+                        throw new RuntimeException("Download project(s) site(s) first");
+                    }
+                    return projects;
+                })
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<ScheduleForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms("1", project.getId()))
                 .flatMapIterable((Function<ArrayList<ScheduleForm>, Iterable<ScheduleForm>>) scheduleForms -> scheduleForms)
@@ -198,18 +231,15 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     }
 
     private Observable<Em> substageFormEducational() {
-        return ProjectLocalSource.getInstance()
-                .getProjectsMaybe()
-                .map(new Function<List<Project>, List<Project>>() {
-                    @Override
-                    public List<Project> apply(List<Project> projects) throws Exception {
-                        if (projects.isEmpty()) {
-                            throw new RuntimeException("Download project(s) site(s) first");
-                        }
-                        return projects;
+        return waitIfProjectsDownloading().
+                flatMapSingle((Function<DownloadableItem, SingleSource<List<Project>>>) syncableItem -> ProjectLocalSource.getInstance()
+                        .getProjectsMaybe())
+                .map(projects -> {
+                    if (projects.isEmpty()) {
+                        throw new RuntimeException("Download project(s) site(s) first");
                     }
+                    return projects;
                 })
-                .toObservable()
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<Stage>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getStageSubStage("1", project.getId()))
                 .flatMapIterable((Function<ArrayList<Stage>, Iterable<Stage>>) stages -> stages)
@@ -237,18 +267,15 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
     private Observable<Em> generalFormEducational() {
 
-        return ProjectLocalSource.getInstance()
-                .getProjectsMaybe()
-                .map(new Function<List<Project>, List<Project>>() {
-                    @Override
-                    public List<Project> apply(List<Project> projects) throws Exception {
-                        if (projects.isEmpty()) {
-                            throw new RuntimeException("Download project(s) site(s) first");
-                        }
-                        return projects;
+        return waitIfProjectsDownloading().
+                flatMapSingle((Function<DownloadableItem, SingleSource<List<Project>>>) syncableItem -> ProjectLocalSource.getInstance()
+                        .getProjectsMaybe())
+                .map(projects -> {
+                    if (projects.isEmpty()) {
+                        throw new RuntimeException("Download project(s) site(s) first");
                     }
+                    return projects;
                 })
-                .toObservable()
                 .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .flatMap((Function<Project, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable("1", project.getId()))
                 .flatMapIterable((Function<ArrayList<GeneralForm>, Iterable<GeneralForm>>) generalForms -> generalForms)

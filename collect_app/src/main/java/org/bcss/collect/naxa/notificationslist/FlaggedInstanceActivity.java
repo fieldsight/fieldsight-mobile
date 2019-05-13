@@ -82,7 +82,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     Context context = this;
 
-    TextView noMessage, tvFormName, tvFormDesc, tvComment, tvFormStatus;
+    TextView tvFormName, tvFormDesc, tvComment, tvFormStatus;
     RecyclerView recyclerViewImages;
     ImageButton imbStatus;
     RelativeLayout relativeStatus;
@@ -133,6 +133,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         formBox.setOnClickListener(this);
 
         loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
+
         formResult = new HashMap<>();
         setupData(loadedFieldSightNotification);
         setupSiteCard(loadedFieldSightNotification);
@@ -211,11 +212,8 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         String formStatus = fieldSightNotification.getFormStatus();
 
         if (TextUtils.isEmpty(fieldSightNotification.getComment())) {
-            noMessage.setText(R.string.comments_default_comment);
-            noMessage.setVisibility(View.VISIBLE);
             tvComment.setText("");
         } else {
-            noMessage.setVisibility(View.GONE);
             tvComment.setText(comment);
         }
 
