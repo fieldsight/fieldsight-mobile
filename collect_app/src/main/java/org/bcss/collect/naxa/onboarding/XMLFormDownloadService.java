@@ -22,6 +22,8 @@ import org.bcss.collect.naxa.common.exception.DownloadRunningException;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
+import org.bcss.collect.naxa.sync.DownloadableItem;
+import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.bcss.collect.naxa.task.FieldSightDownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
@@ -99,10 +101,10 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         message = new Bundle();
         receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
 
-        SyncRepository.getInstance()
+        DownloadableItemLocalSource.getINSTANCE()
                 .getStatusById(Constant.DownloadUID.PROJECT_SITES)
                 .map(syncableItem -> {
-                    if (syncableItem.isProgressStatus()) {
+                    if (syncableItem.getDownloadingStatus() == Constant.DownloadStatus.RUNNING) {
                         throw new DownloadRunningException("Waiting until project and sites are downloaded");
 
                     }
@@ -126,9 +128,9 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
                     }
                 })
-                .flatMapSingle(new Function<SyncableItem, SingleSource<List<Project>>>() {
+                .flatMapSingle(new Function<DownloadableItem, SingleSource<List<Project>>>() {
                     @Override
-                    public SingleSource<List<Project>> apply(SyncableItem syncableItem) {
+                    public SingleSource<List<Project>> apply(DownloadableItem syncableItem) {
                         return ProjectLocalSource.getInstance()
                                 .getProjectsMaybe();
                     }
