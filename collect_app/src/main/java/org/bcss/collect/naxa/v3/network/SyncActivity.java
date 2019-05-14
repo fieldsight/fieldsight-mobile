@@ -106,9 +106,9 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     // this class will manage the sync list to determine which should be synced
     ArrayList<Syncable> createList() {
         ArrayList<Syncable> list = new ArrayList<Syncable>() {{
-            add(new Syncable("Regions and sites", auto, false, false));
-            add(new Syncable("Forms", auto, false, false));
-            add(new Syncable("Materials", auto, false, false));
+            add(0, new Syncable("Regions and sites", auto, false, false));
+            add(1, new Syncable("Forms", auto, false, false));
+            add(2, new Syncable("Materials", auto, false, false));
         }};
         return list;
     }
