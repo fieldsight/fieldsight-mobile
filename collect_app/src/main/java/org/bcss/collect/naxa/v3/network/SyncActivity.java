@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.v3.network;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,10 +10,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.sync.ContentDownloadAdapter;
 import org.bcss.collect.naxa.sync.DownloadViewModel;
@@ -42,6 +45,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     @BindView(R.id.download_button)
     Button downloadButton;
+
 
     @BindView(R.id.layout_network_connectivity)
     RelativeLayout layoutNetworkConnectivity;
@@ -79,11 +83,14 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
         findViewById(R.id.download_button).setOnClickListener(v -> {
             ToastUtils.showShortToast("Download starts");
-        });
 
-        findViewById(R.id.toggle_button).setOnClickListener(v -> {
-            adapterv3.toggleAllSelection();
         });
+        toggleButton.setVisibility(View.GONE);
+
+/// hiding the toggle selection button
+//        findViewById(R.id.toggle_button).setOnClickListener(v -> {
+//            adapterv3.toggleAllSelection();
+//        });
 
     }
 
@@ -99,6 +106,13 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @Override
     public void onRequestInterrupt(Project project) {
 //        TODO: interrupt the download of this project
+        DialogFactory.createActionDialog(this, getString(R.string.app_name), "Are you sure you want to interrupt " + project.getName())
+                .setPositiveButton("Yes", (dialog, which) -> {
+//                    TODO : remove from the download queue
+                })
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();;
     }
 
     @Override

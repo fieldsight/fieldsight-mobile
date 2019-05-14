@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.v3.network.SyncAdapterCallback;
+import org.bcss.collect.naxa.v3.network.Syncable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,26 +35,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     SyncAdapterCallback callback = null;
 
     // this class will manage the sync list to determine which should be synced
-    public class Syncable {
-        String title;
-        boolean sync;
 
-        public String getTitle(){
-            return this.title;
-        }
-        public boolean getSync() {
-            return this.sync;
-        }
-
-        /**
-         * @param title - title that is show in the list
-         * @param sync  - selector to include in the downlod or not. if no need to download {@code sync = false }
-         */
-        public Syncable(String title, boolean sync) {
-            this.title = title;
-            this.sync = sync;
-        }
-    }
 
     ArrayList<Syncable> createList() {
         ArrayList<Syncable> list = new ArrayList<Syncable>() {{
@@ -97,7 +79,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
                 Timber.i("Syncadapterv3, project details clicked");
                 if(callback != null) {
                     Project p = selectedProjectList.get(parentPos);
-                    syncableMap.get(p.getId()).get(pos).sync = ! syncableMap.get(p.getId()).get(pos).sync;
+                    syncableMap.get(p.getId()).get(pos).toggleSync();
                     notifyDataSetChanged();
                     callback.childDownloadListSelectionChange(p, syncableMap.get(p.getId()));
                 }

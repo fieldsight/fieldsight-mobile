@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.v3.network.Syncable;
 
 import java.util.List;
 
@@ -55,19 +56,19 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
         tv_project_other.setText(String.format("A project by %s", project.getOrganizationName()));
     }
 
-    public void manageChildView(List<SyncAdapterv3.Syncable> syncableList){
+    public void manageChildView(List<Syncable> syncableList){
         Timber.i("SyncViewHolder, syncablelistsize = %d", syncableList.size());
-        lv_options.setAdapter(new ArrayAdapter<SyncAdapterv3.Syncable>(itemView.getContext(), R.layout.row_text_checkbox, syncableList) {
+        lv_options.setAdapter(new ArrayAdapter<Syncable>(itemView.getContext(), R.layout.row_text_checkbox, syncableList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 if(convertView == null) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_text_checkbox, null);
                 }
-                SyncAdapterv3.Syncable syncable = getItem(position);
+                Syncable syncable = getItem(position);
                 CheckBox chkbx=  convertView.findViewById(R.id.chkbx_sync_select);
-                chkbx.setChecked(syncable.sync);
-                ((TextView)convertView.findViewById(R.id.tv_name)).setText(syncable.title);
+                chkbx.setChecked(syncable.getSync());
+                ((TextView)convertView.findViewById(R.id.tv_name)).setText(syncable.getTitle());
                 convertView.setOnClickListener(v -> {
                     Timber.i("SyncViewHolder clicked");
                     downloadListItemClicked(getLayoutPosition(), position);

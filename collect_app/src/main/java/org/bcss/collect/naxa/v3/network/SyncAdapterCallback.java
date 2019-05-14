@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface SyncAdapterCallback {
     void onRequestInterrupt(Project project);
-    void childDownloadListSelectionChange(Project project, List<SyncAdapterv3.Syncable> list);
+    void childDownloadListSelectionChange(Project project, List<Syncable> list);
 }
