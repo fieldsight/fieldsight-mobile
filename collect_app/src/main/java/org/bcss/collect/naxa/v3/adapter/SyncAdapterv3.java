@@ -30,44 +30,34 @@ import timber.log.Timber;
 
 public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     List<Project> selectedProjectList;
-    HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
+    HashMap<String, List<Syncable>> syncableMap;
     boolean auto;
     SyncAdapterCallback callback = null;
+    boolean disableItemClick = false;
 
-    // this class will manage the sync list to determine which should be synced
-
-
-    ArrayList<Syncable> createList() {
-        ArrayList<Syncable> list = new ArrayList<Syncable>() {{
-            add(new Syncable("Regions and sites", auto));
-            add(new Syncable("Forms", auto));
-            add(new Syncable("Materials", auto));
-        }};
-        return list;
-    }
-
-    void createSyncableList() {
-        for (Project project : selectedProjectList) {
-            syncableMap.put(project.getId(), createList());
-        }
-    }
-
-
-    public SyncAdapterv3(boolean auto, List<Project> selectedProjectList) {
+    public SyncAdapterv3(boolean auto, List<Project> selectedProjectList, HashMap<String, List<Syncable>> syncableMap) {
         this.auto = auto;
         this.selectedProjectList = selectedProjectList;
-        this.createSyncableList();
+        this.syncableMap = syncableMap;
     }
 
-    public void toggleAllSelection() {
+    public void toggleAllSelection(HashMap<String, List<Syncable>> syncableMap) {
         syncableMap.clear();
         this.auto = ! auto;
-        createSyncableList();
+        this.syncableMap = syncableMap;
         notifyDataSetChanged();
     }
 
     public void setAdapterCallback(SyncAdapterCallback callback) {
         this.callback = callback;
+    }
+
+    public void disableItemClick(){
+        this.disableItemClick = true;
+    }
+
+    public void enableItemClick() {
+        this.disableItemClick = false;
     }
 
     @NonNull
@@ -77,7 +67,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
             @Override
             public void downloadListItemClicked(int parentPos, int pos) {
                 Timber.i("Syncadapterv3, project details clicked");
-                if(callback != null) {
+                if(callback != null && !disableItemClick) {
                     Project p = selectedProjectList.get(parentPos);
                     syncableMap.get(p.getId()).get(pos).toggleSync();
                     notifyDataSetChanged();

@@ -23,6 +23,8 @@ import org.bcss.collect.naxa.v3.adapter.SyncAdapterv3;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,7 +58,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     boolean isNetworkConnected = true;
     SyncAdapterv3 adapterv3;
     boolean auto = true;
-
+    HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,22 +70,29 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
         /// getting the selected project list from the projectlist activity
         Bundle bundle = getIntent().getBundleExtra("params");
-        List<Project> projectList = bundle.getParcelableArrayList("projects");
+        ArrayList<Project> projectList = bundle.getParcelableArrayList("projects");
         auto = bundle.getBoolean("auto", true);
-
 
         if (projectList == null || projectList.size() == 0 ) {
             return;
         }
+
         setTitle(String.format(Locale.getDefault(), "Projects (%d)", projectList.size()));
-        adapterv3 = new SyncAdapterv3(auto, projectList);
+
+        /// create the map of the syncing
+        createSyncableList(projectList);
+        adapterv3 = new SyncAdapterv3(auto, projectList, syncableMap);
         adapterv3.setAdapterCallback(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapterv3);
 
         findViewById(R.id.download_button).setOnClickListener(v -> {
             ToastUtils.showShortToast("Download starts");
-
+//            send the list of project with syncable details
+            Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+            syncIntent.putParcelableArrayListExtra("projects", projectList);
+            syncIntent.putExtra("selection", syncableMap);
+            startService(syncIntent);
         });
         toggleButton.setVisibility(View.GONE);
 
@@ -94,6 +103,21 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     }
 
+    // this class will manage the sync list to determine which should be synced
+    ArrayList<Syncable> createList() {
+        ArrayList<Syncable> list = new ArrayList<Syncable>() {{
+            add(new Syncable("Regions and sites", auto, false, false));
+            add(new Syncable("Forms", auto, false, false));
+            add(new Syncable("Materials", auto, false, false));
+        }};
+        return list;
+    }
+
+    void createSyncableList(List<Project> selectedProjectList) {
+        for (Project project : selectedProjectList) {
+            syncableMap.put(project.getId(), createList());
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -109,21 +133,24 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         DialogFactory.createActionDialog(this, getString(R.string.app_name), "Are you sure you want to interrupt " + project.getName())
                 .setPositiveButton("Yes", (dialog, which) -> {
 //                    TODO : remove from the download queue
-                })
+//                    remove the project from queue
+                    syncableMap.remove(project.getId());
+               })
                 .setNegativeButton("Cancel", null)
                 .create()
-                .show();;
+                .show();
     }
 
     @Override
-    public void childDownloadListSelectionChange(Project project, List<SyncAdapterv3.Syncable> list) {
+    public void childDownloadListSelectionChange(Project project, List<Syncable> list) {
 //    add this request in download queue
         Timber.i("SyncActivity data = " + readaableSyncParams(project.getName(), list));
+        syncableMap.put(project.getId(), list);
     }
 
-    private String readaableSyncParams(String projectName, List<SyncAdapterv3.Syncable> list) {
+    private String readaableSyncParams(String projectName, List<Syncable> list) {
        String logString = "";
-        for(SyncAdapterv3.Syncable syncable : list) {
+        for(Syncable syncable : list) {
            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.getSync();
         }
         return String.format("%s \n params = %s", projectName, logString);

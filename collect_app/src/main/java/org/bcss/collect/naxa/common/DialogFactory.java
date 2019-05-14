@@ -175,7 +175,6 @@ public final class DialogFactory {
 //        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        dialog.setCancelable(false);
 //        dialog.setContentView(view);
-
 //        return dialog;
     }
 

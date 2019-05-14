@@ -1,8 +1,18 @@
 package org.bcss.collect.naxa.v3.network;
 
-public class Syncable {
+import java.io.Serializable;
+
+/**
+ * @Author: Yubaraj Poudel
+ * @Since: 14/05/2019
+ * this Model will handle the sync process of all the content
+ */
+public class Syncable implements Serializable {
         String title;
-        boolean sync;
+//        this flag is used to enable it to sync or not
+        boolean sync = true;
+        boolean completed = false;
+        boolean started = false;
 
         public String getTitle(){
             return this.title;
@@ -22,9 +32,18 @@ public class Syncable {
         /**
          * @param title - title that is show in the list
          * @param sync  - selector to include in the downlod or not. if no need to download {@code sync = false }
+         * @param completed - flag to show sync process has been completed or not
+         * @param started -  flag to show sync process is started or not
          */
-        public Syncable(String title, boolean sync) {
+        public Syncable(String title, boolean sync, boolean completed, boolean started) {
             this.title = title;
             this.sync = sync;
+            this.completed = completed;
+            this.started = started;
         }
+
+        public Syncable(String title) {
+            this.title = title;
+        }
+
     }

@@ -3,6 +3,8 @@ package org.bcss.collect.naxa.login.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -10,6 +12,9 @@ import android.support.annotation.NonNull;
 import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.bcss.collect.naxa.v3.network.Region;
+import org.bcss.collect.naxa.v3.network.RegionConverter;
 
 import java.util.List;
 
@@ -65,6 +70,17 @@ public class Project implements Parcelable {
     @Expose
     @Ignore
     boolean checked = false;
+
+    public List<Region> getRegionList() {
+        return regionList;
+    }
+
+    public void setRegionList(List<Region> regionList) {
+        this.regionList = regionList;
+    }
+
+    @TypeConverters(RegionConverter.class)
+    List<Region> regionList;
 
     public boolean isChecked() {
         return checked;

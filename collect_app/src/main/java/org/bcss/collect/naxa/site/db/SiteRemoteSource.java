@@ -49,6 +49,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     private SiteDao dao;
 
 
+
     public static SiteRemoteSource getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new SiteRemoteSource();
@@ -65,7 +66,6 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
 
     public void updateAllEditedSite() {
-
         DisposableSingleObserver<List<Site>> dis = SiteLocalSource.getInstance()
                 .getAllByStatus(IS_EDITED)
                 .doOnDispose(() -> DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDITED_SITES))
@@ -285,7 +285,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         return getSites(params);
     }
 
-    private Single<SiteResponse> getSites(HashMap<String, String> params) {
+    public Single<SiteResponse> getSites(HashMap<String, String> params) {
         return ServiceGenerator.getRxClient()
                 .create(ApiV3Interface.class)
                 .getSites(params)
