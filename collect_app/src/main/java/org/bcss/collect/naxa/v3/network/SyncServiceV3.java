@@ -58,12 +58,12 @@ public class SyncServiceV3 extends IntentService {
                     .subscribe(new DisposableObserver<List<MySites>>() {
                         @Override
                         public void onNext(List<MySites> mySites) {
-                            Timber.i("Downloaded %d sites",mySites.size());
+                            Timber.i("Downloaded %d sites", mySites.size());
                         }
 
                         @Override
                         public void onError(Throwable e) {
-
+                            Timber.e(e);
                         }
 
                         @Override
@@ -105,10 +105,11 @@ public class SyncServiceV3 extends IntentService {
                         return shouldDownloadSites;
                     }
                 })
+
                 .map(new Function<Project, List<Region>>() {
                     @Override
                     public List<Region> apply(Project project) throws Exception {
-                        return project.getRegionList();
+                        return project.getRegionList() == null ? new ArrayList<>() : project.getRegionList();
                     }
                 })
                 .flatMapIterable(new Function<List<Region>, Iterable<Region>>() {

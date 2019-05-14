@@ -38,6 +38,7 @@ import org.bcss.collect.naxa.substages.data.SubStageDAO;
 import org.bcss.collect.naxa.survey.SurveyForm;
 import org.bcss.collect.naxa.survey.SurveyFormDAO;
 import org.bcss.collect.naxa.sync.SyncOLD;
+import org.bcss.collect.naxa.v3.network.RegionConverter;
 
 import java.io.File;
 
@@ -60,7 +61,7 @@ import java.io.File;
 
         },
         version = 10)
-@TypeConverters({SiteMetaAttributesTypeConverter.class})
+@TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
 

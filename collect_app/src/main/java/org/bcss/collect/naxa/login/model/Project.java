@@ -79,6 +79,7 @@ public class Project implements Parcelable {
         this.regionList = regionList;
     }
 
+    @SerializedName("project_region")
     @TypeConverters(RegionConverter.class)
     List<Region> regionList;
 
@@ -246,6 +247,7 @@ public class Project implements Parcelable {
         dest.writeString(this.phone);
         dest.writeByte(this.isSyncedWithRemote ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.siteMetaAttributes);
+        dest.writeTypedList(this.regionList);
     }
 
     @Override
@@ -267,7 +269,8 @@ public class Project implements Parcelable {
                 Objects.equal(typeId, project.typeId) &&
                 Objects.equal(typeLabel, project.typeLabel) &&
                 Objects.equal(phone, project.phone) &&
-                Objects.equal(siteMetaAttributes, project.siteMetaAttributes);
+                Objects.equal(siteMetaAttributes, project.siteMetaAttributes) &
+                Objects.equal(regionList, project.regionList);
     }
 
     @Override
@@ -291,6 +294,7 @@ public class Project implements Parcelable {
         this.phone = in.readString();
         this.isSyncedWithRemote = in.readByte() != 0;
         this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
+        this.regionList = in.createTypedArrayList(Region.CREATOR);
     }
 
     public static final Creator<Project> CREATOR = new Creator<Project>() {

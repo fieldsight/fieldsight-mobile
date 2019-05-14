@@ -16,6 +16,7 @@ import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.v3.network.LoadProjectCallback;
 import org.bcss.collect.naxa.v3.network.ProjectBuilder;
 import org.bcss.collect.naxa.v3.network.ProjectRemoteSource;
+import org.bcss.collect.naxa.v3.network.Region;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,7 +96,8 @@ public class ProjectRepository implements BaseRepository<Project> {
                 .subscribe(new DisposableSingleObserver<List<Project>>() {
                     @Override
                     public void onSuccess(List<Project> projects) {
-                        boolean isDataNotAvailable = projects.isEmpty();
+//                        boolean isDataNotAvailable = projects.isEmpty();
+                        boolean isDataNotAvailable = true;
                         if (isDataNotAvailable) {
                             getProjectFromRemoteSource(callback);
                         } else {
@@ -126,19 +128,28 @@ public class ProjectRepository implements BaseRepository<Project> {
                 .map(new Function<JSONObject, Project>() {
                     @Override
                     public Project apply(JSONObject json) throws Exception {
-                        return new ProjectBuilder()
+                        Project p = new ProjectBuilder()
                                 .setName(json.getString("name"))
                                 .setId(json.getString("id"))
                                 .setAddress(json.getString("address"))
                                 .setMetaAttributes(mapJSONtoMetaArributes(json.getJSONArray("meta_attributes")))
                                 .setOrganizationName(json.getJSONObject("organization").getString("name"))
                                 .createProject();
+
+                        p.setRegionList(mapJSONtoRegionList(json.getJSONArray("project_region")));
+                        return p;
                     }
 
                     private List<SiteMetaAttribute> mapJSONtoMetaArributes(JSONArray jsonArray) {
                         Type siteMetaAttrsList = new TypeToken<List<SiteMetaAttribute>>() {
                         }.getType();
                         return new Gson().fromJson(jsonArray.toString(), siteMetaAttrsList);
+                    }
+
+                    private List<Region> mapJSONtoRegionList(JSONArray jsonArray) {
+                        Type regionType = new TypeToken<List<Region>>() {
+                        }.getType();
+                        return new Gson().fromJson(jsonArray.toString(), regionType);
                     }
                 })
                 .toList()

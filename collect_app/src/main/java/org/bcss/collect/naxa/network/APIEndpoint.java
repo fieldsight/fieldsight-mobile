@@ -52,8 +52,8 @@ public class APIEndpoint {
 
   public static class V3 {
 
-    public static final String GET_PROJECTS = "/fv3/api/supervisor/projects/";
-    public static final String GET_SITES = "/fv3/api/supervisor/sites/";
+    public static final String GET_PROJECTS = "/fv3/api/projects/";
+    public static final String GET_SITES = "/fv3/api/sites/";
   }
 
   public class PARAMS {
