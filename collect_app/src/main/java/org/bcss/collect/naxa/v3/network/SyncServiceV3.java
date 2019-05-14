@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.bcss.collect.naxa.login.model.MySites;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -53,24 +53,24 @@ public class SyncServiceV3 extends IntentService {
             }
 
             downloadByRegionObservable(selectedProject, selectedMap)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new DisposableObserver<SiteResponse>() {
-                @Override
-                public void onNext(SiteResponse siteResponse) {
-                    Timber.i(siteResponse.toString());
-                }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new DisposableObserver<List<MySites>>() {
+                        @Override
+                        public void onNext(List<MySites> mySites) {
+                            Timber.i("Downloaded %d sites",mySites.size());
+                        }
 
-                @Override
-                public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
 
-                }
+                        }
 
-                @Override
-                public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                }
-            });
+                        }
+                    });
 
 //            maintain the sync history
 //            for projects
@@ -85,7 +85,7 @@ public class SyncServiceV3 extends IntentService {
 
     }
 
-    private Observable<SiteResponse> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
+    private Observable<List<MySites>> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
         return Observable.just(selectedProject)
                 .flatMapIterable(new Function<ArrayList<Project>, Iterable<Project>>() {
                     @Override
@@ -99,7 +99,7 @@ public class SyncServiceV3 extends IntentService {
                         List<Syncable> list = selectedMap.get(project.getId());
                         boolean shouldDownloadSites = false;
                         for (Syncable s : list) {
-                            shouldDownloadSites = TextUtils.equals("Regions and sites", s.getTitle());
+                            shouldDownloadSites = TextUtils.equals("Regions and sites", s.getTitle()) && s.sync;
                             if (shouldDownloadSites) break;
                         }
                         return shouldDownloadSites;
@@ -122,8 +122,35 @@ public class SyncServiceV3 extends IntentService {
                     public SingleSource<SiteResponse> apply(Region region) throws Exception {
                         return SiteRemoteSource.getInstance().getSitesByRegionId(region.getId());
                     }
+                }).filter(new Predicate<SiteResponse>() {
+                    @Override
+                    public boolean test(SiteResponse siteResponse) throws Exception {
+                        return siteResponse.getNext() != null;
+                    }
+                }).flatMap(new Function<SiteResponse, Observable<List<MySites>>>() {
+                    @Override
+                    public Observable<List<MySites>> apply(SiteResponse siteResponse) throws Exception {
+                        return getSiteByRegion(siteResponse.getNext());
+                    }
                 });
 
+    }
+
+    private Observable<List<MySites>> getSiteByRegion(String url) {
+        return SiteRemoteSource.getInstance().getSitesByURL(url)
+                .toObservable()
+                .filter(new Predicate<SiteResponse>() {
+                    @Override
+                    public boolean test(SiteResponse siteResponse) {
+                        return siteResponse.getNext() != null;
+                    }
+                })
+                .flatMap(new Function<SiteResponse, Observable<List<MySites>>>() {
+                    @Override
+                    public Observable<List<MySites>> apply(SiteResponse siteResponse) {
+                        return getSiteByRegion(siteResponse.getNext());
+                    }
+                });
     }
 
     void sartSync() {

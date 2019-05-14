@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 10,
-    "identityHash": "6e2c9b54a4dcbf0c5e521241875949c4",
+    "identityHash": "3bdd6a44e58d818a23a4add44dc27d10",
     "entities": [
       {
         "tableName": "sites",
@@ -170,7 +170,7 @@
       },
       {
         "tableName": "project",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `description` TEXT, `address` TEXT, `lat` TEXT, `lon` TEXT, `siteClusters` TEXT, `organizationName` TEXT, `organizationlogourl` TEXT, `hasClusteredSites` INTEGER, `typeId` INTEGER, `typeLabel` TEXT, `phone` TEXT, `isSyncedWithRemote` INTEGER NOT NULL, `siteMetaAttributes` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `description` TEXT, `address` TEXT, `lat` TEXT, `lon` TEXT, `siteClusters` TEXT, `organizationName` TEXT, `organizationlogourl` TEXT, `hasClusteredSites` INTEGER, `typeId` INTEGER, `typeLabel` TEXT, `phone` TEXT, `isSyncedWithRemote` INTEGER NOT NULL, `regionList` TEXT, `siteMetaAttributes` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -255,6 +255,12 @@
             "columnName": "isSyncedWithRemote",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "regionList",
+            "columnName": "regionList",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "siteMetaAttributes",
@@ -1280,7 +1286,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6e2c9b54a4dcbf0c5e521241875949c4\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3bdd6a44e58d818a23a4add44dc27d10\")"
     ]
   }
 }

@@ -49,7 +49,6 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     private SiteDao dao;
 
 
-
     public static SiteRemoteSource getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new SiteRemoteSource();
@@ -111,7 +110,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDITED_SITES,message);
+                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDITED_SITES, message);
                     }
                 });
 
@@ -283,6 +282,13 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         HashMap<String, String> params = new HashMap<>();
         params.put(APIEndpoint.PARAMS.REGION_ID, regionId);
         return getSites(params);
+    }
+
+    public Single<SiteResponse> getSitesByURL(String url) {
+        return ServiceGenerator.getRxClient()
+                .create(ApiV3Interface.class)
+                .getSites(url)
+                .subscribeOn(Schedulers.io());
     }
 
     public Single<SiteResponse> getSites(HashMap<String, String> params) {
