@@ -73,8 +73,7 @@ public class SyncServiceV3 extends IntentService {
 
                 }
             });
-        } catch (
-                NullPointerException e) {
+        } catch (NullPointerException e) {
             Timber.i("Null Pointer");
             e.printStackTrace();
         }
@@ -89,14 +88,6 @@ public class SyncServiceV3 extends IntentService {
                 .flatMapSingle((Function<Region, SingleSource<SiteResponse>>) region -> SiteRemoteSource.getInstance().getSitesByRegionId(region.getId()));
 
     }
-
-    void sartSync() {
-        if (projectIndex < selectedProject.size()) {
-            Project p = selectedProject.get(projectIndex);
-
-        }
-    }
-
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {
         String logString = "";
