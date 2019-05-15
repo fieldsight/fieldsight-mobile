@@ -19,6 +19,9 @@ public interface SiteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Site... sites);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(List<Site> sites);
+
     @Query("SELECT * FROM sites")
     LiveData<List<Site>> getSites();
 

@@ -17,6 +17,7 @@ import java.util.concurrent.Callable;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
 
@@ -96,7 +97,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     @Override
     public void save(ArrayList<Site> items) {
-        //AsyncTask.execute(() -> dao.insert(items));
+        AsyncTask.execute(() -> dao.insert(items));
     }
 
     @Override
@@ -157,4 +158,5 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     public Single<List<Site>> getAllByStatus(int siteStatus) {
         return dao.getAllByStatus(siteStatus);
     }
+
 }
