@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.v3.network;
 import com.google.gson.annotations.SerializedName;
 
 import org.bcss.collect.naxa.login.model.MySites;
+import org.bcss.collect.naxa.login.model.Site;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class SiteResponse {
     private String previous;
 
     @SerializedName("results")
-    private List<MySites> result;
+    private List<Site> result;
 
 
     public int getCount() {
@@ -44,11 +45,11 @@ public class SiteResponse {
         this.previous = previous;
     }
 
-    public List<MySites> getResult() {
+    public List<Site> getResult() {
         return result;
     }
 
-    public void setResult(List<MySites> result) {
+    public void setResult(List<Site> result) {
         this.result = result;
     }
 }

@@ -3,8 +3,8 @@ package org.bcss.collect.naxa.v3.network;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
+import org.bcss.collect.naxa.login.model.MySites;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
@@ -52,41 +51,121 @@ public class SyncServiceV3 extends IntentService {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
 
-//            Start syncing sites
-
+            //Start syncing sites
             downloadByRegionObservable(selectedProject, selectedMap)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new DisposableObserver<SiteResponse>() {
-                @Override
-                public void onNext(SiteResponse siteResponse) {
-                    Timber.i(siteResponse.toString());
-                }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new DisposableObserver<List<MySites>>() {
+                        @Override
+                        public void onNext(List<MySites> message) {
+                            Timber.i("%s", message.size());
+                        }
 
-                @Override
-                public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
+                            Timber.e(e);
+                        }
 
-                }
+                        @Override
+                        public void onComplete() {
 
-                @Override
-                public void onComplete() {
-
-                }
-            });
+                        }
+                    });
         } catch (NullPointerException e) {
-            Timber.i("Null Pointer");
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 
-    private Observable<SiteResponse> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
+    private Observable<List<MySites>> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
         return Observable.just(selectedProject)
                 .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-                .filter(project -> selectedMap.get(project.getId()).get(0).sync )
-                .map(Project::getRegionList)
-                .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
-                .flatMapSingle((Function<Region, SingleSource<SiteResponse>>) region -> SiteRemoteSource.getInstance().getSitesByRegionId(region.getId()));
+                .filter(project -> selectedMap.get(project.getId()).get(0).sync)
+                .flatMap(new Function<Project, Observable<List<MySites>>>() {
+                    @Override
+                    public Observable<List<MySites>> apply(Project project) {
 
+                        Observable<List<MySites>> regionObservable = Observable.just(project.getRegionList())
+                                .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
+                                .flatMapSingle((Function<Region, SingleSource<SiteResponse>>) region -> SiteRemoteSource.getInstance().getSitesByRegionId(region.getId()))
+                                .filter(siteResponse -> siteResponse.getNext() != null)
+                                .flatMap((Function<SiteResponse, Observable<List<MySites>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
+
+
+                        Observable<List<MySites>> projectObservable = Observable.just(project)
+                                .filter(Project::getHasClusteredSites)
+                                .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance().getSitesByProjectId(project1.getId()))
+                                .filter(siteResponse -> siteResponse.getNext() != null)
+                                .flatMap((Function<SiteResponse, Observable<List<MySites>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
+
+//                        Observable<List<MySites>> projectObservable = Observable.just(project)
+//                                .filter(Project::getHasClusteredSites)
+//                                .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance().getSitesByProjectId(project1.getId()))
+//                                .filter(siteResponse -> siteResponse.getNext() != null)
+//                                .flatMap((Function<SiteResponse, Observable<List<MySites>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
+
+                        return Observable.concat(regionObservable, projectObservable);
+
+
+//                        return Observable.zip(projectObservable, Observable.just(new ArrayList<>()), new BiFunction<List<MySites>, List<MySites>, String>() {
+//                            @Override
+//                            public String apply(List<MySites> mySites, List<MySites> mySites2) throws Exception {
+//                                int totalSites = mySites.size() + mySites2.size();
+//                                return String.format("%s sites downloaded", totalSites);
+//                            }
+//                        });
+                    }
+                });
+//                .map(Project::getRegionList)
+//                .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
+//                .flatMapSingle((Function<Region, SingleSource<SiteResponse>>) region -> SiteRemoteSource.getInstance().getSitesByRegionId(region.getId()))
+//                .filter(new Predicate<SiteResponse>() {
+//                    @Override
+//                    public boolean test(SiteResponse siteResponse) throws Exception {
+//                        return siteResponse.getNext() != null;
+//                    }
+//                }).flatMap(new Function<SiteResponse, Observable<List<MySites>>>() {
+//                    @Override
+//                    public Observable<List<MySites>> apply(SiteResponse siteResponse) throws Exception {
+//                        return getSitesByUrl(siteResponse.getNext());
+//                    }
+//                });
+
+
+    }
+
+    private Observable<List<MySites>> getSitesByUrl(String url) {
+        return SiteRemoteSource.getInstance().getSitesByURL(url)
+                .toObservable()
+                .filter(new Predicate<SiteResponse>() {
+                    @Override
+                    public boolean test(SiteResponse siteResponse) {
+                        return siteResponse.getNext() != null;
+                    }
+                })
+                .flatMap(new Function<SiteResponse, Observable<List<MySites>>>() {
+                    @Override
+                    public Observable<List<MySites>> apply(SiteResponse siteResponse) {
+                        return getSitesByUrl(siteResponse.getNext());
+                    }
+                });
+    }
+
+
+    private Observable<List<MySites>> getSiteByProject(String url) {
+        return SiteRemoteSource.getInstance().getSitesByURL(url)
+                .toObservable()
+                .filter(new Predicate<SiteResponse>() {
+                    @Override
+                    public boolean test(SiteResponse siteResponse) {
+                        return siteResponse.getNext() != null;
+                    }
+                })
+                .flatMap(new Function<SiteResponse, Observable<List<MySites>>>() {
+                    @Override
+                    public Observable<List<MySites>> apply(SiteResponse siteResponse) {
+                        return getSitesByUrl(siteResponse.getNext());
+                    }
+                });
     }
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {

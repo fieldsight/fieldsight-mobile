@@ -134,6 +134,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                                 .setAddress(json.getString("address"))
                                 .setMetaAttributes(mapJSONtoMetaArributes(json.getJSONArray("meta_attributes")))
                                 .setOrganizationName(json.getJSONObject("organization").getString("name"))
+                                .setHasClusteredSites(json.getBoolean("has_site_role"))
                                 .createProject();
 
                         p.setRegionList(mapJSONtoRegionList(json.getJSONArray("project_region")));

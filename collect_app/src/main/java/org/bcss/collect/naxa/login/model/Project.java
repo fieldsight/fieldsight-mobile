@@ -53,7 +53,7 @@ public class Project implements Parcelable {
     @SerializedName("organization_url")
     private String organizationlogourl;
 
-    @SerializedName("cluster_sites")
+    @SerializedName("has_site_role")
     private Boolean hasClusteredSites;
 
     @Expose

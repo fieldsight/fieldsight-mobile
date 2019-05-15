@@ -6,8 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class MySites {
 
+
     @SerializedName("project")
-    @Expose
+    @Expose(serialize = false,deserialize = false)
     private Project project;
     @SerializedName("site")
     @Expose
