@@ -18,6 +18,8 @@ import java.util.Objects;
 import io.reactivex.Observable;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -55,25 +57,17 @@ public class SyncServiceV3 extends IntentService {
             }
 
             //Start syncing sites
-            downloadByRegionObservable(selectedProject, selectedMap)
+            Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new DisposableObserver<List<Site>>() {
+                    .doOnError(new Consumer<Throwable>() {
                         @Override
-                        public void onNext(List<Site> sites) {
-                            Timber.i("%s", sites);
-
+                        public void accept(Throwable throwable) {
+                            Timber.e(throwable);
                         }
+                    })
+                    .subscribe(sites -> {
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Timber.e(e);
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
                     });
         } catch (NullPointerException e) {
             Timber.e(e);
@@ -104,18 +98,31 @@ public class SyncServiceV3 extends IntentService {
 
                         return Observable.concat(regionObservable, projectObservable);
 
-
-//                        return Observable.zip(projectObservable, Observable.just(new ArrayList<>()), new BiFunction<List<MySites>, List<MySites>, String>() {
+//                        return Observable.zip(projectObservable, regionObservable, new BiFunction<List<Site>, List<Site>, List<Site>>() {
 //                            @Override
-//                            public String apply(List<MySites> mySites, List<MySites> mySites2) throws Exception {
-//                                int totalSites = mySites.size() + mySites2.size();
-//                                return String.format("%s sites downloaded", totalSites);
+//                            public List<Site> apply(List<Site> sites, List<Site> sites2) throws Exception {
+//                                ArrayList<Site> allSites = new ArrayList<>();
+//                                allSites.addAll(sites);
+//                                allSites.addAll(sites2);
+//                                return allSites;
 //                            }
 //                        });
+
                     }
                 });
 
     }
+
+//                        return Observable.zip(projectObservable, Observable.just(new ArrayList<>()), new BiFunction<List<Site>, List<Site>, String>() {
+//                            @Override
+//                            public String apply(List<Site> mySites, List<MySites> mySites2) throws Exception {
+//                                int totalSites = mySites.size() + mySites2.size();
+//                                return String.format("%s sites downloaded", totalSites);
+//                            }
+//                        });
+//                    }
+//                });
+
 
     private Consumer<? super SiteResponse> saveSites() {
         return (Consumer<SiteResponse>) siteResponse -> {
@@ -151,3 +158,4 @@ public class SyncServiceV3 extends IntentService {
         return String.format("%s \n params = %s", projectName, logString);
     }
 }
+
