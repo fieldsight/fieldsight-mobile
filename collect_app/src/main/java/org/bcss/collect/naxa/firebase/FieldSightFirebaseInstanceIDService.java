@@ -9,7 +9,6 @@ import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import timber.log.Timber;
 
 public class FieldSightFirebaseInstanceIDService extends FirebaseInstanceIdService {
-
     @Override
     public void onTokenRefresh() {
         super.onTokenRefresh();

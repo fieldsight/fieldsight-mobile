@@ -87,6 +87,7 @@ public class SyncServiceV3 extends IntentService {
                         }
                     }, throwable -> {
                         String url = getFailedFormUrl(throwable);
+                        Timber.i("EducationMaterial, FailedUrl = %s", url);
                     });
 
 
@@ -106,6 +107,7 @@ public class SyncServiceV3 extends IntentService {
                         }
                     }, throwable -> {
                         String url = getFailedFormUrl(throwable);
+                        Timber.i("FormsDownload, FailedUrl = %s", url);
                     });
 
 
