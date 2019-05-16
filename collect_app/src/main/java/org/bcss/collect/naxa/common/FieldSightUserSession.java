@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -14,7 +15,10 @@ import android.text.TextUtils;
 
 import com.evernote.android.job.DailyJob;
 import com.evernote.android.job.JobManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -75,15 +79,13 @@ public class FieldSightUserSession {
     }
 
 
-    public static FCMParameter getFCM(String username, boolean deviceStatus, int retryAttempt) {
-        retryAttempt = 10;
-        String fcmToken = loadFCMWithRetry(retryAttempt);
-        String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
-
-        if (fcmToken == null) {
-            throw new FirebaseTokenException("Fire base token is null");
-        }
-        return new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
+    public static FCMParameter getFCM(String username, boolean deviceStatus) {
+            String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),  SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
+            if(fcmToken == null) {
+                throw new NullPointerException("Firebase messaging token is returning null");
+            }
+            String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
+           return new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
     }
 
     private static String loadFCMWithRetry(int maxTries) {
@@ -92,7 +94,6 @@ public class FieldSightUserSession {
         String fcmToken = null;
         while (true) {
             try {
-
                 fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
                         SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM,
                         null);
@@ -189,7 +190,6 @@ public class FieldSightUserSession {
         return msg;
     }
 
-
     public static void showLogoutDialog(Activity context) {
 
         ((CollectAbstractActivity) context).showProgress();
@@ -210,13 +210,23 @@ public class FieldSightUserSession {
                             logout(context, new OnLogoutListener() {
                                 @Override
                                 public void logoutTaskSuccess() {
+                                    try {
+                                        new Handler().post(() -> {
+                                            try {
+                                                Timber.i("firebase token deleted");
+                                                FirebaseInstanceId.getInstance().deleteInstanceId();
+                                            } catch (IOException e) {
+                                                Timber.i("firebase token deleted failed");
+                                                e.printStackTrace();
+                                            }
+                                        });
+                                        ((CollectAbstractActivity) context).hideProgress();
+                                        Intent intent = new Intent(context, LoginActivity.class)
+                                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        context.startActivity(intent);
+                                    }catch (Exception e) {e.printStackTrace();}
 
-
-                                    ((CollectAbstractActivity) context).hideProgress();
-                                    Intent intent = new Intent(context, LoginActivity.class)
-                                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    context.startActivity(intent);
-                                }
+                                                                  }
 
                                 @Override
                                 public void logoutTaskFailed(String message) {
@@ -324,7 +334,7 @@ public class FieldSightUserSession {
                             public Observable<Response<Void>> apply(User user) throws Exception {
                                 return ServiceGenerator
                                         .createService(ApiInterface.class)
-                                        .deleteFCMUserParameter(getFCM(user.getUser_name(), false, 3))
+                                        .deleteFCMUserParameter(getFCM(user.getUser_name(), false))
                                         .map(new Function<Response<Void>, Response<Void>>() {
                                             @Override
                                             public Response<Void> apply(Response<Void> voidResponse) throws Exception {
@@ -482,21 +492,18 @@ public class FieldSightUserSession {
                 .setPositiveButton(posMsg, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
-
                         logout(context, new OnLogoutListener() {
                             @Override
                             public void logoutTaskSuccess() {
-
-
-                                Intent intent = new Intent(context, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                context.startActivity(intent);
+                                try {
+                                    FirebaseInstanceId.getInstance().deleteInstanceId();
+                                    Intent intent = new Intent(context, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    context.startActivity(intent);
+                                }catch (Exception e) {e.printStackTrace();}
                             }
 
                             @Override
                             public void logoutTaskFailed(String message) {
-
-
                                 FlashBarUtils.showFlashbar(context, "Logout failed");
                             }
 

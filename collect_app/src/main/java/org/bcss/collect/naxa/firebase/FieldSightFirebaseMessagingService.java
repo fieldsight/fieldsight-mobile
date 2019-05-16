@@ -7,10 +7,13 @@ import android.net.Uri;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.data.FieldSightNotificationBuilder;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.previoussubmission.LastSubmissionLocalSource;
@@ -282,5 +285,8 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
     }
 
-
+    @Override
+    public void onNewToken(String fcm_token) {
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcm_token);
+        Timber.i("firebase %s",fcm_token);    }
 }
