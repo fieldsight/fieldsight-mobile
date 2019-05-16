@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.educational;
 
 import android.os.Environment;
+import android.support.annotation.Nullable;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.application.Collect;
@@ -29,11 +30,13 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.SingleObserver;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -57,10 +60,25 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     }
 
 
+
     @Override
     public void getAll() {
+      getAllProjectEducationalMaterial(null)
+              .subscribe(new DisposableSingleObserver<List<String>>() {
+                  @Override
+                  public void onSuccess(List<String> strings) {
+                      //unused
+                  }
 
-        Observable.merge(scheduledFormEducational(), generalFormEducational(), substageFormEducational())
+                  @Override
+                  public void onError(Throwable e) {
+                      //unused
+                  }
+              });
+    }
+
+    public Single<List<String>> getAllProjectEducationalMaterial(String projectId) {
+        return Observable.merge(scheduledFormEducational(projectId), generalFormEducational(projectId), substageFormEducational(projectId))
                 .map(new Function<Em, ArrayList<String>>() {
                     @Override
                     public ArrayList<String> apply(Em em) {
@@ -114,22 +132,23 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 .toList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<List<String>>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        DisposableManager.add(d);
+                    public void accept(Disposable disposable) throws Exception {
+                        DisposableManager.add(disposable);
                         DownloadableItemLocalSource.getINSTANCE().markAsRunning(EDU_MATERIALS);
                     }
-
+                })
+                .doOnSuccess(new Consumer<List<String>>() {
                     @Override
-                    public void onSuccess(List<String> strings) {
-
+                    public void accept(List<String> strings) throws Exception {
                         Timber.i("%s has been downloaded", strings.toString());
                         DownloadableItemLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
                     }
-
+                })
+                .doOnError(new Consumer<Throwable>() {
                     @Override
-                    public void onError(Throwable e) {
+                    public void accept(Throwable e) throws Exception {
                         Timber.e(e);
                         String message;
                         if (e instanceof RetrofitException) {
@@ -138,11 +157,9 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS,message);
-
+                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS, message);
                     }
                 });
-
     }
 
 
@@ -162,21 +179,43 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
         return savePath;
     }
 
-    private Observable<Em> scheduledFormEducational() {
-        return ProjectLocalSource.getInstance()
-                .getProjectsMaybe()
-                .map(new Function<List<Project>, List<Project>>() {
-                    @Override
-                    public List<Project> apply(List<Project> projects) throws Exception {
-                        if (projects.isEmpty()) {
-                            throw new RuntimeException("Download project(s) site(s) first");
+    public Single<List<String>> getByProjectId(String projectId) {
+        return getAllProjectEducationalMaterial(projectId);
+    }
+
+    private Observable<String> getProjectObservable(@Nullable String projectId) {
+
+        if (projectId != null) {
+            return Observable.just(projectId);
+        } else {
+            return ProjectLocalSource.getInstance()
+                    .getProjectsMaybe()
+                    .map(new Function<List<Project>, List<Project>>() {
+                        @Override
+                        public List<Project> apply(List<Project> projects) throws Exception {
+                            if (projects.isEmpty()) {
+                                throw new RuntimeException("Download project(s) site(s) first");
+                            }
+                            return projects;
                         }
-                        return projects;
-                    }
-                })
-                .toObservable()
-                .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
-                .flatMap((Function<Project, ObservableSource<ArrayList<ScheduleForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms("1", project.getId()))
+                    })
+                    .toObservable()
+                    .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
+                    .map(new Function<Project, String>() {
+                        @Override
+                        public String apply(Project project) throws Exception {
+                            return project.getId();
+                        }
+                    });
+        }
+
+    }
+
+    private Observable<Em> scheduledFormEducational(@Nullable String projectId) {
+
+
+        return getProjectObservable(projectId)
+                .flatMap((Function<String, ObservableSource<ArrayList<ScheduleForm>>>) s -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms("1", s))
                 .flatMapIterable((Function<ArrayList<ScheduleForm>, Iterable<ScheduleForm>>) scheduleForms -> scheduleForms)
                 .filter(new Predicate<ScheduleForm>() {
                     @Override
@@ -197,21 +236,9 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 });
     }
 
-    private Observable<Em> substageFormEducational() {
-        return ProjectLocalSource.getInstance()
-                .getProjectsMaybe()
-                .map(new Function<List<Project>, List<Project>>() {
-                    @Override
-                    public List<Project> apply(List<Project> projects) throws Exception {
-                        if (projects.isEmpty()) {
-                            throw new RuntimeException("Download project(s) site(s) first");
-                        }
-                        return projects;
-                    }
-                })
-                .toObservable()
-                .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
-                .flatMap((Function<Project, ObservableSource<ArrayList<Stage>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getStageSubStage("1", project.getId()))
+    private Observable<Em> substageFormEducational(@Nullable String projectId) {
+        return getProjectObservable(projectId)
+                .flatMap((Function<String, ObservableSource<ArrayList<Stage>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getStageSubStage("1", project))
                 .flatMapIterable((Function<ArrayList<Stage>, Iterable<Stage>>) stages -> stages)
                 .map(Stage::getSubStage)
                 .flatMapIterable((Function<ArrayList<SubStage>, Iterable<SubStage>>) subStages -> subStages)
@@ -235,22 +262,10 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 });
     }
 
-    private Observable<Em> generalFormEducational() {
+    private Observable<Em> generalFormEducational(@Nullable String projectId) {
 
-        return ProjectLocalSource.getInstance()
-                .getProjectsMaybe()
-                .map(new Function<List<Project>, List<Project>>() {
-                    @Override
-                    public List<Project> apply(List<Project> projects) throws Exception {
-                        if (projects.isEmpty()) {
-                            throw new RuntimeException("Download project(s) site(s) first");
-                        }
-                        return projects;
-                    }
-                })
-                .toObservable()
-                .flatMapIterable((Function<List<Project>, Iterable<Project>>) projects -> projects)
-                .flatMap((Function<Project, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable("1", project.getId()))
+        return getProjectObservable(projectId)
+                .flatMap((Function<String, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable("1", project))
                 .flatMapIterable((Function<ArrayList<GeneralForm>, Iterable<GeneralForm>>) generalForms -> generalForms)
                 .filter(new Predicate<GeneralForm>() {
                     @Override
@@ -273,14 +288,4 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
 
     }
-
-
-    public static String getSafeString(String string, String defaultValue) {
-        if (string != null && string.length() > 0) {
-            return string;
-        }
-
-        return defaultValue;
-    }
-
 }

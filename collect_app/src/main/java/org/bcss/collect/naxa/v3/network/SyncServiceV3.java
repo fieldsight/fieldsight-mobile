@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import org.bcss.collect.naxa.common.rx.RetrofitException;
-import org.bcss.collect.naxa.login.model.MySites;
+import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
@@ -17,15 +17,12 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -79,13 +76,13 @@ public class SyncServiceV3 extends IntentService {
         }
     }
 
-    private Observable<List<Site>> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
+    private Observable<List<?>> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
         return Observable.just(selectedProject)
                 .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                 .filter(project -> selectedMap.get(project.getId()).get(0).sync)
-                .flatMap(new Function<Project, Observable<List<Site>>>() {
+                .flatMap(new Function<Project, Observable<List<?>>>() {
                     @Override
-                    public Observable<List<Site>> apply(Project project) {
+                    public Observable<List<?>> apply(Project project) {
 
                         Observable<List<Site>> regionObservable = Observable.just(project.getRegionList())
                                 .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
@@ -106,33 +103,17 @@ public class SyncServiceV3 extends IntentService {
                                 .filter(siteResponse -> siteResponse.getNext() != null)
                                 .flatMap((Function<SiteResponse, Observable<List<Site>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
 
+                        Observable<List<String>> projectEduMatObservable = EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
 
-                        return Observable.concat(regionObservable, projectObservable);
 
-//                        return Observable.zip(projectObservable, regionObservable, new BiFunction<List<Site>, List<Site>, List<Site>>() {
-//                            @Override
-//                            public List<Site> apply(List<Site> sites, List<Site> sites2) throws Exception {
-//                                ArrayList<Site> allSites = new ArrayList<>();
-//                                allSites.addAll(sites);
-//                                allSites.addAll(sites2);
-//                                return allSites;
-//                            }
-//                        });
+                        return Observable.concat(regionObservable, projectObservable,projectEduMatObservable);
+
 
                     }
                 });
 
     }
 
-//                        return Observable.zip(projectObservable, Observable.just(new ArrayList<>()), new BiFunction<List<Site>, List<Site>, String>() {
-//                            @Override
-//                            public String apply(List<Site> mySites, List<MySites> mySites2) throws Exception {
-//                                int totalSites = mySites.size() + mySites2.size();
-//                                return String.format("%s sites downloaded", totalSites);
-//                            }
-//                        });
-//                    }
-//                });
 
 
     private Consumer<? super SiteResponse> saveSites() {
