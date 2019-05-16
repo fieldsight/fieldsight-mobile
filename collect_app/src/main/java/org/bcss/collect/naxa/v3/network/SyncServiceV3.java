@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.login.model.MySites;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -60,15 +62,17 @@ public class SyncServiceV3 extends IntentService {
             Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnError(new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) {
-                            Timber.e(throwable);
-                            // project ? url
-                        }
-                    })
                     .subscribe(sites -> {
 
+                    }, throwable -> {
+                        if (throwable instanceof RetrofitException) {
+                            RetrofitException retrofitException = (RetrofitException) throwable;
+                            String msg = retrofitException.getMessage();
+                            String failedUrl = retrofitException.getUrl();
+                            Timber.i("Failed URL: %s Message:%s ", failedUrl, msg);
+                        }
+
+                        // project ? url
                     });
         } catch (NullPointerException e) {
             Timber.e(e);
@@ -85,7 +89,13 @@ public class SyncServiceV3 extends IntentService {
 
                         Observable<List<Site>> regionObservable = Observable.just(project.getRegionList())
                                 .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
-                                .flatMapSingle((Function<Region, SingleSource<SiteResponse>>) region -> SiteRemoteSource.getInstance().getSitesByRegionId(region.getId()).doOnSuccess(saveSites()))
+                                .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
+                                    @Override
+                                    public SingleSource<SiteResponse> apply(Region region) {
+                                        return SiteRemoteSource.getInstance().getSitesByRegionId(region.getId())
+                                                .doOnSuccess(saveSites());
+                                    }
+                                })
                                 .filter(siteResponse -> siteResponse.getNext() != null)
                                 .flatMap((Function<SiteResponse, Observable<List<Site>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
 

@@ -36,7 +36,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
     }
 
     @Override
-    public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
+    public CallAdapter<?, ?> get(@NonNull Type returnType, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
         return new RxCallAdapterWrapper(retrofit, original.get(returnType, annotations, retrofit));
     }
 
@@ -91,6 +91,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
         private RetrofitException asRetrofitException(Throwable throwable) {
             // We had non-200 http error
             if (throwable instanceof HttpException) {
+
                 HttpException httpException = (HttpException) throwable;
                 Response response = httpException.response();
                 return RetrofitException.httpError(response.raw().request().url().toString(), response, retrofit);
