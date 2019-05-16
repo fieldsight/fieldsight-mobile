@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -36,7 +37,9 @@ import com.facebook.stetho.Stetho;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -53,6 +56,8 @@ import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 import org.bcss.collect.naxa.login.APIErrorUtils;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
@@ -278,7 +283,7 @@ public class Collect extends Application implements HasActivityInjector {
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
         }
-
+        createNewFcmTokenIfNotExists();
         setupFirebaseRemoteConfig();
         applicationComponent = DaggerAppComponent.builder()
                 .application(this)
@@ -321,6 +326,26 @@ public class Collect extends Application implements HasActivityInjector {
         setupLeakCanary();
 
         DailyNotificationJob.schedule();
+
+    }
+
+    void createNewFcmTokenIfNotExists() {
+        String savedFcm = SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
+        if(TextUtils.isEmpty(savedFcm)) {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
+                String fcm_token = instanceIdResult.getToken();
+                Timber.i("Regenerated Fcm token :: %s ", fcm_token);
+                SharedPreferenceUtils.saveToPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, savedFcm);
+                Timber.i("token saved to pref");
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                   Timber.e("Failed with %s ",e.getMessage());
+                }
+            });
+        } else {
+            Timber.i("user already has fcm");
+        }
     }
 
     private void setupCrashlytics() {
