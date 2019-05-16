@@ -64,6 +64,7 @@ public class SyncServiceV3 extends IntentService {
                         @Override
                         public void accept(Throwable throwable) {
                             Timber.e(throwable);
+                            // project ? url
                         }
                     })
                     .subscribe(sites -> {

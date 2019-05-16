@@ -1,6 +1,8 @@
 package org.bcss.collect.naxa.v3.network;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @Author: Yubaraj Poudel
@@ -13,6 +15,7 @@ public class Syncable implements Serializable {
         boolean sync = true;
         boolean completed = false;
         boolean started = false;
+        Set<String> lastFailedUrl = new HashSet<>();
 
         public String getTitle(){
             return this.title;
@@ -40,6 +43,14 @@ public class Syncable implements Serializable {
             this.sync = sync;
             this.completed = completed;
             this.started = started;
+        }
+
+        public void addFailedUrl(String url) {
+            this.lastFailedUrl.add(url);
+        }
+
+        public Set<String> getFailedUrl() {
+            return this.lastFailedUrl;
         }
 
         public Syncable(String title) {
