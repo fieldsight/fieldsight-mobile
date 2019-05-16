@@ -33,12 +33,12 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.ODK_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.FormDownloadList.FORMDETAIL_KEY;
@@ -92,40 +92,35 @@ public class ODKFormRemoteSource {
     }
 
 
-    public void downloadODKForms() {
-        DownloadableItemLocalSource.getINSTANCE().markAsRunning(ODK_FORMS);
 
-        DisposableObserver<String[]> dis = getXMLForms().subscribeWith(new DisposableObserver<String[]>() {
-            @Override
-            public void onNext(String[] strings) {
-                Timber.d("onNext() %s", Arrays.toString(strings));
-                String name = strings[0];
-                String current = strings[1];
-                String total = strings[2];
 
-                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ODK_FORMS, Arrays.toString(strings));
+    public Observable<List<String>> getByProjectId(Project project) {
+        ArrayList<Project> projects = new ArrayList<>();
+        projects.add(project);
 
-                if (current.equals(total)) {
-                    DownloadableItemLocalSource.getINSTANCE().markAsCompleted(ODK_FORMS);
-                }
-            }
+        return Observable.just(projects)
+                .map(mapProjectsToXMLForm())
+                .flatMapIterable((Function<ArrayList<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
+                .flatMap((Function<XMLForm, ObservableSource<HashMap<String, FormDetails>>>) this::downloadFormlist)
+                .map(checkAndThrowDownloadError())
+                .toList()
+                .toObservable()
+                .map(hashMaps -> {
+                    HashMap<String, FormDetails> result = new HashMap<>();
+                    for (HashMap<String, FormDetails> hashMap : hashMaps) {
+                        result.putAll(hashMap);
+                    }
+                    return result;
 
-            @Override
-            public void onError(Throwable e) {
-                DownloadableItemLocalSource.getINSTANCE().markAsFailed(ODK_FORMS, e.getMessage());
-                Timber.e(e);
-            }
+                })
+                .flatMap((Function<HashMap<String, FormDetails>, ObservableSource<ArrayList<FormDetails>>>) this::formListDownloadingComplete)
+                .flatMap((Function<ArrayList<FormDetails>, ObservableSource<List<String>>>) this::downloadSingleForm)
+                .subscribeOn(Schedulers.io())
+                ;
 
-            @Override
-            public void onComplete() {
-                Timber.d("onComplete()");
-            }
-        });
-
-        DisposableManager.add(dis);
     }
 
-    public Observable<String[]> getXMLForms() {
+    public Observable<List<String>> getXMLForms() {
         return checkIfProjectSitesDownloaded()
                 .flatMapSingle((Function<SyncableItem, SingleSource<List<Project>>>) syncableItem -> ProjectLocalSource.getInstance().getProjectsMaybe())
                 .map(mapProjectsToXMLForm())
@@ -151,9 +146,9 @@ public class ODKFormRemoteSource {
                         return formListDownloadingComplete(formNamesAndURLs);
                     }
                 })
-                .flatMap(new Function<ArrayList<FormDetails>, ObservableSource<String[]>>() {
+                .flatMap(new Function<ArrayList<FormDetails>, ObservableSource<List<String>>>() {
                     @Override
-                    public ObservableSource<String[]> apply(ArrayList<FormDetails> formDetails) throws Exception {
+                    public ObservableSource<List<String>> apply(ArrayList<FormDetails> formDetails) throws Exception {
                         return downloadSingleForm(formDetails);
                     }
                 });
@@ -169,21 +164,23 @@ public class ODKFormRemoteSource {
         });
     }
 
-    private Observable<String[]> downloadSingleForm(ArrayList<FormDetails>... values) {
+    @SafeVarargs
+    private final Observable<List<String>> downloadSingleForm(ArrayList<FormDetails>... values) {
 
 
-        return Observable.create(new ObservableOnSubscribe<String[]>() {
+        return Observable.create(new ObservableOnSubscribe<List<String>>() {
             @Override
-            public void subscribe(ObservableEmitter<String[]> emitter) throws Exception {
+            public void subscribe(ObservableEmitter<List<String>> emitter) throws Exception {
                 FormDownloader formDownloader = new FormDownloader(false);
                 formDownloader.setDownloaderListener(new FormDownloaderListener() {
                     @Override
                     public void progressUpdate(String currentFile, String progress, String total) {
                         if (!emitter.isDisposed()) {
-                            emitter.onNext(new String[]{currentFile, progress, total});
+
+                            emitter.onNext(Arrays.asList(currentFile,progress,total));
                         }
 
-                        if (progress.equals(total)) {
+                        if (progress.equals(total) || emitter.isDisposed()) {
                             emitter.onComplete();
                         }
                     }
@@ -199,6 +196,7 @@ public class ODKFormRemoteSource {
         });
 
     }
+
 
     private ArrayList<FormDetails> cleanDownloadedFormList(HashMap<String, FormDetails> formNamesAndURLs) {
         HashMap<String, FormDetails> result = new HashMap<>();
@@ -277,6 +275,7 @@ public class ODKFormRemoteSource {
     }
 
     private Observable<HashMap<String, FormDetails>> downloadFormlist(XMLForm xmlForm) {
+        Timber.i("Downloading odk forms from %s",xmlForm.getDownloadUrl());
         return Observable.fromCallable(() -> new FieldSightFormListDownloadUtils().downloadFormList(xmlForm, false));
     }
 

@@ -273,7 +273,12 @@ public class DownloadViewModel extends ViewModel {
     private void fetchAllFormsV2() {
 
 
-        Observable<String[]> odkFormsObservable = ODKFormRemoteSource.getInstance().getXMLForms();
+        Observable<ArrayList<String>> odkFormsObservable = ODKFormRemoteSource.getInstance().getXMLForms().map(new Function<List<String>, ArrayList<String>>() {
+            @Override
+            public ArrayList<String> apply(List<String> strings) throws Exception {
+                return new ArrayList<>(strings);
+            }
+        });
         Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
         Single<ArrayList<ScheduleForm>> scheduled = ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
         Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();

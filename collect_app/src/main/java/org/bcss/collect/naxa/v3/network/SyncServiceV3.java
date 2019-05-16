@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
 import org.bcss.collect.naxa.login.model.Project;
@@ -60,7 +61,7 @@ public class SyncServiceV3 extends IntentService {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(sites -> {
-
+                        Timber.i("Sync completed");
                     }, throwable -> {
                         if (throwable instanceof RetrofitException) {
                             RetrofitException retrofitException = (RetrofitException) throwable;
@@ -104,9 +105,9 @@ public class SyncServiceV3 extends IntentService {
                                 .flatMap((Function<SiteResponse, Observable<List<Site>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
 
                         Observable<List<String>> projectEduMatObservable = EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
+                        Observable<List<String>> formsDownloadObservable = ODKFormRemoteSource.getInstance().getByProjectId(project);
 
-
-                        return Observable.concat(regionObservable, projectObservable,projectEduMatObservable);
+                        return Observable.concat(regionObservable, projectObservable,projectEduMatObservable,formsDownloadObservable);
 
 
                     }
