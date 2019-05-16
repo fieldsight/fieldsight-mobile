@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -56,65 +57,111 @@ public class SyncServiceV3 extends IntentService {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
 
+
             //Start syncing sites
             Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(sites -> {
-                        Timber.i("Sync completed");
+                        Timber.i("Sites Sync completed");
+
                     }, throwable -> {
-                        if (throwable instanceof RetrofitException) {
-                            RetrofitException retrofitException = (RetrofitException) throwable;
-                            String msg = retrofitException.getMessage();
-                            String failedUrl = retrofitException.getUrl();
-                            Timber.i("Failed URL: %s Message:%s ", failedUrl, msg);
-                        }
+                        String url = getFailedFormUrl(throwable);
 
                         // project ? url
                     });
-        } catch (NullPointerException e) {
+
+
+            Disposable projectEduMatObservable = Observable.just(selectedProject)
+                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
+                    .filter(project -> selectedMap.get(project.getId()).get(0).sync)
+                    .flatMap(new Function<Project, ObservableSource<List<String>>>() {
+                        @Override
+                        public ObservableSource<List<String>> apply(Project project) throws Exception {
+                            return EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
+                        }
+                    }).subscribe(new Consumer<List<String>>() {
+                        @Override
+                        public void accept(List<String> strings) throws Exception {
+                            Timber.i("Project Educational material Sync completed");
+                        }
+                    }, throwable -> {
+                        String url = getFailedFormUrl(throwable);
+                    });
+
+
+            Disposable formsDownloadObservable = Observable.just(selectedProject)
+                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
+                    .filter(project -> selectedMap.get(project.getId()).get(0).sync)
+                    .flatMap(new Function<Project, ObservableSource<List<String>>>() {
+                        @Override
+                        public ObservableSource<List<String>> apply(Project project) throws Exception {
+                            return ODKFormRemoteSource.getInstance().getByProjectId(project);
+                        }
+                    })
+                    .subscribe(new Consumer<List<String>>() {
+                        @Override
+                        public void accept(List<String> strings) throws Exception {
+                            Timber.i("ODK forms Sync completed");
+                        }
+                    }, throwable -> {
+                        String url = getFailedFormUrl(throwable);
+                    });
+
+
+        } catch (
+                NullPointerException e) {
             Timber.e(e);
         }
+
+    }
+
+    private String getFailedFormUrl(Throwable throwable) {
+        String failedUrl = "";
+        if (throwable instanceof RetrofitException) {
+            RetrofitException retrofitException = (RetrofitException) throwable;
+            String msg = retrofitException.getMessage();
+            failedUrl = retrofitException.getUrl();
+
+        }
+
+        return failedUrl;
+    }
+
+    private Function<Project, ObservableSource<List<?>>> getSitesObservable() {
+        return new Function<Project, ObservableSource<List<?>>>() {
+            @Override
+            public ObservableSource<List<?>> apply(Project project) throws Exception {
+                Observable<List<Site>> regionSitesObservable = Observable.just(project.getRegionList())
+                        .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
+                        .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
+                            @Override
+                            public SingleSource<SiteResponse> apply(Region region) {
+                                return SiteRemoteSource.getInstance().getSitesByRegionId(region.getId())
+                                        .doOnSuccess(saveSites());
+                            }
+                        })
+                        .filter(siteResponse -> siteResponse.getNext() != null)
+                        .flatMap((Function<SiteResponse, Observable<List<Site>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
+
+
+                Observable<List<Site>> projectObservable = Observable.just(project)
+                        .filter(Project::getHasClusteredSites)
+                        .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance().getSitesByProjectId(project1.getId()).doOnSuccess(saveSites()))
+                        .filter(siteResponse -> siteResponse.getNext() != null)
+                        .flatMap((Function<SiteResponse, Observable<List<Site>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
+
+                return Observable.concat(regionSitesObservable, projectObservable);
+            }
+        };
     }
 
     private Observable<List<?>> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
         return Observable.just(selectedProject)
                 .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                 .filter(project -> selectedMap.get(project.getId()).get(0).sync)
-                .flatMap(new Function<Project, Observable<List<?>>>() {
-                    @Override
-                    public Observable<List<?>> apply(Project project) {
-
-                        Observable<List<Site>> regionObservable = Observable.just(project.getRegionList())
-                                .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
-                                .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
-                                    @Override
-                                    public SingleSource<SiteResponse> apply(Region region) {
-                                        return SiteRemoteSource.getInstance().getSitesByRegionId(region.getId())
-                                                .doOnSuccess(saveSites());
-                                    }
-                                })
-                                .filter(siteResponse -> siteResponse.getNext() != null)
-                                .flatMap((Function<SiteResponse, Observable<List<Site>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
-
-
-                        Observable<List<Site>> projectObservable = Observable.just(project)
-                                .filter(Project::getHasClusteredSites)
-                                .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance().getSitesByProjectId(project1.getId()).doOnSuccess(saveSites()))
-                                .filter(siteResponse -> siteResponse.getNext() != null)
-                                .flatMap((Function<SiteResponse, Observable<List<Site>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
-
-                        Observable<List<String>> projectEduMatObservable = EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
-                        Observable<List<String>> formsDownloadObservable = ODKFormRemoteSource.getInstance().getByProjectId(project);
-
-                        return Observable.concat(regionObservable, projectObservable,projectEduMatObservable,formsDownloadObservable);
-
-
-                    }
-                });
-
+                .flatMap(getSitesObservable());
     }
-
 
 
     private Consumer<? super SiteResponse> saveSites() {
