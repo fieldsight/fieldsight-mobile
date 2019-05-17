@@ -11,10 +11,13 @@ import com.google.firebase.iid.InstanceIdResult;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.network.APIEndpoint;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFinishedListener {
 
@@ -39,9 +42,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
             loginView.showUsernameError(R.string.error_invalid_email);
             return;
         }
-
         loginView.showProgress(true);
-
         ReactiveNetwork.checkInternetConnectivity()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,19 +50,13 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
                     @Override
                     public void onSuccess(Boolean isConnected) {
                         if (isConnected) {
-
-                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-                                @Override
-                                public void onSuccess(InstanceIdResult instanceIdResult) {
-                                    String token = instanceIdResult.getToken();
-                                    loginModel.login(username, password, token, LoginPresenterImpl.this);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    loginView.showError(Collect.getInstance().getString(R.string.dialog_unexpected_error_title));
-                                }
-                            });
+                            String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
+                            if(!TextUtils.isEmpty(fcmToken)) {
+                                    Timber.i("token generated: " + fcmToken);
+                                    loginModel.login(username, password, fcmToken, LoginPresenterImpl.this);
+                            } else {
+                                loginView.showError("Failed to get token");
+                            }
                         } else {
                             loginView.showError("No Network Connectivity");
                         }
@@ -97,7 +92,6 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -105,7 +99,6 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     public void onError(String message) {
         loginView.showProgress(false);
         loginView.showError(message);
-
     }
 
 

@@ -91,16 +91,12 @@ public class LoginModelImpl implements LoginModel {
     }
 
     private void authenticateUser(String username, String password, String token, OnLoginFinishedListener onLoginFinishedListener) {
-
-
         ServiceGenerator.createService(ApiInterface.class)
                 .getAuthToken(username, password)
                 .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
                     @Override
                     public ObservableSource<FCMParameter> apply(AuthResponse authResponse) {
-
                         ServiceGenerator.clearInstance();
-
                         return ServiceGenerator
                                 .createService(ApiInterface.class)
                                 .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCMParameter(username, token, true))
