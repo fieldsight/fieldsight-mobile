@@ -26,11 +26,11 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "id")
     private String id;
 
-    @SerializedName("lat")
+    @SerializedName("latitude")
     @ColumnInfo(name = "latitude")
     private String latitude;
 
-    @SerializedName("lon")
+    @SerializedName("longitude")
     @ColumnInfo(name = "longitude")
     private String longitude;
 
