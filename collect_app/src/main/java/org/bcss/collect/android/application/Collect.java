@@ -68,6 +68,7 @@ import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PRNGFixes;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -283,7 +284,6 @@ public class Collect extends Application implements HasActivityInjector {
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
         }
-        createNewFcmTokenIfNotExists();
         setupFirebaseRemoteConfig();
         applicationComponent = DaggerAppComponent.builder()
                 .application(this)
@@ -329,24 +329,6 @@ public class Collect extends Application implements HasActivityInjector {
 
     }
 
-    void createNewFcmTokenIfNotExists() {
-        String savedFcm = SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
-        if(TextUtils.isEmpty(savedFcm)) {
-            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
-                String fcm_token = instanceIdResult.getToken();
-                Timber.i("Regenerated Fcm token :: %s ", fcm_token);
-                SharedPreferenceUtils.saveToPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, savedFcm);
-                Timber.i("token saved to pref");
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                   Timber.e("Failed with %s ",e.getMessage());
-                }
-            });
-        } else {
-            Timber.i("user already has fcm");
-        }
-    }
 
     private void setupCrashlytics() {
         try {

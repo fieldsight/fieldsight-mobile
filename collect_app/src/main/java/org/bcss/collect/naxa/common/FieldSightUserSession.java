@@ -65,7 +65,6 @@ import timber.log.Timber;
 
 public class FieldSightUserSession {
 
-
     public static void login() {
 
     }
@@ -78,53 +77,12 @@ public class FieldSightUserSession {
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), Constant.PrefKey.token, "Token " + token);
     }
 
-
-    public static FCMParameter getFCM(String username, boolean deviceStatus) {
-            String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),  SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
-            if(fcmToken == null) {
-                throw new NullPointerException("Firebase messaging token is returning null");
-            }
-            String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
-           return new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
-    }
-
-    private static String loadFCMWithRetry(int maxTries) {
-
-        int count = 0;
-        String fcmToken = null;
-        while (true) {
-            try {
-                fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
-                        SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM,
-                        null);
-
-                if (fcmToken == null) {
-                    Timber.d("loadFCMWithRetry() Generating new firebase token");
-                    FirebaseInstanceId.getInstance().deleteInstanceId();
-                } else {
-                    Timber.d("loadFCMWithRetry() Firebase token refreshed to %s", fcmToken);
-                    break;
-                }
-
-                long timeout = TimeUnit.SECONDS.toMillis(count);
-                Timber.d("loadFCMWithRetry() Delaying another check for %s seconds", timeout);
-
-                Thread.sleep(timeout);
-                if (++count == maxTries) {
-                    Timber.e("Failed to load fcm on %s tries", count);
-                    break;
-                }
-
-            } catch (IOException | InterruptedException e) {
-                Timber.e(e, "loadFCMWithRetry() count %s", count);
-                if (++count == maxTries) break;
-            }
-        }
-        return fcmToken;
+    public static FCMParameter getFCMParameter(String username, String token, boolean deviceStatus) {
+        String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
+        return new FCMParameter(deviceId, token, username, String.valueOf(deviceStatus));
     }
 
     public static MutableLiveData<String[]> getLogoutMessage() {
-
         MutableLiveData<String[]> message = new MutableLiveData<>();
         Context context = Collect.getInstance();
         message.setValue(new String[]{
@@ -210,23 +168,12 @@ public class FieldSightUserSession {
                             logout(context, new OnLogoutListener() {
                                 @Override
                                 public void logoutTaskSuccess() {
-                                    try {
-                                        new Handler().post(() -> {
-                                            try {
-                                                Timber.i("firebase token deleted");
-                                                FirebaseInstanceId.getInstance().deleteInstanceId();
-                                            } catch (IOException e) {
-                                                Timber.i("firebase token deleted failed");
-                                                e.printStackTrace();
-                                            }
-                                        });
-                                        ((CollectAbstractActivity) context).hideProgress();
-                                        Intent intent = new Intent(context, LoginActivity.class)
-                                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        context.startActivity(intent);
-                                    }catch (Exception e) {e.printStackTrace();}
-
-                                                                  }
+                                    tokenDeleteThread.start();
+                                    ((CollectAbstractActivity) context).hideProgress();
+                                    Intent intent = new Intent(context, LoginActivity.class)
+                                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    context.startActivity(intent);
+                                }
 
                                 @Override
                                 public void logoutTaskFailed(String message) {
@@ -263,6 +210,12 @@ public class FieldSightUserSession {
 
 
     }
+
+   static Thread tokenDeleteThread = new Thread(() -> {
+       try {
+           FirebaseInstanceId.getInstance().deleteInstanceId();
+       }catch (IOException e) { e.printStackTrace();}
+   });
 
 
     public static void stopLogoutDialog(Context context) {
@@ -324,35 +277,13 @@ public class FieldSightUserSession {
             Timber.e(e);
         }
 
-        Observable<Response<Void>> deleteFCM =
-                Observable.just(1)
-                        .map(integer -> getUserString())
-                        .filter(s -> !TextUtils.isEmpty(s))
-                        .map(s -> getUser())
-                        .flatMap(new Function<User, Observable<Response<Void>>>() {
-                            @Override
-                            public Observable<Response<Void>> apply(User user) throws Exception {
-                                return ServiceGenerator
-                                        .createService(ApiInterface.class)
-                                        .deleteFCMUserParameter(getFCM(user.getUser_name(), false))
-                                        .map(new Function<Response<Void>, Response<Void>>() {
-                                            @Override
-                                            public Response<Void> apply(Response<Void> voidResponse) throws Exception {
-                                                if (voidResponse.code() != 200) {
-                                                    throw new RuntimeException("FCM removal did not return 200");
-                                                }
-                                                return voidResponse;
-                                            }
-                                        });
-                            }
-                        });
 
-        Observable.concat(deleteFCM, purgeSharedPref.toObservable(), purgeDatabase.toObservable())
+        Observable.concat(purgeSharedPref.toObservable(), purgeDatabase.toObservable())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<Response<Void>>() {
+                .subscribe(new DisposableObserver<Object>() {
                     @Override
-                    public void onNext(Response<Void> voidResponse) {
+                    public void onNext(Object voidResponse) {
 
                     }
 
@@ -450,72 +381,6 @@ public class FieldSightUserSession {
         return ids.toArray(longs);
     }
 
-
-    public static void createLogoutDialogV2(Activity context, String dialogMessage) {
-        String dialogTitle = context.getApplicationContext().getString(R.string.dialog_title_warning_logout);
-        String dialogMsg;
-        String posMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_pos);
-        String negMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_neg);
-
-        @ColorInt int color = context.getResources().getColor(R.color.primaryColor);
-        Drawable drawable = context.getResources().getDrawable(android.R.drawable.ic_dialog_alert);
-        Drawable wrapped = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(wrapped, color);
-
-
-        DialogFactory.createMessageDialog(context, context.getString(R.string.msg_stop_logout), dialogMessage)
-
-                .show();
-
-        /**
-         * 1. Show list of offline sites
-         * 2. Show a list of forms
-         * 3. Upload them
-         * 4. If Failed show just restart the process
-         */
-
-    }
-
-    @Deprecated
-    public static void createLogoutDialog(Activity context, String dialogMsg) {
-
-        String dialogTitle = context.getApplicationContext().getString(R.string.dialog_title_warning_logout);
-        String posMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_pos);
-        String negMsg = context.getApplicationContext().getString(R.string.dialog_warning_logout_neg);
-        @ColorInt int color = context.getResources().getColor(R.color.primaryColor);
-        Drawable drawable = context.getResources().getDrawable(android.R.drawable.ic_dialog_alert);
-        Drawable wrapped = DrawableCompat.wrap(drawable);
-        DrawableCompat.setTint(wrapped, color);
-
-
-        DialogFactory.createActionDialog(context, dialogTitle, dialogMsg)
-                .setPositiveButton(posMsg, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        logout(context, new OnLogoutListener() {
-                            @Override
-                            public void logoutTaskSuccess() {
-                                try {
-                                    FirebaseInstanceId.getInstance().deleteInstanceId();
-                                    Intent intent = new Intent(context, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    context.startActivity(intent);
-                                }catch (Exception e) {e.printStackTrace();}
-                            }
-
-                            @Override
-                            public void logoutTaskFailed(String message) {
-                                FlashBarUtils.showFlashbar(context, "Logout failed");
-                            }
-
-                            @Override
-                            public void taskComplete() {
-                                ((CollectAbstractActivity) context).hideProgress();
-                            }
-                        });
-                    }
-                }).setNegativeButton(negMsg, null).setIcon(wrapped).show();
-
-    }
 
     public static boolean isLoggedIn() {
         String token = getAuthToken();

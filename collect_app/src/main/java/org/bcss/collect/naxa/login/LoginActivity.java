@@ -137,7 +137,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
     @Override
     public void gmailLoginSuccess(String googleAccessToken, String username) {
         loginPresenter.googleOauthCredentials(googleAccessToken, username);
-        Timber.d("gmailLoginSuccess: Access tokenId "+googleAccessToken);
+        Timber.d("gmailLoginSuccess: Access tokenId %s", googleAccessToken);
 
     }
 
@@ -152,7 +152,6 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -242,7 +241,6 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
                 .setNegativeButton(R.string.dialog_action_dismiss, null)
                 .create();
         new Handler().postDelayed(dialog::show, 500);
-
     }
 
     /**

@@ -288,5 +288,5 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     @Override
     public void onNewToken(String fcm_token) {
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcm_token);
-        Timber.i("firebase %s",fcm_token);    }
+        Timber.i("Messaging service, firebase %s",fcm_token);    }
 }

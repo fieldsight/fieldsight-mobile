@@ -50,6 +50,4 @@ public class APIEndpoint {
 
     public static final String GET_EXCHANGE_TOKEN = "/users/api/exchange/google-oauth2/";
 
-
-
 }
