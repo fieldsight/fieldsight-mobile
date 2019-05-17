@@ -284,7 +284,6 @@ public class Collect extends Application implements HasActivityInjector {
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
         }
-        createNewFcmTokenIfNotExists();
         setupFirebaseRemoteConfig();
         applicationComponent = DaggerAppComponent.builder()
                 .application(this)
@@ -330,25 +329,6 @@ public class Collect extends Application implements HasActivityInjector {
 
     }
 
-    public void createNewFcmTokenIfNotExists() {
-        String savedFcm = SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
-        if(TextUtils.isEmpty(savedFcm)) {
-            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
-                String fcm_token = instanceIdResult.getToken();
-                Timber.i("Regenerated Fcm token :: %s ", fcm_token);
-                SharedPreferenceUtils.saveToPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, savedFcm);
-                Timber.i("token saved to pref");
-                ToastUtils.showShortToast("Token generated successfully");
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                   Timber.e("Failed with %s ",e.getMessage());
-                }
-            });
-        } else {
-            Timber.i("user already has fcm");
-        }
-    }
 
     private void setupCrashlytics() {
         try {

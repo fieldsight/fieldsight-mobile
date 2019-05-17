@@ -1,9 +1,13 @@
 package org.bcss.collect.naxa.login;
 
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -45,8 +49,19 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
                     @Override
                     public void onSuccess(Boolean isConnected) {
                         if (isConnected) {
-                            FirebaseInstanceId.getInstance().getToken();
-                            loginModel.login(username, password, LoginPresenterImpl.this);
+
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                                @Override
+                                public void onSuccess(InstanceIdResult instanceIdResult) {
+                                    String token = instanceIdResult.getToken();
+                                    loginModel.login(username, password, token, LoginPresenterImpl.this);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    loginView.showError(Collect.getInstance().getString(R.string.dialog_unexpected_error_title));
+                                }
+                            });
                         } else {
                             loginView.showError("No Network Connectivity");
                         }
@@ -64,7 +79,19 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     public void googleOauthCredentials(String googleAccessToken, String username) {
         loginView.showProgress(true);
 
-        loginModel.loginViaGoogle(googleAccessToken, username,LoginPresenterImpl.this);
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String token = instanceIdResult.getToken();
+                loginModel.loginViaGoogle(googleAccessToken, username, token, LoginPresenterImpl.this);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                loginView.showError(Collect.getInstance().getString(R.string.dialog_unexpected_error_title));
+            }
+        });
+
 
     }
 
@@ -80,7 +107,6 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
         loginView.showError(message);
 
     }
-
 
 
     @Override

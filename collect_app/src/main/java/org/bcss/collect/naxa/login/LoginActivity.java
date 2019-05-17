@@ -131,13 +131,13 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
             mEmailView.setText(BuildConfig.username);
             mPasswordView.setText(BuildConfig.password);
         }
-        Collect.getInstance().createNewFcmTokenIfNotExists();
+
     }
 
     @Override
     public void gmailLoginSuccess(String googleAccessToken, String username) {
         loginPresenter.googleOauthCredentials(googleAccessToken, username);
-        Timber.d("gmailLoginSuccess: Access tokenId "+googleAccessToken);
+        Timber.d("gmailLoginSuccess: Access tokenId %s", googleAccessToken);
 
     }
 

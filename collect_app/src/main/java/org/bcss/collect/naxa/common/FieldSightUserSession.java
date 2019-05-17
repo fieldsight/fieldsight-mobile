@@ -78,15 +78,10 @@ public class FieldSightUserSession {
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), Constant.PrefKey.token, "Token " + token);
     }
 
+    public static FCMParameter getFCMParameter(String username,String token, boolean deviceStatus) {
 
-    public static FCMParameter getFCM(String username, boolean deviceStatus) {
-            String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),  SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
-            if(fcmToken == null) {
-                Collect.getInstance().createNewFcmTokenIfNotExists();
-                throw new NullPointerException("Firebase messaging token is returning null, creating new.");
-            }
-            String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
-           return new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
+        String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
+        return new FCMParameter(deviceId, token, username, String.valueOf(deviceStatus));
     }
 
     private static String loadFCMWithRetry(int maxTries) {
@@ -225,9 +220,11 @@ public class FieldSightUserSession {
                                         Intent intent = new Intent(context, LoginActivity.class)
                                                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         context.startActivity(intent);
-                                    }catch (Exception e) {e.printStackTrace();}
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
 
-                                                                  }
+                                }
 
                                 @Override
                                 public void logoutTaskFailed(String message) {
@@ -325,30 +322,9 @@ public class FieldSightUserSession {
             Timber.e(e);
         }
 
-        Observable<Response<Void>> deleteFCM =
-                Observable.just(1)
-                        .map(integer -> getUserString())
-                        .filter(s -> !TextUtils.isEmpty(s))
-                        .map(s -> getUser())
-                        .flatMap(new Function<User, Observable<Response<Void>>>() {
-                            @Override
-                            public Observable<Response<Void>> apply(User user) throws Exception {
-                                return ServiceGenerator
-                                        .createService(ApiInterface.class)
-                                        .deleteFCMUserParameter(getFCM(user.getUser_name(), false))
-                                        .map(new Function<Response<Void>, Response<Void>>() {
-                                            @Override
-                                            public Response<Void> apply(Response<Void> voidResponse) throws Exception {
-                                                if (voidResponse.code() != 200) {
-                                                    throw new RuntimeException("FCM removal did not return 200");
-                                                }
-                                                return voidResponse;
-                                            }
-                                        });
-                            }
-                        });
 
-        Observable.concat( purgeSharedPref.toObservable(), purgeDatabase.toObservable())
+
+        Observable.concat(purgeSharedPref.toObservable(), purgeDatabase.toObservable())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableObserver<Object>() {
@@ -500,7 +476,9 @@ public class FieldSightUserSession {
                                     FirebaseInstanceId.getInstance().deleteInstanceId();
                                     Intent intent = new Intent(context, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     context.startActivity(intent);
-                                }catch (Exception e) {e.printStackTrace();}
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 
                             @Override
