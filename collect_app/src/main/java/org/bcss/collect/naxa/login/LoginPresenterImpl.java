@@ -52,7 +52,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
                         if (isConnected) {
                             String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
                             if(!TextUtils.isEmpty(fcmToken)) {
-                                    Timber.i("token generated: " + fcmToken);
+                                    Timber.i("token generated: %s", fcmToken);
                                     loginModel.login(username, password, fcmToken, LoginPresenterImpl.this);
                             } else {
                                 loginView.showError("Failed to get token");
@@ -74,20 +74,13 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     public void googleOauthCredentials(String googleAccessToken, String username) {
         loginView.showProgress(true);
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String token = instanceIdResult.getToken();
-                loginModel.loginViaGoogle(googleAccessToken, username, token, LoginPresenterImpl.this);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                loginView.showError(Collect.getInstance().getString(R.string.dialog_unexpected_error_title));
-            }
-        });
-
-
+        String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
+        if(!TextUtils.isEmpty(fcmToken)) {
+            Timber.i("token generated: %s", fcmToken);
+            loginModel.loginViaGoogle(googleAccessToken, username, fcmToken, LoginPresenterImpl.this);
+        } else {
+            loginView.showError("Failed to get token");
+        }
     }
 
 

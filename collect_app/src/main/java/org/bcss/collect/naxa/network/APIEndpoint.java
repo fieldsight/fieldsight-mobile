@@ -50,9 +50,4 @@ public class APIEndpoint {
 
     public static final String GET_EXCHANGE_TOKEN = "/users/api/exchange/google-oauth2/";
 
-    public static final String PROJECT_ID = "fieldsight-2906f";
-    public static final String SCOPE_GCM = "GCM";
-
-
-
 }
