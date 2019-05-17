@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
@@ -167,6 +168,7 @@ public class SyncServiceV3 extends IntentService {
     private Consumer<? super SiteResponse> saveSites() {
         return (Consumer<SiteResponse>) siteResponse -> {
             Timber.i("Saving %d sites", siteResponse.getResult().size());
+
             SiteLocalSource.getInstance().save((ArrayList<Site>) siteResponse.getResult());
         };
     }

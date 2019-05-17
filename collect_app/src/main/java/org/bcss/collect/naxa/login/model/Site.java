@@ -84,7 +84,7 @@ public class Site implements Parcelable {
     private String project;
 
     @ColumnInfo(name = "isSiteVerified")
-    private int isSiteVerified;
+    private int isSiteVerified = Constant.SiteStatus.IS_ONLINE;
 
     @SerializedName("type")
     @Expose
@@ -155,7 +155,7 @@ public class Site implements Parcelable {
         return String.valueOf(System.currentTimeMillis()).concat("-").concat(postfix);
     }
 
-    public static boolean isFakeSiteId(String siteId){
+    public static boolean isFakeSiteId(String siteId) {
         return siteId.contains(Site.postfix);
     }
 
