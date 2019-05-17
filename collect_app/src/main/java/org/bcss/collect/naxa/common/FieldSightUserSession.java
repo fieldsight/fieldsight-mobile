@@ -348,12 +348,12 @@ public class FieldSightUserSession {
                             }
                         });
 
-        Observable.concat(deleteFCM, purgeSharedPref.toObservable(), purgeDatabase.toObservable())
+        Observable.concat( purgeSharedPref.toObservable(), purgeDatabase.toObservable())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<Response<Void>>() {
+                .subscribe(new DisposableObserver<Object>() {
                     @Override
-                    public void onNext(Response<Void> voidResponse) {
+                    public void onNext(Object voidResponse) {
 
                     }
 
