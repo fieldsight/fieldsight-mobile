@@ -131,7 +131,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
             mEmailView.setText(BuildConfig.username);
             mPasswordView.setText(BuildConfig.password);
         }
-
+        Collect.getInstance().createNewFcmTokenIfNotExists();
     }
 
     @Override
@@ -242,7 +242,6 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
                 .setNegativeButton(R.string.dialog_action_dismiss, null)
                 .create();
         new Handler().postDelayed(dialog::show, 500);
-
     }
 
     /**

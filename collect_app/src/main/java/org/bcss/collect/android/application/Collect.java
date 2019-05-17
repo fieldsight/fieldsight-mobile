@@ -68,6 +68,7 @@ import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PRNGFixes;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -329,7 +330,7 @@ public class Collect extends Application implements HasActivityInjector {
 
     }
 
-    void createNewFcmTokenIfNotExists() {
+    public void createNewFcmTokenIfNotExists() {
         String savedFcm = SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
         if(TextUtils.isEmpty(savedFcm)) {
             FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
@@ -337,6 +338,7 @@ public class Collect extends Application implements HasActivityInjector {
                 Timber.i("Regenerated Fcm token :: %s ", fcm_token);
                 SharedPreferenceUtils.saveToPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, savedFcm);
                 Timber.i("token saved to pref");
+                ToastUtils.showShortToast("Token generated successfully");
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {

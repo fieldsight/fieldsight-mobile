@@ -82,7 +82,8 @@ public class FieldSightUserSession {
     public static FCMParameter getFCM(String username, boolean deviceStatus) {
             String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),  SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, null);
             if(fcmToken == null) {
-                throw new NullPointerException("Firebase messaging token is returning null");
+                Collect.getInstance().createNewFcmTokenIfNotExists();
+                throw new NullPointerException("Firebase messaging token is returning null, creating new.");
             }
             String deviceId = new PropertyManager(Collect.getInstance()).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID);
            return new FCMParameter(deviceId, fcmToken, username, String.valueOf(deviceStatus));
