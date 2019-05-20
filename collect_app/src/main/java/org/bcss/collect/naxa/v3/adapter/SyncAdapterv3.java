@@ -85,7 +85,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         syncViewHolder.manageChildView(syncables);
         syncViewHolder.iv_cancel.setOnClickListener(v -> {
             if (callback != null) {
-                callback.onRequestInterrupt(project);
+                callback.onRequestInterrupt(i, project);
             }
         });
     }
@@ -95,6 +95,13 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         return selectedProjectList.size();
     }
 
+    public void removeAndNotify(int pos) {
+        if(syncableMap.keySet().contains(selectedProjectList.get(pos).getId())) {
+            syncableMap.remove(selectedProjectList.get(pos).getId());
+        }
+        selectedProjectList.remove(pos);
+        notifyDataSetChanged();
+    }
 }
 
 
