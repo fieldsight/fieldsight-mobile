@@ -50,6 +50,8 @@ public interface SiteDao {
     @Query("UPDATE sites SET stagedFormDeployedFrom = :deployedFrom WHERE id = :siteId ")
     void updateStagedFormDeployedFrom(String siteId, String deployedFrom);
 
+    @Query("SELECT DISTINCT project from sites")
+    LiveData<List<String>> getAllDistictProject();
 
     @Query("UPDATE sites SET scheduleFormDeployedForm = :deployedFrom WHERE id = :siteId ")
     void updateScheduleFormDeployedFrom(String siteId, String deployedFrom);

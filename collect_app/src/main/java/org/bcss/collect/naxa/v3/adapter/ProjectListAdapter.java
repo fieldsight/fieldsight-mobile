@@ -17,6 +17,7 @@ import java.util.List;
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableSingleObserver;
+import timber.log.Timber;
 
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
     private List<Project> projectList;
@@ -37,25 +38,20 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
 
             @Override
             void itemClicked(int index) {
-                super.itemClicked(index);
                 Project project = projectList.get(index);
-                SiteLocalSource.getInstance().getByIdAsSingle(project.getId())
-                        .subscribe(new DisposableSingleObserver<List<Site>>() {
-                            @Override
-                            public void onSuccess(List<Site> sites) {
-                                if (sites.size() > 0) {
-                                    ProjectDashboardActivity.start(viewGroup.getContext(), projectList.get(index));
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-
-                            }
-                        });
-
+                if(project.isSynced()) {
+                   ProjectDashboardActivity.start(viewGroup.getContext(), projectList.get(index));
+                }
             }
         };
+    }
+
+    public void notifyProjectisSynced(List<String> projectIds) {
+        for (int i = 0; i < projectList.size(); i++) {
+            Timber.i("projectadapter hasSites = "+ (projectIds.indexOf(projectList.get(i).getId())));
+            projectList.get(i).setSynced(projectIds.indexOf(projectList.get(i).getId()) > -1);
+        }
+        notifyDataSetChanged();
     }
 
     @Override

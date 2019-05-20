@@ -28,6 +28,7 @@ import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.project.data.ProjectRepository;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.bcss.collect.naxa.v3.adapter.ProjectListAdapter;
 import org.bcss.collect.naxa.v3.network.LoadProjectCallback;
@@ -95,6 +96,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     boolean auto = false;
     RecyclerView.AdapterDataObserver observer;
     boolean allSelected = false;
+    LiveData<List<String>> projectIds = SiteLocalSource.getInstance().getAllDistinctProjectIds();
+    Observer<List<String>> projectObserver = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,7 +115,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                     if (projectList.get(i).isChecked())
                         selected++;
                 }
-
                 Timber.d("project list counter is %d", selected);
                 if (selected > 0) {
                     cv_sync_project.setVisibility(View.VISIBLE);
@@ -126,12 +128,17 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
             }
         };
+
         adapter.registerAdapterDataObserver(observer);
         rv_projectlist.setLayoutManager(new LinearLayoutManager(this));
         rv_projectlist.setAdapter(adapter);
         getDataFromServer();
         manageNodata(true);
         cv_sync_project.setOnClickListener(v -> openDownloadAActivity());
+        projectObserver = listLiveData -> {
+            Timber.i("list live data = %d", listLiveData.size());
+            adapter.notifyProjectisSynced(listLiveData);
+        };
     }
 
 
@@ -140,6 +147,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         super.onDestroy();
         if (observer != null)
             adapter.unregisterAdapterDataObserver(observer);
+        if (projectIds.hasObservers() && projectObserver != null)
+            projectIds.removeObserver(projectObserver);
     }
 
     void manageNodata(boolean loading) {
@@ -156,6 +165,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 adapter.notifyDataSetChanged();
                 manageNodata(false);
                 Timber.e("data found with %d size", projects.size());
+                projectIds.observe(ProjectListActivityV3.this, projectObserver);
             }
 
             @Override
@@ -180,12 +190,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     void openDownloadAActivity() {
         ArrayList<Project> syncProjectList = manageSyncList();
         if (syncProjectList.size() > 0) {
-           Intent intent = new Intent(this, SyncActivity.class);
-           Bundle bundle = new Bundle();
-           bundle.putParcelableArrayList("projects", syncProjectList);
-           bundle.putBoolean("auto", true);
-           intent.putExtra("params", bundle);
-           startActivity(intent);
+            Intent intent = new Intent(this, SyncActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("projects", syncProjectList);
+            bundle.putBoolean("auto", true);
+            intent.putExtra("params", bundle);
+            startActivity(intent);
         } else {
             ToastUtils.showShortToastInMiddle("Please select at least one projects");
         }

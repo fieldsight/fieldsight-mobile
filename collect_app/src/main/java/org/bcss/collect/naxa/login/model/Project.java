@@ -71,6 +71,18 @@ public class Project implements Parcelable {
     @Ignore
     boolean checked = false;
 
+    @Expose
+    @Ignore
+    boolean isSynced = false;
+
+    public void setSynced(boolean isSynced) {
+        this.isSynced = isSynced;
+    }
+
+    public boolean isSynced() {
+        return this.isSynced;
+    }
+
     public List<Region> getRegionList() {
         return regionList;
     }

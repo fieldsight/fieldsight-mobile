@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.v3.adapter;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
@@ -27,6 +28,9 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_project_address)
     TextView project_address;
 
+    @BindView(R.id.iv_card_status)
+    AppCompatImageView imageView;
+
     public ProjectViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -39,6 +43,7 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
         project_address.setText(String.format("%s", project.getAddress()));
         chkbx_sync.setChecked(project.isChecked());
         chkbx_sync.setVisibility(project.isChecked() ? View.VISIBLE : View.GONE);
+        imageView.setImageResource(project.isSynced() ? android.R.drawable.stat_sys_download_done : android.R.drawable.stat_notify_sync);
     }
 
     void checkBoxChanged(int index, boolean isChecked) {
