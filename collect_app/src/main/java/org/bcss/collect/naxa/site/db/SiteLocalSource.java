@@ -91,6 +91,9 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         AsyncTask.execute(() -> dao.insert(items));
     }
 
+
+
+
     public Completable saveAsCompletable(Site... sites) {
         return Completable.fromAction(() -> dao.insert(sites));
     }
