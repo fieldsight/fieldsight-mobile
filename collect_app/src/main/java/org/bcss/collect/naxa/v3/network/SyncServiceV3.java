@@ -104,20 +104,28 @@ public class SyncServiceV3 extends IntentService {
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(0).sync)
-                    .flatMap(new Function<Project, ObservableSource<List<String>>>() {
+                    .flatMap(new Function<Project, Observable<Project>>() {
                         @Override
-                        public ObservableSource<List<String>> apply(Project project) throws Exception {
+                        public Observable<Project> apply(Project project) throws Exception {
                             return ODKFormRemoteSource.getInstance().getByProjectId(project);
                         }
                     })
-                    .subscribe(new Consumer<List<String>>() {
+                    .subscribeWith(new DisposableObserver<Project>() {
                         @Override
-                        public void accept(List<String> strings) throws Exception {
-                            Timber.i("ODK forms Sync completed");
+                        public void onNext(Project project) {
+                            Timber.i("Forms downloaded for project %s",project.getName());
                         }
-                    }, throwable -> {
-                        String url = getFailedFormUrl(throwable);
-                        Timber.i("FormsDownload, FailedUrl = %s", url);
+
+                        @Override
+                        public void onError(Throwable throwable) {
+                            String url = getFailedFormUrl(throwable);
+                            Timber.i("FormsDownload, FailedUrl = %s", url);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
                     });
 
 

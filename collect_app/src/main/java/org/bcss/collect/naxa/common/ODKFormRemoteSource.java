@@ -33,7 +33,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
-import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -94,7 +93,7 @@ public class ODKFormRemoteSource {
 
 
 
-    public Observable<List<String>> getByProjectId(Project project) {
+    public Observable<Project> getByProjectId(Project project) {
         ArrayList<Project> projects = new ArrayList<>();
         projects.add(project);
 
@@ -115,6 +114,14 @@ public class ODKFormRemoteSource {
                 })
                 .flatMap((Function<HashMap<String, FormDetails>, ObservableSource<ArrayList<FormDetails>>>) this::formListDownloadingComplete)
                 .flatMap((Function<ArrayList<FormDetails>, ObservableSource<List<String>>>) this::downloadSingleForm)
+                .toList()
+                .map(new Function<List<List<String>>, Project>() {
+                    @Override
+                    public Project apply(List<List<String>> lists) throws Exception {
+                        return project;
+                    }
+                })
+                .toObservable()
                 .subscribeOn(Schedulers.io())
                 ;
 
@@ -176,7 +183,6 @@ public class ODKFormRemoteSource {
                     @Override
                     public void progressUpdate(String currentFile, String progress, String total) {
                         if (!emitter.isDisposed()) {
-
                             emitter.onNext(Arrays.asList(currentFile,progress,total));
                         }
 
