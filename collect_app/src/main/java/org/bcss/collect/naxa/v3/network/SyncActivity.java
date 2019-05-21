@@ -35,7 +35,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 
-public class SyncActivity extends CollectAbstractActivity implements SyncAdapterCallback  {
+public class SyncActivity extends CollectAbstractActivity implements SyncAdapterCallback {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -73,7 +73,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         ArrayList<Project> projectList = bundle.getParcelableArrayList("projects");
         auto = bundle.getBoolean("auto", true);
 
-        if (projectList == null || projectList.size() == 0 ) {
+        if (projectList == null || projectList.size() == 0) {
             return;
         }
 
@@ -121,7 +121,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -129,11 +129,15 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     @Override
     public void onRequestInterrupt(int pos, Project project) {
-        DialogFactory.createActionDialog(this, getString(R.string.app_name), "Are you sure you want to interrupt " + project.getName())
+        DialogFactory.createActionDialog(this, getString(R.string.app_name), "Are you sure you want to remove " + project.getName() + "from download queue ?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     syncableMap.remove(project.getId());
                     adapterv3.removeAndNotify(pos);
-               })
+                    if (adapterv3.getItemCount() > 0)
+                        setTitle("Projects (" + adapterv3.getItemCount() + ")");
+                    else
+                        setTitle("Projects");
+                })
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
@@ -147,9 +151,9 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     }
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {
-       String logString = "";
-        for(Syncable syncable : list) {
-           logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.getSync();
+        String logString = "";
+        for (Syncable syncable : list) {
+            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.getSync();
         }
         return String.format("%s \n params = %s", projectName, logString);
     }
