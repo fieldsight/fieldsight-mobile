@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
@@ -26,6 +25,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -63,13 +63,22 @@ public class SyncServiceV3 extends IntentService {
             Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(sites -> {
-                        Timber.i("Sites Sync completed");
+                    .subscribeWith(new DisposableObserver<Project>() {
+                        @Override
+                        public void onNext(Project project) {
+                            Timber.i("Sites downloaded for project %s",project.getName());
+                        }
 
-                    }, throwable -> {
-                        String url = getFailedFormUrl(throwable);
-                        Timber.i("SyncService sites failed url = %s", url);
-                        // project ? url
+                        @Override
+                        public void onError(Throwable throwable) {
+                            String url = getFailedFormUrl(throwable);
+                            Timber.i("SyncService sites failed url = %s", url);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
                     });
 
 
@@ -131,11 +140,11 @@ public class SyncServiceV3 extends IntentService {
         return failedUrl;
     }
 
-    private Function<Project, ObservableSource<List<?>>> getSitesObservable() {
-        return new Function<Project, ObservableSource<List<?>>>() {
+    private Function<Project, Observable<Project>> getSitesObservable() {
+        return new Function<Project, Observable<Project>>() {
             @Override
-            public ObservableSource<List<?>> apply(Project project) throws Exception {
-                Observable<List<Site>> regionSitesObservable = Observable.just(project.getRegionList())
+            public Observable<Project> apply(Project project) throws Exception {
+                Observable<Object> regionSitesObservable = Observable.just(project.getRegionList())
                         .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
                         .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
                             @Override
@@ -144,22 +153,51 @@ public class SyncServiceV3 extends IntentService {
                                         .doOnSuccess(saveSites());
                             }
                         })
-                        .filter(siteResponse -> siteResponse.getNext() != null)
-                        .flatMap((Function<SiteResponse, Observable<List<Site>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
+                        .concatMap(new Function<SiteResponse, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(SiteResponse siteResponse) throws Exception {
+                                if (siteResponse.getNext() == null) {
+                                    return Observable.just(siteResponse);
+                                }
+
+                                return Observable.just(siteResponse)
+                                        .concatWith(getSitesByUrl(siteResponse.getNext()));
+
+                            }
+                        });
 
 
-                Observable<List<Site>> projectObservable = Observable.just(project)
+                Observable<Object> projectObservable = Observable.just(project)
                         .filter(Project::getHasClusteredSites)
                         .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance().getSitesByProjectId(project1.getId()).doOnSuccess(saveSites()))
-                        .filter(siteResponse -> siteResponse.getNext() != null)
-                        .flatMap((Function<SiteResponse, Observable<List<Site>>>) siteResponse -> getSitesByUrl(siteResponse.getNext()));
+                        .concatMap(new Function<SiteResponse, ObservableSource<?>>() {
+                            @Override
+                            public ObservableSource<?> apply(SiteResponse siteResponse) throws Exception {
+                                if (siteResponse.getNext() == null) {
+                                    return Observable.just(siteResponse);
+                                }
 
-                return Observable.concat(regionSitesObservable, projectObservable);
+                                return Observable.just(siteResponse)
+                                        .concatWith(getSitesByUrl(siteResponse.getNext()));
+
+                            }
+                        });
+
+
+
+                return Observable.concat(projectObservable, projectObservable)
+                        .map(new Function<Object, Project>() {
+                            @Override
+                            public Project apply(Object o) throws Exception {
+
+                                return project;
+                            }
+                        });
             }
         };
     }
 
-    private Observable<List<?>> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
+    private Observable<Project> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
         return Observable.just(selectedProject)
                 .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                 .filter(project -> selectedMap.get(project.getId()).get(0).sync)
@@ -175,7 +213,7 @@ public class SyncServiceV3 extends IntentService {
         };
     }
 
-    private Observable<List<Site>> getSitesByUrl(String url) {
+    private ObservableSource<? extends SiteResponse> getSitesByUrl(String url) {
         return SiteRemoteSource.getInstance().getSitesByURL(url)
                 .toObservable()
                 .filter(new Predicate<SiteResponse>() {
@@ -185,9 +223,9 @@ public class SyncServiceV3 extends IntentService {
                     }
                 })
                 .doOnNext(saveSites())
-                .flatMap(new Function<SiteResponse, Observable<List<Site>>>() {
+                .flatMap(new Function<SiteResponse, ObservableSource<? extends SiteResponse>>() {
                     @Override
-                    public Observable<List<Site>> apply(SiteResponse siteResponse) {
+                    public ObservableSource<? extends SiteResponse> apply(SiteResponse siteResponse) {
                         return getSitesByUrl(siteResponse.getNext());
                     }
                 });
