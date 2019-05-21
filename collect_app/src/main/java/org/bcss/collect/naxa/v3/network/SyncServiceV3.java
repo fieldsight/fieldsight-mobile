@@ -68,7 +68,7 @@ public class SyncServiceV3 extends IntentService {
 
                     }, throwable -> {
                         String url = getFailedFormUrl(throwable);
-
+                        Timber.i("SyncService sites failed url = %s", url);
                         // project ? url
                     });
 

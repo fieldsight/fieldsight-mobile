@@ -7,6 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface SyncAdapterCallback {
-    void onRequestInterrupt(Project project);
+    void onRequestInterrupt(int pos, Project project);
     void childDownloadListSelectionChange(Project project, List<Syncable> list);
 }

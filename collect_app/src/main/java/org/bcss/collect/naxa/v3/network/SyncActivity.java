@@ -128,13 +128,11 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     }
 
     @Override
-    public void onRequestInterrupt(Project project) {
-//        TODO: interrupt the download of this project
+    public void onRequestInterrupt(int pos, Project project) {
         DialogFactory.createActionDialog(this, getString(R.string.app_name), "Are you sure you want to interrupt " + project.getName())
                 .setPositiveButton("Yes", (dialog, which) -> {
-//                    TODO : remove from the download queue
-//                    remove the project from queue
                     syncableMap.remove(project.getId());
+                    adapterv3.removeAndNotify(pos);
                })
                 .setNegativeButton("Cancel", null)
                 .create()
