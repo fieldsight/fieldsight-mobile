@@ -33,6 +33,7 @@ public class SyncStat {
         this.type = type;
         this.failedUrl = failedUrl;
         this.started = started;
+        this.status = status;
     }
 
     public int getStatus() {
