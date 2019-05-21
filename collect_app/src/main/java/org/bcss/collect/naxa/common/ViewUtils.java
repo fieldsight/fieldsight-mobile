@@ -103,7 +103,7 @@ public final class ViewUtils {
 
     public static GlideRequest<Drawable> loadRemoteImage(Context context, String path) {
         return GlideApp.with(context)
-                .load(path.trim())
+                .load(path)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .centerInside()
                 .skipMemoryCache(false)

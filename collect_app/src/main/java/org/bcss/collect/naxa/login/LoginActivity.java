@@ -30,6 +30,7 @@ import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.migrate.MigrationHelper;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.project.ProjectListActivity;
+import org.bcss.collect.naxa.v3.ProjectListActivityV3;
 
 import timber.log.Timber;
 
@@ -210,7 +211,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         if (hasOldAccount) {
             MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
         } else {
-            ProjectListActivity.start(this);
+            startActivity(new Intent(this, ProjectListActivityV3.class));
         }
         Toast.makeText(this, "Logged In!", Toast.LENGTH_SHORT).show();
         finish();
