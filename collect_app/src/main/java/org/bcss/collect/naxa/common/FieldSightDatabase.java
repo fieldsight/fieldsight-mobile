@@ -39,6 +39,8 @@ import org.bcss.collect.naxa.survey.SurveyForm;
 import org.bcss.collect.naxa.survey.SurveyFormDAO;
 import org.bcss.collect.naxa.sync.SyncOLD;
 import org.bcss.collect.naxa.v3.network.RegionConverter;
+import org.bcss.collect.naxa.v3.network.SyncDaoV3;
+import org.bcss.collect.naxa.v3.network.SyncStat;
 
 import java.io.File;
 
@@ -57,10 +59,11 @@ import java.io.File;
                 FieldSightNotification.class,
                 Em.class,
                 FieldSightContactModel.class,
-                SubmissionDetail.class
+                SubmissionDetail.class,
+                SyncStat.class
 
         },
-        version = 10)
+        version = 11)
 @TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
@@ -93,6 +96,8 @@ public abstract class FieldSightDatabase extends RoomDatabase {
 
     public abstract ContacstDao getContactsDao();
 
+    public abstract SyncDaoV3 getSyncDaoV3();
+
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 
     public static FieldSightDatabase getDatabase(final Context context) {
@@ -105,7 +110,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         FieldSightDatabase.class, DB_PATH)
                         .allowMainThreadQueries()//used in org.bcss.collect.naxa.jobs.LocalNotificationJob
-                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
+                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
                         .build();
             }
         }
@@ -160,6 +165,13 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE FieldSightNotification "
                     + " ADD COLUMN `schedule_forms_count` TEXT ");
+        }
+    };
+    private static final Migration MIGRATION_10_11 = new Migration(10, 11) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `syncstat` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `project_id` TEXT, `type` TEXT, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL)");
+
         }
     };
 

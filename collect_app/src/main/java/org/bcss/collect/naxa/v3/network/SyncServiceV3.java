@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
@@ -52,12 +53,12 @@ public class SyncServiceV3 extends IntentService {
             selectedProject = Objects.requireNonNull(intent).getParcelableArrayListExtra("projects");
             Timber.i("SyncServiceV3 slectedProject size = %d", selectedProject.size());
 
+
             HashMap<String, List<Syncable>> selectedMap = (HashMap<String, List<Syncable>>) intent.getSerializableExtra("selection");
 
             for (String key : selectedMap.keySet()) {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
-
 
             //Start syncing sites
             Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
@@ -67,6 +68,9 @@ public class SyncServiceV3 extends IntentService {
                         @Override
                         public void onNext(Project project) {
                             Timber.i("Sites downloaded for project %s",project.getName());
+                            selectedMap.get(project.getId()).get(0).completed = true;
+                            SyncStat syncStat = new SyncStat(project.getId(), "11", "", false, Constant.DownloadStatus.COMPLETED);
+                            SyncLocalSourcev3.getInstance().save(syncStat);
                         }
 
                         @Override
@@ -113,6 +117,9 @@ public class SyncServiceV3 extends IntentService {
                     .subscribeWith(new DisposableObserver<Project>() {
                         @Override
                         public void onNext(Project project) {
+                            selectedMap.get(project.getId()).get(2).completed = true;
+                            SyncStat syncStat = new SyncStat(project.getId(), "2", "", false, Constant.DownloadStatus.COMPLETED);
+                            SyncLocalSourcev3.getInstance().save(syncStat);
                             Timber.i("Forms downloaded for project %s",project.getName());
                         }
 

@@ -9,6 +9,7 @@ import java.util.Set;
  * @Since: 14/05/2019
  * this Model will handle the sync process of all the content
  */
+
 public class Syncable implements Serializable {
         String title;
 //        this flag is used to enable it to sync or not
