@@ -21,6 +21,7 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.v3.network.Syncable;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,9 +53,10 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bindView(Project project){
+    public void bindView(Project project, HashMap<String, Integer> progressMap){
         tv_project_name.setText(project.getName());
         tv_project_other.setText(String.format("A project by %s", project.getOrganizationName()));
+        progressBar.setProgress(progressMap.get(project.getId()));
     }
 
     public void manageChildView(List<Syncable> syncableList){
