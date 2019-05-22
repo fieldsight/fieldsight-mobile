@@ -14,16 +14,16 @@
                         android:endColor="@color/white"
                         android:angle="270" />
                     <size
-                        android:width="30dp"
-                        android:height="30dp" />
+                        android:width="19dp"
+                        android:height="19dp" />
                 </shape>
             </item>
 
             <item
-                android:width="8dp"
-                android:height="2dp"
-                android:top="20dp"
-                android:left="6dp">
+                android:width="4dp"
+                android:height="1dp"
+                android:top="12dp"
+                android:left="4.6dp">
                 <rotate
                     android:fromDegrees="45">
                     <shape android:shape="rectangle">
@@ -33,10 +33,10 @@
             </item>
 
             <item
-                android:width="19dp"
-                android:height="2dp"
-                android:top="16dp"
-                android:left="9dp">
+                android:width="10dp"
+                android:height="1dp"
+                android:top="10dp"
+                android:left="6.5dp">
                 <rotate
                     android:fromDegrees="-45">
                     <shape android:shape="rectangle">

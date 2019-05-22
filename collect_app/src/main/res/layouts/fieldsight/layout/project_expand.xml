@@ -52,8 +52,8 @@
 
         <CheckBox
             android:id="@+id/chkbx_sync"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
             android:button="@drawable/cb_circular_pressed_state_bg"
             app:layout_constraintBottom_toBottomOf="@id/rela_round"
             app:layout_constraintLeft_toLeftOf="parent"
