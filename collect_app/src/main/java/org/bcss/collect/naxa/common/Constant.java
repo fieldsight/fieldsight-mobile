@@ -163,10 +163,8 @@ public class Constant {
     }
 
     public final static HashMap<Integer, String> DOWNLOADMAP = new HashMap<Integer, String>(){{
-        put(DownloadStatus.PENDING, SyncStatus.PENDING);
-        put(DownloadStatus.FAILED, SyncStatus.FAILED);
-        put(DownloadStatus.RUNNING, SyncStatus.RUNNING);
-        put(DownloadStatus.COMPLETED, SyncStatus.COMPLETED);
-        put(DownloadStatus.DISABLED, SyncStatus.DISABLED);
+        put(DownloadStatus.FAILED, "Failed");
+        put(DownloadStatus.RUNNING, "Syncing data");
+        put(DownloadStatus.COMPLETED, "Completed");
     }};
 }

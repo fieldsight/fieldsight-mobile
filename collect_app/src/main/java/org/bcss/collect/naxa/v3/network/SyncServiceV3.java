@@ -63,12 +63,6 @@ public class SyncServiceV3 extends IntentService {
             Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnSubscribe(new Consumer<Disposable>() {
-                        @Override
-                        public void accept(Disposable disposable) throws Exception {
-
-                        }
-                    })
                     .subscribeWith(new DisposableObserver<Project>() {
                         @Override
                         public void onNext(Project project) {
@@ -105,12 +99,8 @@ public class SyncServiceV3 extends IntentService {
                     .flatMap(new Function<Project, Observable<String>>() {
                         @Override
                         public Observable<String> apply(Project project) throws Exception {
+                            saveState(project.getId(), 2, "", true, Constant.DownloadStatus.RUNNING);
                             return EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
-                        }
-                    }).doOnSubscribe(new Consumer<Disposable>() {
-                        @Override
-                        public void accept(Disposable disposable) throws Exception {
-
                         }
                     })
                     .subscribe(new Consumer<String>() {
@@ -134,16 +124,13 @@ public class SyncServiceV3 extends IntentService {
 
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-                    .filter(project -> selectedMap.get(project.getId()).get(0).sync)
+                    .filter(project -> selectedMap.get(project.getId()).get(1).sync)
                     .flatMap(new Function<Project, Observable<Project>>() {
                         @Override
                         public Observable<Project> apply(Project project) throws Exception {
+                            Timber.i("selected project : %s downloading forms", project.getId());
+                            saveState(project.getId(), 1, "", true, Constant.DownloadStatus.RUNNING);
                             return ODKFormRemoteSource.getInstance().getByProjectId(project);
-                        }
-                    }).doOnSubscribe(new Consumer<Disposable>() {
-                        @Override
-                        public void accept(Disposable disposable) throws Exception {
-
                         }
                     })
                     .subscribeWith(new DisposableObserver<Project>() {
@@ -213,6 +200,7 @@ public class SyncServiceV3 extends IntentService {
                         .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
                             @Override
                             public SingleSource<SiteResponse> apply(Region region) {
+                                saveState(project.getId(), 0, "", true, Constant.DownloadStatus.RUNNING);
                                 return SiteRemoteSource.getInstance().getSitesByRegionId(region.getId())
                                         .doOnSuccess(saveSites());
                             }
@@ -236,11 +224,11 @@ public class SyncServiceV3 extends IntentService {
                         .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance().getSitesByProjectId(project1.getId()).doOnSuccess(saveSites()))
                         .concatMap(new Function<SiteResponse, ObservableSource<?>>() {
                             @Override
-                            public ObservableSource<?> apply(SiteResponse siteResponse) throws Exception {
+                            public ObservableSource<?> apply(SiteResponse siteResponse) {
                                 if (siteResponse.getNext() == null) {
                                     return Observable.just(siteResponse);
                                 }
-
+                                saveState(project.getId(), 0, "", true, Constant.DownloadStatus.RUNNING);
                                 return Observable.just(siteResponse)
                                         .concatWith(getSitesByUrl(siteResponse.getNext()));
 
@@ -248,7 +236,7 @@ public class SyncServiceV3 extends IntentService {
                         });
 
 
-                return Observable.concat(projectObservable, projectObservable)
+                return Observable.concat(projectObservable, regionSitesObservable)
                         .map(new Function<Object, Project>() {
                             @Override
                             public Project apply(Object o) throws Exception {

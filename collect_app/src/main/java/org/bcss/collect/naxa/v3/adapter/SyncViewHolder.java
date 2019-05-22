@@ -48,18 +48,18 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
     ImageView iv_avatar;
 
 
-    public SyncViewHolder(@NonNull View itemView) {
+    SyncViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
-    public void bindView(Project project, HashMap<String, Integer> progressMap){
+    void bindView(Project project, HashMap<String, Integer> progressMap){
         tv_project_name.setText(project.getName());
         tv_project_other.setText(String.format("A project by %s", project.getOrganizationName()));
         progressBar.setProgress(progressMap.get(project.getId()));
     }
 
-    public void manageChildView(List<Syncable> syncableList){
+    void manageChildView(List<Syncable> syncableList){
         Timber.i("SyncViewHolder, syncablelistsize = %d", syncableList.size());
         lv_options.setAdapter(new ArrayAdapter<Syncable>(itemView.getContext(), R.layout.row_text_checkbox, syncableList) {
             @NonNull

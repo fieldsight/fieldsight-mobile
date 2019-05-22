@@ -15,10 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.sync.ContentDownloadAdapter;
@@ -46,15 +48,18 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @BindView(R.id.activity_download_recycler_view)
     RecyclerView recyclerView;
 
-    @BindView(R.id.toggle_button)
-    Button toggleButton;
+//    @BindView(R.id.toggle_button)
+//    Button toggleButton;
 
     @BindView(R.id.download_button)
     Button downloadButton;
 
 
-    @BindView(R.id.layout_network_connectivity)
-    RelativeLayout layoutNetworkConnectivity;
+//    @BindView(R.id.layout_network_connectivity)
+//    RelativeLayout layoutNetworkConnectivity;
+
+    @BindView(R.id.toolbar_message)
+    TextView toolbar_message;
 
     private ContentDownloadAdapter adapter;
     private DownloadViewModel viewModel;
@@ -71,7 +76,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_download);
+        setContentView(R.layout.activity_sync);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -102,7 +107,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             syncIntent.putExtra("selection", syncableMap);
             startService(syncIntent);
         });
-        toggleButton.setVisibility(View.GONE);
+//        toggleButton.setVisibility(View.GONE);
 
 /// hiding the toggle selection button
 //        findViewById(R.id.toggle_button).setOnClickListener(v -> {
@@ -115,6 +120,37 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         };
         syncdata = SyncLocalSourcev3.getInstance().getAll();
         syncdata.observe(this, syncObserver);
+
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        adapter.setOnItemClickListener(this);
+        connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
+            @Override
+            public void onConnectionSuccess() {
+               toolbar_message.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onConnectionFailure() {
+               toolbar_message.setVisibility(View.VISIBLE);
+               toolbar_message.setText(getString(R.string.no_internet_body));
+            }
+
+            @Override
+            public void onCheckComplete() {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        adapter.setOnItemClickListener(null);
+        connectivityDisposable.dispose();
     }
 
     // this class will manage the sync list to determine which should be synced
