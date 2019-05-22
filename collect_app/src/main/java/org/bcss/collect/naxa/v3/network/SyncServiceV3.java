@@ -63,6 +63,12 @@ public class SyncServiceV3 extends IntentService {
             Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+
+                        }
+                    })
                     .subscribeWith(new DisposableObserver<Project>() {
                         @Override
                         public void onNext(Project project) {
@@ -101,6 +107,11 @@ public class SyncServiceV3 extends IntentService {
                         public Observable<String> apply(Project project) throws Exception {
                             return EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
                         }
+                    }).doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+
+                        }
                     })
                     .subscribe(new Consumer<String>() {
                         @Override
@@ -128,6 +139,11 @@ public class SyncServiceV3 extends IntentService {
                         @Override
                         public Observable<Project> apply(Project project) throws Exception {
                             return ODKFormRemoteSource.getInstance().getByProjectId(project);
+                        }
+                    }).doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+
                         }
                     })
                     .subscribeWith(new DisposableObserver<Project>() {
