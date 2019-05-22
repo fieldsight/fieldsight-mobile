@@ -19,6 +19,8 @@ public class SyncStat {
     boolean started;
     @ColumnInfo(name = "status")
     int status;
+    @ColumnInfo(name = "created_date")
+    long created_date;
 
     public SyncStat() {}
 
@@ -28,12 +30,21 @@ public class SyncStat {
             @params failedUrl
             @params started
      */
-    public SyncStat(String projectId, String type, String failedUrl, boolean started, int status) {
+    public SyncStat(String projectId, String type, String failedUrl, boolean started, int status, long created_date) {
         this.projectId = projectId;
         this.type = type;
         this.failedUrl = failedUrl;
         this.started = started;
         this.status = status;
+        this.created_date = created_date;
+    }
+
+    public long getCreated_date() {
+        return created_date;
+    }
+
+    public void setCreated_date(long created_date) {
+        this.created_date = created_date;
     }
 
     public int getStatus() {

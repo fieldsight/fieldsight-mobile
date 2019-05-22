@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 12,
-    "identityHash": "1ff8a7c1f4be0799f0b632a856a9b0df",
+    "identityHash": "70e079f03d136ac3ac4c10f6463006b6",
     "entities": [
       {
         "tableName": "sites",
@@ -1291,7 +1291,7 @@
       },
       {
         "tableName": "syncstat",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `project_id` TEXT, `type` TEXT, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `project_id` TEXT, `type` TEXT, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "uid",
@@ -1328,6 +1328,12 @@
             "columnName": "status",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "created_date",
+            "columnName": "created_date",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1342,7 +1348,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1ff8a7c1f4be0799f0b632a856a9b0df\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"70e079f03d136ac3ac4c10f6463006b6\")"
     ]
   }
 }

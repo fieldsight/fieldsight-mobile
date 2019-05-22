@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -88,7 +89,7 @@ public class SyncServiceV3 extends IntentService {
 
             Disposable projectEduMatObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-                    .filter(project -> selectedMap.get(project.getId()).get(0).sync)
+                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
                     .flatMap(new Function<Project, Observable<String>>() {
                         @Override
                         public Observable<String> apply(Project project) throws Exception {
@@ -152,11 +153,12 @@ public class SyncServiceV3 extends IntentService {
 
     }
 
+
     private void saveState(String projectId, int type, String failedUrl, boolean started, int status) {
         Timber.d("saving for for %d stopped at %s for %s", type, failedUrl,projectId);
         if(selectedMap != null && selectedMap.containsKey(projectId)) {
 //            selectedMap.get(projectId).get(type).completed = true;
-            SyncStat syncStat = new SyncStat(projectId, type+"", failedUrl, started, status);
+            SyncStat syncStat = new SyncStat(projectId, type+"", failedUrl, started, status, System.currentTimeMillis());
             SyncLocalSourcev3.getInstance().save(syncStat);
         }
     }

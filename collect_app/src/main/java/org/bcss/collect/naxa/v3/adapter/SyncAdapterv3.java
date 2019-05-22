@@ -91,12 +91,14 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         for (String key : syncableMap.keySet()) {
             List<Syncable> syncableList = syncableMap.get(key);
             int totalSynced = 0;
+            int totalSize = 0;
             for(Syncable syncable : syncableList) {
                 if(syncable.getStatus() == Constant.DownloadStatus.COMPLETED) {
                     totalSynced++;
                 }
+                totalSize += syncable.getSync() ? 1 : 0;
             }
-            progressMap.put(key, totalSynced*100/syncableList.size());
+            progressMap.put(key, totalSynced*100/totalSize);
         }
     }
 

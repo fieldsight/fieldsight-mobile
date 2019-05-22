@@ -201,4 +201,15 @@ public class DateTimeUtils {
     }
 
 
+    public String getFormattedDate(String format, long time) {
+        try {
+            Date date = new Date();
+            date.setTime(time);
+            return new SimpleDateFormat(format).format(date);
+        }catch (Exception e) {e.printStackTrace();
+            return time+"";
+        }
+    }
+
+
 }
