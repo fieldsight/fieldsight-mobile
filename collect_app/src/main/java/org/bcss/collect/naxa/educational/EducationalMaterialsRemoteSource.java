@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseRemoteDataSource;
+import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
@@ -19,9 +20,7 @@ import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.SubStage;
-import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
-
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
@@ -41,6 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
+import static org.bcss.collect.naxa.network.APIEndpoint.getEducationalParams;
 
 public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em> {
 
@@ -60,24 +60,23 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     }
 
 
-
     @Override
     public void getAll() {
-      getAllProjectEducationalMaterial(null)
-              .subscribe(new DisposableSingleObserver<List<String>>() {
-                  @Override
-                  public void onSuccess(List<String> strings) {
-                      //unused
-                  }
+        getAllProjectEducationalMaterial(null)
+                .subscribe(new DisposableSingleObserver<String>() {
+                    @Override
+                    public void onSuccess(String strings) {
+                        //unused
+                    }
 
-                  @Override
-                  public void onError(Throwable e) {
-                      //unused
-                  }
-              });
+                    @Override
+                    public void onError(Throwable e) {
+                        //unused
+                    }
+                });
     }
 
-    public Single<List<String>> getAllProjectEducationalMaterial(String projectId) {
+    public Single<String> getAllProjectEducationalMaterial(String projectId) {
         return Observable.merge(scheduledFormEducational(projectId), generalFormEducational(projectId), substageFormEducational(projectId))
                 .map(new Function<Em, ArrayList<String>>() {
                     @Override
@@ -130,6 +129,12 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
                 })
                 .toList()
+                .map(new Function<List<String>, String>() {
+                    @Override
+                    public String apply(List<String> strings) throws Exception {
+                        return projectId;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -139,13 +144,14 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                         DownloadableItemLocalSource.getINSTANCE().markAsRunning(EDU_MATERIALS);
                     }
                 })
-                .doOnSuccess(new Consumer<List<String>>() {
+                .doOnSuccess(new Consumer<String>() {
                     @Override
-                    public void accept(List<String> strings) throws Exception {
-                        Timber.i("%s has been downloaded", strings.toString());
+                    public void accept(String s) throws Exception {
+                        Timber.i("%s has been downloaded", s);
                         DownloadableItemLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
                     }
                 })
+
                 .doOnError(new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable e) throws Exception {
@@ -179,7 +185,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
         return savePath;
     }
 
-    public Single<List<String>> getByProjectId(String projectId) {
+    public Single<String> getByProjectId(String projectId) {
         return getAllProjectEducationalMaterial(projectId);
     }
 
@@ -215,7 +221,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
 
         return getProjectObservable(projectId)
-                .flatMap((Function<String, ObservableSource<ArrayList<ScheduleForm>>>) s -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms("1", s))
+                .flatMap((Function<String, ObservableSource<ArrayList<ScheduleForm>>>) s -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms(getEducationalParams(),"1", s))
                 .flatMapIterable((Function<ArrayList<ScheduleForm>, Iterable<ScheduleForm>>) scheduleForms -> scheduleForms)
                 .filter(new Predicate<ScheduleForm>() {
                     @Override
@@ -238,7 +244,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
     private Observable<Em> substageFormEducational(@Nullable String projectId) {
         return getProjectObservable(projectId)
-                .flatMap((Function<String, ObservableSource<ArrayList<Stage>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getStageSubStage("1", project))
+                .flatMap((Function<String, ObservableSource<ArrayList<Stage>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getStageSubStage(getEducationalParams(),"1", project))
                 .flatMapIterable((Function<ArrayList<Stage>, Iterable<Stage>>) stages -> stages)
                 .map(Stage::getSubStage)
                 .flatMapIterable((Function<ArrayList<SubStage>, Iterable<SubStage>>) subStages -> subStages)
@@ -265,7 +271,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     private Observable<Em> generalFormEducational(@Nullable String projectId) {
 
         return getProjectObservable(projectId)
-                .flatMap((Function<String, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable("1", project))
+                .flatMap((Function<String, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable(getEducationalParams(), "1", project))
                 .flatMapIterable((Function<ArrayList<GeneralForm>, Iterable<GeneralForm>>) generalForms -> generalForms)
                 .filter(new Predicate<GeneralForm>() {
                     @Override

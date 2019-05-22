@@ -67,7 +67,7 @@ public class SyncServiceV3 extends IntentService {
                     .subscribeWith(new DisposableObserver<Project>() {
                         @Override
                         public void onNext(Project project) {
-                            Timber.i("Sites downloaded for project %s",project.getName());
+                            Timber.i("Sites downloaded for project %s", project.getName());
                             selectedMap.get(project.getId()).get(0).completed = true;
                             SyncStat syncStat = new SyncStat(project.getId(), "11", "", false, Constant.DownloadStatus.COMPLETED);
                             SyncLocalSourcev3.getInstance().save(syncStat);
@@ -75,8 +75,10 @@ public class SyncServiceV3 extends IntentService {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            String url = getFailedFormUrl(throwable);
-                            Timber.i("SyncService sites failed url = %s", url);
+
+                            String url = getFailedFormUrl(throwable)[0];
+                            String projectId = getFailedFormUrl(throwable)[1];
+                            Timber.d("Download for sites stopped at %s for %s", url,projectId);
                         }
 
                         @Override
@@ -89,19 +91,27 @@ public class SyncServiceV3 extends IntentService {
             Disposable projectEduMatObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(0).sync)
-                    .flatMap(new Function<Project, ObservableSource<List<String>>>() {
+                    .flatMap(new Function<Project, Observable<String>>() {
                         @Override
-                        public ObservableSource<List<String>> apply(Project project) throws Exception {
+                        public Observable<String> apply(Project project) throws Exception {
                             return EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
                         }
-                    }).subscribe(new Consumer<List<String>>() {
+                    })
+                    .subscribe(new Consumer<String>() {
                         @Override
-                        public void accept(List<String> strings) throws Exception {
+                        public void accept(String projectId) throws Exception {
+                            SyncStat syncStat = new SyncStat("", "2", "", false, Constant.DownloadStatus.COMPLETED);
+                            SyncLocalSourcev3.getInstance().save(syncStat);
+
                             Timber.i("Project Educational material Sync completed");
                         }
                     }, throwable -> {
-                        String url = getFailedFormUrl(throwable);
-                        Timber.i("EducationMaterial, FailedUrl = %s", url);
+                        String url = getFailedFormUrl(throwable)[0];
+                        String projectId = getFailedFormUrl(throwable)[1];
+                        Timber.d("Download for educational stopped at %s for %s", url,projectId);
+
+                        SyncStat syncStat = new SyncStat("", "2", url, false, Constant.DownloadStatus.FAILED);
+                        SyncLocalSourcev3.getInstance().save(syncStat);
                     });
 
 
@@ -118,15 +128,19 @@ public class SyncServiceV3 extends IntentService {
                         @Override
                         public void onNext(Project project) {
                             selectedMap.get(project.getId()).get(2).completed = true;
-                            SyncStat syncStat = new SyncStat(project.getId(), "2", "", false, Constant.DownloadStatus.COMPLETED);
+                            SyncStat syncStat = new SyncStat(project.getId(), "1", "", false, Constant.DownloadStatus.COMPLETED);
                             SyncLocalSourcev3.getInstance().save(syncStat);
-                            Timber.i("Forms downloaded for project %s",project.getName());
+                            Timber.i("Forms downloaded for project %s", project.getName());
+
+
                         }
 
                         @Override
                         public void onError(Throwable throwable) {
-                            String url = getFailedFormUrl(throwable);
-                            Timber.i("FormsDownload, FailedUrl = %s", url);
+                            String url = getFailedFormUrl(throwable)[0];
+                            String projectId = getFailedFormUrl(throwable)[1];
+                            Timber.d("Download for forms stopped at %s for %s", url,projectId);
+
                         }
 
                         @Override
@@ -143,17 +157,20 @@ public class SyncServiceV3 extends IntentService {
 
     }
 
-    private String getFailedFormUrl(Throwable throwable) {
+    private String[] getFailedFormUrl(Throwable throwable) {
         String failedUrl = "";
+        String projectId = "";
         if (throwable instanceof RetrofitException) {
             RetrofitException retrofitException = (RetrofitException) throwable;
             String msg = retrofitException.getMessage();
             failedUrl = retrofitException.getUrl();
+            projectId = retrofitException.getProjectId();
 
         }
 
-        return failedUrl;
+        return new String[]{failedUrl, projectId};
     }
+
 
     private Function<Project, Observable<Project>> getSitesObservable() {
         return new Function<Project, Observable<Project>>() {
@@ -197,7 +214,6 @@ public class SyncServiceV3 extends IntentService {
 
                             }
                         });
-
 
 
                 return Observable.concat(projectObservable, projectObservable)

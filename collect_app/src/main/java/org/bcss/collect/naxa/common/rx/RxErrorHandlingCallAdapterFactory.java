@@ -2,8 +2,6 @@ package org.bcss.collect.naxa.common.rx;
 
 import android.support.annotation.NonNull;
 
-import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -15,6 +13,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
+import okhttp3.HttpUrl;
 import retrofit2.Call;
 import retrofit2.CallAdapter;
 import retrofit2.HttpException;
@@ -49,6 +48,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             this.wrapped = wrapped;
         }
 
+
         @NonNull
         @Override
         public Type responseType() {
@@ -59,11 +59,13 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
         @Override
         public Object adapt(@NonNull Call<R> call) {
             Object result = wrapped.adapt(call);
+            HttpUrl url = call.request().url();
+
             if (result instanceof Single) {
                 return ((Single) result).onErrorResumeNext(new Function<Throwable, SingleSource>() {
                     @Override
                     public SingleSource apply(@NonNull Throwable throwable) {
-                        return Single.error(asRetrofitException(throwable));
+                        return Single.error(asRetrofitException(throwable, url));
                     }
                 });
             }
@@ -71,7 +73,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
                 return ((Observable) result).onErrorResumeNext(new Function<Throwable, ObservableSource>() {
                     @Override
                     public ObservableSource apply(@NonNull Throwable throwable) {
-                        return Observable.error(asRetrofitException(throwable));
+                        return Observable.error(asRetrofitException(throwable, url));
                     }
                 });
             }
@@ -79,8 +81,8 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             if (result instanceof Completable) {
                 return ((Completable) result).onErrorResumeNext(new Function<Throwable, CompletableSource>() {
                     @Override
-                    public CompletableSource apply(@NonNull Throwable throwable) {
-                        return Completable.error(asRetrofitException(throwable));
+                    public CompletableSource apply(Throwable throwable) throws Exception {
+                        return Completable.error(throwable);
                     }
                 });
             }
@@ -88,7 +90,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             return result;
         }
 
-        private RetrofitException asRetrofitException(Throwable throwable) {
+        private RetrofitException asRetrofitException(Throwable throwable, HttpUrl url) {
             // We had non-200 http error
             if (throwable instanceof HttpException) {
 
@@ -99,11 +101,11 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
 
             // A network error happened
             if (throwable instanceof IOException) {
-                return RetrofitException.networkError((IOException) throwable);
+                return RetrofitException.networkError((IOException) throwable,url);
             }
 
             // We don't know what happened. We need to simply convert to an unknown error
-            return RetrofitException.unexpectedError(throwable);
+            return RetrofitException.unexpectedError(throwable,url);
         }
     }
 }

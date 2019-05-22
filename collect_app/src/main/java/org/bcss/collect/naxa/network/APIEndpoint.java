@@ -1,14 +1,16 @@
 package org.bcss.collect.naxa.network;
 
+import java.util.HashMap;
+
 public class APIEndpoint {
 
     public final static int NEW_RECORD_CREATED = 201;
-//  public static final String BASE_URL = "https://app.fieldsight.org";
-  public static final String BASE_URL = "https://fieldsight.naxa.com.np";
+    //  public static final String BASE_URL = "https://app.fieldsight.org";
+    public static final String BASE_URL = "https://fieldsight.naxa.com.np";
 //  public static final String BASE_URL = "http://192.168.1.107:8001";
 //  public static final String BASE_URL = "http://192.168.1.251:8001";
 
-    public static final String PASSWORD_RESET ="/accounts/password/reset/";
+    public static final String PASSWORD_RESET = "/accounts/password/reset/";
     public static final String USER_LOGIN = "/users/api/get-auth-token/";
 
     public static final String FORM_SUBMISSION_PAGE = "/forms/submission/";
@@ -45,20 +47,39 @@ public class APIEndpoint {
 
     public static final String GET_USER_PROFILE = "/users/api/profile/";
     public static final String GET_INSTANCE_SUBMISSION_ATTACHMENTS = "/forms/api/instance/get_attachments_of_finstance/{instance_submission_id}";
-    public static final String GET_INSTANCE_XML= "/forms/api/instance/download_submission";
-    public static final String GET_FORM_XML= "/forms/api/instance/download_xml_version";
+    public static final String GET_INSTANCE_XML = "/forms/api/instance/download_submission";
+    public static final String GET_FORM_XML = "/forms/api/instance/download_xml_version";
 
     public static final String GET_EXCHANGE_TOKEN = "/users/api/exchange/google-oauth2/";
 
-  public static class V3 {
+    public static class V3 {
 
-    public static final String GET_PROJECTS = "/fv3/api/projects/";
-    public static final String GET_SITES = "/fv3/api/sites/";
-  }
+        public static final String GET_PROJECTS = "/fv3/api/projects/";
+        public static final String GET_SITES = "/fv3/api/sites/";
+    }
 
-  public class PARAMS {
-    public static final String PROJECT_ID = "project_id";
-    public static final String REGION_ID = "region_id";
-  }
+    public class PARAMS {
+        public static final String PROJECT_ID = "project_id";
+        public static final String REGION_ID = "region_id";
+        /*
+         To differentiate forms and educational material from url in `call` object in RxErrorHandlingCallAdapterFactory
+         */
+        public static final String FORMS_EDU_TYPE = "x_type";
+
+        public class VALUES {
+            public static final String EDUCATIONAL = "educational";
+            public static final String FORMS = "forms";
+        }
+    }
+
+    public static HashMap<String, String> getEducationalParams() {
+
+        return new HashMap<>();
+    }
+
+
+    public static HashMap<String, String> getFormsParams() {
+        return new HashMap<>();
+    }
 
 }

@@ -21,6 +21,7 @@ import org.bcss.collect.naxa.submissions.FormHistoryResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -36,6 +37,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_ALL_CONTACTS;
@@ -80,14 +82,14 @@ public interface ApiInterface {
     );
 
     @GET(GET_GENERAL_FORM)
-    Observable<ArrayList<GeneralForm>> getGeneralFormsObservable(@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
+    Observable<ArrayList<GeneralForm>> getGeneralFormsObservable(@QueryMap Map<String, String> options, @Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
 
     @GET(GET_FORM_SCHEDULE)
-    Observable<ArrayList<ScheduleForm>> getScheduleForms(@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
+    Observable<ArrayList<ScheduleForm>> getScheduleForms(@QueryMap Map<String, String> options,@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
 
 
     @GET(GET_STAGE_SUB_STAGE)
-    Observable<ArrayList<Stage>> getStageSubStage(@Path(value = "is_project", encoded = true) String createdFromProject, @Path("id") String creatorsId);
+    Observable<ArrayList<Stage>> getStageSubStage(@QueryMap Map<String, String> options,@Path(value = "is_project", encoded = true) String createdFromProject, @Path("id") String creatorsId);
 
     @Multipart
     @POST
@@ -236,7 +238,6 @@ public interface ApiInterface {
 
     @GET(APIEndpoint.GET_INSTANCE_SUBMISSION_ATTACHMENTS)
     Observable<HashMap<String, String>> getInstanceMediaList(@Path(value = "instance_submission_id", encoded = true) String instanceSubmissionId);
-
 
 
 }

@@ -33,6 +33,8 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
+import static org.bcss.collect.naxa.network.APIEndpoint.getFormsParams;
+
 public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
 
     private static StageRemoteSource INSTANCE;
@@ -80,7 +82,7 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
         return ServiceGenerator
                 .getRxClient()
                 .create(ApiInterface.class)
-                .getStageSubStage(createdFromProject, creatorsId)
+                .getStageSubStage(getFormsParams(),createdFromProject, creatorsId)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) {

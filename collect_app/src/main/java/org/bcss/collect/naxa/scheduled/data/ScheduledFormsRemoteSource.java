@@ -36,6 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_ERROR;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_START;
+import static org.bcss.collect.naxa.network.APIEndpoint.getFormsParams;
 
 public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<ScheduleForm> {
 
@@ -91,7 +92,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
         String createdFromProject = XMLForm.toNumeralString(xmlForm.isCreatedFromProject());
         String creatorsId = xmlForm.getFormCreatorsId();
         return ServiceGenerator.getRxClient().create(ApiInterface.class)
-                .getScheduleForms(createdFromProject, creatorsId)
+                .getScheduleForms(getFormsParams(),createdFromProject, creatorsId)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) {
