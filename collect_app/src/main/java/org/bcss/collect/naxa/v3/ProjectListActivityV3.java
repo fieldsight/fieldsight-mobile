@@ -105,7 +105,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         setContentView(R.layout.layout_simple_recycler_with_nodata);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        setTitle("Projects");
+        setTitle("Select Projects for sync");
         adapter = new ProjectListAdapter(projectList);
         observer = new RecyclerView.AdapterDataObserver() {
             @Override

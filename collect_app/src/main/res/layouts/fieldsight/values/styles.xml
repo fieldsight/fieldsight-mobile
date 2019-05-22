@@ -62,4 +62,26 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="TextAppearance.MaterialComponents.SyncProjectsTitle" parent="TextAppearance.AppCompat.Title">
+    <!-- Fake Roboto Medium. -->
+    <item name="fontFamily">sans-serif-medium</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textAllCaps">false</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:textColor">#005681</item>
+    <item name="android:letterSpacing">0.0125</item>
+</style>
+
+    <style name="TextAppearance.MaterialComponents.SyncProjectsSubtitle" parent="TextAppearance.AppCompat.Subhead">
+        <!-- Fake Roboto Medium. -->
+        <item name="fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">#AA333333</item>
+        <item name="android:letterSpacing">0.0125</item>
+    </style>
+
 </resources>

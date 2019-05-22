@@ -15,22 +15,29 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="102dp">
 
 
         <RelativeLayout
             android:id="@+id/rela_round"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/circle_green"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginBottom="23dp"
             app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed">
+
+            <ImageView
+                android:id="@+id/iv_project_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/circle_blue"
+                />
 
 
             <TextView
@@ -43,48 +50,55 @@
 
         </RelativeLayout>
 
+        <CheckBox
+            android:id="@+id/chkbx_sync"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:button="@drawable/cb_circular_pressed_state_bg"
+            app:layout_constraintBottom_toBottomOf="@id/rela_round"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:checked="true"
+            android:layout_marginLeft="53dp"
+            />
+
 
         <TextView
             android:id="@+id/primary_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="6dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsTitle"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="22dp"
             app:layout_constraintStart_toEndOf="@+id/rela_round"
             app:layout_constraintTop_toTopOf="parent"
-
-            tools:text="STFC - Nuwakot" />
+            tools:text="Project Sight first" />
 
         <TextView
             android:id="@+id/sub_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="8dp"
             android:text="A project by Build Change"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/secondaryColor"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
             app:layout_constraintBottom_toTopOf="@+id/tv_project_address"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rela_round"
-
             app:layout_constraintTop_toBottomOf="@+id/primary_text" />
 
         <TextView
             android:id="@+id/tv_project_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="7dp"
             android:text="Kathmandu -10, Nepal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/secondaryColor"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
+            android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rela_round"
             app:layout_constraintTop_toBottomOf="@+id/sub_text" />
@@ -105,17 +119,6 @@
             app:srcCompat="@android:drawable/stat_sys_download_done" />
 
 
-        <CheckBox
-            android:id="@+id/chkbx_sync"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="0dp"
-            android:padding="6dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_project_address"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp" />
 
 
         <ProgressBar
@@ -128,7 +131,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:progress="20"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/chkbx_sync" />
+            app:layout_constraintTop_toBottomOf="@id/tv_project_address" />
 
         <TextView
             android:id="@+id/tv_download_counter"
