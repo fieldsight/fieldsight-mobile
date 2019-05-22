@@ -44,6 +44,17 @@ public class Project implements Parcelable {
     @Expose
     private String lon;
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @SerializedName("url")
+    public String url;
+
     @Expose
     private String siteClusters;
 
@@ -321,7 +332,7 @@ public class Project implements Parcelable {
         }
     };
 
-    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote,List<SiteMetaAttribute> metaAttributes) {
+    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote,List<SiteMetaAttribute> metaAttributes, String url) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -337,6 +348,7 @@ public class Project implements Parcelable {
         this.phone = phone;
         this.isSyncedWithRemote = isSyncedWithRemote;
         this.siteMetaAttributes = metaAttributes;
+        this.url = url;
 
     }
 

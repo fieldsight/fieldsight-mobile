@@ -22,12 +22,18 @@ public class ProjectBuilder {
     private String typeLabel;
     private String phone;
     private boolean isSyncedWithRemote;
+    public String url;
     private List<SiteMetaAttribute> metaAttributes;
     private Parcel in;
 
      public ProjectBuilder setId(String id) {
         this.id = id;
         return this;
+    }
+
+    public ProjectBuilder setUrl(String url) {
+         this.url = url;
+         return this;
     }
 
      public ProjectBuilder setName(String name) {
@@ -106,6 +112,6 @@ public class ProjectBuilder {
     }
 
      public Project createProject() {
-        return new Project(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, metaAttributes);
+        return new Project(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, metaAttributes, url);
     }
 } 

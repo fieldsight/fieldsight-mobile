@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,9 +86,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.cv_sync_project)
-    CardView cv_sync_project;
-
     @BindView(R.id.tv_sync_project)
     TextView tv_sync_project;
 
@@ -104,8 +102,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_simple_recycler_with_nodata);
         ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
-        setTitle("Select Projects for sync");
+        setTitle("Projects");
         adapter = new ProjectListAdapter(projectList);
         observer = new RecyclerView.AdapterDataObserver() {
             @Override
@@ -117,11 +116,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 }
                 Timber.d("project list counter is %d", selected);
                 if (selected > 0) {
-                    cv_sync_project.setVisibility(View.VISIBLE);
-                    cv_sync_project.setCardBackgroundColor(getResources().getColor(R.color.secondaryColor));
+                    tv_sync_project.setVisibility(View.VISIBLE);
+                    tv_sync_project.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
                     tv_sync_project.setText(String.format(Locale.getDefault(), "Sync %d projects", selected));
                 } else {
-                    cv_sync_project.setVisibility(View.GONE);
+                    tv_sync_project.setVisibility(View.GONE);
                     allSelected = false;
                     invalidateOptionsMenu();
                 }
@@ -134,7 +133,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         rv_projectlist.setAdapter(adapter);
         getDataFromServer();
         manageNodata(true);
-        cv_sync_project.setOnClickListener(v -> openDownloadAActivity());
+        tv_sync_project.setOnClickListener(v -> openDownloadAActivity());
         projectObserver = listLiveData -> {
             Timber.i("list live data = %d", listLiveData.size());
             adapter.notifyProjectisSynced(listLiveData);
@@ -211,7 +210,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.action_refresh).setIcon(allSelected ?
                 R.drawable.ic_cancel_white_24dp :
-                R.drawable.ic_refresh_white);
+                R.drawable.ic_action_sync
+        );
         menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
 
         return super.onPrepareOptionsMenu(menu);

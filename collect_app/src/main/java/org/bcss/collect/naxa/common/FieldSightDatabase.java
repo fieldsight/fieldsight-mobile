@@ -63,7 +63,7 @@ import java.io.File;
                 SyncStat.class
 
         },
-        version = 11)
+        version = 12)
 @TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
@@ -110,7 +110,8 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         FieldSightDatabase.class, DB_PATH)
                         .allowMainThreadQueries()//used in org.bcss.collect.naxa.jobs.LocalNotificationJob
-                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
+                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
+                                MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
                         .build();
             }
         }
@@ -172,6 +173,14 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("CREATE TABLE IF NOT EXISTS `syncstat` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `project_id` TEXT, `type` TEXT, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL)");
 
+        }
+    };
+
+    private static final Migration MIGRATION_11_12 = new Migration(10, 12) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE syncstat "
+                    + " ADD COLUMN `url` TEXT");
         }
     };
 

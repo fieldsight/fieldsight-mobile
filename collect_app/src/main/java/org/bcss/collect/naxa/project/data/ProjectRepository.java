@@ -129,12 +129,13 @@ public class ProjectRepository implements BaseRepository<Project> {
                     @Override
                     public Project apply(JSONObject json) throws Exception {
                         Project p = new ProjectBuilder()
-                                .setName(json.getString("name"))
-                                .setId(json.getString("id"))
-                                .setAddress(json.getString("address"))
-                                .setMetaAttributes(mapJSONtoMetaArributes(json.getJSONArray("meta_attributes")))
-                                .setOrganizationName(json.getJSONObject("organization").getString("name"))
-                                .setHasClusteredSites(json.getBoolean("has_site_role"))
+                                .setName(json.optString("name"))
+                                .setId(json.optString("id"))
+                                 .setUrl(json.optString("url"))
+                                .setAddress(json.optString("address"))
+                                .setMetaAttributes(mapJSONtoMetaArributes(json.optJSONArray("meta_attributes")))
+                                .setOrganizationName(json.getJSONObject("organization").optString("name"))
+                                .setHasClusteredSites(json.optBoolean("has_site_role"))
                                 .createProject();
 
                         p.setRegionList(mapJSONtoRegionList(json.getJSONArray("project_region")));
