@@ -172,4 +172,12 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         }
         return String.format("%s \n params = %s", projectName, logString);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(syncdata != null && syncdata.hasObservers()) {
+            syncdata.removeObserver(syncObserver);
+        }
+    }
 }
