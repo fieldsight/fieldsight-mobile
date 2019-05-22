@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.v3.network.SyncAdapterCallback;
+import org.bcss.collect.naxa.v3.network.SyncStat;
 import org.bcss.collect.naxa.v3.network.Syncable;
 
 import java.util.ArrayList;
@@ -34,11 +36,19 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     boolean auto;
     SyncAdapterCallback callback = null;
     boolean disableItemClick = false;
+    HashMap<String, Integer> progressMap = new HashMap<>();
 
     public SyncAdapterv3(boolean auto, List<Project> selectedProjectList, HashMap<String, List<Syncable>> syncableMap) {
         this.auto = auto;
         this.selectedProjectList = selectedProjectList;
         this.syncableMap = syncableMap;
+        initProgressMap();
+    }
+
+    private void initProgressMap() {
+        for(Project project : selectedProjectList) {
+            progressMap.put(project.getId(), 0);
+        }
     }
 
     public void toggleAllSelection(HashMap<String, List<Syncable>> syncableMap) {
@@ -58,6 +68,36 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
 
     public void enableItemClick() {
         this.disableItemClick = false;
+    }
+
+    public void notifyBySyncStat(List<SyncStat> syncStatList) {
+        if(syncStatList != null && syncStatList.size() > 0) {
+            for(SyncStat syncStat : syncStatList) {
+                List<Syncable> list = syncableMap.get(syncStat.getProjectId());
+                int syncType = Integer.parseInt(syncStat.getType());
+                if(syncType > -1) {
+                    Syncable syncable = list.get(syncType);
+                    syncable.setStatus(syncStat.getStatus());
+                }
+                syncableMap.put(syncStat.getProjectId(), list);
+            }
+            Timber.i("SyncAdapterV3 syncedMessage = %s", syncableMap.toString());
+            notifyProgressBar();
+            notifyDataSetChanged();
+        }
+    }
+
+    private void notifyProgressBar() {
+        for (String key : syncableMap.keySet()) {
+            List<Syncable> syncableList = syncableMap.get(key);
+            int totalSynced = 0;
+            for(Syncable syncable : syncableList) {
+                if(syncable.getStatus() == Constant.DownloadStatus.COMPLETED) {
+                    totalSynced++;
+                }
+            }
+            progressMap.put(key, totalSynced*100/syncableList.size());
+        }
     }
 
     @NonNull
@@ -80,7 +120,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull SyncViewHolder syncViewHolder, int i) {
         Project project = selectedProjectList.get(i);
-        syncViewHolder.bindView(project);
+        syncViewHolder.bindView(project, progressMap);
         List<Syncable> syncables = syncableMap.get(project.getId());
         syncViewHolder.manageChildView(syncables);
         syncViewHolder.iv_cancel.setOnClickListener(v -> {

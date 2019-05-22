@@ -38,9 +38,8 @@ public class SyncServiceV3 extends IntentService {
      * @Since : 14/05/2019
      */
 
-    int projectIndex = 0;
-    int regionIndex = 0;
     ArrayList<Project> selectedProject;
+    HashMap<String, List<Syncable>> selectedMap = null;
 
     public SyncServiceV3() {
         super("SyncserviceV3");
@@ -54,7 +53,7 @@ public class SyncServiceV3 extends IntentService {
             Timber.i("SyncServiceV3 slectedProject size = %d", selectedProject.size());
 
 
-            HashMap<String, List<Syncable>> selectedMap = (HashMap<String, List<Syncable>>) intent.getSerializableExtra("selection");
+            selectedMap = (HashMap<String, List<Syncable>>) intent.getSerializableExtra("selection");
 
             for (String key : selectedMap.keySet()) {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
@@ -64,13 +63,20 @@ public class SyncServiceV3 extends IntentService {
             Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+
+                        }
+                    })
                     .subscribeWith(new DisposableObserver<Project>() {
                         @Override
                         public void onNext(Project project) {
                             Timber.i("Sites downloaded for project %s", project.getName());
-                            selectedMap.get(project.getId()).get(0).completed = true;
-                            SyncStat syncStat = new SyncStat(project.getId(), "11", "", false, Constant.DownloadStatus.COMPLETED);
-                            SyncLocalSourcev3.getInstance().save(syncStat);
+                            saveState(project.getId(), 0, "", false, Constant.DownloadStatus.COMPLETED);
+//                            selectedMap.get(project.getId()).get(0).completed = true;
+//                            SyncStat syncStat = new SyncStat(project.getId(), "11", "", false, Constant.DownloadStatus.COMPLETED);
+//                            SyncLocalSourcev3.getInstance().save(syncStat);
                         }
 
                         @Override
@@ -78,6 +84,11 @@ public class SyncServiceV3 extends IntentService {
 
                             String url = getFailedFormUrl(throwable)[0];
                             String projectId = getFailedFormUrl(throwable)[1];
+
+//                            selectedMap.get(projectId).get(0).completed = true;
+//                            SyncStat syncStat = new SyncStat(project.getId(), "11", "", false, Constant.DownloadStatus.COMPLETED);
+//                            SyncLocalSourcev3.getInstance().save(syncStat);
+                            saveState(projectId, 0, url, false, Constant.DownloadStatus.FAILED);
                             Timber.d("Download for sites stopped at %s for %s", url,projectId);
                         }
 
@@ -96,22 +107,28 @@ public class SyncServiceV3 extends IntentService {
                         public Observable<String> apply(Project project) throws Exception {
                             return EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
                         }
+                    }).doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+
+                        }
                     })
                     .subscribe(new Consumer<String>() {
                         @Override
                         public void accept(String projectId) throws Exception {
-                            SyncStat syncStat = new SyncStat("", "2", "", false, Constant.DownloadStatus.COMPLETED);
-                            SyncLocalSourcev3.getInstance().save(syncStat);
-
+//                            SyncStat syncStat = new SyncStat("", "2", "", false, Constant.DownloadStatus.COMPLETED);
+//                            SyncLocalSourcev3.getInstance().save(syncStat);
+                            saveState(projectId, 2, "", false, Constant.DownloadStatus.COMPLETED);
                             Timber.i("Project Educational material Sync completed");
                         }
                     }, throwable -> {
                         String url = getFailedFormUrl(throwable)[0];
                         String projectId = getFailedFormUrl(throwable)[1];
+                        saveState(projectId, 2, url, false, Constant.DownloadStatus.FAILED);
                         Timber.d("Download for educational stopped at %s for %s", url,projectId);
 
-                        SyncStat syncStat = new SyncStat("", "2", url, false, Constant.DownloadStatus.FAILED);
-                        SyncLocalSourcev3.getInstance().save(syncStat);
+//                        SyncStat syncStat = new SyncStat("", "2", url, false, Constant.DownloadStatus.FAILED);
+//                        SyncLocalSourcev3.getInstance().save(syncStat);
                     });
 
 
@@ -123,13 +140,19 @@ public class SyncServiceV3 extends IntentService {
                         public Observable<Project> apply(Project project) throws Exception {
                             return ODKFormRemoteSource.getInstance().getByProjectId(project);
                         }
+                    }).doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+
+                        }
                     })
                     .subscribeWith(new DisposableObserver<Project>() {
                         @Override
                         public void onNext(Project project) {
-                            selectedMap.get(project.getId()).get(2).completed = true;
-                            SyncStat syncStat = new SyncStat(project.getId(), "1", "", false, Constant.DownloadStatus.COMPLETED);
-                            SyncLocalSourcev3.getInstance().save(syncStat);
+//                            selectedMap.get(project.getId()).get(2).completed = true;
+//                            SyncStat syncStat = new SyncStat(project.getId(), "1", "", false, Constant.DownloadStatus.COMPLETED);
+//                            SyncLocalSourcev3.getInstance().save(syncStat);
+                            saveState(project.getId(), 1, "", false, Constant.DownloadStatus.COMPLETED);
                             Timber.i("Forms downloaded for project %s", project.getName());
 
 
@@ -140,7 +163,7 @@ public class SyncServiceV3 extends IntentService {
                             String url = getFailedFormUrl(throwable)[0];
                             String projectId = getFailedFormUrl(throwable)[1];
                             Timber.d("Download for forms stopped at %s for %s", url,projectId);
-
+                            saveState(projectId, 1, url, false, Constant.DownloadStatus.FAILED);
                         }
 
                         @Override
@@ -155,6 +178,15 @@ public class SyncServiceV3 extends IntentService {
             Timber.e(e);
         }
 
+    }
+
+    private void saveState(String projectId, int type, String failedUrl, boolean started, int status) {
+        Timber.d("saving for for %d stopped at %s for %s", type, failedUrl,projectId);
+        if(selectedMap != null && selectedMap.containsKey(projectId)) {
+//            selectedMap.get(projectId).get(type).completed = true;
+            SyncStat syncStat = new SyncStat(projectId, type+"", failedUrl, started, status);
+            SyncLocalSourcev3.getInstance().save(syncStat);
+        }
     }
 
     private String[] getFailedFormUrl(Throwable throwable) {

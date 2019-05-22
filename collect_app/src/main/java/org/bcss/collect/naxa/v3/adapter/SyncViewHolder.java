@@ -17,9 +17,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.v3.network.Syncable;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -51,9 +53,10 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bindView(Project project){
+    public void bindView(Project project, HashMap<String, Integer> progressMap){
         tv_project_name.setText(project.getName());
         tv_project_other.setText(String.format("A project by %s", project.getOrganizationName()));
+        progressBar.setProgress(progressMap.get(project.getId()));
     }
 
     public void manageChildView(List<Syncable> syncableList){
@@ -73,6 +76,14 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                     Timber.i("SyncViewHolder clicked");
                     downloadListItemClicked(getLayoutPosition(), position);
                 });
+                TextView tv_stat = convertView.findViewById(R.id.tv_secondary);
+                if(syncable.getStatus() != Constant.DownloadStatus.COMPLETED) {
+                    Timber.i("syncable item name = %s and status = %s", syncable.getTitle(), syncable.getStatus());
+                }
+                tv_stat.setTextColor(syncable.status == Constant.DownloadStatus.FAILED ?
+                        getContext().getResources().getColor(R.color.red) :
+                        getContext().getResources().getColor(R.color.green));
+                tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
                 chkbx.setOnClickListener(v -> downloadListItemClicked(getLayoutPosition(), position));
                 return convertView;
             }

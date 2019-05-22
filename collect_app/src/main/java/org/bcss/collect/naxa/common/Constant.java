@@ -1,6 +1,9 @@
 package org.bcss.collect.naxa.common;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.v3.network.SyncStat;
+
+import java.util.HashMap;
 
 public class Constant {
 
@@ -149,6 +152,7 @@ public class Constant {
         public final static String RUNNING = "running";
         public final static String COMPLETED = "completed";
         public final static String FAILED = "failed";
+        public final static String DISABLED = "disabled";
     }
 
     public final static class MetaAttrsType {
@@ -157,4 +161,12 @@ public class Constant {
         public final static String MCQ = "MCQ";
         public final static String NUMBER = "Number";
     }
+
+    public final static HashMap<Integer, String> DOWNLOADMAP = new HashMap<Integer, String>(){{
+        put(DownloadStatus.PENDING, SyncStatus.PENDING);
+        put(DownloadStatus.FAILED, SyncStatus.FAILED);
+        put(DownloadStatus.RUNNING, SyncStatus.RUNNING);
+        put(DownloadStatus.COMPLETED, SyncStatus.COMPLETED);
+        put(DownloadStatus.DISABLED, SyncStatus.DISABLED);
+    }};
 }

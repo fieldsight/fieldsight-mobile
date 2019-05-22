@@ -14,8 +14,6 @@ public class Syncable implements Serializable {
         String title;
 //        this flag is used to enable it to sync or not
         boolean sync = true;
-        boolean completed = false;
-        boolean started = false;
         Set<String> lastFailedUrl = new HashSet<>();
 
         public String getTitle(){
@@ -28,7 +26,7 @@ public class Syncable implements Serializable {
         public boolean getSync() {
             return this.sync;
         }
-
+        public int status;
         public void toggleSync() {
             this.sync = !this.sync;
         }
@@ -36,14 +34,13 @@ public class Syncable implements Serializable {
         /**
          * @param title - title that is show in the list
          * @param sync  - selector to include in the downlod or not. if no need to download {@code sync = false }
-         * @param completed - flag to show sync process has been completed or not
-         * @param started -  flag to show sync process is started or not
+         * @param status - status of the download
          */
-        public Syncable(String title, boolean sync, boolean completed, boolean started) {
+
+        public Syncable(String title, boolean sync, int status) {
             this.title = title;
             this.sync = sync;
-            this.completed = completed;
-            this.started = started;
+            this.status = status;
         }
 
         public void addFailedUrl(String url) {
@@ -56,6 +53,13 @@ public class Syncable implements Serializable {
 
         public Syncable(String title) {
             this.title = title;
+        }
+        public void setStatus(int status) {
+            this.status = status;
+        }
+
+        public int getStatus() {
+            return this.status;
         }
 
     }
