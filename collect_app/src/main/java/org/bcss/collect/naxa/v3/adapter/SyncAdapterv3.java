@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.v3.network.SyncAdapterCallback;
+import org.bcss.collect.naxa.v3.network.SyncStat;
 import org.bcss.collect.naxa.v3.network.Syncable;
 
 import java.util.ArrayList;
@@ -58,6 +59,19 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
 
     public void enableItemClick() {
         this.disableItemClick = false;
+    }
+
+    public void notifyBySyncStat(List<SyncStat> syncStatList) {
+        if(syncStatList != null && syncStatList.size() > 0) {
+            for(SyncStat syncStat : syncStatList) {
+                List<Syncable> list = syncableMap.get(syncStat.getProjectId());
+                Syncable syncable = list.get(Integer.parseInt(syncStat.getType()));
+                syncable.setStatus(syncStat.getStatus());
+                syncableMap.put(syncStat.getProjectId(), list);
+            }
+            Timber.i("SyncAdapterV3 syncedMessage = %s", syncableMap.toString());
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull

@@ -1,6 +1,8 @@
 package org.bcss.collect.naxa.v3.network;
 
 import android.app.Activity;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,8 +17,10 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.sync.ContentDownloadAdapter;
 import org.bcss.collect.naxa.sync.DownloadViewModel;
 import org.bcss.collect.naxa.v3.adapter.SyncAdapterv3;
@@ -60,6 +64,10 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     boolean auto = true;
     HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
 
+    LiveData<List<SyncStat>> syncdata;
+    Observer<List<SyncStat>> syncObserver = null;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,14 +109,21 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 //            adapterv3.toggleAllSelection();
 //        });
 
+        syncObserver = syncStats -> {
+            Timber.i("sync stats size = %d", syncStats.size());
+            adapterv3.notifyBySyncStat(syncStats);
+        };
+        syncdata = SyncLocalSourcev3.getInstance().getAll();
+        syncdata.observe(this, syncObserver);
     }
 
     // this class will manage the sync list to determine which should be synced
     ArrayList<Syncable> createList() {
+//        -1 refers here as never started
         ArrayList<Syncable> list = new ArrayList<Syncable>() {{
-            add(0, new Syncable("Regions and sites", auto, false, false));
-            add(1, new Syncable("Forms", auto, false, false));
-            add(2, new Syncable("Materials", auto, false, false));
+            add(0, new Syncable("Regions and sites", auto, -1));
+            add(1, new Syncable("Forms",auto, -1 ));
+            add(2, new Syncable("Materials", auto, -1));
         }};
         return list;
     }
