@@ -286,12 +286,21 @@ public class InstanceServerUploader extends InstanceUploader {
             urlString = getServerSubmissionURL();
         }
 
-        // add deviceID to request
-        try {
-            urlString += "?deviceID=" + URLEncoder.encode(deviceId != null ? deviceId : "", "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Timber.i(e, "Error encoding URL for device id : %s", deviceId);
+        String fsInstanceId = currentInstance.getFieldSightInstanceId();
+        if (fsInstanceId != null) {
+            try {
+                urlString += "?instance=" + URLEncoder.encode(fsInstanceId, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                Timber.i(e, "Error encoding URL for device id : %s", deviceId);
+            }
         }
+
+        // add deviceID to request
+//        try {
+//            urlString += "?deviceID=" + URLEncoder.encode(deviceId != null ? deviceId : "", "UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            Timber.i(e, "Error encoding URL for device id : %s", deviceId);
+//        }
 
 
         return urlString;

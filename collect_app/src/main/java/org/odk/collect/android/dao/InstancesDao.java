@@ -493,6 +493,7 @@ public class InstancesDao {
                     int displaySubtextColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT);
                     int deletedDateColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DELETED_DATE);
                     int fsSiteColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.FS_SITE_ID);
+                    int fsInstanceIdColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID);
 
                     int databaseIdIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID);
 
@@ -508,6 +509,7 @@ public class InstancesDao {
                             .lastStatusChangeDate(cursor.getLong(lastStatusChangeDateColumnIndex))
                             .displaySubtext(cursor.getString(displaySubtextColumnIndex))
                             .deletedDate(cursor.getLong(deletedDateColumnIndex))
+                            .fieldSightInstanceId(cursor.getString(fsInstanceIdColumnIndex))
                             .fieldSightSiteId(cursor.getString(fsSiteColumnIndex))
                             .databaseId(cursor.getLong(databaseIdIndex))
                             .build();
