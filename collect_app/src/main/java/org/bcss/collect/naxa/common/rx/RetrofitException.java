@@ -183,13 +183,14 @@ public class RetrofitException extends RuntimeException {
     }
 
     public String getProjectId() {
-        String projectId;
-        final String regex = "(?!\\/)\\d+(?=\\/?\\?)";
-
-
+        String projectId = "-1";
         Uri uri = Uri.parse(url);
-        projectId = uri.getQueryParameter("project_id");
+        if(uri.getQueryParameterNames().contains("project_id")) {
+            projectId = uri.getQueryParameter("project_id");
+            return projectId;
+        }
 
+        final String regex = "(?!<\\/)\\d+$";
         final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
         final Matcher matcher = pattern.matcher(url);
         boolean foundProjectId = matcher.matches();
@@ -198,11 +199,6 @@ public class RetrofitException extends RuntimeException {
             Timber.i("Matcher group 0 %s", matcher.group(0));
             projectId = matcher.group(0);
         }
-
-        if (url == null || projectId == null) {
-            projectId = "-1";
-        }
-
         return projectId;
 
     }

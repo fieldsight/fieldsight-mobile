@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/no_internet_body"
+        android:visibility="gone"
         android:background="@color/yellow"
         android:textAlignment="center"
         android:textColor="@color/white" />

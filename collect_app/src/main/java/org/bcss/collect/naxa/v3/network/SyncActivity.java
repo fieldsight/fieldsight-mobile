@@ -48,23 +48,14 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @BindView(R.id.activity_download_recycler_view)
     RecyclerView recyclerView;
 
-//    @BindView(R.id.toggle_button)
-//    Button toggleButton;
-
     @BindView(R.id.download_button)
     Button downloadButton;
-
-
-//    @BindView(R.id.layout_network_connectivity)
-//    RelativeLayout layoutNetworkConnectivity;
 
     @BindView(R.id.toolbar_message)
     TextView toolbar_message;
 
-    private ContentDownloadAdapter adapter;
-    private DownloadViewModel viewModel;
+
     private DisposableObserver<Boolean> connectivityDisposable;
-    boolean isNetworkConnected = true;
     SyncAdapterv3 adapterv3;
     boolean auto = true;
     HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
@@ -121,22 +112,15 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         syncdata = SyncLocalSourcev3.getInstance().getAll();
         syncdata.observe(this, syncObserver);
 
-
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        adapter.setOnItemClickListener(this);
         connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
             @Override
             public void onConnectionSuccess() {
-               toolbar_message.setVisibility(View.GONE);
+                toolbar_message.setVisibility(View.GONE);
             }
 
             @Override
             public void onConnectionFailure() {
-               toolbar_message.setVisibility(View.VISIBLE);
-               toolbar_message.setText(getString(R.string.no_internet_body));
+                toolbar_message.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -144,13 +128,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
             }
         });
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        adapter.setOnItemClickListener(null);
-        connectivityDisposable.dispose();
     }
 
     // this class will manage the sync list to determine which should be synced
@@ -158,7 +136,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 //        -1 refers here as never started
         ArrayList<Syncable> list = new ArrayList<Syncable>() {{
             add(0, new Syncable("Regions and sites", auto, -1));
-            add(1, new Syncable("Forms",auto, -1 ));
+            add(1, new Syncable("Forms", auto, -1));
             add(2, new Syncable("Materials", auto, -1));
         }};
         return list;
@@ -212,8 +190,10 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(syncdata != null && syncdata.hasObservers()) {
+        if (syncdata != null && syncdata.hasObservers()) {
             syncdata.removeObserver(syncObserver);
         }
+        if (connectivityDisposable != null)
+            connectivityDisposable.dispose();
     }
 }

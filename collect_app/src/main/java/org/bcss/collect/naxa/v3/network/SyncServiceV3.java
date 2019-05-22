@@ -68,9 +68,6 @@ public class SyncServiceV3 extends IntentService {
                         public void onNext(Project project) {
                             Timber.i("Sites downloaded for project %s", project.getName());
                             saveState(project.getId(), 0, "", false, Constant.DownloadStatus.COMPLETED);
-//                            selectedMap.get(project.getId()).get(0).completed = true;
-//                            SyncStat syncStat = new SyncStat(project.getId(), "11", "", false, Constant.DownloadStatus.COMPLETED);
-//                            SyncLocalSourcev3.getInstance().save(syncStat);
                         }
 
                         @Override
@@ -78,10 +75,6 @@ public class SyncServiceV3 extends IntentService {
 
                             String url = getFailedFormUrl(throwable)[0];
                             String projectId = getFailedFormUrl(throwable)[1];
-
-//                            selectedMap.get(projectId).get(0).completed = true;
-//                            SyncStat syncStat = new SyncStat(project.getId(), "11", "", false, Constant.DownloadStatus.COMPLETED);
-//                            SyncLocalSourcev3.getInstance().save(syncStat);
                             saveState(projectId, 0, url, false, Constant.DownloadStatus.FAILED);
                             Timber.d("Download for sites stopped at %s for %s", url,projectId);
                         }
@@ -106,8 +99,6 @@ public class SyncServiceV3 extends IntentService {
                     .subscribe(new Consumer<String>() {
                         @Override
                         public void accept(String projectId) throws Exception {
-//                            SyncStat syncStat = new SyncStat("", "2", "", false, Constant.DownloadStatus.COMPLETED);
-//                            SyncLocalSourcev3.getInstance().save(syncStat);
                             saveState(projectId, 2, "", false, Constant.DownloadStatus.COMPLETED);
                             Timber.i("Project Educational material Sync completed");
                         }
@@ -116,9 +107,6 @@ public class SyncServiceV3 extends IntentService {
                         String projectId = getFailedFormUrl(throwable)[1];
                         saveState(projectId, 2, url, false, Constant.DownloadStatus.FAILED);
                         Timber.d("Download for educational stopped at %s for %s", url,projectId);
-
-//                        SyncStat syncStat = new SyncStat("", "2", url, false, Constant.DownloadStatus.FAILED);
-//                        SyncLocalSourcev3.getInstance().save(syncStat);
                     });
 
 
@@ -136,9 +124,6 @@ public class SyncServiceV3 extends IntentService {
                     .subscribeWith(new DisposableObserver<Project>() {
                         @Override
                         public void onNext(Project project) {
-//                            selectedMap.get(project.getId()).get(2).completed = true;
-//                            SyncStat syncStat = new SyncStat(project.getId(), "1", "", false, Constant.DownloadStatus.COMPLETED);
-//                            SyncLocalSourcev3.getInstance().save(syncStat);
                             saveState(project.getId(), 1, "", false, Constant.DownloadStatus.COMPLETED);
                             Timber.i("Forms downloaded for project %s", project.getName());
 
@@ -200,7 +185,6 @@ public class SyncServiceV3 extends IntentService {
                         .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
                             @Override
                             public SingleSource<SiteResponse> apply(Region region) {
-                                saveState(project.getId(), 0, "", true, Constant.DownloadStatus.RUNNING);
                                 return SiteRemoteSource.getInstance().getSitesByRegionId(region.getId())
                                         .doOnSuccess(saveSites());
                             }
@@ -228,7 +212,6 @@ public class SyncServiceV3 extends IntentService {
                                 if (siteResponse.getNext() == null) {
                                     return Observable.just(siteResponse);
                                 }
-                                saveState(project.getId(), 0, "", true, Constant.DownloadStatus.RUNNING);
                                 return Observable.just(siteResponse)
                                         .concatWith(getSitesByUrl(siteResponse.getNext()));
 
@@ -237,6 +220,12 @@ public class SyncServiceV3 extends IntentService {
 
 
                 return Observable.concat(projectObservable, regionSitesObservable)
+                        .doOnSubscribe(new Consumer<Disposable>() {
+                            @Override
+                            public void accept(Disposable disposable) throws Exception {
+                                saveState(project.getId(), 0, "", true, Constant.DownloadStatus.RUNNING);
+                            }
+                        })
                         .map(new Function<Object, Project>() {
                             @Override
                             public Project apply(Object o) throws Exception {
