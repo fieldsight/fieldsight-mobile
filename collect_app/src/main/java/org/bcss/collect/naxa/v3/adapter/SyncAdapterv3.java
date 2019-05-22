@@ -46,14 +46,14 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     }
 
     private void initProgressMap() {
-        for(Project project : selectedProjectList) {
+        for (Project project : selectedProjectList) {
             progressMap.put(project.getId(), 0);
         }
     }
 
     public void toggleAllSelection(HashMap<String, List<Syncable>> syncableMap) {
         syncableMap.clear();
-        this.auto = ! auto;
+        this.auto = !auto;
         this.syncableMap = syncableMap;
         notifyDataSetChanged();
     }
@@ -62,20 +62,22 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         this.callback = callback;
     }
 
-    public void disableItemClick(){
+    public void disableItemClick() {
         this.disableItemClick = true;
+        notifyDataSetChanged();
     }
 
     public void enableItemClick() {
         this.disableItemClick = false;
+        notifyDataSetChanged();
     }
 
     public void notifyBySyncStat(List<SyncStat> syncStatList) {
-        if(syncStatList != null && syncStatList.size() > 0) {
-            for(SyncStat syncStat : syncStatList) {
+        if (syncStatList != null && syncStatList.size() > 0) {
+            for (SyncStat syncStat : syncStatList) {
                 List<Syncable> list = syncableMap.get(syncStat.getProjectId());
                 int syncType = Integer.parseInt(syncStat.getType());
-                if(syncType > -1) {
+                if (syncType > -1) {
                     Syncable syncable = list.get(syncType);
                     syncable.setStatus(syncStat.getStatus());
                 }
@@ -92,13 +94,13 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
             List<Syncable> syncableList = syncableMap.get(key);
             int totalSynced = 0;
             int totalSize = 0;
-            for(Syncable syncable : syncableList) {
-                if(syncable.getStatus() == Constant.DownloadStatus.COMPLETED) {
+            for (Syncable syncable : syncableList) {
+                if (syncable.getStatus() == Constant.DownloadStatus.COMPLETED) {
                     totalSynced++;
                 }
                 totalSize += syncable.getSync() ? 1 : 0;
             }
-            progressMap.put(key, totalSynced*100/totalSize);
+            progressMap.put(key, totalSynced * 100 / totalSize);
         }
     }
 
@@ -109,7 +111,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
             @Override
             public void downloadListItemClicked(int parentPos, int pos) {
                 Timber.i("Syncadapterv3, project details clicked");
-                if(callback != null && !disableItemClick) {
+                if (callback != null) {
                     Project p = selectedProjectList.get(parentPos);
                     syncableMap.get(p.getId()).get(pos).toggleSync();
                     notifyDataSetChanged();
@@ -122,9 +124,9 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull SyncViewHolder syncViewHolder, int i) {
         Project project = selectedProjectList.get(i);
-        syncViewHolder.bindView(project, progressMap);
+        syncViewHolder.bindView(project, progressMap, disableItemClick);
         List<Syncable> syncables = syncableMap.get(project.getId());
-        syncViewHolder.manageChildView(syncables);
+        syncViewHolder.manageChildView(syncables, disableItemClick);
         syncViewHolder.iv_cancel.setOnClickListener(v -> {
             if (callback != null) {
                 callback.onRequestInterrupt(i, project);
@@ -138,9 +140,11 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     }
 
     public void removeAndNotify(int pos) {
-        if(syncableMap.keySet().contains(selectedProjectList.get(pos).getId())) {
+        String projectId = selectedProjectList.get(pos).getId();
+        if (syncableMap.keySet().contains(projectId)) {
             syncableMap.remove(selectedProjectList.get(pos).getId());
         }
+        progressMap.remove(projectId);
         selectedProjectList.remove(pos);
         notifyDataSetChanged();
     }

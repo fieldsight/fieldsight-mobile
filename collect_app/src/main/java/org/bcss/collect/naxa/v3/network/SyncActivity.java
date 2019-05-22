@@ -97,6 +97,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             syncIntent.putParcelableArrayListExtra("projects", projectList);
             syncIntent.putExtra("selection", syncableMap);
             startService(syncIntent);
+            disableAdapter();
         });
 //        toggleButton.setVisibility(View.GONE);
 
@@ -177,6 +178,13 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 //    add this request in download queue
         Timber.i("SyncActivity data = " + readaableSyncParams(project.getName(), list));
         syncableMap.put(project.getId(), list);
+    }
+
+    private void disableAdapter() {
+        adapterv3.disableItemClick();
+        downloadButton.setEnabled(false);
+        downloadButton.setBackgroundColor(getResources().getColor(R.color.disabled_gray));
+        downloadButton.setTextColor(getResources().getColor(R.color.white));
     }
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {

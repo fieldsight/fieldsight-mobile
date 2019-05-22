@@ -28,7 +28,8 @@
             android:id="@+id/activity_download_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/button_wrapper" />
+            android:layout_above="@+id/button_wrapper"
+            android:layout_marginBottom="48dp"/>
 
 
         <Button

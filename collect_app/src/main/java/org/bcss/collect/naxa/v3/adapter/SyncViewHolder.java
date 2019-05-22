@@ -53,37 +53,39 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    void bindView(Project project, HashMap<String, Integer> progressMap){
+    void bindView(Project project, HashMap<String, Integer> progressMap, boolean disable) {
         tv_project_name.setText(project.getName());
         tv_project_other.setText(String.format("A project by %s", project.getOrganizationName()));
         progressBar.setProgress(progressMap.get(project.getId()));
+        iv_cancel.setVisibility(disable ? View.GONE : View.VISIBLE);
     }
 
-    void manageChildView(List<Syncable> syncableList){
+    void manageChildView(List<Syncable> syncableList, boolean disable) {
         Timber.i("SyncViewHolder, syncablelistsize = %d", syncableList.size());
         lv_options.setAdapter(new ArrayAdapter<Syncable>(itemView.getContext(), R.layout.row_text_checkbox, syncableList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                if(convertView == null) {
+                if (convertView == null) {
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_text_checkbox, null);
                 }
                 Syncable syncable = getItem(position);
-                CheckBox chkbx=  convertView.findViewById(R.id.chkbx_sync_select);
+                CheckBox chkbx = convertView.findViewById(R.id.chkbx_sync_select);
                 chkbx.setChecked(syncable.getSync());
-                ((TextView)convertView.findViewById(R.id.tv_name)).setText(syncable.getTitle());
+                ((TextView) convertView.findViewById(R.id.tv_name)).setText(syncable.getTitle());
                 convertView.setOnClickListener(v -> {
                     Timber.i("SyncViewHolder clicked");
                     downloadListItemClicked(getLayoutPosition(), position);
                 });
                 TextView tv_stat = convertView.findViewById(R.id.tv_secondary);
-                if(syncable.getStatus() != Constant.DownloadStatus.COMPLETED) {
+                if (syncable.getStatus() != Constant.DownloadStatus.COMPLETED) {
                     Timber.i("syncable item name = %s and status = %s", syncable.getTitle(), syncable.getStatus());
                 }
                 tv_stat.setTextColor(syncable.status == Constant.DownloadStatus.FAILED ?
                         getContext().getResources().getColor(R.color.red) :
                         getContext().getResources().getColor(R.color.green));
                 tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
+                chkbx.setEnabled(!disable);
                 chkbx.setOnClickListener(v -> downloadListItemClicked(getLayoutPosition(), position));
                 return convertView;
             }
