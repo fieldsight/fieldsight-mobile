@@ -16,6 +16,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.login.model.Project;
@@ -47,6 +50,9 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.iv_avatar)
     ImageView iv_avatar;
 
+    @BindView(R.id.tv_project_progress_percentage)
+    TextView tv_project_progress_percentage;
+
 
     SyncViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -55,9 +61,12 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
 
     void bindView(Project project, HashMap<String, Integer> progressMap, boolean disable) {
         tv_project_name.setText(project.getName());
-        tv_project_other.setText(String.format("A project by %s", project.getOrganizationName()));
+        tv_project_other.setText(String.format("By %s", project.getOrganizationName()));
         progressBar.setProgress(progressMap.get(project.getId()));
         iv_cancel.setVisibility(disable ? View.GONE : View.VISIBLE);
+        tv_project_progress_percentage.setText(progressMap.get(project.getId()) + "%");
+        Glide.with(itemView.getContext()).load(project.getUrl()).
+                apply(RequestOptions.circleCropTransform()).into(iv_avatar);
     }
 
     void manageChildView(List<Syncable> syncableList, boolean disable) {

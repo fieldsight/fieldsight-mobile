@@ -43,6 +43,11 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         this.selectedProjectList = selectedProjectList;
         this.syncableMap = syncableMap;
         initProgressMap();
+        checkIfSyncing();
+    }
+
+    private void checkIfSyncing() {
+
     }
 
     private void initProgressMap() {
@@ -75,13 +80,15 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     public void notifyBySyncStat(List<SyncStat> syncStatList) {
         if (syncStatList != null && syncStatList.size() > 0) {
             for (SyncStat syncStat : syncStatList) {
-                List<Syncable> list = syncableMap.get(syncStat.getProjectId());
-                int syncType = Integer.parseInt(syncStat.getType());
-                if (syncType > -1) {
-                    Syncable syncable = list.get(syncType);
-                    syncable.setStatus(syncStat.getStatus());
+                if(syncableMap.containsKey(syncStat.getProjectId())) {
+                    List<Syncable> list = syncableMap.get(syncStat.getProjectId());
+                    int syncType = Integer.parseInt(syncStat.getType());
+                    if (syncType > -1) {
+                        Syncable syncable = list.get(syncType);
+                        syncable.setStatus(syncStat.getStatus());
+                    }
+                    syncableMap.put(syncStat.getProjectId(), list);
                 }
-                syncableMap.put(syncStat.getProjectId(), list);
             }
             Timber.i("SyncAdapterV3 syncedMessage = %s", syncableMap.toString());
             notifyProgressBar();

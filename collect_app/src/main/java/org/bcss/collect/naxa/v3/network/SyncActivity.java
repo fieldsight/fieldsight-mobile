@@ -62,7 +62,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     LiveData<List<SyncStat>> syncdata;
     Observer<List<SyncStat>> syncObserver = null;
-
+    boolean syncing = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -185,6 +185,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         downloadButton.setEnabled(false);
         downloadButton.setBackgroundColor(getResources().getColor(R.color.disabled_gray));
         downloadButton.setTextColor(getResources().getColor(R.color.white));
+        this.syncing = true;
     }
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {
@@ -204,4 +205,5 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         if (connectivityDisposable != null)
             connectivityDisposable.dispose();
     }
+
 }
