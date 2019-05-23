@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
 #copy the db file to destination
-function pd() {
- echo "test"
+function pullDb() {
  adb pull /sdcard/fieldsight/metadata/fieldsight_database ~/Desktop/fieldsight_database
 }
 
 #clear all sdcard files
 cs() {
+ adb shell
  rm -rf /sdcard/fieldsight
+ exit
 }
 
 #uninstall but keep all the files and database
@@ -16,9 +17,17 @@ uninstall() {
  adb uninstall -k org.bcss.collect.android
 }
 
-#hard uninstall
+#hard uninstall, delete everything
 hu() {
  adb uninstall org.bcss.collect.android
+ cs
+}
+
+help() {
+ echo "available commands"
+ echo "pd - pull database"
+ echo "ui - Uninstall App, this will not delete the preferences and database though app is uninstalled, if you want to clear all use hu instead."
+ echo "hu - Hard uninstall, removes everything"
 }
 
 #install with permisson
@@ -34,3 +43,10 @@ build() {
 ./gradlew assembleDebug
 }
 
+case "$1" in
+    (pd) pullDb ;;
+    (ui) uninstall;;
+    (hu) hu;;
+    (cs) cs;;
+    (*) help;;
+esac
