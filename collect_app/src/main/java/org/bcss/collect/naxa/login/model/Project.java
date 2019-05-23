@@ -127,7 +127,7 @@ public class Project implements Parcelable {
     }
 
     @SerializedName("site_meta_attributes")
-    private List<SiteMetaAttribute> siteMetaAttributes ;
+    private List<SiteMetaAttribute> siteMetaAttributes;
 
     public Project() {
 
@@ -175,7 +175,7 @@ public class Project implements Parcelable {
         this.siteMetaAttributes = siteMetaAttributes;
     }
 
-    public List<SiteMetaAttribute>  getSiteMetaAttributes() {
+    public List<SiteMetaAttribute> getSiteMetaAttributes() {
         return siteMetaAttributes;
     }
 
@@ -283,6 +283,7 @@ public class Project implements Parcelable {
         dest.writeByte(this.isSyncedWithRemote ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.siteMetaAttributes);
         dest.writeTypedList(this.regionList);
+        dest.writeString(this.url);
     }
 
     @Override
@@ -304,7 +305,8 @@ public class Project implements Parcelable {
                 Objects.equal(typeId, project.typeId) &&
                 Objects.equal(typeLabel, project.typeLabel) &&
                 Objects.equal(phone, project.phone) &&
-                Objects.equal(siteMetaAttributes, project.siteMetaAttributes) &
+                Objects.equal(siteMetaAttributes, project.siteMetaAttributes) &&
+                Objects.equal(url, project.url) &&
                 Objects.equal(regionList, project.regionList);
     }
 
@@ -330,6 +332,7 @@ public class Project implements Parcelable {
         this.isSyncedWithRemote = in.readByte() != 0;
         this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
         this.regionList = in.createTypedArrayList(Region.CREATOR);
+        this.url = in.readString();
     }
 
     public static final Creator<Project> CREATOR = new Creator<Project>() {
@@ -344,7 +347,7 @@ public class Project implements Parcelable {
         }
     };
 
-    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote,List<SiteMetaAttribute> metaAttributes, String url) {
+    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, List<SiteMetaAttribute> metaAttributes, String url) {
         this.id = id;
         this.name = name;
         this.description = description;

@@ -149,7 +149,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         super.onDestroy();
         if (observer != null)
             adapter.unregisterAdapterDataObserver(observer);
-        if (projectIds.hasObservers() && projectObserver != null)
+        if (projectIds != null && projectIds.hasObservers() && projectObserver != null)
             projectIds.removeObserver(projectObserver);
     }
 
@@ -229,7 +229,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 //                check all the project and make auto true
                 allSelected = !allSelected;
                 for (Project project : projectList) {
-                    project.setChecked(allSelected);
+                    if(!project.isSynced()) {
+                        project.setChecked(allSelected);
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 invalidateOptionsMenu();
@@ -243,6 +245,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }
 

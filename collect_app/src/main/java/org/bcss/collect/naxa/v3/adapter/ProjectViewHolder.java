@@ -52,9 +52,9 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
         primary_text.setText(project.getName());
         sub_text.setText(String.format("A project by %s", project.getOrganizationName()));
         if (project.getSyncedDate() > 0)
-            tv_synced_date.setText("Synced On " + DateTimeUtils.getFormattedDate("yyyy-MM-dd, hh:mm", project.getSyncedDate()));
+            tv_synced_date.setText("Synced On " + DateTimeUtils.getFormattedDate("yyyy-MM-dd, HH:mm", project.getSyncedDate()));
         chkbx_sync.setChecked(project.isChecked());
-        chkbx_sync.setVisibility(project.isChecked() ? View.VISIBLE : View.GONE);
+        chkbx_sync.setVisibility(project.isChecked() && !project.isSynced() ? View.VISIBLE : View.GONE);
         imageView.setImageResource(project.isSynced() ? R.drawable.ic_action_check : android.R.drawable.stat_sys_download_done);
         Timber.i("project image = %s", project.getUrl());
         Glide.with(itemView.getContext()).load(project.getUrl()).apply(RequestOptions.circleCropTransform()).into(iv_thumbnail);

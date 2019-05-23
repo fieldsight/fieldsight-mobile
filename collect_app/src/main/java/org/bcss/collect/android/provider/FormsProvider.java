@@ -125,7 +125,6 @@ public class FormsProvider extends ContentProvider {
                     throw new IllegalArgumentException("Unknown URI " + uri);
             }
             c = qb.query(formsDatabaseHelper.getReadableDatabase(), projection, selection, selectionArgs, groupBy, null, sortOrder);
-
             // Tell the cursor what uri to watch, so it knows when its source data changes
             c.setNotificationUri(getContext().getContentResolver(), uri);
         }
