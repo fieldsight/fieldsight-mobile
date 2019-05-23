@@ -12,6 +12,7 @@ import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.ProjectDashboardActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.bcss.collect.naxa.v3.network.ProjectNameTuple;
 
 import java.util.List;
 
@@ -46,10 +47,14 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
         };
     }
 
-    public void notifyProjectisSynced(List<String> projectIds) {
+    public void notifyProjectisSynced(List<ProjectNameTuple> projecttuple) {
         for (int i = 0; i < projectList.size(); i++) {
-            Timber.i("projectadapter hasSites = "+ (projectIds.indexOf(projectList.get(i).getId())));
-            projectList.get(i).setSynced(projectIds.indexOf(projectList.get(i).getId()) > -1);
+            for(int j = 0; j < projecttuple.size(); j ++ ) {
+                if(projectList.get(i).getId().equals(projecttuple.get(j).projectId)) {
+                    projectList.get(i).setSynced(true);
+                    projectList.get(i).setSyncedDate(projecttuple.get(j).created_date);
+                }
+            }
         }
         notifyDataSetChanged();
     }

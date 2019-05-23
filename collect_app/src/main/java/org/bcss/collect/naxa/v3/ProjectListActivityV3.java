@@ -33,7 +33,9 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.bcss.collect.naxa.v3.adapter.ProjectListAdapter;
 import org.bcss.collect.naxa.v3.network.LoadProjectCallback;
+import org.bcss.collect.naxa.v3.network.ProjectNameTuple;
 import org.bcss.collect.naxa.v3.network.SyncActivity;
+import org.bcss.collect.naxa.v3.network.SyncLocalSourcev3;
 import org.json.JSONArray;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -94,8 +96,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     boolean auto = false;
     RecyclerView.AdapterDataObserver observer;
     boolean allSelected = false;
-    LiveData<List<String>> projectIds = SiteLocalSource.getInstance().getAllDistinctProjectIds();
-    Observer<List<String>> projectObserver = null;
+    LiveData<List<ProjectNameTuple>> projectIds;
+    Observer<List<ProjectNameTuple>> projectObserver = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -134,10 +136,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         getDataFromServer();
         manageNodata(true);
         tv_sync_project.setOnClickListener(v -> openDownloadAActivity());
-        projectObserver = listLiveData -> {
-            Timber.i("list live data = %d", listLiveData.size());
-            adapter.notifyProjectisSynced(listLiveData);
+        projectObserver = projectNameList -> {
+            Timber.i("list live data = %d", projectNameList.size());
+            adapter.notifyProjectisSynced(projectNameList);
         };
+       projectIds = SyncLocalSourcev3.getInstance().getAllSiteSyncedProject();
     }
 
 

@@ -84,19 +84,19 @@
             android:layout_marginTop="8dp"
             android:text="A project by Build Change"
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
-            app:layout_constraintBottom_toTopOf="@+id/tv_project_address"
+            app:layout_constraintBottom_toTopOf="@+id/tv_synced_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rela_round"
             app:layout_constraintTop_toBottomOf="@+id/primary_text" />
 
         <TextView
-            android:id="@+id/tv_project_address"
+            android:id="@+id/tv_synced_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
-            android:text="Kathmandu -10, Nepal"
+            android:text=""
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -115,11 +115,7 @@
             android:padding="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/red"
             app:srcCompat="@android:drawable/stat_sys_download_done" />
-
-
-
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -131,7 +127,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:progress="20"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/tv_project_address" />
+            app:layout_constraintTop_toBottomOf="@id/tv_synced_date" />
 
         <TextView
             android:id="@+id/tv_download_counter"

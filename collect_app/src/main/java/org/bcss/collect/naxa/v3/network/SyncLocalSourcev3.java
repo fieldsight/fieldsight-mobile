@@ -83,4 +83,8 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
         dao.delete();
     }
 
+    public LiveData<List<ProjectNameTuple>> getAllSiteSyncedProject() {
+        return dao.getAllSiteSyncedProject();
+    }
+
 }

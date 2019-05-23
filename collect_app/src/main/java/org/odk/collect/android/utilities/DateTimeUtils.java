@@ -201,7 +201,7 @@ public class DateTimeUtils {
     }
 
 
-    public String getFormattedDate(String format, long time) {
+    public static String getFormattedDate(String format, long time) {
         try {
             Date date = new Date();
             date.setTime(time);
