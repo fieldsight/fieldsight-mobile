@@ -52,4 +52,15 @@ public class SiteTypeLocalSource implements BaseLocalDataSource<SiteType> {
     public void updateAll(ArrayList<SiteType> items) {
         dao.updateAll(items);
     }
+
+    public void refreshCache(SiteType... siteTypes) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                dao.deleteAll();
+                dao.insert(siteTypes);
+            }
+        });
+    }
+
 }
