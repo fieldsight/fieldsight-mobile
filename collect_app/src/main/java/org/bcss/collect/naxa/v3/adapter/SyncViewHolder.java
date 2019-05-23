@@ -65,6 +65,7 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
         progressBar.setProgress(progressMap.get(project.getId()));
         iv_cancel.setVisibility(disable ? View.GONE : View.VISIBLE);
         tv_project_progress_percentage.setText(progressMap.get(project.getId()) + "%");
+        Timber.i("SyncViewHolder, projectImage = %s", project.getUrl());
         Glide.with(itemView.getContext()).load(project.getUrl()).
                 apply(RequestOptions.circleCropTransform()).into(iv_avatar);
     }
@@ -95,7 +96,10 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                         getContext().getResources().getColor(R.color.green));
                 tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
                 chkbx.setEnabled(!disable);
-                chkbx.setOnClickListener(v -> downloadListItemClicked(getLayoutPosition(), position));
+                chkbx.setOnClickListener(v -> {
+                    if(!disable)
+                        downloadListItemClicked(getLayoutPosition(), position);
+                    });
                 return convertView;
             }
         });

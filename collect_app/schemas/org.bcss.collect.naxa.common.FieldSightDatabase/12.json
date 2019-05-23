@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 12,
-    "identityHash": "70e079f03d136ac3ac4c10f6463006b6",
+    "identityHash": "1deddd8083990a7a0467b002d00a2f77",
     "entities": [
       {
         "tableName": "sites",
@@ -1291,25 +1291,19 @@
       },
       {
         "tableName": "syncstat",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `project_id` TEXT, `type` TEXT, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))",
         "fields": [
-          {
-            "fieldPath": "uid",
-            "columnName": "uid",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "projectId",
             "columnName": "project_id",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "type",
             "columnName": "type",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "failedUrl",
@@ -1338,9 +1332,10 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "uid"
+            "project_id",
+            "type"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -1348,7 +1343,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"70e079f03d136ac3ac4c10f6463006b6\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1deddd8083990a7a0467b002d00a2f77\")"
     ]
   }
 }

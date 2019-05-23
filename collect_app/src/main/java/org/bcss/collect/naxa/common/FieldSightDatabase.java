@@ -171,7 +171,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     private static final Migration MIGRATION_10_11 = new Migration(10, 11) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS `syncstat` (`uid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `project_id` TEXT, `type` TEXT, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL)");
+            database.execSQL("CREATE TABLE IF NOT EXISTS `syncstat` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))");
         }
     };
 

@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="#212121"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
 
         <TextView
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:text="Syncing data"
             android:textColor="@color/green"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 

@@ -55,6 +55,8 @@ import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 import org.bcss.collect.naxa.login.APIErrorUtils;
+import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.v3.network.Syncable;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.FormMetadataMigrator;
@@ -66,7 +68,9 @@ import org.odk.collect.android.utilities.PRNGFixes;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -119,6 +123,8 @@ public class Collect extends Application implements HasActivityInjector {
     private static Collect singleton;
     private static long lastClickTime;
     private static String lastClickName;
+    public static ArrayList<Project> selectedProjectList;
+    public static HashMap<String, List<Syncable>> syncableMap;
 
     @Nullable
     private FormController formController;

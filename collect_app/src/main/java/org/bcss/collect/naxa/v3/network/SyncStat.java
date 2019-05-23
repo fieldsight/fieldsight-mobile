@@ -2,28 +2,32 @@ package org.bcss.collect.naxa.v3.network;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
-@Entity(tableName = "syncstat")
+@Entity(tableName = "syncstat", primaryKeys = {"project_id","type"})
+
 public class SyncStat {
-    @PrimaryKey(autoGenerate = true)
-     public int uid;
-
+    @NonNull
     @ColumnInfo(name = "project_id")
     String projectId;
+
+    @NonNull
     @ColumnInfo(name = "type")
     String type;
+
     @ColumnInfo(name = "failed_url")
     String failedUrl;
+
     @ColumnInfo(name = "started")
     boolean started;
+
     @ColumnInfo(name = "status")
     int status;
+
     @ColumnInfo(name = "created_date")
     long created_date;
 
     public SyncStat() {}
-
     /*
             @params projectId
             @params type
@@ -53,14 +57,6 @@ public class SyncStat {
 
     public void setStatus(int status) {
         this.status = status;
-    }
-
-    public int getUid() {
-        return uid;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
     }
 
     public String getProjectId() {

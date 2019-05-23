@@ -87,6 +87,7 @@ public class SharedPreferenceUtils {
         }
     }
 
+
     public static Boolean getBooleanFromPrefs(Context context, String key, Boolean defaultValue) {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         try {

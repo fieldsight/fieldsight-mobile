@@ -54,14 +54,15 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
         AsyncTask.execute(() -> dao.delete(stat));
     }
 
+    public LiveData<Integer> getCountByStatus(int status) {
+        return dao.countByStatus(status);
+    }
+
 
     @Override
     public void save(SyncStat... items) {
         AsyncTask.execute(() -> dao.insert(items));
     }
-
-
-
 
 
     @Override
@@ -78,6 +79,8 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
         AsyncTask.execute(()-> dao.updateAll(stat));
     }
 
-
+    public void delete() {
+        dao.delete();
+    }
 
 }

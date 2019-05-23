@@ -18,9 +18,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.InternetUtils;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.sync.ContentDownloadAdapter;
@@ -58,11 +60,14 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     private DisposableObserver<Boolean> connectivityDisposable;
     SyncAdapterv3 adapterv3;
     boolean auto = true;
-    HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
+    HashMap<String, List<Syncable>> syncableMap = null;
 
     LiveData<List<SyncStat>> syncdata;
     Observer<List<SyncStat>> syncObserver = null;
     boolean syncing = false;
+    ArrayList<Project> projectList;
+    LiveData<Integer> runningLiveData;
+    Observer<Integer> runningLiveDataObserver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,18 +78,25 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         /// getting the selected project list from the projectlist activity
-        Bundle bundle = getIntent().getBundleExtra("params");
-        ArrayList<Project> projectList = bundle.getParcelableArrayList("projects");
-        auto = bundle.getBoolean("auto", true);
+        Timber.i("SyncActivity, alreadySyncing:: " + (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0));
+        if (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0) {
+            syncing = true;
+            projectList = Collect.selectedProjectList;
+            syncableMap = Collect.syncableMap;
+        } else {
+            Bundle bundle = getIntent().getBundleExtra("params");
+            projectList = bundle.getParcelableArrayList("projects");
+            auto = bundle.getBoolean("auto", true);
+        }
 
         if (projectList == null || projectList.size() == 0) {
             return;
         }
-
         setTitle(String.format(Locale.getDefault(), "Projects (%d)", projectList.size()));
-
         /// create the map of the syncing
-        createSyncableList(projectList);
+        if (syncableMap == null)
+            createSyncableList(projectList);
+
         adapterv3 = new SyncAdapterv3(auto, projectList, syncableMap);
         adapterv3.setAdapterCallback(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -92,26 +104,33 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
         findViewById(R.id.download_button).setOnClickListener(v -> {
             ToastUtils.showShortToast("Download starts");
-//            send the list of project with syncable details
             Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
             syncIntent.putParcelableArrayListExtra("projects", projectList);
             syncIntent.putExtra("selection", syncableMap);
             startService(syncIntent);
-            disableAdapter();
-        });
-//        toggleButton.setVisibility(View.GONE);
 
-/// hiding the toggle selection button
-//        findViewById(R.id.toggle_button).setOnClickListener(v -> {
-//            adapterv3.toggleAllSelection();
-//        });
+            Collect.selectedProjectList = projectList;
+            Collect.syncableMap = syncableMap;
+            enableDisableAdapter(true);
+        });
 
         syncObserver = syncStats -> {
             Timber.i("sync stats size = %d", syncStats.size());
             adapterv3.notifyBySyncStat(syncStats);
         };
+
         syncdata = SyncLocalSourcev3.getInstance().getAll();
         syncdata.observe(this, syncObserver);
+
+        runningLiveDataObserver = count -> {
+            Timber.i("SyncActivity, syncing = " + syncing + " count = %d", count);
+            if (count == 0) {
+                Timber.i("SyncActivity, enable called");
+                enableDisableAdapter(false);
+            }
+        };
+        runningLiveData = SyncLocalSourcev3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING);
+        runningLiveData.observe(this, runningLiveDataObserver);
 
         connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
             @Override
@@ -130,6 +149,9 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             }
         });
 
+        if(syncing) {
+            enableDisableAdapter(syncing);
+        }
     }
 
     // this class will manage the sync list to determine which should be synced
@@ -144,6 +166,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     }
 
     void createSyncableList(List<Project> selectedProjectList) {
+        syncableMap = new HashMap<>();
         for (Project project : selectedProjectList) {
             syncableMap.put(project.getId(), createList());
         }
@@ -152,7 +175,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            super.onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -180,12 +203,17 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         syncableMap.put(project.getId(), list);
     }
 
-    private void disableAdapter() {
-        adapterv3.disableItemClick();
-        downloadButton.setEnabled(false);
-        downloadButton.setBackgroundColor(getResources().getColor(R.color.disabled_gray));
+    private void enableDisableAdapter(boolean isSyncing) {
+        if (isSyncing) {
+            adapterv3.disableItemClick();
+        } else {
+            adapterv3.enableItemClick();
+        }
+        downloadButton.setEnabled(!isSyncing);
+        downloadButton.setBackgroundColor(isSyncing ? getResources().getColor(R.color.disabled_gray) :
+                getResources().getColor(R.color.primaryColor));
         downloadButton.setTextColor(getResources().getColor(R.color.white));
-        this.syncing = true;
+        this.syncing = isSyncing;
     }
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {
@@ -202,8 +230,21 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         if (syncdata != null && syncdata.hasObservers()) {
             syncdata.removeObserver(syncObserver);
         }
-        if (connectivityDisposable != null)
+        if (connectivityDisposable != null) {
             connectivityDisposable.dispose();
+        }
+
+        if (runningLiveData != null && runningLiveData.hasObservers()) {
+            runningLiveData.removeObserver(runningLiveDataObserver);
+        }
+        Timber.i("OnDestroy, isSyncing : " + syncing);
+        if (syncing) {
+            Collect.syncableMap = syncableMap;
+            Collect.selectedProjectList = projectList;
+        } else {
+            Collect.syncableMap = null;
+            Collect.selectedProjectList = null;
+        }
     }
 
 }
