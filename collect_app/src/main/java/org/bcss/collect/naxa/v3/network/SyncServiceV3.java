@@ -141,7 +141,7 @@ public class SyncServiceV3 extends IntentService {
 
                         @Override
                         public void onComplete() {
-
+                            Timber.i("Forms observable has completed emitting");
                         }
                     });
 

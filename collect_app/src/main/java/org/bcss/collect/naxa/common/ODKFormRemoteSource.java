@@ -7,7 +7,6 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.FormDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.naxa.common.exception.DownloadRunningException;
-import org.bcss.collect.naxa.common.exception.FormDownloadFailedException;
 import org.bcss.collect.naxa.common.utilities.FieldSightFormListDownloadUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -23,7 +22,6 @@ import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.utilities.FormDownloader;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -34,6 +32,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleSource;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -101,7 +100,6 @@ public class ODKFormRemoteSource {
                 .map(mapProjectsToXMLForm())
                 .flatMapIterable((Function<ArrayList<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
                 .flatMap((Function<XMLForm, ObservableSource<HashMap<String, FormDetails>>>) this::downloadFormlist)
-                .map(checkAndThrowDownloadError())
                 .toList()
                 .toObservable()
                 .map(hashMaps -> {
@@ -113,17 +111,21 @@ public class ODKFormRemoteSource {
 
                 })
                 .flatMap((Function<HashMap<String, FormDetails>, ObservableSource<ArrayList<FormDetails>>>) this::formListDownloadingComplete)
-                .flatMap((Function<ArrayList<FormDetails>, ObservableSource<List<String>>>) this::downloadSingleForm)
-                .toList()
-                .map(new Function<List<List<String>>, Project>() {
+                .flatMap(new Function<ArrayList<FormDetails>, ObservableSource<?>>() {
                     @Override
-                    public Project apply(List<List<String>> lists) throws Exception {
+                    public ObservableSource<?> apply(ArrayList<FormDetails> formDetails) throws Exception {
+                        return downloadSingleFormv2();
+                    }
+                })
+                .toList()
+                .map(new Function<List<Object>, Project>() {
+                    @Override
+                    public Project apply(List<Object> objects) throws Exception {
                         return project;
                     }
                 })
                 .toObservable()
-                .subscribeOn(Schedulers.io())
-                ;
+                .subscribeOn(Schedulers.io());
 
     }
 
@@ -179,16 +181,43 @@ public class ODKFormRemoteSource {
             @Override
             public void subscribe(ObservableEmitter<List<String>> emitter) throws Exception {
                 FormDownloader formDownloader = new FormDownloader(false);
+
+//                formDownloader.setDownloaderListener(new FormDownloaderListener() {
+//                    @Override
+//                    public void progressUpdate(String currentFile, String progress, String total) {
+//                        if (!emitter.isDisposed()) {
+//                            emitter.onNext(Arrays.asList(currentFile,progress,total));
+//                        }
+//
+//                        if (progress.equals(total) || emitter.isDisposed()) {
+//                            emitter.onComplete();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public boolean isTaskCanceled() {
+//                        return emitter.isDisposed();
+//                    }
+//                });
+
+                formDownloader.downloadForms(values[0]);
+            }
+        });
+
+    }
+
+
+    @SafeVarargs
+    private final Observable<HashMap<FormDetails, String>> downloadSingleFormv2(ArrayList<FormDetails>... values){
+        return Observable.fromCallable(new Callable<HashMap<FormDetails, String>>() {
+            @Override
+            public HashMap<FormDetails, String> call() throws Exception {
+
+                FormDownloader formDownloader = new FormDownloader(false);
                 formDownloader.setDownloaderListener(new FormDownloaderListener() {
                     @Override
                     public void progressUpdate(String currentFile, String progress, String total) {
-                        if (!emitter.isDisposed()) {
-                            emitter.onNext(Arrays.asList(currentFile,progress,total));
-                        }
 
-                        if (progress.equals(total) || emitter.isDisposed()) {
-                            emitter.onComplete();
-                        }
                     }
 
                     @Override
@@ -197,10 +226,9 @@ public class ODKFormRemoteSource {
                     }
                 });
 
-                formDownloader.downloadForms(values[0]);
+                return  formDownloader.downloadForms(values[0]);
             }
         });
-
     }
 
 
@@ -268,10 +296,10 @@ public class ODKFormRemoteSource {
         return result -> {
 
             if (result.containsKey(DL_AUTH_REQUIRED)) {
-                throw new FormDownloadFailedException("Bad token");
+                throw new RuntimeException("Bad token");
             } else if (result.containsKey(DL_ERROR_MSG)) {
                 //todo: give better reason why it failed
-                throw new FormDownloadFailedException("Download failed");
+                throw new RuntimeException("Download failed");
             }
 
             return result;
@@ -282,7 +310,18 @@ public class ODKFormRemoteSource {
 
     private Observable<HashMap<String, FormDetails>> downloadFormlist(XMLForm xmlForm) {
         Timber.i("Downloading odk forms from %s",xmlForm.getDownloadUrl());
-        return Observable.fromCallable(() -> new FieldSightFormListDownloadUtils().downloadFormList(xmlForm, false));
+        return Observable.fromCallable(() -> new FieldSightFormListDownloadUtils().downloadFormList(xmlForm, false))
+                .doOnNext(new Consumer<HashMap<String, FormDetails>>() {
+                    @Override
+                    public void accept(HashMap<String, FormDetails> result) throws Exception {
+                        if (result.containsKey(DL_AUTH_REQUIRED)) {
+                            throw new RuntimeException("Bad token");
+                        } else if (result.containsKey(DL_ERROR_MSG)) {
+                            //todo: give better reason why it failed
+                            throw new RuntimeException("Download failed");
+                        }
+                    }
+                });
     }
 
     private Function<List<Project>, ArrayList<XMLForm>> mapProjectsToXMLForm() {
