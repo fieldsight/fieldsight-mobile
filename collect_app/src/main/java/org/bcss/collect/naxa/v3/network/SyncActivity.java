@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -149,7 +150,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             }
         });
 
-        if(syncing) {
+        if (syncing) {
             enableDisableAdapter(syncing);
         }
     }
@@ -176,8 +177,18 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             super.onBackPressed();
+        } else if (item.getItemId() == Menu.FIRST + 1) {
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        menu.add(0, Menu.FIRST, Menu.FIRST + 1, "Cancel Sync").setIcon(R.drawable.ic_close);
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override

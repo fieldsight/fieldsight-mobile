@@ -149,7 +149,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     }
 
     @OnClick(R.id.cv_resync)
-    void resyncProject(){
+    void resyncProject() {
         getDataFromServer();
         manageNodata(true);
     }
@@ -164,7 +164,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     }
 
     void manageNodata(boolean loading) {
-        if(adapter.getItemCount() == 0) {
+        if (adapter.getItemCount() == 0) {
             ll_nodata.setVisibility(View.VISIBLE);
             cv_resync.setVisibility(loading ? View.GONE : View.VISIBLE);
         } else {
@@ -244,9 +244,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 //                check all the project and make auto true
                 allSelected = !allSelected;
                 for (Project project : projectList) {
-                    if (!project.isSynced()) {
-                        project.setChecked(allSelected);
-                    }
+//                    if (!project.isSynced()) {
+                    project.setChecked(allSelected);
+//                    }
                 }
                 adapter.notifyDataSetChanged();
                 invalidateOptionsMenu();
