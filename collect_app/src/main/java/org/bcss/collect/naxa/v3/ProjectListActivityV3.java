@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -48,6 +49,7 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.application.Collect.allowClick;
@@ -90,6 +92,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
     @BindView(R.id.tv_sync_project)
     TextView tv_sync_project;
+
+    @BindView(R.id.cv_resync)
+    CardView cv_resync;
 
     ProjectListAdapter adapter = null;
     List<Project> projectList = new ArrayList<>();
@@ -140,9 +145,14 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             Timber.i("list live data = %d", projectNameList.size());
             adapter.notifyProjectisSynced(projectNameList);
         };
-       projectIds = SyncLocalSourcev3.getInstance().getAllSiteSyncedProject();
+        projectIds = SyncLocalSourcev3.getInstance().getAllSiteSyncedProject();
     }
 
+    @OnClick(R.id.cv_resync)
+    void resyncProject(){
+        getDataFromServer();
+        manageNodata(true);
+    }
 
     @Override
     protected void onDestroy() {
@@ -154,9 +164,14 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     }
 
     void manageNodata(boolean loading) {
-        ll_nodata.setVisibility(adapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        if(adapter.getItemCount() == 0) {
+            ll_nodata.setVisibility(View.VISIBLE);
+            cv_resync.setVisibility(loading ? View.GONE : View.VISIBLE);
+        } else {
+            ll_nodata.setVisibility(View.GONE);
+        }
         prgbar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        tv_nodata.setText(loading ? "Loading data ... " : "Data not found");
+        tv_nodata.setText(loading ? "Loading data ... " : "Error in syncing the project");
     }
 
     void getDataFromServer() {
@@ -229,7 +244,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 //                check all the project and make auto true
                 allSelected = !allSelected;
                 for (Project project : projectList) {
-                    if(!project.isSynced()) {
+                    if (!project.isSynced()) {
                         project.setChecked(allSelected);
                     }
                 }
