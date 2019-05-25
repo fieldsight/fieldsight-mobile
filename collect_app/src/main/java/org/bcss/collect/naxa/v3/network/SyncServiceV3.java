@@ -60,55 +60,55 @@ public class SyncServiceV3 extends IntentService {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
 
-//            //Start syncing sites
-//            Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribeWith(new DisposableObserver<Project>() {
-//                        @Override
-//                        public void onNext(Project project) {
-//                            Timber.i("Sites downloaded for project %s", project.getName());
-//                            saveState(project.getId(), 0, "", false, Constant.DownloadStatus.COMPLETED);
-//                        }
-//
-//                        @Override
-//                        public void onError(Throwable throwable) {
-//
-//                            String url = getFailedFormUrl(throwable)[0];
-//                            String projectId = getFailedFormUrl(throwable)[1];
-//                            saveState(projectId, 0, url, false, Constant.DownloadStatus.FAILED);
-//                            Timber.d("Download for sites stopped at %s for %s", url, projectId);
-//                        }
-//
-//                        @Override
-//                        public void onComplete() {
-//
-//                        }
-//                    });
+            //Start syncing sites
+            Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(new DisposableObserver<Project>() {
+                        @Override
+                        public void onNext(Project project) {
+                            Timber.i("Sites downloaded for project %s", project.getName());
+                            saveState(project.getId(), 0, "", false, Constant.DownloadStatus.COMPLETED);
+                        }
+
+                        @Override
+                        public void onError(Throwable throwable) {
+
+                            String url = getFailedFormUrl(throwable)[0];
+                            String projectId = getFailedFormUrl(throwable)[1];
+                            saveState(projectId, 0, url, false, Constant.DownloadStatus.FAILED);
+                            Timber.d("Download for sites stopped at %s for %s", url, projectId);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
 
 
-//            Disposable projectEduMatObservable = Observable.just(selectedProject)
-//                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-//                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
-//                    .flatMap(new Function<Project, Observable<String>>() {
-//                        @Override
-//                        public Observable<String> apply(Project project) throws Exception {
-//                            saveState(project.getId(), 2, "", true, Constant.DownloadStatus.RUNNING);
-//                            return EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
-//                        }
-//                    })
-//                    .subscribe(new Consumer<String>() {
-//                        @Override
-//                        public void accept(String projectId) throws Exception {
-//                            saveState(projectId, 2, "", false, Constant.DownloadStatus.COMPLETED);
-//                            Timber.i("Project Educational material Sync completed");
-//                        }
-//                    }, throwable -> {
-//                        String url = getFailedFormUrl(throwable)[0];
-//                        String projectId = getFailedFormUrl(throwable)[1];
-//                        saveState(projectId, 2, url, false, Constant.DownloadStatus.FAILED);
-//                        Timber.d("Download for educational stopped at %s for %s", url, projectId);
-//                    });
+            Disposable projectEduMatObservable = Observable.just(selectedProject)
+                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
+                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
+                    .flatMap(new Function<Project, Observable<String>>() {
+                        @Override
+                        public Observable<String> apply(Project project) throws Exception {
+                            saveState(project.getId(), 2, "", true, Constant.DownloadStatus.RUNNING);
+                            return EducationalMaterialsRemoteSource.getInstance().getByProjectId(project.getId()).toObservable();
+                        }
+                    })
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String projectId) throws Exception {
+                            saveState(projectId, 2, "", false, Constant.DownloadStatus.COMPLETED);
+                            Timber.i("Project Educational material Sync completed");
+                        }
+                    }, throwable -> {
+                        String url = getFailedFormUrl(throwable)[0];
+                        String projectId = getFailedFormUrl(throwable)[1];
+                        saveState(projectId, 2, url, false, Constant.DownloadStatus.FAILED);
+                        Timber.d("Download for educational stopped at %s for %s", url, projectId);
+                    });
 
 
             Disposable formsDownloadObservable = Observable.just(selectedProject)
