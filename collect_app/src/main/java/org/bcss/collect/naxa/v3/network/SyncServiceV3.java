@@ -125,7 +125,9 @@ public class SyncServiceV3 extends IntentService {
                         @Override
                         public Observable<Project> apply(Project project) throws Exception {
 
-                            return ODKFormRemoteSource.getInstance().getByProjectId(project)
+
+                            return ODKFormRemoteSource.getInstance()
+                                    .getByProjectId(project)
                                     .doOnNext(new Consumer<Project>() {
                                         @Override
                                         public void accept(Project project) throws Exception {

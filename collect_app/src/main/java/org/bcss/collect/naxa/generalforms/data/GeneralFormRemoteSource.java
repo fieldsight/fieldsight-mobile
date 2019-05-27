@@ -37,7 +37,6 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_END;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_ERROR;
 import static org.bcss.collect.naxa.common.event.DataSyncEvent.EventStatus.EVENT_START;
-import static org.bcss.collect.naxa.network.APIEndpoint.getFormsParams;
 
 public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm> {
 
@@ -67,7 +66,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
         return ServiceGenerator
                 .getRxClient()
                 .create(ApiInterface.class)
-                .getGeneralFormsObservable(getFormsParams(),createdFromProject, creatorsId)
+                .getGeneralFormsObservable(createdFromProject, creatorsId)
                 .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(final Observable<Throwable> throwableObservable) {

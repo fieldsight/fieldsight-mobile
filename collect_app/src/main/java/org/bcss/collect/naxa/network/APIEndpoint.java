@@ -61,25 +61,8 @@ public class APIEndpoint {
     public class PARAMS {
         public static final String PROJECT_ID = "project_id";
         public static final String REGION_ID = "region_id";
-        /*
-         To differentiate forms and educational material from url in `call` object in RxErrorHandlingCallAdapterFactory
-         */
-        public static final String FORMS_EDU_TYPE = "x_type";
 
-        public class VALUES {
-            public static final String EDUCATIONAL = "educational";
-            public static final String FORMS = "forms";
-        }
     }
 
-    public static HashMap<String, String> getEducationalParams() {
-
-        return new HashMap<>();
-    }
-
-
-    public static HashMap<String, String> getFormsParams() {
-        return new HashMap<>();
-    }
 
 }

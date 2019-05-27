@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
-import static org.bcss.collect.naxa.network.APIEndpoint.getEducationalParams;
+
 
 public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em> {
 
@@ -115,7 +115,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                                 break;
                         }
 
-                        return true;
+                        return !isFileAlreadyDownloaded;
                     }
                 })
                 .flatMap((Function<String, Observable<String>>) url -> {
@@ -222,7 +222,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
 
         return getProjectObservable(projectId)
-                .flatMap((Function<String, ObservableSource<ArrayList<ScheduleForm>>>) s -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms(getEducationalParams(),"1", s))
+                .flatMap((Function<String, ObservableSource<ArrayList<ScheduleForm>>>) s -> ServiceGenerator.getRxClient().create(ApiInterface.class).getScheduleForms( "1", s))
                 .flatMapIterable((Function<ArrayList<ScheduleForm>, Iterable<ScheduleForm>>) scheduleForms -> scheduleForms)
                 .filter(new Predicate<ScheduleForm>() {
                     @Override
@@ -245,7 +245,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
     private Observable<Em> substageFormEducational(@Nullable String projectId) {
         return getProjectObservable(projectId)
-                .flatMap((Function<String, ObservableSource<ArrayList<Stage>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getStageSubStage(getEducationalParams(),"1", project))
+                .flatMap((Function<String, ObservableSource<ArrayList<Stage>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getStageSubStage( "1", project))
                 .flatMapIterable((Function<ArrayList<Stage>, Iterable<Stage>>) stages -> stages)
                 .map(Stage::getSubStage)
                 .flatMapIterable((Function<ArrayList<SubStage>, Iterable<SubStage>>) subStages -> subStages)
@@ -272,7 +272,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     private Observable<Em> generalFormEducational(@Nullable String projectId) {
 
         return getProjectObservable(projectId)
-                .flatMap((Function<String, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable(getEducationalParams(), "1", project))
+                .flatMap((Function<String, ObservableSource<ArrayList<GeneralForm>>>) project -> ServiceGenerator.getRxClient().create(ApiInterface.class).getGeneralFormsObservable(  "1", project))
                 .flatMapIterable((Function<ArrayList<GeneralForm>, Iterable<GeneralForm>>) generalForms -> generalForms)
                 .filter(new Predicate<GeneralForm>() {
                     @Override

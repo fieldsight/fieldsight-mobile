@@ -82,14 +82,14 @@ public interface ApiInterface {
     );
 
     @GET(GET_GENERAL_FORM)
-    Observable<ArrayList<GeneralForm>> getGeneralFormsObservable(@QueryMap Map<String, String> options, @Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
+    Observable<ArrayList<GeneralForm>> getGeneralFormsObservable(@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
 
     @GET(GET_FORM_SCHEDULE)
-    Observable<ArrayList<ScheduleForm>> getScheduleForms(@QueryMap Map<String, String> options,@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
+    Observable<ArrayList<ScheduleForm>> getScheduleForms(@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
 
 
     @GET(GET_STAGE_SUB_STAGE)
-    Observable<ArrayList<Stage>> getStageSubStage(@QueryMap Map<String, String> options,@Path(value = "is_project", encoded = true) String createdFromProject, @Path("id") String creatorsId);
+    Observable<ArrayList<Stage>> getStageSubStage(@Path(value = "is_project", encoded = true) String createdFromProject, @Path("id") String creatorsId);
 
     @Multipart
     @POST
