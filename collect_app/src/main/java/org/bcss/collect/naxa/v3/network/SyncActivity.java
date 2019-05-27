@@ -133,7 +133,36 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         runningLiveData = SyncLocalSourcev3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING);
         runningLiveData.observe(this, runningLiveDataObserver);
 
-        connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
+//        connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
+//            @Override
+//            public void onConnectionSuccess() {
+//                toolbar_message.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onConnectionFailure() {
+//                toolbar_message.setVisibility(View.VISIBLE);
+//            }
+//
+//            @Override
+//            public void onCheckComplete() {
+//
+//            }
+//        });
+
+        if (syncing) {
+            enableDisableAdapter(syncing);
+        }
+    }
+
+    // this class will manage the sync list to determine which should be synced
+    ArrayList<Syncable> createList() {
+//        -1 refers here as never started
+        ArrayList<Syncable> list = new ArrayList<Syncable>() {{
+            add(0, new Syncable("Regions and sites", auto, -1));
+            add(1, new Syncable("Forms", auto, -1));
+            add(2, new Syncable("Materials", auto, -1));
+        }}; connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
             @Override
             public void onConnectionSuccess() {
                 toolbar_message.setVisibility(View.GONE);
@@ -149,20 +178,6 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
             }
         });
-
-        if (syncing) {
-            enableDisableAdapter(syncing);
-        }
-    }
-
-    // this class will manage the sync list to determine which should be synced
-    ArrayList<Syncable> createList() {
-//        -1 refers here as never started
-        ArrayList<Syncable> list = new ArrayList<Syncable>() {{
-            add(0, new Syncable("Regions and sites", auto, -1));
-            add(1, new Syncable("Forms", auto, -1));
-            add(2, new Syncable("Materials", auto, -1));
-        }};
         return list;
     }
 

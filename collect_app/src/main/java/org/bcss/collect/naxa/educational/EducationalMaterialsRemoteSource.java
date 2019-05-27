@@ -115,7 +115,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                                 break;
                         }
 
-                        return !isFileAlreadyDownloaded;
+                        return true;
                     }
                 })
                 .flatMap((Function<String, Observable<String>>) url -> {
@@ -137,6 +137,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
