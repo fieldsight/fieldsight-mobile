@@ -270,68 +270,7 @@ public class DownloadViewModel extends ViewModel {
 
     }
 
-    private void fetchAllFormsV2() {
 
-
-        Observable<ArrayList<String>> odkFormsObservable = ODKFormRemoteSource.getInstance().getXMLForms().map(new Function<List<String>, ArrayList<String>>() {
-            @Override
-            public ArrayList<String> apply(List<String> strings) throws Exception {
-                return new ArrayList<>(strings);
-            }
-        });
-        Single<ArrayList<GeneralForm>> general = GeneralFormRemoteSource.getInstance().fetchAllGeneralForms();
-        Single<ArrayList<ScheduleForm>> scheduled = ScheduledFormsRemoteSource.getInstance().fetchAllScheduledForms();
-        Single<ArrayList<Stage>> stage = StageRemoteSource.getInstance().fetchAllStages();
-
-        DisposableObserver<Serializable> dis = Observable.concat(odkFormsObservable, general.toObservable(), scheduled.toObservable(), stage.toObservable())
-                .doOnSubscribe(disposable -> DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Preparing to start"))
-                .subscribeWith(new DisposableObserver<Serializable>() {
-                    @Override
-                    public void onNext(Serializable serializable) {
-                        if (serializable instanceof String[]) {
-                            //do something
-                            String[] string = (String[]) serializable;
-                            String message = String.format("Downloading %s", string[0]);
-                            int current = Integer.parseInt(string[1]);
-                            int total = Integer.parseInt(string[2]);
-
-                            DownloadableItemLocalSource.getINSTANCE().setProgress(ALL_FORMS, current, total);
-                            DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, message);
-
-                        } else if (serializable instanceof ArrayList) {
-                            if (isListOfType((Collection<?>) serializable, GeneralForm.class)) {
-                                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Syncing General form(s)");
-                            } else if (isListOfType((Collection<?>) serializable, ScheduleForm.class)) {
-                                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Syncing Scheduled form(s)");
-                            } else if (isListOfType((Collection<?>) serializable, Stage.class)) {
-
-                                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Syncing Staged form(s)");
-                                DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS, "Downloads all forms for assigned sites");
-                                DownloadableItemLocalSource.getINSTANCE().markAsCompleted(ALL_FORMS);
-
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        String message;
-                        if (e instanceof RetrofitException) {
-                            message = ((RetrofitException) e).getKind().getMessage();
-                        } else {
-                            message = e.getMessage();
-                        }
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(ALL_FORMS, message);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-        DisposableManager.add(dis);
-    }
 
 
     @Deprecated

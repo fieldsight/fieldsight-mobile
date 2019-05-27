@@ -112,11 +112,24 @@ public class SyncServiceV3 extends IntentService {
                     .flatMap(new Function<Project, Observable<Project>>() {
                         @Override
                         public Observable<Project> apply(Project project) throws Exception {
-                            markAsRunning(project.getId(), 1);
+
                             return ODKFormRemoteSource.getInstance().getByProjectId(project)
+                                    .doOnNext(new Consumer<Project>() {
+                                        @Override
+                                        public void accept(Project project) throws Exception {
+                                            markAsCompleted(project.getId(), 1);
+                                        }
+                                    })
+                                    .doOnSubscribe(new Consumer<Disposable>() {
+                                        @Override
+                                        public void accept(Disposable disposable) throws Exception {
+                                            markAsRunning(project.getId(), 1);
+                                        }
+                                    })
                                     .onErrorReturn(new Function<Throwable, Project>() {
                                         @Override
                                         public Project apply(Throwable throwable) throws Exception {
+                                            Timber.e(throwable);
                                             String url = getFailedFormUrl(throwable)[0];
                                             markAsFailed(project.getId(), 1, url);
                                             return project;
@@ -124,21 +137,9 @@ public class SyncServiceV3 extends IntentService {
                                     });
                         }
                     })
-                    .subscribeWith(new DisposableObserver<Project>() {
-                        @Override
-                        public void onNext(Project project) {
-                            markAsCompleted(project.getId(), 1);
-                        }
-
-                        @Override
-                        public void onError(Throwable throwable) {
-                            Timber.e(throwable);
-                        }
-
-                        @Override
-                        public void onComplete() {
-                        }
-                    });
+                    .subscribe(project -> {
+                        //unused
+                    }, Timber::e);
 
 
         } catch (
