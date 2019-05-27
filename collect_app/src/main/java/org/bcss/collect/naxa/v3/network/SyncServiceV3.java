@@ -10,6 +10,7 @@ import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 
@@ -130,8 +131,14 @@ public class SyncServiceV3 extends IntentService {
                                         @Override
                                         public Project apply(Throwable throwable) throws Exception {
                                             Timber.e(throwable);
-                                            String url = getFailedFormUrl(throwable)[0];
-                                            markAsFailed(project.getId(), 1, url);
+                                            String urls = new ArrayList<String>() {
+                                                {
+                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()));
+                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()));
+                                                }
+                                            }.toString();
+
+                                            markAsFailed(project.getId(), 1, urls);
                                             return project;
                                         }
                                     });

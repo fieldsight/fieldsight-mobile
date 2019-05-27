@@ -119,39 +119,6 @@ public class ODKFormRemoteSource {
 
     }
 
-    public Observable<HashMap<FormDetails, String>> getXMLForms() {
-        return checkIfProjectSitesDownloaded()
-                .flatMapSingle((Function<SyncableItem, SingleSource<List<Project>>>) syncableItem -> ProjectLocalSource.getInstance().getProjectsMaybe())
-                .map(mapProjectsToXMLForm())
-                .flatMapIterable((Function<ArrayList<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
-                .flatMap((Function<XMLForm, ObservableSource<HashMap<String, FormDetails>>>) this::downloadFormlist)
-                .map(checkAndThrowDownloadError())
-                .toList()
-                .toObservable()
-                .map(new Function<List<HashMap<String, FormDetails>>, HashMap<String, FormDetails>>() {
-                    @Override
-                    public HashMap<String, FormDetails> apply(List<HashMap<String, FormDetails>> hashMaps) throws Exception {
-                        HashMap<String, FormDetails> result = new HashMap<>();
-                        for (HashMap<String, FormDetails> hashMap : hashMaps) {
-                            result.putAll(hashMap);
-                        }
-                        return result;
-
-                    }
-                })
-                .flatMap(new Function<HashMap<String, FormDetails>, ObservableSource<ArrayList<FormDetails>>>() {
-                    @Override
-                    public ObservableSource<ArrayList<FormDetails>> apply(HashMap<String, FormDetails> formNamesAndURLs) throws Exception {
-                        return formListDownloadingComplete(formNamesAndURLs);
-                    }
-                })
-                .flatMap(new Function<ArrayList<FormDetails>, Observable<HashMap<FormDetails, String>>>() {
-                    @Override
-                    public Observable<HashMap<FormDetails, String>> apply(ArrayList<FormDetails> formDetails) throws Exception {
-                        return downloadSingleForm(formDetails);
-                    }
-                });
-    }
 
 
     private Observable<ArrayList<FormDetails>> formListDownloadingComplete(HashMap<String, FormDetails> formNamesAndURLs) {
