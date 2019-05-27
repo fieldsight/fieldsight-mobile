@@ -123,6 +123,11 @@ public class ODKFormRemoteSource {
                                 .toObservable()
                                 .map(lists -> project);
                     }
+                }).onErrorReturn(new Function<Throwable, Project>() {
+                    @Override
+                    public Project apply(Throwable throwable) throws Exception {
+                        return project;
+                    }
                 });
 
 
