@@ -112,8 +112,16 @@ public class SyncServiceV3 extends IntentService {
                     .flatMap(new Function<Project, Observable<Project>>() {
                         @Override
                         public Observable<Project> apply(Project project) throws Exception {
-                            saveState(project.getId(), 1, "", true, Constant.DownloadStatus.RUNNING);
-                            return ODKFormRemoteSource.getInstance().getByProjectId(project);
+                            markAsRunning(project.getId(), 1);
+                            return ODKFormRemoteSource.getInstance().getByProjectId(project)
+                                    .onErrorReturn(new Function<Throwable, Project>() {
+                                        @Override
+                                        public Project apply(Throwable throwable) throws Exception {
+                                            String url = getFailedFormUrl(throwable)[0];
+                                            markAsFailed(project.getId(), 1, url);
+                                            return project;
+                                        }
+                                    });
                         }
                     })
                     .subscribeWith(new DisposableObserver<Project>() {
@@ -124,9 +132,6 @@ public class SyncServiceV3 extends IntentService {
 
                         @Override
                         public void onError(Throwable throwable) {
-                            String url = getFailedFormUrl(throwable)[0];
-                            String projectId = getFailedFormUrl(throwable)[1];
-                            markAsFailed(projectId, 1, url);
                             Timber.e(throwable);
                         }
 
