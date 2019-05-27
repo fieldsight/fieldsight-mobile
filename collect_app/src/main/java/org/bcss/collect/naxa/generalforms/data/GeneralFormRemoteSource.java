@@ -86,14 +86,13 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-
-    public Single<ArrayList<GeneralForm>> fetchAllGeneralForms() {
-        Observable<List<XMLForm>> siteODKForms = FieldSightConfigDatabase
-                .getDatabase(Collect.getInstance())
+    public Single<ArrayList<GeneralForm>> fetchGeneralFormByProjectId(String projectId) {
+        Observable<List<XMLForm>> siteODKForms = FieldSightConfigDatabase.getDatabase(Collect.getInstance())
                 .getSiteOverideDAO()
-                .getAll()
+                .getSiteOverideFormIds(projectId)
                 .map((Function<SiteOveride, LinkedList<String>>) siteOveride -> {
-                    Type type = new TypeToken<LinkedList<String>>() {}.getType();//todo use typeconvertor
+                    Type type = new TypeToken<LinkedList<String>>() {
+                    }.getType();//todo use typeconvertor
                     return new Gson().fromJson(siteOveride.getGeneralFormIds(), type);
                 }).flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
                 .map(siteId -> new XMLFormBuilder()
@@ -104,19 +103,75 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                 .toObservable();
 
 
-        Observable<List<XMLForm>> projectODKForms = projectLocalSource
+        Observable<ArrayList<XMLForm>> projectODKForms = ProjectLocalSource.getInstance()
+                .getProjectByIdAsSingle(projectId)
+                .map(new Function<Project, ArrayList<XMLForm>>() {
+                    @Override
+                    public ArrayList<XMLForm> apply(Project project) throws Exception {
+
+                        return new ArrayList<XMLForm>() {{
+                            add(new XMLFormBuilder()
+                                    .setFormCreatorsId(project.getId())
+                                    .setIsCreatedFromProject(true)
+                                    .createXMLForm()
+                            );
+                        }};
+                    }
+                }).toObservable();
+
+        return Observable.concat(projectODKForms, siteODKForms)
+                .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
+                .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::fetchGeneralFromOneUrl)
+                .map(generalForms -> {
+                    for (GeneralForm generalForm : generalForms) {
+                        String deployedFrom = generalForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+                        generalForm.setFormDeployedFrom(deployedFrom);
+                    }
+
+                    return generalForms;
+                })
+                .toList()
+                .map((List<ArrayList<GeneralForm>> arrayLists) -> {
+                    ArrayList<GeneralForm> generalForms = new ArrayList<>(0);
+
+                    for (ArrayList<GeneralForm> generalFormList : arrayLists) {
+                        generalForms.addAll(generalFormList);
+                    }
+                    GeneralFormLocalSource.getInstance().updateAll(generalForms);
+                    return generalForms;
+                });
+
+    }
+
+    public Single<ArrayList<GeneralForm>> fetchAllGeneralForms() {
+        Single<List<XMLForm>> siteODKForms = FieldSightConfigDatabase
+                .getDatabase(Collect.getInstance())
+                .getSiteOverideDAO()
+                .getAll()
+                .map((Function<SiteOveride, LinkedList<String>>) siteOveride -> {
+                    Type type = new TypeToken<LinkedList<String>>() {
+                    }.getType();//todo use typeconvertor
+                    return new Gson().fromJson(siteOveride.getGeneralFormIds(), type);
+                }).flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
+                .map(siteId -> new XMLFormBuilder()
+                        .setFormCreatorsId(siteId)
+                        .setIsCreatedFromProject(false)
+                        .createXMLForm())
+                .toList();
+
+
+        Single<List<XMLForm>> projectODKForms = projectLocalSource
                 .getProjectsMaybe()
                 .flattenAsObservable((Function<List<Project>, Iterable<Project>>) projects -> projects)
                 .map(project -> new XMLFormBuilder()
                         .setFormCreatorsId(project.getId())
                         .setIsCreatedFromProject(true)
                         .createXMLForm())
-                .toList()
-                .toObservable();
+                .toList();
 
 
-        return Observable.concat(siteODKForms, projectODKForms)
-
+        return Single.concat(siteODKForms, projectODKForms)
+                .toObservable()
                 .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
                 .flatMap((Function<XMLForm, ObservableSource<ArrayList<GeneralForm>>>) this::fetchGeneralFromOneUrl)
                 .map(generalForms -> {

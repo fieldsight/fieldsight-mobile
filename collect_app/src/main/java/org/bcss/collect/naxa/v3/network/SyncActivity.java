@@ -162,22 +162,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             add(0, new Syncable("Regions and sites", auto, -1));
             add(1, new Syncable("Forms", auto, -1));
             add(2, new Syncable("Materials", auto, -1));
-        }}; connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
-            @Override
-            public void onConnectionSuccess() {
-                toolbar_message.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onConnectionFailure() {
-                toolbar_message.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onCheckComplete() {
-
-            }
-        });
+        }};
         return list;
     }
 

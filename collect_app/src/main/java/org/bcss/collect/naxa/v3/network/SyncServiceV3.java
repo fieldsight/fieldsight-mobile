@@ -3,12 +3,12 @@ package org.bcss.collect.naxa.v3.network;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
-import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
+import org.bcss.collect.naxa.generalforms.data.GeneralForm;
+import org.bcss.collect.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -23,13 +23,11 @@ import java.util.Objects;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class SyncServiceV3 extends IntentService {
@@ -61,85 +59,77 @@ public class SyncServiceV3 extends IntentService {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
 
-            //Start syncing sites
-            Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(new DisposableObserver<Object>() {
-                        @Override
-                        public void onNext(Object o) {
-                            //unused
-                        }
+//            //Start syncing sites
+//            Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribeWith(new DisposableObserver<Object>() {
+//                        @Override
+//                        public void onNext(Object o) {
+//                            //unused
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable e) {
+//                            Timber.e(e);
+//                        }
+//
+//                        @Override
+//                        public void onComplete() {
+//                            //unused
+//                        }
+//                    });
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Timber.e(e);
-                        }
 
-                        @Override
-                        public void onComplete() {
-                            //unused
-                        }
-                    });
-
-
-            Disposable projectEduMatObservable = Observable.just(selectedProject)
-                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
-                    .flatMap(new Function<Project, Observable<String>>() {
-                        @Override
-                        public Observable<String> apply(Project project) throws Exception {
-
-                            return EducationalMaterialsRemoteSource.getInstance()
-                                    .getByProjectId(project.getId())
-                                    .toObservable()
-                                    .doOnSubscribe(new Consumer<Disposable>() {
-                                        @Override
-                                        public void accept(Disposable disposable) throws Exception {
-                                            markAsRunning(project.getId(), 2);
-                                        }
-                                    })
-                                    .onErrorReturn(throwable -> {
-                                        String url = getFailedFormUrl(throwable)[0];
-                                        markAsFailed(project.getId(), 2, url);
-                                        return "error";
-                                    })
-                                    .doOnNext(o -> {
-                                        boolean hasErrorBeenThrown = TextUtils.equals(o, "error");
-                                        if (!hasErrorBeenThrown) {//error has been thrown
-                                            markAsCompleted(project.getId(), 2);
-                                        }
-                                    });
-                        }
-                    })
-                    .subscribe(projectId -> {
-                        //unused
-                    }, Timber::e);
+//            Disposable projectEduMatObservable = Observable.just(selectedProject)
+//                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
+//                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
+//                    .flatMap(new Function<Project, Observable<String>>() {
+//                        @Override
+//                        public Observable<String> apply(Project project) throws Exception {
+//
+//                            return EducationalMaterialsRemoteSource.getInstance()
+//                                    .getByProjectId(project.getId())
+//                                    .toObservable()
+//                                    .doOnSubscribe(new Consumer<Disposable>() {
+//                                        @Override
+//                                        public void accept(Disposable disposable) throws Exception {
+//                                            markAsRunning(project.getId(), 2);
+//                                        }
+//                                    })
+//                                    .onErrorReturn(throwable -> {
+//                                        String url = getFailedFormUrl(throwable)[0];
+//                                        markAsFailed(project.getId(), 2, url);
+//                                        return "error";
+//                                    })
+//                                    .doOnNext(o -> {
+//                                        boolean hasErrorBeenThrown = TextUtils.equals(o, "error");
+//                                        if (!hasErrorBeenThrown) {//error has been thrown
+//                                            markAsCompleted(project.getId(), 2);
+//                                        }
+//                                    });
+//                        }
+//                    })
+//                    .subscribe(projectId -> {
+//                        //unused
+//                    }, Timber::e);
 
 
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
 
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
-                    .flatMap(new Function<Project, Observable<Project>>() {
+                    .flatMap(new Function<Project, Observable<Object>>() {
                         @Override
-                        public Observable<Project> apply(Project project) throws Exception {
+                        public Observable<Object> apply(Project project) throws Exception {
 
-
-                            return ODKFormRemoteSource.getInstance()
-                                    .getByProjectId(project)
-                                    .doOnNext(new Consumer<Project>() {
+                            return Observable.concat(ODKFormRemoteSource.getInstance().getByProjectId(project), GeneralFormRemoteSource.getInstance().fetchAllGeneralForms().toObservable())
+                                    .doOnNext(new Consumer<Object>() {
                                         @Override
-                                        public void accept(Project project) throws Exception {
+                                        public void accept(Object o) throws Exception {
                                             markAsCompleted(project.getId(), 1);
                                         }
-                                    })
-                                    .doOnSubscribe(new Consumer<Disposable>() {
-                                        @Override
-                                        public void accept(Disposable disposable) throws Exception {
-                                            markAsRunning(project.getId(), 1);
-                                        }
-                                    })
+                                    }).doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
                                     .onErrorReturn(new Function<Throwable, Project>() {
                                         @Override
                                         public Project apply(Throwable throwable) throws Exception {
@@ -155,6 +145,30 @@ public class SyncServiceV3 extends IntentService {
                                             return project;
                                         }
                                     });
+
+
+//                            return Observable.zip(ODKFormRemoteSource.getInstance().getByProjectId(project), GeneralFormRemoteSource.getInstance().fetchAllGeneralForms().toObservable(), new BiFunction<Project, ArrayList<GeneralForm>, Project>() {
+//                                @Override
+//                                public Project apply(Project project, ArrayList<GeneralForm> generalForms) throws Exception {
+//                                    return project;
+//                                }
+//                            }).doOnNext(project1 -> markAsCompleted(project1.getId(), 1))
+//                                    .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
+//                                    .onErrorReturn(new Function<Throwable, Project>() {
+//                                        @Override
+//                                        public Project apply(Throwable throwable) throws Exception {
+//                                            Timber.e(throwable);
+//                                            String urls = new ArrayList<String>() {
+//                                                {
+//                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()));
+//                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()));
+//                                                }
+//                                            }.toString();
+//
+//                                            markAsFailed(project.getId(), 1, urls);
+//                                            return project;
+//                                        }
+//                                    });
                         }
                     })
                     .subscribe(project -> {
