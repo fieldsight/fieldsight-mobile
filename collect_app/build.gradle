@@ -298,7 +298,7 @@ dependencies {
 
     implementation "com.google.firebase:firebase-core:16.0.1"
     implementation 'com.google.firebase:firebase-config:15.0.2'
-    implementation "com.crashlytics.sdk.android:crashlytics:2.9.2"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.10.1"
 
     implementation "com.google.firebase:firebase-messaging:17.0.0"
 

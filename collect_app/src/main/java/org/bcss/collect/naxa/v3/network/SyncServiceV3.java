@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
-import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
@@ -17,11 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -65,25 +61,20 @@ public class SyncServiceV3 extends IntentService {
             Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(new DisposableObserver<Project>() {
+                    .subscribeWith(new DisposableObserver<Object>() {
                         @Override
-                        public void onNext(Project project) {
-                            Timber.i("Sites downloaded for project %s", project.getName());
-                            saveState(project.getId(), 0, "", false, Constant.DownloadStatus.COMPLETED);
+                        public void onNext(Object o) {
+                            //unused
                         }
 
                         @Override
-                        public void onError(Throwable throwable) {
-
-                            String url = getFailedFormUrl(throwable)[0];
-                            String projectId = getFailedFormUrl(throwable)[1];
-                            saveState(projectId, 0, url, false, Constant.DownloadStatus.FAILED);
-                            Timber.d("Download for sites stopped at %s for %s", url, projectId);
+                        public void onError(Throwable e) {
+                            Timber.e(e);
                         }
 
                         @Override
                         public void onComplete() {
-
+                            //unused
                         }
                     });
 
@@ -177,10 +168,10 @@ public class SyncServiceV3 extends IntentService {
     }
 
 
-    private Function<Project, Observable<Project>> getSitesObservable() {
-        return new Function<Project, Observable<Project>>() {
+    private Function<Project, Observable<Object>> getSitesObservable() {
+        return new Function<Project, Observable<Object>>() {
             @Override
-            public Observable<Project> apply(Project project) throws Exception {
+            public Observable<Object> apply(Project project) throws Exception {
                 Observable<Object> regionSitesObservable = Observable.just(project.getRegionList())
                         .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
                         .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
@@ -227,22 +218,33 @@ public class SyncServiceV3 extends IntentService {
                                 saveState(project.getId(), 0, "", true, Constant.DownloadStatus.RUNNING);
                             }
                         })
-                        .map(new Function<Object, Project>() {
+                        .onErrorReturn(throwable -> {
+                            String url = getFailedFormUrl(throwable)[0];
+                            saveState(project.getId(), 0, url, false, Constant.DownloadStatus.FAILED);
+                            Timber.d("Download for sites stopped at %s for %s", url, project.getId());
+                            return project.getId();
+                        })
+                        .doOnNext(new Consumer<Object>() {
                             @Override
-                            public Project apply(Object o) throws Exception {
-
-                                return project;
+                            public void accept(Object o) throws Exception {
+                                boolean hasErrorBeenThrown = o instanceof String;
+                                if (!hasErrorBeenThrown) {//error has been thrown
+                                    Timber.i("Sites downloaded for project %s", project.getName());
+                                    saveState(project.getId(), 0, "", false, Constant.DownloadStatus.COMPLETED);
+                                }
                             }
                         });
             }
         };
     }
 
-    private Observable<Project> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
+    private Observable<Object> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
         return Observable.just(selectedProject)
                 .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                 .filter(project -> selectedMap.get(project.getId()).get(0).sync)
                 .flatMap(getSitesObservable());
+
+
     }
 
 
