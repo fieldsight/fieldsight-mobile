@@ -110,6 +110,14 @@ public class BackupActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(handler != null) {
+            handler.removeCallbacks(runnable);
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
