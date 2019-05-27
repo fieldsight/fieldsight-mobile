@@ -78,7 +78,7 @@ public class BackupActivity extends AppCompatActivity {
                         "Name:  %s \n" +
                         "Total files: %s \n" +
                         "size = %s", folderInfo.get("type"), folderInfo.get("name"),
-                folderInfo.get("total_file"), folderInfo.get("total_file"));
+                folderInfo.get("total_file"), folderInfo.get("size"));
 
         tv_data_info.setText(infoMessage);
         zipUtils.setZipProgressListener(new ZipUtils.ZipProgressListener() {
