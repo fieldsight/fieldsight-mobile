@@ -82,12 +82,6 @@ public class ODKFormRemoteSource {
         });
     }
 
-
-    private void updateProgress(String message, int current, int total) {
-        Timber.i("%s %d %d", message, current, total);
-    }
-
-
     public Observable<Project> getByProjectId(Project project) {
         ArrayList<Project> projects = new ArrayList<>();
         projects.add(project);
@@ -173,7 +167,6 @@ public class ODKFormRemoteSource {
     private final Observable<HashMap<FormDetails, String>> downloadSingleForm(ArrayList<FormDetails>... values) {
 
 
-
         return Observable.fromCallable(new Callable<HashMap<FormDetails, String>>() {
             @Override
             public HashMap<FormDetails, String> call() throws Exception {
@@ -181,8 +174,8 @@ public class ODKFormRemoteSource {
                 HashMap<FormDetails, String> result = formDownloader.downloadForms(values[0]);
 
                 for (String value : result.values()) {
-                    boolean isDownloadSuccessfully =Collect.getInstance().getString(R.string.success).equals(value);
-                    if(!isDownloadSuccessfully){
+                    boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value);
+                    if (!isDownloadSuccessfully) {
                         throw new RuntimeException("A form failed to download, causing downloads for the whole project to stop");
                     }
                 }
@@ -190,71 +183,6 @@ public class ODKFormRemoteSource {
                 return result;
             }
         });
-//        return Observable.create(new ObservableOnSubscribe<List<String>>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<List<String>> emitter) throws Exception {
-//
-//                FormDownloader formDownloader = new FormDownloader(false);
-//                formDownloader.setDownloaderListener(new FormDownloaderListener() {
-//                    @Override
-//                    public void progressUpdate(String currentFile, String progress, String total) {
-//                        if (!emitter.isDisposed()) {
-//                            emitter.onNext(Arrays.asList(currentFile, progress, total));
-//                        }
-//
-//                        if (progress.equals(total)) {
-//                            emitter.onComplete();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public boolean isTaskCanceled() {
-//                        return emitter.isDisposed();
-//                    }
-//                });
-//
-//                formDownloader.downloadForms(values[0]);
-//            }
-//        });
-
-    }
-
-    @SafeVarargs
-    private final Observable<HashMap<FormDetails, String>> downloadSingleFormV2(ArrayList<FormDetails>... values) {
-        return Observable.fromCallable(new Callable<HashMap<FormDetails, String>>() {
-            @Override
-            public HashMap<FormDetails, String> call() throws Exception {
-                FormDownloader formDownloader = new FormDownloader(false);
-                return formDownloader.downloadForms(values[0]);
-            }
-        });
-
-//        return Observable.create(new ObservableOnSubscribe<List<String>>() {
-//            @Override
-//            public void subscribe(ObservableEmitter<List<String>> emitter) throws Exception {
-//
-//
-//                formDownloader.setDownloaderListener(new FormDownloaderListener() {
-//                    @Override
-//                    public void progressUpdate(String currentFile, String progress, String total) {
-//                        if (!emitter.isDisposed()) {
-//                            emitter.onNext(Arrays.asList(currentFile,progress,total));
-//                        }
-//
-//                        if (progress.equals(total) || emitter.isDisposed()) {
-//                            emitter.onComplete();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public boolean isTaskCanceled() {
-//                        return emitter.isDisposed();
-//                    }
-//                });
-//
-//                formDownloader.downloadForms(values[0]);
-//            }
-//        });
 
     }
 
