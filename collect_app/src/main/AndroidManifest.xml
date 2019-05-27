@@ -348,6 +348,10 @@
         <activity
             android:name="org.bcss.collect.naxa.project.NotificationTestActivity"
             android:exported="true" />
+        <activity
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name="org.bcss.collect.naxa.BackupActivity"/>
+
         <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivityNew" />
         <activity android:name="org.bcss.collect.naxa.common.SettingsActivity" />
         <activity
