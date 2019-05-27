@@ -96,8 +96,8 @@ public class ProjectRepository implements BaseRepository<Project> {
                 .subscribe(new DisposableSingleObserver<List<Project>>() {
                     @Override
                     public void onSuccess(List<Project> projects) {
-//                        boolean isDataNotAvailable = projects.isEmpty();
-                        boolean isDataNotAvailable = true;
+                        boolean isDataNotAvailable = projects.isEmpty();
+
                         if (isDataNotAvailable) {
                             getProjectFromRemoteSource(callback);
                         } else {
