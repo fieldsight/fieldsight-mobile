@@ -31,6 +31,7 @@ import io.reactivex.ObservableSource;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -48,6 +49,7 @@ public class SyncServiceV3 extends IntentService {
 
     ArrayList<Project> selectedProject;
     HashMap<String, List<Syncable>> selectedMap = null;
+    private List<String> failedSiteUrls = new ArrayList<>();
 
     public SyncServiceV3() {
         super("SyncserviceV3");
@@ -212,16 +214,28 @@ public class SyncServiceV3 extends IntentService {
 
 
                 return Observable.concat(projectObservable, regionSitesObservable)
+                        .map(new Function<Object, Object>() {
+                            @Override
+                            public Object apply(Object o) throws Exception {
+                                if(true) throw new RuntimeException();
+                                return o;
+                            }
+                        })
                         .doOnSubscribe(disposable -> markAsRunning(project.getId(), 0))
                         .onErrorReturn(throwable -> {
                             String url = getFailedFormUrl(throwable)[0];
-                            markAsFailed(project.getId(), 0, url);
+                            failedSiteUrls.add(url);
                             return project.getId();
                         })
                         .doOnNext(o -> {
                             boolean hasErrorBeenThrown = o instanceof String;
                             if (!hasErrorBeenThrown) {//error has been thrown
                                 markAsCompleted(project.getId(), 0);
+                            }
+
+                            if (failedSiteUrls.size() > 0) {
+                                markAsFailed(project.getId(), 0, failedSiteUrls.toString());
+                                failedSiteUrls.clear();
                             }
                         });
             }
