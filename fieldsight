@@ -7,9 +7,7 @@ function pullDb() {
 
 #clear all sdcard files
 cs() {
- adb shell
- rm -rf /sdcard/fieldsight
- exit
+ adb shell && rm -rf /sdcard/fieldsight && exit
 }
 
 #uninstall but keep all the files and database
@@ -28,6 +26,8 @@ help() {
  echo "pd - pull database"
  echo "ui - Uninstall App, this will not delete the preferences and database though app is uninstalled, if you want to clear all use hu instead."
  echo "hu - Hard uninstall, removes everything"
+ echo "cs - Clear SD card files"
+ echo "bi - Build and install"
 }
 
 #install with permisson
@@ -35,12 +35,13 @@ iwp() {
     adb install -r -g "$(find . -name "*.apk" -type f)"
     adb shell am start -n org.bcss.collect.android/org.odk.collect.android.activities.SplashScreenActivity
 }
+
 #build
 build() {
-# run adb
-[! -f "gradlew"] && echo "gradlew file not exists" && exit
-# build and run the debug apk
-./gradlew assembleDebug
+    # run adb
+    [! -f "gradlew"] && echo "gradlew file not exists" && exit
+    # build and run the debug apk
+    ./gradlew assembleDebug
 }
 
 case "$1" in
@@ -48,5 +49,6 @@ case "$1" in
     (ui) uninstall;;
     (hu) hu;;
     (cs) cs;;
+    (bi) build && iwp;;
     (*) help;;
 esac
