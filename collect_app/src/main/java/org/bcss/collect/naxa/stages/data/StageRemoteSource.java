@@ -162,4 +162,71 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
 
 
     }
+
+    public Single<ArrayList<Stage>> fetchByProjectId(String projectId) {
+        Observable<List<XMLForm>> siteODKForms = FieldSightConfigDatabase
+                .getDatabase(Collect.getInstance())
+                .getSiteOverideDAO()
+                .getSiteOverideFormIds(projectId)
+                .map((Function<SiteOveride, LinkedList<String>>) siteOveride -> {
+                    Type type = new TypeToken<LinkedList<String>>() {
+                    }.getType();//todo use typeconvertor
+                    return new Gson().fromJson(siteOveride.getStagedFormIds(), type);
+                }).flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
+                .map(siteId -> new XMLFormBuilder()
+                        .setFormCreatorsId(siteId)
+                        .setIsCreatedFromProject(false)
+                        .createXMLForm())
+                .toList()
+                .toObservable();
+
+        Observable<ArrayList<XMLForm>> projectODKForms = ProjectLocalSource.getInstance()
+                .getProjectByIdAsSingle(projectId)
+                .map(new Function<Project, ArrayList<XMLForm>>() {
+                    @Override
+                    public ArrayList<XMLForm> apply(Project project) throws Exception {
+
+                        return new ArrayList<XMLForm>() {{
+                            add(new XMLFormBuilder()
+                                    .setFormCreatorsId(project.getId())
+                                    .setIsCreatedFromProject(true)
+                                    .createXMLForm()
+                            );
+                        }};
+                    }
+                }).toObservable();
+
+
+        return Observable.merge(siteODKForms, projectODKForms)
+                .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
+                .flatMap((Function<XMLForm, ObservableSource<ArrayList<Stage>>>) this::downloadStages)
+                .toList()
+                .map(listOfStages -> {
+                    ArrayList<Stage> stagesList = new ArrayList<>(0);
+                    ArrayList<SubStage> subStageList = new ArrayList<>(0);
+
+                    for (ArrayList<Stage> stages : listOfStages) {
+                        stagesList.addAll(stages);
+                    }
+
+                    for (Stage stage : stagesList) {
+                        for(SubStage subStage: stage.getSubStage()){
+                            subStage.setStageId(stage.getId());
+                            subStage.setSubStageDeployedFrom(stage.getFormDeployedFrom());
+                            subStage.setFsFormId(subStage.getStageForms().getId());
+                            subStage.setJrFormId(subStage.getStageForms().getXf().getJrFormId());
+                            subStageList.add(subStage);
+                        }
+
+                    }
+
+                    StageLocalSource.getInstance().save(stagesList);
+                    SubStageLocalSource.getInstance().save(subStageList);
+
+                    return stagesList;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
 }
