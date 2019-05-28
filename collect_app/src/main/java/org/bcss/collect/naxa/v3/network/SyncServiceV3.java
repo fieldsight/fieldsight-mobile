@@ -53,16 +53,13 @@ public class SyncServiceV3 extends IntentService {
         super("SyncserviceV3");
     }
 
-
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    protected void onHandleIntent(Intent intent) {
         try {
             selectedProject = Objects.requireNonNull(intent).getParcelableArrayListExtra("projects");
             Timber.i("SyncServiceV3 slectedProject size = %d", selectedProject.size());
 
-
             selectedMap = (HashMap<String, List<Syncable>>) intent.getSerializableExtra("selection");
-
             for (String key : selectedMap.keySet()) {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
@@ -88,150 +85,86 @@ public class SyncServiceV3 extends IntentService {
                         }
                     });
 
+            Disposable projectEduMatObservable = Observable.just(selectedProject)
+                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
+                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
+                    .flatMap(new Function<Project, Observable<String>>() {
+                        @Override
+                        public Observable<String> apply(Project project) throws Exception {
 
-//            Disposable projectEduMatObservable = Observable.just(selectedProject)
-//                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-//                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
-//                    .flatMap(new Function<Project, Observable<String>>() {
-//                        @Override
-//                        public Observable<String> apply(Project project) throws Exception {
-//
-//                            return EducationalMaterialsRemoteSource.getInstance()
-//                                    .getByProjectId(project.getId())
-//                                    .toObservable()
-//                                    .doOnSubscribe(new Consumer<Disposable>() {
-//                                        @Override
-//                                        public void accept(Disposable disposable) throws Exception {
-//                                            markAsRunning(project.getId(), 2);
-//                                        }
-//                                    })
-//                                    .onErrorReturn(throwable -> {
-//                                        String url = getFailedFormUrl(throwable)[0];
-//                                        markAsFailed(project.getId(), 2, url);
-//                                        return "error";
-//                                    })
-//                                    .doOnNext(o -> {
-//                                        boolean hasErrorBeenThrown = TextUtils.equals(o, "error");
-//                                        if (!hasErrorBeenThrown) {//error has been thrown
-//                                            markAsCompleted(project.getId(), 2);
-//                                        }
-//                                    });
-//                        }
-//                    })
-//                    .subscribe(projectId -> {
-//                        //unused
-//                    }, Timber::e);
-//
-//
-//            Disposable formsDownloadObservable = Observable.just(selectedProject)
-//                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-//
-//                    .filter(project -> selectedMap.get(project.getId()).get(1).sync)
-//                    .flatMap(new Function<Project, Observable<Object>>() {
-//                        @Override
-//                        public Observable<Object> apply(Project project) throws Exception {
-//
-//                            Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
-//                            Observable<List<ArrayList<ScheduleForm>>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
-//                            Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
-//                            Observable<Project> odkForms = ODKFormRemoteSource.getInstance().getByProjectId(project);
-//
-//                            return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
-//                                    .doOnNext(new Consumer<Object>() {
-//                                        @Override
-//                                        public void accept(Object o) throws Exception {
-//                                            markAsCompleted(project.getId(), 1);
-//                                        }
-//                                    }).doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
-//                                    .onErrorReturn(new Function<Throwable, Project>() {
-//                                        @Override
-//                                        public Project apply(Throwable throwable) throws Exception {
-//                                            Timber.e(throwable);
-//                                            String urls = new ArrayList<String>() {
-//                                                {
-//                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()));
-//                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()));
-//                                                }
-//                                            }.toString();
-//
-//                                            markAsFailed(project.getId(), 1, urls);
-//                                            return project;
-//                                        }
-//                                    });
+                            return EducationalMaterialsRemoteSource.getInstance()
+                                    .getByProjectId(project.getId())
+                                    .toObservable()
+                                    .doOnSubscribe(new Consumer<Disposable>() {
+                                        @Override
+                                        public void accept(Disposable disposable) throws Exception {
+                                            markAsRunning(project.getId(), 2);
+                                        }
+                                    })
+                                    .onErrorReturn(throwable -> {
+                                        String url = getFailedFormUrl(throwable)[0];
+                                        markAsFailed(project.getId(), 2, url);
+                                        return "error";
+                                    })
+                                    .doOnNext(o -> {
+                                        boolean hasErrorBeenThrown = TextUtils.equals(o, "error");
+                                        if (!hasErrorBeenThrown) {//error has been thrown
+                                            markAsCompleted(project.getId(), 2);
+                                        }
+                                    });
+                        }
+                    })
+                    .subscribe(projectId -> {
+                        //unused
+                    }, Timber::e);
 
 
-//                            return Observable.zip(ODKFormRemoteSource.getInstance().getByProjectId(project), GeneralFormRemoteSource.getInstance().fetchAllGeneralForms().toObservable(), new BiFunction<Project, ArrayList<GeneralForm>, Project>() {
-//                                @Override
-//                                public Project apply(Project project, ArrayList<GeneralForm> generalForms) throws Exception {
-//                                    return project;
-//                                }
-//                            }).doOnNext(project1 -> markAsCompleted(project1.getId(), 1))
-//                                    .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
-//                                    .onErrorReturn(new Function<Throwable, Project>() {
-//                                        @Override
-//                                        public Project apply(Throwable throwable) throws Exception {
-//                                            Timber.e(throwable);
-//                                            String urls = new ArrayList<String>() {
-//                                                {
-//                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()));
-//                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()));
-//                                                }
-//                                            }.toString();
-//
-//                                            markAsFailed(project.getId(), 1, urls);
-//                                            return project;
-//                                        }
-//                                    });
-//                        }
-//                    })
-//                    .subscribe(project -> {
-//                        //unused
-//                    }, Timber::e);
+            Disposable formsDownloadObservable = Observable.just(selectedProject)
+                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
+
+                    .filter(project -> selectedMap.get(project.getId()).get(1).sync)
+                    .flatMap(new Function<Project, Observable<Object>>() {
+                        @Override
+                        public Observable<Object> apply(Project project) throws Exception {
+
+                            Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
+                            Observable<List<ArrayList<ScheduleForm>>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
+                            Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
+                            Observable<Project> odkForms = ODKFormRemoteSource.getInstance().getByProjectId(project);
+
+                            return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
+                                    .doOnNext(new Consumer<Object>() {
+                                        @Override
+                                        public void accept(Object o) throws Exception {
+                                            markAsCompleted(project.getId(), 1);
+                                        }
+                                    }).doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
+                                    .onErrorReturn(new Function<Throwable, Project>() {
+                                        @Override
+                                        public Project apply(Throwable throwable) throws Exception {
+                                            Timber.e(throwable);
+                                            String urls = new ArrayList<String>() {
+                                                {
+                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()));
+                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()));
+                                                }
+                                            }.toString();
+
+                                            markAsFailed(project.getId(), 1, urls);
+                                            return project;
+                                        }
+                                    });
+
+                        }
+                    })
+                    .subscribe(project -> {
+                        //unused
+                    }, Timber::e);
 
 
-        } catch (
-                NullPointerException e) {
+        } catch (NullPointerException e) {
             Timber.e(e);
         }
-
-    }
-
-    private void markAsFailed(String projectId, int type, String failedUrl) {
-        saveState(projectId, type, failedUrl, false, Constant.DownloadStatus.FAILED);
-        Timber.e("Download stopped %s for project %s", failedUrl, projectId);
-    }
-
-    private void markAsRunning(String projectId, int type) {
-        saveState(projectId, type, "", true, Constant.DownloadStatus.RUNNING);
-    }
-
-
-    private void markAsCompleted(String projectId, int type) {
-        saveState(projectId, type, "", false, Constant.DownloadStatus.COMPLETED);
-        Timber.e("Download completed for project %s", projectId);
-    }
-
-    private void saveState(String projectId, int type, String failedUrl, boolean started, int status) {
-        Timber.d("saving for for %d stopped at %s for %s", type, failedUrl, projectId);
-        if (selectedMap != null && selectedMap.containsKey(projectId)) {
-//            selectedMap.get(projectId).get(type).completed = true;
-            SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, started, status, System.currentTimeMillis());
-            SyncLocalSourcev3.getInstance().save(syncStat);
-        }
-    }
-
-    private String[] getFailedFormUrl(Throwable throwable) {
-        String failedUrl = "";
-        String projectId = "";
-        if (throwable instanceof RetrofitException) {
-            RetrofitException retrofitException = (RetrofitException) throwable;
-            String msg = retrofitException.getMessage();
-            failedUrl = retrofitException.getUrl();
-            projectId = retrofitException.getProjectId();
-
-        }
-
-        return new String[]{failedUrl, projectId};
     }
 
 
@@ -293,6 +226,46 @@ public class SyncServiceV3 extends IntentService {
                         });
             }
         };
+
+    }
+
+
+    private String[] getFailedFormUrl(Throwable throwable) {
+        String failedUrl = "";
+        String projectId = "";
+        if (throwable instanceof RetrofitException) {
+            RetrofitException retrofitException = (RetrofitException) throwable;
+            String msg = retrofitException.getMessage();
+            failedUrl = retrofitException.getUrl();
+            projectId = retrofitException.getProjectId();
+
+        }
+
+        return new String[]{failedUrl, projectId};
+    }
+
+    private void markAsFailed(String projectId, int type, String failedUrl) {
+        saveState(projectId, type, failedUrl, false, Constant.DownloadStatus.FAILED);
+        Timber.e("Download stopped %s for project %s", failedUrl, projectId);
+    }
+
+    private void markAsRunning(String projectId, int type) {
+        saveState(projectId, type, "", true, Constant.DownloadStatus.RUNNING);
+    }
+
+
+    private void markAsCompleted(String projectId, int type) {
+        saveState(projectId, type, "", false, Constant.DownloadStatus.COMPLETED);
+        Timber.e("Download completed for project %s", projectId);
+    }
+
+    private void saveState(String projectId, int type, String failedUrl, boolean started, int status) {
+        Timber.d("saving for for %d stopped at %s for %s", type, failedUrl, projectId);
+        if (selectedMap != null && selectedMap.containsKey(projectId)) {
+//            selectedMap.get(projectId).get(type).completed = true;
+            SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, started, status, System.currentTimeMillis());
+            SyncLocalSourcev3.getInstance().save(syncStat);
+        }
     }
 
     private Observable<Object> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
