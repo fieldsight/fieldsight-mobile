@@ -177,4 +177,55 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    public Single<List<ArrayList<ScheduleForm>>> fetchFormByProjectId(String projectId) {
+        Observable<List<XMLForm>> siteODKForms = FieldSightConfigDatabase.getDatabase(Collect.getInstance())
+                .getSiteOverideDAO()
+                .getSiteOverideFormIds(projectId)
+                .map((Function<SiteOveride, LinkedList<String>>) siteOveride -> {
+                    Type type = new TypeToken<LinkedList<String>>() {
+                    }.getType();//todo use typeconvertor
+                    return new Gson().fromJson(siteOveride.getScheduleFormIds(), type);
+                }).flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
+                .map(siteId -> new XMLFormBuilder()
+                        .setFormCreatorsId(siteId)
+                        .setIsCreatedFromProject(false)
+                        .createXMLForm())
+                .toList()
+                .toObservable();
+
+
+        Observable<ArrayList<XMLForm>> projectODKForms = ProjectLocalSource.getInstance()
+                .getProjectByIdAsSingle(projectId)
+                .map(new Function<Project, ArrayList<XMLForm>>() {
+                    @Override
+                    public ArrayList<XMLForm> apply(Project project) throws Exception {
+
+                        return new ArrayList<XMLForm>() {{
+                            add(new XMLFormBuilder()
+                                    .setFormCreatorsId(project.getId())
+                                    .setIsCreatedFromProject(true)
+                                    .createXMLForm()
+                            );
+                        }};
+                    }
+                }).toObservable();
+
+        return Observable.concat(projectODKForms, siteODKForms)
+                .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
+                .flatMap((Function<XMLForm, ObservableSource<ArrayList<ScheduleForm>>>) this::downloadProjectSchedule)
+                .map(scheduleForms -> {
+                    for (ScheduleForm scheduleForm : scheduleForms) {
+                        String deployedFrom = scheduleForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+                        scheduleForm.setFormDeployedFrom(deployedFrom);
+                    }
+
+                    return scheduleForms;
+
+                })
+                .toList()
+                .subscribeOn(Schedulers.io());
+
+
+    }
 }
