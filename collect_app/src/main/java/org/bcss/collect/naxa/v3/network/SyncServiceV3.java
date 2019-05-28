@@ -214,13 +214,6 @@ public class SyncServiceV3 extends IntentService {
 
 
                 return Observable.concat(projectObservable, regionSitesObservable)
-                        .map(new Function<Object, Object>() {
-                            @Override
-                            public Object apply(Object o) throws Exception {
-                                if(true) throw new RuntimeException();
-                                return o;
-                            }
-                        })
                         .doOnSubscribe(disposable -> markAsRunning(project.getId(), 0))
                         .onErrorReturn(throwable -> {
                             String url = getFailedFormUrl(throwable)[0];
