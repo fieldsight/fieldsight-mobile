@@ -103,6 +103,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     boolean allSelected = false;
     LiveData<List<ProjectNameTuple>> projectIds;
     Observer<List<ProjectNameTuple>> projectObserver = null;
+    boolean showSyncMenu = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -144,6 +145,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         projectObserver = projectNameList -> {
             Timber.i("list live data = %d", projectNameList.size());
             adapter.notifyProjectisSynced(projectNameList);
+            showSyncMenu = projectNameList.size() == 0 || projectNameList.size() < adapter.getItemCount();
+            invalidateOptionsMenu();
         };
         projectIds = SyncLocalSourcev3.getInstance().getAllSiteSyncedProject();
     }
@@ -226,11 +229,14 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_refresh).setIcon(allSelected ?
-                R.drawable.ic_cancel_white_24dp :
-                R.drawable.ic_action_sync
-        );
-        menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
+        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
+        if(showSyncMenu) {
+            menu.findItem(R.id.action_refresh).setIcon(allSelected ?
+                    R.drawable.ic_cancel_white_24dp :
+                    R.drawable.ic_action_sync
+            );
+            menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
+        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -238,14 +244,14 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_search:
-                break;
+//            case R.id.action_search:
+//                break;
             case R.id.action_refresh:
 //                check all the project and make auto true
                 allSelected = !allSelected;
                 for (Project project : projectList) {
                     if (!project.isSynced()) {
-                    project.setChecked(allSelected);
+                        project.setChecked(allSelected);
                     }
                 }
                 adapter.notifyDataSetChanged();
