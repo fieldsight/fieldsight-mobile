@@ -255,6 +255,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 NotificationListActivity.start(this);
                 break;
             case R.id.action_logout:
+                FieldSightUserSession.showLogoutDialog(this);
                 break;
 
         }
