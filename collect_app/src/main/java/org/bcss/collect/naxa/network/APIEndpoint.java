@@ -53,6 +53,7 @@ public class APIEndpoint {
     public static final String GET_INSTANCE_XML = "/forms/api/instance/download_submission";
     public static final String GET_FORM_XML = "/forms/api/instance/download_xml_version";
 
+
     public static final String GET_EXCHANGE_TOKEN = "/users/api/exchange/google-oauth2/";
 
 
@@ -60,6 +61,7 @@ public class APIEndpoint {
 
         public static final String GET_PROJECTS = "/fv3/api/projects/";
         public static final String GET_SITES = "/fv3/api/sites/";
+        public static final String GET_NOTIFICATION = "/fv3/api/user/logs/";
     }
 
     public class PARAMS {

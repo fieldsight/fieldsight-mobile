@@ -25,6 +25,7 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.network.NetworkUtils;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.ArrayList;
@@ -76,6 +77,10 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                     adapter.updateList(fieldSightNotifications);
                     scrollToTop();
                 });
+
+        if(NetworkUtils.isNetworkConnected()) {
+            viewModel.pullDataFromServer(0+"");
+        }
 
 
     }

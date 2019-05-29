@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.network;
 
 
 import org.bcss.collect.naxa.contact.FieldSightContactModel;
+import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.login.model.AuthResponse;
@@ -238,6 +239,5 @@ public interface ApiInterface {
 
     @GET(APIEndpoint.GET_INSTANCE_SUBMISSION_ATTACHMENTS)
     Observable<HashMap<String, String>> getInstanceMediaList(@Path(value = "instance_submission_id", encoded = true) String instanceSubmissionId);
-
 
 }
