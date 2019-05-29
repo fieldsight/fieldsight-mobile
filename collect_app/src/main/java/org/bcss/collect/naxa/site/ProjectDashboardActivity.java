@@ -55,6 +55,7 @@ import com.crashlytics.android.Crashlytics;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.BackupActivity;
 import org.bcss.collect.naxa.BaseActivity;
 import org.bcss.collect.naxa.common.AppBarStateChangeListener;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
@@ -409,6 +410,9 @@ public class ProjectDashboardActivity extends BaseActivity {
             case R.id.nav_view_site_dashboard:
 
                 break;
+            case R.id.nav_backup:
+                startActivity(new Intent(this, BackupActivity.class));
+                return;
             case R.id.nav_setting:
                 startActivity(new Intent(this, org.bcss.collect.naxa.preferences.SettingsActivity.class));
                 break;

@@ -19,19 +19,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.HttpException;
 import timber.log.Timber;
 
 public class LoginModelImpl implements LoginModel {
 
     @Override
-    public void login(String username, String password, OnLoginFinishedListener listener) {
+    public void login(String username, String password, String token, OnLoginFinishedListener listener) {
 
-        authenticateUser(username, password, listener);
+        authenticateUser(username, password, token, listener);
     }
 
     @Override
-    public void loginViaGoogle(String googleAccessToken, String username,  OnLoginFinishedListener onLoginFinishedListener) {
+    public void loginViaGoogle(String googleAccessToken, String username, String token, OnLoginFinishedListener onLoginFinishedListener) {
         ServiceGenerator.createService(ApiInterface.class)
                 .getAuthTokenUsingGoogle(googleAccessToken)
                 .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
@@ -42,7 +41,7 @@ public class LoginModelImpl implements LoginModel {
 
                         return ServiceGenerator
                                 .createService(ApiInterface.class)
-                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true, 3))
+                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCMParameter(username, token, true))
                                 .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
                                     @Override
                                     public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
@@ -91,20 +90,16 @@ public class LoginModelImpl implements LoginModel {
                 });
     }
 
-    private void authenticateUser(String username, String password, OnLoginFinishedListener onLoginFinishedListener) {
-
-
+    private void authenticateUser(String username, String password, String token, OnLoginFinishedListener onLoginFinishedListener) {
         ServiceGenerator.createService(ApiInterface.class)
                 .getAuthToken(username, password)
                 .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
                     @Override
                     public ObservableSource<FCMParameter> apply(AuthResponse authResponse) {
-
                         ServiceGenerator.clearInstance();
-
                         return ServiceGenerator
                                 .createService(ApiInterface.class)
-                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCM(username, true, 3))
+                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCMParameter(username, token, true))
                                 .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
                                     @Override
                                     public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {

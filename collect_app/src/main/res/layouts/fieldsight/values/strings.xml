@@ -253,6 +253,7 @@
     <string name="msg_check_for_update">Check for update</string>
     <string name="msg_choose_a_day">Choose an day</string>
     <string name="msg_choose_month_option">Choose month option</string>
+    <string name="backup_data">Backup all data</string>
 
 
     <!--Notification sitelist ends here-->

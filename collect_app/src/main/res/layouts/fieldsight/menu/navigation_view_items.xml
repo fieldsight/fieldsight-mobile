@@ -37,6 +37,12 @@
     </item>
 
     <item
+        android:icon="@drawable/ic_action_backup"
+        android:id="@+id/nav_backup"
+        android:title="@string/backup_data" />
+
+
+    <item
         android:icon="@drawable/ic_setting"
         android:id="@+id/nav_setting"
         android:title="@string/toolbar_settings" />

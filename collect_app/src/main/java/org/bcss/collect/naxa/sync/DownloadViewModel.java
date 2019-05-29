@@ -71,7 +71,6 @@ public class DownloadViewModel extends ViewModel {
         for (DownloadableItem downloadableItem : downloadableItems) {
             downloadOneItem(downloadableItem.getUid());
         }
-
     }
 
 
@@ -81,7 +80,7 @@ public class DownloadViewModel extends ViewModel {
     }
 
 
-    public void fetchGeneralForms() {
+    private void fetchGeneralForms() {
 
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
@@ -135,7 +134,7 @@ public class DownloadViewModel extends ViewModel {
     }
 
 
-    public void fetchScheduledForms() {
+    private void fetchScheduledForms() {
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -187,7 +186,7 @@ public class DownloadViewModel extends ViewModel {
     }
 
 
-    public void fetchStagedForms() {
+    private void fetchStagedForms() {
 
 //        ProjectSitesRemoteSource
 //                .getInstance()

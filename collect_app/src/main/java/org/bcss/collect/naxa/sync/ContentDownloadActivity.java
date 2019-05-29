@@ -24,6 +24,7 @@ import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -329,6 +330,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                 break;
             case R.id.download_button:
                 if (!isNetworkConnected) {
+                    ToastUtils.showLongToast(R.string.no_internet_title);
                     stopDownload();
                     return;
                 }
@@ -339,7 +341,6 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                     stopDownload();
                 }
 
-                DownloadableItemLocalSource.getINSTANCE().markAllCheckedAsUnchecked();
 
                 break;
         }
@@ -357,6 +358,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                     public void onSuccess(List<DownloadableItem> downloadableItems) {
                         viewModel.queueSyncTask(downloadableItems);
                         Timber.i("Select completed on sync table");
+                        DownloadableItemLocalSource.getINSTANCE().markAllCheckedAsUnchecked();
                     }
 
                     @Override

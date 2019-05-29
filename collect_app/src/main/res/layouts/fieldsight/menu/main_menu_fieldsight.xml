@@ -30,6 +30,12 @@
         app:showAsAction="never" />
 
     <item
+        android:icon="@drawable/ic_action_backup"
+        android:id="@+id/action_backup"
+        app:showAsAction="never"
+        android:title="@string/backup_data" />
+
+    <item
         android:id="@+id/action_logout"
         android:title="@string/menu_title_logout"
         app:showAsAction="never" />

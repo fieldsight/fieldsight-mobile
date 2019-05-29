@@ -39,6 +39,7 @@ import com.crashlytics.android.Crashlytics;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.application.ForceUpdateChecker;
+import org.bcss.collect.naxa.BackupActivity;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
@@ -189,7 +190,12 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
                 break;
 
+            case R.id.action_backup:
+                startActivity(new Intent(this, BackupActivity.class));
+                return true;
+
         }
+
         return super.onOptionsItemSelected(item);
     }
 

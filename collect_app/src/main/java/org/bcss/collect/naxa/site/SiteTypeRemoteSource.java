@@ -50,7 +50,7 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                     @Override
                     public void onSuccess(List<SiteType> siteTypes) {
                         SiteType[] list = siteTypes.toArray(new SiteType[siteTypes.size()]);
-                        SiteTypeLocalSource.getInstance().save(list);
+                        SiteTypeLocalSource.getInstance().refreshCache(list);
                         DownloadableItemLocalSource.getINSTANCE().markAsCompleted(SITE_TYPES);
                     }
 

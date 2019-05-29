@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -20,12 +21,18 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.SettingsActivity;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.migrate.MigrateFieldSightActivity;
 import org.bcss.collect.naxa.migrate.MigrationHelper;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -125,12 +132,13 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
             mEmailView.setText(BuildConfig.username);
             mPasswordView.setText(BuildConfig.password);
         }
+
     }
 
     @Override
     public void gmailLoginSuccess(String googleAccessToken, String username) {
         loginPresenter.googleOauthCredentials(googleAccessToken, username);
-        Timber.d("gmailLoginSuccess: Access tokenId "+googleAccessToken);
+        Timber.d("gmailLoginSuccess: Access tokenId %s", googleAccessToken);
 
     }
 
@@ -145,7 +153,6 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -235,7 +242,6 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
                 .setNegativeButton(R.string.dialog_action_dismiss, null)
                 .create();
         new Handler().postDelayed(dialog::show, 500);
-
     }
 
     /**

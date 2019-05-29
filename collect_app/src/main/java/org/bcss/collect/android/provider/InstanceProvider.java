@@ -439,6 +439,8 @@ public class InstanceProvider extends ContentProvider {
                 InstanceColumns.DISPLAY_SUBTEXT);
         sInstancesProjectionMap.put(InstanceColumns.FS_SITE_ID,
                 InstanceColumns.FS_SITE_ID);
+        sInstancesProjectionMap.put(InstanceColumns.FS_SUBMISSION_INSTANCE_ID,
+                InstanceColumns.FS_SUBMISSION_INSTANCE_ID);
         sInstancesProjectionMap.put(InstanceColumns.DELETED_DATE, InstanceColumns.DELETED_DATE);
     }
 }
