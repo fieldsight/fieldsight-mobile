@@ -69,17 +69,23 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
         setupToolbar();
         setupRecyclerView();
-
+        int threshold = 20;
 
         viewModel.getAll()
                 .observe(this, fieldSightNotifications -> {
+                    rvNotificationList.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.updateList(fieldSightNotifications);
+                            if (adapter.getItemCount() > threshold)
+                                scrollToTop();
+                        }
+                    });
 
-                    adapter.updateList(fieldSightNotifications);
-                    scrollToTop();
                 });
 
-        if(NetworkUtils.isNetworkConnected()) {
-            viewModel.pullDataFromServer(0+"");
+        if (NetworkUtils.isNetworkConnected()) {
+            viewModel.pullDataFromServer(0 + "");
         }
 
 

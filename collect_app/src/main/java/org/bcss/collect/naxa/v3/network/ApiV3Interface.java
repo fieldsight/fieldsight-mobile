@@ -25,5 +25,5 @@ public interface ApiV3Interface {
     Single<SiteResponse> getSites(@Url String url);
 
     @GET(APIEndpoint.V3.GET_NOTIFICATION)
-    Observable<ResponseBody> getNotification(@QueryMap Map<String, String> queryParams);
+    Single<ResponseBody> getNotification(@QueryMap Map<String, String> queryParams);
 }

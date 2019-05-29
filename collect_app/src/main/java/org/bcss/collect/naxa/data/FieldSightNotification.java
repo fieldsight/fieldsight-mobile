@@ -77,6 +77,9 @@ public class FieldSightNotification implements Parcelable {
         this.isDeployedFromSite = isDeployedFromSite;
         this.scheduleFormsCount = scheduleFormsCount;
     }
+    public FieldSightNotification() {
+
+    }
 
     public boolean isDeployedFromSite() {
         return isDeployedFromSite;
