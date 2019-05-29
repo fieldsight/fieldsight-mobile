@@ -58,6 +58,7 @@ import org.bcss.collect.naxa.site.ProjectDashboardActivity;
 import org.bcss.collect.naxa.site.SearchAdapter;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
+import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;

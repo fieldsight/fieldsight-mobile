@@ -244,9 +244,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 //                check all the project and make auto true
                 allSelected = !allSelected;
                 for (Project project : projectList) {
-//                    if (!project.isSynced()) {
+                    if (!project.isSynced()) {
                     project.setChecked(allSelected);
-//                    }
+                    }
                 }
                 adapter.notifyDataSetChanged();
                 invalidateOptionsMenu();

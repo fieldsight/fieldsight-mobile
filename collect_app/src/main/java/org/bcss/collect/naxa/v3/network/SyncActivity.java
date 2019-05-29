@@ -58,8 +58,6 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @BindView(R.id.toolbar_message)
     TextView toolbar_message;
 
-
-    private DisposableObserver<Boolean> connectivityDisposable;
     SyncAdapterv3 adapterv3;
     boolean auto = true;
     HashMap<String, List<Syncable>> syncableMap = null;
@@ -243,10 +241,6 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         if (syncdata != null && syncdata.hasObservers()) {
             syncdata.removeObserver(syncObserver);
         }
-        if (connectivityDisposable != null) {
-            connectivityDisposable.dispose();
-        }
-
         if (runningLiveData != null && runningLiveData.hasObservers()) {
             runningLiveData.removeObserver(runningLiveDataObserver);
         }
