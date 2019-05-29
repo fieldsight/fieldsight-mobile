@@ -2,6 +2,7 @@ package org.bcss.collect.naxa;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -17,10 +18,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.utilities.ZipUtils;
+import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.io.File;
 import java.util.HashMap;
@@ -29,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BackupActivity extends AppCompatActivity {
+public class BackupActivity extends CollectAbstractActivity {
     @BindView(R.id.tv_data_info)
     TextView tv_data_info;
 
@@ -70,8 +73,11 @@ public class BackupActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         zipUtils = new ZipUtils();
         builder = new StringBuilder();
-        StrictMode.VmPolicy.Builder modeBuilder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(modeBuilder.build());
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            StrictMode.VmPolicy.Builder modeBuilder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(modeBuilder.build());
+        }
 
         HashMap<String, String> folderInfo = zipUtils.getAllInfo(Collect.ODK_ROOT);
         String infoMessage = String.format("type :  %s \n " +
@@ -112,7 +118,7 @@ public class BackupActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(handler != null) {
+        if (handler != null) {
             handler.removeCallbacks(runnable);
         }
     }
