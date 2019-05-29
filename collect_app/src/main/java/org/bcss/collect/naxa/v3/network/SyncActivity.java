@@ -131,24 +131,6 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         };
         runningLiveData = SyncLocalSourcev3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING);
         runningLiveData.observe(this, runningLiveDataObserver);
-
-//        connectivityDisposable = InternetUtils.observeInternetConnectivity(new InternetUtils.OnConnectivityListener() {
-//            @Override
-//            public void onConnectionSuccess() {
-//                toolbar_message.setVisibility(View.GONE);
-//            }
-//
-//            @Override
-//            public void onConnectionFailure() {
-//                toolbar_message.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void onCheckComplete() {
-//
-//            }
-//        });
-
         if (syncing) {
             enableDisableAdapter(syncing);
         }
