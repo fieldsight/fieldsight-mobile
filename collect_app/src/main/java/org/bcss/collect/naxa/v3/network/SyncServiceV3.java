@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
@@ -50,9 +51,20 @@ public class SyncServiceV3 extends IntentService {
     ArrayList<Project> selectedProject;
     HashMap<String, List<Syncable>> selectedMap = null;
     private List<String> failedSiteUrls = new ArrayList<>();
+    private ArrayList<Disposable> syncDisposable = new ArrayList<>();
 
     public SyncServiceV3() {
         super("SyncserviceV3");
+    }
+
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        String sentAction = intent.getAction();
+        if (TextUtils.equals(sentAction, Constant.SERVICE.STOP_SYNC)) {
+            cancelAllTask();
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -67,7 +79,7 @@ public class SyncServiceV3 extends IntentService {
             }
 
             //Start syncing sites
-            Disposable disposable = downloadByRegionObservable(selectedProject, selectedMap)
+            Disposable sitesObservable = downloadByRegionObservable(selectedProject, selectedMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeWith(new DisposableObserver<Object>() {
@@ -87,6 +99,8 @@ public class SyncServiceV3 extends IntentService {
                         }
                     });
 
+            DisposableManager.add(sitesObservable);
+
             Disposable projectEduMatObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(2).sync)
@@ -97,6 +111,12 @@ public class SyncServiceV3 extends IntentService {
                             return EducationalMaterialsRemoteSource.getInstance()
                                     .getByProjectId(project.getId())
                                     .toObservable()
+                                    .doOnDispose(new Action() {
+                                        @Override
+                                        public void run() throws Exception {
+                                            markAsFailed(project.getId(), 2, "");
+                                        }
+                                    })
                                     .doOnSubscribe(new Consumer<Disposable>() {
                                         @Override
                                         public void accept(Disposable disposable) throws Exception {
@@ -116,10 +136,13 @@ public class SyncServiceV3 extends IntentService {
                                     });
                         }
                     })
+
                     .subscribe(projectId -> {
                         //unused
                     }, Timber::e);
 
+
+            DisposableManager.add(projectEduMatObservable);
 
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
@@ -141,6 +164,12 @@ public class SyncServiceV3 extends IntentService {
                                             markAsCompleted(project.getId(), 1);
                                         }
                                     }).doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
+                                    .doOnDispose(new Action() {
+                                        @Override
+                                        public void run() throws Exception {
+                                            markAsFailed(project.getId(), 1, "");
+                                        }
+                                    })
                                     .onErrorReturn(new Function<Throwable, Project>() {
                                         @Override
                                         public Project apply(Throwable throwable) throws Exception {
@@ -164,8 +193,18 @@ public class SyncServiceV3 extends IntentService {
                     }, Timber::e);
 
 
+            DisposableManager.add(formsDownloadObservable);
+
         } catch (NullPointerException e) {
             Timber.e(e);
+        }
+    }
+
+    private void cancelAllTask() {
+        for (Disposable disposable : syncDisposable) {
+            if (disposable != null && !disposable.isDisposed()) {
+                disposable.dispose();
+            }
         }
     }
 
@@ -229,6 +268,11 @@ public class SyncServiceV3 extends IntentService {
                             if (failedSiteUrls.size() > 0) {
                                 markAsFailed(project.getId(), 0, failedSiteUrls.toString());
                                 failedSiteUrls.clear();
+                            }
+                        }).doOnDispose(new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                markAsFailed(project.getId(), 0, "");
                             }
                         });
             }

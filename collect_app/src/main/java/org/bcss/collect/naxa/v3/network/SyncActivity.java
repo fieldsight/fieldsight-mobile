@@ -22,6 +22,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
+import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.login.model.Project;
@@ -177,19 +178,20 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             super.onBackPressed();
-        } else if (item.getItemId() == Menu.FIRST + 1) {
-
+        } else if (item.getItemId() == R.id.menu_item_cancel) {
+            DisposableManager.dispose();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.clear();
-        menu.add(0, Menu.FIRST, Menu.FIRST + 1, "Cancel Sync").setIcon(R.drawable.ic_close);
 
-        return super.onPrepareOptionsMenu(menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sync_menu,menu);
+        return super.onCreateOptionsMenu(menu);
     }
+
+
 
     @Override
     public void onRequestInterrupt(int pos, Project project) {

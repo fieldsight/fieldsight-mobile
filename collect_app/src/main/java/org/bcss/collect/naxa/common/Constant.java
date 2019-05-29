@@ -167,4 +167,10 @@ public class Constant {
         put(DownloadStatus.RUNNING, "Syncing data");
         put(DownloadStatus.COMPLETED, "Completed");
     }};
+
+    public static class SERVICE {
+        static String SERVICE_AUTHORITY = "org.bcss.collect.naxa.v3.network.SyncServiceV3";
+        public static String STOP_SYNC = SERVICE_AUTHORITY + "stop";
+
+    }
 }
