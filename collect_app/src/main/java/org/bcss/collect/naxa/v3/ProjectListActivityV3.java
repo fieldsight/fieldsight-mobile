@@ -151,6 +151,14 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         projectIds = SyncLocalSourcev3.getInstance().getAllSiteSyncedProject();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(tv_sync_project.getVisibility() == View.VISIBLE) {
+            tv_sync_project.setVisibility(View.GONE);
+        }
+    }
+
     @OnClick(R.id.cv_resync)
     void resyncProject() {
         getDataFromServer();
