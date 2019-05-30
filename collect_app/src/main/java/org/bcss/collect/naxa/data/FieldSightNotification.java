@@ -2,12 +2,13 @@ package org.bcss.collect.naxa.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-@Entity
+@Entity(indices = {@Index(value = "receivedDateTime", unique = true)})
 public class FieldSightNotification implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
@@ -35,10 +36,15 @@ public class FieldSightNotification implements Parcelable {
     private String formSubmissionId;
     private String formVersion;
     private String siteIdentifier;
+    private String receivedDateTime;
     private boolean isDeployedFromSite;
 
     @ColumnInfo(name = "schedule_forms_count")
     private String scheduleFormsCount;
+
+    public void setReceivedDateTime(String receivedDateTime) {
+        this.receivedDateTime = receivedDateTime;
+    }
 
     public String getFormSubmissionId() {
         return formSubmissionId;
@@ -51,7 +57,7 @@ public class FieldSightNotification implements Parcelable {
     public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString,
                                   String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId,
                                   String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment,
-                                  String formType, boolean isRead, String formSubmissionId, String formVersion, String siteIdentifier, boolean isDeployedFromSite, String scheduleFormsCount) {
+                                  String formType, boolean isRead, String formSubmissionId, String formVersion, String siteIdentifier, boolean isDeployedFromSite, String scheduleFormsCount,String receivedDateTime) {
         this.id = id;
         this.notificationType = notificationType;
         this.notifiedDate = notifiedDate;
@@ -76,6 +82,7 @@ public class FieldSightNotification implements Parcelable {
         this.siteIdentifier = siteIdentifier;
         this.isDeployedFromSite = isDeployedFromSite;
         this.scheduleFormsCount = scheduleFormsCount;
+        this.receivedDateTime = receivedDateTime;
     }
     public FieldSightNotification() {
 
@@ -266,6 +273,10 @@ public class FieldSightNotification implements Parcelable {
         this.scheduleFormsCount = scheduleFormsCount;
     }
 
+    public String getReceivedDateTime() {
+        return receivedDateTime;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -297,6 +308,7 @@ public class FieldSightNotification implements Parcelable {
         dest.writeByte(this.isDeployedFromSite ? (byte) 1 : (byte) 0);
         dest.writeString(this.siteIdentifier);
         dest.writeString(this.scheduleFormsCount);
+        dest.writeString(this.receivedDateTime);
     }
 
     protected FieldSightNotification(Parcel in) {
@@ -324,6 +336,7 @@ public class FieldSightNotification implements Parcelable {
         this.isDeployedFromSite = in.readByte() != 0;
         this.siteIdentifier = in.readString();
         this.scheduleFormsCount = in.readString();
+        this.receivedDateTime = in.readString();
     }
 
     public static final Creator<FieldSightNotification> CREATOR = new Creator<FieldSightNotification>() {

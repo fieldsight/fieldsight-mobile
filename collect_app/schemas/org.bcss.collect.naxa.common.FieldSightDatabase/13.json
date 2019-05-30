@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 13,
-    "identityHash": "1deddd8083990a7a0467b002d00a2f77",
+    "identityHash": "ea5e6c43934af6a5cc4558681cde04f9",
     "entities": [
       {
         "tableName": "sites",
@@ -881,7 +881,7 @@
       },
       {
         "tableName": "FieldSightNotification",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `details_url` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `schedule_forms_count` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `details_url` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `receivedDateTime` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `schedule_forms_count` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1016,6 +1016,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "receivedDateTime",
+            "columnName": "receivedDateTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "isDeployedFromSite",
             "columnName": "isDeployedFromSite",
             "affinity": "INTEGER",
@@ -1034,7 +1040,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_FieldSightNotification_receivedDateTime",
+            "unique": true,
+            "columnNames": [
+              "receivedDateTime"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_FieldSightNotification_receivedDateTime` ON `${TABLE_NAME}` (`receivedDateTime`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -1343,7 +1358,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1deddd8083990a7a0467b002d00a2f77\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ea5e6c43934af6a5cc4558681cde04f9\")"
     ]
   }
 }

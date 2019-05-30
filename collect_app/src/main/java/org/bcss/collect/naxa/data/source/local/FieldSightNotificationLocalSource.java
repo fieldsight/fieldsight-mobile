@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -16,9 +17,13 @@ import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.data.FieldSightNotificationBuilder;
 import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.odk.collect.android.utilities.DateTimeUtils;
 
+import java.sql.Date;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -175,12 +180,12 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
     @Override
     public void save(FieldSightNotification... items) {
-        AsyncTask.execute(() -> dao.insert(items));
+        AsyncTask.execute(() -> dao.insertOrIgnore(items));
     }
 
     @Override
     public void save(ArrayList<FieldSightNotification> items) {
-        AsyncTask.execute(() -> dao.insert(items));
+        AsyncTask.execute(() -> dao.insertOrIgnore(items));
     }
 
     @Override
@@ -325,6 +330,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     public FieldSightNotification parseNotificationData(JSONObject jsonObject) {
 
         JSONObject notificationData = jsonObject.optJSONObject("message");
+        String receivedDateTime = jsonObject.optString("date");
 
 
         if (notificationData.has("notify_type")) {
@@ -432,7 +438,8 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
         }
 
 
-        FieldSightNotification notification = new FieldSightNotificationBuilder().setDetails_url(notificationDetailsUrl)
+        FieldSightNotification notification = new FieldSightNotificationBuilder()
+                .setDetails_url(notificationDetailsUrl)
                 .setNotificationType(notifyType)
                 .setFsFormId(fsFormId)
                 .setFormName(formName)
@@ -453,6 +460,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 .isRead(false)
                 .isDeployedFromSite(isDeployedFromSite)
                 .setFormVersion(formVerion)
+                .setReceivedDateTime(receivedDateTime)
                 .createFieldSightNotification();
 
         return notification;

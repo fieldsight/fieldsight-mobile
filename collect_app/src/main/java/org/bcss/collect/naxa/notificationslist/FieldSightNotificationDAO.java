@@ -2,6 +2,8 @@ package org.bcss.collect.naxa.notificationslist;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
@@ -40,7 +42,6 @@ public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<Fie
     public abstract Maybe<Integer> countForNotificationType(Boolean read, String... notificationTypes);
 
 
-
     @Query("UPDATE fieldsightnotification SET isRead=:read WHERE notificationType in (:notificationTypes)")
     public abstract void applyReadToNotificationType(Boolean read, String... notificationTypes);
 
@@ -48,9 +49,14 @@ public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<Fie
             "(SELECT COUNT(DISTINCT projectId) FROM fieldsightnotification WHERE notificationType =:assign and isRead =:read ) " +
             " - " +
             "(SELECT COUNT(DISTINCT projectId) FROM fieldsightnotification WHERE notificationType =:assign AND projectId in(:projectIds) and isRead =:read )")
-    public abstract LiveData<Integer> countNonExistentProjectInNotification(Boolean read,String assign, String... projectIds);
+    public abstract LiveData<Integer> countNonExistentProjectInNotification(Boolean read, String assign, String... projectIds);
 
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    public abstract void insertOrIgnore(FieldSightNotification... items);
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    public abstract void insertOrIgnore(ArrayList<FieldSightNotification> items);
         /*
     *
  SELECT ( SELECT count(DISTINCT projectId) FROM fieldsightnotification WHERE notificationType = "Assign Site") -
