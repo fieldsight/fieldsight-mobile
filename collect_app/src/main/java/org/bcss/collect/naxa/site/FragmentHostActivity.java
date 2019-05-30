@@ -22,6 +22,7 @@ import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
+import org.bcss.collect.naxa.preferences.SettingsActivity;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -111,9 +112,8 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
                 break;
             case R.id.action_app_settings:
-                //startActivity(new Intent(this, SettingsActivity.class));
-
-                break;
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
             case R.id.action_logout:
 //                showProgress();
                 InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {

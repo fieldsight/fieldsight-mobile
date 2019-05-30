@@ -159,11 +159,11 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_search:
-                if (allowClick(getClass().getName())) {
-                    loadToolBarSearch();
-                }
-                break;
+//            case R.id.action_search:
+//                if (allowClick(getClass().getName())) {
+//                    loadToolBarSearch();
+//                }
+//                break;
             case R.id.action_refresh:
                 ContentDownloadActivity.start(this);
                 break;
