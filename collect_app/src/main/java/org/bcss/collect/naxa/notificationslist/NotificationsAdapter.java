@@ -24,6 +24,8 @@ import org.odk.collect.android.utilities.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGE_DEPLOYED;
@@ -71,13 +73,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         FieldSightNotification fieldSightNotification = FieldSightNotifications.get(viewHolder.getAdapterPosition());
-        viewHolder.ivNotificationIcon.setImageDrawable(getNotificationImage(fieldSightNotification.getNotificationType()));
-        Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance().generateNotificationContent(fieldSightNotification);
-        String title = titleContent.first;
-        String content = titleContent.second;
-        viewHolder.tvTitle.setText(title);
-        viewHolder.tvDesc.setText(content);
-        viewHolder.tvDate.setText(fieldSightNotification.getNotifiedDate());
+        try {
+            viewHolder.ivNotificationIcon.setImageDrawable(getNotificationImage(fieldSightNotification.getNotificationType()));
+            Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance().generateNotificationContent(fieldSightNotification);
+            String title = titleContent.first;
+            String content = titleContent.second;
+            viewHolder.tvTitle.setText(title);
+            viewHolder.tvDesc.setText(content);
+            viewHolder.tvDate.setText(fieldSightNotification.getNotifiedDate());
+        } catch (NullPointerException e) {
+            Timber.e("Failed loading notification onBinViewHolder() reason: %s",e.getMessage());
+        }
     }
 
     private Drawable getNotificationImage(String notificationType) {

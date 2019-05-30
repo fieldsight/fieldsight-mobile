@@ -9,6 +9,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.network.NetworkUtils;
@@ -68,23 +69,16 @@ public class NotificationListViewModel extends ViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap((Function<ResponseBody, ObservableSource<JSONObject>>) responseBody -> {
-                    Timber.i("NotificationListViewModel value = %s", responseBody.string());
-                    JSONArray jsonArray = new JSONObject(responseBody.string()).optJSONArray("notifications");
-                    Timber.i("NotificationListViewModel, val length:: %d", jsonArray.length());
-                    return Observable.range(0, jsonArray.length())
-                            .map(jsonArray::getJSONObject);
+                    String jsonString = responseBody.string();
+                    JSONArray notificationJsonArray = new JSONObject(jsonString).optJSONArray("notifications");
+                    return Observable.range(0, notificationJsonArray.length())
+                            .map(notificationJsonArray::getJSONObject);
                 })
                 .map(new Function<JSONObject, FieldSightNotification>() {
                     @Override
                     public FieldSightNotification apply(JSONObject json) throws Exception {
-                        FieldSightNotification fieldSightNotification = new FieldSightNotification();
-                        fieldSightNotification.setNotifiedDate(json.optString("data"));
-                        fieldSightNotification.setProjectId(json.optJSONObject("message").optJSONObject("project").optString("id"));
-                        fieldSightNotification.setProjectName(json.optJSONObject("message").optJSONObject("project").optString("name"));
-                        fieldSightNotification.setNotificationType(json.optJSONObject("message").optString("notify_type"));
-                        fieldSightNotification.setSiteId(json.optJSONObject("message").optJSONObject("site").optString("id"));
-                        fieldSightNotification.setSiteName(json.optJSONObject("message").optJSONObject("site").optString("name"));
-                        return fieldSightNotification;
+
+                        return FieldSightNotificationLocalSource.getInstance().parseNotificationData(json);
                     }
                 })
                 .toList()

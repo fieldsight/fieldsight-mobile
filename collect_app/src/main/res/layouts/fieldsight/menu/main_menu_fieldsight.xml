@@ -2,11 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <!--<item-->
-        <!--android:id="@+id/action_search"-->
-        <!--android:icon="@drawable/ic_search_white"-->
-        <!--android:title="@string/menu_title_search"-->
-        <!--app:showAsAction="ifRoom" />-->
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white"
+        android:title="@string/menu_title_search"
+        app:showAsAction="ifRoom" />
 
 
     <item
