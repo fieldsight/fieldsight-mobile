@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.OnItemClickListener;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
+import org.odk.collect.android.utilities.DateTimeUtils;
 import org.odk.collect.android.utilities.TextUtils;
 
 import java.util.ArrayList;
@@ -80,7 +82,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             String content = titleContent.second;
             viewHolder.tvTitle.setText(title);
             viewHolder.tvDesc.setText(content);
-            viewHolder.tvDate.setText(fieldSightNotification.getNotifiedDate());
+            viewHolder.tvDate.setText(DateTimeUtils.getRelativeTime(fieldSightNotification.getReceivedDateTime(),true));
         } catch (NullPointerException e) {
             Timber.e("Failed loading notification onBinViewHolder() reason: %s",e.getMessage());
         }

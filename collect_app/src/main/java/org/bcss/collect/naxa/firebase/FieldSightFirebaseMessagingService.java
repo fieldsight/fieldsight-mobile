@@ -121,11 +121,11 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setFsFormIdProject(fsFormIdProject)
                     .isRead(false)
                     .isDeployedFromSite(isDeployedFromSite)
-                    .setFormVersion(formVerion)
-                    .createFieldSightNotification();
+                    .setFormVersion(formVerion);
 
-            FieldSightNotificationLocalSource.getInstance().save(builder.createFieldSightNotification());
-            Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance().generateNotificationContent(builder.createFieldSightNotification());
+
+            Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance()
+                    .generateNotificationContent(builder.createFieldSightNotification());
 
             String title = titleContent.first;
             String content = titleContent.second;
