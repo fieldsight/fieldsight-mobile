@@ -130,22 +130,16 @@ public class FieldSightUserSession {
     }
 
     private static String getLogoutMessage(int offlineSitesNumber, int unsentFormCount) {
-
-
-        String msg;
         Context context = Collect.getInstance();
-
-        if (offlineSitesNumber == 0 && unsentFormCount == 0) {
-            msg = context.getString(R.string.logout_message_none);
-        } else if (offlineSitesNumber == 0) {
+       String msg = "";
+        if (offlineSitesNumber > 0) {
             msg = context.getString(R.string.logout_message_only_filled_forms, unsentFormCount);
-        } else if (unsentFormCount == 0) {
-            msg = context.getString(R.string.logout_message_only_offline_sites, offlineSitesNumber);
-        } else {
-            msg = context.getString(R.string.logout_message_all, offlineSitesNumber, unsentFormCount);
         }
-
-        return msg;
+        if (unsentFormCount > 0) {
+            if (!msg.isEmpty()) msg+=context.getString(R.string.and);
+            msg += context.getString(R.string.logout_message_only_offline_sites, offlineSitesNumber);
+        }
+        return context.getString(R.string.logout_warn_message, msg);
     }
 
     public static void showLogoutDialog(Activity context) {
