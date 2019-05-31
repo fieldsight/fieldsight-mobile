@@ -41,7 +41,7 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
     @Query("DELETE FROM syncstat")
     void delete();
 
-    @Query("SELECT project_id, created_date FROM syncstat WHERE type=0 AND status=4")
-    LiveData<List<ProjectNameTuple>> getAllSiteSyncedProject();
+    @Query("SELECT project_id, created_date, status FROM syncstat WHERE type=0 AND status > 0")
+    LiveData<List<ProjectNameTuple>> getAllSiteSyncingProject();
 
 }

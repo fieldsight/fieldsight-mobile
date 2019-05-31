@@ -69,13 +69,10 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
         FieldSightNotificationLocalSource.getInstance()
                 .isSiteNotSynced(loadedSite.getId(), loadedSite.getProject())
-                .observe(this, new Observer<Integer>() {
-                    @Override
-                    public void onChanged(@Nullable Integer integer) {
-                        if (integer != null && integer > 0) {
+                .observe(this, integer -> {
+                    if (integer != null && integer > 0) {
 
-                            FlashBarUtils.showOutOfSyncMsg(ALL_FORMS, FragmentHostActivity.this, "Form(s) information is out of sync");
-                        }
+                        FlashBarUtils.showOutOfSyncMsg(ALL_FORMS, FragmentHostActivity.this, "Form(s) information is out of sync");
                     }
                 });
 

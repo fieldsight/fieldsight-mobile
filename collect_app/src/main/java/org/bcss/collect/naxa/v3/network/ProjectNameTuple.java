@@ -9,5 +9,8 @@ public class ProjectNameTuple {
     @ColumnInfo(name = "created_date")
     public long created_date;
 
+    @ColumnInfo(name = "status")
+    public int status;
+
 
 }

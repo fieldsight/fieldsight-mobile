@@ -86,6 +86,18 @@ public class Project implements Parcelable {
     @Ignore
     boolean isSynced = false;
 
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
+    @Expose
+    @Ignore
+    String statusMessage = "";
+
     public long getSyncedDate() {
         return syncedDate;
     }

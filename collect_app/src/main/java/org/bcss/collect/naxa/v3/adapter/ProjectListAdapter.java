@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
@@ -16,6 +17,7 @@ import org.bcss.collect.naxa.site.ProjectDashboardActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.v3.network.ProjectNameTuple;
 import org.bcss.collect.naxa.v3.network.SyncActivity;
+import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.List;
 
@@ -61,8 +63,18 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
         for (int i = 0; i < projectList.size(); i++) {
             for (int j = 0; j < projecttuple.size(); j++) {
                 if (projectList.get(i).getId().equals(projecttuple.get(j).projectId)) {
-                    projectList.get(i).setSynced(true);
-                    projectList.get(i).setSyncedDate(projecttuple.get(j).created_date);
+                    int status = projecttuple.get(j).status;
+                    if(status == Constant.DownloadStatus.RUNNING) {
+                        projectList.get(i).setStatusMessage("Syncing project");
+                    } else if(status == Constant.DownloadStatus.COMPLETED) {
+                        projectList.get(i).setSynced(true);
+                        projectList.get(i).setSyncedDate(projecttuple.get(j).created_date);
+                        projectList.get(i).setStatusMessage("Synced On " + DateTimeUtils.getFormattedDate("yyyy-MM-dd, HH:mm", projectList.get(i).getSyncedDate()));
+                    } else if(status == Constant.DownloadStatus.FAILED) {
+                        projectList.get(i).setStatusMessage("Sync failed");
+                    } else {
+                        projectList.get(i).setStatusMessage("");
+                    }
                 }
             }
         }

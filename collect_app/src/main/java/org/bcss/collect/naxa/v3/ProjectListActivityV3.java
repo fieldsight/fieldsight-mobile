@@ -148,7 +148,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             showSyncMenu = projectNameList.size() == 0 || projectNameList.size() < adapter.getItemCount();
             invalidateOptionsMenu();
         };
-        projectIds = SyncLocalSourcev3.getInstance().getAllSiteSyncedProject();
+        projectIds = SyncLocalSourcev3.getInstance().getAllSiteSyncingProject();
     }
 
     @Override
@@ -260,6 +260,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 for (Project project : projectList) {
                     if (!project.isSynced()) {
                         project.setChecked(allSelected);
+                    } else {
+                        project.setChecked(false);
                     }
                 }
                 adapter.notifyDataSetChanged();
