@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.BackupActivity;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.login.model.Project;
@@ -252,8 +253,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_search:
-//                break;
+            case R.id.action_backup:
+                startActivity(new Intent(this, BackupActivity.class));
+                return true;
             case R.id.action_refresh:
 //                check all the project and make auto true
                 allSelected = !allSelected;
