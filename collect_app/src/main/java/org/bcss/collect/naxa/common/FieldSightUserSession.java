@@ -131,13 +131,16 @@ public class FieldSightUserSession {
 
     private static String getLogoutMessage(int offlineSitesNumber, int unsentFormCount) {
         Context context = Collect.getInstance();
-       String msg = "";
+        String msg = "";
         if (offlineSitesNumber > 0) {
-            msg = context.getString(R.string.logout_message_only_filled_forms, unsentFormCount);
+            msg = context.getString(R.string.logout_message_only_offline_sites, offlineSitesNumber);
         }
         if (unsentFormCount > 0) {
-            if (!msg.isEmpty()) msg+=context.getString(R.string.and);
-            msg += context.getString(R.string.logout_message_only_offline_sites, offlineSitesNumber);
+            if (!msg.isEmpty()) {
+                msg += context.getString(R.string.and);
+            }
+
+            msg += context.getString(R.string.logout_message_only_filled_forms, unsentFormCount);
         }
         return context.getString(R.string.logout_warn_message, msg);
     }
@@ -205,11 +208,13 @@ public class FieldSightUserSession {
 
     }
 
-   static Thread tokenDeleteThread = new Thread(() -> {
-       try {
-           FirebaseInstanceId.getInstance().deleteInstanceId();
-       }catch (IOException e) { e.printStackTrace();}
-   });
+    static Thread tokenDeleteThread = new Thread(() -> {
+        try {
+            FirebaseInstanceId.getInstance().deleteInstanceId();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    });
 
 
     public static void stopLogoutDialog(Context context) {
