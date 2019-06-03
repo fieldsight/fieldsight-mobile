@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -14,26 +14,21 @@ import android.widget.RelativeLayout;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.BaseActivity;
 import org.bcss.collect.naxa.common.GridItemDecoration;
-import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.v3.network.ApiV3Interface;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Single;
+import io.reactivex.Observable;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -49,7 +44,7 @@ public class SiteDocumentsListActivity extends BaseActivity implements SiteDocum
     @BindView(R.id.progress_layout)
     View progressLayout;
     @BindView(R.id.rv_site_documents)
-    RecyclerViewEmptySupport rvSiteDocuments;
+    RecyclerView rvSiteDocuments;
     @BindView(R.id.root_layout_empty_layout)
     RelativeLayout emptyLayout;
 
@@ -69,6 +64,7 @@ public class SiteDocumentsListActivity extends BaseActivity implements SiteDocum
         ButterKnife.bind(this);
 
         loadedSite = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
+        emptyLayout.setVisibility(View.GONE);
 
 
         setupToolbar();
@@ -85,25 +81,25 @@ public class SiteDocumentsListActivity extends BaseActivity implements SiteDocum
                 .getSiteDocuments(params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(new Function<ResponseBody, SingleSource<List<String>>>() {
-                    @Override
-                    public SingleSource<List<String>> apply(ResponseBody responseBody) throws Exception {
-                        JSONObject jsonObject = new JSONObject(responseBody.string());
-                        JSONArray result = jsonObject.getJSONArray("blueprints");
-                        return io.reactivex.Observable.range(0, result.length())
-                                .map(new Function<Integer, String>() {
-                                    @Override
-                                    public String apply(Integer index) throws Exception {
-                                        return result.getString(index);
-                                    }
-                                }).toList();
-                    }
+                .flatMap((Function<ResponseBody, SingleSource<List<String>>>) responseBody -> {
+                    JSONObject jsonObject = new JSONObject(responseBody.string());
+                    JSONArray result = jsonObject.getJSONArray("blueprints");
+                    return Observable.range(0, result.length())
+                            .map(new Function<Integer, String>() {
+                                @Override
+                                public String apply(Integer index) throws Exception {
+                                    return result.getString(index);
+                                }
+                            }).toList();
                 })
                 .doOnSubscribe(disposable -> showProgressLayout(true))
                 .doAfterTerminate(() -> showProgressLayout(false))
                 .subscribe(new DisposableSingleObserver<List<String>>() {
                     @Override
                     public void onSuccess(List<String> urls) {
+                        if (urls.isEmpty()) {
+                            emptyLayout.setVisibility(View.VISIBLE);
+                        }
                         adapter.addAll(urls);
                     }
 
@@ -132,7 +128,6 @@ public class SiteDocumentsListActivity extends BaseActivity implements SiteDocum
         adapter = new SiteDocumentsAdapter();
         adapter.setOnSiteDocumentClickListener(this);
         rvSiteDocuments.setAdapter(adapter);
-        rvSiteDocuments.setEmptyView(emptyLayout, getString(R.string.empty_message_site_documents), null);
         rvSiteDocuments.addItemDecoration(new GridItemDecoration(16, 2));
 
 
