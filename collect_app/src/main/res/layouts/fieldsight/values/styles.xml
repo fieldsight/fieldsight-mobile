@@ -51,6 +51,15 @@
         <item name="navigationIcon">@drawable/ic_close</item>
     </style>
 
+
+
+    <style name="ToolBarWithNavigationCloseBlack" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@color/gray_deep</item>
+        <item name="android:textColorSecondary">@color/gray_deep</item>
+        <item name="actionMenuTextColor">@color/gray_deep</item>
+        <item name="navigationIcon">@drawable/ic_close_white_24dp</item>
+    </style>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light" />
 
     <style name="AppTheme.NoActionBar">
