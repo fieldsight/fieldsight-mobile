@@ -31,6 +31,9 @@ import butterknife.ButterKnife;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -43,12 +46,13 @@ public class SiteDocumentsListActivity extends BaseActivity implements SiteDocum
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.progress_layout)
+    View progressLayout;
     @BindView(R.id.rv_site_documents)
     RecyclerViewEmptySupport rvSiteDocuments;
     @BindView(R.id.root_layout_empty_layout)
     RelativeLayout emptyLayout;
-    @BindView(R.id.fab_scroll_to_top)
-    FloatingActionButton fabScrollToTop;
+
     private SiteDocumentsAdapter adapter;
     private Site loadedSite;
 
@@ -95,6 +99,8 @@ public class SiteDocumentsListActivity extends BaseActivity implements SiteDocum
                                 }).toList();
                     }
                 })
+                .doOnSubscribe(disposable -> showProgressLayout(true))
+                .doAfterTerminate(() -> showProgressLayout(false))
                 .subscribe(new DisposableSingleObserver<List<String>>() {
                     @Override
                     public void onSuccess(List<String> urls) {
@@ -106,6 +112,10 @@ public class SiteDocumentsListActivity extends BaseActivity implements SiteDocum
                         Timber.e("Failed to add documents to list due to %s", e.getMessage());
                     }
                 });
+    }
+
+    private void showProgressLayout(boolean show) {
+        progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void setupToolbar() {
