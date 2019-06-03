@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.BaseActivity;
 import org.bcss.collect.naxa.common.GridItemDecoration;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.login.model.Site;
@@ -38,7 +39,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
-public class SiteDocumentsListActivity extends CollectAbstractActivity implements SiteDocumentsAdapter.OnSiteDocumentClickListener {
+public class SiteDocumentsListActivity extends BaseActivity implements SiteDocumentsAdapter.OnSiteDocumentClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -136,5 +137,10 @@ public class SiteDocumentsListActivity extends CollectAbstractActivity implement
     public void onPDFDocumentClick(String url) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
+    }
+
+    @Override
+    public void onBackClicked(boolean isHome) {
+        this.finish();
     }
 }

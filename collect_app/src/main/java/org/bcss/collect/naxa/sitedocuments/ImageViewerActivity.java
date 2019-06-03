@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.GlideApp;
+import org.bcss.collect.naxa.common.ImageUtils;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.io.File;
@@ -49,6 +50,7 @@ public class ImageViewerActivity extends CollectAbstractActivity {
         circularProgressDrawable.setStrokeWidth(5f);
         circularProgressDrawable.setCenterRadius(30f);
         circularProgressDrawable.start();
+
 
         GlideApp.with(getApplicationContext())
                 .load(new File(url))
