@@ -12,13 +12,13 @@ import org.bcss.collect.naxa.common.BaseRepository;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormRepository;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
+import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.v3.network.LoadProjectCallback;
 import org.bcss.collect.naxa.v3.network.ProjectBuilder;
 import org.bcss.collect.naxa.v3.network.ProjectRemoteSource;
 import org.bcss.collect.naxa.v3.network.Region;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
@@ -70,7 +70,6 @@ public class ProjectRepository implements BaseRepository<Project> {
     }
 
 
-
     @Override
     public void save(Project... items) {
         AsyncTask.execute(() -> localSource.save(items));
@@ -86,7 +85,7 @@ public class ProjectRepository implements BaseRepository<Project> {
         localSource.updateAll(items);
     }
 
-//added in v3
+    //added in v3
 //    TODO before sending daata in the call
     public void getAll(LoadProjectCallback callback) {
         ProjectLocalSource.getInstance()
@@ -96,7 +95,8 @@ public class ProjectRepository implements BaseRepository<Project> {
                 .subscribe(new DisposableSingleObserver<List<Project>>() {
                     @Override
                     public void onSuccess(List<Project> projects) {
-                        boolean isDataNotAvailable = projects.isEmpty();
+
+                        boolean isDataNotAvailable = projects.isEmpty() || NetworkUtils.isNetworkConnected();
 
                         if (isDataNotAvailable) {
                             getProjectFromRemoteSource(callback);
@@ -104,6 +104,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                             callback.onProjectLoaded(projects);
                         }
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
@@ -111,8 +112,6 @@ public class ProjectRepository implements BaseRepository<Project> {
                     }
                 });
     }
-
-
 
 
     private void getProjectFromRemoteSource(LoadProjectCallback callback) {
@@ -131,7 +130,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                         Project p = new ProjectBuilder()
                                 .setName(json.optString("name"))
                                 .setId(json.optString("id"))
-                                 .setUrl(json.optString("url"))
+                                .setUrl(json.optString("url"))
                                 .setAddress(json.optString("address"))
                                 .setMetaAttributes(mapJSONtoMetaArributes(json.optJSONArray("meta_attributes")))
                                 .setOrganizationName(json.getJSONObject("organization").optString("name"))
@@ -161,6 +160,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                         localSource.save((ArrayList<Project>) list);
                         callback.onProjectLoaded(list);
                     }
+
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);

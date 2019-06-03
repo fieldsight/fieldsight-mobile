@@ -203,6 +203,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 manageNodata(false);
             }
         });
+
+
     }
 
     //    Clear the sync project list and add the selected projects
