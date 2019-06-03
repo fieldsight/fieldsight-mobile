@@ -17,7 +17,7 @@ public interface BaseDaoFieldSight<T> {
     void insert(T... items);
 
     @Update
-    void update(T entity);
+    void update(T...entity);
 
     @Delete
     void delete(T entity);

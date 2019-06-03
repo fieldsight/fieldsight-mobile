@@ -22,9 +22,7 @@ public class GeneralFormViewModel extends ViewModel {
     }
 
 
-    public void deleteAll() {
-        repository.deleteAll();
-    }
+
 
     @Deprecated
     public LiveData<List<GeneralForm>> getForms(boolean forcedUpdate, Site loadedSite) {
