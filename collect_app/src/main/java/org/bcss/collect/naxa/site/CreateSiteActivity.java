@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,7 +52,8 @@ import org.bcss.collect.naxa.login.model.McqOption;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
-import org.bcss.collect.naxa.site.data.SiteRegion;
+
+import org.bcss.collect.naxa.v3.network.Region;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -167,18 +169,21 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             isUpdate = true;
         }
 
-        boolean isClusterIsEmpty = project.getSiteClusters() == null || project.getSiteClusters().isEmpty();
+        boolean isClusterIsEmpty = (project != null ? project.getRegionList() : null) == null || project.getRegionList().isEmpty();
         if (!isClusterIsEmpty) {
-            Type type = new TypeToken<ArrayList<SiteRegion>>() {
-            }.getType();
-            ArrayList<SiteRegion> siteRegions = new ArrayList<>(new Gson().fromJson(project.getSiteClusters(), type));
-            createSiteViewModel.setSiteClusterMutableLiveData(siteRegions);
+            createSiteViewModel.setSiteClusterMutableLiveData(project.getRegionList());
         }
 
         createSiteViewModel.setMetaAttributes(project.getSiteMetaAttributes());
 
 
-        createSiteViewModel.getSiteClusterMutableLiveData().observe(this, this::showSiteClusterSpinner);
+        createSiteViewModel.getSiteClusterMutableLiveData()
+                .observe(this, new Observer<List<Region>>() {
+                    @Override
+                    public void onChanged(@Nullable List<Region> regions) {
+                        showSiteClusterSpinner((ArrayList<Region>) regions);
+                    }
+                });
 
 
         createSiteViewModel.getSiteTypesMutableLiveData()
@@ -622,7 +627,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         }
     }
 
-    private void showSiteClusterSpinner(ArrayList<SiteRegion> clusters) {
+    private void showSiteClusterSpinner(ArrayList<Region> clusters) {
         boolean show = clusters != null && !clusters.isEmpty();
         spinnerSiteCluster.setVisibility(show ? View.VISIBLE : View.GONE);
         if (show) {
@@ -635,9 +640,9 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         }
     }
 
-    private void loadValueIntoClusterSpinner(ArrayList<SiteRegion> clusters) {
+    private void loadValueIntoClusterSpinner(ArrayList<Region> clusters) {
         for (int pos = 0; pos < clusters.size(); pos++) {
-            SiteRegion siteRegion = clusters.get(pos);
+            Region siteRegion = clusters.get(pos);
             if (loadedSite != null && siteRegion.getId().equals(loadedSite.getRegionId())) {
                 spinnerSiteCluster.setSelection(pos);
                 break;
@@ -685,8 +690,8 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
     private void collectSpinnerOptions() {
         if (spinnerSiteCluster.getVisibility() == View.VISIBLE) {
-            String selectedRegionId = ((SiteRegion) spinnerSiteCluster.getSelectedItem()).getId();
-            String selectedRegionLabel = ((SiteRegion) spinnerSiteCluster.getSelectedItem()).getName();
+            String selectedRegionId = ((Region) spinnerSiteCluster.getSelectedItem()).getId();
+            String selectedRegionLabel = ((Region) spinnerSiteCluster.getSelectedItem()).getName();
 
 
             createSiteViewModel.setSiteRegion(selectedRegionLabel, selectedRegionId);

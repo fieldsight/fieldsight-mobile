@@ -12,6 +12,10 @@ public class Region implements Parcelable {
         name = in.readString();
     }
 
+    public Region(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public String getId() {
         return id;
