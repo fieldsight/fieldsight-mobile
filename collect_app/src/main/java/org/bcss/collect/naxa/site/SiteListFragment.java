@@ -45,6 +45,7 @@ import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.survey.SurveyFormsActivity;
+import org.bcss.collect.naxa.v3.network.Region;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormEntryActivity;
@@ -65,6 +66,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
@@ -298,15 +300,24 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         Type type = new TypeToken<ArrayList<SiteRegion>>() {
         }.getType();
 
-        ArrayList<SiteRegion> siteRegions;
-        siteRegions = GSONInstance.getInstance().fromJson(loadedProject.getSiteClusters(), type);
+        List<Region> siteRegions;
+        siteRegions = loadedProject.getRegionList();
         MutableLiveData<ArrayList<FilterOption>> sortingOptionsMutableLive = new MutableLiveData<>();
 
         if (siteRegions == null) siteRegions = new ArrayList<>(0);
-
         Observable.just(siteRegions)
-                .flatMapIterable((Function<List<SiteRegion>, Iterable<SiteRegion>>) siteClusters1 -> siteClusters1)
-                .map((Function<SiteRegion, Pair>) siteCluster -> Pair.create(siteCluster.getId(), siteCluster.getName()))
+                .flatMapIterable(new Function<List<Region>, Iterable<Region>>() {
+                    @Override
+                    public Iterable<Region> apply(List<Region> regions) throws Exception {
+                        return regions;
+                    }
+                })
+                .map(new Function<Region, Pair>() {
+                    @Override
+                    public Pair apply(Region region) throws Exception {
+                        return Pair.create(region.getId(), region.getName());
+                    }
+                })
                 .toList()
                 .map(new Function<List<Pair>, List<Pair>>() {
                     @Override
@@ -316,21 +327,13 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         return pairs;
                     }
                 })
-                .subscribe(new SingleObserver<List<Pair>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
+                .subscribe(new DisposableSingleObserver<List<Pair>>() {
                     @Override
                     public void onSuccess(List<Pair> pairs) {
                         ArrayList<FilterOption> filterOptions = new ArrayList<>();
 
                         filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Region", pairs));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
-//                        filterOptions.add(new FilterOption(FilterOption.FilterType.SITE, "Site ", sites));
-//                        filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline Site(s)", new ArrayList<>(0)));
-//                        filterOptions.add(new FilterOption(FilterOption.FilterType.ALL_SITES, "All Site(s)", new ArrayList<>(0)));
 
                         sortingOptionsMutableLive.setValue(filterOptions);
                     }

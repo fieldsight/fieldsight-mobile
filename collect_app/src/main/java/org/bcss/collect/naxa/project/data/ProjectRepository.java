@@ -137,6 +137,8 @@ public class ProjectRepository implements BaseRepository<Project> {
                                 .setHasClusteredSites(json.optBoolean("has_site_role"))
                                 .createProject();
 
+
+
                         p.setRegionList(mapJSONtoRegionList(json.getJSONArray("project_region")));
                         return p;
                     }
