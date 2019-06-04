@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,6 +98,12 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                             if (fieldSightNotifications.size() > 0) {
                                 adapter.updateList(fieldSightNotifications);
                             }
+                            if(adapter.getItemCount() == 0 && fieldSightNotifications.size() == 0) {
+                                tv_nodata.setText("No notification found");
+                                tv_nodata.setVisibility(View.VISIBLE);
+                            } else {
+                                tv_nodata.setVisibility(View.GONE);
+                            }
                         }
                     });
                 });
@@ -152,6 +159,8 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
         if (adapter.getItemCount() == 0) {
             getDataFromServer("" + (System.currentTimeMillis() / 1000), older_notification);
+            tv_nodata.setVisibility(View.VISIBLE);
+            tv_nodata.setText("Loading notification please wait");
         } else {
             pullNotificationByDate(older_notification);
         }
