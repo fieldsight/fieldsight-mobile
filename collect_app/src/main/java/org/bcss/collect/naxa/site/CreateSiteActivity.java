@@ -169,11 +169,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             isUpdate = true;
         }
 
-        boolean isClusterIsEmpty = (project != null ? project.getRegionList() : null) == null || project.getRegionList().isEmpty();
-        if (!isClusterIsEmpty) {
-            createSiteViewModel.setSiteClusterMutableLiveData(project.getRegionList());
-        }
-
+        createSiteViewModel.setSiteClusterMutableLiveData(project.getRegionList());
         createSiteViewModel.setMetaAttributes(project.getSiteMetaAttributes());
 
 
