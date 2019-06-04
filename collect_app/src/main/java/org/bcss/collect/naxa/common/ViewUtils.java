@@ -111,6 +111,16 @@ public final class ViewUtils {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
     }
 
+    public static GlideRequest<Drawable> loadRemoteImageAndCache(Context context, String path) {
+        return GlideApp.with(context)
+                .load(path)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .centerInside()
+                .skipMemoryCache(false)
+                .priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+    }
+
 
     static Drawable getProgressBarIndeterminate() {
         final int[] attrs = {android.R.attr.indeterminateDrawable};

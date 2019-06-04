@@ -26,4 +26,8 @@ public interface ApiV3Interface {
 
     @GET(APIEndpoint.V3.GET_NOTIFICATION)
     Single<ResponseBody> getNotification(@QueryMap Map<String, String> queryParams);
+
+    @GET(APIEndpoint.V3.GET_SITE_DOCUMENTS)
+    Single<ResponseBody> getSiteDocuments(@QueryMap Map<String, String> queryParams);
+
 }

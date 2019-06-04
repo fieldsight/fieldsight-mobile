@@ -121,6 +121,7 @@ public class ServiceGenerator {
         if (cacheablesRetrofit == null) {
             cacheablesRetrofit = new Retrofit.Builder()
                     .client(createCacheablesOkHttpClient())
+                    .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                     .baseUrl(FieldSightUserSession.getServerUrl(Collect.getInstance()))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
