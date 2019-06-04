@@ -218,8 +218,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     }
                 });
 
-        createSiteViewModel.getSiteTypesMutableLiveData()
-                .observe(this, this::showSiteTypeSpinner);
+
 
         createSiteViewModel
                 .getFormStatus()
@@ -609,9 +608,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_type), siteTypes);
             spinnerSiteType.setAdapter(spinnerAdapter);
             spinnerSiteType.setSelection(spinnerAdapter.getCount());
-
             loadValueIntoSiteTypeSpinner(spinnerAdapter.getValues());
-//            spinnerSiteCluster.setSelection(0);
         }
 
 

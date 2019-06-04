@@ -24,11 +24,12 @@ public class SiteClusterSpinnerAdapter extends ArrayAdapter<Region> {
 
     private List<Region> values;
 
-    public SiteClusterSpinnerAdapter(Context context, int textViewResourceId, String hint, List<Region> values) {
+    SiteClusterSpinnerAdapter(Context context, int textViewResourceId, String hint, List<Region> values) {
         super(context, textViewResourceId, values);
         this.context = context;
 
-        Region dummy = new Region(null, hint);
+        Region dummy = null;
+        dummy = new Region(null, hint);
         values.add(dummy);
 
         this.values = values;
@@ -36,7 +37,8 @@ public class SiteClusterSpinnerAdapter extends ArrayAdapter<Region> {
 
     public int getCount() {
         int count = super.getCount();
-        return count > 0 ? count - 1 : count;
+        int newCount = count > 0 ? count - 1 : count;
+        return newCount;
     }
 
 

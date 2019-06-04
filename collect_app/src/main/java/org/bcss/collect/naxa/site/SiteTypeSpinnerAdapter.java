@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.site;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -24,8 +25,11 @@ public class SiteTypeSpinnerAdapter extends ArrayAdapter<SiteType> {
         super(context, textViewResourceId, values);
         this.context = context;
 
-        SiteType dummy = new SiteType(hint, hint, hint, hint);
+        SiteType dummy;
+        dummy = new SiteType(hint, hint, hint, hint);
         values.add(dummy);
+
+
 
         this.values = values;
     }
@@ -36,7 +40,8 @@ public class SiteTypeSpinnerAdapter extends ArrayAdapter<SiteType> {
 
     public int getCount() {
         int count = super.getCount();
-        return count > 0 ? count - 1 : count;
+        int newCount = count > 0 ? count - 1 : count;
+        return newCount;
     }
 
 
@@ -49,8 +54,9 @@ public class SiteTypeSpinnerAdapter extends ArrayAdapter<SiteType> {
     }
 
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         TextView label = new TextView(context);
         label.setTextColor(Color.BLACK);
 
@@ -64,7 +70,7 @@ public class SiteTypeSpinnerAdapter extends ArrayAdapter<SiteType> {
     // Normally is the same view, but you can customize it if you want
     @Override
     public View getDropDownView(int position, View convertView,
-                                ViewGroup parent) {
+                                @NonNull ViewGroup parent) {
         TextView label = new TextView(context);
         label.setTextColor(Color.BLACK);
         label.setPadding(18, 16, 16, 16);
