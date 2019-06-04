@@ -42,49 +42,82 @@ import static org.bcss.collect.naxa.common.Constant.NotificationType.UNASSIGNED_
 import static org.bcss.collect.naxa.common.Constant.NotificationType.WEEKLY_REMINDER;
 
 
-public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
+public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<FieldSightNotification> FieldSightNotifications;
+    private List<FieldSightNotification> fieldSightNotifications;
     private OnItemClickListener<FieldSightNotification> listener;
+    final int TYPE_LOADING = 1, TYPE_ITEM = 2;
 
-
-    NotificationsAdapter(ArrayList<FieldSightNotification> totalList, OnItemClickListener<FieldSightNotification> listener) {
-        this.FieldSightNotifications = totalList;
+    NotificationsAdapter(List<FieldSightNotification> totalList, OnItemClickListener<FieldSightNotification> listener) {
+        this.fieldSightNotifications = totalList;
         this.listener = listener;
     }
 
 
     public void updateList(List<FieldSightNotification> newList) {
+        if (fieldSightNotifications.size() == 0) {
+            fieldSightNotifications.addAll(newList);
+            Timber.i("Notification Adapter, first time");
 
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FieldSightNotificationsDiffCallback(newList, FieldSightNotifications));
-        FieldSightNotifications.clear();
-        FieldSightNotifications.addAll(newList);
-        diffResult.dispatchUpdatesTo(this);
+        } else if (Integer.parseInt(DateTimeUtils.tsToSec8601(newList.get(0).getReceivedDateTime())) >
+                Integer.parseInt(DateTimeUtils.tsToSec8601(fieldSightNotifications.get(0).getReceivedDateTime()))) {
+            newList.addAll(fieldSightNotifications);
+            fieldSightNotifications = newList;
+            Timber.i("Notification Adapter, new notification");
+        } else {
+            fieldSightNotifications.addAll(newList);
+            Timber.i("Notification Adapter, older notification");
+
+        }
+        notifyDataSetChanged();
+
+    }
+
+    public FieldSightNotification getMostRecentNotification() {
+        if (fieldSightNotifications.size() > 0) return fieldSightNotifications.get(0);
+        else return null;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (fieldSightNotifications.get(position) == null) {
+            return TYPE_LOADING;
+
+        } else {
+            return TYPE_ITEM;
+        }
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, null);
-        return new ViewHolder(view);
-
-
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_LOADING) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_loading, parent, false);
+            return new LoadingViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, null);
+            return new ViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        FieldSightNotification fieldSightNotification = FieldSightNotifications.get(viewHolder.getAdapterPosition());
-        try {
-            viewHolder.ivNotificationIcon.setImageDrawable(getNotificationImage(fieldSightNotification.getNotificationType()));
-            Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance().generateNotificationContent(fieldSightNotification);
-            String title = titleContent.first;
-            String content = titleContent.second;
-            viewHolder.tvTitle.setText(title);
-            viewHolder.tvDesc.setText(content);
-            viewHolder.tvDate.setText(DateTimeUtils.getRelativeTime(fieldSightNotification.getReceivedDateTime(),true));
-        } catch (NullPointerException e) {
-            Timber.e("Failed loading notification onBinViewHolder() reason: %s",e.getMessage());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        if (viewHolder instanceof ViewHolder) {
+            ViewHolder mviewHolder = (ViewHolder) viewHolder;
+            FieldSightNotification fieldSightNotification = fieldSightNotifications.get(viewHolder.getAdapterPosition());
+            try {
+                mviewHolder.ivNotificationIcon.setImageDrawable(getNotificationImage(fieldSightNotification.getNotificationType()));
+                Pair<String, String> titleContent = FieldSightNotificationLocalSource.getInstance().generateNotificationContent(fieldSightNotification);
+                String title = titleContent.first;
+                String content = titleContent.second;
+                mviewHolder.tvTitle.setText(title);
+                mviewHolder.tvDesc.setText(content);
+                mviewHolder.tvDate.setText(DateTimeUtils.getRelativeTime(fieldSightNotification.getReceivedDateTime(), true));
+            } catch (NullPointerException e) {
+                Timber.e("Failed loading notification onBinViewHolder() reason: %s", e.getMessage());
+            }
+        } else {
+
         }
     }
 
@@ -122,7 +155,18 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
     @Override
     public int getItemCount() {
-        return FieldSightNotifications.size();
+        return fieldSightNotifications.size();
+    }
+
+    public FieldSightNotification getLastNotification() {
+        return fieldSightNotifications.size() > 0 ? fieldSightNotifications.get(fieldSightNotifications.size() - 1) : null;
+    }
+
+    public void removeLoader() {
+        if(fieldSightNotifications.size() > 0 && fieldSightNotifications.get(getItemCount()-1) == null) {
+            fieldSightNotifications.remove(getItemCount()-1);
+            notifyDataSetChanged();
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -145,7 +189,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         @Override
         public void onClick(View v) {
-            FieldSightNotification FieldSightNotification = FieldSightNotifications.get(getAdapterPosition());
+            FieldSightNotification FieldSightNotification = fieldSightNotifications.get(getAdapterPosition());
 
 
             switch (v.getId()) {
@@ -157,4 +201,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         }
     }
 
+}
+
+class LoadingViewHolder extends RecyclerView.ViewHolder {
+    public LoadingViewHolder(@NonNull View itemView) {
+        super(itemView);
+    }
 }
