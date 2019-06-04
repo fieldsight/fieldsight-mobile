@@ -14,6 +14,8 @@ import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
 import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
+import org.bcss.collect.naxa.site.SiteType;
+import org.bcss.collect.naxa.site.SiteTypeLocalSource;
 import org.bcss.collect.naxa.v3.network.LoadProjectCallback;
 import org.bcss.collect.naxa.v3.network.ProjectBuilder;
 import org.bcss.collect.naxa.v3.network.ProjectRemoteSource;
@@ -138,7 +140,17 @@ public class ProjectRepository implements BaseRepository<Project> {
                                 .createProject();
 
                         p.setRegionList(mapJSONtoRegionList(json.getJSONArray("project_region")));
+
+                        ArrayList<SiteType> siteTypes = mapJSONtoSiteTypes(json.optString("types"));
+                        SiteTypeLocalSource.getInstance().save(siteTypes);
+
                         return p;
+                    }
+
+                    private ArrayList<SiteType> mapJSONtoSiteTypes(String types) {
+                        Type siteTypeToken = new TypeToken<ArrayList<SiteType>>() {
+                        }.getType();
+                        return new Gson().fromJson(types, siteTypeToken);
                     }
 
                     private List<SiteMetaAttribute> mapJSONtoMetaArributes(JSONArray jsonArray) {
