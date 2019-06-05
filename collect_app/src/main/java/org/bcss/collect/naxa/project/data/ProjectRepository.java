@@ -97,14 +97,10 @@ public class ProjectRepository implements BaseRepository<Project> {
                 .subscribe(new DisposableSingleObserver<List<Project>>() {
                     @Override
                     public void onSuccess(List<Project> projects) {
-
-                        boolean isDataNotAvailable = projects.isEmpty() || NetworkUtils.isNetworkConnected();
-
-                        if (isDataNotAvailable) {
+                        if (NetworkUtils.isNetworkConnected()) {
                             getProjectFromRemoteSource(callback);
-                        } else {
-                            callback.onProjectLoaded(projects);
                         }
+                        callback.onProjectLoaded(projects);
                     }
 
                     @Override
