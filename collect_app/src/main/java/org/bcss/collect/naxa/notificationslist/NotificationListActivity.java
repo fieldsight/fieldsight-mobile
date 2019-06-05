@@ -15,6 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,8 +63,17 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeLayout;
 
-    @BindView(R.id.tv_nodata)
-    TextView tv_nodata;
+//    for nodata handling
+
+    @BindView(R.id.prgbar)
+    ProgressBar prgbar;
+
+    @BindView(R.id.msg)
+    TextView tv_message_nodata;
+
+    @BindView(R.id.root_layout_empty_layout)
+    LinearLayout empty_layout;
+
 
     boolean isNewerLoading = false;
     boolean isOlderLoading = false;
@@ -98,11 +109,12 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                             if (fieldSightNotifications.size() > 0) {
                                 adapter.updateList(fieldSightNotifications);
                             }
-                            if(adapter.getItemCount() == 0 && fieldSightNotifications.size() == 0) {
-                                tv_nodata.setText("No notification found");
-                                tv_nodata.setVisibility(View.VISIBLE);
+                            if (adapter.getItemCount() == 0 && fieldSightNotifications.size() == 0) {
+                                empty_layout.setVisibility(View.VISIBLE);
+                                tv_message_nodata.setText("No notification found");
+                                tv_message_nodata.setVisibility(View.VISIBLE);
                             } else {
-                                tv_nodata.setVisibility(View.GONE);
+                               empty_layout.setVisibility(View.GONE);
                             }
                         }
                     });
@@ -142,7 +154,6 @@ public class NotificationListActivity extends CollectAbstractActivity implements
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
                 int visibleThreshold = 15;
                 int totalItemCount = rvNotificationList.getLayoutManager().getItemCount();
                 int lastVisibleItem = ((LinearLayoutManager) rvNotificationList.getLayoutManager()).findLastVisibleItemPosition();
@@ -159,16 +170,20 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
         if (adapter.getItemCount() == 0) {
             getDataFromServer("" + (System.currentTimeMillis() / 1000), older_notification);
-            tv_nodata.setVisibility(View.VISIBLE);
-            tv_nodata.setText("Loading notification please wait");
+            empty_layout.setVisibility(View.VISIBLE);
+            tv_message_nodata.setVisibility(View.VISIBLE);
+            tv_message_nodata.setText("Loading notification please wait");
+            prgbar.setVisibility(View.VISIBLE);
         } else {
+            empty_layout.setVisibility(View.GONE);
             pullNotificationByDate(older_notification);
         }
+        isOlderLoading = true;
     }
 
     private void pullNotificationByDate(String type) {
         FieldSightNotification lastUpdatedDate;
-        if (type == older_notification) {
+        if (type.equals(older_notification)) {
             lastUpdatedDate = adapter.getLastNotification();
         } else {
             lastUpdatedDate = adapter.getMostRecentNotification();
@@ -220,6 +235,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                             isNewerLoading = false;
                             swipeLayout.setRefreshing(false);
                         }
+                        prgbar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -232,6 +248,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                             isNewerLoading = false;
                             swipeLayout.setRefreshing(false);
                         }
+                        prgbar.setVisibility(View.GONE);
                     }
                 });
     }
