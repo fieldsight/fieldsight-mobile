@@ -3,6 +3,7 @@ package org.odk.collect.android.utilities;
 import android.content.Context;
 import android.os.Build;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.logic.DatePickerDetails;
@@ -25,6 +26,7 @@ import bikramsambat.BikramSambatDate;
 import bikramsambat.BsCalendar;
 import bikramsambat.BsException;
 import bikramsambat.BsGregorianDate;
+import okhttp3.internal.Util;
 import timber.log.Timber;
 
 public class DateTimeUtils {
@@ -208,6 +210,18 @@ public class DateTimeUtils {
             return new SimpleDateFormat(format).format(date);
         }catch (Exception e) {e.printStackTrace();
             return time+"";
+        }
+    }
+
+    public static String tsToSec8601(String timestamp) {
+        if (timestamp == null) return null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+            long epoch =  sdf.parse(timestamp).getTime();
+            return ((epoch / 1000))+"";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
