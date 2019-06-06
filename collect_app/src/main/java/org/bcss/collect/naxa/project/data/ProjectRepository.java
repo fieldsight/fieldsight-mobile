@@ -99,8 +99,10 @@ public class ProjectRepository implements BaseRepository<Project> {
                     public void onSuccess(List<Project> projects) {
                         if (NetworkUtils.isNetworkConnected()) {
                             getProjectFromRemoteSource(callback);
+                        }else {
+                            callback.onProjectLoaded(projects);
                         }
-                        callback.onProjectLoaded(projects);
+
                     }
 
                     @Override
