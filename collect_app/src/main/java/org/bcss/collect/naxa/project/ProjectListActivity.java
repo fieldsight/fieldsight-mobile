@@ -162,11 +162,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_search:
-                if (allowClick(getClass().getName())) {
-                    loadToolBarSearch();
-                }
-                break;
             case R.id.action_refresh:
                 ContentDownloadActivity.start(this);
                 break;
@@ -221,136 +216,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     }
 
 
-    public void loadToolBarSearch() {
 
-        //  ArrayList<String> sitesStored = SharedPreference.loadList(this, Utils.PREFS_NAME, Utils.KEY_SITES);
-        ArrayList<Site> sitesStored = new ArrayList<>();
-        View view = this.getLayoutInflater().inflate(R.layout.view_toolbar_search, null);
-
-        ImageView btnHomeSearchToolbar = view.findViewById(R.id.img_tool_back);
-        final EditText edtToolSearch = view.findViewById(R.id.edt_tool_search);
-        ImageView imgToolMic = view.findViewById(R.id.img_tool_mic);
-        final ListView listSearch = view.findViewById(R.id.list_search);
-        final TextView txtEmpty = view.findViewById(R.id.txt_empty);
-
-        ViewUtils.setListViewHeightBasedOnChildren(listSearch);
-        edtToolSearch.setHint(getString(R.string.search_sites));
-
-        final Dialog toolbarSearchDialog = new Dialog(this, R.style.MaterialSearch);
-
-        toolbarSearchDialog.setContentView(view);
-        toolbarSearchDialog.setCancelable(true);
-
-        toolbarSearchDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        toolbarSearchDialog.getWindow().setGravity(Gravity.BOTTOM);
-        toolbarSearchDialog.show();
-
-        toolbarSearchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
-        //sitesStored = (sitesStored != null && sitesStored.size() > 0) ? sitesStored : new ArrayList<String>();
-        final SearchAdapter searchAdapter = new SearchAdapter(this, sitesStored, false);
-
-        listSearch.setVisibility(View.VISIBLE);
-        listSearch.setAdapter(searchAdapter);
-
-        toolbarSearchDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent keyEvent) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    toolbarSearchDialog.dismiss();
-                }
-
-                return true;
-            }
-        });
-
-        btnHomeSearchToolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toolbarSearchDialog.dismiss();
-            }
-        });
-
-        imgToolMic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                edtToolSearch.setText("");
-            }
-        });
-
-        listSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                Site mySiteLocationPojo = searchAdapter.getMySiteLocationPojo(position);
-                listSearch.setVisibility(View.GONE);
-                toolbarSearchDialog.dismiss();
-                FragmentHostActivity.start(ProjectListActivity.this, mySiteLocationPojo);
-            }
-        });
-
-        RxSearchObservable.fromView(edtToolSearch)
-                .debounce(500, TimeUnit.MILLISECONDS)
-                .map(new Function<String, String>() {
-                    @Override
-                    public String apply(final String s) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                listSearch.setVisibility(s.isEmpty() ? View.GONE : View.VISIBLE);
-                                txtEmpty.setVisibility(s.isEmpty() ? View.VISIBLE : View.GONE);
-                            }
-                        });
-
-                        return s;
-                    }
-                })
-                .filter(new Predicate<String>() {
-                    @Override
-                    public boolean test(final String s) {
-                        return !s.isEmpty();
-                    }
-                })
-                .distinctUntilChanged()
-                .switchMap(new Function<String, ObservableSource<List<Site>>>() {
-                    @Override
-                    public ObservableSource<List<Site>> apply(String userQuery) {
-                        List<Site> filteredSites = new SiteViewModel(Collect.getInstance()).searchSites(userQuery.trim(),null);
-                        return Observable.just(filteredSites);
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<List<Site>>() {
-                    @Override
-                    public void onNext(List<Site> mySiteLocationPojos) {
-
-
-                        listSearch.setVisibility(mySiteLocationPojos.isEmpty() ? View.GONE : View.VISIBLE);
-                        txtEmpty.setVisibility(mySiteLocationPojos.isEmpty() ? View.VISIBLE : View.GONE);
-                        searchAdapter.updateList(mySiteLocationPojos, true);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
-                        toolbarSearchDialog.dismiss();
-                        Crashlytics.logException(e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-        btnHomeSearchToolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toolbarSearchDialog.dismiss();
-            }
-        });
-    }
 
     @Override
     public void onStart() {
