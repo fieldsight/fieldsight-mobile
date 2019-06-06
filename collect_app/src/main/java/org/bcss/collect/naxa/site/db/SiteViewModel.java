@@ -22,8 +22,8 @@ public class SiteViewModel extends AndroidViewModel {
 
     }
 
-    public List<Site> searchSites(String searchQuery) {
-        return mSiteRepository.searchSites(searchQuery);
+    public List<Site> searchSites(String searchQuery,String projectId) {
+        return mSiteRepository.searchSites(searchQuery,projectId);
     }
 
     public LiveData<List<Site>> getSiteByProject(Project project) {
