@@ -41,8 +41,8 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
         this.remoteSource = remoteSource;
     }
 
-    public List<Site> searchSites(String searchQuery) {
-        return localSource.searchSites(searchQuery);
+    public List<Site> searchSites(String searchQuery,String projectId) {
+        return localSource.searchSites(searchQuery,projectId);
     }
 
     public LiveData<Site> getSiteById(String id) {

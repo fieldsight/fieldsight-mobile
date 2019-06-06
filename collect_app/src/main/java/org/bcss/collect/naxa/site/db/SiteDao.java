@@ -22,8 +22,10 @@ public interface SiteDao {
     @Query("SELECT * FROM sites")
     LiveData<List<Site>> getSites();
 
-    @Query("SELECT * FROM sites WHERE name LIKE '%' || :searchQuery || '%' OR phone LIKE '%' || :searchQuery || '%' OR identifier LIKE '%' || :searchQuery || '%' OR address LIKE '%' || :searchQuery || '%'")
-    List<Site> searchSites(String searchQuery);
+    @Query("SELECT * FROM sites WHERE (name LIKE '%' || :searchQuery || " +
+            "'%' OR phone LIKE '%' || :searchQuery || '%' OR identifier LIKE '%' || " +
+            ":searchQuery || '%' OR address LIKE '%' || :searchQuery || '%') and project=:projectId")
+    List<Site> searchSites(String searchQuery, String projectId);
 
     @Query("SELECT * from sites WHERE project =  :projectID ORDER BY isSiteVerified ASC,name ")
     LiveData<List<Site>> getSiteByProjectId(String projectID);

@@ -315,7 +315,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
                 .switchMap(new Function<String, ObservableSource<List<Site>>>() {
                     @Override
                     public ObservableSource<List<Site>> apply(String userQuery) {
-                        List<Site> filteredSites = new SiteViewModel(Collect.getInstance()).searchSites(userQuery.trim());
+                        List<Site> filteredSites = new SiteViewModel(Collect.getInstance()).searchSites(userQuery.trim(),null);
                         return Observable.just(filteredSites);
                     }
                 })
