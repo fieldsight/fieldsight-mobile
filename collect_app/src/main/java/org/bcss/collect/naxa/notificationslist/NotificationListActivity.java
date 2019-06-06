@@ -80,8 +80,8 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     private NotificationListViewModel viewModel;
     private NotificationsAdapter adapter;
     private int count;
-    final String latest_notification = "1"; // notification type when the user scroll down
-    final String older_notification = "2"; // notification type when the user scrolls up
+    final String latest_notification = "2"; // notification type when the user scroll down
+    final String older_notification = "1"; // notification type when the user scrolls up
     List<FieldSightNotification> mNotificationList = new ArrayList<>();
 
     public static void start(Context context) {
