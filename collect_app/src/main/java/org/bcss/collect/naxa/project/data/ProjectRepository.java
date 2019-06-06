@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -99,7 +100,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                     public void onSuccess(List<Project> projects) {
                         if (NetworkUtils.isNetworkConnected()) {
                             getProjectFromRemoteSource(callback);
-                        }else {
+                        } else {
                             callback.onProjectLoaded(projects);
                         }
 
@@ -132,12 +133,12 @@ public class ProjectRepository implements BaseRepository<Project> {
                                 .setId(json.optString("id"))
                                 .setUrl(json.optString("url"))
                                 .setAddress(json.optString("address"))
-                                .setMetaAttributes(mapJSONtoMetaArributes(json.optJSONArray("meta_attributes")))
+                                .setMetaAttributes(mapJSONtoMetaArributes(json.optJSONArray("meta_attributes").toString()))
                                 .setOrganizationName(json.getJSONObject("organization").optString("name"))
                                 .setHasClusteredSites(json.optBoolean("has_site_role"))
                                 .createProject();
 
-                        p.setRegionList(mapJSONtoRegionList(json.getJSONArray("project_region")));
+                        p.setRegionList(mapJSONtoRegionList(json.getJSONArray("project_region").toString()));
 
                         ArrayList<SiteType> siteTypes = mapJSONtoSiteTypes(json.optString("types"));
                         SiteTypeLocalSource.getInstance().save(siteTypes);
@@ -146,21 +147,24 @@ public class ProjectRepository implements BaseRepository<Project> {
                     }
 
                     private ArrayList<SiteType> mapJSONtoSiteTypes(String types) {
+                        if (TextUtils.isEmpty(types)) return new ArrayList<>();
                         Type siteTypeToken = new TypeToken<ArrayList<SiteType>>() {
                         }.getType();
                         return new Gson().fromJson(types, siteTypeToken);
                     }
 
-                    private List<SiteMetaAttribute> mapJSONtoMetaArributes(JSONArray jsonArray) {
+                    private List<SiteMetaAttribute> mapJSONtoMetaArributes(String  jsonArray) {
+                        if (TextUtils.isEmpty(jsonArray)) return new ArrayList<>();
                         Type siteMetaAttrsList = new TypeToken<List<SiteMetaAttribute>>() {
                         }.getType();
-                        return new Gson().fromJson(jsonArray.toString(), siteMetaAttrsList);
+                        return new Gson().fromJson(jsonArray, siteMetaAttrsList);
                     }
 
-                    private List<Region> mapJSONtoRegionList(JSONArray jsonArray) {
+                    private List<Region> mapJSONtoRegionList(String jsonArray) {
+                        if (TextUtils.isEmpty(jsonArray)) return new ArrayList<>();
                         Type regionType = new TypeToken<List<Region>>() {
                         }.getType();
-                        return new Gson().fromJson(jsonArray.toString(), regionType);
+                        return new Gson().fromJson(jsonArray, regionType);
                     }
                 })
                 .toList()
