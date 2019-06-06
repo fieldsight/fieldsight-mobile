@@ -28,6 +28,7 @@ import org.bcss.collect.naxa.BackupActivity;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.project.data.ProjectRepository;
@@ -155,15 +156,19 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(tv_sync_project.getVisibility() == View.VISIBLE) {
+        if(!adapter.anyProjectSelectedForSync()) {
             tv_sync_project.setVisibility(View.GONE);
         }
     }
 
     @OnClick(R.id.cv_resync)
     void resyncProject() {
-        getDataFromServer();
-        manageNodata(true);
+        if(NetworkUtils.isNetworkConnected()) {
+            getDataFromServer();
+            manageNodata(true);
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

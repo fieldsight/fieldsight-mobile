@@ -82,6 +82,16 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
         notifyDataSetChanged();
     }
 
+    public boolean anyProjectSelectedForSync() {
+        boolean found = false;
+        for(Project project: this.projectList) {
+            if(project.isChecked()) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+    }
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
         projectViewHolder.bindView(projectList.get(i));
