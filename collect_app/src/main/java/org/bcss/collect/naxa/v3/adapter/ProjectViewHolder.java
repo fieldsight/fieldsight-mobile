@@ -43,7 +43,6 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
 
     public ProjectViewHolder(@NonNull View itemView) {
         super(itemView);
-
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener((v) -> itemClicked(getLayoutPosition()));
         chkbx_sync.setOnClickListener((v -> checkBoxChanged(getLayoutPosition(), ((CheckBox) v).isChecked())));
@@ -54,7 +53,7 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
         sub_text.setText(String.format("A project by %s", project.getOrganizationName()));
         tv_synced_date.setText(project.getStatusMessage());
         chkbx_sync.setChecked(project.isChecked());
-//        chkbx_sync.setVisibility(project.isChecked() && !project.isSynced() ? View.VISIBLE : View.GONE);
+        chkbx_sync.setVisibility(project.isChecked() && !project.isSynced() ? View.VISIBLE : View.GONE);
         imageView.setImageResource(project.isSynced() ? R.drawable.ic_action_check : android.R.drawable.stat_sys_download_done);
         Timber.i("project image = %s", project.getUrl());
         Glide.with(itemView.getContext()).load(project.getUrl()).apply(RequestOptions.circleCropTransform()).into(iv_thumbnail);
