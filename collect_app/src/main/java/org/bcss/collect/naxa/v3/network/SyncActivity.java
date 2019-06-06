@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -26,6 +27,7 @@ import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.sync.ContentDownloadAdapter;
 import org.bcss.collect.naxa.sync.DownloadViewModel;
@@ -103,15 +105,19 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         recyclerView.setAdapter(adapterv3);
 
         findViewById(R.id.download_button).setOnClickListener(v -> {
-            ToastUtils.showShortToast("Download starts");
-            Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
-            syncIntent.putParcelableArrayListExtra("projects", projectList);
-            syncIntent.putExtra("selection", syncableMap);
-            startService(syncIntent);
+            if (NetworkUtils.isNetworkConnected()) {
+                ToastUtils.showShortToast("Download starts");
+                Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+                syncIntent.putParcelableArrayListExtra("projects", projectList);
+                syncIntent.putExtra("selection", syncableMap);
+                startService(syncIntent);
 
-            Collect.selectedProjectList = projectList;
-            Collect.syncableMap = syncableMap;
-            enableDisableAdapter(true);
+                Collect.selectedProjectList = projectList;
+                Collect.syncableMap = syncableMap;
+                enableDisableAdapter(true);
+            } else {
+                Toast.makeText(this, getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
+            }
         });
 
         syncObserver = syncStats -> {
@@ -167,10 +173,9 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.sync_menu,menu);
+        getMenuInflater().inflate(R.menu.sync_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
 
 
     @Override
