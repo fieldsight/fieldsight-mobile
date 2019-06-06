@@ -102,10 +102,12 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
             int totalSynced = 0;
             int totalSize = 0;
             for (Syncable syncable : syncableList) {
+                if(!syncable.getSync())
+                    continue;
                 if (syncable.getStatus() == Constant.DownloadStatus.COMPLETED) {
                     totalSynced++;
                 }
-                totalSize += syncable.getSync() ? 1 : 0;
+                totalSize ++;
             }
             progressMap.put(key, totalSynced * 100 / totalSize);
         }
