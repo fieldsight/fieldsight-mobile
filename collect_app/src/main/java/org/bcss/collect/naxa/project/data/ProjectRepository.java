@@ -17,6 +17,7 @@ import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.site.SiteType;
 import org.bcss.collect.naxa.site.SiteTypeLocalSource;
+import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.v3.network.LoadProjectCallback;
 import org.bcss.collect.naxa.v3.network.ProjectBuilder;
 import org.bcss.collect.naxa.v3.network.ProjectRemoteSource;
@@ -153,7 +154,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                         return new Gson().fromJson(types, siteTypeToken);
                     }
 
-                    private List<SiteMetaAttribute> mapJSONtoMetaArributes(String  jsonArray) {
+                    private List<SiteMetaAttribute> mapJSONtoMetaArributes(String jsonArray) {
                         if (TextUtils.isEmpty(jsonArray)) return new ArrayList<>();
                         Type siteMetaAttrsList = new TypeToken<List<SiteMetaAttribute>>() {
                         }.getType();
@@ -161,10 +162,20 @@ public class ProjectRepository implements BaseRepository<Project> {
                     }
 
                     private List<Region> mapJSONtoRegionList(String jsonArray) {
-                        if (TextUtils.isEmpty(jsonArray)) return new ArrayList<>();
+
+
+                        List<Region> regions = new ArrayList<>();
+                        regions.add(new Region("", "Unassigned "));
+
+                        if (TextUtils.isEmpty(jsonArray)) {
+                            return regions;
+                        }
+
                         Type regionType = new TypeToken<List<Region>>() {
                         }.getType();
-                        return new Gson().fromJson(jsonArray, regionType);
+                        regions.addAll(new Gson().fromJson(jsonArray, regionType));
+
+                        return regions;
                     }
                 })
                 .toList()
