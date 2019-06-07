@@ -68,7 +68,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
     private StageViewModel viewModel;
 
     @BindView(R.id.root_layout_empty_layout)
-    public RelativeLayout emptyLayout;
+    public LinearLayout emptyLayout;
 
     public static StageListFragment newInstance(@NonNull Site loadedSite) {
         Bundle bundle = new Bundle();

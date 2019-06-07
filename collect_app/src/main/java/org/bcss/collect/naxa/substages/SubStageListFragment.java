@@ -60,7 +60,7 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
     LinearLayout rootLayout;
 
     @BindView(R.id.root_layout_empty_layout)
-    RelativeLayout emptyLayout;
+    LinearLayout emptyLayout;
 
     private SubStageListAdapter listAdapter;
     private Site loadedSite;
