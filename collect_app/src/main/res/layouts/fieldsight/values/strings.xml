@@ -255,7 +255,7 @@
     <string name="msg_choose_month_option">Choose month option</string>
     <string name="backup_data">Backup all data</string>
     <string name="logout_warn_message">"Cannot logout, You have %s"</string>
-    <string name="and"> and </string>
+    <string name="label_and">and</string>
 
 
     <!--Notification sitelist ends here-->
