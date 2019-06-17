@@ -176,7 +176,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         }
     };
 
-    private static final Migration MIGRATION_11_12 = new Migration(10, 12) {
+    private static final Migration MIGRATION_11_12 = new Migration(11, 12) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE project"
