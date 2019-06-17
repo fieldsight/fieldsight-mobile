@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -148,6 +149,19 @@ public class FieldSightUserSession {
         return msg;
     }
 
+
+    static class DeleteFcm extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                FirebaseInstanceId.getInstance().deleteInstanceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     public static void showLogoutDialog(Activity context) {
 
         ((CollectAbstractActivity) context).showProgress();
@@ -168,7 +182,8 @@ public class FieldSightUserSession {
                             logout(context, new OnLogoutListener() {
                                 @Override
                                 public void logoutTaskSuccess() {
-                                    tokenDeleteThread.start();
+//                                    tokenDeleteThread.start();
+                                    new DeleteFcm().execute();
                                     ((CollectAbstractActivity) context).hideProgress();
                                     Intent intent = new Intent(context, LoginActivity.class)
                                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -211,11 +226,13 @@ public class FieldSightUserSession {
 
     }
 
-   static Thread tokenDeleteThread = new Thread(() -> {
-       try {
-           FirebaseInstanceId.getInstance().deleteInstanceId();
-       }catch (IOException e) { e.printStackTrace();}
-   });
+    static Thread tokenDeleteThread = new Thread(() -> {
+        try {
+            FirebaseInstanceId.getInstance().deleteInstanceId();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    });
 
 
     public static void stopLogoutDialog(Context context) {
@@ -395,3 +412,4 @@ public class FieldSightUserSession {
         SharedPreferenceUtils.saveToPrefs(context, Constant.KEY_BASE_URL, newUrl);
     }
 }
+
