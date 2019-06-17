@@ -38,8 +38,6 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
     }
 
 
-
-
     @Override
     public LiveData<List<Project>> getAll() {
         return dao.getProjectsLive();

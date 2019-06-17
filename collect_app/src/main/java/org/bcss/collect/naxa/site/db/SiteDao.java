@@ -73,4 +73,7 @@ public interface SiteDao {
 
     @Query("SELECT * from sites WHERE isSiteVerified =:siteStatus")
     Single<List<Site>> getAllByStatus(int siteStatus);
+
+    @Query("SELECT DISTINCT regionId from sites")
+    Single<List<Site>> getAssignedRegions();
 }
