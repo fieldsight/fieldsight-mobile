@@ -156,7 +156,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(!adapter.anyProjectSelectedForSync()) {
+        Timber.i("ProjectListActivityv3 :: anyProject checked = " + adapter.anyProjectSelectedForSync());
+        if(tv_sync_project.getVisibility() == View.VISIBLE && !adapter.anyProjectSelectedForSync()) {
             tv_sync_project.setVisibility(View.GONE);
         }
     }
