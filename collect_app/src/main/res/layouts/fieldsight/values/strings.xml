@@ -255,6 +255,15 @@
     <string name="msg_choose_month_option">Choose month option</string>
     <string name="backup_data">Backup all data</string>
 
+    <string-array name="bug_type">
+        <item>Select error type</item>
+        <item>Bug</item>
+        <item>Crash</item>
+        <item>Unrelated data</item>
+        <item>UI error</item>
+        <item>Other</item>
+    </string-array>
+
 
     <!--Notification sitelist ends here-->
 
