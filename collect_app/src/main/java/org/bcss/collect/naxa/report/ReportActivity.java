@@ -94,6 +94,7 @@ public class ReportActivity extends CollectAbstractActivity {
         setContentView(R.layout.activity_report);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        setTitle(getString(R.string.report_bug));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
