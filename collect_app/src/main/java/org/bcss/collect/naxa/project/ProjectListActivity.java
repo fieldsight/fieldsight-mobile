@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.application.ForceUpdateChecker;
@@ -51,8 +52,10 @@ import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
+import org.bcss.collect.naxa.preferences.SettingsActivity;
 import org.bcss.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;
+import org.bcss.collect.naxa.report.ReportActivity;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.ProjectDashboardActivity;
 import org.bcss.collect.naxa.site.SearchAdapter;
@@ -154,6 +157,14 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(BuildConfig.BUILD_TYPE.equals("release")) {
+            menu.findItem(R.id.action_server_url).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu_fieldsight, menu);
         return super.onCreateOptionsMenu(menu);
@@ -189,8 +200,17 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
                 break;
 
+            case R.id.action_server_url:
+                startActivity(new Intent(this, org.bcss.collect.naxa.common.SettingsActivity.class));
+
             case R.id.action_backup:
                 startActivity(new Intent(this, BackupActivity.class));
+                return true;
+            case R.id.action_setting:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.action_submit_report:
+                startActivity(new Intent(this, ReportActivity.class));
                 return true;
 
         }

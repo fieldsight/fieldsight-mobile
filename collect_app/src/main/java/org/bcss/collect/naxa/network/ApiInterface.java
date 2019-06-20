@@ -26,6 +26,7 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -155,6 +156,17 @@ public interface ApiInterface {
                                        @Part("twitter") RequestBody twitter,
                                        @Part("organization") RequestBody organization,
                                        @Part MultipartBody.Part file);
+    @POST(APIEndpoint.POST_REPORT)
+    @FormUrlEncoded
+    Observable<ResponseBody> submitReport(@Field("device") String device,
+                                          @Field("fcm_reg_id") String fcm_reg_id,
+                                          @Field("app_version") String app_version,
+                                          @Field("app_os_version") String app_os_version,
+                                          @Field("message_type") String message_type,
+                                          @Field("message") String message,
+                                          @Field("device_name") String device_name,
+                                          @Field("lat") String lat,
+                                          @Field("lng") String lng);
 
     @GET(GET_SITE_TYPES)
     Single<List<SiteType>> getSiteTypes();

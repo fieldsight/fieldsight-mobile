@@ -254,6 +254,18 @@
     <string name="msg_choose_a_day">Choose an day</string>
     <string name="msg_choose_month_option">Choose month option</string>
     <string name="backup_data">Backup all data</string>
+    <string name="send_report">Send Report</string>
+    <string name="action_change_url">Change Server url</string>
+    <string name="firebase_token">FCM token</string>
+    <string name="app_version">App Version</string>
+    <string name="android_os_version">Android OS version</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="error_type">Error type</string>
+    <string name="device_name">Device name</string>
+    <string name="report_message">Report Message</string>
+    <string name="report_agree">I agree to send my shown data to the server for the debugging purpose</string>
+    <string name="report_bug">Report Bug</string>
 
     <string-array name="bug_type">
         <item>Select error type</item>
