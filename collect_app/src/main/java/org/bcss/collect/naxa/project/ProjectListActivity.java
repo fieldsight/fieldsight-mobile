@@ -202,6 +202,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
             case R.id.action_server_url:
                 startActivity(new Intent(this, org.bcss.collect.naxa.common.SettingsActivity.class));
+                return true;
 
             case R.id.action_backup:
                 startActivity(new Intent(this, BackupActivity.class));
