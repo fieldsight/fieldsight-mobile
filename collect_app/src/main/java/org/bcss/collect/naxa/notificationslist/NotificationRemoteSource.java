@@ -21,15 +21,16 @@ public class NotificationRemoteSource {
         return INSTANCE;
     }
 
-    public Single<ResponseBody> getNotifications(long epochTime) {
+    public Single<ResponseBody> getNotifications(String epochTime, String type) {
         return ServiceGenerator.getRxClient().create(ApiInterface.class)
-                .getNotification(getHasMap(epochTime))
+                .getNotification(getHasMap(epochTime, type))
                 .subscribeOn(Schedulers.io());
     }
 
-    private Map<String, String> getHasMap(long epochTime) {
+    private Map<String, String> getHasMap(String epochTime, String type) {
         HashMap<String, String> requestParams = new HashMap<>();
         requestParams.put("last_updated", epochTime+ "");
+        requestParams.put("type", type);
         return requestParams;
     }
 }
