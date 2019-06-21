@@ -55,20 +55,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
     public void updateList(List<FieldSightNotification> newList) {
-        if (fieldSightNotifications.size() == 0) {
-            fieldSightNotifications.addAll(newList);
-            Timber.i("Notification Adapter, first time");
-
-        } else if (Integer.parseInt(DateTimeUtils.tsToSec8601(newList.get(0).getReceivedDateTime())) >
-                Integer.parseInt(DateTimeUtils.tsToSec8601(fieldSightNotifications.get(0).getReceivedDateTime()))) {
-            newList.addAll(fieldSightNotifications);
-            fieldSightNotifications = newList;
-            Timber.i("Notification Adapter, new notification");
-        } else {
+//        if (fieldSightNotifications.size() == 0) {
+//            fieldSightNotifications.addAll(newList);
+//            Timber.i("Notification Adapter, first time");
+//
+//        } else if (Integer.parseInt(DateTimeUtils.tsToSec8601(newList.get(0).getReceivedDateTime())) >
+//                Integer.parseInt(DateTimeUtils.tsToSec8601(fieldSightNotifications.get(0).getReceivedDateTime()))) {
+//            newList.addAll(fieldSightNotifications);
+//            fieldSightNotifications = newList;
+//            Timber.i("Notification Adapter, new notification");
+//        } else {
             fieldSightNotifications.addAll(newList);
             Timber.i("Notification Adapter, older notification");
 
-        }
+//        }
         notifyDataSetChanged();
 
     }
@@ -163,10 +163,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void removeLoader() {
-        if(fieldSightNotifications.size() > 0 && fieldSightNotifications.get(getItemCount()-1) == null) {
-            fieldSightNotifications.remove(getItemCount()-1);
-            notifyDataSetChanged();
-        }
+        try {
+            if (fieldSightNotifications != null && fieldSightNotifications.size() > 0 && fieldSightNotifications.get(getItemCount() - 1) == null) {
+                fieldSightNotifications.remove(getItemCount() - 1);
+                notifyDataSetChanged();
+            }
+        }catch (Exception e){e.printStackTrace();}
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

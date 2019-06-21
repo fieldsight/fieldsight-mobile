@@ -20,7 +20,7 @@ import io.reactivex.Maybe;
 public abstract class FieldSightNotificationDAO implements BaseDaoFieldSight<FieldSightNotification> {
 
 
-    @Query("SELECT * FROM fieldsightnotification ORDER BY id DESC")
+    @Query("SELECT * FROM fieldsightnotification")
     public abstract LiveData<List<FieldSightNotification>> getAll();
 
 
