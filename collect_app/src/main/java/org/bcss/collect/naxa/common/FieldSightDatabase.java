@@ -168,6 +168,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("DROP TABLE FieldSightNotification");
             database.execSQL("CREATE TABLE IF NOT EXISTS `FieldSightNotification` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `details_url` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `receivedDateTime` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `schedule_forms_count` TEXT)");
+            database.execSQL("CREATE UNIQUE INDEX `index_FieldSightNotification_receivedDateTime` ON `FieldSightNotification` (`receivedDateTime`)");
         }
     };
 
