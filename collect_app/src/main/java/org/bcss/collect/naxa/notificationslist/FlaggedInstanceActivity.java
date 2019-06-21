@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -104,7 +105,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     private TextView tvSiteAddress;
     private ImageView ivCircleSite;
     private TextView tvSiteMissing;
-    private RelativeLayout cardViewSite;
+    private LinearLayout cardViewSite;
 
 
     public static void start(Context context, FieldSightNotification fieldSightNotification) {

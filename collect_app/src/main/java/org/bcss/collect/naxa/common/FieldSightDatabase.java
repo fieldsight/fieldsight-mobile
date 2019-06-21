@@ -7,6 +7,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.contact.ContacstDao;
@@ -59,7 +60,7 @@ import java.io.File;
                 SubmissionDetail.class
 
         },
-        version = 10)
+        version = 11)
 @TypeConverters({SiteMetaAttributesTypeConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
@@ -104,7 +105,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         FieldSightDatabase.class, DB_PATH)
                         .allowMainThreadQueries()//used in org.bcss.collect.naxa.jobs.LocalNotificationJob
-                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
+                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
                         .build();
             }
         }
@@ -159,6 +160,15 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE FieldSightNotification "
                     + " ADD COLUMN `schedule_forms_count` TEXT ");
+        }
+    };
+
+    private static final Migration MIGRATION_10_11 = new Migration(10, 11) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("DROP TABLE FieldSightNotification");
+            database.execSQL("CREATE TABLE IF NOT EXISTS `FieldSightNotification` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `details_url` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `receivedDateTime` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `schedule_forms_count` TEXT)");
+            database.execSQL("CREATE UNIQUE INDEX `index_FieldSightNotification_receivedDateTime` ON `FieldSightNotification` (`receivedDateTime`)");
         }
     };
 

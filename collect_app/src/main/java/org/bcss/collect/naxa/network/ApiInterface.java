@@ -21,6 +21,7 @@ import org.bcss.collect.naxa.submissions.FormHistoryResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -37,6 +38,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
 import static org.bcss.collect.naxa.network.APIEndpoint.GET_ALL_CONTACTS;
@@ -249,6 +251,7 @@ public interface ApiInterface {
     @GET(APIEndpoint.GET_INSTANCE_SUBMISSION_ATTACHMENTS)
     Observable<HashMap<String, String>> getInstanceMediaList(@Path(value = "instance_submission_id", encoded = true) String instanceSubmissionId);
 
-
+    @GET(APIEndpoint.V3.GET_NOTIFICATION)
+    Single<ResponseBody> getNotification(@QueryMap Map<String, String> queryParams);
 
 }
