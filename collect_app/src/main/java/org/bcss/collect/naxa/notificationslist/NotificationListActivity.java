@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.fabric.sdk.android.services.network.NetworkUtils;
 
 public class NotificationListActivity extends CollectAbstractActivity implements OnItemClickListener<FieldSightNotification> {
 
@@ -40,7 +41,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
     @BindView(R.id.appbar_general)
     AppBarLayout appbarGeneral;
-    @BindView(R.id.rv_notification_list)
+    @BindView(R.id.rv_notification)
     RecyclerViewEmptySupport rvNotificationList;
 
     @BindView(R.id.root_layout_empty_layout)
@@ -68,14 +69,24 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
         setupToolbar();
         setupRecyclerView();
-
+        int threshold = 20;
 
         viewModel.getAll()
                 .observe(this, fieldSightNotifications -> {
+                    rvNotificationList.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.updateList(fieldSightNotifications);
+                            if (adapter.getItemCount() > threshold)
+                                scrollToTop();
+                        }
+                    });
 
-                    adapter.updateList(fieldSightNotifications);
-                    scrollToTop();
                 });
+
+        if (NetworkUtils.isNetworkConnected()) {
+            viewModel.pullDataFromServer(0 + "");
+        }
 
 
     }

@@ -40,6 +40,10 @@ public class FieldSightNotification implements Parcelable {
     @ColumnInfo(name = "schedule_forms_count")
     private String scheduleFormsCount;
 
+    public FieldSightNotification() {
+
+    }
+
     public String getFormSubmissionId() {
         return formSubmissionId;
     }
