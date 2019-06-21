@@ -85,7 +85,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
     public boolean anyProjectSelectedForSync() {
         boolean found = false;
         for(Project project: this.projectList) {
-            if(project.isChecked()) {
+            if(!project.isSynced()) {
                 found = true;
                 break;
             }
