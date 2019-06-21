@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 11,
-    "identityHash": "5b221120df7c495538127d0f84633836",
+    "identityHash": "069171a643fda0ceab82f94f770ebc27",
     "entities": [
       {
         "tableName": "sites",
@@ -1028,7 +1028,16 @@
           ],
           "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_FieldSightNotification_receivedDateTime",
+            "unique": true,
+            "columnNames": [
+              "receivedDateTime"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_FieldSightNotification_receivedDateTime` ON `${TABLE_NAME}` (`receivedDateTime`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -1286,7 +1295,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5b221120df7c495538127d0f84633836\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"069171a643fda0ceab82f94f770ebc27\")"
     ]
   }
 }
