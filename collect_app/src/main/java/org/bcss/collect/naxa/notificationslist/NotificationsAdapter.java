@@ -92,7 +92,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_LOADING) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_loading, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_progress_loading, parent, false);
             return new LoadingViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, null);
