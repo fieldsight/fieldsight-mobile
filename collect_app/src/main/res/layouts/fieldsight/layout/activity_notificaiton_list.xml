@@ -1,32 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include layout="@layout/general_toolbar" />
 
-    <org.bcss.collect.naxa.common.RecyclerViewEmptySupport
-        android:id="@+id/rv_notification_list"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/appbar_general"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <include layout="@layout/empty_layout_with_icon" />
+        android:layout_height="match_parent">
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_scroll_to_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/margin_medium"
-        android:rotation="90"
-        app:backgroundTint="@color/primaryColor"
-        app:layout_behavior="@string/scroll_fab_behaviour"
-        app:srcCompat="@drawable/ic_arrow_back_legacy"
-        app:useCompatPadding="true" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_notification"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <include layout="@layout/empty_layout"/>
+
+        </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_scroll_to_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/margin_medium"
+            android:rotation="90"
+            app:backgroundTint="@color/primaryColor"
+            app:layout_behavior="@string/scroll_fab_behaviour"
+            app:srcCompat="@drawable/ic_arrow_back_legacy"
+            app:useCompatPadding="true" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
