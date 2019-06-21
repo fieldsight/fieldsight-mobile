@@ -52,6 +52,6 @@ public class APIEndpoint {
 
   public static final String POST_REPORT = "/fv3/api/report/";
   public static class V3 {
-    public static final String GET_NOTIFICATION = "";
+    public static final String GET_NOTIFICATION = "/fv3/api/user/logs/";
   }
 }

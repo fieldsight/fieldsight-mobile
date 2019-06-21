@@ -41,6 +41,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
     @BindView(R.id.appbar_general)
     AppBarLayout appbarGeneral;
+
     @BindView(R.id.rv_notification)
     RecyclerViewEmptySupport rvNotificationList;
 
