@@ -2,10 +2,12 @@ package org.bcss.collect.naxa.data.source.local;
 
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.media.Ringtone;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -13,12 +15,20 @@ import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
 import org.bcss.collect.naxa.data.FieldSightNotification;
+import org.bcss.collect.naxa.data.FieldSightNotificationBuilder;
 import org.bcss.collect.naxa.notificationslist.FieldSightNotificationDAO;
+import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.odk.collect.android.utilities.DateTimeUtils;
 
+import java.sql.Date;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Maybe;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.ALL_STAGE_DEPLOYED;
 import static org.bcss.collect.naxa.common.Constant.NotificationEvent.SINGLE_STAGED_FORM_DEPLOYED;
@@ -41,6 +51,41 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
     private static FieldSightNotificationLocalSource INSTANCE;
     private final FieldSightNotificationDAO dao;
+
+
+    String notifyType;
+    String siteId;
+    String siteName;
+    String projectId;
+    String projectName;
+    String formStatus;
+
+    String jrFormId;
+    String notificationDescriptions;
+    String submissionId;
+    String submissionDateTime;
+
+
+    String date_str;
+    String localTime;
+    Boolean notificationStatus = false;
+
+    String comment;
+    String fsFormId;
+    String fsFormIdProject;
+    String fsFormSubmissionId;
+    String formType;
+    String formName;
+    String formComment;
+    String form;
+    String formVerion;
+
+    String deleteForm;
+    String isDeployed, webDeployedId;
+    String notificationDetailsUrl = "";
+    String isDeployedFromProject;//todo: this needs to be checked and removed coz we are using isDeployedFromSite in flag forms
+    boolean isDeployedFromSite;
+    String siteIdentifier = null;
 
     public static FieldSightNotificationLocalSource getInstance() {
         if (INSTANCE == null) {
@@ -135,12 +180,12 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
     @Override
     public void save(FieldSightNotification... items) {
-        AsyncTask.execute(() -> dao.insert(items));
+        AsyncTask.execute(() -> dao.insertOrIgnore(items));
     }
 
     @Override
     public void save(ArrayList<FieldSightNotification> items) {
-        AsyncTask.execute(() -> dao.insert(items));
+        AsyncTask.execute(() -> dao.insertOrIgnore(items));
     }
 
     @Override
@@ -279,5 +324,145 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
 
         return desc;
+    }
+
+
+    public FieldSightNotification parseNotificationData(JSONObject jsonObject) {
+
+        JSONObject notificationData = jsonObject.optJSONObject("message");
+        String receivedDateTime = jsonObject.optString("date");
+
+
+        if (notificationData.has("notify_type")) {
+            notifyType = notificationData.optString("notify_type");
+        }
+        if (notificationData.has("submission_id")) {
+            submissionId = notificationData.optString("submission_id");
+        }
+        if (notificationData.has("submission_date_time")) {
+            submissionDateTime = notificationData.optString("submission_date_time");
+        }
+        if (notificationData.has("description")) {
+            notificationDescriptions = notificationData.optString("description");
+        }
+        if (notificationData.has("status")) {
+            formStatus = notificationData.optString("status");
+        }
+        if (notificationData.has("form_id")) {
+            fsFormId = notificationData.optString("form_id");
+        }
+        if (notificationData.has("form_type_id")) {
+            formType = notificationData.optString("form_type_id");
+        }
+        if (notificationData.has("site")) {
+            String site = notificationData.optString("site");
+            try {
+                JSONObject siteData = new JSONObject(site);
+                if (siteData.has("name")) {
+                    siteName = siteData.getString("name");
+                }
+                if (siteData.has("id")) {
+                    siteId = siteData.getString("id");
+                }
+                if (siteData.has("identifier")) {
+                    siteIdentifier = siteData.getString("identifier");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+            }
+        }
+        if (notificationData.has("project")) {
+            String site = notificationData.optString("project");
+            try {
+                JSONObject siteData = new JSONObject(site);
+                if (siteData.has("name")) {
+                    projectName = siteData.getString("name");
+                }
+                if (siteData.has("id")) {
+                    projectId = siteData.getString("id");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+            }
+        }
+        if (notificationData.has("xfid")) {
+            jrFormId = notificationData.optString("xfid");
+        }
+        if (notificationData.has("comment")) {
+            formComment = notificationData.optString("comment");
+        }
+        if (notificationData.has("form_name")) {
+            formName = notificationData.optString("form_name");
+        }
+        if (notificationData.has("form_type")) {
+            formType = notificationData.optString("form_type");
+        }
+        if (notificationData.has("form")) {
+            form = notificationData.optString("form");
+        }
+        if (notificationData.has("is_delete")) {
+            deleteForm = notificationData.optString("is_delete");
+        }
+        if (notificationData.has("is_deployed")) {
+            isDeployed = notificationData.optString("is_deployed");
+        }
+        if (notificationData.has("comment_url")) {
+            notificationDetailsUrl = notificationData.optString("comment_url");
+        }
+
+        if (notificationData.has("deploy_id")) {
+            webDeployedId = notificationData.optString("deploy_id");
+            Timber.i("deploy_id %s", webDeployedId);
+        }
+
+        if (notificationData.has("is_project")) {
+            isDeployedFromProject = notificationData.optString("is_project");
+        }
+
+        if (notificationData.has("project_form_id")) {
+            fsFormIdProject = notificationData.optString("project_form_id");
+        }
+        if (notificationData.has("submission_id")) {
+            fsFormSubmissionId = notificationData.optString("submission_id");
+        }
+        if (notificationData.has("version")) {
+            formVerion = notificationData.optString("version");
+        }
+        if (notificationData.has("site_level_form")) {
+            String data = notificationData.optString("site_level_form");
+            if (!TextUtils.isEmpty(data)) {
+                isDeployedFromSite = Boolean.parseBoolean(data);
+            }
+        }
+
+
+        FieldSightNotification notification = new FieldSightNotificationBuilder()
+                .setDetails_url(notificationDetailsUrl)
+                .setNotificationType(notifyType)
+                .setFsFormId(fsFormId)
+                .setFormName(formName)
+                .setSiteId(siteId)
+                .setSiteName(siteName)
+                .setProjectId(projectId)
+                .setProjectName(projectName)
+                .setFormStatus(formStatus)
+                .setSiteIdentifier(siteIdentifier)
+                .setNotifiedDate(date_str)
+                .setNotifiedTime(localTime)
+                .setIdString(jrFormId)
+                .setComment(formComment)
+                .setFormType(formType)
+                .setIsFormDeployed(isDeployed)
+                .setFormSubmissionId(fsFormSubmissionId)
+                .setFsFormIdProject(fsFormIdProject)
+                .isRead(false)
+                .isDeployedFromSite(isDeployedFromSite)
+                .setFormVersion(formVerion)
+                .setReceivedDateTime(receivedDateTime)
+                .createFieldSightNotification();
+
+        return notification;
     }
 }
