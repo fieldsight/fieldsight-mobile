@@ -16,16 +16,27 @@
         android:title="@string/menu_title_sync"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/action_app_settings"
-        android:title="@string/menu_title_settings"
-        android:visible="false"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_backup"
         android:icon="@drawable/ic_action_backup"
         android:title="@string/backup_data"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_server_url"
+        android:icon="@android:drawable/ic_dialog_info"
+        android:title="@string/action_change_url"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_submit_report"
+        android:icon="@android:drawable/ic_menu_report_image"
+        android:title="@string/send_report"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_setting"
+        android:icon="@drawable/ic_setting"
+        android:title="@string/menu_title_settings"
         app:showAsAction="never" />
 
     <item
