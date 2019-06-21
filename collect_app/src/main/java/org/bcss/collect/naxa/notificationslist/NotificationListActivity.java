@@ -28,7 +28,6 @@ import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.network.NetworkUtils;
-import org.bcss.collect.naxa.v3.network.NotificationRemoteSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
