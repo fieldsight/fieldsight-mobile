@@ -213,15 +213,15 @@ public class DateTimeUtils {
         }
     }
 
-    public static String tsToSec8601(String timestamp) {
-        if (timestamp == null) return null;
+    public static long tsToSec8601(String timestamp) {
+        if (timestamp == null) return 0;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             long epoch =  sdf.parse(timestamp).getTime();
-            return ((epoch / 1000))+"";
+            return ((epoch / 1000));
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return 0;
         }
     }
 

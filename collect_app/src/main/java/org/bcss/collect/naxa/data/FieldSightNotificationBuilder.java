@@ -1,5 +1,7 @@
 package org.bcss.collect.naxa.data;
 
+import org.odk.collect.android.utilities.DateTimeUtils;
+
 public class FieldSightNotificationBuilder {
     private int id;
     private String notificationType;
@@ -26,6 +28,7 @@ public class FieldSightNotificationBuilder {
     private String siteIdentifier;
     private String scheduleFormsCount;
     private String receivedDateTime;
+    private long receivedDateTimeInMillis;
 
     public FieldSightNotificationBuilder setId(int id) {
         this.id = id;
@@ -148,7 +151,7 @@ public class FieldSightNotificationBuilder {
         return new FieldSightNotification(id, notificationType, notifiedDate, notifiedTime,
                 idString, fsFormId, fsFormIdProject, formName, siteId, siteName, projectId,
                 projectName, formStatus, role, isFormDeployed, details_url, comment,
-                formType, isRead, formSubmissionId, formVersion, siteIdentifier, isDeployedFromSite, scheduleFormsCount,receivedDateTime);
+                formType, isRead, formSubmissionId, formVersion, siteIdentifier, isDeployedFromSite, scheduleFormsCount,receivedDateTime, receivedDateTimeInMillis);
     }
 
     public FieldSightNotificationBuilder setSiteIdentifier(String siteIdentifier) {
@@ -158,6 +161,15 @@ public class FieldSightNotificationBuilder {
 
     public FieldSightNotificationBuilder setReceivedDateTime(String receivedDateTime) {
         this.receivedDateTime = receivedDateTime;
+        return this;
+    }
+
+    public long getReceivedDateTimeInMillis() {
+        return receivedDateTimeInMillis;
+    }
+
+    public FieldSightNotificationBuilder setReceivedDateTimeInMillis() {
+        this.receivedDateTimeInMillis = DateTimeUtils.tsToSec8601(this.receivedDateTime);
         return this;
     }
 }

@@ -191,7 +191,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         if (lastUpdatedDate != null) {
             String date = lastUpdatedDate.getReceivedDateTime();
 
-            String epochTime = DateTimeUtils.tsToSec8601(date);
+            String epochTime = DateTimeUtils.tsToSec8601(date)+"";
             Timber.i("NotificationListActivity, date = %s, epochTime = %s", date, epochTime);
             if (epochTime != null) {
                 getDataFromServer(epochTime, type);

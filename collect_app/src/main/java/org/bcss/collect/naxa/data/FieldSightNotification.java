@@ -38,6 +38,7 @@ public class FieldSightNotification implements Parcelable {
     private String siteIdentifier;
     private String receivedDateTime;
     private boolean isDeployedFromSite;
+    private long receivedDateTimeInMillis;
 
     @ColumnInfo(name = "schedule_forms_count")
     private String scheduleFormsCount;
@@ -57,7 +58,7 @@ public class FieldSightNotification implements Parcelable {
     public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString,
                                   String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId,
                                   String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment,
-                                  String formType, boolean isRead, String formSubmissionId, String formVersion, String siteIdentifier, boolean isDeployedFromSite, String scheduleFormsCount,String receivedDateTime) {
+                                  String formType, boolean isRead, String formSubmissionId, String formVersion, String siteIdentifier, boolean isDeployedFromSite, String scheduleFormsCount,String receivedDateTime, long receivedDateTimeInMillis) {
         this.id = id;
         this.notificationType = notificationType;
         this.notifiedDate = notifiedDate;
@@ -83,6 +84,7 @@ public class FieldSightNotification implements Parcelable {
         this.isDeployedFromSite = isDeployedFromSite;
         this.scheduleFormsCount = scheduleFormsCount;
         this.receivedDateTime = receivedDateTime;
+        this.receivedDateTimeInMillis = receivedDateTimeInMillis;
     }
     public FieldSightNotification() {
 
@@ -309,6 +311,7 @@ public class FieldSightNotification implements Parcelable {
         dest.writeString(this.siteIdentifier);
         dest.writeString(this.scheduleFormsCount);
         dest.writeString(this.receivedDateTime);
+        dest.writeLong(this.receivedDateTimeInMillis);
     }
 
     protected FieldSightNotification(Parcel in) {
@@ -337,6 +340,7 @@ public class FieldSightNotification implements Parcelable {
         this.siteIdentifier = in.readString();
         this.scheduleFormsCount = in.readString();
         this.receivedDateTime = in.readString();
+        this.receivedDateTimeInMillis = in.readLong();
     }
 
     public static final Creator<FieldSightNotification> CREATOR = new Creator<FieldSightNotification>() {
@@ -350,4 +354,12 @@ public class FieldSightNotification implements Parcelable {
             return new FieldSightNotification[size];
         }
     };
+
+    public long getReceivedDateTimeInMillis() {
+        return receivedDateTimeInMillis;
+    }
+
+    public void setReceivedDateTimeInMillis(long receivedDateTimeInMillis) {
+        this.receivedDateTimeInMillis = receivedDateTimeInMillis;
+    }
 }
