@@ -26,6 +26,6 @@ Selecting any project shows the list of sites that are under the selected projec
  |<p align="middle">Project List Page|<p align="middle">Project Sync Page|<p align="middle">Project Sync Error|
  
 
-|--test--|--test--|
-|:---|:---:|
+| | |  |
+|:---:|:---:|:---:|
 | test | test |
