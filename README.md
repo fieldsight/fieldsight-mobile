@@ -28,4 +28,4 @@ Selecting any project shows the list of sites that are under the selected projec
 
 |  1  | 2   |  3  |
 |:--:|:--:|:--:|
-|    |    |    |
+|  ![Project List](https://lh3.googleusercontent.com/oIaCybGMp24Q5bOlkI-aoYOuUekax2haA2Gc9wFXbj6FASYRTXnX-HmoYBEQ9_wppWipf5PtiH3TJQ "Project List")  |    |    |
