@@ -35,7 +35,7 @@ public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
             " WHERE general_forms.siteId =:siteId OR general_forms.projectId =:projectId")
     public abstract LiveData<List<GeneralFormAndSubmission>> getSiteGeneralFormAndSubmission(String siteId, String projectId);
 
-    @Query("DELETE FROM general_forms WHERE projectId=:projectId AND siteId=:siteId")
+    @Query("DELETE FROM general_forms WHERE projectId=:projectId OR siteId=:siteId")
     public abstract void deleteAllById(String projectId, String siteId);
 
     @Transaction
