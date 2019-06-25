@@ -72,6 +72,7 @@ import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.profile.UserActivity;
 import org.bcss.collect.naxa.project.MapFragment;
+import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.bcss.collect.naxa.v3.network.SyncActivity;
@@ -706,7 +707,7 @@ public class ProjectDashboardActivity extends BaseActivity {
                 .switchMap(new Function<String, ObservableSource<List<Site>>>() {
                     @Override
                     public ObservableSource<List<Site>> apply(String userQuery) {
-                        List<Site> filteredSites = new SiteViewModel(Collect.getInstance()).searchSites(userQuery.trim());
+                        List<Site> filteredSites = SiteLocalSource.getInstance().searchSites(userQuery.trim(), loadedProject.getId());
                         return Observable.just(filteredSites);
                     }
                 })

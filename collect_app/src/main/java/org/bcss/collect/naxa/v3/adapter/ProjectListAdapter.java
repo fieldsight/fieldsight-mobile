@@ -71,6 +71,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
                         projectList.get(i).setSyncedDate(projecttuple.get(j).created_date);
                         projectList.get(i).setStatusMessage("Synced On " + DateTimeUtils.getFormattedDate("yyyy-MM-dd, HH:mm", projectList.get(i).getSyncedDate()));
                     } else if(status == Constant.DownloadStatus.FAILED) {
+                        projectList.get(i).setSynced(false);
                         projectList.get(i).setStatusMessage("Sync failed");
                     } else {
                         projectList.get(i).setStatusMessage("");
@@ -81,6 +82,16 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
         notifyDataSetChanged();
     }
 
+    public boolean anyProjectSelectedForSync() {
+        boolean found = false;
+        for(Project project: this.projectList) {
+            if(!project.isSynced()) {
+                found = true;
+                break;
+            }
+        }
+        return found;
+    }
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
         projectViewHolder.bindView(projectList.get(i));

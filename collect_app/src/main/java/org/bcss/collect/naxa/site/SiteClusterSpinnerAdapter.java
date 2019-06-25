@@ -2,12 +2,14 @@ package org.bcss.collect.naxa.site;
 
 import android.content.Context;
 import android.graphics.Color;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import org.bcss.collect.naxa.site.data.SiteRegion;
+import org.bcss.collect.naxa.v3.network.Region;
 
 import java.util.List;
 
@@ -16,17 +18,18 @@ import java.util.List;
  * by nishon.tan@gmail.com
  */
 
-public class SiteClusterSpinnerAdapter extends ArrayAdapter<SiteRegion> {
+public class SiteClusterSpinnerAdapter extends ArrayAdapter<Region> {
 
     private Context context;
 
-    private List<SiteRegion> values;
+    private List<Region> values;
 
-    public SiteClusterSpinnerAdapter(Context context, int textViewResourceId, String hint, List<SiteRegion> values) {
+    SiteClusterSpinnerAdapter(Context context, int textViewResourceId, String hint, List<Region> values) {
         super(context, textViewResourceId, values);
         this.context = context;
 
-        SiteRegion dummy = new SiteRegion(null, hint, null);
+        Region dummy = null;
+        dummy = new Region(null, hint);
         values.add(dummy);
 
         this.values = values;
@@ -34,11 +37,12 @@ public class SiteClusterSpinnerAdapter extends ArrayAdapter<SiteRegion> {
 
     public int getCount() {
         int count = super.getCount();
-        return count > 0 ? count - 1 : count;
+        int newCount = count > 0 ? count - 1 : count;
+        return newCount;
     }
 
 
-    public SiteRegion getItem(int position) {
+    public Region getItem(int position) {
         return values.get(position);
     }
 

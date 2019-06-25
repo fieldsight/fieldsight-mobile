@@ -63,35 +63,7 @@ public class NotificationListViewModel extends ViewModel {
         return notificationRepository.getAll(false);
     }
 
-    void pullDataFromServer(String epochTime) {
-        NotificationRemoteSource.getInstance().getNotifications(0)
-                .toObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap((Function<ResponseBody, ObservableSource<JSONObject>>) responseBody -> {
-                    String jsonString = responseBody.string();
-                    JSONArray notificationJsonArray = new JSONObject(jsonString).optJSONArray("notifications");
-                    return Observable.range(0, notificationJsonArray.length())
-                            .map(notificationJsonArray::getJSONObject);
-                })
-                .map(new Function<JSONObject, FieldSightNotification>() {
-                    @Override
-                    public FieldSightNotification apply(JSONObject json) throws Exception {
-
-                        return FieldSightNotificationLocalSource.getInstance().parseNotificationData(json);
-                    }
-                })
-                .toList()
-                .subscribe(new DisposableSingleObserver<List<FieldSightNotification>>() {
-                    @Override
-                    public void onSuccess(List<FieldSightNotification> list) {
-                        notificationRepository.save((ArrayList<FieldSightNotification>) list);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.e(e);
-                    }
-                });
+    void saveData(List<FieldSightNotification> fieldSightNotifications) {
+        notificationRepository.save((ArrayList<FieldSightNotification>) fieldSightNotifications);
     }
 }

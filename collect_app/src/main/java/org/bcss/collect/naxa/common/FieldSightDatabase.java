@@ -7,6 +7,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.contact.ContacstDao;
@@ -63,7 +64,7 @@ import java.io.File;
                 SyncStat.class
 
         },
-        version = 13)
+        version = 15)
 @TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
 
 public abstract class FieldSightDatabase extends RoomDatabase {
@@ -111,7 +112,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                         FieldSightDatabase.class, DB_PATH)
                         .allowMainThreadQueries()//used in org.bcss.collect.naxa.jobs.LocalNotificationJob
                         .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
-                                MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13)
+                                MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15)
                         .build();
             }
         }
@@ -175,7 +176,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         }
     };
 
-    private static final Migration MIGRATION_11_12 = new Migration(10, 12) {
+    private static final Migration MIGRATION_11_12 = new Migration(11, 12) {
         @Override
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE project"
@@ -194,5 +195,19 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         }
     };
 
+    private static final Migration MIGRATION_13_14 = new Migration(13, 14) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE project"
+                    + " ADD COLUMN `regionList` TEXT");
+        }
+    };
 
+
+    private static final Migration MIGRATION_14_15 = new Migration(14, 15) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `syncstat` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))");
+        }
+    };
 }

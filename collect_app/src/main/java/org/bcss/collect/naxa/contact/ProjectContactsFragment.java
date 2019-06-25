@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.ViewModelFactory;
@@ -33,7 +34,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
 
 
     @BindView(R.id.root_layout_empty_layout)
-    View emptyLayout;
+    LinearLayout emptyLayout;
     private Unbinder unbinder;
 
     @BindView(R.id.recycler_view)

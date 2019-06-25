@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -131,13 +132,16 @@ public class FieldSightUserSession {
 
     private static String getLogoutMessage(int offlineSitesNumber, int unsentFormCount) {
         Context context = Collect.getInstance();
-       String msg = "";
+        String msg = "";
         if (offlineSitesNumber > 0) {
-            msg = context.getString(R.string.logout_message_only_filled_forms, unsentFormCount);
+            msg = context.getString(R.string.logout_message_only_offline_sites, offlineSitesNumber);
         }
         if (unsentFormCount > 0) {
-            if (!msg.isEmpty()) msg+=context.getString(R.string.and);
-            msg += context.getString(R.string.logout_message_only_offline_sites, offlineSitesNumber);
+            if (!msg.isEmpty()) {
+                msg += context.getString(R.string.label_and);
+            }
+
+            msg += context.getString(R.string.logout_message_only_filled_forms, unsentFormCount);
         }
         return context.getString(R.string.logout_warn_message, msg);
     }
@@ -162,7 +166,7 @@ public class FieldSightUserSession {
                             logout(context, new OnLogoutListener() {
                                 @Override
                                 public void logoutTaskSuccess() {
-                                    tokenDeleteThread.start();
+                                    new DeleteFcm().execute();
                                     ((CollectAbstractActivity) context).hideProgress();
                                     Intent intent = new Intent(context, LoginActivity.class)
                                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -205,13 +209,17 @@ public class FieldSightUserSession {
 
     }
 
-   static Thread tokenDeleteThread = new Thread(() -> {
-       try {
-           FirebaseInstanceId.getInstance().deleteInstanceId();
-       }catch (IOException e) { e.printStackTrace();}
-   });
-
-
+    static class DeleteFcm extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                FirebaseInstanceId.getInstance().deleteInstanceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
     public static void stopLogoutDialog(Context context) {
 
         DialogFactory.createMessageDialog(context, "Can't logout", "An active internet connection required").show();

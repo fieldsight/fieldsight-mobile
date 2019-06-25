@@ -85,9 +85,9 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
-    public List<Site> searchSites(String searchQuery) {
+    public List<Site> searchSites(String searchQuery,String projectId) {
 
-        return dao.searchSites(searchQuery);
+        return dao.searchSites(searchQuery,projectId);
     }
 
     @Override

@@ -60,7 +60,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     LinearLayout rootLayout;
 
     @BindView(R.id.root_layout_empty_layout)
-    View emptyLayout;
+    LinearLayout emptyLayout;
 
 
     Unbinder unbinder;
