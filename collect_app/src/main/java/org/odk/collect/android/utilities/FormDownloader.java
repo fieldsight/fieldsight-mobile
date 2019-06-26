@@ -236,6 +236,7 @@ public class FormDownloader {
             if (md5Hash != null) {
                 formsDao.deleteFormsFromMd5Hash(md5Hash);
             }
+
             FileUtils.deleteAndReport(fileResult.getFile());
         }
 

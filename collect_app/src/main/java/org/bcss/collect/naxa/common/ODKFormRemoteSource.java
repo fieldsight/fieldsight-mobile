@@ -120,7 +120,6 @@ public class ODKFormRemoteSource {
     }
 
 
-
     private Observable<ArrayList<FormDetails>> formListDownloadingComplete(HashMap<String, FormDetails> formNamesAndURLs) {
         return Observable.fromCallable(new Callable<ArrayList<FormDetails>>() {
             @Override
@@ -179,62 +178,77 @@ public class ODKFormRemoteSource {
     }
 
 
-    private ArrayList<FormDetails> cleanDownloadedFormList(HashMap<String, FormDetails> formNamesAndURLs) {
-        HashMap<String, FormDetails> result = new HashMap<>();
-        ArrayList<HashMap<String, String>> formList = new ArrayList<>();
-        result = formNamesAndURLs;
-        ArrayList<HashMap<String, String>> filteredFormList = new ArrayList<>();
-        String[] formIdsToDownload;
-        HashMap<String, Boolean> formResult = new HashMap<>();
-        ArrayList<String> formsFound = new ArrayList<>();
+    private ArrayList<FormDetails> cleanDownloadedFormList(HashMap<String, FormDetails> result) {
 
-        ArrayList<String> ids = new ArrayList<String>(formNamesAndURLs.keySet());
-        for (int i = 0; i < result.size(); i++) {
-            String formDetailsKey = ids.get(i);
-            FormDetails details = formNamesAndURLs.get(formDetailsKey);
+        HashMap<String, FormDetails> formNamesAndURLs;
 
-            if ((details.isNewerFormVersionAvailable() || details.areNewerMediaFilesAvailable())) {
+
+        if (result == null) {
+            Timber.e("Formlist Downloading returned null.  That shouldn't happen");
+            throw new RuntimeException(Collect.getInstance().getString(R.string.load_remote_form_error));
+        }
+
+        if (result.containsKey(DL_AUTH_REQUIRED)) {
+
+            throw new RuntimeException(Collect.getInstance().getString(R.string.server_requires_auth));
+
+        } else if (result.containsKey(DL_ERROR_MSG)) {
+            // Download failed
+            throw new RuntimeException(Collect.getInstance().getString(R.string.list_failed_with_error,
+                    result.get(DL_ERROR_MSG).getErrorStr()));
+        } else {
+            // Everything worked. Clear the list and add the results.
+            formNamesAndURLs = result;
+
+
+            //array list added here siteName on Create
+            ArrayList<HashMap<String, String>> mFormList = new ArrayList<HashMap<String, String>>();
+            ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
+
+
+            ArrayList<String> ids = new ArrayList<String>(formNamesAndURLs.keySet());
+            for (int i = 0; i < result.size(); i++) {
+                String formDetailsKey = ids.get(i);
+                FormDetails details = formNamesAndURLs.get(formDetailsKey);
                 HashMap<String, String> item = new HashMap<String, String>();
                 item.put(FORMNAME, details.getFormName());
                 item.put(FORMID_DISPLAY,
-                        ((details.getFormVersion() == null) ? "" : (Collect.getInstance().getString(R.string.version) + " "
-                                + details.getFormVersion() + " ")) + "ID: " + details.getFormID());
+                        ((details.getFormVersion() == null) ? "" : (Collect.getInstance().getString(R.string.version) + " " + details.getFormVersion() + " ")) +
+                                "ID: " + details.getFormID());
                 item.put(FORMDETAIL_KEY, formDetailsKey);
                 item.put(FORM_ID_KEY, details.getFormID());
                 item.put(FORM_VERSION_KEY, details.getFormVersion());
 
                 // Insert the new form in alphabetical order.
-                if (formList.isEmpty()) {
-                    formList.add(item);
+                if (mFormList.size() == 0) {
+                    mFormList.add(item);
                 } else {
                     int j;
-                    for (j = 0; j < formList.size(); j++) {
-                        HashMap<String, String> compareMe = formList.get(j);
+                    for (j = 0; j < mFormList.size(); j++) {
+                        HashMap<String, String> compareMe = mFormList.get(j);
                         String name = compareMe.get(FORMNAME);
                         if (name.compareTo(formNamesAndURLs.get(ids.get(i)).getFormName()) > 0) {
                             break;
                         }
                     }
-                    formList.add(j, item);
+                    mFormList.add(j, item);
                 }
             }
+
+
+            for (int i = 0; i < mFormList.size(); i++) {
+
+                HashMap<String, String> item =
+                        (HashMap<String, String>) mFormList.get(i);
+                filesToDownload.add(formNamesAndURLs.get(item.get(FORMDETAIL_KEY)));
+
+            }
+
+
+            return filesToDownload;
+
+
         }
-
-
-        filteredFormList.addAll(formList);
-
-        ArrayList<FormDetails> filesToDownload = new ArrayList<>();
-
-        for (FormDetails formDetails : formNamesAndURLs.values()) {
-            String formId = formDetails.getFormID();
-
-            formsFound.add(formId);
-            filesToDownload.add(formDetails);
-
-        }
-
-
-        return filesToDownload;
 
     }
 
