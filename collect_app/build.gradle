@@ -94,7 +94,7 @@ android {
         targetSdkVersion(26)
         //versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         //versionName getVersionName()
-        versionCode versionMajor*100+versionMinor*100+versionPatch
+        versionCode versionMajor*1000+versionMinor*100+versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}-beta"
         System.out.println(versionName + " " + versionCode)
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
