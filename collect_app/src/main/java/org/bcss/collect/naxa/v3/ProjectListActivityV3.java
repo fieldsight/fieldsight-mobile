@@ -56,26 +56,6 @@ import timber.log.Timber;
 
 import static org.bcss.collect.android.application.Collect.allowClick;
 
-/**
- * pull the project list from the new api. show the list of the project
- * it has two options - 1. sync all project without selection at a time
- * 2. sync project with the selection
- * add the checkbox in the project to allow the user to select and deselect the project
- *
- * @Since 2019-05-09
- * @Author Yubaraj Poudel
- * <p>
- * steps:
- * 1. Create the list of the project for sync {@code Set<String> syncList }
- * 2. Depending upon the selection remove the items from the list
- * 3. create a flag for controlled sync or automatic sync {@code boolean auto = false }
- * 4. if auto is true
- * 4.1 sync all the selected projects
- * 5. if auto is false
- * 5.1 sync projects but allow the user to select what they want to sync
- **/
-
-
 public class ProjectListActivityV3 extends CollectAbstractActivity {
     @BindView(R.id.rv_projectlist)
     RecyclerView rv_projectlist;
@@ -115,7 +95,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
         setSupportActionBar(toolbar);
         setTitle("Projects");
-        adapter = new ProjectListAdapter(projectList);
+        adapter = new ProjectListAdapter(projectList, allSelected);
         observer = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -246,7 +226,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
+//        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
         if(showSyncMenu) {
             menu.findItem(R.id.action_refresh).setIcon(allSelected ?
                     R.drawable.ic_cancel_white_24dp :
@@ -268,12 +248,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 //                check all the project and make auto true
                 allSelected = !allSelected;
                 for (Project project : projectList) {
-                    if (!project.isSynced()) {
+//                    if (!project.isSynced()) {
                         project.setChecked(allSelected);
-                    } else {
-                        project.setChecked(false);
-                    }
+//                    } else {
+//                        project.setChecked(false);
+//                    }
                 }
+                adapter.toggleAllSelected(allSelected);
                 adapter.notifyDataSetChanged();
                 invalidateOptionsMenu();
                 break;

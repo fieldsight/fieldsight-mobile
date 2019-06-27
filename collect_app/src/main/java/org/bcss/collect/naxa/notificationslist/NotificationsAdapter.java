@@ -55,20 +55,20 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
     public void updateList(List<FieldSightNotification> newList) {
-        if (fieldSightNotifications.size() == 0) {
-            fieldSightNotifications.addAll(newList);
-            Timber.i("Notification Adapter, first time");
-
-        } else if (Integer.parseInt(DateTimeUtils.tsToSec8601(newList.get(0).getReceivedDateTime())) >
-                Integer.parseInt(DateTimeUtils.tsToSec8601(fieldSightNotifications.get(0).getReceivedDateTime()))) {
-            newList.addAll(fieldSightNotifications);
+//        if (fieldSightNotifications.size() == 0) {
+//            fieldSightNotifications.addAll(newList);
+//            Timber.i("Notification Adapter, first time");
+//
+//        } else if (Integer.parseInt(DateTimeUtils.tsToSec8601(newList.get(0).getReceivedDateTime())) >
+//                Integer.parseInt(DateTimeUtils.tsToSec8601(fieldSightNotifications.get(0).getReceivedDateTime()))) {
+//            newList.addAll(fieldSightNotifications);
+//            fieldSightNotifications = newList;
+//            Timber.i("Notification Adapter, new notification");
+//        } else {
             fieldSightNotifications = newList;
-            Timber.i("Notification Adapter, new notification");
-        } else {
-            fieldSightNotifications.addAll(newList);
             Timber.i("Notification Adapter, older notification");
 
-        }
+//        }
         notifyDataSetChanged();
 
     }

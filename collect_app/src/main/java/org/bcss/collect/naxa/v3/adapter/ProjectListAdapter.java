@@ -27,9 +27,15 @@ import timber.log.Timber;
 
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
     private List<Project> projectList;
+    boolean allTrue = false;
 
-    public ProjectListAdapter(List<Project> projectList) {
+    public ProjectListAdapter(List<Project> projectList, boolean allTrue) {
         this.projectList = projectList;
+        this.allTrue = allTrue;
+    }
+
+    public void toggleAllSelected(boolean allSelected) {
+        this.allTrue = allSelected;
     }
 
     @NonNull
@@ -94,7 +100,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
     }
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
-        projectViewHolder.bindView(projectList.get(i));
+        projectViewHolder.bindView(projectList.get(i), allTrue);
     }
 
     @Override

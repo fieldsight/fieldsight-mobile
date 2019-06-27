@@ -58,6 +58,7 @@
             app:layout_constraintBottom_toBottomOf="@id/rela_round"
             app:layout_constraintLeft_toLeftOf="parent"
             android:checked="true"
+            android:visibility="gone"
             android:layout_marginLeft="53dp"
             />
 
@@ -96,7 +97,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
-            android:text=""
+            android:text="Not synced yet"
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -114,6 +115,7 @@
             android:layout_marginBottom="0dp"
             android:padding="6dp"
             app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/stat_sys_download_done" />
 
