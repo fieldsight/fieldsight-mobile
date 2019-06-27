@@ -39,7 +39,6 @@ public abstract class ScheduledFormDAO implements BaseDaoFieldSight<ScheduleForm
 
     @Transaction
     public void updateAll(ArrayList<ScheduleForm> items) {
-        deleteAll();
         insert(items);
     }
 

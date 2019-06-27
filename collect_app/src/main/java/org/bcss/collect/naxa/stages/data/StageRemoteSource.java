@@ -141,7 +141,7 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
                     }
 
                     for (Stage stage : stagesList) {
-                        for(SubStage subStage: stage.getSubStage()){
+                        for (SubStage subStage : stage.getSubStage()) {
                             subStage.setStageId(stage.getId());
                             subStage.setSubStageDeployedFrom(stage.getFormDeployedFrom());
                             subStage.setFsFormId(subStage.getStageForms().getId());
@@ -160,7 +160,6 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
                 .observeOn(AndroidSchedulers.mainThread());
 
 
-
     }
 
     public Single<ArrayList<Stage>> fetchByProjectId(String projectId) {
@@ -172,7 +171,15 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
                     Type type = new TypeToken<LinkedList<String>>() {
                     }.getType();//todo use typeconvertor
                     return new Gson().fromJson(siteOveride.getStagedFormIds(), type);
-                }).flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
+                })
+                .flattenAsObservable((Function<LinkedList<String>, Iterable<String>>) siteIds -> siteIds)
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String siteId) throws Exception {
+                        StageLocalSource.getInstance().deleteAllBySiteId(siteId);
+                        return siteId;
+                    }
+                })
                 .map(siteId -> new XMLFormBuilder()
                         .setFormCreatorsId(siteId)
                         .setIsCreatedFromProject(false)
@@ -201,26 +208,34 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
                 .flatMapIterable((Function<List<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
                 .flatMap((Function<XMLForm, ObservableSource<ArrayList<Stage>>>) this::downloadStages)
                 .toList()
+
                 .map(listOfStages -> {
-                    ArrayList<Stage> stagesList = new ArrayList<>(0);
-                    ArrayList<SubStage> subStageList = new ArrayList<>(0);
+                    ArrayList<Stage> stagesList = new ArrayList<>();
+                    ArrayList<SubStage> subStageList = new ArrayList<>();
+                    ArrayList<String> stageIds = new ArrayList<>();
 
                     for (ArrayList<Stage> stages : listOfStages) {
                         stagesList.addAll(stages);
                     }
 
                     for (Stage stage : stagesList) {
-                        for(SubStage subStage: stage.getSubStage()){
+                        for (SubStage subStage : stage.getSubStage()) {
                             subStage.setStageId(stage.getId());
                             subStage.setSubStageDeployedFrom(stage.getFormDeployedFrom());
                             subStage.setFsFormId(subStage.getStageForms().getId());
                             subStage.setJrFormId(subStage.getStageForms().getXf().getJrFormId());
                             subStageList.add(subStage);
+                            stageIds.add(stage.getId());
                         }
 
                     }
 
+
+                    StageLocalSource.getInstance().deleteAllByProjectId(projectId);
                     StageLocalSource.getInstance().save(stagesList);
+
+
+                    SubStageLocalSource.getInstance().deleteAll(subStageList);
                     SubStageLocalSource.getInstance().save(subStageList);
 
                     return stagesList;

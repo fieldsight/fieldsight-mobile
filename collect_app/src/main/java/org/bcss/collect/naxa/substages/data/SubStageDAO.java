@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.substages.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
@@ -20,15 +21,15 @@ public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
     public abstract LiveData<List<SubStage>> getAllSubStages();
 
 
-    @Query("DELETE FROM SubStage")
-    public abstract void deleteAll();
+    @Delete
+    public abstract void deleteAll(ArrayList<SubStage> subStages);
+
+
 
     @Transaction
     public void updateAll(ArrayList<SubStage> items) {
-        deleteAll();
         insert(items);
     }
-
 
     @Query("SELECT * FROM substage WHERE stageId= :stageId ORDER BY `order` ASC")
     public abstract LiveData<List<SubStage>> getByStageId(String stageId);

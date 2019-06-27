@@ -287,9 +287,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public void deleteAll() {
-        AsyncTask.execute(() -> dao.deleteAll());
-    }
+
 
 
     public LiveData<List<GeneralForm>> getById(String fsFormId) {

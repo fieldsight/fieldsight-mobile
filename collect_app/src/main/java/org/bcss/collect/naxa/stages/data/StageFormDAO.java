@@ -38,4 +38,10 @@ public abstract class StageFormDAO implements BaseDaoFieldSight<Stage> {
 
     @Query("SELECT * FROM stages WHERE project =:projectId OR site =:siteId")
     public abstract Maybe<List<Stage>> getBySiteIdMaybe(String siteId, String projectId);
+
+    @Query("DELETE FROM stages WHERE project=:projectId")
+    public abstract void deleteAllById(String projectId);
+
+    @Query("DELETE FROM stages WHERE project=:siteId")
+    public abstract void deleteAllBySiteId(String siteId);
 }
