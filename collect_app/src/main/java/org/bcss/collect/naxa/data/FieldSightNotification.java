@@ -8,7 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-@Entity(indices = {@Index(value = "receivedDateTime", unique = true)})
+@Entity(indices = {@Index(value = "receivedDateTimeInMillis", unique = true)})
 public class FieldSightNotification implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
