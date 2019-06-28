@@ -38,7 +38,9 @@ public class FieldSightNotification implements Parcelable {
     private String siteIdentifier;
     private String receivedDateTime;
     private boolean isDeployedFromSite;
-    private long receivedDateTimeInMillis;
+
+    @NonNull
+    private long receivedDateTimeInMillis = 0;
 
     @ColumnInfo(name = "schedule_forms_count")
     private String scheduleFormsCount;
