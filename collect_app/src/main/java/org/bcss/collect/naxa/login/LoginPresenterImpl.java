@@ -52,13 +52,15 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
                     public void onSuccess(Boolean isConnected) {
                         if (isConnected) {
                             String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
-                            if(!TextUtils.isEmpty(fcmToken)) {
-                                    Timber.i("token generated: %s", fcmToken);
-                                    loginModel.login(username, password, fcmToken, LoginPresenterImpl.this);
+                            if (!TextUtils.isEmpty(fcmToken)) {
+                                Timber.i("token generated: %s", fcmToken);
+                                loginModel.login(username, password, fcmToken, LoginPresenterImpl.this);
                             } else {
+
                                 FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
                                     String fcmToken1 = instanceIdResult.getToken();
                                     Timber.i("RegeneratedToken: " + fcmToken1);
+
                                     SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcmToken1);
                                     loginModel.login(username, password, fcmToken1, LoginPresenterImpl.this);
                                 }).addOnFailureListener(new OnFailureListener() {
@@ -87,7 +89,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
         loginView.showProgress(true);
 
         String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
-        if(!TextUtils.isEmpty(fcmToken)) {
+        if (!TextUtils.isEmpty(fcmToken)) {
             Timber.i("token generated: %s", fcmToken);
             loginModel.loginViaGoogle(googleAccessToken, username, fcmToken, LoginPresenterImpl.this);
         } else {

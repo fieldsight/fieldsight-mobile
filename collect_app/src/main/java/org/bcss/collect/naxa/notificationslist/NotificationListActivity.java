@@ -114,7 +114,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                                 tv_message_nodata.setText("No notification found");
                                 tv_message_nodata.setVisibility(View.VISIBLE);
                             } else {
-                               empty_layout.setVisibility(View.GONE);
+                                empty_layout.setVisibility(View.GONE);
                             }
                         }
                     });

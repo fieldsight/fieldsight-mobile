@@ -146,6 +146,19 @@ public class FieldSightUserSession {
         return context.getString(R.string.logout_warn_message, msg);
     }
 
+
+    static class DeleteFcm extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                FirebaseInstanceId.getInstance().deleteInstanceId();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
     public static void showLogoutDialog(Activity context) {
 
         ((CollectAbstractActivity) context).showProgress();
@@ -166,6 +179,7 @@ public class FieldSightUserSession {
                             logout(context, new OnLogoutListener() {
                                 @Override
                                 public void logoutTaskSuccess() {
+
                                     new DeleteFcm().execute();
                                     ((CollectAbstractActivity) context).hideProgress();
                                     Intent intent = new Intent(context, LoginActivity.class)
@@ -209,17 +223,8 @@ public class FieldSightUserSession {
 
     }
 
-    static class DeleteFcm extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try {
-                FirebaseInstanceId.getInstance().deleteInstanceId();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
+
+
     public static void stopLogoutDialog(Context context) {
 
         DialogFactory.createMessageDialog(context, "Can't logout", "An active internet connection required").show();
@@ -397,3 +402,4 @@ public class FieldSightUserSession {
         SharedPreferenceUtils.saveToPrefs(context, Constant.KEY_BASE_URL, newUrl);
     }
 }
+

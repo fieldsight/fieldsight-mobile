@@ -2,7 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 10,
+<<<<<<< HEAD
     "identityHash": "3bdd6a44e58d818a23a4add44dc27d10",
+=======
+    "identityHash": "5b221120df7c495538127d0f84633836",
+>>>>>>> master
     "entities": [
       {
         "tableName": "sites",
@@ -875,7 +879,7 @@
       },
       {
         "tableName": "FieldSightNotification",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `details_url` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `schedule_forms_count` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `details_url` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `receivedDateTime` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `schedule_forms_count` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1006,6 +1010,12 @@
           {
             "fieldPath": "siteIdentifier",
             "columnName": "siteIdentifier",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "receivedDateTime",
+            "columnName": "receivedDateTime",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1286,7 +1296,11 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+<<<<<<< HEAD
       "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3bdd6a44e58d818a23a4add44dc27d10\")"
+=======
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5b221120df7c495538127d0f84633836\")"
+>>>>>>> master
     ]
   }
 }

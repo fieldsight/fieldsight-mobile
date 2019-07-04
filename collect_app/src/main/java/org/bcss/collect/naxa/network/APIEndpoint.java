@@ -1,7 +1,5 @@
 package org.bcss.collect.naxa.network;
 
-import java.util.HashMap;
-
 public class APIEndpoint {
 
     public final static int NEW_RECORD_CREATED = 201;
@@ -71,5 +69,7 @@ public class APIEndpoint {
 
     }
 
+
+    public static final String POST_REPORT = "/fv3/api/report/";
 
 }

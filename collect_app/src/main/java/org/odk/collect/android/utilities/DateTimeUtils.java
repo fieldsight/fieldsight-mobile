@@ -82,9 +82,9 @@ public class DateTimeUtils {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
                 bikramSambatDate = BsCalendar.getInstance().toBik(new BsGregorianDate(
-                                        calendar.get(Calendar.YEAR),
-                                        calendar.get(Calendar.MONTH) + 1,
-                                        calendar.get(Calendar.DAY_OF_MONTH)));
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1,
+                        calendar.get(Calendar.DAY_OF_MONTH)));
                 String day = datePickerDetails.isSpinnerMode() ? bikramSambatDate.day + " " : "";
                 String month = datePickerDetails.isSpinnerMode() || datePickerDetails.isMonthYearMode() ? monthArray[bikramSambatDate.month - 1] + " " : "";
 

@@ -67,6 +67,7 @@ import java.io.File;
         version = 16)
 @TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
 
+
 public abstract class FieldSightDatabase extends RoomDatabase {
 
     private static FieldSightDatabase INSTANCE;
@@ -113,6 +114,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                         .allowMainThreadQueries()//used in org.bcss.collect.naxa.jobs.LocalNotificationJob
                         .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
                                 MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16)
+
                         .build();
             }
         }
@@ -219,4 +221,5 @@ public abstract class FieldSightDatabase extends RoomDatabase {
             database.execSQL("CREATE UNIQUE INDEX `index_FieldSightNotification_receivedDateTimeInMillis` ON `FieldSightNotification` (`receivedDateTimeInMillis`)");
         }
     };
+
 }
