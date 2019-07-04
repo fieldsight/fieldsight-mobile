@@ -13,10 +13,10 @@ import org.bcss.collect.naxa.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-class ContentDownloadAdapter extends RecyclerView.Adapter<DownloadContentViewHolder> {
+public class ContentDownloadAdapter extends RecyclerView.Adapter<DownloadContentViewHolder> {
     private final ArrayList<DownloadableItem> syncableItems;
 
-    ContentDownloadAdapter(ArrayList<DownloadableItem> syncableItems) {
+    public ContentDownloadAdapter(ArrayList<DownloadableItem> syncableItems) {
         this.syncableItems = syncableItems;
     }
 

@@ -15,7 +15,9 @@ import org.bcss.collect.naxa.substages.data.SubStageLocalSource;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 
@@ -48,9 +50,14 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
     @Override
     public void save(ArrayList<Stage> items) {
-        AsyncTask.execute(() -> dao.insert(items));
+        dao.insert(items);
     }
 
+    public void deleteAllByProjectId(String projectId) {
+        dao.deleteAllById(projectId);
+    }
+
+    @Deprecated
     @Override
     public void updateAll(ArrayList<Stage> items) {
         AsyncTask.execute(() -> dao.updateAll(items));
@@ -122,7 +129,7 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
     }
 
     public Observable<List<Stage>> getBySiteIdMaybe(String siteId, String siteTypeId, String projectId) {
-        return dao.getBySiteIdMaybe(siteId,projectId)
+        return dao.getBySiteIdMaybe(siteId, projectId)
                 .toObservable()
                 .flatMapIterable((Function<List<Stage>, Iterable<Stage>>) stages -> stages)
                 .flatMap(new Function<Stage, Observable<Stage>>() {
@@ -182,5 +189,9 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
         });
 
         return mediatorLiveData;
+    }
+
+    public void deleteAllBySiteId(String siteId) {
+        dao.deleteAllBySiteId(siteId);
     }
 }

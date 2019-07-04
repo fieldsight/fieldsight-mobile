@@ -35,6 +35,7 @@ import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
+import org.bcss.collect.naxa.v3.ProjectListActivityV3;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.DialogUtils;
@@ -144,7 +145,7 @@ public class SplashScreenActivity extends Activity {
 
     private void endSplashScreen() {
         if (FieldSightUserSession.isLoggedIn()) {
-            startActivity(new Intent(this, ProjectListActivity.class));
+            startActivity(new Intent(this, ProjectListActivityV3.class));
         } else {
             startActivity(new Intent(this, LoginActivity.class));
         }

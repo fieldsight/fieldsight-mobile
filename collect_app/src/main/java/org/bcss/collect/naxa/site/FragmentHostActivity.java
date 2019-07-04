@@ -20,11 +20,17 @@ import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
+import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
+import org.bcss.collect.naxa.preferences.SettingsActivity;
+import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
+import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
+
+import java.util.ArrayList;
 
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
@@ -68,13 +74,10 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
         FieldSightNotificationLocalSource.getInstance()
                 .isSiteNotSynced(loadedSite.getId(), loadedSite.getProject())
-                .observe(this, new Observer<Integer>() {
-                    @Override
-                    public void onChanged(@Nullable Integer integer) {
-                        if (integer != null && integer > 0) {
+                .observe(this, integer -> {
+                    if (integer != null && integer > 0) {
 
-                            FlashBarUtils.showOutOfSyncMsg(ALL_FORMS, FragmentHostActivity.this, "Form(s) information is out of sync");
-                        }
+                        FlashBarUtils.showOutOfSyncMsg(ALL_FORMS, FragmentHostActivity.this, "Form(s) information is out of sync");
                     }
                 });
 
@@ -111,9 +114,8 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
                 break;
             case R.id.action_app_settings:
-                //startActivity(new Intent(this, SettingsActivity.class));
-
-                break;
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
             case R.id.action_logout:
 //                showProgress();
                 InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {
@@ -134,11 +136,22 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 });
                 break;
             case R.id.action_refresh:
-
-                ContentDownloadActivity.start(this);
-                break;
+                ProjectLocalSource.getInstance().getProjectById(loadedSite.getProject()).observe(this, new Observer<Project>() {
+                    @Override
+                    public void onChanged(@Nullable Project project) {
+                        if (project != null) {
+                            Bundle bundle = new Bundle();
+                            ArrayList<Project> projectArrayList = new ArrayList<>();
+                            projectArrayList.add(project);
+                            bundle.putParcelableArrayList("projects", projectArrayList);
+                            bundle.getBoolean("auto", true);
+                            startActivity(new Intent(FragmentHostActivity.this, SyncActivity.class)
+                                    .putExtra("params", bundle));
+                        }
+                    }
+                });
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

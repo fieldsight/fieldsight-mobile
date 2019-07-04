@@ -131,22 +131,19 @@ public class FieldSightUserSession {
     }
 
     private static String getLogoutMessage(int offlineSitesNumber, int unsentFormCount) {
-
-
-        String msg;
         Context context = Collect.getInstance();
-
-        if (offlineSitesNumber == 0 && unsentFormCount == 0) {
-            msg = context.getString(R.string.logout_message_none);
-        } else if (offlineSitesNumber == 0) {
-            msg = context.getString(R.string.logout_message_only_filled_forms, unsentFormCount);
-        } else if (unsentFormCount == 0) {
+        String msg = "";
+        if (offlineSitesNumber > 0) {
             msg = context.getString(R.string.logout_message_only_offline_sites, offlineSitesNumber);
-        } else {
-            msg = context.getString(R.string.logout_message_all, offlineSitesNumber, unsentFormCount);
         }
+        if (unsentFormCount > 0) {
+            if (!msg.isEmpty()) {
+                msg += context.getString(R.string.label_and);
+            }
 
-        return msg;
+            msg += context.getString(R.string.logout_message_only_filled_forms, unsentFormCount);
+        }
+        return context.getString(R.string.logout_warn_message, msg);
     }
 
 
@@ -182,7 +179,7 @@ public class FieldSightUserSession {
                             logout(context, new OnLogoutListener() {
                                 @Override
                                 public void logoutTaskSuccess() {
-//                                    tokenDeleteThread.start();
+
                                     new DeleteFcm().execute();
                                     ((CollectAbstractActivity) context).hideProgress();
                                     Intent intent = new Intent(context, LoginActivity.class)
@@ -226,13 +223,6 @@ public class FieldSightUserSession {
 
     }
 
-    static Thread tokenDeleteThread = new Thread(() -> {
-        try {
-            FirebaseInstanceId.getInstance().deleteInstanceId();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    });
 
 
     public static void stopLogoutDialog(Context context) {

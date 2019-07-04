@@ -3,6 +3,8 @@ package org.bcss.collect.naxa.login.model;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -10,6 +12,9 @@ import android.support.annotation.NonNull;
 import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.bcss.collect.naxa.v3.network.Region;
+import org.bcss.collect.naxa.v3.network.RegionConverter;
 
 import java.util.List;
 
@@ -39,6 +44,17 @@ public class Project implements Parcelable {
     @Expose
     private String lon;
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @SerializedName("url")
+    public String url;
+
     @Expose
     private String siteClusters;
 
@@ -48,7 +64,7 @@ public class Project implements Parcelable {
     @SerializedName("organization_url")
     private String organizationlogourl;
 
-    @SerializedName("cluster_sites")
+    @SerializedName("has_site_role")
     private Boolean hasClusteredSites;
 
     @Expose
@@ -62,9 +78,68 @@ public class Project implements Parcelable {
 
     private boolean isSyncedWithRemote;
 
+    @Expose
+    @Ignore
+    boolean checked = false;
+
+    @Expose
+    @Ignore
+    boolean isSynced = false;
+
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
+    @Expose
+    @Ignore
+    String statusMessage = "";
+
+    public long getSyncedDate() {
+        return syncedDate;
+    }
+
+    public void setSyncedDate(long syncedDate) {
+        this.syncedDate = syncedDate;
+    }
+
+    @Expose
+    @Ignore
+    long syncedDate = 0;
+
+    public void setSynced(boolean isSynced) {
+        this.isSynced = isSynced;
+    }
+
+    public boolean isSynced() {
+        return this.isSynced;
+    }
+
+    public List<Region> getRegionList() {
+        return regionList;
+    }
+
+    public void setRegionList(List<Region> regionList) {
+        this.regionList = regionList;
+    }
+
+    @SerializedName("project_region")
+    @TypeConverters(RegionConverter.class)
+    List<Region> regionList;
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 
     @SerializedName("site_meta_attributes")
-    private List<SiteMetaAttribute> siteMetaAttributes ;
+    private List<SiteMetaAttribute> siteMetaAttributes;
 
     public Project() {
 
@@ -112,7 +187,7 @@ public class Project implements Parcelable {
         this.siteMetaAttributes = siteMetaAttributes;
     }
 
-    public List<SiteMetaAttribute>  getSiteMetaAttributes() {
+    public List<SiteMetaAttribute> getSiteMetaAttributes() {
         return siteMetaAttributes;
     }
 
@@ -219,6 +294,8 @@ public class Project implements Parcelable {
         dest.writeString(this.phone);
         dest.writeByte(this.isSyncedWithRemote ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.siteMetaAttributes);
+        dest.writeTypedList(this.regionList);
+        dest.writeString(this.url);
     }
 
     @Override
@@ -240,7 +317,9 @@ public class Project implements Parcelable {
                 Objects.equal(typeId, project.typeId) &&
                 Objects.equal(typeLabel, project.typeLabel) &&
                 Objects.equal(phone, project.phone) &&
-                Objects.equal(siteMetaAttributes, project.siteMetaAttributes);
+                Objects.equal(siteMetaAttributes, project.siteMetaAttributes) &&
+                Objects.equal(url, project.url) &&
+                Objects.equal(regionList, project.regionList);
     }
 
     @Override
@@ -264,6 +343,8 @@ public class Project implements Parcelable {
         this.phone = in.readString();
         this.isSyncedWithRemote = in.readByte() != 0;
         this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
+        this.regionList = in.createTypedArrayList(Region.CREATOR);
+        this.url = in.readString();
     }
 
     public static final Creator<Project> CREATOR = new Creator<Project>() {
@@ -277,4 +358,25 @@ public class Project implements Parcelable {
             return new Project[size];
         }
     };
+
+    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, List<SiteMetaAttribute> metaAttributes, String url) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.address = address;
+        this.lat = lat;
+        this.lon = lon;
+        this.siteClusters = siteClusters;
+        this.organizationName = organizationName;
+        this.organizationlogourl = organizationlogourl;
+        this.hasClusteredSites = hasClusteredSites;
+        this.typeId = typeId;
+        this.typeLabel = typeLabel;
+        this.phone = phone;
+        this.isSyncedWithRemote = isSyncedWithRemote;
+        this.siteMetaAttributes = metaAttributes;
+        this.url = url;
+
+    }
+
 }

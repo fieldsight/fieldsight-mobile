@@ -65,7 +65,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //            fieldSightNotifications = newList;
 //            Timber.i("Notification Adapter, new notification");
 //        } else {
-            fieldSightNotifications.addAll(newList);
+            fieldSightNotifications = newList;
+
             Timber.i("Notification Adapter, older notification");
 
 //        }
@@ -92,7 +93,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_LOADING) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_progress_loading, parent, false);
+
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_loading, parent, false);
+
             return new LoadingViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, null);
@@ -163,12 +166,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void removeLoader() {
+
         try {
             if (fieldSightNotifications != null && fieldSightNotifications.size() > 0 && fieldSightNotifications.get(getItemCount() - 1) == null) {
                 fieldSightNotifications.remove(getItemCount() - 1);
                 notifyDataSetChanged();
             }
         }catch (Exception e){e.printStackTrace();}
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

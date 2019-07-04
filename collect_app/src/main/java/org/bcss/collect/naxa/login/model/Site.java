@@ -26,11 +26,11 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "id")
     private String id;
 
-    @SerializedName("lat")
+    @SerializedName("latitude")
     @ColumnInfo(name = "latitude")
     private String latitude;
 
-    @SerializedName("lon")
+    @SerializedName("longitude")
     @ColumnInfo(name = "longitude")
     private String longitude;
 
@@ -84,7 +84,7 @@ public class Site implements Parcelable {
     private String project;
 
     @ColumnInfo(name = "isSiteVerified")
-    private int isSiteVerified;
+    private int isSiteVerified = Constant.SiteStatus.IS_ONLINE;
 
     @SerializedName("type")
     @Expose
@@ -155,7 +155,7 @@ public class Site implements Parcelable {
         return String.valueOf(System.currentTimeMillis()).concat("-").concat(postfix);
     }
 
-    public static boolean isFakeSiteId(String siteId){
+    public static boolean isFakeSiteId(String siteId) {
         return siteId.contains(Site.postfix);
     }
 

@@ -75,7 +75,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
 
     }
 
-    Completable toggleAllChecked() {
+    public Completable toggleAllChecked() {
 
         return syncDAO.selectedItemsCount()
                 .toObservable()
@@ -93,15 +93,15 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
         return syncDAO.selectedItemsCount();
     }
 
-    LiveData<Integer> selectedItemCountLive() {
+    public LiveData<Integer> selectedItemCountLive() {
         return syncDAO.selectedItemsCountLive();
     }
 
-    LiveData<Integer> runningItemCountLive() {
+    public LiveData<Integer> runningItemCountLive() {
         return syncDAO.runningItemCountLive(Constant.DownloadStatus.RUNNING);
     }
 
-    Completable toggleSingleItem(DownloadableItem downloadableItem) {
+    public Completable toggleSingleItem(DownloadableItem downloadableItem) {
         return Completable.fromAction(() -> {
             if (downloadableItem.isChecked()) {
                 syncDAO.markAsUnchecked(downloadableItem.getUid());
@@ -111,7 +111,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
         });
     }
 
-    Single<List<DownloadableItem>> getAllChecked() {
+    public Single<List<DownloadableItem>> getAllChecked() {
         return syncDAO.getAllChecked();
     }
 
@@ -148,7 +148,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
 
     }
 
-    void markAsDisabled(int uid, String message) {
+    public void markAsDisabled(int uid, String message) {
         AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.DISABLED, formattedDate(), message));
 
     }

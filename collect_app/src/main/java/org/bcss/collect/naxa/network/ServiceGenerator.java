@@ -60,9 +60,9 @@ public class ServiceGenerator {
             okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
         }
 
-        okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS);
-        okHttpClientBuilder.writeTimeout(3600, TimeUnit.SECONDS);
-        okHttpClientBuilder.readTimeout(3600, TimeUnit.SECONDS);
+//        okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS);
+//        okHttpClientBuilder.writeTimeout(3600, TimeUnit.SECONDS);
+//        okHttpClientBuilder.readTimeout(3600, TimeUnit.SECONDS);
 
 
         if (BuildConfig.DEBUG) {
@@ -74,10 +74,7 @@ public class ServiceGenerator {
     }
 
     private static OkHttpClient createCacheablesOkHttpClient() {
-
-
         String token = SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
-
         int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(Collect.getInstance().getCacheDir(), cacheSize);
 
@@ -124,6 +121,7 @@ public class ServiceGenerator {
         if (cacheablesRetrofit == null) {
             cacheablesRetrofit = new Retrofit.Builder()
                     .client(createCacheablesOkHttpClient())
+                    .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                     .baseUrl(FieldSightUserSession.getServerUrl(Collect.getInstance()))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();

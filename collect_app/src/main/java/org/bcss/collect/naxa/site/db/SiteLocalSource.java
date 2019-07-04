@@ -17,6 +17,7 @@ import java.util.concurrent.Callable;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
 
@@ -55,6 +56,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteByProjectIdAsSingle(projectId);
     }
 
+    public LiveData<List<String>> getAllDistinctProjectIds() {
+        return dao.getAllDistictProject();
+    }
+
 
     public LiveData<List<Site>> getByIdAndSiteStatus(String projectId, int status) {
         return dao.getByIdOfflineSites(projectId, status);
@@ -90,13 +95,16 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         AsyncTask.execute(() -> dao.insert(items));
     }
 
+
+
+
     public Completable saveAsCompletable(Site... sites) {
         return Completable.fromAction(() -> dao.insert(sites));
     }
 
     @Override
     public void save(ArrayList<Site> items) {
-        //AsyncTask.execute(() -> dao.insert(items));
+        AsyncTask.execute(() -> dao.insert(items));
     }
 
     @Override
@@ -157,4 +165,5 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     public Single<List<Site>> getAllByStatus(int siteStatus) {
         return dao.getAllByStatus(siteStatus);
     }
+
 }

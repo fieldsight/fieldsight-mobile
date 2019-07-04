@@ -80,7 +80,7 @@ public class DownloadableItem {
         return isOutOfSync;
     }
 
-    void setOutOfSync(boolean outOfSync) {
+    public void setOutOfSync(boolean outOfSync) {
         isOutOfSync = outOfSync;
     }
 

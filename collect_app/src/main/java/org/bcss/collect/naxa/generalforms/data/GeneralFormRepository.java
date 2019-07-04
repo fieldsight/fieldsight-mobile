@@ -87,9 +87,5 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
     }
 
 
-    public void deleteAll() {
-        localSource.deleteAll();
-    }
-
 
 }

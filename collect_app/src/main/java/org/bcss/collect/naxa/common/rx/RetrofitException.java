@@ -1,5 +1,7 @@
 package org.bcss.collect.naxa.common.rx;
 
+import android.net.Uri;
+
 import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.naxa.common.GSONInstance;
@@ -9,8 +11,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import okhttp3.HttpUrl;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Response;
@@ -84,12 +90,12 @@ public class RetrofitException extends RuntimeException {
     }
 
 
-    static RetrofitException networkError(IOException exception) {
-        return new RetrofitException(exception.getMessage(), null, null, Kind.NETWORK, exception, null);
+    static RetrofitException networkError(IOException exception, HttpUrl url) {
+        return new RetrofitException(exception.getMessage(), url.url().toString(), null, Kind.NETWORK, exception, null);
     }
 
-    static RetrofitException unexpectedError(Throwable exception) {
-        return new RetrofitException(exception.getMessage(), null, null, Kind.UNEXPECTED, exception, null);
+    static RetrofitException unexpectedError(Throwable exception, HttpUrl url) {
+        return new RetrofitException(exception.getMessage(), url.url().toString(), null, Kind.UNEXPECTED, exception, null);
     }
 
     /**
@@ -176,25 +182,26 @@ public class RetrofitException extends RuntimeException {
         return converter.convert(response.errorBody());
     }
 
-    @Deprecated
-    public static String getMessage(Throwable e) {
-        String[] message = new String[]{e.getMessage(), e.getMessage()};
-
-        if (e instanceof RetrofitException) {
-            RetrofitException retrofitException = ((RetrofitException) e);
-            switch (retrofitException.getKind()) {
-                case NETWORK:
-
-                    message = new String[]{"Connection lost", String.format("A %s occurred while communicating to the server", retrofitException.getCause().getMessage())};
-                    break;
-                case HTTP:
-                    message = new String[]{"", e.getMessage()};
-                    break;
-                case UNEXPECTED:
-                    break;
-            }
+    public String getProjectId() {
+        String projectId = "-1";
+        Uri uri = Uri.parse(url);
+        if(uri.getQueryParameterNames().contains("project_id")) {
+            projectId = uri.getQueryParameter("project_id");
+            return projectId;
         }
-        return message[1];
+
+        final String regex = "(?!<\\/)\\d+$";
+        final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        final Matcher matcher = pattern.matcher(url);
+        boolean foundProjectId = matcher.matches();
+        Timber.i("foundProjectId %s", foundProjectId);
+        if (foundProjectId) {
+            Timber.i("Matcher group 0 %s", matcher.group(0));
+            projectId = matcher.group(0);
+        }
+        return projectId;
+
     }
+
 }
 

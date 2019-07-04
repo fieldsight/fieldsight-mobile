@@ -3,6 +3,7 @@ package org.odk.collect.android.utilities;
 import android.content.Context;
 import android.os.Build;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.logic.DatePickerDetails;
@@ -25,6 +26,7 @@ import bikramsambat.BikramSambatDate;
 import bikramsambat.BsCalendar;
 import bikramsambat.BsException;
 import bikramsambat.BsGregorianDate;
+import okhttp3.internal.Util;
 import timber.log.Timber;
 
 public class DateTimeUtils {
@@ -80,9 +82,9 @@ public class DateTimeUtils {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
                 bikramSambatDate = BsCalendar.getInstance().toBik(new BsGregorianDate(
-                                        calendar.get(Calendar.YEAR),
-                                        calendar.get(Calendar.MONTH) + 1,
-                                        calendar.get(Calendar.DAY_OF_MONTH)));
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1,
+                        calendar.get(Calendar.DAY_OF_MONTH)));
                 String day = datePickerDetails.isSpinnerMode() ? bikramSambatDate.day + " " : "";
                 String month = datePickerDetails.isSpinnerMode() || datePickerDetails.isMonthYearMode() ? monthArray[bikramSambatDate.month - 1] + " " : "";
 
@@ -200,6 +202,7 @@ public class DateTimeUtils {
         return relativeTime;
     }
 
+
     public static String getFormattedDate(String format, long time) {
         try {
             Date date = new Date();
@@ -210,19 +213,17 @@ public class DateTimeUtils {
         }
     }
 
-    public static String tsToSec8601(String timestamp) {
-        if (timestamp == null) return null;
+    public static long tsToSec8601(String timestamp) {
+        if (timestamp == null) return 0;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             long epoch =  sdf.parse(timestamp).getTime();
-            return ((epoch / 1000))+"";
+            return ((epoch / 1000));
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return 0;
         }
     }
-
-
 
 
 }

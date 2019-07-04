@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +27,7 @@ import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.network.NetworkUtils;
+import org.bcss.collect.naxa.v3.network.NotificationRemoteSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -72,7 +72,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     TextView tv_message_nodata;
 
     @BindView(R.id.root_layout_empty_layout)
-    RelativeLayout empty_layout;
+    LinearLayout empty_layout;
 
 
     boolean isNewerLoading = false;
@@ -191,7 +191,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         if (lastUpdatedDate != null) {
             String date = lastUpdatedDate.getReceivedDateTime();
 
-            String epochTime = DateTimeUtils.tsToSec8601(date);
+            String epochTime = DateTimeUtils.tsToSec8601(date)+"";
             Timber.i("NotificationListActivity, date = %s, epochTime = %s", date, epochTime);
             if (epochTime != null) {
                 getDataFromServer(epochTime, type);

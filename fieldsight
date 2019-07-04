@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+#copy the db file to destination
+function pullDb() {
+ adb pull /sdcard/fieldsight/metadata/fieldsight_database ~/Desktop/fieldsight_database
+}
+
+#clear all sdcard files
+cs() {
+ adb shell && rm -rf /sdcard/fieldsight && exit
+}
+
+#uninstall but keep all the files and database
+uninstall() {
+ adb uninstall -k org.bcss.collect.android
+}
+
+#hard uninstall, delete everything
+hu() {
+ adb uninstall org.bcss.collect.android
+ cs
+}
+
+help() {
+ echo "available commands"
+ echo "pd - pull database"
+ echo "ui - Uninstall App, this will not delete the preferences and database though app is uninstalled, if you want to clear all use hu instead."
+ echo "hu - Hard uninstall, removes everything"
+ echo "cs - Clear SD card files"
+ echo "bi - Build and install"
+}
+
+#install with permisson
+iwp() {
+    adb install -r -g "$(find . -name "*.apk" -type f)"
+    adb shell am start -n org.bcss.collect.android/org.odk.collect.android.activities.SplashScreenActivity
+}
+
+#build
+build() {
+    # run adb
+    [! -f "gradlew"] && echo "gradlew file not exists" && exit
+    # build and run the debug apk
+    ./gradlew assembleDebug
+}
+
+case "$1" in
+    (pd) pullDb ;;
+    (ui) uninstall;;
+    (hu) hu;;
+    (cs) cs;;
+    (bi) build && iwp;;
+    (*) help;;
+esac

@@ -62,8 +62,8 @@
 
 
     <string name="logout_message_all">If you logout all your account data including, %1$d offline site(s) and %2$d filled form(s) would be deleted.</string>
-    <string name="logout_message_only_filled_forms">If you logout all your account data including %d filled form(s) would be deleted.</string>
-    <string name="logout_message_only_offline_sites">If you logout all your account data including %d offline site(s) would be deleted.</string>
+    <string name="logout_message_only_filled_forms"> %d pending filled form(s)</string>
+    <string name="logout_message_only_offline_sites"> %d offline site(s)</string>
     <string name="logout_message_none">If you logout all your account data would be deleted.</string>
 
     <string name="toolbar_downloads">Sync</string>
@@ -254,6 +254,10 @@
     <string name="msg_choose_a_day">Choose an day</string>
     <string name="msg_choose_month_option">Choose month option</string>
     <string name="backup_data">Backup all data</string>
+
+    <string name="logout_warn_message">"Cannot logout, You have %s"</string>
+    <string name="label_and">and</string>
+
     <string name="send_report">Send Report</string>
     <string name="action_change_url">Change Server url</string>
     <string name="firebase_token">FCM token</string>
@@ -276,6 +280,7 @@
         <item>UI error</item>
         <item>Other</item>
     </string-array>
+
 
 
     <!--Notification sitelist ends here-->

@@ -9,8 +9,9 @@ import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
-import org.bcss.collect.naxa.site.data.SiteRegion;
+
 import org.bcss.collect.naxa.site.db.SiteRepository;
+import org.bcss.collect.naxa.v3.network.Region;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class CreateSiteViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Integer>> metaAttributesViewIds = new MutableLiveData<>();
     private final MutableLiveData<String> metaAttributesAnswer = new MutableLiveData<>();
 
-    private final MutableLiveData<ArrayList<SiteRegion>> siteClusterMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<Region>> siteClusterMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<SiteType>> siteTypesMutableLiveData = new MutableLiveData<>();
 
     private CreateSiteViewModel() {}
@@ -53,11 +54,11 @@ public class CreateSiteViewModel extends ViewModel {
         siteTypesMutableLiveData.setValue(siteTypes);
     }
 
-    public MutableLiveData<ArrayList<SiteRegion>> getSiteClusterMutableLiveData() {
+    public MutableLiveData<List<Region>> getSiteClusterMutableLiveData() {
         return siteClusterMutableLiveData;
     }
 
-    public void setSiteClusterMutableLiveData(ArrayList<SiteRegion> siteRegion) {
+    public void setSiteClusterMutableLiveData(List<Region> siteRegion) {
         this.siteClusterMutableLiveData.setValue(siteRegion);
     }
 

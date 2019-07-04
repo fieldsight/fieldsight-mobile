@@ -12,7 +12,6 @@ import io.reactivex.schedulers.Schedulers;
 public class InternetUtils {
     public static void checkInterConnectivity(OnConnectivityListener onConnectivityListener) {
         ReactiveNetwork.checkInternetConnectivity()
-                .delay(2, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new DisposableSingleObserver<Boolean>() {

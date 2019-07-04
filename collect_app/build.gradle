@@ -78,9 +78,11 @@ if (secretsFile.exists()) {
     secrets.load(new FileInputStream(secretsFile))
 }
 
-def versionMajor = 2
-def versionMinor = 8
-def versionPatch = 12
+def versionMajor = 3
+def versionMinor = 0
+    def versionPatch = 5
+
+
 
 
 
@@ -93,7 +95,7 @@ android {
         targetSdkVersion(26)
         //versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         //versionName getVersionName()
-        versionCode versionMajor*100+versionMinor*100+versionPatch
+        versionCode versionMajor*1000+versionMinor*100+versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         System.out.println(versionName + " " + versionCode)
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
@@ -296,9 +298,9 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:16.1.0"
     implementation "com.google.android.gms:play-services-location:16.0.0"
 
+    implementation "com.crashlytics.sdk.android:crashlytics:2.10.1"
     implementation "com.google.firebase:firebase-core:16.0.9"
     implementation 'com.google.firebase:firebase-config:17.0.0'
-    implementation "com.crashlytics.sdk.android:crashlytics:2.10.0"
 
     implementation "com.google.firebase:firebase-messaging:18.0.0"
 

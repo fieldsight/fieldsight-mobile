@@ -75,6 +75,7 @@ import org.bcss.collect.naxa.project.MapFragment;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
+import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderList;
@@ -593,7 +594,14 @@ public class ProjectDashboardActivity extends BaseActivity {
                 });
                 break;
             case R.id.action_refresh:
-                ContentDownloadActivity.start(this);
+//                ContentDownloadActivity.start(this);
+                Bundle bundle = new Bundle();
+                ArrayList<Project> projectArrayList = new ArrayList<>();
+                projectArrayList.add(loadedProject);
+                bundle.putParcelableArrayList("projects", projectArrayList);
+                bundle.getBoolean("auto", true);
+                startActivity(new Intent(this, SyncActivity.class)
+                        .putExtra("params", bundle));
                 break;
             case R.id.action_app_settings:
                 if (allowClick(getClass().getName())) {

@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -55,7 +56,7 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
     RecyclerViewEmptySupport recyclerView;
 
     @BindView(R.id.root_layout_empty_layout)
-    View emptyLayout;
+    LinearLayout emptyLayout;
 
     private Site loadedSite;
     private Unbinder unbinder;

@@ -42,4 +42,8 @@ public abstract class ProjectDao implements BaseDaoFieldSight<Project> {
 
     @Query("SELECT * from project where id=:id")
     public abstract LiveData<Project> getById(String id);
+
+
+    @Query("SELECT * from project where id=:id")
+    public abstract Single<Project> getByIdAsSingle(String id);
 }

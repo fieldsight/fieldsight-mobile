@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/general_toolbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_projectlist"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="48dp"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:id="@+id/ll_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:id="@+id/prgbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_nodata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Loading please wait"
+                android:textColor="@color/secondaryColor"
+                android:textSize="16sp" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_resync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/primaryColor"
+                app:cardCornerRadius="8dp"
+                android:layout_marginTop="16dp"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/primaryColor"
+                    android:text="Sync project again"
+                    android:textColor="@android:color/white" />
+
+
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_sync_project"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/primaryColor"
+            android:drawableRight="@drawable/ic_keyboard_arrow_right_24dp"
+            android:gravity="end|center_vertical"
+            android:padding="8dp"
+            android:text="Sync Projects"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</LinearLayout>

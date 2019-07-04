@@ -461,6 +461,9 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 .isDeployedFromSite(isDeployedFromSite)
                 .setFormVersion(formVerion)
                 .setReceivedDateTime(receivedDateTime)
+
+                .setReceivedDateTimeInMillis()
+
                 .createFieldSightNotification();
 
         return notification;

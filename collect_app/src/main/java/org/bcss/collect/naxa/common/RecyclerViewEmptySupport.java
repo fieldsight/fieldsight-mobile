@@ -112,6 +112,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         if (message != null) {
             tvMsg.setText(message);
         }
+
         if (onEmptyLayoutClickListener != null) {
             this.emptyView.findViewById(R.id.btn_retry)
                     .setOnClickListener(new OnClickListener() {
@@ -120,8 +121,6 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                             Intent intent =  new Intent(Collect.getInstance(), ContentDownloadActivity.class);
                             intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                             Collect.getInstance().startActivity(intent);
-//                            DownloadActivity.start(Collect.getInstance().getApplicationContext());
-                            //onEmptyLayoutClickListener.onRetryButtonClick();
                         }
                     });
         }

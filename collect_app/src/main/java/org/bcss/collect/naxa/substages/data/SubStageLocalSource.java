@@ -136,7 +136,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
 
     @Override
     public void save(ArrayList<SubStage> items) {
-        AsyncTask.execute(() -> dao.insert(items));
+        dao.insert(items);
     }
 
     @Override
@@ -171,4 +171,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
     }
 
 
+    public void deleteAll(ArrayList<SubStage> subStageList) {
+        dao.deleteAll(subStageList);
+    }
 }

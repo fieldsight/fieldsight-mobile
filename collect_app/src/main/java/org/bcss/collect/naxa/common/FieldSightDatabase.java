@@ -39,6 +39,9 @@ import org.bcss.collect.naxa.substages.data.SubStageDAO;
 import org.bcss.collect.naxa.survey.SurveyForm;
 import org.bcss.collect.naxa.survey.SurveyFormDAO;
 import org.bcss.collect.naxa.sync.SyncOLD;
+import org.bcss.collect.naxa.v3.network.RegionConverter;
+import org.bcss.collect.naxa.v3.network.SyncDaoV3;
+import org.bcss.collect.naxa.v3.network.SyncStat;
 
 import java.io.File;
 
@@ -57,11 +60,13 @@ import java.io.File;
                 FieldSightNotification.class,
                 Em.class,
                 FieldSightContactModel.class,
-                SubmissionDetail.class
+                SubmissionDetail.class,
+                SyncStat.class
 
         },
-        version = 11)
-@TypeConverters({SiteMetaAttributesTypeConverter.class})
+        version = 16)
+@TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
+
 
 public abstract class FieldSightDatabase extends RoomDatabase {
 
@@ -93,6 +98,8 @@ public abstract class FieldSightDatabase extends RoomDatabase {
 
     public abstract ContacstDao getContactsDao();
 
+    public abstract SyncDaoV3 getSyncDaoV3();
+
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 
     public static FieldSightDatabase getDatabase(final Context context) {
@@ -105,7 +112,9 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                 INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                         FieldSightDatabase.class, DB_PATH)
                         .allowMainThreadQueries()//used in org.bcss.collect.naxa.jobs.LocalNotificationJob
-                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
+                        .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
+                                MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16)
+
                         .build();
             }
         }
@@ -162,13 +171,54 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                     + " ADD COLUMN `schedule_forms_count` TEXT ");
         }
     };
-
     private static final Migration MIGRATION_10_11 = new Migration(10, 11) {
         @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `syncstat` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))");
+        }
+    };
+
+    private static final Migration MIGRATION_11_12 = new Migration(11, 12) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE project"
+                    + " ADD COLUMN `url` TEXT");
+        }
+    };
+
+
+    private static final Migration MIGRATION_12_13 = new Migration(12, 13) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("DROP TABLE FieldSightNotification");
             database.execSQL("CREATE TABLE IF NOT EXISTS `FieldSightNotification` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `details_url` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `receivedDateTime` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `schedule_forms_count` TEXT)");
             database.execSQL("CREATE UNIQUE INDEX `index_FieldSightNotification_receivedDateTime` ON `FieldSightNotification` (`receivedDateTime`)");
+
+        }
+    };
+
+    private static final Migration MIGRATION_13_14 = new Migration(13, 14) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE project"
+                    + " ADD COLUMN `regionList` TEXT");
+        }
+    };
+
+
+    private static final Migration MIGRATION_14_15 = new Migration(14, 15) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `syncstat` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))");
+        }
+    };
+
+    private static final Migration MIGRATION_15_16 = new Migration(15, 16) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("DROP TABLE FieldSightNotification");
+            database.execSQL("CREATE TABLE IF NOT EXISTS `FieldSightNotification` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `details_url` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `receivedDateTime` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `schedule_forms_count` TEXT, `receivedDateTimeInMillis` INTEGER NOT NULL DEFAULT 0)");
+            database.execSQL("CREATE UNIQUE INDEX `index_FieldSightNotification_receivedDateTimeInMillis` ON `FieldSightNotification` (`receivedDateTimeInMillis`)");
         }
     };
 

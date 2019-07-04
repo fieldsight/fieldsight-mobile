@@ -64,6 +64,10 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
         return dao.getProjectsMaybe();
     }
 
+    public Single<Project> getProjectByIdAsSingle(String projectId) {
+        return dao.getByIdAsSingle(projectId);
+    }
+
     public void updateSiteClusters(String projectId, String siteClusters) {
         AsyncTask.execute(() -> dao.updateCluster(projectId, siteClusters));
     }
@@ -71,6 +75,7 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
     public LiveData<Project> getProjectById(String id) {
         return dao.getById(id);
     }
+
 
     public LiveData<Project> getClusterLabelForProject(String id) {
         return dao.getById(id);

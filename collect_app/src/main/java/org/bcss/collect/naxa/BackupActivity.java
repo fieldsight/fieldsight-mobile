@@ -137,7 +137,8 @@ public class BackupActivity extends CollectAbstractActivity {
     void share() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(getApplicationContext(), BuildConfig.APPLICATION_ID + ".provider", new File(destination)));
+        sendIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", new File(destination)));
+
         sendIntent.setType("application/zip");
         startActivity(sendIntent);
     }
