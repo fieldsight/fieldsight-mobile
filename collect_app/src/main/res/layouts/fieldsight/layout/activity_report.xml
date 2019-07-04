@@ -249,8 +249,7 @@
         android:layout_width="match_parent"
         android:hint="@string/add_your_message"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:focusable="false"/>
+        android:layout_marginTop="4dp"/>
 
 
     <CheckBox

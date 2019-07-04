@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.report;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -96,7 +98,7 @@ public class ReportActivity extends CollectAbstractActivity {
         setSupportActionBar(toolbar);
         setTitle(getString(R.string.report_bug));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        hideKeyboardInActivity();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         tv_device_id.setText(new PropertyManager(this).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID));
         tv_fcm_token.setText(SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, ""));
@@ -232,4 +234,20 @@ public class ReportActivity extends CollectAbstractActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    public void hideKeyboardInActivity() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        }
+    }
+
 }
