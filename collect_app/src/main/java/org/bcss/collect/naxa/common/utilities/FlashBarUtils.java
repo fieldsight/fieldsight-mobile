@@ -1,6 +1,8 @@
 package org.bcss.collect.naxa.common.utilities;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -8,8 +10,12 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
+import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.utilities.ToastUtils;
+
+import java.util.ArrayList;
 
 import timber.log.Timber;
 
@@ -17,17 +23,22 @@ public class FlashBarUtils {
 
 
 
-    public static void showOutOfSyncMsg(@NonNull int outOfSyncUid, @NonNull Activity context, @NonNull String message) {
+    public static void showOutOfSyncMsg(@NonNull Project project, @NonNull Activity context, @NonNull String message) {
         if (message.isEmpty()) {
             return;
         }
-
         try {
             View rootView = context.getWindow().getDecorView().getRootView();
             Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
             snack.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
             snack.setAction("Resolve", v -> {
-                ContentDownloadActivity.start(context,outOfSyncUid);
+                    Bundle bundle = new Bundle();
+                    ArrayList<Project> projectArrayList = new ArrayList<>();
+                    projectArrayList.add(project);
+                    bundle.putParcelableArrayList("projects", projectArrayList);
+                    bundle.getBoolean("auto", true);
+                    context.startActivity(new Intent(context, SyncActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .putExtra("params", bundle));
             });
 
             SnackbarHelper.configSnackbar(context, snack);
