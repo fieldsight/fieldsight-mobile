@@ -1,13 +1,10 @@
 package org.bcss.collect.naxa.v3;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,48 +12,36 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.BackupActivity;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.preferences.SettingsActivity;
-import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.project.data.ProjectRepository;
 import org.bcss.collect.naxa.report.ReportActivity;
-import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.bcss.collect.naxa.v3.adapter.ProjectListAdapter;
 import org.bcss.collect.naxa.v3.network.LoadProjectCallback;
 import org.bcss.collect.naxa.v3.network.ProjectNameTuple;
 import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.bcss.collect.naxa.v3.network.SyncLocalSourcev3;
-import org.json.JSONArray;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
-
-import static org.bcss.collect.android.application.Collect.allowClick;
 
 public class ProjectListActivityV3 extends CollectAbstractActivity {
     @BindView(R.id.rv_projectlist)

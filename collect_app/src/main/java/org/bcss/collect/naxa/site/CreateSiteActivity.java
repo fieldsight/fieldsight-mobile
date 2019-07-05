@@ -129,12 +129,15 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private boolean isUpdate;
 
 
-    public static void start(Context context, @NonNull Project project, @Nullable Site site) {
+
+    public static void start(Context context, @NonNull Project project, @Nullable Site site, String site_label, String region_label) {
         Intent intent = new Intent(context, CreateSiteActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
         if (site != null) {
             intent.putExtra("site", site);
         }
+        intent.putExtra("site_label", site_label);
+        intent.putExtra("region_label", region_label);
         context.startActivity(intent);
     }
 
@@ -354,7 +357,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         watchText(tiSitePublicDesc);
 
         createSiteViewModel.getProjectMutableLiveData().setValue(project);
-
+        btnCollectSiteAddPhoto.setText(String.format("Add %s photo", getIntent().getStringExtra("site_label")));
     }
 
     private void finishWithDelay() {
@@ -625,7 +628,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         spinnerSiteCluster.setVisibility(show ? View.VISIBLE : View.GONE);
         if (show) {
             SiteClusterSpinnerAdapter spinnerAdapter = new SiteClusterSpinnerAdapter(this,
-                    android.R.layout.simple_spinner_dropdown_item, getString(R.string.hint_choose_site_region), clusters);
+                    android.R.layout.simple_spinner_dropdown_item, String.format("choose a %s", getIntent().getStringExtra("region_label")), clusters);
             spinnerSiteCluster.setAdapter(spinnerAdapter);
             spinnerSiteCluster.setSelection(spinnerAdapter.getCount());
 
@@ -771,7 +774,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     }
 
     private void setupToolbar() {
-        toolbarGeneral.setTitle(R.string.toolbar_title_offline_site);
+        toolbarGeneral.setTitle(String.format("Create new %s", getIntent().getStringExtra("site_label")));
         setSupportActionBar(toolbarGeneral);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

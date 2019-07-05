@@ -17,7 +17,6 @@ import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.site.SiteType;
 import org.bcss.collect.naxa.site.SiteTypeLocalSource;
-import org.bcss.collect.naxa.site.data.SiteRegion;
 import org.bcss.collect.naxa.v3.network.LoadProjectCallback;
 import org.bcss.collect.naxa.v3.network.ProjectBuilder;
 import org.bcss.collect.naxa.v3.network.ProjectRemoteSource;
@@ -134,6 +133,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                                 .setId(json.optString("id"))
                                 .setUrl(json.optString("url"))
                                 .setAddress(json.optString("address"))
+                                .setTermsAndLabels(json.optString("terms_and_labels"))
                                 .setMetaAttributes(mapJSONtoMetaArributes(json.optJSONArray("meta_attributes").toString()))
                                 .setOrganizationName(json.getJSONObject("organization").optString("name"))
                                 .setHasClusteredSites(json.optBoolean("has_site_role"))

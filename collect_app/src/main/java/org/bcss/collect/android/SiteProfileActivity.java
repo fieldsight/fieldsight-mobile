@@ -11,6 +11,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import com.google.gson.Gson;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.project.TermsLabels;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.site.CreateSiteActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
@@ -258,7 +260,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                 }
 
                 if ("metaAttributes".equals(key)) {
-                    if (value.trim().length() == 0){
+                    if (value.trim().length() == 0) {
                         continue;
                     }
                     JSONObject metaAttrsJSON = new JSONObject(value);
@@ -327,8 +329,21 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                         ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
                         return;
                     }
-
-                    CreateSiteActivity.start(this, project, loadedSite);
+                    try {
+                        String site_label = "Site", region_label = "Region";
+                        if (!TextUtils.isEmpty(project.getTerms_and_labels())) {
+                            TermsLabels tl = TermsLabels.fromJSON(new JSONObject(project.getTerms_and_labels()));
+                            if (!TextUtils.isEmpty(tl.site)) {
+                                site_label = tl.site;
+                            }
+                            if (!TextUtils.isEmpty(tl.region)) {
+                                region_label = tl.region;
+                            }
+                        }
+                        CreateSiteActivity.start(this, project, loadedSite, site_label, region_label);
+                    } catch (Exception e) {
+                    }
+                    ;
                 });
 
     }
