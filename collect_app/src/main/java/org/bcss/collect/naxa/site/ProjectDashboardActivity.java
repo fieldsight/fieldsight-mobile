@@ -27,6 +27,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.transition.Transition;
 import android.util.Pair;
 import android.view.Gravity;
@@ -59,7 +60,7 @@ import org.bcss.collect.naxa.BackupActivity;
 import org.bcss.collect.naxa.BaseActivity;
 import org.bcss.collect.naxa.common.AppBarStateChangeListener;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.common.GlideApp;
+//import org.bcss.collect.naxa.common.GlideApp;
 import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.NonSwipeableViewPager;
 import org.bcss.collect.naxa.common.RxSearchObservable;
@@ -72,10 +73,12 @@ import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.profile.UserActivity;
 import org.bcss.collect.naxa.project.MapFragment;
+import org.bcss.collect.naxa.project.TermsLabels;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteViewModel;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.bcss.collect.naxa.v3.network.SyncActivity;
+import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderList;
@@ -120,6 +123,7 @@ public class ProjectDashboardActivity extends BaseActivity {
     private int mapExistReachesPosition;
 
     private ImageView ivToolbarBackground;
+    TermsLabels tl = null;
 
     public static void start(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
@@ -172,37 +176,28 @@ public class ProjectDashboardActivity extends BaseActivity {
         setupAppBar();
         setupSearchView();
         setupNavigation();
-        setupNavigationHeader();
         setupAnimation();
+        getTermsAndLabels();
+        setupNavigationHeader();
+        if(tl != null) {
+            if(!TextUtils.isEmpty(tl.site)) {
+                navigationView.getMenu().findItem(R.id.nav_create_offline_site).setTitle(String.format("Create New %s", tl.site));
+                navigationView.getMenu().findItem(R.id.nav_view_site_dashboard).setTitle(String.format("My %s", tl.site));
+            }
+        }
     }
 
-    private void setToolbarBackground(String organizationlogourl) {
-        GlideApp.with(this)
-                .asBitmap()
-                .load(organizationlogourl)
-                .centerInside()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .placeholder(R.drawable.sand_city_illustration)
-                .listener(new RequestListener<Bitmap>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-
-                        return false;
-                    }
-                })
-                .into(ivToolbarBackground);
+    private void getTermsAndLabels() {
+        if(!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
+            try{
+                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
+                JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
+                tl = TermsLabels.fromJSON(tlJson);
+            }catch (Exception e){e.printStackTrace();}
+        }
     }
-
 
     private void setupAnimation() {
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && false) {
             Transition sharedElementEnterTransition = getWindow().getSharedElementEnterTransition();
 
@@ -263,6 +258,10 @@ public class ProjectDashboardActivity extends BaseActivity {
             User user = FieldSightUserSession.getUser();
             ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFullName());
             ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
+             if(tl != null && !TextUtils.isEmpty(tl.site_supervisor)) {
+                 Timber.i("ProjectDashboardActivity, data:: sitesv = %s", tl.site_supervisor);
+                 ((TextView)navigationHeader.findViewById(R.id.tv_user_post)).setText(tl.site_supervisor);
+             }
 
             ImageView ivProfilePicture = navigationHeader.findViewById(R.id.image_profile);
 
@@ -388,7 +387,13 @@ public class ProjectDashboardActivity extends BaseActivity {
     private void handleNavDrawerClicks(int id) {
         switch (id) {
             case R.id.nav_create_offline_site:
-                CreateSiteActivity.start(this, loadedProject, null);
+                String site_label = "Site";
+                String region_label = "Region";
+                if(tl != null) {
+                    site_label = tl.site;
+                    region_label = tl.region;
+                }
+                CreateSiteActivity.start(this, loadedProject, null, site_label, region_label);
                 break;
             case R.id.nav_delete_saved_form:
 

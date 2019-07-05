@@ -98,6 +98,16 @@ public class Project implements Parcelable {
     @Ignore
     String statusMessage = "";
 
+    public String getTerms_and_labels() {
+        return terms_and_labels;
+    }
+
+    public void setTerms_and_labels(String terms_and_labels) {
+        this.terms_and_labels = terms_and_labels;
+    }
+
+    private String terms_and_labels = "";
+
     public long getSyncedDate() {
         return syncedDate;
     }
@@ -296,6 +306,7 @@ public class Project implements Parcelable {
         dest.writeTypedList(this.siteMetaAttributes);
         dest.writeTypedList(this.regionList);
         dest.writeString(this.url);
+        dest.writeString(this.terms_and_labels);
     }
 
     @Override
@@ -319,12 +330,13 @@ public class Project implements Parcelable {
                 Objects.equal(phone, project.phone) &&
                 Objects.equal(siteMetaAttributes, project.siteMetaAttributes) &&
                 Objects.equal(url, project.url) &&
-                Objects.equal(regionList, project.regionList);
+                Objects.equal(regionList, project.regionList)&&
+                Objects.equal(terms_and_labels, project.terms_and_labels);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, siteMetaAttributes);
+        return Objects.hashCode(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, siteMetaAttributes, terms_and_labels);
     }
 
     protected Project(Parcel in) {
@@ -345,6 +357,7 @@ public class Project implements Parcelable {
         this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
         this.regionList = in.createTypedArrayList(Region.CREATOR);
         this.url = in.readString();
+        this.terms_and_labels = in.readString();
     }
 
     public static final Creator<Project> CREATOR = new Creator<Project>() {
@@ -359,7 +372,7 @@ public class Project implements Parcelable {
         }
     };
 
-    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, List<SiteMetaAttribute> metaAttributes, String url) {
+    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, List<SiteMetaAttribute> metaAttributes, String url, String terms_and_labels) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -376,6 +389,7 @@ public class Project implements Parcelable {
         this.isSyncedWithRemote = isSyncedWithRemote;
         this.siteMetaAttributes = metaAttributes;
         this.url = url;
+        this.terms_and_labels = terms_and_labels;
 
     }
 

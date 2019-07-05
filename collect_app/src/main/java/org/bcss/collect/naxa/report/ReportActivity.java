@@ -1,24 +1,19 @@
 package org.bcss.collect.naxa.report;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +32,6 @@ import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.PermissionUtils;
 
 import java.io.IOException;
@@ -45,12 +39,9 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class ReportActivity extends CollectAbstractActivity {
