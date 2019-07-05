@@ -65,9 +65,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 //            fieldSightNotifications = newList;
 //            Timber.i("Notification Adapter, new notification");
 //        } else {
-            fieldSightNotifications = newList;
-
-            Timber.i("Notification Adapter, older notification");
+        fieldSightNotifications = newList;
+        Timber.i("Notification Adapter, older notification");
 
 //        }
         notifyDataSetChanged();
@@ -93,9 +92,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_LOADING) {
-
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_loading, parent, false);
-
             return new LoadingViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_notification, null);
@@ -116,6 +113,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
                 mviewHolder.tvTitle.setText(title);
                 mviewHolder.tvDesc.setText(content);
                 mviewHolder.tvDate.setText(DateTimeUtils.getRelativeTime(fieldSightNotification.getReceivedDateTime(), true));
+                mviewHolder.itemView.setOnClickListener((v) -> listener.onClickPrimaryAction(fieldSightNotification));
             } catch (NullPointerException e) {
                 Timber.e("Failed loading notification onBinViewHolder() reason: %s", e.getMessage());
             }
@@ -166,17 +164,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void removeLoader() {
-
-        try {
-            if (fieldSightNotifications != null && fieldSightNotifications.size() > 0 && fieldSightNotifications.get(getItemCount() - 1) == null) {
-                fieldSightNotifications.remove(getItemCount() - 1);
-                notifyDataSetChanged();
-            }
-        }catch (Exception e){e.printStackTrace();}
-
+        if (fieldSightNotifications.size() > 0 && fieldSightNotifications.get(getItemCount() - 1) == null) {
+            fieldSightNotifications.remove(getItemCount() - 1);
+            notifyDataSetChanged();
+        }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvTitle, tvDesc;
         RelativeLayout rootLayout;
@@ -185,33 +179,17 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public ViewHolder(View view) {
             super(view);
-
             tvTitle = view.findViewById(R.id.tv_list_item_title);
             tvDesc = view.findViewById(R.id.tv_list_item_desc);
             ivNotificationIcon = view.findViewById(R.id.iv_notification_icon);
             rootLayout = view.findViewById(R.id.card_view_list_item_title_desc);
             tvDate = view.findViewById(R.id.tv_notification_date);
-            rootLayout.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            FieldSightNotification FieldSightNotification = fieldSightNotifications.get(getAdapterPosition());
-
-
-            switch (v.getId()) {
-                case R.id.card_view_list_item_title_desc:
-                    listener.onClickPrimaryAction(FieldSightNotification);
-                    break;
-
-            }
         }
     }
 
-}
-
-class LoadingViewHolder extends RecyclerView.ViewHolder {
-    public LoadingViewHolder(@NonNull View itemView) {
-        super(itemView);
+    class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public LoadingViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
     }
 }
