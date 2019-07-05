@@ -127,7 +127,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     public void onChanged(@Nullable Integer integer) {
                         if (integer != null && integer > 0) {
 
-                            FlashBarUtils.showOutOfSyncMsg(PROJECT_SITES, requireActivity(), "Site(s) data is out of sync");
+                            FlashBarUtils.showOutOfSyncMsg(loadedProject, requireActivity(), "Site(s) data is out of sync");
                         }
                     }
                 });
