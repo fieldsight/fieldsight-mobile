@@ -30,8 +30,10 @@ import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
+import org.bcss.collect.naxa.preferences.SettingsActivity;
 import org.bcss.collect.naxa.project.ProjectListActivity;
 import org.bcss.collect.naxa.project.data.ProjectRepository;
+import org.bcss.collect.naxa.report.ReportActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.bcss.collect.naxa.v3.adapter.ProjectListAdapter;
@@ -264,6 +266,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             case R.id.action_logout:
                 FieldSightUserSession.showLogoutDialog(this);
                 break;
+            case R.id.action_setting:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.action_submit_report:
+                startActivity(new Intent(this, ReportActivity.class));
+                return true;
+
 
         }
         return super.onOptionsItemSelected(item);
