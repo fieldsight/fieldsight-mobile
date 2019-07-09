@@ -128,8 +128,12 @@ public class LoginModelImpl implements LoginModel {
                         String errorMessage = e.getMessage();
                         if (e instanceof RetrofitException) {
                             RetrofitException retrofitException = (RetrofitException) e;
-                            boolean hasErrorBody = retrofitException.getResponse().errorBody() != null;
-                            errorMessage = hasErrorBody ? retrofitException.getMessage() : retrofitException.getKind().getMessage();
+                            if(retrofitException.getResponse() != null) {
+                                boolean hasErrorBody = retrofitException.getResponse().errorBody() != null;
+                                errorMessage = hasErrorBody ? retrofitException.getMessage() : retrofitException.getKind().getMessage();
+                            } else {
+                                errorMessage = Collect.getInstance().getString(R.string.dialog_error_register);
+                            }
                         } else if (e instanceof SSLException) {
                             errorMessage = "A SSL exception occurred";
                         } else if (e instanceof FirebaseTokenException) {

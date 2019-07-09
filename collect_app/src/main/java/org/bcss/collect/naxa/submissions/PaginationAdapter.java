@@ -48,11 +48,9 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
         switch (viewType) {
             case ITEM:
                 viewHolder = getViewHolder(parent, inflater);
-
                 break;
             case LOADING:
                 View v2 = inflater.inflate(R.layout.item_progress, parent, false);
@@ -78,19 +76,18 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
         final FormResponse result = movies.get(position);
-
         switch (getItemViewType(position)) {
             case ITEM:
                 FormVH formVH = (FormVH) holder;
-                ((FormVH) holder).rootLayout.setOnClickListener(new View.OnClickListener() {
+                ((FormVH) holder).itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        listener.onFormClicked(result,view);
+                        if(listener != null) {
+                            listener.onFormClicked(result, view);
+                        }
                     }
                 });
-
                 formVH.tvTitle.setText(formatSubmittedBy(result.getSubmittedByUsername()));
                 formVH.tvSubmissionDateTime.setText(formatSubmissionDateTime(result.getDate()));
                 break;

@@ -35,6 +35,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,9 +92,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_history_list);
-
         Bundle bundle = getIntent().getExtras();
-
         fsFormId = bundle.getString(Constant.BundleKey.KEY_FS_FORM_ID);
         fsFormName = bundle.getString(Constant.BundleKey.KEY_FS_FORM_NAME);
         fsFormRecordName = bundle.getString(Constant.BundleKey.KEY_FS_FORM_RECORD_NAME);
@@ -147,68 +149,69 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     }
 
     private void loadFirstPage(String url) {
+        ServiceGenerator.createService(ApiInterface.class)
+                .getFormHistory(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<FormHistoryResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-        Call<FormHistoryResponse> call = ServiceGenerator.createCacheService(ApiInterface.class).getFormHistory(url);
-        call.enqueue(new Callback<FormHistoryResponse>() {
-            @Override
-            public void onResponse(Call<FormHistoryResponse> call, Response<FormHistoryResponse> response) {
-                progressBar.setVisibility(View.GONE);
-                cardSubmissionInfo.setVisibility(View.VISIBLE);
+                    }
 
-                tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
+                    @Override
+                    public void onNext(FormHistoryResponse response) {
+                        progressBar.setVisibility(View.GONE);
+                        cardSubmissionInfo.setVisibility(View.VISIBLE);
 
-                if (response.code() != 200 || response.body() == null) {
+                        tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
 
-                    showNoDataLayout();
-                    tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
-                    return;
+                        if (response != null) {
 
-                }
+                            showNoDataLayout();
+                            tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
+                            return;
 
-                FormHistoryResponse formHistoryResponse = response.body();
+                        }
 
-                if (formHistoryResponse.getResults().size() <= 0) {
-                    showNoDataLayout();
-                    tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
-                    return;
-                }
+                        if (response.getResults().size() <= 0) {
+                            showNoDataLayout();
+                            tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
+                            return;
+                        }
 
-                String totalSubmissionMsg = getResources()
-                        .getQuantityString(R.plurals.msg_total_submission_info, formHistoryResponse.getCount(), formHistoryResponse.getCount());
-                tvTotalSubmissionMessage.setText(totalSubmissionMsg);
+                        String totalSubmissionMsg = getResources()
+                                .getQuantityString(R.plurals.msg_total_submission_info, response.getCount(), response.getCount());
+                        tvTotalSubmissionMessage.setText(totalSubmissionMsg);
 
-                adapter.clear();
-                adapter.addAll(formHistoryResponse.getResults());
-                tvListTitle.setVisibility(View.VISIBLE);
-
-//                long updated = FormsRecordsHelper.getInstance()
-//                        .updateFormWithLatestResponse(formHistoryResponse.getSubmissionDetails().get(0),
-//                                fsFormId,
-//                                formHistoryResponse.getCount(),
-//                                tableName);
-
-
-                long updated = 0L;
+                        adapter.clear();
+                        adapter.addAll(response.getResults());
+                        tvListTitle.setVisibility(View.VISIBLE);
+                        long updated = 0L;
 
 
-                Timber.i("Saving form response for FormID %s of type %s query %s", fsFormId, tableName, updated);
+                        Timber.i("Saving form response for FormID %s of type %s query %s", fsFormId, tableName, updated);
 
-                if (formHistoryResponse.getNext() == null) {
-                    isLastPage = true;
-                } else {
-                    urlNextPage = formHistoryResponse.getNext();
-                    adapter.addLoadingFooter();
-                }
-            }
+                        if (response.getNext() == null) {
+                            isLastPage = true;
+                        } else {
+                            urlNextPage = response.getNext();
+                            adapter.addLoadingFooter();
+                        }
+                    }
 
-            @Override
-            public void onFailure(Call<FormHistoryResponse> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                ToastUtils.showLongToast(t.getMessage());
-                t.printStackTrace();
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        progressBar.setVisibility(View.GONE);
+                        ToastUtils.showLongToast(e.getMessage());
+                        e.printStackTrace();
+                    }
 
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
 
@@ -298,34 +301,40 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     }
 
     private void loadNextPage() {
-        ServiceGenerator.createCacheService(ApiInterface.class)
+        ServiceGenerator.createService(ApiInterface.class)
                 .getFormHistory(urlNextPage)
-                .enqueue(new Callback<FormHistoryResponse>() {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<FormHistoryResponse>() {
                     @Override
-                    public void onResponse(Call<FormHistoryResponse> call, Response<FormHistoryResponse> response) {
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(FormHistoryResponse response) {
                         adapter.removeLoadingFooter();
                         isLoading = false;
-
                         progressBar.setVisibility(View.GONE);
-
-
-                        FormHistoryResponse formHistoryResponse = response.body();
-                        adapter.addAll(formHistoryResponse.getResults());
-
-
-                        if (formHistoryResponse.getNext() == null) {
+                        adapter.addAll(response.getResults());
+                        if (response.getNext() == null) {
                             isLastPage = true;
                         } else {
-                            urlNextPage = formHistoryResponse.getNext();
+                            urlNextPage = response.getNext();
                             adapter.addLoadingFooter();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<FormHistoryResponse> call, Throwable t) {
+                    public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
-                        ToastUtils.showLongToast(t.getMessage());
-                        t.printStackTrace();
+                        ToastUtils.showLongToast(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
     }
