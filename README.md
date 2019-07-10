@@ -1,4 +1,5 @@
 # Welcome to FieldSight Mobile app!
+[![CircleCI](https://circleci.com/gh/fieldsight/fieldsight-mobile.svg?style=svg)](https://circleci.com/gh/fieldsight/fieldsight-mobile)
 
 FieldSight is a tool to remotely monitor, supervise and manage your projects. Major objectives of FieldSight include 
 1. Data Collection
