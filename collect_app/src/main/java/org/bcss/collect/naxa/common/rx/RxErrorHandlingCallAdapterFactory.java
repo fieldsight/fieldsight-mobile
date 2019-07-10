@@ -35,7 +35,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
     }
 
     @Override
-    public CallAdapter<?, ?> get(@NonNull Type returnType, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
+    public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
         return new RxCallAdapterWrapper(retrofit, original.get(returnType, annotations, retrofit));
     }
 
@@ -43,28 +43,24 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
         private final Retrofit retrofit;
         private final CallAdapter<R, Object> wrapped;
 
-        RxCallAdapterWrapper(Retrofit retrofit, CallAdapter<R, Object> wrapped) {
+        public RxCallAdapterWrapper(Retrofit retrofit, CallAdapter<R, Object> wrapped) {
             this.retrofit = retrofit;
             this.wrapped = wrapped;
         }
 
-
-        @NonNull
         @Override
         public Type responseType() {
             return wrapped.responseType();
         }
 
-        @NonNull
         @Override
-        public Object adapt(@NonNull Call<R> call) {
+        public Object adapt(Call<R> call) {
             Object result = wrapped.adapt(call);
             HttpUrl url = call.request().url();
-
             if (result instanceof Single) {
                 return ((Single) result).onErrorResumeNext(new Function<Throwable, SingleSource>() {
                     @Override
-                    public SingleSource apply(@NonNull Throwable throwable) {
+                    public SingleSource apply(@NonNull Throwable throwable) throws Exception {
                         return Single.error(asRetrofitException(throwable, url));
                     }
                 });
@@ -72,7 +68,7 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             if (result instanceof Observable) {
                 return ((Observable) result).onErrorResumeNext(new Function<Throwable, ObservableSource>() {
                     @Override
-                    public ObservableSource apply(@NonNull Throwable throwable) {
+                    public ObservableSource apply(@NonNull Throwable throwable) throws Exception {
                         return Observable.error(asRetrofitException(throwable, url));
                     }
                 });
@@ -81,8 +77,8 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
             if (result instanceof Completable) {
                 return ((Completable) result).onErrorResumeNext(new Function<Throwable, CompletableSource>() {
                     @Override
-                    public CompletableSource apply(Throwable throwable) throws Exception {
-                        return Completable.error(throwable);
+                    public CompletableSource apply(@NonNull Throwable throwable) throws Exception {
+                        return Completable.error(asRetrofitException(throwable, url));
                     }
                 });
             }

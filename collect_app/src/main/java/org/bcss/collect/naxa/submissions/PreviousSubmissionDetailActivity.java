@@ -40,17 +40,13 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_history_detail);
-
         FormResponse model = getIntent().getParcelableExtra(EXTRA_OBJECT);
-
-
         bindUI();
         setupToolBar(model);
-
-
-        if (model.getGetResponces() == null) {
+        if (model != null && model.getGetResponces() == null) {
             DialogFactory.createGenericErrorDialog(this, R.string.error_occured).show();
             finish();
+            return;
         }
 
         //setQuestionAnswerAsync(model.getGetResponces());

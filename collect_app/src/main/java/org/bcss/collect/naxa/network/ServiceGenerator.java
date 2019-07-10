@@ -112,8 +112,6 @@ public class ServiceGenerator {
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
-
-
         return retrofit.create(serviceClass);
     }
 
