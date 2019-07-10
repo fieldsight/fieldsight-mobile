@@ -149,7 +149,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     }
 
     private void loadFirstPage(String url) {
-        ServiceGenerator.createService(ApiInterface.class)
+        ServiceGenerator.createCacheService(ApiInterface.class)
                 .getFormHistory(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -166,7 +166,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
 
                         tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
 
-                        if (response != null) {
+                        if (response == null) {
 
                             showNoDataLayout();
                             tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
