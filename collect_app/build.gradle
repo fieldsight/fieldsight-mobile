@@ -134,16 +134,13 @@ android {
             minifyEnabled false
             shrinkResources false
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
-            buildConfigField 'String', "username", getProps("username")
-            buildConfigField 'String', "password", getProps("password")
+
         }
         internal {
             debuggable false
             minifyEnabled false
             shrinkResources false
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
-            buildConfigField 'String', "username", getProps("username")
-            buildConfigField 'String', "password", getProps("password")
 
         }
 
@@ -163,9 +160,6 @@ android {
             debuggable(true)
             testCoverageEnabled(true)
             resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
-
-            buildConfigField 'String', "username", getProps("username")
-            buildConfigField 'String', "password", getProps("password")
 
         }
     }
