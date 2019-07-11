@@ -120,18 +120,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
 
 
-        FieldSightNotificationLocalSource.getInstance()
-                .isProjectNotSynced(loadedProject.getId(), loadedProject.getId())
-                .observe(this, new Observer<Integer>() {
-                    @Override
-                    public void onChanged(@Nullable Integer integer) {
-                        if (integer != null && integer > 0) {
-
-                            FlashBarUtils.showOutOfSyncMsg(loadedProject, requireActivity(), "Site(s) data is out of sync");
-                        }
-                    }
-                });
-
 
         return view;
     }
