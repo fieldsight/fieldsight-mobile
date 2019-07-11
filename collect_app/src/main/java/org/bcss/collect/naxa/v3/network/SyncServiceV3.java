@@ -153,7 +153,7 @@ public class SyncServiceV3 extends IntentService {
                         public Observable<Object> apply(Project project) throws Exception {
 
                             Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
-                            Observable<List<ArrayList<ScheduleForm>>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
+                            Observable<ArrayList<ScheduleForm>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
                             Observable<Project> odkForms = ODKFormRemoteSource.getInstance().getByProjectId(project);
 
