@@ -127,11 +127,6 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
 
         loginPresenter = new LoginPresenterImpl(this);
 
-        if (BuildConfig.DEBUG) {
-            hideKeyboardInActivity(this);
-            mEmailView.setText(BuildConfig.username);
-            mPasswordView.setText(BuildConfig.password);
-        }
 
     }
 
