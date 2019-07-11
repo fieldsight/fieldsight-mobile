@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@color/primaryColor"
-            android:drawableRight="@drawable/ic_action_right"
+            android:drawableRight="@drawable/ic_keyboard_arrow_right_legacy_24dp"
             android:gravity="end|center_vertical"
             android:padding="8dp"
             android:text="Sync Projects"
