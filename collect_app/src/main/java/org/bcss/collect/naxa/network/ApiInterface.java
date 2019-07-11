@@ -179,7 +179,7 @@ public interface ApiInterface {
     Observable<List<SiteRegion>> getRegionsByProjectId(@Path(value = "project_id", encoded = true) String projectId);
 
     @GET
-    Call<FormHistoryResponse> getFormHistory(@Url String urlNextPage);
+    Observable<FormHistoryResponse> getFormHistory(@Url String urlNextPage);
 
     @POST()
     Observable<FCMParameter> postFCMUserParameter(@Url String url, @Body FCMParameter fcmParameter);

@@ -71,6 +71,7 @@ import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PRNGFixes;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -296,6 +297,9 @@ public class Collect extends Application implements HasActivityInjector {
                 .build();
 
         applicationComponent.inject(this);
+        OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+
+
 
         NotificationUtils.createNotificationChannel(singleton);
         FieldSightNotificationUtils.createChannels(singleton);
