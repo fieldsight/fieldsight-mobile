@@ -23,39 +23,6 @@ public class FlashBarUtils {
 
 
 
-    public static void showOutOfSyncMsg(@NonNull Project project, @NonNull Activity context, @NonNull String message) {
-        if (message.isEmpty()) {
-            return;
-        }
-        try {
-            View rootView = context.getWindow().getDecorView().getRootView();
-            Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
-            snack.setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-            snack.setAction("Resolve", v -> {
-                    Bundle bundle = new Bundle();
-                    ArrayList<Project> projectArrayList = new ArrayList<>();
-                    projectArrayList.add(project);
-                    bundle.putParcelableArrayList("projects", projectArrayList);
-                    bundle.getBoolean("auto", true);
-                    context.startActivity(new Intent(context, SyncActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            .putExtra("params", bundle));
-            });
-
-            SnackbarHelper.configSnackbar(context, snack);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    snack.show();
-                }
-            },1000);
-
-        } catch (Exception e) {
-            Timber.e(e);
-            ToastUtils.showLongToast(message);
-        }
-    }
-
-
     public static void showErrorFlashbar(@NonNull Activity context, @NonNull String message) {
         showFlashbar(context, message, false);
     }
