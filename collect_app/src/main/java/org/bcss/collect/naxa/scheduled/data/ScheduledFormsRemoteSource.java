@@ -178,7 +178,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Single<List<ArrayList<ScheduleForm>>> fetchFormByProjectId(String projectId) {
+    public Single<ArrayList<ScheduleForm>> fetchFormByProjectId(String projectId) {
         Observable<List<XMLForm>> siteODKForms = FieldSightConfigDatabase.getDatabase(Collect.getInstance())
                 .getSiteOverideDAO()
                 .getSiteOverideFormIds(projectId)
@@ -224,6 +224,15 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
 
                 })
                 .toList()
+                .map((List<ArrayList<ScheduleForm>> arrayLists) -> {
+                    ArrayList<ScheduleForm> scheduleForms = new ArrayList<>(0);
+
+                    for (ArrayList<ScheduleForm> scheduleFormList : arrayLists) {
+                        scheduleForms.addAll(scheduleFormList);
+                    }
+                    ScheduledFormsLocalSource.getInstance().updateAll(scheduleForms);
+                    return scheduleForms;
+                })
                 .subscribeOn(Schedulers.io());
 
 
