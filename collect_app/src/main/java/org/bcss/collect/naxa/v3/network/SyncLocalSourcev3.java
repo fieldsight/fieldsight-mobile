@@ -6,20 +6,12 @@ import android.os.AsyncTask;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
-import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
-import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.site.db.SiteDao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
-
-import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
 
 public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
 
@@ -85,6 +77,10 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
 
     public LiveData<List<ProjectNameTuple>> getAllSiteSyncingProject() {
         return dao.getAllSiteSyncingProject();
+    }
+
+    public Single<SyncStat> getFailedUrls(String projectId, int type){
+        return dao.getFailedUrls(projectId,type);
     }
 
 }

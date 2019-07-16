@@ -1,5 +1,6 @@
 package org.bcss.collect.naxa.v3.network;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -22,6 +23,7 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.StageRemoteSource;
+import org.odk.collect.android.activities.FormDownloadList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +32,7 @@ import java.util.Objects;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -148,9 +151,12 @@ public class SyncServiceV3 extends IntentService {
             DisposableManager.add(projectEduMatObservable);
             HashMap<String, FormDetails> failedForms = new HashMap<>();
 
+            Intent toFormDownloadList = new Intent(this, FormDownloadList.class);
+            toFormDownloadList.putExtra("isDownloadOnlyMode",true);
+            startActivity();
+            if(true)return;
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
                     .flatMap(new Function<Project, Observable<List<?>>>() {
                         @Override
@@ -163,20 +169,43 @@ public class SyncServiceV3 extends IntentService {
 
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
                                     .doOnNext(new Consumer<List<? extends Object>>() {
+                                        @SuppressLint("CheckResult")
                                         @Override
                                         public void accept(List<?> objects) throws Exception {
-                                            markAsCompleted(project.getId(), 1);
-                                            if (ResponseUtils.isListOfType(objects, ArrayList.class)) {
-                                                List<ArrayList<FormDetails>> formDetailsPerProject = (List<ArrayList<FormDetails>>) objects;
-                                                for (ArrayList<FormDetails> formDetailsList : formDetailsPerProject) {
-                                                    for (FormDetails formDetails: formDetailsList ){
-                                                        markAsFailed(project.getId(),1,formDetails.getDownloadUrl());
-                                                    }
+
+                                            if (isListOfType(objects, ArrayList.class)) {
+                                               saveFailedFormUrls(objects);
+                                            }
+
+
+                                            SyncLocalSourcev3
+                                                    .getInstance()
+                                                    .getFailedUrls(project.getId(), 1)
+                                                    .subscribeOn(Schedulers.io())
+                                                    .subscribe(new Consumer<SyncStat>() {
+                                                        @Override
+                                                        public void accept(SyncStat syncStat) throws Exception {
+                                                            boolean isListValid = TextUtils.isEmpty(syncStat.getFailedUrl()) && syncStat.getFailedUrl().contains("[");
+                                                            if (isListValid) {
+
+                                                            }
+                                                        }
+                                                    });
+
+                                        }
+
+                                        private void saveFailedFormUrls(List<?> objects) {
+                                            List<ArrayList<FormDetails>> formDetailsPerProject = (List<ArrayList<FormDetails>>) objects;
+                                            for (ArrayList<FormDetails> formDetailsList : formDetailsPerProject) {
+                                                ArrayList<String> failed = new ArrayList<>();
+                                                for (FormDetails formDetails : formDetailsList) {
+                                                    failed.add(formDetails.getDownloadUrl());
                                                 }
+
+                                                markAsFailed(project.getId(), 1, failed.toString());
                                             }
                                         }
                                     })
-                                    .doOnNext((Consumer<Object>) o -> markAsCompleted(project.getId(), 1))
                                     .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
                                     .doOnDispose(() -> markAsFailed(project.getId(), 1, ""))
                                     .onErrorReturn(new Function<Throwable, List<? extends Object>>() {
@@ -311,8 +340,9 @@ public class SyncServiceV3 extends IntentService {
 
     private void markAsFailed(String projectId, int type, String failedUrl) {
         markAsFailed(projectId, type, failedUrl, false);
-
     }
+
+
 
     private void markAsRunning(String projectId, int type) {
         saveState(projectId, type, "", true, Constant.DownloadStatus.RUNNING);

@@ -133,7 +133,7 @@ public class ODKFormRemoteSource {
                 for (FormDetails key : result.keySet()) {
                     String value = result.get(key);
                     boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value);
-                    if (!isDownloadSuccessfully) {
+                    if (!false) {
                         failedForms.add(key);
                     }
                 }
