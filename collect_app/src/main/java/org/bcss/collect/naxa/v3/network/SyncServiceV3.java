@@ -40,6 +40,8 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.ResponseUtils.isListOfType;
+
 public class SyncServiceV3 extends IntentService {
     /***
      *
@@ -143,6 +145,7 @@ public class SyncServiceV3 extends IntentService {
 
 
             DisposableManager.add(projectEduMatObservable);
+            HashMap<String,FormDetails> failedForms = new HashMap<>();
 
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
@@ -161,7 +164,15 @@ public class SyncServiceV3 extends IntentService {
                                     .doOnNext(new Consumer<List<? extends Object>>() {
                                         @Override
                                         public void accept(List<?> objects) throws Exception {
-                                            isListOfType<FormDe>
+                                            markAsCompleted(project.getId(), 1);
+                                            if (isListOfType(objects, FormDetails.class)) {
+                                                ArrayList<FormDetails> formDetails = (ArrayList<FormDetails>) objects;
+                                                if (formDetails.size() > 0) {
+
+                                                    markAsFailed(project.getId(), formDetails, "", false);
+                                                }
+                                            }
+
                                         }
                                     })
                                     .doOnNext(new Consumer<Object>() {
@@ -204,6 +215,7 @@ public class SyncServiceV3 extends IntentService {
             Timber.e(e);
         }
     }
+
 
     private void cancelAllTask() {
         for (Disposable disposable : syncDisposable) {
@@ -300,9 +312,14 @@ public class SyncServiceV3 extends IntentService {
         return new String[]{failedUrl, projectId};
     }
 
-    private void markAsFailed(String projectId, int type, String failedUrl) {
+    private void markAsFailed(String projectId, int type, String failedUrl, boolean shouldRetry) {
         saveState(projectId, type, failedUrl, false, Constant.DownloadStatus.FAILED);
         Timber.e("Download stopped %s for project %s", failedUrl, projectId);
+    }
+
+    private void markAsFailed(String projectId, int type, String failedUrl) {
+        markAsFailed(projectId, type, failedUrl, false);
+
     }
 
     private void markAsRunning(String projectId, int type) {
