@@ -30,7 +30,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -87,6 +86,7 @@ public class ODKFormRemoteSource {
         ArrayList<Project> projects = new ArrayList<>();
         projects.add(project);
 
+
         return Observable.just(projects)
                 .subscribeOn(Schedulers.io())
                 .map(mapProjectsToXMLForm())
@@ -101,33 +101,10 @@ public class ODKFormRemoteSource {
                     return result;
 
                 })
-                .flatMapObservable(new Function<HashMap<String, FormDetails>, ObservableSource<ArrayList<FormDetails>>>() {
-                    @Override
-                    public ObservableSource<ArrayList<FormDetails>> apply(HashMap<String, FormDetails> stringFormDetailsHashMap) throws Exception {
-                        return formListDownloadingComplete(stringFormDetailsHashMap);
-                    }
-                })
-                .flatMap(new Function<ArrayList<FormDetails>, Observable<List<ArrayList<FormDetails>>>>() {
-                    @Override
-                    public Observable<List<ArrayList<FormDetails>>> apply(ArrayList<FormDetails> formDetails) {
-                        return downloadSingleForm(formDetails)
-                                .filter(new Predicate<ArrayList<FormDetails>>() {
-                                    @Override
-                                    public boolean test(ArrayList<FormDetails> failedFormDetails) throws Exception {
-                                        return failedFormDetails.size() > 0;
-                                    }
-                                })
-                                .map(new Function<ArrayList<FormDetails>, ArrayList<FormDetails>>() {
-                                    @Override
-                                    public ArrayList<FormDetails> apply(ArrayList<FormDetails> formDetails) throws Exception {
-                                        ArrayList<FormDetails> forms = new ArrayList<>(formDetails);
-                                        return null;
-                                    }
-                                })
-                                .toList()
-                                .toObservable();
-                    }
-                });
+                .flatMapObservable((Function<HashMap<String, FormDetails>, ObservableSource<ArrayList<FormDetails>>>) this::formListDownloadingComplete)
+                .flatMap((Function<ArrayList<FormDetails>, Observable<ArrayList<FormDetails>>>) this::downloadBulkForms)
+                .toList()
+                .toObservable();
 
 
     }
@@ -143,11 +120,10 @@ public class ODKFormRemoteSource {
     }
 
     @SafeVarargs
-    private final Observable<ArrayList<FormDetails>> downloadSingleForm(ArrayList<FormDetails>... values) {
+    private final Observable<ArrayList<FormDetails>> downloadBulkForms(ArrayList<FormDetails>... values) {
 
 
         ArrayList<FormDetails> failedForms = new ArrayList<>();
-
 
         return Observable.fromCallable(new Callable<ArrayList<FormDetails>>() {
             @Override
@@ -156,15 +132,10 @@ public class ODKFormRemoteSource {
                 HashMap<FormDetails, String> result = formDownloader.downloadForms(values[0]);
                 for (FormDetails key : result.keySet()) {
                     String value = result.get(key);
-//                    boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value);
-                    int random = (int) (Math.random() * 2 + 1);
-                    boolean isDownloadSuccessfully = random == 2;
-
+                    boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value);
                     if (!isDownloadSuccessfully) {
-                        Timber.i("%s failed to download, adding it to failed download list", key.getDownloadUrl());
                         failedForms.add(key);
                     }
-
                 }
 
                 return failedForms;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import org.bcss.collect.android.logic.FormDetails;
+import org.bcss.collect.naxa.ResponseUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
@@ -145,7 +146,7 @@ public class SyncServiceV3 extends IntentService {
 
 
             DisposableManager.add(projectEduMatObservable);
-            HashMap<String,FormDetails> failedForms = new HashMap<>();
+            HashMap<String, FormDetails> failedForms = new HashMap<>();
 
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
@@ -165,29 +166,20 @@ public class SyncServiceV3 extends IntentService {
                                         @Override
                                         public void accept(List<?> objects) throws Exception {
                                             markAsCompleted(project.getId(), 1);
-                                            if (isListOfType(objects, FormDetails.class)) {
-                                                ArrayList<FormDetails> formDetails = (ArrayList<FormDetails>) objects;
-                                                if (formDetails.size() > 0) {
-
-                                                    markAsFailed(project.getId(), formDetails, "", false);
+                                            if (ResponseUtils.isListOfType(objects, ArrayList.class)) {
+                                                List<ArrayList<FormDetails>> formDetailsPerProject = (List<ArrayList<FormDetails>>) objects;
+                                                for (ArrayList<FormDetails> formDetailsList : formDetailsPerProject) {
+                                                    for (FormDetails formDetails: formDetailsList ){
+                                                        markAsFailed(project.getId(),1,formDetails.getDownloadUrl());
+                                                    }
                                                 }
                                             }
-
                                         }
                                     })
-                                    .doOnNext(new Consumer<Object>() {
-                                        @Override
-                                        public void accept(Object o) throws Exception {
-                                            markAsCompleted(project.getId(), 1);
-                                        }
-                                    })
+                                    .doOnNext((Consumer<Object>) o -> markAsCompleted(project.getId(), 1))
                                     .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
-                                    .doOnDispose(new Action() {
-                                        @Override
-                                        public void run() throws Exception {
-                                            markAsFailed(project.getId(), 1, "");
-                                        }
-                                    }).onErrorReturn(new Function<Throwable, List<? extends Object>>() {
+                                    .doOnDispose(() -> markAsFailed(project.getId(), 1, ""))
+                                    .onErrorReturn(new Function<Throwable, List<? extends Object>>() {
                                         @Override
                                         public List<? extends Object> apply(Throwable throwable) throws Exception {
                                             Timber.e(throwable);
