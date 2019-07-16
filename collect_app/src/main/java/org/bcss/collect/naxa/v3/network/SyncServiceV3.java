@@ -2,9 +2,9 @@ package org.bcss.collect.naxa.v3.network;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
@@ -148,31 +148,37 @@ public class SyncServiceV3 extends IntentService {
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
 
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
-                    .flatMap(new Function<Project, Observable<Object>>() {
+                    .flatMap(new Function<Project, Observable<List<?>>>() {
                         @Override
-                        public Observable<Object> apply(Project project) throws Exception {
+                        public Observable<List<?>> apply(Project project) throws Exception {
 
                             Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<ScheduleForm>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
-                            Observable<Project> odkForms = ODKFormRemoteSource.getInstance().getByProjectId(project);
+                            Observable<List<ArrayList<FormDetails>>> odkForms = ODKFormRemoteSource.getInstance().getByProjectId(project);
 
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
+                                    .doOnNext(new Consumer<List<? extends Object>>() {
+                                        @Override
+                                        public void accept(List<?> objects) throws Exception {
+                                            isListOfType<FormDe>
+                                        }
+                                    })
                                     .doOnNext(new Consumer<Object>() {
                                         @Override
                                         public void accept(Object o) throws Exception {
                                             markAsCompleted(project.getId(), 1);
                                         }
-                                    }).doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
+                                    })
+                                    .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
                                     .doOnDispose(new Action() {
                                         @Override
                                         public void run() throws Exception {
                                             markAsFailed(project.getId(), 1, "");
                                         }
-                                    })
-                                    .onErrorReturn(new Function<Throwable, Project>() {
+                                    }).onErrorReturn(new Function<Throwable, List<? extends Object>>() {
                                         @Override
-                                        public Project apply(Throwable throwable) throws Exception {
+                                        public List<? extends Object> apply(Throwable throwable) throws Exception {
                                             Timber.e(throwable);
                                             String urls = new ArrayList<String>() {
                                                 {
@@ -182,10 +188,9 @@ public class SyncServiceV3 extends IntentService {
                                             }.toString();
 
                                             markAsFailed(project.getId(), 1, urls);
-                                            return project;
+                                            return new ArrayList<>();
                                         }
                                     });
-
                         }
                     })
                     .subscribe(project -> {

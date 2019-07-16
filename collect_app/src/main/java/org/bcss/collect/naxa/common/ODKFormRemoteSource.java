@@ -16,7 +16,6 @@ import org.bcss.collect.naxa.onboarding.XMLForm;
 import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadReceiver;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadService;
-import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
 import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.utilities.FormDownloader;
@@ -29,9 +28,9 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.SingleSource;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -53,6 +52,7 @@ public class ODKFormRemoteSource {
     public static ODKFormRemoteSource getInstance() {
         return INSTANCE;
     }
+
 
     @Deprecated
     public Observable<DownloadProgress> fetchODKForms() {
@@ -82,7 +82,8 @@ public class ODKFormRemoteSource {
         });
     }
 
-    public Observable<Project> getByProjectId(Project project) {
+    public Observable<List<ArrayList<FormDetails>>> getByProjectId(Project project) {
+
         ArrayList<Project> projects = new ArrayList<>();
         projects.add(project);
 
@@ -106,13 +107,25 @@ public class ODKFormRemoteSource {
                         return formListDownloadingComplete(stringFormDetailsHashMap);
                     }
                 })
-                .flatMap(new Function<ArrayList<FormDetails>, Observable<Project>>() {
+                .flatMap(new Function<ArrayList<FormDetails>, Observable<List<ArrayList<FormDetails>>>>() {
                     @Override
-                    public Observable<Project> apply(ArrayList<FormDetails> formDetails) {
+                    public Observable<List<ArrayList<FormDetails>>> apply(ArrayList<FormDetails> formDetails) {
                         return downloadSingleForm(formDetails)
+                                .filter(new Predicate<ArrayList<FormDetails>>() {
+                                    @Override
+                                    public boolean test(ArrayList<FormDetails> failedFormDetails) throws Exception {
+                                        return failedFormDetails.size() > 0;
+                                    }
+                                })
+                                .map(new Function<ArrayList<FormDetails>, ArrayList<FormDetails>>() {
+                                    @Override
+                                    public ArrayList<FormDetails> apply(ArrayList<FormDetails> formDetails) throws Exception {
+                                        ArrayList<FormDetails> forms = new ArrayList<>(formDetails);
+                                        return null;
+                                    }
+                                })
                                 .toList()
-                                .toObservable()
-                                .map(lists -> project);
+                                .toObservable();
                     }
                 });
 
@@ -130,23 +143,31 @@ public class ODKFormRemoteSource {
     }
 
     @SafeVarargs
-    private final Observable<HashMap<FormDetails, String>> downloadSingleForm(ArrayList<FormDetails>... values) {
+    private final Observable<ArrayList<FormDetails>> downloadSingleForm(ArrayList<FormDetails>... values) {
 
 
-        return Observable.fromCallable(new Callable<HashMap<FormDetails, String>>() {
+        ArrayList<FormDetails> failedForms = new ArrayList<>();
+
+
+        return Observable.fromCallable(new Callable<ArrayList<FormDetails>>() {
             @Override
-            public HashMap<FormDetails, String> call() throws Exception {
+            public ArrayList<FormDetails> call() throws Exception {
                 FormDownloader formDownloader = new FormDownloader(false);
                 HashMap<FormDetails, String> result = formDownloader.downloadForms(values[0]);
+                for (FormDetails key : result.keySet()) {
+                    String value = result.get(key);
+//                    boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value);
+                    int random = (int) (Math.random() * 2 + 1);
+                    boolean isDownloadSuccessfully = random == 2;
 
-                for (String value : result.values()) {
-                    boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value);
                     if (!isDownloadSuccessfully) {
-                        throw new RuntimeException("A form failed to download, causing downloads for the whole project to stop");
+                        Timber.i("%s failed to download, adding it to failed download list", key.getDownloadUrl());
+                        failedForms.add(key);
                     }
+
                 }
 
-                return result;
+                return failedForms;
             }
         });
 
