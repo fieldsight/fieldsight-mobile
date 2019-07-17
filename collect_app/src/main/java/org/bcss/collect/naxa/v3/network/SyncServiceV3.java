@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Pair;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.logic.FormDetails;
-import org.bcss.collect.naxa.ResponseUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
@@ -24,11 +27,13 @@ import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.StageRemoteSource;
 import org.odk.collect.android.activities.FormDownloadList;
+import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -151,21 +156,77 @@ public class SyncServiceV3 extends IntentService {
             DisposableManager.add(projectEduMatObservable);
             HashMap<String, FormDetails> failedForms = new HashMap<>();
 
-            Intent toFormDownloadList = new Intent(this, FormDownloadList.class);
-            toFormDownloadList.putExtra("isDownloadOnlyMode",true);
-            startActivity();
-            if(true)return;
+
+//            Observable.just(selectedProject)
+//                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
+//                    .filter(project -> selectedMap.get(project.getId()).get(1).sync)
+//                    .flatMap(new Function<Project, Observable<Pair>>() {
+//                        @Override
+//                        public Observable<Pair> apply(Project project) throws Exception {
+//                            Observable<Pair> odkForms = ODKFormRemoteSource.getInstance().getFormListByProject(project);
+//                            return odkForms;
+//                        }
+//                    })
+//                    .doOnNext(new Consumer<Pair>() {
+//                        @Override
+//                        public void accept(Pair pair) throws Exception {
+//                            Intent toFormDownloadList = new Intent(SyncServiceV3.this, FormDownloadList.class);
+//                            ArrayList<String> forms = (ArrayList<String>) pair.first;
+//                            toFormDownloadList.putStringArrayListExtra(ApplicationConstants.BundleKeys.FORM_IDS,forms);
+//                            toFormDownloadList.putExtra(ApplicationConstants.BundleKeys.URL, pair.second.toString());
+//                            startActivity(toFormDownloadList);
+//                        }
+//                    })
+//                    .subscribeOn(Schedulers.io())
+//                    .subscribe(new DisposableObserver<Pair>() {
+//                        @Override
+//                        public void onNext(Pair pair) {
+//                            Timber.i(pair.toString());
+//                        }
+//
+//                        @Override
+//                        public void onError(Throwable e) {
+//                            Timber.e(e);
+//                        }
+//
+//                        @Override
+//                        public void onComplete() {
+//
+//                        }
+//                    });
+//
+//
+//            if(true)return;
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
                     .flatMap(new Function<Project, Observable<List<?>>>() {
                         @Override
-                        public Observable<List<?>> apply(Project project) throws Exception {
+                        public Observable<List<?>> apply(Project project) {
 
                             Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<ScheduleForm>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
-                            Observable<List<ArrayList<FormDetails>>> odkForms = ODKFormRemoteSource.getInstance().getByProjectId(project);
+
+                            Observable<List<ArrayList<FormDetails>>> odkForms = SyncLocalSourcev3
+                                    .getInstance()
+                                    .getFailedUrls(project.getId(), 1)
+                                    .subscribeOn(Schedulers.io())
+                                    .flatMapObservable((Function<SyncStat, ObservableSource<List<ArrayList<FormDetails>>>>) syncStat -> {
+                                        List<String> failedFormsUrls = new Gson().fromJson(syncStat.getFailedUrl(), new TypeToken<List<String>>() {
+                                        }.getType());
+
+                                        boolean isValidList = syncStat.getFailedUrl() != null &&
+                                                syncStat.getFailedUrl().contains("[") &&
+                                                failedFormsUrls.size() > 0;
+
+                                        if (isValidList) {
+                                            return ODKFormRemoteSource.getInstance().getByProjectId(project, failedFormsUrls);
+                                        } else {
+                                            return ODKFormRemoteSource.getInstance().getByProjectId(project);
+                                        }
+                                    });
+
 
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
                                     .doOnNext(new Consumer<List<? extends Object>>() {
@@ -174,23 +235,9 @@ public class SyncServiceV3 extends IntentService {
                                         public void accept(List<?> objects) throws Exception {
 
                                             if (isListOfType(objects, ArrayList.class)) {
-                                               saveFailedFormUrls(objects);
+                                                saveFailedFormUrls(objects);
                                             }
 
-
-                                            SyncLocalSourcev3
-                                                    .getInstance()
-                                                    .getFailedUrls(project.getId(), 1)
-                                                    .subscribeOn(Schedulers.io())
-                                                    .subscribe(new Consumer<SyncStat>() {
-                                                        @Override
-                                                        public void accept(SyncStat syncStat) throws Exception {
-                                                            boolean isListValid = TextUtils.isEmpty(syncStat.getFailedUrl()) && syncStat.getFailedUrl().contains("[");
-                                                            if (isListValid) {
-
-                                                            }
-                                                        }
-                                                    });
 
                                         }
 
@@ -341,7 +388,6 @@ public class SyncServiceV3 extends IntentService {
     private void markAsFailed(String projectId, int type, String failedUrl) {
         markAsFailed(projectId, type, failedUrl, false);
     }
-
 
 
     private void markAsRunning(String projectId, int type) {

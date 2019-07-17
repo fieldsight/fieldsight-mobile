@@ -88,8 +88,8 @@ public class DownloadFormListUtils {
                 R.string.default_odk_formlist);
 
         // When a url is supplied, we will use the default formList url
-        String downloadPath = (url != null) ? formListUrl : settings.getString(PreferenceKeys.KEY_FORMLIST_URL, formListUrl);
-        downloadListUrl += downloadPath;
+//        String downloadPath = (url != null) ? formListUrl : settings.getString(PreferenceKeys.KEY_FORMLIST_URL, formListUrl);
+//        downloadListUrl += downloadPath;
 
         // We populate this with available forms from the specified server.
         // <formname, details>

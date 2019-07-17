@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.common;
 
 import android.os.Handler;
+import android.util.Pair;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -81,7 +82,39 @@ public class ODKFormRemoteSource {
         });
     }
 
+    public Observable<Pair> getFormListByProject(Project project) {
+        ArrayList<Project> projects = new ArrayList<>();
+        projects.add(project);
+
+        return Observable.just(projects)
+                .subscribeOn(Schedulers.io())
+                .map(mapProjectsToXMLForm())
+                .flatMapIterable((Function<ArrayList<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
+                .flatMap(new Function<XMLForm, ObservableSource<Pair>>() {
+                    @Override
+                    public ObservableSource<Pair> apply(XMLForm xmlForm) throws Exception {
+                        return downloadFormlist(xmlForm)
+                                .map(new Function<HashMap<String, FormDetails>, Pair>() {
+                                    @Override
+                                    public Pair apply(HashMap<String, FormDetails> stringFormDetailsHashMap) throws Exception {
+                                        return Pair.create(
+                                                new ArrayList<>(stringFormDetailsHashMap.keySet())
+//                                                        .toArray(
+//                                                                new String[stringFormDetailsHashMap.size()]
+//                                                        )
+                                                , xmlForm.getDownloadUrl());
+                                    }
+                                });
+                    }
+                });
+
+    }
+
     public Observable<List<ArrayList<FormDetails>>> getByProjectId(Project project) {
+        return getByProjectId(project, new ArrayList<>(0));
+    }
+
+    public Observable<List<ArrayList<FormDetails>>> getByProjectId(Project project, List<String> formsToDownload) {
 
         ArrayList<Project> projects = new ArrayList<>();
         projects.add(project);
@@ -92,16 +125,21 @@ public class ODKFormRemoteSource {
                 .map(mapProjectsToXMLForm())
                 .flatMapIterable((Function<ArrayList<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
                 .flatMap((Function<XMLForm, ObservableSource<HashMap<String, FormDetails>>>) this::downloadFormlist)
-                .toList()
-                .map(hashMaps -> {
+                .map((Function<HashMap<String, FormDetails>, HashMap<String, FormDetails>>) hashMap -> {
                     HashMap<String, FormDetails> result = new HashMap<>();
-                    for (HashMap<String, FormDetails> hashMap : hashMaps) {
-                        result.putAll(hashMap);
-                    }
-                    return result;
 
+                    for (String key : hashMap.keySet()) {
+                        boolean isMatch = formsToDownload.contains(hashMap.get(key).getDownloadUrl());
+                        if (formsToDownload.size() == 0) {
+                            result.put(key, result.get(key));
+                        } else if (isMatch) {
+                            result.put(key, result.get(key));
+                        }
+                    }
+
+                    return result;
                 })
-                .flatMapObservable((Function<HashMap<String, FormDetails>, ObservableSource<ArrayList<FormDetails>>>) this::formListDownloadingComplete)
+                .flatMap(hashMap -> formListDownloadingComplete(hashMap))
                 .flatMap((Function<ArrayList<FormDetails>, Observable<ArrayList<FormDetails>>>) this::downloadBulkForms)
                 .toList()
                 .toObservable();
@@ -133,7 +171,7 @@ public class ODKFormRemoteSource {
                 for (FormDetails key : result.keySet()) {
                     String value = result.get(key);
                     boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value);
-                    if (!false) {
+                    if (isDownloadSuccessfully) {
                         failedForms.add(key);
                     }
                 }
