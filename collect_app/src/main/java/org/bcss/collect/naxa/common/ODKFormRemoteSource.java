@@ -131,10 +131,11 @@ public class ODKFormRemoteSource {
                     for (String key : hashMap.keySet()) {
                         boolean isMatch = formsToDownload.contains(hashMap.get(key).getDownloadUrl());
                         if (formsToDownload.size() == 0) {
-                            result.put(key, result.get(key));
+                            result.put(key, hashMap.get(key));
                         } else if (isMatch) {
-                            result.put(key, result.get(key));
+                            result.put(key, hashMap.get(key));
                         }
+
                     }
 
                     return result;

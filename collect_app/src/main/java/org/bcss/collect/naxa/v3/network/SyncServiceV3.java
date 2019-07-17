@@ -30,6 +30,7 @@ import org.odk.collect.android.activities.FormDownloadList;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -212,19 +213,27 @@ public class SyncServiceV3 extends IntentService {
                                     .getInstance()
                                     .getFailedUrls(project.getId(), 1)
                                     .subscribeOn(Schedulers.io())
+
                                     .flatMapObservable((Function<SyncStat, ObservableSource<List<ArrayList<FormDetails>>>>) syncStat -> {
-                                        List<String> failedFormsUrls = new Gson().fromJson(syncStat.getFailedUrl(), new TypeToken<List<String>>() {
-                                        }.getType());
+
 
                                         boolean isValidList = syncStat.getFailedUrl() != null &&
-                                                syncStat.getFailedUrl().contains("[") &&
-                                                failedFormsUrls.size() > 0;
+                                                syncStat.getFailedUrl().contains("[") ;
 
-                                        if (isValidList) {
-                                            return ODKFormRemoteSource.getInstance().getByProjectId(project, failedFormsUrls);
+//                                        markAsRunning(project.getId(), 1);
+
+
+                                        if (true) {
+                                            String[] failedFormsUrls = syncStat.getFailedUrl()
+                                                    .replace("[", "")
+                                                    .replace("]", "")
+                                                    .split(",");
+                                            return ODKFormRemoteSource.getInstance().getByProjectId(project, Arrays.asList(failedFormsUrls));
                                         } else {
                                             return ODKFormRemoteSource.getInstance().getByProjectId(project);
                                         }
+
+
                                     });
 
 
@@ -253,20 +262,19 @@ public class SyncServiceV3 extends IntentService {
                                             }
                                         }
                                     })
-                                    .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
                                     .doOnDispose(() -> markAsFailed(project.getId(), 1, ""))
                                     .onErrorReturn(new Function<Throwable, List<? extends Object>>() {
                                         @Override
                                         public List<? extends Object> apply(Throwable throwable) throws Exception {
                                             Timber.e(throwable);
-                                            String urls = new ArrayList<String>() {
-                                                {
-                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()));
-                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()));
-                                                }
-                                            }.toString();
-
-                                            markAsFailed(project.getId(), 1, urls);
+//                                            String urls = new ArrayList<String>() {
+//                                                {
+//                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()));
+//                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()));
+//                                                }
+//                                            }.toString();
+//
+//                                            markAsFailed(project.getId(), 1, urls);
                                             return new ArrayList<>();
                                         }
                                     });
