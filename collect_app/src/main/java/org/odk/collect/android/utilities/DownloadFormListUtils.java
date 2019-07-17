@@ -70,6 +70,8 @@ public class DownloadFormListUtils {
         return downloadFormList(null, null, null, alwaysCheckMediaFiles);
     }
 
+
+
     public HashMap<String, FormDetails> downloadFormList(@Nullable String url, @Nullable String username,
                                                          @Nullable String password, boolean alwaysCheckMediaFiles) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(

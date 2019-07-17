@@ -366,4 +366,47 @@ public class ODKFormRemoteSource {
     }
 
 
+    public Observable<ArrayList<FormDetails>> getFormsUsingProjectId(Project project) {
+
+
+        ArrayList<Project> projects = new ArrayList<>();
+        projects.add(project);
+
+        return Observable.just(projects)
+                .subscribeOn(Schedulers.io())
+                .map(mapProjectsToXMLForm())
+                .flatMapIterable((Function<ArrayList<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
+                .flatMap((Function<XMLForm, ObservableSource<HashMap<FormDetails, String>>>) this::getFormDownloadObservable)
+                .map(new Function<HashMap<FormDetails, String>, ArrayList<FormDetails>>() {
+                    @Override
+                    public ArrayList<FormDetails> apply(HashMap<FormDetails, String> formDetailsStringHashMap) throws Exception {
+
+                        ArrayList<FormDetails> failedForms = new ArrayList<>();
+                        for (FormDetails key : formDetailsStringHashMap.keySet()) {
+                            String value = formDetailsStringHashMap.get(key);
+                            boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value);
+                            if (isDownloadSuccessfully) {
+                                failedForms.add(key);
+                            }
+                        }
+
+                        return failedForms;
+                    }
+                });
+    }
+
+
+    private Observable<HashMap<FormDetails, String>> getFormDownloadObservable(XMLForm xmlform) {
+
+        return Observable.fromCallable(() -> {
+            HashMap<String, FormDetails> formDetailsHashMap = new FieldSightFormListDownloadUtils().downloadFormList(xmlform, false);
+            ArrayList<FormDetails> formDetailsArrayList = new ArrayList<>();
+            for (String key : formDetailsHashMap.keySet()) {
+                formDetailsArrayList.add(formDetailsHashMap.get(key));
+            }
+
+            FormDownloader formDownloader = new FormDownloader(false);
+            return formDownloader.downloadForms(formDetailsArrayList);
+        });
+    }
 }
