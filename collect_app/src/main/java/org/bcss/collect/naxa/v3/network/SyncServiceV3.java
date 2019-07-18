@@ -208,15 +208,7 @@ public class SyncServiceV3 extends IntentService {
                                 .onErrorReturn(new Function<Throwable, String>() {
                                     @Override
                                     public String apply(Throwable throwable) throws Exception {
-                                        Timber.e(throwable);
-                                        String urls = new ArrayList<String>() {
-                                            {
-                                                add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()));
-                                                add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()));
-                                            }
-                                        }.toString();
-
-                                        markAsFailed(project.getId(), 1, urls);
+                                        markAsFailed(project.getId(), 1, "");
                                         return "";
                                     }
                                 });
