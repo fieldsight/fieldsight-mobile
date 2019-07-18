@@ -198,7 +198,9 @@ public class SyncServiceV3 extends IntentService {
                                     failed.add(formDetails.getFormID());
                                 }
 
-                                markAsFailed(project.getId(), 1, failed.toString());
+                                if (failed.size() > 0) {
+                                    markAsFailed(project.getId(), 1, failed.toString());
+                                }
                             }
                         })
                                 .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
