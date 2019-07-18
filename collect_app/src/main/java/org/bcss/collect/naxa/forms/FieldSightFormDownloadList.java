@@ -44,8 +44,11 @@ import org.bcss.collect.android.listeners.FormListDownloaderListener;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.logic.FormDetails;
 
-import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.network.APIEndpoint;
+import org.bcss.collect.naxa.onboarding.XMLForm;
+import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.task.FieldSightDownloadFormListTask;
 import org.odk.collect.android.activities.FormListActivity;
 import org.odk.collect.android.dao.FormsDao;
@@ -121,6 +124,7 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
 
     public static final String FORM_ID_KEY = "formid";
     public static final String FORM_VERSION_KEY = "formversion";
+    private final int totalTimesAsyncTaskHasToRun = 2;
 
     private String alertMsg;
     private boolean alertShowing;
@@ -160,10 +164,10 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
     @Inject
     WebCredentialsUtils webCredentialsUtils;
 
-    public static void start(Context context, Project project, ArrayList<String> list) {
+    public static void start(Context context, Project project, String[] list) {
         Intent intent = new Intent(context, FieldSightFormDownloadList.class);
         intent.putExtra(EXTRA_OBJECT, project);
-        intent.putStringArrayListExtra(ApplicationConstants.BundleKeys.FORM_IDS, list);
+        intent.putExtra(ApplicationConstants.BundleKeys.FORM_IDS, list);
         context.startActivity(intent);
     }
 
@@ -209,7 +213,7 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
                 displayOnlyUpdatedForms = (boolean) bundle.get(DISPLAY_ONLY_UPDATED_FORMS);
             }
 
-            if(bundle.containsKey(EXTRA_OBJECT)){
+            if (bundle.containsKey(EXTRA_OBJECT)) {
                 loadedProject = bundle.getParcelable(EXTRA_OBJECT);
             }
 
@@ -412,13 +416,34 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
                 downloadFormListTask = null;
             }
 
-            downloadFormListTask = new FieldSightDownloadFormListTask();
+
+            downloadFormListTask = new FieldSightDownloadFormListTask(mapProjectsToXMLForm(loadedProject));
             downloadFormListTask.setDownloaderListener(this);
-
-
             downloadFormListTask.execute();
+
+
         }
     }
+
+    private XMLForm[] mapProjectsToXMLForm(Project project) {
+
+
+        String baseUrl = FieldSightUserSession.getServerUrl(Collect.getInstance());
+
+        return new XMLForm[]{
+                new XMLFormBuilder()
+                        .setFormCreatorsId(project.getId())
+                        .setIsCreatedFromProject(false)
+                        .setDownloadUrl(baseUrl + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()))
+                        .createXMLForm(),
+                new XMLFormBuilder()
+                        .setFormCreatorsId(project.getId())
+                        .setIsCreatedFromProject(true)
+                        .setDownloadUrl(baseUrl + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()))
+                        .createXMLForm()
+        };
+    }
+
 
     @Override
     protected void onRestoreInstanceState(Bundle state) {
@@ -699,6 +724,7 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
         dismissDialog(PROGRESS_DIALOG);
         downloadFormListTask.setDownloaderListener(null);
         downloadFormListTask = null;
+
 
         if (result == null) {
             Timber.e("Formlist Downloading returned null.  That shouldn't happen");

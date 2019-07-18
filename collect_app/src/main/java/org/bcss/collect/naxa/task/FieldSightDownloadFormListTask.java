@@ -21,7 +21,10 @@ import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.naxa.common.utilities.FieldSightFormListDownloadUtils;
 import org.bcss.collect.naxa.onboarding.XMLForm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import timber.log.Timber;
 
 /**
  * Background task for downloading forms siteName urls or a formlist siteName a url. We overload this task
@@ -34,19 +37,25 @@ import java.util.HashMap;
 public class FieldSightDownloadFormListTask extends AsyncTask<Void, String, HashMap<String, FormDetails>> {
 
     private FormListDownloaderListener stateListener;
-    private XMLForm xmlForm;
+    private XMLForm[] xmlForms;
 
-    public FieldSightDownloadFormListTask(XMLForm xmlForm) {
-        this.xmlForm = xmlForm;
+    public FieldSightDownloadFormListTask(XMLForm... xmlForm) {
+        this.xmlForms = xmlForm;
     }
 
-    public FieldSightDownloadFormListTask() {
+    private FieldSightDownloadFormListTask() {
 
     }
 
     @Override
     protected HashMap<String, FormDetails> doInBackground(Void... values) {
-        return new FieldSightFormListDownloadUtils().downloadFormList(xmlForm, false);
+        HashMap<String, FormDetails> formDetailsHashMap = new HashMap<>();
+        for (XMLForm xmlForm : xmlForms) {
+            Timber.i("Downloading forms from %s", xmlForm.getDownloadUrl());
+            formDetailsHashMap.putAll(new FieldSightFormListDownloadUtils().downloadFormList(xmlForm, false));
+        }
+
+        return formDetailsHashMap;
     }
 
     @Override

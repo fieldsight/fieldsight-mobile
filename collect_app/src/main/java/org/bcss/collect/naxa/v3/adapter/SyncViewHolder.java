@@ -109,18 +109,19 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                         downloadListItemClicked(getLayoutPosition(), position);
                 });
 
-                AppCompatImageView btnRetry = convertView.findViewById(R.id.btn_retry);
+                TextView btnRetry = convertView.findViewById(R.id.btn_retry);
 
                 View finalConvertView = convertView;
 
+                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0;
+                if (hasFailedUrls) {
+                    btnRetry.setVisibility(View.VISIBLE);
+                    btnRetry.setOnClickListener(v -> FieldSightFormDownloadList.start(finalConvertView.getContext(), project,
+                            syncable.getFailedUrl().toArray(new String[0])));
+                } else {
+                    btnRetry.setVisibility(View.GONE);
+                }
 
-
-                btnRetry.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FieldSightFormDownloadList.start(finalConvertView.getContext(), project,new ArrayList<>(0));
-                    }
-                });
 
                 return convertView;
             }

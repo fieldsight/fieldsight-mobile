@@ -37,7 +37,11 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatImageView
+    <TextView
+        android:background="?selectableItemBackground"
+        android:textColor="@color/green"
+        android:textAllCaps="true"
+        android:text="@string/action_retry"
         android:id="@+id/btn_retry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
