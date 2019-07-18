@@ -289,14 +289,14 @@ public class UserActivity extends CollectAbstractActivity {
                             phototoUploadUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", photoToUpload);
                             Intent toCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             toCamera.putExtra(MediaStore.EXTRA_OUTPUT, phototoUploadUri);
-                            startActivityForResult(toCamera, Constant.Key.RC_CAMERA);
+                            startActivityForResult(toCamera, Constant.RequestCode.RC_CAMERA);
                             break;
                         case 1:
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_GET_CONTENT);
                             intent.addCategory(Intent.CATEGORY_OPENABLE);
                             intent.setType("image/*");
-                            startActivityForResult(Intent.createChooser(intent, "Select site image"), Constant.Key.SELECT_FILE);
+                            startActivityForResult(Intent.createChooser(intent, "Select site image"), Constant.RequestCode.SELECT_FILE);
                             break;
                         default:
                             break;
@@ -342,13 +342,13 @@ public class UserActivity extends CollectAbstractActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK) return;
         switch (requestCode) {
-            case Constant.Key.RC_CAMERA:
+            case Constant.RequestCode.RC_CAMERA:
                 userProfileViewModel.getUser().getValue().setProfilepic(photoToUpload.getAbsolutePath());
                 GlideApp.with(UserActivity.this)
                         .load(photoToUpload)
                         .into(civProfilePic);
                 break;
-            case Constant.Key.SELECT_FILE:
+            case Constant.RequestCode.SELECT_FILE:
                 Uri uri = data.getData();
                 String path = ImageFileUtils.getPath(this, uri);
                 userProfileViewModel.getUser().getValue().setProfilepic(path);

@@ -58,7 +58,7 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
     TextView tv_project_progress_percentage;
 
 
-    Project project;
+    private Project project;
 
     SyncViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -116,8 +116,12 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 boolean hasFailedUrls = syncable.getFailedUrl().size() > 0;
                 if (hasFailedUrls) {
                     btnRetry.setVisibility(View.VISIBLE);
-                    btnRetry.setOnClickListener(v -> FieldSightFormDownloadList.start(finalConvertView.getContext(), project,
-                            syncable.getFailedUrl().toArray(new String[0])));
+                    btnRetry.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            retryButtonClicked(project, syncable.getFailedUrl().toArray(new String[0]));
+                        }
+                    });
                 } else {
                     btnRetry.setVisibility(View.GONE);
                 }
@@ -126,6 +130,10 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 return convertView;
             }
         });
+
+    }
+
+    public void retryButtonClicked(Project project, String[] failedUrls) {
 
     }
 

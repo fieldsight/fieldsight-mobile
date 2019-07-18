@@ -137,6 +137,15 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
                     callback.childDownloadListSelectionChange(p, syncableMap.get(p.getId()));
                 }
             }
+
+            @Override
+            public void retryButtonClicked(Project project, String[] failedUrls) {
+                if(callback != null){
+
+                    notifyDataSetChanged();
+                    callback.onRetryButtonClicked(project,failedUrls);
+                }
+            }
         };
     }
 

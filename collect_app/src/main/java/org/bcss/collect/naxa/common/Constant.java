@@ -29,12 +29,13 @@ public class Constant {
         public static final String token = "token";
     }
 
-    public static class Key {
+    public static class RequestCode {
         public static final int RC_CAMERA = 1234;
         public static final int RC_STORAGE = 1235;
         public static final int RC_LOCATION = 1236;
         public static final int GEOPOINT_RESULT_CODE = 1994;
         public static final int SELECT_FILE = 1993;
+        public static final int DOWNLOAD_FORMS = 1996;
 
         public static int LOCATION_CAPTURE = 1995;
     }

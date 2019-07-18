@@ -14,6 +14,7 @@
 
 package org.bcss.collect.naxa.forms;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -73,6 +74,7 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static org.bcss.collect.naxa.common.Constant.EXTRA_ID;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
 import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
@@ -164,11 +166,11 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
     @Inject
     WebCredentialsUtils webCredentialsUtils;
 
-    public static void start(Context context, Project project, String[] list) {
+    public static void startForResult(Activity context, Project project, String[] list,int requestCode) {
         Intent intent = new Intent(context, FieldSightFormDownloadList.class);
         intent.putExtra(EXTRA_OBJECT, project);
         intent.putExtra(ApplicationConstants.BundleKeys.FORM_IDS, list);
-        context.startActivity(intent);
+        context.startActivityForResult(intent, requestCode);
     }
 
     @SuppressWarnings("unchecked")
@@ -961,6 +963,8 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
         if (resultFormIds != null) {
             intent.putExtra(ApplicationConstants.BundleKeys.FORM_IDS, resultFormIds);
         }
+
+        intent.putExtra(EXTRA_ID,loadedProject.getId());
 
         setResult(RESULT_OK, intent);
     }
