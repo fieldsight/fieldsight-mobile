@@ -272,6 +272,7 @@
     <string name="report_bug">Report Bug</string>
     <string name="add_your_message">Add description here</string>
     <string name="action_retry">retry</string>
+    <string name="retry_forms">Retry %d form(s)</string>
 
     <string-array name="bug_type">
         <item>Select error type</item>

@@ -115,6 +115,7 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
 
                 boolean hasFailedUrls = syncable.getFailedUrl().size() > 0;
                 if (hasFailedUrls) {
+                    btnRetry.setText(finalConvertView.getContext().getString(R.string.retry_forms, syncable.getFailedUrl().size()));
                     btnRetry.setVisibility(View.VISIBLE);
                     btnRetry.setOnClickListener(new View.OnClickListener() {
                         @Override
