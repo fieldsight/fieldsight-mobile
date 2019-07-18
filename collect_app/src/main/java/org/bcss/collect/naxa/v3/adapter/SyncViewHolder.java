@@ -1,7 +1,9 @@
 package org.bcss.collect.naxa.v3.adapter;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,9 +23,11 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.forms.FieldSightFormDownloadList;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.v3.network.Syncable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,12 +58,16 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
     TextView tv_project_progress_percentage;
 
 
+    Project project;
+
     SyncViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
     void bindView(Project project, HashMap<String, Integer> progressMap, boolean disable) {
+        this.project = project;
+
         tv_project_name.setText(project.getName());
         tv_project_other.setText(String.format("By %s", project.getOrganizationName()));
         progressBar.setProgress(progressMap.get(project.getId()));
@@ -97,9 +105,23 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
                 chkbx.setEnabled(!disable);
                 chkbx.setOnClickListener(v -> {
-                    if(!disable)
+                    if (!disable)
                         downloadListItemClicked(getLayoutPosition(), position);
-                    });
+                });
+
+                AppCompatImageView btnRetry = convertView.findViewById(R.id.btn_retry);
+
+                View finalConvertView = convertView;
+
+
+
+                btnRetry.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FieldSightFormDownloadList.start(finalConvertView.getContext(), project,new ArrayList<>(0));
+                    }
+                });
+
                 return convertView;
             }
         });

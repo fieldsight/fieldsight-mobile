@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.v3.network;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,4 +63,7 @@ public class Syncable implements Serializable {
             return this.status;
         }
 
+    public void addFailedUrl(String[] urlList) {
+        this.lastFailedUrl.addAll(Arrays.asList(urlList));
     }
+}

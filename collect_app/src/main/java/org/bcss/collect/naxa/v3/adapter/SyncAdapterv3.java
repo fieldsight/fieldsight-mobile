@@ -79,13 +79,23 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
 
     public void notifyBySyncStat(List<SyncStat> syncStatList) {
         if (syncStatList != null && syncStatList.size() > 0) {
+
             for (SyncStat syncStat : syncStatList) {
-                if(syncableMap.containsKey(syncStat.getProjectId())) {
+                if (syncableMap.containsKey(syncStat.getProjectId())) {
                     List<Syncable> list = syncableMap.get(syncStat.getProjectId());
                     int syncType = Integer.parseInt(syncStat.getType());
+                    boolean isValidList = syncStat.getFailedUrl().contains("[") && syncStat.getFailedUrl().contains(",");
                     if (syncType > -1) {
                         Syncable syncable = list.get(syncType);
                         syncable.setStatus(syncStat.getStatus());
+                        if (isValidList) {
+                            String[] urlList = syncStat.getFailedUrl()
+                                    .replace("[", "")
+                                    .replace("]", "")
+                                    .split(",");
+                            syncable.addFailedUrl(urlList);
+                        }
+
                     }
                     syncableMap.put(syncStat.getProjectId(), list);
                 }
@@ -102,12 +112,12 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
             int totalSynced = 0;
             int totalSize = 0;
             for (Syncable syncable : syncableList) {
-                if(!syncable.getSync())
+                if (!syncable.getSync())
                     continue;
                 if (syncable.getStatus() == Constant.DownloadStatus.COMPLETED) {
                     totalSynced++;
                 }
-                totalSize ++;
+                totalSize++;
             }
             progressMap.put(key, totalSynced * 100 / totalSize);
         }

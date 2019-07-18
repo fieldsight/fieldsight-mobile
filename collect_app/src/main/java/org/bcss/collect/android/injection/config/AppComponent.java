@@ -10,6 +10,7 @@ import org.bcss.collect.android.injection.ActivityBuilder;
 import org.bcss.collect.android.injection.config.scopes.PerApplication;
 import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.naxa.common.utilities.FieldSightFormListDownloadUtils;
+import org.bcss.collect.naxa.forms.FieldSightFormDownloadList;
 import org.odk.collect.android.activities.FormDownloadList;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceUploaderList;
@@ -84,6 +85,8 @@ public interface AppComponent {
     void inject(AuthDialogUtility authDialogUtility);
 
     void inject(FormDownloadList formDownloadList);
+
+    void inject(FieldSightFormDownloadList formDownloadList);
 
     void inject(FieldSightFormListDownloadUtils fieldSightDownloadFormListUtils);
 }
