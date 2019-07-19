@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import org.bcss.collect.android.logic.FormDetails;
+import org.bcss.collect.naxa.ResponseUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
@@ -148,13 +149,15 @@ public class SyncServiceV3 extends IntentService {
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
-                    .flatMap((Function<Project, Observable<String>>) project -> {
+                    .flatMap(new Function<Project, ObservableSource<?>>() {
+                        @Override
+                        public ObservableSource<?> apply(Project project) throws Exception {
 
-                        Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
-                        Observable<ArrayList<ScheduleForm>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
-                        Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
-                        Observable<ArrayList<FormDetails>> odkForms = ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
 
+                            Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
+                            Observable<ArrayList<ScheduleForm>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
+                            Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
+                            Observable<ArrayList<FormDetails>> odkForms = ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
 
 //                            Observable<List<ArrayList<FormDetails>>> odkForms = SyncLocalSourcev3
 //                                    .getInstance()
@@ -183,36 +186,34 @@ public class SyncServiceV3 extends IntentService {
 //
 //                                    });
 
-                        return Observable.zip(odkForms, generalForms, scheduledForms, stagedForms, new Function4<ArrayList<FormDetails>, ArrayList<GeneralForm>, ArrayList<ScheduleForm>, ArrayList<Stage>, String>() {
-                            @Override
-                            public String apply(ArrayList<FormDetails> formDetails, ArrayList<GeneralForm> generalForms, ArrayList<ScheduleForm> scheduleForms, ArrayList<Stage> stages) {
-                                markAsCompleted(project.getId(), 1);
-                                saveFailedFormUrls(formDetails);
-                                return "success";
-                            }
+                            return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
+                                    .doOnNext(new Consumer<ArrayList<? extends Object>>() {
+                                        @Override
+                                        public void accept(ArrayList<?> objects) {
+                                            markAsCompleted(project.getId(),1);
+                                            if (ResponseUtils.isListOfType(objects, FormDetails.class)) {
+                                                saveFailedFormUrls((List<FormDetails>) objects);
+                                            }
+                                        }
 
-                            private void saveFailedFormUrls(List<FormDetails> formDetailsList) {
+                                        private void saveFailedFormUrls(List<FormDetails> formDetailsList) {
 
-                                ArrayList<String> failed = new ArrayList<>();
-                                for (FormDetails formDetails : formDetailsList) {
-                                    failed.add(formDetails.getFormID());
-                                }
+                                            ArrayList<String> failed = new ArrayList<>();
+                                            for (FormDetails formDetails : formDetailsList) {
+                                                failed.add(formDetails.getFormID());
+                                            }
 
-                                if (failed.size() > 0) {
-                                    markAsFailed(project.getId(), 1, failed.toString());
-                                }
-                            }
-                        })
-                                .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
-                                .doOnDispose(() -> markAsFailed(project.getId(), 1, ""))
-                                .onErrorReturn(new Function<Throwable, String>() {
-                                    @Override
-                                    public String apply(Throwable throwable) throws Exception {
-                                        markAsFailed(project.getId(), 1, "");
-                                        return "";
-                                    }
-                                });
+                                            if (failed.size() > 0) {
+                                                markAsFailed(project.getId(), 1, failed.toString());
+                                            }
+                                        }
+                                    })
+                                    .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
+                                    .doOnDispose(() -> markAsFailed(project.getId(), 1, ""))
+                                    .doOnError(throwable -> markAsFailed(project.getId(), 1, ""));
+                        }
                     })
+
                     .subscribe(project -> {
                         //unused
                     }, Timber::e);

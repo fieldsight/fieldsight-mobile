@@ -110,10 +110,10 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 });
 
                 TextView btnRetry = convertView.findViewById(R.id.btn_retry);
-
                 View finalConvertView = convertView;
 
                 boolean hasFailedUrls = syncable.getFailedUrl().size() > 0;
+
                 if (hasFailedUrls) {
                     btnRetry.setText(finalConvertView.getContext().getString(R.string.retry_forms, syncable.getFailedUrl().size()));
                     btnRetry.setVisibility(View.VISIBLE);
