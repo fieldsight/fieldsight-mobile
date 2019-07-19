@@ -375,8 +375,12 @@ public class ODKFormRemoteSource {
         return Observable.just(projects)
                 .subscribeOn(Schedulers.io())
                 .map(mapProjectsToXMLForm())
-                .flatMapIterable((Function<ArrayList<XMLForm>, Iterable<XMLForm>>) xmlForms -> xmlForms)
-                .flatMap((Function<XMLForm, ObservableSource<HashMap<FormDetails, String>>>) this::getFormDownloadObservable)
+                .flatMap(new Function<ArrayList<XMLForm>, Observable<HashMap<FormDetails, String>>>() {
+                    @Override
+                    public Observable<HashMap<FormDetails, String>> apply(ArrayList<XMLForm> xmlForms) throws Exception {
+                        return getFormDownloadObservable(xmlForms);
+                    }
+                })
                 .map(new Function<HashMap<FormDetails, String>, ArrayList<FormDetails>>() {
                     @Override
                     public ArrayList<FormDetails> apply(HashMap<FormDetails, String> formDetailsStringHashMap) throws Exception {
@@ -396,17 +400,25 @@ public class ODKFormRemoteSource {
     }
 
 
-    private Observable<HashMap<FormDetails, String>> getFormDownloadObservable(XMLForm xmlform) {
+    private Observable<HashMap<FormDetails, String>> getFormDownloadObservable(ArrayList<XMLForm> xmlForms) {
 
         return Observable.fromCallable(() -> {
-            HashMap<String, FormDetails> formDetailsHashMap = new FieldSightFormListDownloadUtils().downloadFormList(xmlform, false);
+
+            HashMap<String, FormDetails> formDetailsHashMap = new HashMap<>();
+            for (XMLForm xmlForm : xmlForms) {
+                Timber.i("Getting form list from %s", xmlForm.getDownloadUrl());
+                formDetailsHashMap.putAll(new FieldSightFormListDownloadUtils().downloadFormList(xmlForm, false));
+            }
+
             ArrayList<FormDetails> formDetailsArrayList = new ArrayList<>();
             for (String key : formDetailsHashMap.keySet()) {
                 formDetailsArrayList.add(formDetailsHashMap.get(key));
             }
 
             FormDownloader formDownloader = new FormDownloader(false);
-            return formDownloader.downloadForms(formDetailsArrayList);
+            HashMap<FormDetails, String> forms = formDownloader.downloadForms(formDetailsArrayList);
+            Timber.i("Downloaded %s forms from %s and %s",forms.size(),xmlForms.get(0).getDownloadUrl(),xmlForms.get(0).getDownloadUrl());
+            return forms;
         });
     }
 }
