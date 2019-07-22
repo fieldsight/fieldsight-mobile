@@ -159,33 +159,6 @@ public class SyncServiceV3 extends IntentService {
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<FormDetails>> odkForms = ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
 
-//                            Observable<List<ArrayList<FormDetails>>> odkForms = SyncLocalSourcev3
-//                                    .getInstance()
-//                                    .getFailedUrls(project.getId(), 1)
-//                                    .subscribeOn(Schedulers.io())
-//
-//                                    .flatMapObservable((Function<SyncStat, ObservableSource<List<ArrayList<FormDetails>>>>) syncStat -> {
-//
-//
-//                                        boolean isValidList = syncStat.getFailedUrl() != null &&
-//                                                syncStat.getFailedUrl().contains("[") ;
-//
-////                                        markAsRunning(project.getId(), 1);
-//
-//
-//                                        if (true) {
-//                                            String[] failedFormsUrls = syncStat.getFailedUrl()
-//                                                    .replace("[", "")
-//                                                    .replace("]", "")
-//                                                    .split(",");
-//                                            return ODKFormRemoteSource.getInstance().getByProjectId(project, Arrays.asList(failedFormsUrls));
-//                                        } else {
-//                                            return ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
-//                                        }
-//
-//
-//                                    });
-
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
                                     .doOnNext(new Consumer<ArrayList<? extends Object>>() {
                                         @Override
@@ -208,12 +181,10 @@ public class SyncServiceV3 extends IntentService {
                                             }
                                         }
                                     })
-                                    .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
-                                    .doOnDispose(() -> markAsFailed(project.getId(), 1, ""))
-                                    .doOnError(throwable -> markAsFailed(project.getId(), 1, ""));
+                                    .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1));
+
                         }
                     })
-
                     .subscribe(project -> {
                         //unused
                     }, Timber::e);

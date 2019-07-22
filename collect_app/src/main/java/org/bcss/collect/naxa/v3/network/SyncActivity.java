@@ -193,6 +193,21 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     @Override
     public void onRetryButtonClicked(Project project, String[] failedUrls) {
+
+//        HashMap<String, List<Syncable>> map = new HashMap<>();
+//        map.put(project.getId(), new ArrayList<Syncable>() {{
+//            add(0, new Syncable("Forms", true, -1));
+//            add(0, new Syncable("Forms", true, -1));
+//            add(0, new Syncable("Forms", true, -1));
+//        }});
+//        Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+//        syncIntent.putParcelableArrayListExtra("projects", new ArrayList<Project>() {
+//            {
+//                add(project);
+//            }
+//        });
+//        syncIntent.putExtra("selection", map);
+//        startService(syncIntent);
         FieldSightFormDownloadList.startForResult(this, project, failedUrls, Constant.RequestCode.DOWNLOAD_FORMS);
     }
 
@@ -240,12 +255,13 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Timber.i("Request code: %d", requestCode);
-        String projectId;
+
         if (requestCode == Constant.RequestCode.DOWNLOAD_FORMS) {
+            String projectId;
             HashMap<String, Boolean> statusAndForms = (HashMap<String, Boolean>) data.getSerializableExtra(ApplicationConstants.BundleKeys.FORM_IDS);
 
             ArrayList<String> failedUrls = new ArrayList<>();
+
             for (String key : statusAndForms.keySet()) {
                 boolean failedToDownload = !statusAndForms.get(key);
                 if (failedToDownload) {
@@ -260,7 +276,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
                 SyncLocalSourcev3.getInstance().markAsCompleted(projectId, 1);
             }
 
-
+//
         }
     }
 }

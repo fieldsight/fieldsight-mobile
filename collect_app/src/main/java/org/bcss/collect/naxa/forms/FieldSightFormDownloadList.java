@@ -166,7 +166,7 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
     @Inject
     WebCredentialsUtils webCredentialsUtils;
 
-    public static void startForResult(Activity context, Project project, String[] list,int requestCode) {
+    public static void startForResult(Activity context, Project project, String[] list, int requestCode) {
         Intent intent = new Intent(context, FieldSightFormDownloadList.class);
         intent.putExtra(EXTRA_OBJECT, project);
         intent.putExtra(ApplicationConstants.BundleKeys.FORM_IDS, list);
@@ -803,17 +803,19 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
                 //1. First check if all form IDS could be found on the server - Register forms that could not be found
 
                 for (String formId : formIdsToDownload) {
-                    formResult.put(formId, false);
+                    formResult.put(formId.trim(), false);
                 }
 
                 ArrayList<FormDetails> filesToDownload = new ArrayList<>();
 
                 for (FormDetails formDetails : formNamesAndURLs.values()) {
                     String formId = formDetails.getFormID();
-
-                    if (formResult.containsKey(formId)) {
-                        formsFound.add(formId);
-                        filesToDownload.add(formDetails);
+                    for (String s : formResult.keySet()) {
+                        boolean doesFormExistInServer = s.trim().equals(formId.trim());
+                        if (doesFormExistInServer) {
+                            formsFound.add(formId);
+                            filesToDownload.add(formDetails);
+                        }
                     }
                 }
 
@@ -890,8 +892,8 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
             for (FormDetails formDetails : result.keySet()) {
                 String successKey = result.get(formDetails);
                 if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
-                    if (formResult.containsKey(formDetails.getFormID())) {
-                        formResult.put(formDetails.getFormID(), true);
+                    if (formResult.containsKey(formDetails.getFormID().trim())) {
+                        formResult.put(formDetails.getFormID().trim(), true);
                     }
                 }
             }
@@ -964,7 +966,7 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
             intent.putExtra(ApplicationConstants.BundleKeys.FORM_IDS, resultFormIds);
         }
 
-        intent.putExtra(EXTRA_ID,loadedProject.getId());
+        intent.putExtra(EXTRA_ID, loadedProject.getId());
 
         setResult(RESULT_OK, intent);
     }

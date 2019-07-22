@@ -1,48 +1,31 @@
 package org.bcss.collect.naxa.common;
 
 import android.os.Handler;
-import android.util.Pair;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.FormDownloaderListener;
 import org.bcss.collect.android.logic.FormDetails;
-import org.bcss.collect.naxa.common.exception.DownloadRunningException;
 import org.bcss.collect.naxa.common.utilities.FieldSightFormListDownloadUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.onboarding.DownloadProgress;
-import org.bcss.collect.naxa.onboarding.SyncableItem;
 import org.bcss.collect.naxa.onboarding.XMLForm;
 import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadReceiver;
 import org.bcss.collect.naxa.onboarding.XMLFormDownloadService;
 import org.bcss.collect.naxa.sync.DownloadableItemLocalSource;
-import org.bcss.collect.naxa.sync.SyncRepository;
 import org.odk.collect.android.utilities.FormDownloader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
-import static org.odk.collect.android.activities.FormDownloadList.FORMDETAIL_KEY;
-import static org.odk.collect.android.activities.FormDownloadList.FORMID_DISPLAY;
-import static org.odk.collect.android.activities.FormDownloadList.FORMNAME;
-import static org.odk.collect.android.activities.FormDownloadList.FORM_ID_KEY;
-import static org.odk.collect.android.activities.FormDownloadList.FORM_VERSION_KEY;
-import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
-import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
 
 public class ODKFormRemoteSource {
 
@@ -57,8 +40,6 @@ public class ODKFormRemoteSource {
 
 
     public Observable<ArrayList<FormDetails>> getFormsUsingProjectId(Project project) {
-
-
         ArrayList<Project> projects = new ArrayList<>();
         projects.add(project);
 
@@ -68,7 +49,7 @@ public class ODKFormRemoteSource {
                 .flatMap(new Function<ArrayList<XMLForm>, Observable<HashMap<FormDetails, String>>>() {
                     @Override
                     public Observable<HashMap<FormDetails, String>> apply(ArrayList<XMLForm> xmlForms) throws Exception {
-                        return getFormDownloadObservable(xmlForms);
+                        return createFormDownloadObservable(xmlForms);
                     }
                 })
                 .map(new Function<HashMap<FormDetails, String>, ArrayList<FormDetails>>() {
@@ -78,12 +59,14 @@ public class ODKFormRemoteSource {
                         ArrayList<FormDetails> failedForms = new ArrayList<>();
                         for (FormDetails key : formDetailsStringHashMap.keySet()) {
                             String value = formDetailsStringHashMap.get(key);
-                            boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value);
+                            boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value) && key.getFormID() != null;
                             if (!isDownloadSuccessfully) {
                                 failedForms.add(key);
                             }
                         }
 
+
+                        Timber.i("%d forms failed to download",failedForms.size());
                         return failedForms;
                     }
                 });
@@ -117,7 +100,7 @@ public class ODKFormRemoteSource {
     }
 
 
-    private Observable<HashMap<FormDetails, String>> getFormDownloadObservable(ArrayList<XMLForm> xmlForms) {
+    private Observable<HashMap<FormDetails, String>> createFormDownloadObservable(ArrayList<XMLForm> xmlForms) {
 
         return Observable.fromCallable(() -> {
 
