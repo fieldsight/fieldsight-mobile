@@ -12,14 +12,20 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.fragments.dialogs.SimpleDialog;
 import org.bcss.collect.naxa.network.APIEndpoint;
 
 import java.util.Calendar;
@@ -160,11 +166,50 @@ public final class DialogFactory {
 
     public static AlertDialog.Builder createListActionDialog(Context context, String title, CharSequence[] items, DialogInterface.OnClickListener onClickListener) {
 
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.RiseUpDialog);
         builder.setTitle(title).setItems(items, onClickListener);
         return builder;
     }
 
+
+    public static AlertDialog.Builder createSiteListDialog(Context context, String title, String[] items, DialogInterface.OnClickListener onClickListener) {
+
+
+        ListAdapter adapter = new ArrayAdapter<String>(context, R.layout.site_list_item, items) {
+            class AdapterVH {
+                TextView title;
+            }
+
+            AdapterVH holder;
+
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                final LayoutInflater inflater = (LayoutInflater) context
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                if (convertView == null) {
+                    convertView = inflater.inflate(
+                            R.layout.site_list_item, parent, false);
+                    holder = new AdapterVH();
+                    holder.title = convertView.findViewById(R.id.tv_site_name);
+                    convertView.setTag(holder);
+                } else {
+                    holder = (AdapterVH) convertView.getTag();
+                }
+
+                holder.title.setText(items[position]);
+                return convertView;
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.RiseUpDialog);
+        builder.setAdapter(adapter, onClickListener);
+
+        builder.setTitle(title).setItems(items, onClickListener);
+        return builder;
+    }
 
     private static AlertDialog.Builder showCustomLayoutDialog(Context context, View view) {
 

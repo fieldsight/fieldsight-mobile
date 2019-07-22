@@ -3,6 +3,7 @@ package org.bcss.collect.naxa.site;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -118,7 +119,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
         collectFilterAndApply(new ArrayList<>(0));
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
-
 
 
         return view;
@@ -369,8 +369,22 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @Override
     public void onUselessLayoutClicked(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
-            FragmentHostActivity.start(getActivity(), site);
+            if (site.hasSubSites()) {
+                showSubSiteDialog(site);
+            } else {
+                FragmentHostActivity.start(getActivity(), site);
+
+            }
         }
+    }
+
+    private void showSubSiteDialog(Site site) {
+        DialogFactory.createSiteListDialog(requireActivity(), "", new String[]{site.getName(), "a", "b"}, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        }).show();
     }
 
     @Override

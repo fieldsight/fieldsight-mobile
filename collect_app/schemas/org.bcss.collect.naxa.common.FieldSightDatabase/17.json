@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 17,
-    "identityHash": "d68f86b9e07c393ed72e1c5e6eb158cd",
+    "identityHash": "ec078135f3dc8fb121c962b275acde2e",
     "entities": [
       {
         "tableName": "sites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `latitude` TEXT, `longitude` TEXT, `identifier` TEXT, `name` TEXT, `typeId` TEXT, `typeLabel` TEXT, `phone` TEXT, `address` TEXT, `publicDesc` TEXT, `additionalDesc` TEXT, `logo` TEXT, `isActive` INTEGER, `location` TEXT, `isSurvey` INTEGER, `dateCreated` TEXT, `project` TEXT, `isSiteVerified` INTEGER NOT NULL, `siteTypeError` TEXT, `metaAttributes` TEXT, `siteDocuments` TEXT, `regionId` TEXT, `generalFormDeployedFrom` TEXT, `stagedFormDeployedFrom` TEXT, `scheduleFormDeployedForm` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `latitude` TEXT, `longitude` TEXT, `identifier` TEXT, `name` TEXT, `typeId` TEXT, `typeLabel` TEXT, `phone` TEXT, `address` TEXT, `publicDesc` TEXT, `additionalDesc` TEXT, `logo` TEXT, `isActive` INTEGER, `location` TEXT, `isSurvey` INTEGER, `dateCreated` TEXT, `project` TEXT, `isSiteVerified` INTEGER NOT NULL, `siteTypeError` TEXT, `metaAttributes` TEXT, `siteDocuments` TEXT, `regionId` TEXT, `hasSubSites` INTEGER NOT NULL, `generalFormDeployedFrom` TEXT, `stagedFormDeployedFrom` TEXT, `scheduleFormDeployedForm` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -139,6 +139,12 @@
             "columnName": "regionId",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "hasSubSites",
+            "columnName": "hasSubSites",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "generalFormDeployedFrom",
@@ -1370,7 +1376,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d68f86b9e07c393ed72e1c5e6eb158cd\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ec078135f3dc8fb121c962b275acde2e\")"
     ]
   }
 }

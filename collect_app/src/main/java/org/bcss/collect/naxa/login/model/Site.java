@@ -104,6 +104,8 @@ public class Site implements Parcelable {
     @SerializedName("region")
     private String regionId;
 
+    private boolean hasSubSites = true;
+
     //default values for  table
     private String generalFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
     private String stagedFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
@@ -157,6 +159,14 @@ public class Site implements Parcelable {
 
     public static boolean isFakeSiteId(String siteId) {
         return siteId.contains(Site.postfix);
+    }
+
+    public boolean hasSubSites() {
+        return hasSubSites;
+    }
+
+    public void setHasSubSites(boolean hasSubSites) {
+        this.hasSubSites = hasSubSites;
     }
 
     @Override
