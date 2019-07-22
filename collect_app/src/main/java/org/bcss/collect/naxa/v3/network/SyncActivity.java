@@ -270,13 +270,12 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             }
 
             projectId = data.getStringExtra(Constant.EXTRA_ID);
+
             if (failedUrls.size() > 0) {
                 SyncLocalSourcev3.getInstance().markAsFailed(projectId, 1, failedUrls.toString());
             } else {
                 SyncLocalSourcev3.getInstance().markAsCompleted(projectId, 1);
             }
-
-//
         }
     }
 }

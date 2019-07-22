@@ -88,6 +88,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
                     if (syncType > -1) {
                         Syncable syncable = list.get(syncType);
                         syncable.setStatus(syncStat.getStatus());
+                        syncable.getFailedUrl().clear();
                         if (isValidList) {
                             String[] urlList = syncStat.getFailedUrl()
                                     .replace("[", "")
@@ -141,8 +142,6 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
             @Override
             public void retryButtonClicked(Project project, String[] failedUrls) {
                 if(callback != null){
-
-                    notifyDataSetChanged();
                     callback.onRetryButtonClicked(project,failedUrls);
                 }
             }

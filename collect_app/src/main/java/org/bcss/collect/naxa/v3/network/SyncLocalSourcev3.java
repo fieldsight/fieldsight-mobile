@@ -12,7 +12,9 @@ import org.bcss.collect.naxa.common.FieldSightDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Single;
+import io.reactivex.functions.Action;
 
 public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
 
@@ -57,6 +59,7 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
     }
 
 
+
     public void markAsFailed(String projectId, int type, String failedUrl) {
         SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, false, Constant.DownloadStatus.FAILED, System.currentTimeMillis());
         save(syncStat);
@@ -69,12 +72,12 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
 
     @Override
     public void save(ArrayList<SyncStat> items) {
-
+        throw new RuntimeException("Not Implemented yet");
     }
 
     @Override
     public void updateAll(ArrayList<SyncStat> items) {
-
+        throw new RuntimeException("Not Implemented yet");
     }
 
     public void update(SyncStat stat) {

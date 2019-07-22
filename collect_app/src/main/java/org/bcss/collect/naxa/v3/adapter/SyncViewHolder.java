@@ -120,7 +120,8 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                     btnRetry.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            retryButtonClicked(project, syncable.getFailedUrl().toArray(new String[0]));
+                            String[] failedUrls = syncable.getFailedUrl().toArray(new String[0]);
+                            retryButtonClicked(project, failedUrls);
                         }
                     });
                 } else {
