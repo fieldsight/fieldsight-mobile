@@ -9,7 +9,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrde
 
 
 
-abstract class FormListActivity extends AppListActivity {
+public abstract class FormListActivity extends AppListActivity {
 
     protected static final String SORT_BY_NAME_ASC
             = FormsProviderAPI.FormsColumns.DISPLAY_NAME + " COLLATE NOCASE ASC";

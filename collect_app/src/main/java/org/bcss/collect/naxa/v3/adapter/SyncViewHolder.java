@@ -1,7 +1,9 @@
 package org.bcss.collect.naxa.v3.adapter;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,15 +17,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Constant;
+import org.bcss.collect.naxa.forms.FieldSightFormDownloadList;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.v3.network.Syncable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,12 +60,16 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
     TextView tv_project_progress_percentage;
 
 
+    private Project project;
+
     SyncViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
 
     void bindView(Project project, HashMap<String, Integer> progressMap, boolean disable) {
+        this.project = project;
+
         tv_project_name.setText(project.getName());
         tv_project_other.setText(String.format("By %s", project.getOrganizationName()));
         progressBar.setProgress(progressMap.get(project.getId()));
@@ -97,12 +107,41 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
                 chkbx.setEnabled(!disable);
                 chkbx.setOnClickListener(v -> {
-                    if(!disable)
+                    if (!disable)
                         downloadListItemClicked(getLayoutPosition(), position);
+                });
+
+                TextView btnRetry = convertView.findViewById(R.id.btn_retry);
+                View finalConvertView = convertView;
+
+                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0;
+
+                if (hasFailedUrls) {
+                    btnRetry.setText(finalConvertView.getContext().getString(R.string.retry_forms, syncable.getFailedUrl().size()));
+                    btnRetry.setVisibility(View.VISIBLE);
+                    btnRetry.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!NetworkUtils.isNetworkConnected()) {
+                                Toast.makeText(btnRetry.getContext(), btnRetry.getContext().getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            String[] failedUrls = syncable.getFailedUrl().toArray(new String[0]);
+                            retryButtonClicked(project, failedUrls);
+                        }
                     });
+                } else {
+                    btnRetry.setVisibility(View.GONE);
+                }
+
+
                 return convertView;
             }
         });
+
+    }
+
+    public void retryButtonClicked(Project project, String[] failedUrls) {
 
     }
 

@@ -2,9 +2,10 @@ package org.bcss.collect.naxa.v3.network;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.bcss.collect.android.logic.FormDetails;
+import org.bcss.collect.naxa.ResponseUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
@@ -35,6 +36,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function4;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -146,45 +148,40 @@ public class SyncServiceV3 extends IntentService {
 
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
-                    .flatMap(new Function<Project, Observable<Object>>() {
+                    .flatMap(new Function<Project, ObservableSource<?>>() {
                         @Override
-                        public Observable<Object> apply(Project project) throws Exception {
+                        public ObservableSource<?> apply(Project project) throws Exception {
+
 
                             Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<ScheduleForm>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
-                            Observable<Project> odkForms = ODKFormRemoteSource.getInstance().getByProjectId(project);
+                            Observable<ArrayList<FormDetails>> odkForms = ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
 
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
-                                    .doOnNext(new Consumer<Object>() {
+                                    .doOnNext(new Consumer<ArrayList<? extends Object>>() {
                                         @Override
-                                        public void accept(Object o) throws Exception {
-                                            markAsCompleted(project.getId(), 1);
+                                        public void accept(ArrayList<?> objects) {
+                                            markAsCompleted(project.getId(),1);
+                                            if (ResponseUtils.isListOfType(objects, FormDetails.class)) {
+                                                saveFailedFormUrls((List<FormDetails>) objects);
+                                            }
                                         }
-                                    }).doOnSubscribe(disposable -> markAsRunning(project.getId(), 1))
-                                    .doOnDispose(new Action() {
-                                        @Override
-                                        public void run() throws Exception {
-                                            markAsFailed(project.getId(), 1, "");
+
+                                        private void saveFailedFormUrls(List<FormDetails> formDetailsList) {
+
+                                            ArrayList<String> failed = new ArrayList<>();
+                                            for (FormDetails formDetails : formDetailsList) {
+                                                failed.add(formDetails.getFormID());
+                                            }
+
+                                            if (failed.size() > 0) {
+                                                markAsFailed(project.getId(), 1, failed.toString());
+                                            }
                                         }
                                     })
-                                    .onErrorReturn(new Function<Throwable, Project>() {
-                                        @Override
-                                        public Project apply(Throwable throwable) throws Exception {
-                                            Timber.e(throwable);
-                                            String urls = new ArrayList<String>() {
-                                                {
-                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(project.getId()));
-                                                    add(APIEndpoint.BASE_URL + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(project.getId()));
-                                                }
-                                            }.toString();
-
-                                            markAsFailed(project.getId(), 1, urls);
-                                            return project;
-                                        }
-                                    });
+                                    .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1));
 
                         }
                     })
@@ -199,6 +196,7 @@ public class SyncServiceV3 extends IntentService {
             Timber.e(e);
         }
     }
+
 
     private void cancelAllTask() {
         for (Disposable disposable : syncDisposable) {
@@ -295,10 +293,15 @@ public class SyncServiceV3 extends IntentService {
         return new String[]{failedUrl, projectId};
     }
 
-    private void markAsFailed(String projectId, int type, String failedUrl) {
+    private void markAsFailed(String projectId, int type, String failedUrl, boolean shouldRetry) {
         saveState(projectId, type, failedUrl, false, Constant.DownloadStatus.FAILED);
         Timber.e("Download stopped %s for project %s", failedUrl, projectId);
     }
+
+    private void markAsFailed(String projectId, int type, String failedUrl) {
+        markAsFailed(projectId, type, failedUrl, false);
+    }
+
 
     private void markAsRunning(String projectId, int type) {
         saveState(projectId, type, "", true, Constant.DownloadStatus.RUNNING);

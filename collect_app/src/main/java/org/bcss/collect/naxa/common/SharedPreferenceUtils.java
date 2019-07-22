@@ -37,7 +37,7 @@ public class SharedPreferenceUtils {
      * Called to save supplied value in shared preferences against given key.
      *
      * @param context Context of caller activity
-     * @param key     Key of value to save against
+     * @param key     RequestCode of value to save against
      * @param value   Value to save
      */
     public static void saveToPrefs(Context context, String key, String value) {
@@ -73,7 +73,7 @@ public class SharedPreferenceUtils {
      * Default value will be returned of no value found or error occurred.
      *
      * @param context      Context of caller activity
-     * @param key          Key to find value against
+     * @param key          RequestCode to find value against
      * @param defaultValue Value to return if no data found against given key
      * @return Return the value found against given key, default if not found or any error occurs
      */
@@ -100,7 +100,7 @@ public class SharedPreferenceUtils {
 
     /**
      * @param context Context of caller activity
-     * @param key     Key to delete siteName SharedPreferences
+     * @param key     RequestCode to delete siteName SharedPreferences
      */
     public static void removeFromPrefs(Context context, String key) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

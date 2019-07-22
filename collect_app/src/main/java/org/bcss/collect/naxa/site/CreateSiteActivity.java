@@ -31,12 +31,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
@@ -62,7 +58,6 @@ import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -811,7 +806,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 
                     Intent toCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     toCamera.putExtra(MediaStore.EXTRA_OUTPUT, phototoUploadUri);
-                    startActivityForResult(toCamera, Constant.Key.RC_CAMERA);
+                    startActivityForResult(toCamera, Constant.RequestCode.RC_CAMERA);
                     break;
                 case 1:
                     Intent intent = new Intent();
@@ -819,7 +814,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "Select site image"), Constant.Key.SELECT_FILE);
+                    startActivityForResult(Intent.createChooser(intent, "Select site image"), Constant.RequestCode.SELECT_FILE);
                     break;
                 default:
                     break;
@@ -854,16 +849,16 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         }
 
         switch (requestCode) {
-            case Constant.Key.RC_CAMERA:
+            case Constant.RequestCode.RC_CAMERA:
                 createSiteViewModel.setPhoto(photoToUpload.getAbsolutePath());
                 break;
-            case Constant.Key.SELECT_FILE:
+            case Constant.RequestCode.SELECT_FILE:
                 Uri uri = data.getData();
                 String path = ImageFileUtils.getPath(this, uri);
                 createSiteViewModel.setPhoto(path);
 
                 break;
-            case Constant.Key.GEOPOINT_RESULT_CODE:
+            case Constant.RequestCode.GEOPOINT_RESULT_CODE:
                 String location = data.getStringExtra(LOCATION_RESULT);
                 String[] locationSplit = location.split(" ");
                 String latitude = locationSplit[0];
@@ -878,7 +873,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     public void onBtnCollectSiteRecordLocationClicked() {
         if (PermissionUtils.checkIfLocationPermissionsGranted(this)) {
             Intent toGeoPointWidget = new Intent(this, GeoPointActivity.class);
-            startActivityForResult(toGeoPointWidget, Constant.Key.GEOPOINT_RESULT_CODE);
+            startActivityForResult(toGeoPointWidget, Constant.RequestCode.GEOPOINT_RESULT_CODE);
         } else {
             PermissionUtils.requestLocationPermissions(this, new PermissionListener() {
                 @Override
