@@ -194,20 +194,6 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @Override
     public void onRetryButtonClicked(Project project, String[] failedUrls) {
 
-//        HashMap<String, List<Syncable>> map = new HashMap<>();
-//        map.put(project.getId(), new ArrayList<Syncable>() {{
-//            add(0, new Syncable("Forms", true, -1));
-//            add(0, new Syncable("Forms", true, -1));
-//            add(0, new Syncable("Forms", true, -1));
-//        }});
-//        Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
-//        syncIntent.putParcelableArrayListExtra("projects", new ArrayList<Project>() {
-//            {
-//                add(project);
-//            }
-//        });
-//        syncIntent.putExtra("selection", map);
-//        startService(syncIntent);
         FieldSightFormDownloadList.startForResult(this, project, failedUrls, Constant.RequestCode.DOWNLOAD_FORMS);
     }
 

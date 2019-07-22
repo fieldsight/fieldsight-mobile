@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -25,6 +26,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.forms.FieldSightFormDownloadList;
 import org.bcss.collect.naxa.login.model.Project;
+import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.v3.network.Syncable;
 
 import java.util.ArrayList;
@@ -120,6 +122,10 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                     btnRetry.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if (!NetworkUtils.isNetworkConnected()) {
+                                Toast.makeText(btnRetry.getContext(), btnRetry.getContext().getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                             String[] failedUrls = syncable.getFailedUrl().toArray(new String[0]);
                             retryButtonClicked(project, failedUrls);
                         }

@@ -59,10 +59,13 @@ public class ODKFormRemoteSource {
                         ArrayList<FormDetails> failedForms = new ArrayList<>();
                         for (FormDetails key : formDetailsStringHashMap.keySet()) {
                             String value = formDetailsStringHashMap.get(key);
-                            boolean isDownloadSuccessfully = Collect.getInstance().getString(R.string.success).equals(value) && key.getFormID() != null;
-                            if (!isDownloadSuccessfully) {
-                                failedForms.add(key);
+                            boolean hasDownloadFailed = !Collect.getInstance().getString(R.string.success).equals(value);
+                            if(hasDownloadFailed){
+                                if(key.getFormID() != null){
+                                    failedForms.add(key);
+                                }
                             }
+
                         }
 
 
