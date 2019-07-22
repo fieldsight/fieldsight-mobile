@@ -379,11 +379,13 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     private void showSubSiteDialog(Site site) {
-        DialogFactory.createSiteListDialog(requireActivity(), "", new String[]{site.getName(), "a", "b"}, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+        Site subsite = new Site();
+        subsite.setName("sub-site-1");
 
-            }
+        Site[] items = new Site[]{site, subsite};
+        DialogFactory.createSiteListDialog(requireActivity(), "Select a site", items, (dialog, which) -> {
+            Site selectedSite = items[which];
+            FragmentHostActivity.start(requireActivity(), selectedSite);
         }).show();
     }
 

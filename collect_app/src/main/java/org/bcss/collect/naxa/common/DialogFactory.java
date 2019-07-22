@@ -12,20 +12,24 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.fragments.dialogs.SimpleDialog;
+import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
 
 import java.util.Calendar;
@@ -173,15 +177,17 @@ public final class DialogFactory {
     }
 
 
-    public static AlertDialog.Builder createSiteListDialog(Context context, String title, String[] items, DialogInterface.OnClickListener onClickListener) {
+    public static AlertDialog.Builder createSiteListDialog(Context context, String title, Site[] items, DialogInterface.OnClickListener onClickListener) {
 
 
-        ListAdapter adapter = new ArrayAdapter<String>(context, R.layout.site_list_item, items) {
+        ListAdapter adapter = new ArrayAdapter<Site>(context, R.layout.sub_site_list_item, items) {
             class AdapterVH {
                 TextView title;
+                RelativeLayout layout;
             }
 
             AdapterVH holder;
+
 
             @NonNull
             @Override
@@ -191,15 +197,32 @@ public final class DialogFactory {
 
                 if (convertView == null) {
                     convertView = inflater.inflate(
-                            R.layout.site_list_item, parent, false);
+                            R.layout.sub_site_list_item, parent, false);
                     holder = new AdapterVH();
                     holder.title = convertView.findViewById(R.id.tv_site_name);
+                    holder.layout = convertView.findViewById(R.id.root_layout_message_list_row);
                     convertView.setTag(holder);
                 } else {
                     holder = (AdapterVH) convertView.getTag();
                 }
+                if (position == 0) {
+                    holder.layout.setBackgroundColor(ContextCompat.getColor(holder.layout.getContext(), R.color.background_grey));
+                }else {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(1000,0,0,0);
+                    holder.layout.setLayoutParams(params);
+                }
+                String formattedSiteName = items[position].getName();
+                holder.title.setText(formattedSiteName);
+                holder.layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                holder.title.setText(items[position]);
+                    }
+                });
                 return convertView;
             }
         };
@@ -207,7 +230,8 @@ public final class DialogFactory {
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.RiseUpDialog);
         builder.setAdapter(adapter, onClickListener);
 
-        builder.setTitle(title).setItems(items, onClickListener);
+
+
         return builder;
     }
 
