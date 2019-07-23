@@ -119,8 +119,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         collectFilterAndApply(new ArrayList<>(0));
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
 
-
-
         return view;
     }
 
@@ -154,6 +152,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
     }
+
 
     private void setupRecycleView() {
         siteListAdapter = new SiteListAdapter(new ArrayList<>(0), this);
