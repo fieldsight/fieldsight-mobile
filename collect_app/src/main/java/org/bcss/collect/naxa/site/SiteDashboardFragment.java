@@ -11,8 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -283,7 +285,8 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         btnToggleFinalized = rootView.findViewById(R.id.site_option_btn_finalize_site);
         btnShowInfo = rootView.findViewById(R.id.site_option_frag_btn_info);
         btnShowInfo.setOnClickListener(this);
-
+        CardView cv_stageform = rootView.findViewById(R.id.cv_stageform);
+        cv_stageform.setVisibility(TextUtils.isEmpty(loadedSite.getSite()) ? View.GONE : View.VISIBLE);
 
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);
