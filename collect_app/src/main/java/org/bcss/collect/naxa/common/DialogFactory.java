@@ -31,8 +31,11 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.fragments.dialogs.SimpleDialog;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
+import org.bcss.collect.naxa.site.SiteListFragment;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 
 public final class DialogFactory {
@@ -177,61 +180,64 @@ public final class DialogFactory {
     }
 
 
-    public static AlertDialog.Builder createSiteListDialog(Context context, String title, Site[] items, DialogInterface.OnClickListener onClickListener) {
-
-
+    public static AlertDialog.Builder createSiteListDialog(Context context, List<Site> items, DialogInterface.OnClickListener listener) {
         ListAdapter adapter = new ArrayAdapter<Site>(context, R.layout.sub_site_list_item, items) {
-            class AdapterVH {
-                TextView title;
-                RelativeLayout layout;
+            class SiteSubsiteViewHolder {
+                TextView tv_site_name, tv_subsiteName, icon_text;
+                private boolean isSite;
+                 SiteSubsiteViewHolder(View view, boolean isSite) {
+                    this.isSite = isSite;
+                    if(isSite) {
+                        tv_site_name = view.findViewById(R.id.tv_site_name);
+                    }
+                    tv_subsiteName = view.findViewById(R.id.tv_subsite_name);
+                    icon_text = view.findViewById(R.id.icon_text);
+                }
+
+                public boolean isSite() {
+                    return this.isSite;
+                }
+
             }
-
-            AdapterVH holder;
-
+            HashMap<String, SiteSubsiteViewHolder> holderMap = new HashMap<>();
 
             @NonNull
             @Override
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                final LayoutInflater inflater = (LayoutInflater) context
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                if (convertView == null) {
-                    convertView = inflater.inflate(
-                            R.layout.sub_site_list_item, parent, false);
-                    holder = new AdapterVH();
-                    holder.title = convertView.findViewById(R.id.tv_site_name);
-                    holder.layout = convertView.findViewById(R.id.root_layout_message_list_row);
-                    convertView.setTag(holder);
-                } else {
-                    holder = (AdapterVH) convertView.getTag();
-                }
-                if (position == 0) {
-                    holder.layout.setBackgroundColor(ContextCompat.getColor(holder.layout.getContext(), R.color.background_grey));
-                }else {
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                            RelativeLayout.LayoutParams.MATCH_PARENT,
-                            RelativeLayout.LayoutParams.WRAP_CONTENT
-                    );
-                    params.setMargins(1000,0,0,0);
-                    holder.layout.setLayoutParams(params);
-                }
-                String formattedSiteName = items[position].getName();
-                holder.title.setText(formattedSiteName);
-                holder.layout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
+                final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                SiteSubsiteViewHolder holder;
+                if(position == 0) {
+                    if(holderMap.containsKey("site")) {
+                        holder = holderMap.get("site");
+                    } else {
+                        convertView = inflater.inflate(R.layout.subsite_list_header, parent, false);
+                         holder = new SiteSubsiteViewHolder(convertView, true);
+                        holderMap.put("site", holder);
+                        convertView.setTag("site");
                     }
-                });
+                } else {
+                    if(holderMap.containsKey("subsite")) {
+                        holder = holderMap.get("subsite");
+                    }
+                    else {
+                        convertView = inflater.inflate(R.layout.sub_site_list_item, parent, false);
+                        holder = new SiteSubsiteViewHolder(convertView, false);
+                        holderMap.put("subsite", holder);
+                        convertView.setTag("subsite");
+                    }
+                }
+
+                if(holder.isSite()) {
+                    holder.tv_site_name.setText(getItem(position).getName());
+                }
+                holder.tv_subsiteName.setText(getItem(position).getName());
+                holder.icon_text.setText(getItem(position).getName().charAt(0));
                 return convertView;
             }
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.RiseUpDialog);
-        builder.setAdapter(adapter, onClickListener);
-
-
-
+        builder.setAdapter(adapter, listener);
         return builder;
     }
 

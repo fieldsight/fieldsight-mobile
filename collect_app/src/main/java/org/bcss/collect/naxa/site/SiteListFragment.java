@@ -103,7 +103,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         return siteListFragment;
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -364,10 +363,14 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     private void showSubSiteDialog(Site site) {
-        Site[] subsiteList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
-        DialogFactory.createSiteListDialog(requireActivity(), site.getName() + "- subsites" , subsiteList, (dialog, which) -> {
-            Site selectedSite = subsiteList[which];
-            FragmentHostActivity.start(requireActivity(), selectedSite);
+        List<Site> subsiteList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
+        subsiteList.add(0, site);
+        DialogFactory.createSiteListDialog(requireActivity(), subsiteList, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Timber.i("SiteListFragment, which = %d", which);
+                FragmentHostActivity.start(requireActivity(), subsiteList.get(which));
+            }
         }).show();
     }
 
