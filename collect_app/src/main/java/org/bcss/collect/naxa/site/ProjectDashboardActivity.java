@@ -137,16 +137,7 @@ public class ProjectDashboardActivity extends BaseActivity {
         ActivityOptions activityOptions = null;
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
-
-
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
-//            context.startActivity(intent, activityOptions.toBundle());
-//        }else {
         context.startActivity(intent);
-//        }
-
-
     }
 
     @Override
@@ -161,7 +152,6 @@ public class ProjectDashboardActivity extends BaseActivity {
 
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
-
         } catch (NullPointerException e) {
             ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
             finish();

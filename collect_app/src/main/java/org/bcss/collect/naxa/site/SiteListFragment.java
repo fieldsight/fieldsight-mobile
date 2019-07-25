@@ -113,13 +113,11 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         setupRecycleView();
         setHasOptionsMenu(true);
 
-
         allSitesLiveData = SiteLocalSource.getInstance().getById(loadedProject.getId());
         offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_OFFLINE);
 
-        collectFilterAndApply(new ArrayList<>(0));
+        collectFilterAndApply(new ArrayList<>());
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
-
 
         return view;
     }
@@ -183,15 +181,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
-//        String selectedRegion = ProjectFilterLocalSource.getInstance()
-//                .getById(loadedProject.getId())
-//                .toObservable()
-//                .
-//                .getSelectedRegionLabel();
-//
-//        String regionLabel = ProjectFilterLocalSource.getInstance()
-//                .getById(loadedProject.getId())
-//                .getSelectedRegionId();
         String site = "", selectedRegion = "0", regionLabel = "";
 
         for (FilterOption filterOption : sortList) {
@@ -220,9 +209,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         source.observe(this, sites -> {
             siteListAdapter.updateList(sites);
         });
-
-//        ProjectFilter projectFilter = new ProjectFilter(loadedProject.getId(), selectedRegion, regionLabel);
-//        AsyncTask.execute(() -> FieldSightConfigDatabase.getDatabase(Collect.getInstance()).getProjectFilterDAO().insert(projectFilter));
 
     }
 
@@ -380,6 +366,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     private void showSubSiteDialog(Site site) {
         Site subsite = new Site();
+        // show the subsite list
         subsite.setName("sub-site-1");
 
         Site[] items = new Site[]{site, subsite};
