@@ -114,11 +114,11 @@ public class Site implements Parcelable {
         this.enable_subsites = enable_subsites;
     }
 
-    public int getSite() {
+    public String getSite() {
         return site;
     }
 
-    public void setSite(int site) {
+    public void setSite(String site) {
         this.site = site;
     }
 
@@ -127,7 +127,7 @@ public class Site implements Parcelable {
     }
 
     private boolean enable_subsites;
-    private int site;
+    private String site;
 
     @Ignore
     private boolean hasSubSites = true;
@@ -147,7 +147,7 @@ public class Site implements Parcelable {
                 Boolean isSurvey, String dateCreated, String project,
                 int isSiteVerified, String siteTypeError, String metaAttributes,
                 String regionId, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm,
-                List<String> siteDocuments, boolean enable_subsites, int site) {
+                List<String> siteDocuments, boolean enable_subsites, String site) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -513,7 +513,7 @@ public class Site implements Parcelable {
         dest.writeString(this.generalFormDeployedFrom);
         dest.writeString(this.stagedFormDeployedFrom);
         dest.writeString(this.scheduleFormDeployedForm);
-        dest.writeInt(this.site);
+        dest.writeString(this.site);
         dest.writeInt(this.enable_subsites? 1 : 0);
     }
 
@@ -544,7 +544,7 @@ public class Site implements Parcelable {
         this.generalFormDeployedFrom = in.readString();
         this.stagedFormDeployedFrom = in.readString();
         this.scheduleFormDeployedForm = in.readString();
-        this.enable_subsites = in.readInt() == 1 ? true : false;
+        this.enable_subsites = in.readInt() == 1;
     }
 
     public static final Parcelable.Creator<Site> CREATOR = new Parcelable.Creator<Site>() {

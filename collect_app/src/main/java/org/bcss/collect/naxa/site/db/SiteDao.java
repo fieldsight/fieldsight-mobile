@@ -67,6 +67,8 @@ public interface SiteDao {
     @Query("SELECT * from sites where project =:projectId and regionId=:cluster ")
     LiveData<List<Site>> getSiteFromFilter(String projectId, String cluster);
 
+    @Query("SELECT * from sites where site =:parentId")
+    Site[] getSiteByParentId(String parentId);
 
     @Query("DELETE from sites WHERE isSiteVerified =:id ")
     void deleteSyncedSites(int id);

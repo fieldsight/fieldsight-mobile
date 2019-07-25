@@ -237,7 +237,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
             database.execSQL("ALTER TABLE site"
                     + " ADD COLUMN `enable_subsites` INTEGER DEFAULT 0");
             database.execSQL("ALTER TABLE site"
-                    + " ADD COLUMN `site` INTEGER ");
+                    + " ADD COLUMN `site` TEXT ");
         }
     };
 

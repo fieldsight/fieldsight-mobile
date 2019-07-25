@@ -70,6 +70,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteFromFilter(projectId, cluster);
     }
 
+    public Site[] getSitesByParentId(String siteId) {
+        return dao.getSiteByParentId(siteId);
+    }
+
     public LiveData<Site> getBySiteId(String siteId) {
         return dao.getSiteById(siteId);
     }

@@ -355,23 +355,18 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @Override
     public void onUselessLayoutClicked(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
-            if (site.hasSubSites()) {
+            if (site.isEnable_subsites()) {
                 showSubSiteDialog(site);
             } else {
                 FragmentHostActivity.start(getActivity(), site);
-
             }
         }
     }
 
     private void showSubSiteDialog(Site site) {
-        Site subsite = new Site();
-        // show the subsite list
-        subsite.setName("sub-site-1");
-
-        Site[] items = new Site[]{site, subsite};
-        DialogFactory.createSiteListDialog(requireActivity(), "Select a site", items, (dialog, which) -> {
-            Site selectedSite = items[which];
+        Site[] subsiteList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
+        DialogFactory.createSiteListDialog(requireActivity(), site.getName() + "- subsites" , subsiteList, (dialog, which) -> {
+            Site selectedSite = subsiteList[which];
             FragmentHostActivity.start(requireActivity(), selectedSite);
         }).show();
     }
