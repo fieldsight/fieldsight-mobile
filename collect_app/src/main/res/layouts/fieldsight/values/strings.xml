@@ -271,6 +271,9 @@
     <string name="report_agree">I agree to send my shown data to the server for the debugging purpose</string>
     <string name="report_bug">Report Bug</string>
     <string name="add_your_message">Add description here</string>
+    <string name="site_name">Site</string>
+    <string name="sub_site_name">Sub sites</string>
+    <string name="site_message">Send data for the site</string>
 
     <string-array name="bug_type">
         <item>Select error type</item>

@@ -99,15 +99,17 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private Unbinder unbinder;
     private View rootView;
     private LiveData<Site> siteLiveData;
+    boolean isParent = false;
 
     public SiteDashboardFragment() {
 
     }
 
 
-    public static SiteDashboardFragment newInstance(Site site) {
+    public static SiteDashboardFragment newInstance(Site site, boolean isParent) {
         SiteDashboardFragment fragment = new SiteDashboardFragment();
         Bundle bundle = new Bundle();
+        bundle.putBoolean("is_parent", isParent);
         bundle.putParcelable(EXTRA_OBJECT, site);
         fragment.setArguments(bundle);
         return fragment;
@@ -128,6 +130,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         //Constants.MY_FRAG = 1;
         unbinder = ButterKnife.bind(this, rootView);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
+        isParent = getArguments().getBoolean("is_parent");
 
         bindUI(rootView);
 
@@ -286,7 +289,9 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         btnShowInfo = rootView.findViewById(R.id.site_option_frag_btn_info);
         btnShowInfo.setOnClickListener(this);
         CardView cv_stageform = rootView.findViewById(R.id.cv_stageform);
-        cv_stageform.setVisibility(TextUtils.isEmpty(loadedSite.getSite()) ? View.GONE : View.VISIBLE);
+
+        Timber.d("SitesdashboardFragment, isParentsite = " + isParent);
+        cv_stageform.setVisibility(isParent? View.GONE : View.VISIBLE);
 
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);

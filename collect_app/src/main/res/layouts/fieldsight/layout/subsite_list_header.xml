@@ -3,32 +3,20 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/tv_site_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textColor="#212121"
-        android:textSize="@dimen/text_size_medium"
-        tools:text="site name" />
-
 
     <LinearLayout
         android:id="@+id/root_layout_message_list_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="@dimen/padding_large">
+        android:gravity="center_vertical">
 
         <RelativeLayout
             android:id="@+id/icon_container"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/icon_profile"
@@ -37,7 +25,7 @@
                 android:background="@drawable/circle_blue" />
 
             <TextView
-                android:id="@+id/icon_text"
+                android:id="@+id/tv_icon_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -46,16 +34,62 @@
                 tools:text="N" />
         </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
         <TextView
-            android:id="@+id/tv_subsite_name"
+            android:id="@+id/tv_sub_site_name"
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:layout_marginLeft="8dp"
             android:lines="1"
             android:textSize="@dimen/msg_text_primary"
             android:textStyle="normal"
             tools:text="Narayan Primary School" />
+
+            <TextView
+                android:id="@+id/tv_sub_site_identifier"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:layout_marginLeft="8dp"
+                android:lines="1"
+                android:textColor="#727272"
+                android:textSize="@dimen/text_size_medium_small"
+                android:textStyle="normal"
+                tools:text="Site identifier" />
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="@color/primaryColor"
+            app:srcCompat="@drawable/ic_file_open"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/gray600"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="#212121"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:textSize="@dimen/text_size_small"
+        android:text="@string/sub_site_name" />
+
 
 </LinearLayout>

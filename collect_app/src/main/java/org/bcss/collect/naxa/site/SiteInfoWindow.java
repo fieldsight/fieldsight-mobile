@@ -1,7 +1,6 @@
 package org.bcss.collect.naxa.site;
 
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
@@ -33,7 +32,7 @@ public class SiteInfoWindow extends InfoWindow {
         txtDescription.setText(site.getIdentifier());
         txtSubdescription.setText(site.getAddress());
 
-        btnMoreInfo.setOnClickListener(v -> FragmentHostActivity.start(Collect.getInstance().getApplicationContext(),site));
+        btnMoreInfo.setOnClickListener(v -> FragmentHostActivity.start(Collect.getInstance().getApplicationContext(),site, false));
 
     }
 

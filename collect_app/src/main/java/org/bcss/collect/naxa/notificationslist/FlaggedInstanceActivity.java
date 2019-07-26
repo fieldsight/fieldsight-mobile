@@ -18,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -48,7 +47,6 @@ import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.DownloadFormListTask;
@@ -158,7 +156,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                     setSiteData(site.getName(), site.getIdentifier(), site.getAddress());
 
-                    cardViewSite.setOnClickListener(v -> FragmentHostActivity.start(FlaggedInstanceActivity.this, site));
+                    cardViewSite.setOnClickListener(v -> FragmentHostActivity.start(FlaggedInstanceActivity.this, site, false));
                 });
 
 

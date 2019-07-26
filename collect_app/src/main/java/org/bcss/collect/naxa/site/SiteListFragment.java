@@ -3,7 +3,6 @@ package org.bcss.collect.naxa.site;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -36,10 +35,8 @@ import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
 import org.bcss.collect.naxa.common.FilterOption;
-import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.data.SiteRegion;
@@ -47,7 +44,6 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.survey.SurveyFormsActivity;
 import org.bcss.collect.naxa.v3.network.Region;
-import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
@@ -56,8 +52,6 @@ import org.odk.collect.android.utilities.ThemeUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,11 +63,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
-import retrofit2.HttpException;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 
@@ -112,7 +103,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         setupRecycleView();
         setHasOptionsMenu(true);
 
-        allSitesLiveData = SiteLocalSource.getInstance().getById(loadedProject.getId());
+        allSitesLiveData = SiteLocalSource.getInstance().getAllParentSite(loadedProject.getId());
         offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_OFFLINE);
 
         collectFilterAndApply(new ArrayList<>());
@@ -357,7 +348,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
             if (site.isEnable_subsites()) {
                 showSubSiteDialog(site);
             } else {
-                FragmentHostActivity.start(getActivity(), site);
+                FragmentHostActivity.start(getActivity(), site, false);
             }
         }
     }
@@ -365,12 +356,11 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private void showSubSiteDialog(Site site) {
         List<Site> subsiteList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
         subsiteList.add(0, site);
-        DialogFactory.createSiteListDialog(requireActivity(), subsiteList, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Timber.i("SiteListFragment, which = %d", which);
-                FragmentHostActivity.start(requireActivity(), subsiteList.get(which));
-            }
+        Timber.i("SiteListFragment subsiteLength = %d", subsiteList.size());
+        DialogFactory.createSiteListDialog(requireActivity(), subsiteList, (dialog, which) -> {
+            Timber.i("SiteListFragment, which = %d", which);
+            boolean isParent = which == 0;
+            FragmentHostActivity.start(requireActivity(), subsiteList.get(which), isParent);
         }).show();
     }
 
