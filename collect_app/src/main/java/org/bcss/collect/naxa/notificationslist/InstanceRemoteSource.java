@@ -63,6 +63,7 @@ public class InstanceRemoteSource {
     }
 
     private Observable<Uri> downloadInstance(Instance.Builder instance, String downloadUrl, String[] nameAndPath) {
+        Timber.i("Downloading filled form from %s for %s", downloadUrl, nameAndPath[0]);
 
         return Observable.just(instance)
                 .flatMap((Function<Instance.Builder, ObservableSource<Uri>>) instance1 -> {

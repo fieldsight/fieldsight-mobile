@@ -36,7 +36,7 @@
             android:textColor="@color/displaySubtextColor"
             android:visibility="gone"/>
 
-    <org.odk.collect.android.views.ProgressBar
+    <org.bcss.collect.android.views.ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
