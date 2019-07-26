@@ -1,6 +1,5 @@
 package org.odk.collect.android.utilities;
 
-import org.bcss.collect.android.upload.InstanceGoogleSheetsUploader;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

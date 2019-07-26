@@ -23,6 +23,8 @@ import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Form;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.exception.BadUrlException;

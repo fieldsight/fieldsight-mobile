@@ -129,16 +129,16 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
 
 
-        if (helper == null) {
-            // For testing:
-            helper = new MapHelper(this.getContext(), map, this);
-
-            map.setMultiTouchControls(true);
-            map.setBuiltInZoomControls(true);
-            map.setTilesScaledToDpi(true);
-
-
-        }
+//        if (helper == null) {
+//            // For testing:
+//            helper = new MapHelper(this.getContext(), map, this);
+//
+//            map.setMultiTouchControls(true);
+//            map.setBuiltInZoomControls(true);
+//            map.setTilesScaledToDpi(true);
+//
+//
+//        }
 
 //        handler.postDelayed(new Runnable() {
 //            public void run() {

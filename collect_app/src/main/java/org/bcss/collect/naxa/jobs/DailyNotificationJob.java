@@ -1,17 +1,15 @@
 package org.bcss.collect.naxa.jobs;
 
+import android.util.Pair;
+
 import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
+
 
 import com.evernote.android.job.DailyJob;
-import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
-import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.data.FieldSightNotificationBuilder;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;

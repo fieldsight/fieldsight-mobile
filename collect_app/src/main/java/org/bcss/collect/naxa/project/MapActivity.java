@@ -34,14 +34,12 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.location.LocationListener;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.spatial.MapHelper;
 import org.bcss.collect.naxa.login.model.Site;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
 import org.odk.collect.android.utilities.GeoPointUtils;
-import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.IRegisterReceiver;
@@ -146,14 +144,14 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         }
 
         map = findViewById(R.id.omap);
-        if (helper == null) {
-            // For testing:
-            helper = new MapHelper(this, map, this);
-
-            map.setMultiTouchControls(true);
-            map.setBuiltInZoomControls(true);
-            map.setTilesScaledToDpi(true);
-        }
+//        if (helper == null) {
+//            // For testing:
+//            helper = new MapHelper(this, map, this);
+//
+//            map.setMultiTouchControls(true);
+//            map.setBuiltInZoomControls(true);
+//            map.setTilesScaledToDpi(true);
+//        }
 
         marker = new Marker(map);
 
@@ -162,7 +160,7 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         setSiteMarkerOrFail();
 
 
-        marker.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_place));
+        marker.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_place_black));
         myLocationOverlay = new MyLocationNewOverlay(map);
 
 
@@ -201,39 +199,39 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
         });
 
 
-        zoomDialogView = getLayoutInflater().inflate(R.layout.geo_zoom_dialog, null);
-
-        zoomLocationButton = zoomDialogView.findViewById(R.id.zoom_location);
-        zoomLocationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                zoomToLocation();
-                map.invalidate();
-                zoomDialog.dismiss();
-            }
-        });
-
-        zoomPointButton = zoomDialogView.findViewById(R.id.zoom_saved_location);
-        zoomPointButton.setText("Zoom to site");
-        zoomPointButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                zoomToPoint();
-                map.invalidate();
-                zoomDialog.dismiss();
-            }
-        });
-
-
-        if (latLng != null) {
-            marker.setPosition(latLng);
-            map.getOverlays().add(marker);
-            map.invalidate();
-            captureLocation = true;
-            foundFirstLocation = true;
-            zoomToPoint();
-        }
+//        zoomDialogView = getLayoutInflater().inflate(R.layout.geo_zoom_dialog, null);
+//
+//        zoomLocationButton = zoomDialogView.findViewById(R.id.zoom_location);
+//        zoomLocationButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                zoomToLocation();
+//                map.invalidate();
+//                zoomDialog.dismiss();
+//            }
+//        });
+//
+//        zoomPointButton = zoomDialogView.findViewById(R.id.zoom_saved_location);
+//        zoomPointButton.setText("Zoom to site");
+//        zoomPointButton.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                zoomToPoint();
+//                map.invalidate();
+//                zoomDialog.dismiss();
+//            }
+//        });
+//
+//
+//        if (latLng != null) {
+//            marker.setPosition(latLng);
+//            map.getOverlays().add(marker);
+//            map.invalidate();
+//            captureLocation = true;
+//            foundFirstLocation = true;
+//            zoomToPoint();
+//        }
     }
 
     private void setSiteMarkerOrFail() {
@@ -440,45 +438,45 @@ public class MapActivity extends CollectAbstractActivity implements LocationList
 
     public void showZoomDialog() {
 
-        if (zoomDialog == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(getString(R.string.zoom_to_where));
-            builder.setView(zoomDialogView)
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    })
-                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            dialog.cancel();
-                            zoomDialog.dismiss();
-                        }
-                    });
-            zoomDialog = builder.create();
-        }
-        //If feature enable zoom to button else disable
-        if (myLocationOverlay.getMyLocation() != null) {
-            zoomLocationButton.setEnabled(true);
-            zoomLocationButton.setBackgroundColor(Color.parseColor("#50cccccc"));
-            zoomLocationButton.setTextColor(themeUtils.getPrimaryTextColor());
-        } else {
-            zoomLocationButton.setEnabled(false);
-            zoomLocationButton.setBackgroundColor(Color.parseColor("#50e2e2e2"));
-            zoomLocationButton.setTextColor(Color.parseColor("#FF979797"));
-        }
-
-        if (latLng != null & !setClear) {
-            zoomPointButton.setEnabled(true);
-            zoomPointButton.setBackgroundColor(Color.parseColor("#50cccccc"));
-            zoomPointButton.setTextColor(themeUtils.getPrimaryTextColor());
-        } else {
-            zoomPointButton.setEnabled(false);
-            zoomPointButton.setBackgroundColor(Color.parseColor("#50e2e2e2"));
-            zoomPointButton.setTextColor(Color.parseColor("#FF979797"));
-        }
-        zoomDialog.show();
+//        if (zoomDialog == null) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle(getString(R.string.zoom_to_where));
+//            builder.setView(zoomDialogView)
+//                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            dialog.cancel();
+//                        }
+//                    })
+//                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                        @Override
+//                        public void onCancel(DialogInterface dialog) {
+//                            dialog.cancel();
+//                            zoomDialog.dismiss();
+//                        }
+//                    });
+//            zoomDialog = builder.create();
+//        }
+//        //If feature enable zoom to button else disable
+//        if (myLocationOverlay.getMyLocation() != null) {
+//            zoomLocationButton.setEnabled(true);
+//            zoomLocationButton.setBackgroundColor(Color.parseColor("#50cccccc"));
+//            zoomLocationButton.setTextColor(themeUtils.getPrimaryTextColor());
+//        } else {
+//            zoomLocationButton.setEnabled(false);
+//            zoomLocationButton.setBackgroundColor(Color.parseColor("#50e2e2e2"));
+//            zoomLocationButton.setTextColor(Color.parseColor("#FF979797"));
+//        }
+//
+//        if (latLng != null & !setClear) {
+//            zoomPointButton.setEnabled(true);
+//            zoomPointButton.setBackgroundColor(Color.parseColor("#50cccccc"));
+//            zoomPointButton.setTextColor(themeUtils.getPrimaryTextColor());
+//        } else {
+//            zoomPointButton.setEnabled(false);
+//            zoomPointButton.setBackgroundColor(Color.parseColor("#50e2e2e2"));
+//            zoomPointButton.setTextColor(Color.parseColor("#FF979797"));
+//        }
+//        zoomDialog.show();
     }
 
     private void zoomToLocation() {

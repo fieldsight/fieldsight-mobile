@@ -59,6 +59,7 @@ import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.v3.network.Syncable;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
+import org.odk.collect.android.injection.config.DaggerAppDependencyComponent;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.FormMetadataMigrator;

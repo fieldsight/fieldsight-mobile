@@ -48,6 +48,7 @@ import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
+import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -78,9 +79,9 @@ import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimati
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.ViewUtils.showOrHide;
-import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
+import static org.odk.collect.android.activities.InstanceUploaderListActivity.INSTANCE_UPLOADER;
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
-import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;
+
 
 public class SiteDashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -347,7 +348,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 startActivity(i);
                 break;
             case R.id.site_option_frag_btn_send_form:
-                intent = new Intent(getActivity().getApplicationContext(), InstanceUploaderList.class);
+                intent = new Intent(getActivity().getApplicationContext(), InstanceUploaderListActivity.class);
                 intent.putExtra(EXTRA_OBJECT, loadedSite);
                 startActivity(intent);
                 break;

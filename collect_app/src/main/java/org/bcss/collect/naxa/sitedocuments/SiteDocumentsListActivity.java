@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;

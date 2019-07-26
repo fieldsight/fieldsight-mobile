@@ -9,6 +9,8 @@ import org.bcss.collect.android.events.RxEventBus;
 import org.bcss.collect.android.fragments.DataManagerList;
 import org.bcss.collect.android.http.CollectServerClient;
 import org.bcss.collect.android.logic.PropertyManager;
+import org.bcss.collect.naxa.common.utilities.FieldSightFormListDownloadUtils;
+import org.bcss.collect.naxa.forms.FieldSightFormDownloadList;
 import org.odk.collect.android.activities.FormDownloadList;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.GoogleDriveActivity;
@@ -95,9 +97,13 @@ public interface AppDependencyComponent {
 
     void inject(DownloadFormListUtils downloadFormListUtils);
 
+    void inject(FieldSightFormListDownloadUtils downloadFormListUtils);
+
     void inject(AuthDialogUtility authDialogUtility);
 
     void inject(FormDownloadList formDownloadList);
+
+    void inject(FieldSightFormDownloadList fieldSightFormDownloadList);
 
     void inject(InstanceUploaderListActivity activity);
 

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is used to encapsulate all access to the {@link org.odk.collect.android.database.helpers.FormsDatabaseHelper#DATABASE_NAME}
+ * This class is used to encapsulate all access to the {@link org.bcss.collect.android.database.helpers.FormsDatabaseHelper}
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_access_object
  */
 public class FormsDao {
@@ -101,7 +101,7 @@ public class FormsDao {
      * newestByFormID is true, only the most recently-downloaded version of each form is included.
      */
     private CursorLoader getFormsCursorLoader(String selection, String[] selectionArgs, String sortOrder, boolean newestByFormId) {
-        Uri formUri = newestByFormId ? FormsProviderAPI.FormsColumns.UNIQUE_FORMS_BY_FORMID_URI
+        Uri formUri = newestByFormId ? FormsProviderAPI.FormsColumns.CONTENT_NEWEST_FORMS_BY_FORMID_URI
                 : FormsProviderAPI.FormsColumns.CONTENT_URI;
 
         return new CursorLoader(Collect.getInstance(), formUri, null, selection, selectionArgs, sortOrder);
@@ -284,6 +284,19 @@ public class FormsDao {
             }
         }
         return forms;
+    }
+
+    public Cursor getFormsCursor(String formId){
+        String[] selectionArgs;
+        String selection;
+        selectionArgs = new String[]{formId};
+        selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
+
+        // As long as we allow storing multiple forms with the same id and version number, choose
+        // the newest one
+        String order = FormsProviderAPI.FormsColumns.DATE + " DESC";
+
+        return getFormsCursor(null, selection, selectionArgs, order);
     }
 
     public ContentValues getValuesFromFormObject(Form form) {

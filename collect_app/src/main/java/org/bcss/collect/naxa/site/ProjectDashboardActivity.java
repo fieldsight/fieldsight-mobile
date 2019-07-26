@@ -81,7 +81,7 @@ import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.InstanceChooserList;
-import org.odk.collect.android.activities.InstanceUploaderList;
+import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
@@ -408,7 +408,7 @@ public class ProjectDashboardActivity extends BaseActivity {
             case R.id.nav_send_final_form:
 
                 startActivity(new Intent(getApplicationContext(),
-                        InstanceUploaderList.class));
+                        InstanceUploaderListActivity.class));
 
                 break;
             case R.id.nav_view_finalized_offline_site:

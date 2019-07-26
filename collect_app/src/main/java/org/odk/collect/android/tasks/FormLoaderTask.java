@@ -158,7 +158,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         externalDataManager = new ExternalDataManagerImpl(formMediaDir);
 
         // add external data function handlers
-        ExternalDataHandler externalDataHandlerPull = new org.odk.collect.android.external.handler.ExternalDataHandlerPull(
+        ExternalDataHandler externalDataHandlerPull = new org.bcss.collect.android.external.handler.ExternalDataHandlerPull(
                 externalDataManager);
         formDef.getEvaluationContext().addFunctionHandler(externalDataHandlerPull);
 

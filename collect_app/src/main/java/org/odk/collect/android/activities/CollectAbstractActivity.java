@@ -19,6 +19,9 @@ package org.odk.collect.android.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -99,7 +102,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         try {
             RelativeLayout relativeLayout = findViewById(R.id.fl_toolbar_progress_wrapper);
             if (relativeLayout != null) {
-                ViewUtils.animateViewVisibility(relativeLayout,View.VISIBLE);
+                ViewUtils.animateViewVisibility(relativeLayout, View.VISIBLE);
 //                relativeLayout.setVisibility(View.VISIBLE);
             } else {
                 progressDialog = DialogFactory.createProgressDialogHorizontal(this, getString(R.string.please_wait));

@@ -21,6 +21,7 @@ import android.media.MediaPlayer;
 import androidx.appcompat.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 
+import org.bcss.collect.android.R;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.odk.collect.android.utilities.ToastUtils;
