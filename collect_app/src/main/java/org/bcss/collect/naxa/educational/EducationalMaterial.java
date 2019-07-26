@@ -16,6 +16,7 @@ package org.bcss.collect.naxa.educational;/*
 
 
 import androidx.annotation.NonNull;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 /**

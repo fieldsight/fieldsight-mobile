@@ -48,8 +48,7 @@ import java.io.IOException;
 import timber.log.Timber;
 
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SPLASH_PATH;
-import static org.odk.collect.android.utilities.PermissionUtils.requestPhoneAndStoragePermission;
-import static org.odk.collect.android.utilities.PermissionUtils.requestReadPhoneStatePermission;
+
 
 public class SplashScreenActivity extends Activity {
 
@@ -86,17 +85,6 @@ public class SplashScreenActivity extends Activity {
             }
         });
 
-        new PermissionUtils().requestReadPhoneStatePermission(this, new PermissionListener() {
-            @Override
-            public void granted() {
-
-            }
-
-            @Override
-            public void denied() {
-
-            }
-        }, true);
     }
 
     private void init() {

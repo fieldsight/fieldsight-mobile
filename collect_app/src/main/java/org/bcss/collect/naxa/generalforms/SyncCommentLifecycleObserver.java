@@ -1,6 +1,6 @@
 package org.bcss.collect.naxa.generalforms;
 
-import android.arch.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleObserver;
 
 class SyncCommentLifecycleObserver implements LifecycleObserver {
 }

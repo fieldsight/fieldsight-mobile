@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 17,
-    "identityHash": "d68f86b9e07c393ed72e1c5e6eb158cd",
+    "identityHash": "275bd22e1270c24c5e1e95926d8ae997",
     "entities": [
       {
         "tableName": "sites",
@@ -1066,7 +1066,7 @@
       },
       {
         "tableName": "educational_materials",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `emImages` TEXT, `pdf` TEXT, `title` TEXT, `text` TEXT, `fsFormId` TEXT NOT NULL, PRIMARY KEY(`fsFormId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `emImages` TEXT, `pdf` TEXT, `title` TEXT, `text` TEXT, `fsFormId` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1102,13 +1102,11 @@
             "fieldPath": "fsFormId",
             "columnName": "fsFormId",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
-          "columnNames": [
-            "fsFormId"
-          ],
+          "columnNames": [],
           "autoGenerate": false
         },
         "indices": [],
@@ -1370,7 +1368,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"d68f86b9e07c393ed72e1c5e6eb158cd\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"275bd22e1270c24c5e1e95926d8ae997\")"
     ]
   }
 }

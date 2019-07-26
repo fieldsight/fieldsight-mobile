@@ -1,8 +1,8 @@
 package org.bcss.collect.android;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import org.bcss.collect.naxa.common.Constant;

@@ -12,7 +12,7 @@
 # This isn't perfect; it won't find every conversion issue. You break it you buy it. Viewer discretion is advised.
 
 MAPPING_FILE=androidx-class-mapping.csv
-PROJECT_DIR=.
+PROJECT_DIR=src
 
 replace=""
 while IFS=, read -r from to

@@ -27,6 +27,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.ResponseUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.odk.collect.android.http.HttpPostResult;
 import org.odk.collect.android.utilities.FileUtils;
 import org.opendatakit.httpclientandroidlib.Header;
 import org.opendatakit.httpclientandroidlib.HttpEntity;

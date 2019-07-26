@@ -1,7 +1,7 @@
 package org.bcss.collect.naxa.jobs;
 
-import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 
 import com.evernote.android.job.DailyJob;
 import com.evernote.android.job.JobManager;

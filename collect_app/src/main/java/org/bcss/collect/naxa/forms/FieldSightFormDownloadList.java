@@ -34,6 +34,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.FormDownloadListAdapter;
 import org.bcss.collect.android.application.Collect;

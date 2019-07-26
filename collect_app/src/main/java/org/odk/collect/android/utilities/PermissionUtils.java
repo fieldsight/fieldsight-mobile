@@ -304,7 +304,7 @@ public class PermissionUtils {
 
 
 
-    public static void requestPhoneAndStoragePermission(@NonNull Activity activity, @NonNull PermissionListener action) {
+    public  void requestPhoneAndStoragePermission(@NonNull Activity activity, @NonNull PermissionListener action) {
         MultiplePermissionsListener multiplePermissionsListener = new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport report) {
