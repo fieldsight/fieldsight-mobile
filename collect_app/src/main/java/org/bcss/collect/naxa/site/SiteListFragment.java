@@ -35,10 +35,8 @@ import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
 import org.bcss.collect.naxa.common.FilterOption;
-import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.data.SiteRegion;
@@ -46,7 +44,6 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.survey.SurveyFormsActivity;
 import org.bcss.collect.naxa.v3.network.Region;
-import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
@@ -55,8 +52,6 @@ import org.odk.collect.android.utilities.ThemeUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,11 +63,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
-import retrofit2.HttpException;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 
@@ -102,7 +94,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         return siteListFragment;
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -112,11 +103,10 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         setupRecycleView();
         setHasOptionsMenu(true);
 
-
-        allSitesLiveData = SiteLocalSource.getInstance().getById(loadedProject.getId());
+        allSitesLiveData = SiteLocalSource.getInstance().getAllParentSite(loadedProject.getId());
         offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_OFFLINE);
 
-        collectFilterAndApply(new ArrayList<>(0));
+        collectFilterAndApply(new ArrayList<>());
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
 
         return view;
@@ -182,15 +172,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
-//        String selectedRegion = ProjectFilterLocalSource.getInstance()
-//                .getById(loadedProject.getId())
-//                .toObservable()
-//                .
-//                .getSelectedRegionLabel();
-//
-//        String regionLabel = ProjectFilterLocalSource.getInstance()
-//                .getById(loadedProject.getId())
-//                .getSelectedRegionId();
         String site = "", selectedRegion = "0", regionLabel = "";
 
         for (FilterOption filterOption : sortList) {
@@ -219,9 +200,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         source.observe(this, sites -> {
             siteListAdapter.updateList(sites);
         });
-
-//        ProjectFilter projectFilter = new ProjectFilter(loadedProject.getId(), selectedRegion, regionLabel);
-//        AsyncTask.execute(() -> FieldSightConfigDatabase.getDatabase(Collect.getInstance()).getProjectFilterDAO().insert(projectFilter));
 
     }
 
@@ -368,8 +346,23 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @Override
     public void onUselessLayoutClicked(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
-            FragmentHostActivity.start(getActivity(), site);
+            if (site.isEnable_subsites()) {
+                showSubSiteDialog(site);
+            } else {
+                FragmentHostActivity.start(getActivity(), site, false);
+            }
         }
+    }
+
+    private void showSubSiteDialog(Site site) {
+        List<Site> subsiteList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
+        subsiteList.add(0, site);
+        Timber.i("SiteListFragment subsiteLength = %d", subsiteList.size());
+        DialogFactory.createSiteListDialog(requireActivity(), subsiteList, (dialog, which) -> {
+            Timber.i("SiteListFragment, which = %d", which);
+            boolean isParent = which == 0;
+            FragmentHostActivity.start(requireActivity(), subsiteList.get(which), isParent);
+        }).show();
     }
 
     @Override
