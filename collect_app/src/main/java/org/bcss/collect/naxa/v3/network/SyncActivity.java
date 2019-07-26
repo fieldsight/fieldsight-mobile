@@ -1,10 +1,7 @@
 package org.bcss.collect.naxa.v3.network;
 
-import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,26 +10,22 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.DisposableManager;
-import org.bcss.collect.naxa.common.InternetUtils;
-import org.bcss.collect.naxa.common.SharedPreferenceUtils;
+import org.bcss.collect.naxa.forms.FieldSightFormDownloadList;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.NetworkUtils;
-import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.bcss.collect.naxa.sync.ContentDownloadAdapter;
-import org.bcss.collect.naxa.sync.DownloadViewModel;
 import org.bcss.collect.naxa.v3.adapter.SyncAdapterv3;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
@@ -42,10 +35,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
-
-import static org.bcss.collect.naxa.common.Constant.EXTRA_MESSAGE;
 
 public class SyncActivity extends CollectAbstractActivity implements SyncAdapterCallback {
     @BindView(R.id.toolbar)
@@ -197,8 +187,14 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @Override
     public void childDownloadListSelectionChange(Project project, List<Syncable> list) {
 //    add this request in download queue
-        Timber.i("SyncActivity data = " + readaableSyncParams(project.getName(), list));
+        Timber.i("SyncActivity data = %s", readaableSyncParams(project.getName(), list));
         syncableMap.put(project.getId(), list);
+    }
+
+    @Override
+    public void onRetryButtonClicked(Project project, String[] failedUrls) {
+
+        FieldSightFormDownloadList.startForResult(this, project, failedUrls, Constant.RequestCode.DOWNLOAD_FORMS);
     }
 
     private void enableDisableAdapter(boolean isSyncing) {
@@ -231,7 +227,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         if (runningLiveData != null && runningLiveData.hasObservers()) {
             runningLiveData.removeObserver(runningLiveDataObserver);
         }
-        Timber.i("OnDestroy, isSyncing : " + syncing);
+        Timber.i("OnDestroy, isSyncing : %s", syncing);
         if (syncing) {
             Collect.syncableMap = syncableMap;
             Collect.selectedProjectList = projectList;
@@ -241,4 +237,31 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         }
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Constant.RequestCode.DOWNLOAD_FORMS) {
+            String projectId;
+            HashMap<String, Boolean> statusAndForms = (HashMap<String, Boolean>) data.getSerializableExtra(ApplicationConstants.BundleKeys.FORM_IDS);
+
+            ArrayList<String> failedUrls = new ArrayList<>();
+
+            for (String key : statusAndForms.keySet()) {
+                boolean failedToDownload = !statusAndForms.get(key);
+                if (failedToDownload) {
+                    failedUrls.add(key);
+                }
+            }
+
+            projectId = data.getStringExtra(Constant.EXTRA_ID);
+
+            if (failedUrls.size() > 0) {
+                SyncLocalSourcev3.getInstance().markAsFailed(projectId, 1, failedUrls.toString());
+            } else {
+                SyncLocalSourcev3.getInstance().markAsCompleted(projectId, 1);
+            }
+        }
+    }
 }

@@ -8,18 +8,13 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.FieldSightDatabase;
-import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.site.db.SiteDao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
-
-import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
+import io.reactivex.functions.Action;
 
 public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
 
@@ -48,7 +43,6 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
     }
 
 
-
     public void delete(SyncStat stat) {
         MutableLiveData<Integer> affectedRowsMutData = new MutableLiveData<>();
         AsyncTask.execute(() -> dao.delete(stat));
@@ -65,18 +59,29 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
     }
 
 
+
+    public void markAsFailed(String projectId, int type, String failedUrl) {
+        SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, false, Constant.DownloadStatus.FAILED, System.currentTimeMillis());
+        save(syncStat);
+    }
+
+    public void markAsCompleted(String projectId, int type) {
+        SyncStat syncStat = new SyncStat(projectId, type + "", "", false, Constant.DownloadStatus.COMPLETED, System.currentTimeMillis());
+        save(syncStat);
+    }
+
     @Override
     public void save(ArrayList<SyncStat> items) {
-
+        throw new RuntimeException("Not Implemented yet");
     }
 
     @Override
     public void updateAll(ArrayList<SyncStat> items) {
-
+        throw new RuntimeException("Not Implemented yet");
     }
 
     public void update(SyncStat stat) {
-        AsyncTask.execute(()-> dao.updateAll(stat));
+        AsyncTask.execute(() -> dao.updateAll(stat));
     }
 
     public void delete() {
@@ -85,6 +90,10 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
 
     public LiveData<List<ProjectNameTuple>> getAllSiteSyncingProject() {
         return dao.getAllSiteSyncingProject();
+    }
+
+    public Single<SyncStat> getFailedUrls(String projectId, int type) {
+        return dao.getFailedUrls(projectId, type);
     }
 
 }

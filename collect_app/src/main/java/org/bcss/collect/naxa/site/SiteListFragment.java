@@ -143,6 +143,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         super.setMenuVisibility(menuVisible);
     }
 
+
     private void setupRecycleView() {
         siteListAdapter = new SiteListAdapter(new ArrayList<>(0), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
