@@ -1,8 +1,8 @@
 package org.bcss.collect.naxa.v3.network;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
 
 @Entity(tableName = "syncstat", primaryKeys = {"project_id","type"})
 

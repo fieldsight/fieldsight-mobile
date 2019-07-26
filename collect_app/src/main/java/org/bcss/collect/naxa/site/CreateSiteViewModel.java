@@ -1,7 +1,7 @@
 package org.bcss.collect.naxa.site;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.SingleLiveEvent;
@@ -9,7 +9,6 @@ import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteBuilder;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
-
 import org.bcss.collect.naxa.site.db.SiteRepository;
 import org.bcss.collect.naxa.v3.network.Region;
 

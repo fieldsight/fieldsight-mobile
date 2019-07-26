@@ -27,12 +27,16 @@ import org.bcss.collect.android.external.ExternalAppsUtils;
 import org.javarosa.core.model.data.DecimalData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.external.ExternalAppsUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
+import timber.log.Timber;
 
+import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
 /**
  * Launch an external app to supply a decimal value. If the app
@@ -92,8 +96,12 @@ public class ExDecimalWidget extends ExStringWidget {
     @Override
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
         i.putExtra("value", getDoubleAnswerValue());
-        ((Activity) getContext()).startActivityForResult(i,
-                RequestCodes.EX_DECIMAL_CAPTURE);
+        try {
+            ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_DECIMAL_CAPTURE);
+        } catch (SecurityException e) {
+            Timber.i(e);
+            ToastUtils.showLongToast(R.string.not_granted_permission);
+        }
     }
 
     @Override
@@ -117,5 +125,7 @@ public class ExDecimalWidget extends ExStringWidget {
     public void setBinaryData(Object answer) {
         DecimalData decimalData = ExternalAppsUtils.asDecimalData(answer);
         this.answer.setText(decimalData == null ? null : decimalData.getValue().toString());
+
+        widgetValueChanged();
     }
 }

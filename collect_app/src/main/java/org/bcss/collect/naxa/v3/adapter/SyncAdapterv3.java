@@ -1,12 +1,11 @@
 package org.bcss.collect.naxa.v3.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Constant;
@@ -15,10 +14,8 @@ import org.bcss.collect.naxa.v3.network.SyncAdapterCallback;
 import org.bcss.collect.naxa.v3.network.SyncStat;
 import org.bcss.collect.naxa.v3.network.Syncable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import timber.log.Timber;
 

@@ -1,6 +1,6 @@
 package org.bcss.collect.naxa.common;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;

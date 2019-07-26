@@ -27,7 +27,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/instance_list_icon_layout_margin"
                 android:layout_marginRight="@dimen/instance_list_icon_layout_margin"
-                android:background="@drawable/instance_list_icon_background">
+              >
 
                 <ImageView
                     android:id="@+id/status_icon"
@@ -90,7 +90,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_toStartOf="@+id/checkbox"
                         android:layout_toLeftOf="@+id/checkbox"
-                        android:textColor="@color/red" />
+                        android:textColor="@color/red_500" />
 
 
                     <TextView
@@ -128,7 +128,7 @@
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
                         android:visibility="gone"
-                        app:srcCompat="@drawable/close_box_outline" />
+                         />
                 </RelativeLayout>
 
 

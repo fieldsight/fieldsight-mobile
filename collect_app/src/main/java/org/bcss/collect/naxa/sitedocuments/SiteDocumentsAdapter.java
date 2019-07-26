@@ -1,13 +1,14 @@
 package org.bcss.collect.naxa.sitedocuments;
 
-import android.support.v7.util.SortedList;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SortedList;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -108,7 +109,7 @@ public class SiteDocumentsAdapter extends RecyclerView.Adapter<SiteDocumentsAdap
             }
         });
 
-        if(isPdf){
+        if (isPdf) {
             return;
         }
 

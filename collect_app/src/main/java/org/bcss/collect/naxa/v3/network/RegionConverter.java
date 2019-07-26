@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.v3.network;
 
-import android.arch.persistence.room.TypeConverter;
+
+import androidx.room.TypeConverter;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;

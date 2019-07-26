@@ -47,6 +47,7 @@ public final class AdminKeys {
     private static final String KEY_DEFAULT_TO_FINALIZED        = "default_to_finalized";
     private static final String KEY_HIGH_RESOLUTION             = "high_resolution";
     private static final String KEY_IMAGE_SIZE                  = "image_size";
+    private static final String KEY_GUIDANCE_HINT               = "guidance_hint";
     private static final String KEY_SHOW_SPLASH_SCREEN          = "show_splash_screen";
     private static final String KEY_DELETE_AFTER_SEND           = "delete_after_send";
     private static final String KEY_INSTANCE_FORM_SYNC          = "instance_form_sync";
@@ -72,34 +73,35 @@ public final class AdminKeys {
      */
     static AdminAndGeneralKeys[] adminToGeneral = new AdminAndGeneralKeys[] {
 
-            ag(KEY_CHANGE_SERVER,              PreferenceKeys.KEY_PROTOCOL),
-            ag(KEY_CHANGE_SUBMISSION_TRANSPORT, PreferenceKeys.KEY_TRANSPORT_PREFERENCE),
-            ag(KEY_CHANGE_SUBMISSION_TRANSPORT, PreferenceKeys.KEY_SMS_PREFERENCE),
-            ag(KEY_CHANGE_FORM_METADATA,       PreferenceKeys.KEY_FORM_METADATA),
+            ag(KEY_CHANGE_SERVER,              GeneralKeys.KEY_PROTOCOL),
+            ag(KEY_CHANGE_SUBMISSION_TRANSPORT, GeneralKeys.KEY_TRANSPORT_PREFERENCE),
+            ag(KEY_CHANGE_SUBMISSION_TRANSPORT, GeneralKeys.KEY_SMS_PREFERENCE),
+            ag(KEY_CHANGE_FORM_METADATA,       GeneralKeys.KEY_FORM_METADATA),
 
-            ag(KEY_PERIODIC_FORM_UPDATES_CHECK, PreferenceKeys.KEY_PERIODIC_FORM_UPDATES_CHECK),
-            ag(KEY_AUTOMATIC_UPDATE,           PreferenceKeys.KEY_AUTOMATIC_UPDATE),
-            ag(KEY_HIDE_OLD_FORM_VERSIONS,     PreferenceKeys.KEY_HIDE_OLD_FORM_VERSIONS),
-            ag(KEY_CHANGE_FONT_SIZE,           PreferenceKeys.KEY_FONT_SIZE),
-            ag(KEY_APP_LANGUAGE,               PreferenceKeys.KEY_APP_LANGUAGE),
-            ag(KEY_DEFAULT_TO_FINALIZED,       PreferenceKeys.KEY_COMPLETED_DEFAULT),
-            ag(KEY_HIGH_RESOLUTION,            PreferenceKeys.KEY_HIGH_RESOLUTION),
-            ag(KEY_IMAGE_SIZE,                 PreferenceKeys.KEY_IMAGE_SIZE),
-            ag(KEY_SHOW_SPLASH_SCREEN,         PreferenceKeys.KEY_SHOW_SPLASH),
-            ag(KEY_SHOW_SPLASH_SCREEN,         PreferenceKeys.KEY_SPLASH_PATH),
-            ag(KEY_DELETE_AFTER_SEND,          PreferenceKeys.KEY_DELETE_AFTER_SEND),
-            ag(KEY_INSTANCE_FORM_SYNC,         PreferenceKeys.KEY_INSTANCE_SYNC),
-            ag(KEY_APP_THEME,                  PreferenceKeys.KEY_APP_THEME),
+            ag(KEY_PERIODIC_FORM_UPDATES_CHECK, GeneralKeys.KEY_PERIODIC_FORM_UPDATES_CHECK),
+            ag(KEY_AUTOMATIC_UPDATE,           GeneralKeys.KEY_AUTOMATIC_UPDATE),
+            ag(KEY_HIDE_OLD_FORM_VERSIONS,     GeneralKeys.KEY_HIDE_OLD_FORM_VERSIONS),
+            ag(KEY_CHANGE_FONT_SIZE,           GeneralKeys.KEY_FONT_SIZE),
+            ag(KEY_APP_LANGUAGE,               GeneralKeys.KEY_APP_LANGUAGE),
+            ag(KEY_DEFAULT_TO_FINALIZED,       GeneralKeys.KEY_COMPLETED_DEFAULT),
+            ag(KEY_HIGH_RESOLUTION,            GeneralKeys.KEY_HIGH_RESOLUTION),
+            ag(KEY_IMAGE_SIZE,                 GeneralKeys.KEY_IMAGE_SIZE),
+            ag(KEY_GUIDANCE_HINT,              GeneralKeys.KEY_GUIDANCE_HINT),
+            ag(KEY_SHOW_SPLASH_SCREEN,         GeneralKeys.KEY_SHOW_SPLASH),
+            ag(KEY_SHOW_SPLASH_SCREEN,         GeneralKeys.KEY_SPLASH_PATH),
+            ag(KEY_DELETE_AFTER_SEND,          GeneralKeys.KEY_DELETE_AFTER_SEND),
+            ag(KEY_INSTANCE_FORM_SYNC,         GeneralKeys.KEY_INSTANCE_SYNC),
+            ag(KEY_APP_THEME,                  GeneralKeys.KEY_APP_THEME),
 
-            ag(KEY_AUTOSEND,                   PreferenceKeys.KEY_AUTOSEND),
+            ag(KEY_AUTOSEND,                   GeneralKeys.KEY_AUTOSEND),
 
-            ag(KEY_NAVIGATION,                 PreferenceKeys.KEY_NAVIGATION),
-            ag(KEY_CONSTRAINT_BEHAVIOR,        PreferenceKeys.KEY_CONSTRAINT_BEHAVIOR),
+            ag(KEY_NAVIGATION,                 GeneralKeys.KEY_NAVIGATION),
+            ag(KEY_CONSTRAINT_BEHAVIOR,        GeneralKeys.KEY_CONSTRAINT_BEHAVIOR),
 
-            ag(KEY_SHOW_MAP_SDK,               PreferenceKeys.KEY_MAP_SDK),
-            ag(KEY_SHOW_MAP_BASEMAP,           PreferenceKeys.KEY_MAP_BASEMAP),
+            ag(KEY_SHOW_MAP_SDK,               GeneralKeys.KEY_MAP_SDK),
+            ag(KEY_SHOW_MAP_BASEMAP,           GeneralKeys.KEY_MAP_BASEMAP),
 
-            ag(KEY_ANALYTICS,                  PreferenceKeys.KEY_ANALYTICS)
+            ag(KEY_ANALYTICS,                  GeneralKeys.KEY_ANALYTICS)
     };
 
     /** Admin keys other than those in adminToGeneral above */
@@ -139,6 +141,7 @@ public final class AdminKeys {
             KEY_CONSTRAINT_BEHAVIOR,
             KEY_HIGH_RESOLUTION,
             KEY_IMAGE_SIZE,
+            KEY_GUIDANCE_HINT,
             KEY_INSTANCE_FORM_SYNC
     );
 

@@ -22,13 +22,14 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.LocationListener;
 
@@ -56,7 +57,7 @@ import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
-import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;
+
 
 /**
  * Version of the GeoPointMapActivity that uses the new OSMDDroid

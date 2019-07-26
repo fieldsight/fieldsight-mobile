@@ -17,13 +17,14 @@ package org.bcss.collect.android.provider;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.bcss.collect.android.R;
@@ -43,8 +44,8 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-import static org.bcss.collect.android.database.helpers.FormsDatabaseHelper.FORMS_TABLE_NAME;
-import static org.odk.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
+import static org.odk.collect.android.database.helpers.FormsDatabaseHelper.FORMS_TABLE_NAME;
+import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 
 public class FormsProvider extends ContentProvider {
     private static HashMap<String, String> sFormsProjectionMap;
@@ -52,7 +53,7 @@ public class FormsProvider extends ContentProvider {
     private static final int FORMS = 1;
     private static final int FORM_ID = 2;
     // Forms unique by ID, keeping only the latest one downloaded
-    private static final int UNIQUE_FORMS_BY_FORM_ID = 3;
+    private static final int NEWEST_FORMS_BY_FORM_ID = 3;
 
     private static final UriMatcher URI_MATCHER;
 
@@ -76,12 +77,12 @@ public class FormsProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
 
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             Timber.i("Read and write permissions are required for this content provider to function.");
             return false;
         }
 
-        // must be at the beginning of any activity that can be called siteName an external intent
+        // must be at the beginning of any activity that can be called from an external intent
         FormsDatabaseHelper h = getDbHelper();
         return h != null;
     }
@@ -90,7 +91,7 @@ public class FormsProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
 
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             return null;
         }
 
@@ -113,7 +114,7 @@ public class FormsProvider extends ContentProvider {
                     break;
 
                 // Only include the latest form that was downloaded with each form_id
-                case UNIQUE_FORMS_BY_FORM_ID:
+                case NEWEST_FORMS_BY_FORM_ID:
                     Map<String, String> filteredProjectionMap = new HashMap<>(sFormsProjectionMap);
                     filteredProjectionMap.put(FormsColumns.DATE, "MAX(" + FormsColumns.DATE + ")");
 
@@ -136,7 +137,7 @@ public class FormsProvider extends ContentProvider {
     public String getType(@NonNull Uri uri) {
         switch (URI_MATCHER.match(uri)) {
             case FORMS:
-            case UNIQUE_FORMS_BY_FORM_ID:
+            case NEWEST_FORMS_BY_FORM_ID:
                 return FormsColumns.CONTENT_TYPE;
 
             case FORM_ID:
@@ -154,7 +155,7 @@ public class FormsProvider extends ContentProvider {
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             return null;
         }
 
@@ -187,11 +188,7 @@ public class FormsProvider extends ContentProvider {
             }
 
             if (!values.containsKey(FormsColumns.DISPLAY_SUBTEXT)) {
-                Date today = new Date();
-                String ts = new SimpleDateFormat(getContext().getString(
-                        R.string.added_on_date_at_time), Locale.getDefault())
-                        .format(today);
-                values.put(FormsColumns.DISPLAY_SUBTEXT, ts);
+                values.put(FormsColumns.DISPLAY_SUBTEXT, getDisplaySubtext());
             }
 
             if (!values.containsKey(FormsColumns.DISPLAY_NAME)) {
@@ -211,10 +208,7 @@ public class FormsProvider extends ContentProvider {
                 values.put(FormsColumns.JRCACHE_FILE_PATH, cachePath);
             }
             if (!values.containsKey(FormsColumns.FORM_MEDIA_PATH)) {
-                String pathNoExtension = filePath.substring(0,
-                        filePath.lastIndexOf('.'));
-                String mediaPath = pathNoExtension + "-media";
-                values.put(FormsColumns.FORM_MEDIA_PATH, mediaPath);
+                values.put(FormsColumns.FORM_MEDIA_PATH, FileUtils.constructMediaPath(filePath));
             }
 
             SQLiteDatabase db = formsDatabaseHelper.getWritableDatabase();
@@ -238,16 +232,13 @@ public class FormsProvider extends ContentProvider {
                     c.close();
                 }
             }
-            long rowId = -1;
-            try {
-                rowId = db.insertOrThrow(FORMS_TABLE_NAME, null, values);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+
+            long rowId = db.insert(FORMS_TABLE_NAME, null, values);
             if (rowId > 0) {
                 Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI,
                         rowId);
                 getContext().getContentResolver().notifyChange(formUri, null);
+                getContext().getContentResolver().notifyChange(FormsProviderAPI.FormsColumns.CONTENT_NEWEST_FORMS_BY_FORMID_URI, null);
                 return formUri;
             }
         }
@@ -287,13 +278,13 @@ public class FormsProvider extends ContentProvider {
     }
 
     /**
-     * This method removes the entry siteName the content provider, and also removes
+     * This method removes the entry from the content provider, and also removes
      * any associated files. files: form.xml, [formmd5].formdef, formname-media
      * {directory}
      */
     @Override
     public int delete(@NonNull Uri uri, String where, String[] whereArgs) {
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             return 0;
         }
         int count = 0;
@@ -379,6 +370,7 @@ public class FormsProvider extends ContentProvider {
             }
 
             getContext().getContentResolver().notifyChange(uri, null);
+            getContext().getContentResolver().notifyChange(FormsColumns.CONTENT_NEWEST_FORMS_BY_FORMID_URI, null);
         }
 
         return count;
@@ -388,7 +380,7 @@ public class FormsProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String where,
                       String[] whereArgs) {
 
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             return 0;
         }
 
@@ -446,11 +438,7 @@ public class FormsProvider extends ContentProvider {
 
                     // Make sure that the necessary fields are all set
                     if (values.containsKey(FormsColumns.DATE)) {
-                        Date today = new Date();
-                        String ts = new SimpleDateFormat(getContext().getString(
-                                R.string.added_on_date_at_time), Locale.getDefault())
-                                .format(today);
-                        values.put(FormsColumns.DISPLAY_SUBTEXT, ts);
+                        values.put(FormsColumns.DISPLAY_SUBTEXT, getDisplaySubtext());
                     }
 
                     count = db.update(FORMS_TABLE_NAME, values, where, whereArgs);
@@ -508,11 +496,7 @@ public class FormsProvider extends ContentProvider {
 
                             // Make sure that the necessary fields are all set
                             if (values.containsKey(FormsColumns.DATE)) {
-                                Date today = new Date();
-                                String ts = new SimpleDateFormat(getContext()
-                                        .getString(R.string.added_on_date_at_time),
-                                        Locale.getDefault()).format(today);
-                                values.put(FormsColumns.DISPLAY_SUBTEXT, ts);
+                                values.put(FormsColumns.DISPLAY_SUBTEXT, getDisplaySubtext());
                             }
 
                             count = db.update(
@@ -537,16 +521,31 @@ public class FormsProvider extends ContentProvider {
             }
 
             getContext().getContentResolver().notifyChange(uri, null);
+            getContext().getContentResolver().notifyChange(FormsProviderAPI.FormsColumns.CONTENT_NEWEST_FORMS_BY_FORMID_URI, null);
         }
 
         return count;
+    }
+
+    private String getDisplaySubtext() {
+        String displaySubtext = "";
+        try {
+            Context context = getContext();
+            if (context != null) {
+                displaySubtext = new SimpleDateFormat(context.getString(R.string.added_on_date_at_time),
+                        Locale.getDefault()).format(new Date());
+            }
+        } catch (IllegalArgumentException e) {
+            Timber.e(e);
+        }
+        return displaySubtext;
     }
 
     @NonNull
     private String[] prepareWhereArgs(String[] whereArgs, String formId) {
         String[] newWhereArgs;
         if (whereArgs == null || whereArgs.length == 0) {
-            newWhereArgs = new String[]{formId};
+            newWhereArgs = new String[] {formId};
         } else {
             newWhereArgs = new String[whereArgs.length + 1];
             newWhereArgs[0] = formId;
@@ -555,12 +554,14 @@ public class FormsProvider extends ContentProvider {
         return newWhereArgs;
     }
 
+    // Leading slashes are removed from paths to support minSdkVersion < 18:
+    // https://developer.android.com/reference/android/content/UriMatcher
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-        URI_MATCHER.addURI(FormsProviderAPI.AUTHORITY, "forms", FORMS);
-        URI_MATCHER.addURI(FormsProviderAPI.AUTHORITY, "forms/#", FORM_ID);
+        URI_MATCHER.addURI(FormsProviderAPI.AUTHORITY, FormsColumns.CONTENT_URI.getPath().replaceAll("^/+", ""), FORMS);
+        URI_MATCHER.addURI(FormsProviderAPI.AUTHORITY, FormsColumns.CONTENT_URI.getPath().replaceAll("^/+", "") + "/#", FORM_ID);
         // Only available for query and type
-        URI_MATCHER.addURI(FormsProviderAPI.AUTHORITY, "uniqueFormsByFormId", UNIQUE_FORMS_BY_FORM_ID);
+        URI_MATCHER.addURI(FormsProviderAPI.AUTHORITY, FormsColumns.CONTENT_NEWEST_FORMS_BY_FORMID_URI.getPath().replaceAll("^/+", ""), NEWEST_FORMS_BY_FORM_ID);
 
         sFormsProjectionMap = new HashMap<>();
         sFormsProjectionMap.put(FormsColumns._ID, FormsColumns._ID);

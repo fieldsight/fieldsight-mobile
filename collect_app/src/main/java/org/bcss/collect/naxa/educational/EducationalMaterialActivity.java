@@ -1,14 +1,17 @@
 package org.bcss.collect.naxa.educational;
 
-import android.arch.persistence.room.EmptyResultSetException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.room.EmptyResultSetException;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.apache.commons.io.FilenameUtils;
 import org.bcss.collect.android.R;
@@ -269,7 +272,7 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
                         e.printStackTrace();
                         if (e instanceof EmptyResultSetException) {
                             ToastUtils.showLongToast("No education materials present for this form");
-                        }else {
+                        } else {
                             ToastUtils.showLongToast("Failed to load Education Material");
                         }
                         finish();

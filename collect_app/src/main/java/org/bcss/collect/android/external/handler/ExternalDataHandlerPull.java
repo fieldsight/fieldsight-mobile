@@ -22,9 +22,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import com.google.android.gms.analytics.HitBuilders;
-
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.external.ExternalDataManager;
 import org.bcss.collect.android.external.ExternalDataUtil;
 import org.bcss.collect.android.external.ExternalSQLiteOpenHelper;
@@ -35,8 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
-
-
 
 /**
  * Author: Meletis Margaritis
@@ -73,12 +68,6 @@ public class ExternalDataHandlerPull extends ExternalDataHandlerBase {
 
     @Override
     public Object eval(Object[] args, EvaluationContext ec) {
-        Collect.getInstance().getDefaultTracker()
-                .send(new HitBuilders.EventBuilder()
-                        .setCategory("ExternalData")
-                        .setAction("pulldata()")
-                        .setLabel(Collect.getCurrentFormIdentifierHash())
-                        .build());
 
         if (args.length != 4) {
             Timber.e("4 arguments are needed to evaluate the %s function", HANDLER_NAME);
@@ -101,7 +90,7 @@ public class ExternalDataHandlerPull extends ExternalDataHandlerBase {
                 return "";
             }
 
-            SQLiteDatabase db = sqLiteOpenHelper.getReadableDatabase();
+            SQLiteDatabase db = ((ExternalSQLiteOpenHelper) sqLiteOpenHelper).getReadableDatabase();
             String[] columns = {ExternalDataUtil.toSafeColumnName(queriedColumn)};
             String selection = ExternalDataUtil.toSafeColumnName(referenceColumn) + "=?";
             String[] selectionArgs = {referenceValue};

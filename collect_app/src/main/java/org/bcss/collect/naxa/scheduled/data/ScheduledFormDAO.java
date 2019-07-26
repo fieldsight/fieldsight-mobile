@@ -1,18 +1,15 @@
 package org.bcss.collect.naxa.scheduled.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Query;
+import androidx.room.Transaction;
 
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-
-import io.reactivex.Single;
 
 @Dao
 public abstract class ScheduledFormDAO implements BaseDaoFieldSight<ScheduleForm> {

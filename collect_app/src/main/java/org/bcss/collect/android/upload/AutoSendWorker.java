@@ -15,7 +15,6 @@
 package org.bcss.collect.android.upload;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -24,26 +23,26 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.analytics.HitBuilders;
 
 import org.bcss.collect.android.R;
+import org.odk.collect.android.activities.NotificationActivity;
 import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.dto.Form;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.exception.MultipleFoldersFoundException;
 import org.bcss.collect.android.http.HttpClientConnection;
 import org.bcss.collect.android.logic.PropertyManager;
-import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.odk.collect.android.activities.NotificationActivity;
-import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
+
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
-import org.odk.collect.android.utilities.IconUtils;
+import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.InstanceUploaderUtils;
+import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
@@ -106,7 +105,7 @@ public class AutoSendWorker extends Worker {
         }
 
         GeneralSharedPreferences settings = GeneralSharedPreferences.getInstance();
-        String protocol = (String) settings.get(PreferenceKeys.KEY_PROTOCOL);
+        String protocol = (String) settings.get(GeneralKeys.KEY_PROTOCOL);
 
         InstanceUploader uploader;
         Map<String, String> resultMessagesByInstanceId = new HashMap<>();
@@ -114,14 +113,14 @@ public class AutoSendWorker extends Worker {
         boolean anyFailure = false;
 
         if (protocol.equals(getApplicationContext().getString(R.string.protocol_google_sheets))) {
-            if (PermissionUtils.checkIfGetAccountsPermissionGranted(getApplicationContext())) {
+            if (PermissionUtils.isGetAccountsPermissionGranted(getApplicationContext())) {
                 GoogleAccountsManager accountsManager = new GoogleAccountsManager(Collect.getInstance());
-                String googleUsername = accountsManager.getSelectedAccount();
+                String googleUsername = accountsManager.getLastSelectedAccountIfValid();
                 if (googleUsername.isEmpty()) {
                     showUploadStatusNotification(true, Collect.getInstance().getString(R.string.google_set_account));
                     return Result.FAILURE;
                 }
-                accountsManager.getCredential().setSelectedAccountName(googleUsername);
+                accountsManager.selectAccount(googleUsername);
                 uploader = new InstanceGoogleSheetsUploader(accountsManager);
 
                 try {
@@ -155,7 +154,7 @@ public class AutoSendWorker extends Worker {
                 // perhaps another worker. It also feels like this could fail and if so should be
                 // communicated to the user. Maybe successful delete should also be communicated?
                 if (InstanceUploader.formShouldBeAutoDeleted(instance.getJrFormId(),
-                        (boolean) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_DELETE_AFTER_SEND))) {
+                        (boolean) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_DELETE_AFTER_SEND))) {
                     Uri deleteForm = Uri.withAppendedPath(InstanceColumns.CONTENT_URI, instance.getDatabaseId().toString());
                     Collect.getInstance().getContentResolver().delete(deleteForm, null, null);
                 }
@@ -166,6 +165,7 @@ public class AutoSendWorker extends Worker {
                                 .setCategory("Submission")
                                 .setAction(protocol.equals(getApplicationContext().getString(R.string.protocol_google_sheets)) ?
                                         "HTTP-Sheets auto" : "HTTP auto")
+                                .setLabel(Collect.getFormIdentifierHash(instance.getJrFormId(), instance.getJrVersion()))
                                 .build());
             } catch (UploadException e) {
                 Timber.d(e);
@@ -193,7 +193,7 @@ public class AutoSendWorker extends Worker {
             return false;
         }
 
-        String autosend = (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_AUTOSEND);
+        String autosend = (String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_AUTOSEND);
         boolean sendwifi = autosend.equals("wifi_only");
         boolean sendnetwork = autosend.equals("cellular_only");
         if (autosend.equals("wifi_and_cellular")) {
@@ -304,16 +304,12 @@ public class AutoSendWorker extends Worker {
         PendingIntent pendingNotify = PendingIntent.getActivity(Collect.getInstance(), FORMS_UPLOADED_NOTIFICATION,
                 notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(Collect.getInstance())
-                .setSmallIcon(IconUtils.getNotificationAppIcon())
-                .setContentTitle(Collect.getInstance().getString(R.string.odk_auto_note))
-                .setContentIntent(pendingNotify)
-                .setContentText(anyFailure ? Collect.getInstance().getString(R.string.failures)
-                        : Collect.getInstance().getString(R.string.success))
-                .setAutoCancel(true);
+        NotificationUtils.showNotification(
+                pendingNotify,
+                AUTO_SEND_RESULT_NOTIFICATION_ID,
+                R.string.odk_auto_note,
+                anyFailure ? Collect.getInstance().getString(R.string.failures)
+                        : Collect.getInstance().getString(R.string.success));
 
-        NotificationManager notificationManager = (NotificationManager) Collect.getInstance()
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(AUTO_SEND_RESULT_NOTIFICATION_ID, builder.build());
     }
 }

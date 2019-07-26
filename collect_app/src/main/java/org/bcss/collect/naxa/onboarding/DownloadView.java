@@ -1,6 +1,6 @@
 package org.bcss.collect.naxa.onboarding;
 
-import android.arch.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleOwner;
 
 import java.util.List;
 

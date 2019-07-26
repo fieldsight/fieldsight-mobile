@@ -22,8 +22,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.v4.content.FileProvider;
-import android.support.v7.widget.AppCompatImageButton;
+
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.content.FileProvider;
+
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -38,6 +40,7 @@ import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.listeners.AudioPlayListener;
 import org.javarosa.core.model.FormIndex;
+import org.bcss.collect.android.listeners.AudioPlayListener;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.odk.collect.android.utilities.FileUtils;
@@ -179,8 +182,7 @@ public class MediaLayout extends RelativeLayout implements View.OnClickListener 
         }
     }
 
-    public void setAVT(FormIndex index, String selectionDesignator, TextView text,
-                       String audioURI, String imageURI, String videoURI,
+    public void setAVT(TextView text, String audioURI, String imageURI, String videoURI,
                        String bigImageURI, MediaPlayer player) {
         this.bigImageURI = bigImageURI;
         this.player = player;
@@ -193,7 +195,7 @@ public class MediaLayout extends RelativeLayout implements View.OnClickListener 
         // Setup audio button
         if (audioURI != null) {
             audioButton.setVisibility(VISIBLE);
-            audioButton.init(index, selectionDesignator, audioURI, player);
+            audioButton.init(audioURI, player);
             audioButton.setOnClickListener(this);
         }
 
@@ -261,6 +263,12 @@ public class MediaLayout extends RelativeLayout implements View.OnClickListener 
                 openImage();
                 break;
         }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        viewText.setEnabled(enabled);
+        imageView.setEnabled(enabled);
     }
 
     private void openImage() {

@@ -1,7 +1,7 @@
 package org.bcss.collect.naxa.flagform;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.bcss.collect.naxa.data.FieldSightNotification;
 

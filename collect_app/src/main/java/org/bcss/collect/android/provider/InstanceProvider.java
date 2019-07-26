@@ -23,7 +23,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.bcss.collect.android.R;
@@ -41,7 +41,7 @@ import java.util.Locale;
 import timber.log.Timber;
 
 import static org.bcss.collect.android.database.helpers.InstancesDatabaseHelper.INSTANCES_TABLE_NAME;
-import static org.odk.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
+import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 
 public class InstanceProvider extends ContentProvider {
     private static HashMap<String, String> sInstancesProjectionMap;
@@ -52,7 +52,7 @@ public class InstanceProvider extends ContentProvider {
     private static final UriMatcher URI_MATCHER;
 
     private static InstancesDatabaseHelper dbHelper;
-
+    
     private synchronized InstancesDatabaseHelper getDbHelper() {
         // wrapper to test and reset/set the dbHelper based upon the attachment state of the device.
         try {
@@ -70,12 +70,12 @@ public class InstanceProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             Timber.i("Read and write permissions are required for this content provider to function.");
             return false;
         }
 
-        // must be at the beginning of any activity that can be called siteName an external intent
+        // must be at the beginning of any activity that can be called from an external intent
         InstancesDatabaseHelper h = getDbHelper();
         return h != null;
     }
@@ -84,7 +84,7 @@ public class InstanceProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
 
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             return null;
         }
 
@@ -138,7 +138,7 @@ public class InstanceProvider extends ContentProvider {
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
 
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             return null;
         }
 
@@ -164,25 +164,11 @@ public class InstanceProvider extends ContentProvider {
                 values.put(InstanceColumns.DISPLAY_SUBTEXT, text);
             }
 
-            if (values.containsKey(InstanceColumns.DISPLAY_SUBTEXT)) {
-                boolean isEmpty = TextUtils.isEmpty(values.getAsString(InstanceColumns.DISPLAY_SUBTEXT));
-                if(isEmpty){
-                    Date today = new Date();
-                    String text = getDisplaySubtext(InstanceProviderAPI.STATUS_INCOMPLETE, today);
-                    values.put(InstanceColumns.DISPLAY_SUBTEXT, text);
-                }
-            }
-
             if (!values.containsKey(InstanceColumns.STATUS)) {
                 values.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_INCOMPLETE);
             }
 
-            long rowId = -1;
-            try {
-                rowId = instancesDatabaseHelper.getWritableDatabase().insertOrThrow(INSTANCES_TABLE_NAME, null, values);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+            long rowId = instancesDatabaseHelper.getWritableDatabase().insert(INSTANCES_TABLE_NAME, null, values);
             if (rowId > 0) {
                 Uri instanceUri = ContentUris.withAppendedId(InstanceColumns.CONTENT_URI, rowId);
                 getContext().getContentResolver().notifyChange(instanceUri, null);
@@ -238,10 +224,12 @@ public class InstanceProvider extends ContentProvider {
 
                 // delete all the files in the directory
                 File[] files = directory.listFiles();
-                for (File f : files) {
-                    // should make this recursive if we get worried about
-                    // the media directory containing directories
-                    f.delete();
+                if (files != null) {
+                    for (File f : files) {
+                        // should make this recursive if we get worried about
+                        // the media directory containing directories
+                        f.delete();
+                    }
                 }
             }
             directory.delete();
@@ -249,13 +237,13 @@ public class InstanceProvider extends ContentProvider {
     }
 
     /**
-     * This method removes the entry siteName the content provider, and also removes any associated
+     * This method removes the entry from the content provider, and also removes any associated
      * files.
      * files:  form.xml, [formmd5].formdef, formname-media {directory}
      */
     @Override
     public int delete(@NonNull Uri uri, String where, String[] whereArgs) {
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             return 0;
         }
         int count = 0;
@@ -317,7 +305,7 @@ public class InstanceProvider extends ContentProvider {
                     } else {
                         String[] newWhereArgs;
                         if (whereArgs == null || whereArgs.length == 0) {
-                            newWhereArgs = new String[]{instanceId};
+                            newWhereArgs = new String[] {instanceId};
                         } else {
                             newWhereArgs = new String[whereArgs.length + 1];
                             newWhereArgs[0] = instanceId;
@@ -345,7 +333,7 @@ public class InstanceProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String where, String[] whereArgs) {
-        if (!checkIfStoragePermissionsGranted(getContext())) {
+        if (!areStoragePermissionsGranted(getContext())) {
             return 0;
         }
         int count = 0;
@@ -391,7 +379,7 @@ public class InstanceProvider extends ContentProvider {
 
                     String[] newWhereArgs;
                     if (whereArgs == null || whereArgs.length == 0) {
-                        newWhereArgs = new String[]{instanceId};
+                        newWhereArgs = new String[] {instanceId};
                     } else {
                         newWhereArgs = new String[whereArgs.length + 1];
                         newWhereArgs[0] = instanceId;

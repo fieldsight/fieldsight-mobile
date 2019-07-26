@@ -3,10 +3,8 @@ package org.bcss.collect.naxa.sitedocuments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.CircularProgressDrawable;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ImageView;
+
+import androidx.appcompat.widget.Toolbar;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.BaseActivity;
