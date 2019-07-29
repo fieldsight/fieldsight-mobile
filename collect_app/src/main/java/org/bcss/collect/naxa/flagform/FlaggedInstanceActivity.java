@@ -346,6 +346,13 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                     return;
                 }
 
+                boolean isFormApproved = "Approved".equals(loadedFieldSightNotification.getFormStatus());
+                if (isFormApproved) {
+                    showFormIsApprovedDialog();
+                    return;
+                }
+
+
                 boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
                 Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
                 if (isInstanceDownloadNeeded) {
@@ -356,6 +363,10 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                 break;
         }
+    }
+
+    private void showFormIsApprovedDialog() {
+        DialogFactory.createMessageDialog(this, "Cannot open form", "This form has already been approved.").show();
     }
 
     private void showDownloadInstanceDialog() {
@@ -399,12 +410,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private void showAskNewSubmissionConsentDialog(String message) {
         DialogFactory.createActionDialog(this, getString(R.string.dialog_title_cant_open_flagged_form), message)
-//                .setPositiveButton(R.string.dialog_action_view_data, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                })
                 .setNegativeButton(R.string.dialog_action_make_new_submission, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
