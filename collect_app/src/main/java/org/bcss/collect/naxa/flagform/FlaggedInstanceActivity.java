@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.notificationslist;
+package org.bcss.collect.naxa.flagform;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -18,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -46,9 +45,11 @@ import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.notificationslist.NotificationDetail;
+import org.bcss.collect.naxa.notificationslist.NotificationImage;
+import org.bcss.collect.naxa.notificationslist.NotificationImageAdapter;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.DownloadFormListTask;
@@ -345,6 +346,13 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                     return;
                 }
 
+                boolean isFormApproved = "Approved".equals(loadedFieldSightNotification.getFormStatus());
+                if (isFormApproved) {
+                    showFormIsApprovedDialog();
+                    return;
+                }
+
+
                 boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
                 Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
                 if (isInstanceDownloadNeeded) {
@@ -355,6 +363,10 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                 break;
         }
+    }
+
+    private void showFormIsApprovedDialog() {
+        DialogFactory.createMessageDialog(this, "Cannot open form", "This form has already been approved.").show();
     }
 
     private void showDownloadInstanceDialog() {
@@ -398,12 +410,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private void showAskNewSubmissionConsentDialog(String message) {
         DialogFactory.createActionDialog(this, getString(R.string.dialog_title_cant_open_flagged_form), message)
-//                .setPositiveButton(R.string.dialog_action_view_data, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//
-//                    }
-//                })
                 .setNegativeButton(R.string.dialog_action_make_new_submission, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

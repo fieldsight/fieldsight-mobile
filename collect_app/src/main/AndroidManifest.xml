@@ -288,7 +288,7 @@
         <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity" />
         <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionDetailActivity" />
         <activity android:name="org.bcss.collect.naxa.notificationslist.NotificationListActivity" />
-        <activity android:name="org.bcss.collect.naxa.notificationslist.FlaggedInstanceActivity" />
+        <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivity" />
         <activity
             android:name="org.bcss.collect.naxa.site.SiteDetailActivity"
             android:exported="true" />
@@ -354,7 +354,6 @@
         <activity android:name="org.bcss.collect.naxa.report.ReportActivity"
             android:exported="true"/>
 
-        <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivityNew" />
         <activity android:name="org.bcss.collect.naxa.common.SettingsActivity" />
         <activity
             android:name="org.bcss.collect.naxa.preferences.SettingsActivity"
