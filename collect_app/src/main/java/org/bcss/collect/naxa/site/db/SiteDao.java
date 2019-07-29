@@ -76,6 +76,6 @@ public interface SiteDao {
     @Query("SELECT * from sites WHERE isSiteVerified =:siteStatus")
     Single<List<Site>> getAllByStatus(int siteStatus);
 
-    @Query("SELECT * from sites WHERE enable_subsites=1")
+    @Query("SELECT * from sites WHERE site IS NULL")
     LiveData<List<Site>> getParentSite();
 }
