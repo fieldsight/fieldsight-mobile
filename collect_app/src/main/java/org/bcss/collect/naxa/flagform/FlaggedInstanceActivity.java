@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.notificationslist;
+package org.bcss.collect.naxa.flagform;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -18,7 +18,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -46,9 +45,11 @@ import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.notificationslist.NotificationDetail;
+import org.bcss.collect.naxa.notificationslist.NotificationImage;
+import org.bcss.collect.naxa.notificationslist.NotificationImageAdapter;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.DownloadFormListTask;

@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.notificationslist;
+package org.bcss.collect.naxa.flagform;
 
 import android.content.ContentValues;
 import android.database.Cursor;

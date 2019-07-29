@@ -26,6 +26,7 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
+import org.bcss.collect.naxa.flagform.FlaggedInstanceActivity;
 import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.v3.network.NotificationRemoteSource;
 import org.json.JSONArray;
@@ -46,7 +47,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import okhttp3.internal.Util;
 import timber.log.Timber;
 
 public class NotificationListActivity extends CollectAbstractActivity implements OnItemClickListener<FieldSightNotification> {
