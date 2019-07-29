@@ -159,7 +159,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                     setSiteData(site.getName(), site.getIdentifier(), site.getAddress());
 
-                    cardViewSite.setOnClickListener(v -> FragmentHostActivity.start(FlaggedInstanceActivity.this, site));
+                    cardViewSite.setOnClickListener(v -> FragmentHostActivity.start(FlaggedInstanceActivity.this, site, false));
                 });
 
 

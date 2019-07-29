@@ -61,16 +61,21 @@ public interface SiteDao {
     @Delete
     int delete(Site site);
 
-    @Query("SELECT * from sites where isSiteVerified =:status and project =:projectId")
+    @Query("SELECT * from sites where isSiteVerified =:status and project =:projectId and enable_subsites=1")
     LiveData<List<Site>> getByIdOfflineSites(String projectId, int status);
 
     @Query("SELECT * from sites where project =:projectId and regionId=:cluster ")
     LiveData<List<Site>> getSiteFromFilter(String projectId, String cluster);
 
+    @Query("SELECT * from sites where site =:parentId")
+    List<Site> getSiteByParentId(String parentId);
 
     @Query("DELETE from sites WHERE isSiteVerified =:id ")
     void deleteSyncedSites(int id);
 
     @Query("SELECT * from sites WHERE isSiteVerified =:siteStatus")
     Single<List<Site>> getAllByStatus(int siteStatus);
+
+    @Query("SELECT * from sites WHERE enable_subsites=1")
+    LiveData<List<Site>> getParentSite();
 }

@@ -2,16 +2,21 @@ package org.bcss.collect.naxa.preferences;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 import android.support.v7.app.AlertDialog;
 
 import com.evernote.android.job.JobManager;
+import com.google.android.gms.analytics.HitBuilders;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.jobs.DailyNotificationJob;
+import org.odk.collect.android.preferences.AdminSharedPreferences;
+import org.odk.collect.android.tasks.ServerPollingJob;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,6 +28,11 @@ import timber.log.Timber;
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_DAILY;
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_MONTHLY;
 import static org.bcss.collect.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_WEEKLY;
+import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_AUTOMATIC_UPDATE;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_CONSTRAINT_BEHAVIOR;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_IMAGE_SIZE;
+import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
 
 
 public class ScheduledNotificationSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -41,6 +51,7 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
         setupNotificationToggle();
         setupUpdateButton();
         setupTimePicker();
+        initListPref(KEY_IMAGE_SIZE);
 
     }
 
@@ -182,4 +193,41 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
 
         return time;
     }
+
+    private void initListPref(String key) {
+        final ListPreference pref = (ListPreference) findPreference(key);
+
+        if (pref != null) {
+            pref.setSummary(pref.getEntry());
+            pref.setOnPreferenceChangeListener((preference, newValue) -> {
+                int index = ((ListPreference) preference).findIndexOfValue(newValue.toString());
+                CharSequence entry = ((ListPreference) preference).getEntries()[index];
+                preference.setSummary(entry);
+
+                if (key.equals(KEY_PERIODIC_FORM_UPDATES_CHECK)) {
+                    ServerPollingJob.schedulePeriodicJob((String) newValue);
+
+                    Collect.getInstance().getDefaultTracker()
+                            .send(new HitBuilders.EventBuilder()
+                                    .setCategory("PreferenceChange")
+                                    .setAction("Periodic form updates check")
+                                    .setLabel((String) newValue)
+                                    .build());
+
+                    if (newValue.equals(getString(R.string.never_value))) {
+                        Preference automaticUpdatePreference = findPreference(KEY_AUTOMATIC_UPDATE);
+                        if (automaticUpdatePreference != null) {
+                            automaticUpdatePreference.setEnabled(false);
+                        }
+                    }
+                    getActivity().recreate();
+                }
+                return true;
+            });
+            if (key.equals(KEY_CONSTRAINT_BEHAVIOR)) {
+                pref.setEnabled((Boolean) AdminSharedPreferences.getInstance().get(ALLOW_OTHER_WAYS_OF_EDITING_FORM));
+            }
+        }
+    }
+
 }

@@ -90,6 +90,8 @@ public class Site implements Parcelable {
     @Expose
     private String siteTypeError;
 
+
+
     @SerializedName("non_field_errors")
     @Ignore
     private String siteUploadError;
@@ -103,6 +105,32 @@ public class Site implements Parcelable {
 
     @SerializedName("region")
     private String regionId;
+
+    public boolean isEnable_subsites() {
+        return enable_subsites;
+    }
+
+    public void setEnable_subsites(boolean enable_subsites) {
+        this.enable_subsites = enable_subsites;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
+
+    public boolean isHasSubSites() {
+        return hasSubSites;
+    }
+
+    private boolean enable_subsites;
+    private String site;
+
+    @Ignore
+    private boolean hasSubSites = true;
 
     //default values for  table
     private String generalFormDeployedFrom = Constant.FormDeploymentFrom.PROJECT;
@@ -119,7 +147,7 @@ public class Site implements Parcelable {
                 Boolean isSurvey, String dateCreated, String project,
                 int isSiteVerified, String siteTypeError, String metaAttributes,
                 String regionId, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm,
-                List<String> siteDocuments) {
+                List<String> siteDocuments, boolean enable_subsites, String site) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -145,6 +173,8 @@ public class Site implements Parcelable {
         this.stagedFormDeployedFrom = stagedFormDeployedFrom;
         this.scheduleFormDeployedForm = scheduleFormDeployedForm;
         this.siteDocuments = siteDocuments;
+        this.enable_subsites = enable_subsites;
+        this.site = site;
     }
 
 
@@ -157,6 +187,15 @@ public class Site implements Parcelable {
 
     public static boolean isFakeSiteId(String siteId) {
         return siteId.contains(Site.postfix);
+    }
+
+    public boolean hasSubSites() {
+        // check it has subsite, subsite.length > 1
+        return hasSubSites;
+    }
+
+    public void setHasSubSites(boolean hasSubSites) {
+        this.hasSubSites = hasSubSites;
     }
 
     @Override
@@ -402,7 +441,7 @@ public class Site implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, siteUploadError, metaAttributes, siteDocuments, regionId, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm);
+        return Objects.hashCode(id, latitude, longitude, identifier, name, typeId, typeLabel, phone, address, publicDesc, additionalDesc, logo, isActive, location, isSurvey, dateCreated, project, isSiteVerified, siteTypeError, siteUploadError, metaAttributes, siteDocuments, regionId, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm, site, enable_subsites);
     }
 
     @Override
@@ -435,7 +474,9 @@ public class Site implements Parcelable {
                 Objects.equal(regionId, site.regionId) &&
                 Objects.equal(generalFormDeployedFrom, site.generalFormDeployedFrom) &&
                 Objects.equal(stagedFormDeployedFrom, site.stagedFormDeployedFrom) &&
-                Objects.equal(scheduleFormDeployedForm, site.scheduleFormDeployedForm);
+                Objects.equal(scheduleFormDeployedForm, site.scheduleFormDeployedForm) &&
+                Objects.equal(enable_subsites, site.enable_subsites) &&
+                Objects.equal(site, site.site);
     }
 
 
@@ -472,6 +513,8 @@ public class Site implements Parcelable {
         dest.writeString(this.generalFormDeployedFrom);
         dest.writeString(this.stagedFormDeployedFrom);
         dest.writeString(this.scheduleFormDeployedForm);
+        dest.writeString(this.site);
+        dest.writeInt(this.enable_subsites? 1 : 0);
     }
 
     protected Site(Parcel in) {
@@ -501,6 +544,7 @@ public class Site implements Parcelable {
         this.generalFormDeployedFrom = in.readString();
         this.stagedFormDeployedFrom = in.readString();
         this.scheduleFormDeployedForm = in.readString();
+        this.enable_subsites = in.readInt() == 1;
     }
 
     public static final Parcelable.Creator<Site> CREATOR = new Parcelable.Creator<Site>() {

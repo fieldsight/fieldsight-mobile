@@ -2,6 +2,7 @@ package org.bcss.collect.naxa.v3.network;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.support.annotation.NonNull;
 
 @Entity(tableName = "syncstat", primaryKeys = {"project_id","type"})
@@ -34,6 +35,7 @@ public class SyncStat {
             @params failedUrl
             @params started
      */
+    @Ignore
     public SyncStat(String projectId, String type, String failedUrl, boolean started, int status, long created_date) {
         this.projectId = projectId;
         this.type = type;

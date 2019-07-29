@@ -31,6 +31,9 @@ public class SiteBuilder {
     private String scheduleFormDeployedForm;
     private Parcel in;
     private List<String> siteDocuments;
+    private String site;
+    private boolean enable_subsites;
+
 
     public SiteBuilder setId(String id) {
         this.id = id;
@@ -137,6 +140,16 @@ public class SiteBuilder {
         return this;
     }
 
+    public SiteBuilder setEnableStatue(boolean enable_subsites) {
+        this.enable_subsites = enable_subsites;
+        return this;
+    }
+
+    public SiteBuilder setSites(String site) {
+        this.site = site;
+        return this;
+    }
+
     public SiteBuilder setGeneralFormDeployedFrom(String generalFormDeployedFrom) {
         this.generalFormDeployedFrom = generalFormDeployedFrom;
         return this;
@@ -166,6 +179,6 @@ public class SiteBuilder {
         return new Site(id, latitude, longitude, identifier, name, typeId, typeLabel,
                 phone, address, publicDesc, additionalDesc, logo, isActive, location,
                 isSurvey, dateCreated, project, isSiteVerified, siteTypeError, metaAttributes,
-                region, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm, siteDocuments);
+                region, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm, siteDocuments, enable_subsites, site);
     }
 }
