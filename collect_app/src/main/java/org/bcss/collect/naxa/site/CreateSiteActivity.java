@@ -623,7 +623,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         spinnerSiteCluster.setVisibility(show ? View.VISIBLE : View.GONE);
         if (show) {
             SiteClusterSpinnerAdapter spinnerAdapter = new SiteClusterSpinnerAdapter(this,
-                    android.R.layout.simple_spinner_dropdown_item, String.format("choose a %s", getIntent().getStringExtra("region_label")), clusters);
+                    android.R.layout.simple_spinner_dropdown_item, String.format("Choose a %s", getIntent().getStringExtra("region_label")), clusters);
             spinnerSiteCluster.setAdapter(spinnerAdapter);
             spinnerSiteCluster.setSelection(spinnerAdapter.getCount());
 

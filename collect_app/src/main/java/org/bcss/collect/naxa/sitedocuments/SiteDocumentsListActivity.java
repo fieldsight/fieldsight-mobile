@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.BaseActivity;
+import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.GridItemDecoration;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -69,7 +70,12 @@ public class SiteDocumentsListActivity extends BaseActivity implements SiteDocum
 
         setupToolbar();
         setupRecyclerView();
-        getDataFromRemote();
+        if (loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_ONLINE) {
+            getDataFromRemote();
+        }else {
+            showProgressLayout(false);
+            emptyLayout.setVisibility(View.VISIBLE);
+        }
     }
 
 
