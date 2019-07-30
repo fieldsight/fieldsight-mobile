@@ -346,7 +346,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @Override
     public void onUselessLayoutClicked(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
-            if (site.isEnable_subsites()) {
+            if (site.getSite() != null) {
                 showSubSiteDialog(site);
             } else {
                 FragmentHostActivity.start(getActivity(), site, false);

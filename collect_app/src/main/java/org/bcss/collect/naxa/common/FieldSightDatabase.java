@@ -235,8 +235,6 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE sites"
-                    + " ADD COLUMN `enable_subsites` INTEGER DEFAULT 0");
-            database.execSQL("ALTER TABLE sites"
                     + " ADD COLUMN `site` TEXT ");
         }
     };
