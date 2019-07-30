@@ -276,6 +276,7 @@
     <string name="site_message">Send data for the site</string>
     <string name="action_retry">retry</string>
     <string name="retry_forms">Retry %d form(s)</string>
+    <string name="error_message_fail_to_load_images">Fail to load notification images</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>

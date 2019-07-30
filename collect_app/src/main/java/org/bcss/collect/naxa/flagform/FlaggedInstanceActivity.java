@@ -106,7 +106,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     private TextView tvSiteAddress;
     private ImageView ivCircleSite;
     private TextView tvSiteMissing;
-    private LinearLayout cardViewSite;
+    private RelativeLayout cardViewSite;
 
 
     public static void start(Context context, FieldSightNotification fieldSightNotification) {
@@ -246,11 +246,8 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            getNotificationDetail();
-        } catch (NullPointerException e) {
-            DialogFactory.createDataSyncErrorDialog(this, "Failed to load images", String.valueOf(500)).show();
-        }
+        getNotificationDetail();
+
     }
 
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
@@ -702,7 +699,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     }
 
 
-    private void getNotificationDetail() throws NullPointerException {
+    private void getNotificationDetail() {
 
         String url = FieldSightUserSession.getServerUrl(Collect.getInstance()) + loadedFieldSightNotification.getDetails_url();
 
@@ -718,16 +715,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                     @Override
                     public void onError(Throwable e) {
-
-                        Timber.e(e);
-                        String message;
-                        if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {
-                            message = ((RetrofitException) e).getKind().getMessage();
-                        } else {
-                            message = e.getMessage();
-                        }
-
-                        DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_site_upload_fail), message).show();
+                        ToastUtils.showLongToast(getString(R.string.error_message_fail_to_load_images));
                     }
                 });
     }
