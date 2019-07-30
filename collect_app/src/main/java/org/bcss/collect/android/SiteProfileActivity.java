@@ -31,6 +31,7 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.sitedocuments.ImageViewerActivity;
 import org.bcss.collect.naxa.submissions.MultiViewAdapter;
 import org.bcss.collect.naxa.submissions.ViewModel;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -323,27 +324,34 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
     @OnClick(R.id.btn_edit_site)
     public void onViewClicked() {
 
-        ProjectLocalSource.getInstance().getProjectById(loadedSite.getProject())
+        ProjectLocalSource.getInstance()
+                .getProjectById(loadedSite.getProject())
                 .observe(this, project -> {
                     if (project == null) {
                         ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
                         return;
                     }
-                    try {
-                        String site_label = "Site", region_label = "Region";
-                        if (!TextUtils.isEmpty(project.getTerms_and_labels())) {
-                            TermsLabels tl = TermsLabels.fromJSON(new JSONObject(project.getTerms_and_labels()));
+
+                    String site_label = "Site", region_label = "Region";
+                    if (!TextUtils.equals("null", project.getTerms_and_labels())) {
+                        TermsLabels tl;
+                        Timber.i("null siteProfileActivity");
+                        try {
+                            tl = TermsLabels.fromJSON(new JSONObject(project.getTerms_and_labels()));
                             if (!TextUtils.isEmpty(tl.site)) {
                                 site_label = tl.site;
                             }
                             if (!TextUtils.isEmpty(tl.region)) {
                                 region_label = tl.region;
                             }
+                        } catch (JSONException e) {
+                            Timber.e(e);
                         }
-                        CreateSiteActivity.start(this, project, loadedSite, site_label, region_label);
-                    } catch (Exception e) {
                     }
-                    ;
+
+                    CreateSiteActivity.start(this, project, loadedSite, site_label, region_label);
+
+
                 });
 
     }
