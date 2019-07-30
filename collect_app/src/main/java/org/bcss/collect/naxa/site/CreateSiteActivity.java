@@ -124,7 +124,6 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private boolean isUpdate;
 
 
-
     public static void start(Context context, @NonNull Project project, @Nullable Site site, String site_label, String region_label) {
         Intent intent = new Intent(context, CreateSiteActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
@@ -144,14 +143,15 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         ButterKnife.bind(this);
 
 
-        Project project = null;
+        Project project;
 
         try {
             project = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             Timber.e("Can't start activity without project extra_object");
             ToastUtils.showLongToast(getString(R.string.msg_failed_to_load));
             finish();
+            return;
         }
 
 
@@ -211,7 +211,6 @@ public class CreateSiteActivity extends CollectAbstractActivity {
 //                        }
                     }
                 });
-
 
 
         createSiteViewModel

@@ -91,7 +91,6 @@ public class Site implements Parcelable {
     private String siteTypeError;
 
 
-
     @SerializedName("non_field_errors")
     @Ignore
     private String siteUploadError;
@@ -514,7 +513,7 @@ public class Site implements Parcelable {
         dest.writeString(this.stagedFormDeployedFrom);
         dest.writeString(this.scheduleFormDeployedForm);
         dest.writeString(this.site);
-        dest.writeInt(this.enable_subsites? 1 : 0);
+        dest.writeInt(this.enable_subsites ? 1 : 0);
     }
 
     protected Site(Parcel in) {
@@ -544,6 +543,7 @@ public class Site implements Parcelable {
         this.generalFormDeployedFrom = in.readString();
         this.stagedFormDeployedFrom = in.readString();
         this.scheduleFormDeployedForm = in.readString();
+        this.site = in.readString();
         this.enable_subsites = in.readInt() == 1;
     }
 
