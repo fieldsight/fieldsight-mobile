@@ -57,7 +57,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
     public LiveData<List<Site>> getAllParentSite(String projectId){
-        return dao.getParentSite();
+        return dao.getParentSite(projectId);
     }
     public LiveData<List<String>> getAllDistinctProjectIds() {
         return dao.getAllDistictProject();
