@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -189,8 +188,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class SiteViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
         private TextView siteName, identifier, message, iconText, offlinetag;
-        private ImageView iconImp, imgProfile;
-        private LinearLayout messageContainer;
+        private ImageView imgProfile;
         private RelativeLayout iconContainer, iconBack, iconFront;
         private View rootLayout;
 
@@ -203,24 +201,27 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             offlinetag = view.findViewById(R.id.timestamp);
             iconBack = view.findViewById(R.id.icon_back);
             iconFront = view.findViewById(R.id.icon_front);
-            iconImp = view.findViewById(R.id.icon_star);
             imgProfile = view.findViewById(R.id.icon_profile);
-            messageContainer = view.findViewById(R.id.message_container);
             iconContainer = view.findViewById(R.id.icon_container);
             rootLayout = view.findViewById(R.id.root_layout_message_list_row);
 
             rootLayout.setOnLongClickListener(this);
             rootLayout.setOnClickListener(this);
+
         }
 
         @Override
         public boolean onLongClick(View view) {
 
-            if (Constant.SiteStatus.IS_ONLINE != siteList.get(getAdapterPosition()).getIsSiteVerified() && Constant.SiteStatus.IS_EDITED != siteList.get(getAdapterPosition()).getIsSiteVerified() ) {
+            if (Constant.SiteStatus.IS_ONLINE != siteList.get(getAdapterPosition()).getIsSiteVerified()
+                    && Constant.SiteStatus.IS_EDITED != siteList.get(getAdapterPosition()).getIsSiteVerified()) {
+
                 listener.onRowLongClicked(getAdapterPosition());
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+
                 return true;
             }
+
             return false;
         }
 

@@ -60,9 +60,9 @@ public class ServiceGenerator {
             okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
         }
 
-//        okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS);
-//        okHttpClientBuilder.writeTimeout(3600, TimeUnit.SECONDS);
-//        okHttpClientBuilder.readTimeout(3600, TimeUnit.SECONDS);
+        okHttpClientBuilder.connectTimeout(60, TimeUnit.SECONDS);
+        okHttpClientBuilder.writeTimeout(60, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);
 
 
         if (BuildConfig.DEBUG) {

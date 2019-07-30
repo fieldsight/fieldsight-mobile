@@ -13,7 +13,7 @@
     <dimen name="msg_text_secondary">14sp</dimen>
     <dimen name="icon_star">25dp</dimen>
     <dimen name="icon_text">22dp</dimen>
-    <dimen name="timestamp">12dp</dimen>
+    <dimen name="timestamp">12sp</dimen>
     <dimen name="corner_radius_bottom_sheet">15dp</dimen>
 
 

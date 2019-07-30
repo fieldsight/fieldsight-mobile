@@ -726,8 +726,8 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                         } else {
                             message = e.getMessage();
                         }
-                        DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_site_upload_fail), message).show();
 
+                        DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_site_upload_fail), message).show();
                     }
                 });
     }
@@ -739,7 +739,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onItemClick(View view, int position, List<NotificationImage> urls) {
-        Timber.i(" Load item at %s siteName the list of size %s ", position, urls.size());
+        Timber.i(" Load item at %s from the list of size %s ", position, urls.size());
         loadSlideShowLayout(position, new ArrayList<NotificationImage>(urls));
 
 
