@@ -14,20 +14,35 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.InternetUtils;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
+import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.network.APIEndpoint;
+import org.bcss.collect.naxa.network.ApiInterface;
+import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.preferences.SettingsActivity;
+import org.bcss.collect.naxa.project.data.BadUserException;
+import org.bcss.collect.naxa.project.data.MySiteResponse;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
 import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
+
+import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -42,6 +57,12 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         intent.putExtra(EXTRA_OBJECT, site);
         intent.putExtra("is_parent", isParent);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -90,6 +111,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -124,7 +146,8 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 });
                 break;
             case R.id.action_refresh:
-                ProjectLocalSource.getInstance().getProjectById(loadedSite.getProject()).observe(this, new Observer<Project>() {
+                ProjectLocalSource.getInstance()
+                        .getProjectById(loadedSite.getProject()).observe(this, new Observer<Project>() {
                     @Override
                     public void onChanged(@Nullable Project project) {
                         if (project != null) {

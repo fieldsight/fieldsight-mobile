@@ -290,7 +290,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         btnShowInfo.setOnClickListener(this);
         CardView cv_stageform = rootView.findViewById(R.id.cv_stageform);
 
-        Timber.d("SitesdashboardFragment, isParentsite = " + isParent);
+        Timber.d("SitesdashboardFragment, isParentsite = %s", isParent);
         cv_stageform.setVisibility(isParent? View.GONE : View.VISIBLE);
 
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
@@ -345,20 +345,20 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.site_option_frag_btn_delete_form:
 
-                intent = new Intent(getActivity().getApplicationContext(), FileManagerTabs.class);
+                intent = new Intent(requireActivity(), FileManagerTabs.class);
                 intent.putExtra(EXTRA_OBJECT, loadedSite);
                 startActivity(intent);
 
                 break;
             case R.id.site_option_frag_btn_edit_saved_form:
-                Intent i = new Intent(getActivity().getApplicationContext(), InstanceChooserList.class);
+                Intent i = new Intent(requireActivity(), InstanceChooserList.class);
                 i.putExtra(EXTRA_OBJECT, loadedSite);
                 i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                         ApplicationConstants.FormModes.EDIT_SAVED);
                 startActivity(i);
                 break;
             case R.id.site_option_frag_btn_send_form:
-                intent = new Intent(getActivity().getApplicationContext(), InstanceUploaderList.class);
+                intent = new Intent(requireActivity(), InstanceUploaderList.class);
                 intent.putExtra(EXTRA_OBJECT, loadedSite);
                 startActivity(intent);
                 break;
