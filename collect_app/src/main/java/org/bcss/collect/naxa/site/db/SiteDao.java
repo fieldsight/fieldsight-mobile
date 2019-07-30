@@ -61,7 +61,7 @@ public interface SiteDao {
     @Delete
     int delete(Site site);
 
-    @Query("SELECT * from sites where isSiteVerified =:status and project =:projectId and enable_subsites=1")
+    @Query("SELECT * from sites where isSiteVerified =:status and project =:projectId AND site IS NULL")
     LiveData<List<Site>> getByIdOfflineSites(String projectId, int status);
 
     @Query("SELECT * from sites where project =:projectId and regionId=:cluster ")
