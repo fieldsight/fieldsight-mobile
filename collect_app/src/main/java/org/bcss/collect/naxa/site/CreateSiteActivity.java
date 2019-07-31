@@ -631,9 +631,10 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     }
 
     private void loadValueIntoClusterSpinner(ArrayList<Region> clusters) {
+
         for (int pos = 0; pos < clusters.size(); pos++) {
             Region siteRegion = clusters.get(pos);
-            if (loadedSite != null && siteRegion.getId().equals(loadedSite.getRegionId())) {
+            if (loadedSite != null && siteRegion.getId() != null && siteRegion.getId().equals(loadedSite.getRegionId())) {
                 spinnerSiteCluster.setSelection(pos);
                 break;
             }
