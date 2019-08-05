@@ -4,11 +4,13 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import org.bcss.collect.android.R;
 import org.bcss.collect.android.logic.FormDetails;
 import org.bcss.collect.naxa.ResponseUtils;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DisposableManager;
 import org.bcss.collect.naxa.common.ODKFormRemoteSource;
+import org.bcss.collect.naxa.common.exception.FormDownloadFailedException;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.educational.EducationalMaterialsRemoteSource;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
@@ -26,6 +28,7 @@ import org.bcss.collect.naxa.stages.data.StageRemoteSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import io.reactivex.Observable;
@@ -159,26 +162,30 @@ public class SyncServiceV3 extends IntentService {
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<FormDetails>> odkForms = ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
 
+                            int totalConcatCall = 0;
+
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
+                                    .flatMap(new Function<ArrayList<? extends Object>, ObservableSource<ArrayList<?>>>() {
+                                        @Override
+                                        public ObservableSource<ArrayList<?>> apply(ArrayList<?> objects) throws Exception {
+                                            if (ResponseUtils.isListOfType(objects, FormDetails.class)) {
+                                                ArrayList<String> failed = new ArrayList<>();
+                                                for (FormDetails formDetails : (List<FormDetails>) objects) {
+                                                    failed.add(formDetails.getFormID());
+                                                }
+
+                                                if (failed.size() > 0) {
+                                                    markAsFailed(project.getId(), 1, failed.toString());
+                                                    return Observable.error(new FormDownloadFailedException(getString(R.string.msg_forms_download_fail, failed.size())));
+                                                }
+                                            }
+                                            return Observable.just(objects);
+                                        }
+                                    })
                                     .doOnNext(new Consumer<ArrayList<? extends Object>>() {
                                         @Override
                                         public void accept(ArrayList<?> objects) {
-                                            markAsCompleted(project.getId(),1);
-                                            if (ResponseUtils.isListOfType(objects, FormDetails.class)) {
-                                                saveFailedFormUrls((List<FormDetails>) objects);
-                                            }
-                                        }
-
-                                        private void saveFailedFormUrls(List<FormDetails> formDetailsList) {
-
-                                            ArrayList<String> failed = new ArrayList<>();
-                                            for (FormDetails formDetails : formDetailsList) {
-                                                failed.add(formDetails.getFormID());
-                                            }
-
-                                            if (failed.size() > 0) {
-                                                markAsFailed(project.getId(), 1, failed.toString());
-                                            }
+                                            markAsCompleted(project.getId(), 1);
                                         }
                                     })
                                     .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1));
