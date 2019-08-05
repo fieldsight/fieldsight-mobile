@@ -29,7 +29,7 @@ public class DynamicFragment extends Fragment {
 
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
-    RelativeLayout noDataLayout;
+    View noDataLayout;
 
     public List<Object> listArryObjFrom = new ArrayList<>();
 
