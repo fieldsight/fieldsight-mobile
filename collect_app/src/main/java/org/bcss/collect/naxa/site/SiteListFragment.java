@@ -346,17 +346,19 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @Override
     public void onUselessLayoutClicked(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
-            if (site.getSite() != null) {
-                showSubSiteDialog(site);
-            } else {
-                FragmentHostActivity.start(getActivity(), site, false);
+            if (site.getSite() == null) {
+                List<Site> subSitesList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
+                if (subSitesList.size() > 0) {
+                    subSitesList.add(0, site);
+                    showSubSiteDialog(subSitesList);
+                } else {
+                    FragmentHostActivity.start(getActivity(), site, false);
+                }
             }
         }
     }
 
-    private void showSubSiteDialog(Site site) {
-        List<Site> subsiteList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
-        subsiteList.add(0, site);
+    private void showSubSiteDialog( List<Site> subsiteList) {
         Timber.i("SiteListFragment subsiteLength = %d", subsiteList.size());
         DialogFactory.createSiteListDialog(requireActivity(), subsiteList, (dialog, which) -> {
             Timber.i("SiteListFragment, which = %d", which);
