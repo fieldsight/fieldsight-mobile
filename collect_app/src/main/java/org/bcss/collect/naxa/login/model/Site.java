@@ -42,7 +42,7 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "name")
     private String name;
 
-    @SerializedName("type_id")
+    @SerializedName("type")
     @ColumnInfo(name = "typeId")
     private String typeId;
 
@@ -86,7 +86,7 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "isSiteVerified")
     private int isSiteVerified = Constant.SiteStatus.IS_ONLINE;
 
-    @SerializedName("type")
+    @SerializedName("type_id")
     @Expose
     private String siteTypeError;
 
