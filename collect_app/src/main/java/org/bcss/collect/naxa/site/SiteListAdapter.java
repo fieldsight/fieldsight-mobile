@@ -274,12 +274,12 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 .createSite());
         surveyFormAndSites.addAll(newList);
 
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new SiteListDiffCallback(this.siteList, surveyFormAndSites));
-
         this.siteList.clear();
         this.siteList.addAll(surveyFormAndSites);
 
-        diffResult.dispatchUpdatesTo(this);
+
+        notifyDataSetChanged();
+
 
     }
 
