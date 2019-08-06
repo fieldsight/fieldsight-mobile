@@ -215,7 +215,11 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="org.odk.collect.android.activities.BearingActivity" />
         <activity
             android:name="org.odk.collect.android.activities.SplashScreenActivity"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@android:style/Theme.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+            </intent-filter>
+        </activity>
         <activity android:name="org.odk.collect.android.activities.CaptureSelfieActivity" />
         <activity android:name="org.odk.collect.android.activities.CaptureSelfieActivityNewApi" />
         <activity android:name="org.odk.collect.android.activities.WebViewActivity" />
