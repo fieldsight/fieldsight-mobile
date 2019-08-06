@@ -1,7 +1,7 @@
 package org.bcss.collect.android.http;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.kxml2.io.KXmlParser;
 import org.kxml2.kdom.Document;
@@ -99,7 +99,7 @@ public class CollectServerClient {
             throw new Exception("Invalid server URL (no hostname): " + downloadUrl);
         }
 
-        return httpInterface.get(uri, contentType, webCredentialsUtils.getCredentials(uri));
+        return httpInterface.executeGetRequest(uri, contentType, webCredentialsUtils.getCredentials(uri));
     }
 
     public static String getPlainTextMimeType() {

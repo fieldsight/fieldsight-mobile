@@ -7,33 +7,27 @@ package org.bcss.collect.naxa.common;
  */
 
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.fragments.dialogs.SimpleDialog;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.network.APIEndpoint;
-import org.bcss.collect.naxa.site.SiteListFragment;
 
 import java.util.Calendar;
 import java.util.HashMap;

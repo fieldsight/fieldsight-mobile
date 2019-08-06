@@ -1,26 +1,15 @@
 package org.bcss.collect.naxa.site;
 
 import android.app.DatePickerDialog;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -34,6 +23,18 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.textfield.TextInputLayout;
+
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -43,12 +44,11 @@ import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.login.model.McqOption;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.SiteMetaAttribute;
-
 import org.bcss.collect.naxa.v3.network.Region;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -221,11 +221,11 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     }
                     switch (createSiteFormStatus) {
                         case SUCCESS:
-                            FlashBarUtils.showFlashbar(this, "Offline Site Created");
+                            SnackBarUtils.showFlashbar(this, "Offline Site Created");
                             finishWithDelay();
                             break;
                         case UPDATE_SUCESS:
-                            FlashBarUtils.showFlashbar(this, "Site Information Updated");
+                            SnackBarUtils.showFlashbar(this, "Site Information Updated");
                             finishWithDelay();
 
                             break;
@@ -781,7 +781,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         if (PermissionUtils.checkIfCameraPermissionGranted(this)) {
             showImageDialog();
         } else {
-            PermissionUtils.requestCameraPermission(this, new PermissionListener() {
+            new PermissionUtils().requestCameraPermission(this, new PermissionListener() {
                 @Override
                 public void granted() {
                     showImageDialog();
@@ -875,7 +875,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
             Intent toGeoPointWidget = new Intent(this, GeoPointActivity.class);
             startActivityForResult(toGeoPointWidget, Constant.RequestCode.GEOPOINT_RESULT_CODE);
         } else {
-            PermissionUtils.requestLocationPermissions(this, new PermissionListener() {
+            new PermissionUtils().requestLocationPermissions(this, new PermissionListener() {
                 @Override
                 public void granted() {
                     onBtnCollectSiteRecordLocationClicked();

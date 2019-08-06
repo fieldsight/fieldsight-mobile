@@ -2,10 +2,11 @@ package org.bcss.collect.naxa.common;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -40,7 +41,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         }
 
         @Override
-        public void onItemRangeChanged(int positionStart, int itemCount, @android.support.annotation.Nullable Object payload) {
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
             super.onItemRangeChanged(positionStart, itemCount, payload);
             dispatchViewChanges();
 

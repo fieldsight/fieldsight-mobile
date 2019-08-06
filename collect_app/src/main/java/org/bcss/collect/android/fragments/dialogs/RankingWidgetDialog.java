@@ -19,18 +19,18 @@ package org.bcss.collect.android.fragments.dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog.Builder;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.support.v7.widget.helper.ItemTouchHelper.Callback;
+import androidx.fragment.app.DialogFragment;
+import androidx.core.widget.NestedScrollView;
+import androidx.appcompat.app.AlertDialog.Builder;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.ItemTouchHelper.Callback;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
@@ -102,17 +102,18 @@ public class RankingWidgetDialog extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(VALUES, (Serializable) rankingListAdapter.getValues());
+        outState.putSerializable(FORM_INDEX, formIndex);
         super.onSaveInstanceState(outState);
     }
 
-    private ScrollView setUpRankingLayout(List<String> values, FormIndex formIndex) {
+    private NestedScrollView setUpRankingLayout(List<String> values, FormIndex formIndex) {
         LinearLayout rankingLayout = new LinearLayout(getContext());
         rankingLayout.setOrientation(LinearLayout.HORIZONTAL);
         rankingLayout.addView(setUpPositionsLayout(values));
         rankingLayout.addView(setUpRecyclerView(values, formIndex));
         rankingLayout.setPadding(10, 0, 10, 0);
 
-        ScrollView scrollView = new ScrollView(getContext());
+        NestedScrollView scrollView = new NestedScrollView(getContext());
         scrollView.addView(rankingLayout);
         return scrollView;
     }

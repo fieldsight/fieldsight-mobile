@@ -1,11 +1,14 @@
 package org.bcss.collect.naxa.common;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.BaseActivity;

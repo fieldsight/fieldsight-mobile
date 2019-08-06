@@ -16,8 +16,10 @@
 
 package org.odk.collect.android.dao;
 
+import android.Manifest;
 import android.database.Cursor;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.rule.GrantPermissionRule;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Instance;
@@ -26,6 +28,7 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -40,6 +43,12 @@ import static org.junit.Assert.assertEquals;
 public class InstancesDaoTest {
 
     private InstancesDao instancesDao;
+
+    @Rule
+    public GrantPermissionRule permissionRule = GrantPermissionRule.grant(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    );
 
     @Before
     public void setUp() {

@@ -1,11 +1,22 @@
 package org.bcss.collect.naxa.notificationslist;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.room.ColumnInfo;
+import androidx.room.Dao;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.PrimaryKey;
+import androidx.room.Query;
+import androidx.room.Transaction;
+import androidx.room.TypeConverters;
+
+
 
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
 import org.bcss.collect.naxa.data.FieldSightNotification;

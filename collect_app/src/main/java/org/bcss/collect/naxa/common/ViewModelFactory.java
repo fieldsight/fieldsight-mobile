@@ -2,11 +2,13 @@ package org.bcss.collect.naxa.common;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
+
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 import org.bcss.collect.naxa.contact.ContactLocalSource;
 import org.bcss.collect.naxa.contact.ContactRemoteSource;

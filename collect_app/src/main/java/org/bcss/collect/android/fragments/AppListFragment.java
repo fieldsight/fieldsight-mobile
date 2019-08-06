@@ -15,14 +15,18 @@ limitations under the License.
 package org.bcss.collect.android.fragments;
 
 import android.database.Cursor;
+import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.app.ListFragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import androidx.fragment.app.ListFragment;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,7 +53,7 @@ import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrde
 
 abstract class AppListFragment extends ListFragment {
 
-    protected String[] sortingOptions;
+    protected int[] sortingOptions;
     protected SimpleCursorAdapter listAdapter;
     protected LinkedHashSet<Long> selectedInstances = new LinkedHashSet<>();
     protected View rootView;
@@ -92,6 +96,18 @@ abstract class AppListFragment extends ListFragment {
             toggleButton.setText(R.string.select_all);
         } else {
             toggleButton.setText(R.string.clear_all);
+        }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Use the nicer-looking drawable with Material Design insets.
+            ListView listView = getListView();
+            listView.setDivider(getResources().getDrawable(R.drawable.list_item_divider, getActivity().getTheme()));
+            listView.setDividerHeight(1);
         }
     }
 

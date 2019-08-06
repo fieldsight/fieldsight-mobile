@@ -1,11 +1,12 @@
 package org.bcss.collect.naxa.common;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.animation.Animation;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;
 

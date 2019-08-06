@@ -1,10 +1,12 @@
 package org.bcss.collect.naxa.scheduled.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
@@ -18,7 +20,6 @@ import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -100,7 +101,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
         LiveData<List<ScheduleForm>> source = dao.getBySiteId(siteId, projectId);
 
         generalFormMediator.addSource(source,
-                new android.arch.lifecycle.Observer<List<ScheduleForm>>() {
+                new Observer<List<ScheduleForm>>() {
                     @Override
                     public void onChanged(@Nullable List<ScheduleForm> generalForms) {
                         if (generalForms != null) {
@@ -165,7 +166,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
         LiveData<List<ScheduleForm>> source = dao.getByProjectId(projectId);
 
         generalFormMediator.addSource(source,
-                new android.arch.lifecycle.Observer<List<ScheduleForm>>() {
+                new Observer<List<ScheduleForm>>() {
                     @Override
                     public void onChanged(@Nullable List<ScheduleForm> generalForms) {
                         if (generalForms != null) {

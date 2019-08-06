@@ -1,17 +1,18 @@
 package org.bcss.collect.naxa.migrate;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.lifecycle.ViewModelProviders;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.ViewModelFactory;

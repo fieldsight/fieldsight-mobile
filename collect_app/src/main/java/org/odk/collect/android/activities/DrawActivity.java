@@ -21,9 +21,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -124,6 +124,13 @@ public class DrawActivity extends CollectAbstractActivity {
                     AnimateUtils.scaleInAnimation(cardViewSaveAndClose, 100, 150, new OvershootInterpolator(), true);
                     AnimateUtils.scaleInAnimation(fabClear, 150, 150, new OvershootInterpolator(), true);
                     AnimateUtils.scaleInAnimation(cardViewClear, 150, 150, new OvershootInterpolator(), true);
+
+                    fabSetColor.show();
+                    cardViewSetColor.setVisibility(View.VISIBLE);
+                    fabSaveAndClose.show();
+                    cardViewSaveAndClose.setVisibility(View.VISIBLE);
+                    fabClear.show();
+                    cardViewClear.setVisibility(View.VISIBLE);
                 } else {
                     status = 0;
                     fabActions.animate().rotation(0).setInterpolator(new AccelerateDecelerateInterpolator())
@@ -230,10 +237,8 @@ public class DrawActivity extends CollectAbstractActivity {
             drawView.drawOnCanvas(canvas, 0, 0);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 70, fos);
             try {
-                if (fos != null) {
-                    fos.flush();
-                    fos.close();
-                }
+                fos.flush();
+                fos.close();
             } catch (Exception e) {
                 Timber.e(e);
             }
@@ -262,11 +267,6 @@ public class DrawActivity extends CollectAbstractActivity {
                 createQuitDrawDialog();
                 return true;
             case KeyEvent.KEYCODE_DPAD_RIGHT:
-                if (event.isAltPressed()) {
-                    createQuitDrawDialog();
-                    return true;
-                }
-                break;
             case KeyEvent.KEYCODE_DPAD_LEFT:
                 if (event.isAltPressed()) {
                     createQuitDrawDialog();

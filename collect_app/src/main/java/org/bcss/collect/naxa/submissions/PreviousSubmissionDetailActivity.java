@@ -3,19 +3,16 @@ package org.bcss.collect.naxa.submissions;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.TextView;
 
-import com.google.api.client.repackaged.com.google.common.base.Splitter;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.DialogFactory;
@@ -27,13 +24,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import timber.log.Timber;
 
@@ -96,7 +89,7 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
         adapter = new MultiViewAdapter();
 
         adapter.setOnCardClickListener(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvFormHistory.setLayoutManager(linearLayoutManager);
         rvFormHistory.setAdapter(adapter);
         rvFormHistory.setItemAnimator(new DefaultItemAnimator());
@@ -108,53 +101,50 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
     private void mapJSONtoViewModel(@NonNull final List<GetResponce> submissions) {
 
+        AsyncTask.execute(() -> {
+            ViewModel answer;
 
-        ViewModel answer;
+            for (int i = 0; i < submissions.size(); i++) {
+                GetResponce response = submissions.get(i);
+                switch (response.getType()) {
+                    case "start":
+                    case "end":
+                    case "calculate":
+                    case "submitted_by":
+                    case "submittion_time":
+                        continue;
 
-        for (int i = 0; i < submissions.size(); i++) {
-            GetResponce response = submissions.get(i);
-            switch (response.getType()) {
-                case "start":
-                case "end":
-                case "calculate":
-                case "submitted_by":
-                case "submittion_time":
-                    continue;
-
-            }
-
-            StringBuilder question = new StringBuilder(response.getQuestion().toString());
-            try {
-                JSONObject questionJson = new JSONObject(question.toString());
-                Iterator<String> keys = questionJson.keys();
-                if (keys.hasNext()) {
-                    question.setLength(0);
                 }
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    question.append(questionJson.getString(key));
+
+                StringBuilder question = new StringBuilder(response.getQuestion().toString());
+                try {
+                    JSONObject questionJson = new JSONObject(question.toString());
+                    Iterator<String> keys = questionJson.keys();
                     if (keys.hasNext()) {
-                        question.append("\n");
+                        question.setLength(0);
                     }
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        question.append(questionJson.getString(key));
+                        if (keys.hasNext()) {
+                            question.append("\n");
+                        }
+                    }
+                } catch (JSONException e) {
+                    Timber.e(e);
                 }
-            } catch (JSONException e) {
-                Timber.e(e);
+
+                answer = new ViewModel(question.toString(), response.getAnswer(), "id", "id");
+                answers.add(answer);
+
             }
 
-            answer = new ViewModel(question.toString(), response.getAnswer(), "id", "id");
-            answers.add(answer);
 
-        }
+            adapter.updateList(answers);
 
 
-        adapter.updateList(answers);
+        });
 
-
-    }
-
-
-    private Map<String, String> splitToMap(String in) {
-        return Splitter.on(",").withKeyValueSeparator("=").split(in);
     }
 
     private String formatSubmissionDateTime(String dateTime) {

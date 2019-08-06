@@ -1,7 +1,9 @@
 package org.bcss.collect.naxa.sync;
 
-import android.arch.lifecycle.LiveData;
+
 import android.os.AsyncTask;
+
+import androidx.lifecycle.LiveData;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSourceRX;

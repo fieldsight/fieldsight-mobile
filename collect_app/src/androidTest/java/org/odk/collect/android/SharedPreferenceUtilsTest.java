@@ -1,8 +1,8 @@
 package org.odk.collect.android;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.SmallTest;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.filters.SmallTest;
 
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;

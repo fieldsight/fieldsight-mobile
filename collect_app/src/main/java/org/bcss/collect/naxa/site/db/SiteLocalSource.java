@@ -1,8 +1,9 @@
 package org.bcss.collect.naxa.site.db;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
@@ -17,7 +18,6 @@ import java.util.concurrent.Callable;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
 
@@ -56,9 +56,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteByProjectIdAsSingle(projectId);
     }
 
-    public LiveData<List<Site>> getAllParentSite(String projectId){
+    public LiveData<List<Site>> getAllParentSite(String projectId) {
         return dao.getParentSite(projectId);
     }
+
     public LiveData<List<String>> getAllDistinctProjectIds() {
         return dao.getAllDistictProject();
     }
@@ -82,7 +83,6 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
-
     //todo return affected rows count
     public LiveData<Integer> delete(Site site) {
         MutableLiveData<Integer> affectedRowsMutData = new MutableLiveData<>();
@@ -92,17 +92,15 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
-    public List<Site> searchSites(String searchQuery,String projectId) {
+    public List<Site> searchSites(String searchQuery, String projectId) {
 
-        return dao.searchSites(searchQuery,projectId);
+        return dao.searchSites(searchQuery, projectId);
     }
 
     @Override
     public void save(Site... items) {
         AsyncTask.execute(() -> dao.insert(items));
     }
-
-
 
 
     public Completable saveAsCompletable(Site... sites) {
@@ -173,4 +171,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getAllByStatus(siteStatus);
     }
 
+    public Single<Site> getSiteByIdAsSingle(String siteId) {
+        return dao.getSiteByIdAsSingle(siteId);
+    }
 }

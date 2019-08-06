@@ -32,20 +32,17 @@ import org.bcss.collect.android.listeners.PermissionListener;
 import org.javarosa.core.model.data.GeoPointData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.GeoPointActivity;
 import org.odk.collect.android.activities.GeoPointMapActivity;
-import org.odk.collect.android.activities.GeoPointOsmMapActivity;
-import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.PlayServicesUtil;
+import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
-import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;
-
 
 /**
  * GeoPointWidget is the widget that allows the user to get GPS readings.
@@ -62,12 +59,10 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
     public static final String DRAGGABLE_ONLY = "draggable";
 
     public static final double DEFAULT_LOCATION_ACCURACY = 5.0;
-    private static final String GOOGLE_MAP_KEY = "google_maps";
     private final boolean readOnly;
     private final boolean useMapsV2;
     private final Button getLocationButton;
     private final Button viewButton;
-    private final String mapSDK;
     private final TextView answerDisplay;
     private boolean useMaps;
     private double accuracyThreshold;
@@ -91,18 +86,15 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
 
         // use mapsV2 if it is available and was requested;
         useMapsV2 = useMapsV2(context);
-        if (appearance != null && appearance.toLowerCase(Locale.US).contains("placement-map") && useMapsV2) {
+        if (appearance != null && appearance.toLowerCase(Locale.US).contains(WidgetAppearanceUtils.PLACEMENT_MAP) && useMapsV2) {
             draggable = true;
             useMaps = true;
-        } else if (appearance != null && appearance.toLowerCase(Locale.US).contains("maps") && useMapsV2) {
+        } else if (appearance != null && appearance.toLowerCase(Locale.US).contains(WidgetAppearanceUtils.MAPS) && useMapsV2) {
             draggable = false;
             useMaps = true;
         } else {
             useMaps = false;
         }
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        mapSDK = sharedPreferences.getString(PreferenceKeys.KEY_MAP_SDK, GOOGLE_MAP_KEY);
 
         readOnly = prompt.isReadOnly();
 
@@ -172,6 +164,7 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
         stringAnswer = null;
         answerDisplay.setText(null);
         updateButtonLabelsAndVisibility(false);
+        widgetValueChanged();
     }
 
     @Override
@@ -252,6 +245,7 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
         }
 
         updateButtonLabelsAndVisibility(true);
+        widgetValueChanged();
     }
 
     @Override
@@ -279,7 +273,7 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
-        requestLocationPermissions((FormEntryActivity) getContext(), new PermissionListener() {
+        getPermissionUtils().requestLocationPermissions((Activity) getContext(), new PermissionListener() {
             @Override
             public void granted() {
                 startGeoPoint();
@@ -292,21 +286,18 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
     }
 
     private void startGeoPoint() {
-        Intent i;
-        if (useMapsV2 && useMaps) {
-            if (mapSDK.equals(GOOGLE_MAP_KEY)) {
-                if (PlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
-                    i = new Intent(getContext(), GeoPointMapActivity.class);
-                } else {
-                    PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(getContext());
-                    return;
-                }
-            } else {
-                i = new Intent(getContext(), GeoPointOsmMapActivity.class);
-            }
-        } else {
-            i = new Intent(getContext(), GeoPointActivity.class);
+        Activity activity = (Activity) getContext();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        String mapSDK = prefs.getString(GeneralKeys.KEY_MAP_SDK, GeneralKeys.DEFAULT_BASEMAP_KEY);
+        if (mapSDK.equals(GeneralKeys.GOOGLE_MAPS_BASEMAP_KEY) &&
+            !PlayServicesUtil.isGooglePlayServicesAvailable(activity)) {
+            PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(activity);
+            return;
         }
+        Intent intent = (useMapsV2 && useMaps) ?
+            new Intent(activity, GeoPointMapActivity.class)
+                .putExtra(GeneralKeys.KEY_MAP_SDK, mapSDK) :
+            new Intent(activity, GeoPointActivity.class);
 
         if (stringAnswer != null && !stringAnswer.isEmpty()) {
             String[] sa = stringAnswer.split(" ");
@@ -315,14 +306,13 @@ public class GeoPointWidget extends QuestionWidget implements BinaryWidget {
             gp[1] = Double.valueOf(sa[1]);
             gp[2] = Double.valueOf(sa[2]);
             gp[3] = Double.valueOf(sa[3]);
-            i.putExtra(LOCATION, gp);
+            intent.putExtra(LOCATION, gp);
         }
-        i.putExtra(READ_ONLY, readOnly);
-        i.putExtra(DRAGGABLE_ONLY, draggable);
-        i.putExtra(ACCURACY_THRESHOLD, accuracyThreshold);
+        intent.putExtra(READ_ONLY, readOnly);
+        intent.putExtra(DRAGGABLE_ONLY, draggable);
+        intent.putExtra(ACCURACY_THRESHOLD, accuracyThreshold);
 
         waitForData();
-
-        ((Activity) getContext()).startActivityForResult(i, RequestCodes.LOCATION_CAPTURE);
+        activity.startActivityForResult(intent, RequestCodes.LOCATION_CAPTURE);
     }
 }

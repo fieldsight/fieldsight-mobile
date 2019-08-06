@@ -3,7 +3,7 @@ package org.bcss.collect.naxa.project;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.bcss.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;

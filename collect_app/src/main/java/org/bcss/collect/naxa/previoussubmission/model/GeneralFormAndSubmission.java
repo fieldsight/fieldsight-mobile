@@ -1,6 +1,6 @@
 package org.bcss.collect.naxa.previoussubmission.model;
 
-import android.arch.persistence.room.Embedded;
+import androidx.room.Embedded;
 
 import com.google.common.base.Objects;
 

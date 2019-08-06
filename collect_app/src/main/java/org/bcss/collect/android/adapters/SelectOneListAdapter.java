@@ -16,17 +16,22 @@
 
 package org.bcss.collect.android.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatRadioButton;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.core.content.ContextCompat;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 
 import org.bcss.collect.android.R;
 import org.javarosa.core.model.SelectChoice;
+import org.javarosa.core.model.data.helper.Selection;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.widgets.AbstractSelectOneWidget;
 
 import java.util.List;
@@ -36,15 +41,18 @@ public class SelectOneListAdapter extends AbstractSelectListAdapter
 
     private String selectedValue;
     private RadioButton selectedRadioButton;
+    private View selectedItem;
 
-    public SelectOneListAdapter(List<SelectChoice> items, String selectedValue, AbstractSelectOneWidget widget) {
-        super(items, widget);
+    public SelectOneListAdapter(List<SelectChoice> items, String selectedValue, AbstractSelectOneWidget widget, int numColumns) {
+        super(items, widget, numColumns);
         this.selectedValue = selectedValue;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.quick_select_layout, null));
+        return new ViewHolder(noButtonsMode
+                ? LayoutInflater.from(parent.getContext()).inflate(R.layout.select_item_layout, null)
+                : LayoutInflater.from(parent.getContext()).inflate(R.layout.quick_select_layout, null));
     }
 
     @Override
@@ -69,10 +77,22 @@ public class SelectOneListAdapter extends AbstractSelectListAdapter
 
         ViewHolder(View v) {
             super(v);
-            autoAdvanceIcon = v.findViewById(R.id.auto_advance_icon);
-            autoAdvanceIcon.setVisibility(((AbstractSelectOneWidget) widget).isAutoAdvance() ? View.VISIBLE : View.GONE);
-            mediaLayout = v.findViewById(R.id.mediaLayout);
-            widget.initMediaLayoutSetUp(mediaLayout);
+            if (noButtonsMode) {
+                view = (FrameLayout) v;
+            } else {
+                autoAdvanceIcon = v.findViewById(R.id.auto_advance_icon);
+                autoAdvanceIcon.setVisibility(((AbstractSelectOneWidget) widget).isAutoAdvance() ? View.VISIBLE : View.GONE);
+                mediaLayout = v.findViewById(R.id.mediaLayout);
+                widget.initMediaLayoutSetUp(mediaLayout);
+            }
+        }
+
+        void bind(final int index) {
+            super.bind(index);
+            if (noButtonsMode && filteredItems.get(index).getValue().equals(selectedValue)) {
+                view.getChildAt(0).setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.select_item_border));
+                selectedItem = view.getChildAt(0);
+            }
         }
     }
 
@@ -90,11 +110,28 @@ public class SelectOneListAdapter extends AbstractSelectListAdapter
         return radioButton;
     }
 
+    @Override
+    void onItemClick(Selection selection, View view) {
+        if (!selection.getValue().equals(selectedValue)) {
+            if (selectedItem != null) {
+                selectedItem.setBackground(null);
+            }
+            view.setBackground(ContextCompat.getDrawable(view.getContext(), R.drawable.select_item_border));
+            selectedItem = view;
+            selectedValue = selection.getValue();
+        }
+        ((AbstractSelectOneWidget) widget).onClick();
+    }
+
     public void clearAnswer() {
         if (selectedRadioButton != null) {
             selectedRadioButton.setChecked(false);
         }
         selectedValue = null;
+        if (selectedItem != null) {
+            selectedItem.setBackground(null);
+            selectedItem = null;
+        }
         ((AbstractSelectOneWidget) widget).clearNextLevelsOfCascadingSelect();
     }
 

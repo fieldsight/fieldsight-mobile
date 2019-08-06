@@ -1,7 +1,7 @@
 package org.bcss.collect.naxa.previoussubmission;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Query;
+import androidx.room.Dao;
+import androidx.room.Query;
 
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
 import org.bcss.collect.naxa.previoussubmission.model.SubmissionDetail;

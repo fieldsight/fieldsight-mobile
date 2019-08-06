@@ -3,8 +3,8 @@ package org.odk.collect.android.tasks;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -19,7 +19,6 @@ import org.odk.collect.android.utilities.ImageConverter;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.BaseImageWidget;
-import org.odk.collect.android.widgets.ImageWebViewWidget;
 import org.odk.collect.android.widgets.QuestionWidget;
 
 import java.io.File;
@@ -53,7 +52,7 @@ public class MediaLoadingTask extends AsyncTask<Uri, Void, File> {
             instanceFile = formController.getInstanceFile();
             if (instanceFile != null) {
                 String instanceFolder = instanceFile.getParent();
-                String extension = ContentResolverHelper.getFileExtensionFromUri(uris[0]);
+                String extension = ContentResolverHelper.getFileExtensionFromUri(formEntryActivity.get(), uris[0]);
                 String destMediaPath = instanceFolder + File.separator + System.currentTimeMillis() + extension;
 
                 try {
@@ -64,8 +63,7 @@ public class MediaLoadingTask extends AsyncTask<Uri, Void, File> {
                         QuestionWidget questionWidget = formEntryActivity.get().getWidgetWaitingForBinaryData();
 
                         // apply image conversion if the widget is an image widget
-                        if (questionWidget instanceof BaseImageWidget ||
-                                questionWidget instanceof ImageWebViewWidget) {
+                        if (questionWidget instanceof BaseImageWidget) {
                             ImageConverter.execute(newFile.getPath(), questionWidget, formEntryActivity.get());
                         }
 
@@ -89,7 +87,7 @@ public class MediaLoadingTask extends AsyncTask<Uri, Void, File> {
     @Override
     protected void onPostExecute(File result) {
         Fragment prev = formEntryActivity.get().getSupportFragmentManager().findFragmentByTag(ProgressDialogFragment.COLLECT_PROGRESS_DIALOG_TAG);
-        if (prev != null) {
+        if (prev != null && !formEntryActivity.get().isInstanceStateSaved()) {
             ((DialogFragment) prev).dismiss();
         }
 
@@ -97,8 +95,5 @@ public class MediaLoadingTask extends AsyncTask<Uri, Void, File> {
         if (odkView != null) {
             odkView.setBinaryData(result);
         }
-
-        formEntryActivity.get().saveAnswersForCurrentScreen(FormEntryActivity.DO_NOT_EVALUATE_CONSTRAINTS);
-        formEntryActivity.get().refreshCurrentView();
     }
 }

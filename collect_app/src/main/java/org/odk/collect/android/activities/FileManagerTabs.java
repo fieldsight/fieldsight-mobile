@@ -17,11 +17,12 @@ package org.odk.collect.android.activities;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.widget.Toolbar;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.ViewPagerAdapter;
@@ -52,7 +53,7 @@ public class FileManagerTabs extends CollectAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.file_manager_layout);
+        setContentView(R.layout.file_manager_tabs);
         initToolbar();
 
         Bundle bundle = getIntent().getExtras();

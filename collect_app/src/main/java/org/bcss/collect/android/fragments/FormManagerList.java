@@ -18,8 +18,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.CursorLoader;
+import androidx.annotation.NonNull;
+import androidx.loader.content.CursorLoader;
 import android.view.View;
 import android.widget.ListView;
 
@@ -101,13 +101,13 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     private void setupAdapter() {
-        String[] data = new String[]{FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION,
+        String[] data = new String[]{FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.DISPLAY_SUBTEXT,
                                         FormsColumns.JR_FORM_ID};
-        int[] view = new int[]{R.id.text1, R.id.text2, R.id.text3};
+        int[] view = new int[]{R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2};
 
         listAdapter = new VersionHidingCursorAdapter(
                 FormsColumns.JR_VERSION, getActivity(),
-                R.layout.two_item_multiple_choice, null, data, view);
+                R.layout.form_chooser_list_item_multiple_choice, null, data, view);
         setListAdapter(listAdapter);
         checkPreviouslyCheckedItems();
     }

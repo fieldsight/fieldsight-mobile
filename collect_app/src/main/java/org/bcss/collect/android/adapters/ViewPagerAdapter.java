@@ -1,4 +1,4 @@
-package org.bcss.collect.android.adapters;/*
+/*
 Copyright 2017 Shobhit
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -11,13 +11,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+package org.bcss.collect.android.adapters;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
-
-
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 

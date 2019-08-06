@@ -14,9 +14,6 @@ package org.bcss.collect.naxa.common;/*
 
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +24,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.FilterOption.FilterType;

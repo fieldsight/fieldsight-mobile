@@ -4,14 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -19,6 +12,15 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.Constant;
@@ -101,6 +103,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
 
         offlineLatestResponse = null;
         urlFirstPage = FieldSightUserSession.getServerUrl(this) + "/forms/api/responses/" + fsFormId + "/" + siteId;
+        Timber.i(urlFirstPage);
         count = bundle.getString("count");
 
         bindUI();
@@ -259,7 +262,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     private void setupRecyclerView() {
         adapter = new PaginationAdapter(this);
         adapter.setCardClickListener(this);
-        linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         listFormHistory.setLayoutManager(linearLayoutManager);
         listFormHistory.setAdapter(adapter);
         listFormHistory.setItemAnimator(new DefaultItemAnimator());

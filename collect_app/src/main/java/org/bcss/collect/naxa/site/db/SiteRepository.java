@@ -1,8 +1,10 @@
 package org.bcss.collect.naxa.site.db;
 
-import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
+
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import org.bcss.collect.naxa.common.BaseRepository;
 import org.bcss.collect.naxa.common.Constant;

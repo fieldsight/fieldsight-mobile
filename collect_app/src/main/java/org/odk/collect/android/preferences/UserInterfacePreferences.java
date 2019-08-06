@@ -22,7 +22,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.google.common.collect.ObjectArrays;
@@ -30,29 +29,45 @@ import com.google.common.collect.ObjectArrays;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.spatial.MapHelper;
 import org.odk.collect.android.activities.MainMenuActivity;
+import org.odk.collect.android.map.MapboxUtils;
+import org.bcss.collect.android.spatial.MapHelper;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.MediaUtils;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import androidx.annotation.Nullable;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
-import static org.odk.collect.android.preferences.PreferenceKeys.GOOGLE_MAPS_BASEMAP_DEFAULT;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_APP_LANGUAGE;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_APP_THEME;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_FONT_SIZE;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_MAP_BASEMAP;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_MAP_SDK;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_NAVIGATION;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SPLASH_PATH;
-import static org.odk.collect.android.preferences.PreferenceKeys.OSM_BASEMAP_KEY;
-import static org.odk.collect.android.preferences.PreferenceKeys.OSM_MAPS_BASEMAP_DEFAULT;
+import static org.odk.collect.android.preferences.GeneralKeys.GOOGLE_MAPS_BASEMAP_DEFAULT;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_LANGUAGE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_THEME;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_FONT_SIZE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_MAP_BASEMAP;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_MAP_SDK;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_NAVIGATION;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SPLASH_PATH;
+import static org.odk.collect.android.preferences.GeneralKeys.MAPBOX_BASEMAP_DEFAULT;
+import static org.odk.collect.android.preferences.GeneralKeys.MAPBOX_BASEMAP_KEY;
+import static org.odk.collect.android.preferences.GeneralKeys.OSM_BASEMAP_KEY;
+import static org.odk.collect.android.preferences.GeneralKeys.OSM_MAPS_BASEMAP_DEFAULT;
+import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public class UserInterfacePreferences extends BasePreferenceFragment {
 
     protected static final int IMAGE_CHOOSER = 0;
+
+    public static UserInterfacePreferences newInstance(boolean adminMode) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(INTENT_KEY_ADMIN_MODE, adminMode);
+
+        UserInterfacePreferences userInterfacePreferences = new UserInterfacePreferences();
+        userInterfacePreferences.setArguments(bundle);
+
+        return userInterfacePreferences;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -181,13 +196,19 @@ public class UserInterfacePreferences extends BasePreferenceFragment {
             return;
         }
 
+        if (mapSdk.getValue() == null || mapSdk.getEntry() == null) {
+            mapSdk.setValueIndex(0);  // use the first option as the default
+        }
+
         String[] onlineLayerEntryValues;
         String[] onlineLayerEntries;
-
         if (mapSdk.getValue().equals(OSM_BASEMAP_KEY)) {
             onlineLayerEntryValues = getResources().getStringArray(R.array.map_osm_basemap_selector_entry_values);
             onlineLayerEntries = getResources().getStringArray(R.array.map_osm_basemap_selector_entries);
-        } else {
+        } else if (mapSdk.getValue().equals(MAPBOX_BASEMAP_KEY)) {
+            onlineLayerEntryValues = getResources().getStringArray(R.array.map_mapbox_basemap_selector_entry_values);
+            onlineLayerEntries = getResources().getStringArray(R.array.map_mapbox_basemap_selector_entries);
+        } else { // otherwise fall back to Google, the default
             onlineLayerEntryValues = getResources().getStringArray(R.array.map_google_basemap_selector_entry_values);
             onlineLayerEntries = getResources().getStringArray(R.array.map_google_basemap_selector_entries);
         }
@@ -198,23 +219,31 @@ public class UserInterfacePreferences extends BasePreferenceFragment {
         mapSdk.setOnPreferenceChangeListener((preference, newValue) -> {
             String[] onlineLayerEntryValues1;
             String[] onlineLayerEntries1;
+            String value = (String) newValue;
 
-            int index = ((ListPreference) preference).findIndexOfValue(newValue.toString());
-            if (index == 0) { // Google Maps
-                onlineLayerEntryValues1 = getResources().getStringArray(R.array.map_google_basemap_selector_entry_values);
-                onlineLayerEntries1 = getResources().getStringArray(R.array.map_google_basemap_selector_entries);
-                mapBasemap.setValue(GOOGLE_MAPS_BASEMAP_DEFAULT);
-            } else { // OSM Maps
+            if (value.equals(OSM_BASEMAP_KEY)) {
                 onlineLayerEntryValues1 = getResources().getStringArray(R.array.map_osm_basemap_selector_entry_values);
                 onlineLayerEntries1 = getResources().getStringArray(R.array.map_osm_basemap_selector_entries);
                 mapBasemap.setValue(OSM_MAPS_BASEMAP_DEFAULT);
+            } else if (value.equals(MAPBOX_BASEMAP_KEY)) {
+                if (MapboxUtils.initMapbox() == null) {
+                    // This settings code will be rewritten very soon (planned for r1.23),
+                    // so let's just warn for now instead of trying to disable the option.
+                    MapboxUtils.warnMapboxUnsupported(getActivity());
+                }
+                onlineLayerEntryValues1 = getResources().getStringArray(R.array.map_mapbox_basemap_selector_entry_values);
+                onlineLayerEntries1 = getResources().getStringArray(R.array.map_mapbox_basemap_selector_entries);
+                mapBasemap.setValue(MAPBOX_BASEMAP_DEFAULT);
+            } else {  // GOOGLE_MAPS_BASEMAP_KEY, or default
+                onlineLayerEntryValues1 = getResources().getStringArray(R.array.map_google_basemap_selector_entry_values);
+                onlineLayerEntries1 = getResources().getStringArray(R.array.map_google_basemap_selector_entries);
+                mapBasemap.setValue(GOOGLE_MAPS_BASEMAP_DEFAULT);
             }
-
             mapBasemap.setEntryValues(ObjectArrays.concat(onlineLayerEntryValues1, MapHelper.getOfflineLayerListWithTags(), String.class));
             mapBasemap.setEntries(ObjectArrays.concat(onlineLayerEntries1, MapHelper.getOfflineLayerListWithTags(), String.class));
             mapBasemap.setSummary(mapBasemap.getEntry());
 
-            preference.setSummary(((ListPreference) preference).getEntries()[index]);
+            mapSdk.setSummary(mapSdk.getEntries()[mapSdk.findIndexOfValue(value)]);
             return true;
         });
 
@@ -251,6 +280,7 @@ public class UserInterfacePreferences extends BasePreferenceFragment {
 
                 // setting image path
                 setSplashPath(sourceMediaPath);
+
                 break;
         }
     }

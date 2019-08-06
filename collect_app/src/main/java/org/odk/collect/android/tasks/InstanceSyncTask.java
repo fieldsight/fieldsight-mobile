@@ -24,14 +24,14 @@ import android.provider.BaseColumns;
 import org.apache.commons.io.FileUtils;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.exception.EncryptionException;
 import org.bcss.collect.android.listeners.DiskSyncListener;
 import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.EncryptionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -142,7 +142,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
 
                 final boolean instanceSyncFlag = PreferenceManager.getDefaultSharedPreferences(
                         Collect.getInstance().getApplicationContext()).getBoolean(
-                        PreferenceKeys.KEY_INSTANCE_SYNC, true);
+                        GeneralKeys.KEY_INSTANCE_SYNC, true);
 
                 int counter = 0;
                 // Begin parsing and add them to the content provider
@@ -213,7 +213,6 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
             Document document = builder.parse(new File(instancePath));
             Element element = document.getDocumentElement();
             instanceFormId = element.getAttribute("id");
-
         } catch (IOException | ParserConfigurationException | SAXException e) {
             Timber.w("Unable to read form id from %s", instancePath);
         }
@@ -253,7 +252,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
         File instanceXml = new File(candidateInstance);
         if (!new File(instanceXml.getParentFile(), "submission.xml.enc").exists()) {
             Uri uri = Uri.parse(InstanceColumns.CONTENT_URI + "/" + instanceCursor.getInt(instanceCursor.getColumnIndex(BaseColumns._ID)));
-            FormController.InstanceMetadata instanceMetadata = new FormController.InstanceMetadata(getInstanceIdFromInstance(candidateInstance), null, false);
+            FormController.InstanceMetadata instanceMetadata = new FormController.InstanceMetadata(getInstanceIdFromInstance(candidateInstance), null, null);
             EncryptionUtils.EncryptedFormInformation formInfo = EncryptionUtils.getEncryptedFormInformation(uri, instanceMetadata);
 
             if (formInfo != null) {
@@ -266,7 +265,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
                 instancesDao.updateInstance(values, InstanceColumns.INSTANCE_FILE_PATH + "=?", new String[]{candidateInstance});
 
                 SaveToDiskTask.manageFilesAfterSavingEncryptedForm(instanceXml, submissionXml);
-                if (!EncryptionUtils.deletePlaintextFiles(instanceXml)) {
+                if (!EncryptionUtils.deletePlaintextFiles(instanceXml, null)) {
                     Timber.e("Error deleting plaintext files for %s", instanceXml.getAbsolutePath());
                 }
             }

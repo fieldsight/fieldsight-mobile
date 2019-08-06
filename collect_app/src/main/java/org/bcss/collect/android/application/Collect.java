@@ -14,32 +14,31 @@
 
 package org.bcss.collect.android.application;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatDelegate;
-import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.multidex.MultiDex;
 
 import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobManagerCreateException;
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -49,28 +48,28 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.external.ExternalDataManager;
-import org.bcss.collect.android.injection.config.AppComponent;
-import org.bcss.collect.android.injection.config.DaggerAppComponent;
 import org.bcss.collect.android.jobs.CollectJobCreator;
 import org.bcss.collect.android.logic.FormController;
 import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.common.SharedPreferenceUtils;
-import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
 import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 import org.bcss.collect.naxa.login.APIErrorUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.v3.network.Syncable;
+import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.injection.config.AppDependencyComponent;
+import org.odk.collect.android.injection.config.DaggerAppDependencyComponent;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.FormMetadataMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
+import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PRNGFixes;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 
 import java.io.ByteArrayInputStream;
@@ -81,31 +80,28 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.net.ssl.SSLException;
 
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
 import io.fabric.sdk.android.Fabric;
 import io.reactivex.functions.Consumer;
 import io.reactivex.plugins.RxJavaPlugins;
 import retrofit2.HttpException;
 import timber.log.Timber;
 
-import static org.bcss.collect.android.BuildConfig.DEBUG;
 import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
 import static org.bcss.collect.android.logic.PropertyManager.SCHEME_USERNAME;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_APP_LANGUAGE;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_FONT_SIZE;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
-
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_LANGUAGE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_FONT_SIZE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_USERNAME;
+import static org.odk.collect.android.tasks.sms.SmsNotificationReceiver.SMS_NOTIFICATION_ACTION;
+import static org.odk.collect.android.tasks.sms.SmsSender.SMS_SEND_ACTION;
 
 /**
  * The Open Data Kit Collect application.
  *
  * @author carlhartung
  */
-public class Collect extends Application implements HasActivityInjector {
+public class Collect extends Application {
 
     // Storage paths
     public static final String ODK_ROOT = Environment.getExternalStorageDirectory()
@@ -137,10 +133,7 @@ public class Collect extends Application implements HasActivityInjector {
     private FormController formController;
     private ExternalDataManager externalDataManager;
     private Tracker tracker;
-    private AppComponent applicationComponent;
-
-    @Inject
-    DispatchingAndroidInjector<Activity> androidInjector;
+    private AppDependencyComponent applicationComponent;
 
     public static Collect getInstance() {
         return singleton;
@@ -238,7 +231,9 @@ public class Collect extends Application implements HasActivityInjector {
             dirPath = dirPath.substring(Collect.ODK_ROOT.length());
             String[] parts = dirPath.split(File.separatorChar == '\\' ? "\\\\" : File.separator);
             // [appName, instances, tableId, instanceId ]
-            return parts.length == 4 && parts[1].equals("instances");
+            if (parts.length == 4 && parts[1].equals("instances")) {
+                return true;
+            }
         }
         return false;
     }
@@ -292,17 +287,16 @@ public class Collect extends Application implements HasActivityInjector {
             Stetho.initializeWithDefaults(this);
         }
         setupFirebaseRemoteConfig();
-        applicationComponent = DaggerAppComponent.builder()
-                .application(this)
-                .build();
-
-        applicationComponent.inject(this);
         OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
 
+        setupDagger();
 
         NotificationUtils.createNotificationChannel(singleton);
         FieldSightNotificationUtils.createChannels(singleton);
+
+        registerReceiver(new SmsSentBroadcastReceiver(), new IntentFilter(SMS_SEND_ACTION));
+        registerReceiver(new SmsNotificationReceiver(), new IntentFilter(SMS_NOTIFICATION_ACTION));
 
         try {
             JobManager
@@ -356,6 +350,14 @@ public class Collect extends Application implements HasActivityInjector {
         Fabric.with(this, new Crashlytics());
     }
 
+
+    private void setupDagger() {
+        applicationComponent = DaggerAppDependencyComponent.builder()
+                .application(this)
+                .build();
+
+        applicationComponent.inject(this);
+    }
 
     protected RefWatcher setupLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -436,12 +438,13 @@ public class Collect extends Application implements HasActivityInjector {
         return allowClick;
     }
 
-    public AppComponent getComponent() {
+    public AppDependencyComponent getComponent() {
         return applicationComponent;
     }
 
-    public void setComponent(AppComponent applicationComponent) {
+    public void setComponent(AppDependencyComponent applicationComponent) {
         this.applicationComponent = applicationComponent;
+        applicationComponent.inject(this);
     }
 
     /**
@@ -460,13 +463,27 @@ public class Collect extends Application implements HasActivityInjector {
             }
         }
 
-        return FileUtils.getMd5Hash(
-                new ByteArrayInputStream(formIdentifier.getBytes()));
+        return FileUtils.getMd5Hash(new ByteArrayInputStream(formIdentifier.getBytes()));
     }
 
-    @Override
-    public DispatchingAndroidInjector<Activity> activityInjector() {
-        return androidInjector;
+
+    /**
+     * Gets a unique, privacy-preserving identifier for a form based on its id and version.
+     * @param formId id of a form
+     * @param formVersion version of a form
+     * @return md5 hash of the form title, a space, the form ID
+     */
+    public static String getFormIdentifierHash(String formId, String formVersion) {
+        String formIdentifier = new FormsDao().getFormTitleForFormIdAndFormVersion(formId, formVersion) + " " + formId;
+        return FileUtils.getMd5Hash(new ByteArrayInputStream(formIdentifier.getBytes()));
+    }
+
+    public void logNullFormControllerEvent(String action) {
+        Collect.getInstance().getDefaultTracker()
+                .send(new HitBuilders.EventBuilder()
+                        .setCategory("NullFormControllerEvent")
+                        .setAction(action)
+                        .build());
     }
 
     private void setupFirebaseRemoteConfig() {
