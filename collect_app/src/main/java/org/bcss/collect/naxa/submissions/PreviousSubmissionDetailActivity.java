@@ -13,16 +13,29 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.api.client.repackaged.com.google.common.base.Splitter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.generalforms.data.FormResponse;
 import org.bcss.collect.naxa.generalforms.data.GetResponce;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
@@ -33,7 +46,6 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
     RecyclerView rvFormHistory;
     ArrayList<ViewModel> answers = new ArrayList<>();
     private MultiViewAdapter adapter;
-
 
 
     @Override
@@ -58,7 +70,7 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
     private void bindUI() {
         toolbar = findViewById(R.id.toolbar);
         rvFormHistory = findViewById(R.id.form_history_detail_recycler_view);
-        }
+    }
 
     private void setupToolBar(FormResponse model) {
         toolbar.setTitle("Submitted by " + model.getSubmittedByUsername());
@@ -111,7 +123,25 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
             }
 
-            answer = new ViewModel("hi", response.getAnswer(), "id", "id");
+            StringBuilder question = new StringBuilder(response.getQuestion().toString());
+            try {
+                JSONObject questionJson = new JSONObject(question.toString());
+                Iterator<String> keys = questionJson.keys();
+                if (keys.hasNext()) {
+                    question.setLength(0);
+                }
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    question.append(questionJson.getString(key));
+                    if (keys.hasNext()) {
+                        question.append("\n");
+                    }
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+
+            answer = new ViewModel(question.toString(), response.getAnswer(), "id", "id");
             answers.add(answer);
 
         }
@@ -122,6 +152,10 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
     }
 
+
+    private Map<String, String> splitToMap(String in) {
+        return Splitter.on(",").withKeyValueSeparator("=").split(in);
+    }
 
     private String formatSubmissionDateTime(String dateTime) {
 

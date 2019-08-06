@@ -3,8 +3,11 @@ package org.bcss.collect.naxa.generalforms.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.bcss.collect.naxa.common.GSONInstance;
 
 public class GetResponce implements Parcelable {
 
@@ -45,8 +48,14 @@ public class GetResponce implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        boolean isKeyValuePair = question.toString().startsWith("{") && question.toString().endsWith("}") && question.toString().contains("=") && question.toString().contains(",");
+
         dest.writeString(this.answer);
-//        dest.writeString(this.question);
+        if (isKeyValuePair) {
+            dest.writeString(GSONInstance.getInstance().toJson(this.question));
+        } else {
+            dest.writeString(this.question.toString());
+        }
         dest.writeString(this.type);
     }
 
@@ -55,7 +64,7 @@ public class GetResponce implements Parcelable {
 
     protected GetResponce(Parcel in) {
         this.answer = in.readString();
-//        this.question = in.readString();
+        this.question = in.readString();
         this.type = in.readString();
     }
 
