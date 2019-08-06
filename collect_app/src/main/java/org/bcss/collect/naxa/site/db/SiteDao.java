@@ -39,6 +39,9 @@ public interface SiteDao {
     @Query("SELECT * from sites WHERE id= :siteId")
     LiveData<Site> getSiteById(String siteId);
 
+    @Query("SELECT * from sites WHERE id= :siteId")
+    Single<Site> getSiteByIdAsSingle(String siteId);
+
     @Query("UPDATE sites SET isSiteVerified =:siteStatus WHERE id=:siteId")
     int updateSiteStatus(String siteId, int siteStatus);
 

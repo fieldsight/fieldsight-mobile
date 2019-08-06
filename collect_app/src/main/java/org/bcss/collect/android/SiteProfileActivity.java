@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import org.bcss.collect.naxa.common.ViewUtils;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.project.TermsLabels;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
@@ -221,7 +221,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
                     @Override
                     public void onError(Throwable throwable) {
-                        FlashBarUtils.showFlashbar(SiteProfileActivity.this, throwable.getMessage());
+                        SnackBarUtils.showFlashbar(SiteProfileActivity.this, throwable.getMessage());
 
                         Timber.e(throwable);
                     }

@@ -37,7 +37,7 @@ import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.bcss.collect.naxa.common.FilterDialogAdapter;
 import org.bcss.collect.naxa.common.FilterOption;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.data.SiteRegion;
@@ -474,7 +474,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         }
 
                         if (uploadForms && instanceIDs.size() == 0) {
-                            FlashBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                            SnackBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
                         }
                     }
 

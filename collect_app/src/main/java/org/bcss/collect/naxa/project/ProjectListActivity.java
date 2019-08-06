@@ -34,7 +34,7 @@ import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.preferences.SettingsActivity;
@@ -225,13 +225,13 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
         Timber.i(event.toString());
         switch (event.getEvent()) {
             case DataSyncEvent.EventStatus.EVENT_START:
-                FlashBarUtils.showFlashbar(this, getString(R.string.download_update_start_message, syncItem), true);
+                SnackBarUtils.showFlashbar(this, getString(R.string.download_update_start_message, syncItem), true);
                 break;
             case DataSyncEvent.EventStatus.EVENT_END:
-                FlashBarUtils.showFlashbar(this, getString(R.string.download_update_end_message, syncItem), false);
+                SnackBarUtils.showFlashbar(this, getString(R.string.download_update_end_message, syncItem), false);
                 break;
             case DataSyncEvent.EventStatus.EVENT_ERROR:
-                FlashBarUtils.showFlashbar(this, getString(R.string.download_update_error_message, syncItem), false);
+                SnackBarUtils.showFlashbar(this, getString(R.string.download_update_error_message, syncItem), false);
                 break;
         }
     }

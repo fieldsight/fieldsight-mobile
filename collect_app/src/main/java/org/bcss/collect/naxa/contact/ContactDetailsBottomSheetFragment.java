@@ -16,7 +16,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.GlideApp;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 
 
 public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment {
@@ -106,7 +106,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
             return true;
         }
 
-        FlashBarUtils.showFlashbar(requireActivity(),"Device does not support phone calls");
+        SnackBarUtils.showFlashbar(requireActivity(),"Device does not support phone calls");
         return false;
     }
 
