@@ -33,6 +33,10 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         listOfItems = new ArrayList<>();
     }
 
+    public MultiViewAdapter(ArrayList<ViewModel> listOfItems) {
+        this.listOfItems = listOfItems;
+    }
+
     public List<ViewModel> getListOfItems() {
         return listOfItems;
     }

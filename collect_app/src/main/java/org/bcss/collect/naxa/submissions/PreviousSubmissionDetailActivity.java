@@ -29,11 +29,11 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 public class PreviousSubmissionDetailActivity extends CollectAbstractActivity implements MultiViewAdapter.OnCardClickListener {
 
     Toolbar toolbar;
-    TextView tvQuestionAnswer;
+
     RecyclerView rvFormHistory;
     ArrayList<ViewModel> answers = new ArrayList<>();
     private MultiViewAdapter adapter;
-    private NestedScrollView nestedScroll;
+
 
 
     @Override
@@ -57,10 +57,8 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
     private void bindUI() {
         toolbar = findViewById(R.id.toolbar);
-        tvQuestionAnswer = findViewById(R.id.tv_question_answer);
         rvFormHistory = findViewById(R.id.form_history_detail_recycler_view);
-        nestedScroll = findViewById(R.id.form_history_nested_scroll);
-    }
+        }
 
     private void setupToolBar(FormResponse model) {
         toolbar.setTitle("Submitted by " + model.getSubmittedByUsername());
@@ -84,6 +82,7 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
     private void setupRecyclerView() {
         adapter = new MultiViewAdapter();
+
         adapter.setOnCardClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvFormHistory.setLayoutManager(linearLayoutManager);
@@ -96,37 +95,32 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
     }
 
     private void mapJSONtoViewModel(@NonNull final List<GetResponce> submissions) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
 
-                ViewModel answer;
 
-                for (int i = 0; i < submissions.size(); i++) {
-                    GetResponce response = submissions.get(i);
-                    switch (response.getType()) {
-                        case "start":
-                        case "end":
-                        case "calculate":
-                        case "submitted_by":
-                        case "submittion_time":
-                            continue;
+        ViewModel answer;
 
-                    }
+        for (int i = 0; i < submissions.size(); i++) {
+            GetResponce response = submissions.get(i);
+            switch (response.getType()) {
+                case "start":
+                case "end":
+                case "calculate":
+                case "submitted_by":
+                case "submittion_time":
+                    continue;
 
-                    answer = new ViewModel(response.getQuestion(), response.getAnswer(), "id", "id");
-                    answers.add(answer);
-
-                }
-
-                adapter.addAll(answers);
             }
-        });
+
+            answer = new ViewModel("hi", response.getAnswer(), "id", "id");
+            answers.add(answer);
+
+        }
+
+
+        adapter.updateList(answers);
 
 
     }
-
-
 
 
     private String formatSubmissionDateTime(String dateTime) {

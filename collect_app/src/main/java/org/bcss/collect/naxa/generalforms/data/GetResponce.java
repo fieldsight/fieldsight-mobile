@@ -13,7 +13,7 @@ public class GetResponce implements Parcelable {
     private String answer;
     @SerializedName("question")
     @Expose
-    private String question;
+    private Object question;
     @SerializedName("type")
     @Expose
     private String type;
@@ -22,11 +22,7 @@ public class GetResponce implements Parcelable {
         return answer;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public String getQuestion() {
+    public Object getQuestion() {
         return question;
     }
 
@@ -50,7 +46,7 @@ public class GetResponce implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.answer);
-        dest.writeString(this.question);
+//        dest.writeString(this.question);
         dest.writeString(this.type);
     }
 
@@ -59,7 +55,7 @@ public class GetResponce implements Parcelable {
 
     protected GetResponce(Parcel in) {
         this.answer = in.readString();
-        this.question = in.readString();
+//        this.question = in.readString();
         this.type = in.readString();
     }
 
