@@ -258,10 +258,10 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         }
     }
 
-    private void retryLogin(){
-        if (isFromGooleSignin){
+    private void retryLogin() {
+        if (isFromGooleSignin) {
             gmailSignIn();
-        }else {
+        } else {
             attemptLogin();
         }
     }

@@ -1,91 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_site_lst_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="@dimen/corner_radius"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    app:contentPadding="@dimen/margin_large">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/root_layout_message_list_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_list_row"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/padding_list_row"
-        android:paddingTop="@dimen/padding_list_row"
-        android:paddingRight="@dimen/padding_list_row"
-        android:paddingBottom="@dimen/padding_list_row">
+        android:orientation="horizontal">
 
-        <include layout="@layout/item_text_circle" />
-
-        <LinearLayout
-            android:id="@+id/message_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingRight="@dimen/padding_list_row"
-            android:paddingEnd="@dimen/padding_list_row">
-
-            <TextView
-                android:id="@+id/tv_site_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/msg_text_primary"
-                android:textStyle="normal"
-                tools:text="Narayan Primary School" />
-
-            <TextView
-                android:id="@+id/tv_identifier"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/black_160"
-                android:textSize="@dimen/msg_text_secondary"
-                android:textStyle="normal"
-                tools:text="identifier" />
-
-            <TextView
-                android:id="@+id/txt_secondary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/black_160"
-                android:textSize="@dimen/msg_text_secondary"
-                tools:text="Baluwatar, Kathmandu" />
-
-        </LinearLayout>
+        <include
+            layout="@layout/item_text_circle"
+            android:layout_width="@dimen/icon_width_height"
+            android:layout_height="@dimen/icon_width_height"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginRight="@dimen/margin_medium" />
 
 
         <TextView
-            android:id="@+id/timestamp"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_site_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textColor="@color/colorAccent"
-            android:textSize="@dimen/timestamp"
-            android:textStyle="bold"
-            tools:text="Offline Site" />
+            android:layout_toEndOf="@id/icon_container"
+            android:layout_toRightOf="@id/icon_container"
+            android:textColor="@color/black"
+            android:textSize="@dimen/msg_text_primary"
+            android:textStyle="normal"
+            tools:text="Narayan Primary School" />
 
-        <ImageView
-            android:id="@+id/icon_star"
-            android:layout_width="@dimen/icon_star"
+        <TextView
+            android:id="@+id/tv_identifier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_site_name"
+            android:layout_toEndOf="@id/icon_container"
+            android:layout_toRightOf="@id/icon_container"
+            android:textColor="@color/black_160"
+            android:textSize="@dimen/msg_text_secondary"
+            android:textStyle="normal"
+            tools:text="identifier" />
 
-            android:layout_height="@dimen/icon_star"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:tint="@color/yellow"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_stars" />
+        <TextView
+            android:id="@+id/txt_secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_identifier"
+            android:layout_toEndOf="@id/icon_container"
+            android:layout_toRightOf="@id/icon_container"
+            android:textColor="@color/black_160"
+            android:textSize="@dimen/msg_text_secondary"
+            tools:text="Baluwatar, Kathmandu" />
 
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    </RelativeLayout>
+
+
+    <TextView
+
+        android:id="@+id/timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:padding="@dimen/padding_large"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/timestamp"
+        android:textStyle="bold"
+        tools:text="Offline Site" />
+
+
+</android.support.v7.widget.CardView>

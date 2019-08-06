@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,11 +45,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.crashlytics.android.Crashlytics;
 
 import org.bcss.collect.android.BuildConfig;
@@ -75,8 +69,6 @@ import org.bcss.collect.naxa.profile.UserActivity;
 import org.bcss.collect.naxa.project.MapFragment;
 import org.bcss.collect.naxa.project.TermsLabels;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.bcss.collect.naxa.site.db.SiteViewModel;
-import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
@@ -137,16 +129,7 @@ public class ProjectDashboardActivity extends BaseActivity {
         ActivityOptions activityOptions = null;
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
-
-
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//            activityOptions = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0]);
-//            context.startActivity(intent, activityOptions.toBundle());
-//        }else {
         context.startActivity(intent);
-//        }
-
-
     }
 
     @Override
@@ -161,7 +144,6 @@ public class ProjectDashboardActivity extends BaseActivity {
 
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
-
         } catch (NullPointerException e) {
             ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
             finish();
@@ -408,7 +390,7 @@ public class ProjectDashboardActivity extends BaseActivity {
             case R.id.nav_send_final_form:
 
                 startActivity(new Intent(getApplicationContext(),
-                        InstanceUploaderListActivity.class));
+                        InstanceUploaderList.class));
 
                 break;
             case R.id.nav_view_finalized_offline_site:
@@ -682,7 +664,7 @@ public class ProjectDashboardActivity extends BaseActivity {
                 Site mySiteLocationPojo = searchAdapter.getMySiteLocationPojo(position);
                 listSearch.setVisibility(View.GONE);
                 toolbarSearchDialog.dismiss();
-                FragmentHostActivity.start(ProjectDashboardActivity.this, mySiteLocationPojo);
+                FragmentHostActivity.start(ProjectDashboardActivity.this, mySiteLocationPojo, false);
             }
         });
 

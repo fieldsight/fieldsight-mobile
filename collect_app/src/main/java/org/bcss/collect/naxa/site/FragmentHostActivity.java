@@ -14,36 +14,55 @@ import android.view.MenuItem;
 import android.view.Window;
 
 import org.bcss.collect.android.R;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
+import org.bcss.collect.naxa.common.GSONInstance;
 import org.bcss.collect.naxa.common.InternetUtils;
+import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
-import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
+import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
+import org.bcss.collect.naxa.network.APIEndpoint;
+import org.bcss.collect.naxa.network.ApiInterface;
+import org.bcss.collect.naxa.network.ServiceGenerator;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.preferences.SettingsActivity;
+import org.bcss.collect.naxa.project.data.BadUserException;
+import org.bcss.collect.naxa.project.data.MySiteResponse;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
-import org.bcss.collect.naxa.sync.ContentDownloadActivity;
 import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 
-import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
+import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 
 public class FragmentHostActivity extends CollectAbstractActivity {
 
     Site loadedSite = null;
     Toolbar toolbar;
+    boolean is_parent = false;
 
-    public static void start(Context context, Site site) {
+    public static void start(Context context, Site site, boolean isParent) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
         intent.putExtra(EXTRA_OBJECT, site);
+        intent.putExtra("is_parent", isParent);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -64,11 +83,12 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         }
 
         loadedSite = extras.getParcelable(EXTRA_OBJECT);
+        is_parent = extras.getBoolean("is_parent");
         bindUI();
         setupToolbar();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_container, SiteDashboardFragment.newInstance(loadedSite), "frag0")
+                .add(R.id.fragment_container, SiteDashboardFragment.newInstance(loadedSite, is_parent), "frag0")
                 .commit();
 
     }
@@ -90,6 +110,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -125,7 +146,8 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 });
                 break;
             case R.id.action_refresh:
-                ProjectLocalSource.getInstance().getProjectById(loadedSite.getProject()).observe(this, new Observer<Project>() {
+                ProjectLocalSource.getInstance()
+                        .getProjectById(loadedSite.getProject()).observe(this, new Observer<Project>() {
                     @Override
                     public void onChanged(@Nullable Project project) {
                         if (project != null) {

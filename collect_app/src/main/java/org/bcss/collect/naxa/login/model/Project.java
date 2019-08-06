@@ -282,95 +282,6 @@ public class Project implements Parcelable {
     }
 
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
-        dest.writeString(this.name);
-        dest.writeString(this.description);
-        dest.writeString(this.address);
-        dest.writeString(this.lat);
-        dest.writeString(this.lon);
-        dest.writeString(this.siteClusters);
-        dest.writeString(this.organizationName);
-        dest.writeString(this.organizationlogourl);
-        dest.writeValue(this.hasClusteredSites);
-        dest.writeValue(this.typeId);
-        dest.writeString(this.typeLabel);
-        dest.writeString(this.phone);
-        dest.writeByte(this.isSyncedWithRemote ? (byte) 1 : (byte) 0);
-        dest.writeTypedList(this.siteMetaAttributes);
-        dest.writeTypedList(this.regionList);
-        dest.writeString(this.url);
-        dest.writeString(this.terms_and_labels);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Project project = (Project) o;
-        return isSyncedWithRemote == project.isSyncedWithRemote &&
-                Objects.equal(id, project.id) &&
-                Objects.equal(name, project.name) &&
-                Objects.equal(description, project.description) &&
-                Objects.equal(address, project.address) &&
-                Objects.equal(lat, project.lat) &&
-                Objects.equal(lon, project.lon) &&
-                Objects.equal(siteClusters, project.siteClusters) &&
-                Objects.equal(organizationName, project.organizationName) &&
-                Objects.equal(organizationlogourl, project.organizationlogourl) &&
-                Objects.equal(hasClusteredSites, project.hasClusteredSites) &&
-                Objects.equal(typeId, project.typeId) &&
-                Objects.equal(typeLabel, project.typeLabel) &&
-                Objects.equal(phone, project.phone) &&
-                Objects.equal(siteMetaAttributes, project.siteMetaAttributes) &&
-                Objects.equal(url, project.url) &&
-                Objects.equal(regionList, project.regionList)&&
-                Objects.equal(terms_and_labels, project.terms_and_labels);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, siteMetaAttributes, terms_and_labels);
-    }
-
-    protected Project(Parcel in) {
-        this.id = in.readString();
-        this.name = in.readString();
-        this.description = in.readString();
-        this.address = in.readString();
-        this.lat = in.readString();
-        this.lon = in.readString();
-        this.siteClusters = in.readString();
-        this.organizationName = in.readString();
-        this.organizationlogourl = in.readString();
-        this.hasClusteredSites = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.typeId = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.typeLabel = in.readString();
-        this.phone = in.readString();
-        this.isSyncedWithRemote = in.readByte() != 0;
-        this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
-        this.regionList = in.createTypedArrayList(Region.CREATOR);
-        this.url = in.readString();
-        this.terms_and_labels = in.readString();
-    }
-
-    public static final Creator<Project> CREATOR = new Creator<Project>() {
-        @Override
-        public Project createFromParcel(Parcel source) {
-            return new Project(source);
-        }
-
-        @Override
-        public Project[] newArray(int size) {
-            return new Project[size];
-        }
-    };
 
     public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, List<SiteMetaAttribute> metaAttributes, String url, String terms_and_labels) {
         this.id = id;
@@ -393,4 +304,71 @@ public class Project implements Parcelable {
 
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeString(this.address);
+        dest.writeString(this.lat);
+        dest.writeString(this.lon);
+        dest.writeString(this.url);
+        dest.writeString(this.siteClusters);
+        dest.writeString(this.organizationName);
+        dest.writeString(this.organizationlogourl);
+        dest.writeValue(this.hasClusteredSites);
+        dest.writeValue(this.typeId);
+        dest.writeString(this.typeLabel);
+        dest.writeString(this.phone);
+        dest.writeByte(this.isSyncedWithRemote ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.checked ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.isSynced ? (byte) 1 : (byte) 0);
+        dest.writeString(this.statusMessage);
+        dest.writeString(this.terms_and_labels);
+        dest.writeLong(this.syncedDate);
+        dest.writeTypedList(this.regionList);
+        dest.writeTypedList(this.siteMetaAttributes);
+    }
+
+    protected Project(Parcel in) {
+        this.id = in.readString();
+        this.name = in.readString();
+        this.description = in.readString();
+        this.address = in.readString();
+        this.lat = in.readString();
+        this.lon = in.readString();
+        this.url = in.readString();
+        this.siteClusters = in.readString();
+        this.organizationName = in.readString();
+        this.organizationlogourl = in.readString();
+        this.hasClusteredSites = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.typeId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.typeLabel = in.readString();
+        this.phone = in.readString();
+        this.isSyncedWithRemote = in.readByte() != 0;
+        this.checked = in.readByte() != 0;
+        this.isSynced = in.readByte() != 0;
+        this.statusMessage = in.readString();
+        this.terms_and_labels = in.readString();
+        this.syncedDate = in.readLong();
+        this.regionList = in.createTypedArrayList(Region.CREATOR);
+        this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
+    }
+
+    public static final Parcelable.Creator<Project> CREATOR = new Parcelable.Creator<Project>() {
+        @Override
+        public Project createFromParcel(Parcel source) {
+            return new Project(source);
+        }
+
+        @Override
+        public Project[] newArray(int size) {
+            return new Project[size];
+        }
+    };
 }

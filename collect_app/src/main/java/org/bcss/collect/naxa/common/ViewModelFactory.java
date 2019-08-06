@@ -15,7 +15,6 @@ import org.bcss.collect.naxa.contact.ContactRemoteSource;
 import org.bcss.collect.naxa.contact.ContactRepository;
 import org.bcss.collect.naxa.contact.ProjectContactViewModel;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
-import org.bcss.collect.naxa.flagform.FlaggedFormViewModel;
 import org.bcss.collect.naxa.generalforms.GeneralFormViewModel;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormLocalSource;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormRemoteSource;
@@ -159,11 +158,6 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             //noinspection unchecked
             return (T) new FragmentHostViewModel();
         }
-        else if (modelClass.isAssignableFrom(FlaggedFormViewModel.class)) {
-            //noinspection unchecked
-            return (T) new FlaggedFormViewModel();
-        }
-
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());
     }
 

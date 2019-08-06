@@ -34,6 +34,7 @@ import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.firebase.FCMParameter;
 import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 import org.bcss.collect.naxa.login.LoginActivity;
+import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.login.model.User;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -224,7 +225,6 @@ public class FieldSightUserSession {
     }
 
 
-
     public static void stopLogoutDialog(Context context) {
 
         DialogFactory.createMessageDialog(context, "Can't logout", "An active internet connection required").show();
@@ -327,8 +327,33 @@ public class FieldSightUserSession {
     public static User getUser() throws IllegalArgumentException {
         String userString = getUserString();
         if (userString == null || userString.length() == 0) {
+
+            ServiceGenerator.getRxClient().create(ApiInterface.class)
+                    .getUser()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new DisposableObserver<MeResponse>() {
+                        @Override
+                        public void onNext(MeResponse meResponse) {
+                            String user = GSONInstance.getInstance().toJson(meResponse.getData());
+                            SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Timber.i(e);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+
             throw new IllegalArgumentException("User information is missing from cache");
         }
+
+
+
         return GSONInstance.getInstance().fromJson(userString, User.class);
     }
 

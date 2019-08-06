@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 17,
-    "identityHash": "ec078135f3dc8fb121c962b275acde2e",
+    "version": 18,
+    "identityHash": "8e9f767d115b80ea179c80bf1a1805fd",
     "entities": [
       {
         "tableName": "sites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `latitude` TEXT, `longitude` TEXT, `identifier` TEXT, `name` TEXT, `typeId` TEXT, `typeLabel` TEXT, `phone` TEXT, `address` TEXT, `publicDesc` TEXT, `additionalDesc` TEXT, `logo` TEXT, `isActive` INTEGER, `location` TEXT, `isSurvey` INTEGER, `dateCreated` TEXT, `project` TEXT, `isSiteVerified` INTEGER NOT NULL, `siteTypeError` TEXT, `metaAttributes` TEXT, `siteDocuments` TEXT, `regionId` TEXT, `hasSubSites` INTEGER NOT NULL, `generalFormDeployedFrom` TEXT, `stagedFormDeployedFrom` TEXT, `scheduleFormDeployedForm` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `latitude` TEXT, `longitude` TEXT, `identifier` TEXT, `name` TEXT, `typeId` TEXT, `typeLabel` TEXT, `phone` TEXT, `address` TEXT, `publicDesc` TEXT, `additionalDesc` TEXT, `logo` TEXT, `isActive` INTEGER, `location` TEXT, `isSurvey` INTEGER, `dateCreated` TEXT, `project` TEXT, `isSiteVerified` INTEGER NOT NULL, `siteTypeError` TEXT, `metaAttributes` TEXT, `siteDocuments` TEXT, `regionId` TEXT, `site` TEXT, `generalFormDeployedFrom` TEXT, `stagedFormDeployedFrom` TEXT, `scheduleFormDeployedForm` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -141,10 +141,10 @@
             "notNull": false
           },
           {
-            "fieldPath": "hasSubSites",
-            "columnName": "hasSubSites",
-            "affinity": "INTEGER",
-            "notNull": true
+            "fieldPath": "site",
+            "columnName": "site",
+            "affinity": "TEXT",
+            "notNull": false
           },
           {
             "fieldPath": "generalFormDeployedFrom",
@@ -1323,24 +1323,24 @@
         "foreignKeys": []
       },
       {
-        "tableName": "syncstat",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))",
+        "tableName": "SyncStat",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`projectId` TEXT, `type` TEXT, `failedUrl` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "projectId",
-            "columnName": "project_id",
+            "columnName": "projectId",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "type",
             "columnName": "type",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "failedUrl",
-            "columnName": "failed_url",
+            "columnName": "failedUrl",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1364,10 +1364,7 @@
           }
         ],
         "primaryKey": {
-          "columnNames": [
-            "project_id",
-            "type"
-          ],
+          "columnNames": [],
           "autoGenerate": false
         },
         "indices": [],
@@ -1376,7 +1373,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ec078135f3dc8fb121c962b275acde2e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8e9f767d115b80ea179c80bf1a1805fd\")"
     ]
   }
 }

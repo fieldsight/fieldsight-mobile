@@ -24,6 +24,8 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 
 public final class DialogFactory {
@@ -161,11 +163,40 @@ public final class DialogFactory {
 
     public static AlertDialog.Builder createListActionDialog(Context context, String title, CharSequence[] items, DialogInterface.OnClickListener onClickListener) {
 
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.RiseUpDialog);
         builder.setTitle(title).setItems(items, onClickListener);
         return builder;
     }
 
+
+    public static AlertDialog.Builder createSiteListDialog(Context context, List<Site> items, DialogInterface.OnClickListener listener) {
+        ListAdapter adapter = new ArrayAdapter<Site>(context, R.layout.sub_site_list_item, items) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                final LayoutInflater inflater = LayoutInflater.from(context);
+                if (position == 0) {
+                    convertView = inflater.inflate(R.layout.subsite_list_header, parent, false);
+                } else {
+                    convertView = inflater.inflate(R.layout.sub_site_list_item, parent, false);
+                }
+                Site siteAtpos = items.get(position);
+                TextView tv_subsiteName = convertView.findViewById(R.id.tv_sub_site_name);
+                TextView tv_icon_text = convertView.findViewById(R.id.tv_icon_text);
+                TextView tv_sub_site_identifier = convertView.findViewById(R.id.tv_sub_site_identifier);
+                tv_sub_site_identifier.setText(siteAtpos.getIdentifier());
+                tv_subsiteName.setText(siteAtpos.getName());
+                tv_icon_text.setText(siteAtpos.getName().substring(0,1));
+
+                return convertView;
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.RiseUpDialog);
+        builder.setAdapter(adapter, listener);
+        return builder;
+    }
 
     private static AlertDialog.Builder showCustomLayoutDialog(Context context, View view) {
 

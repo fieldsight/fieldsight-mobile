@@ -64,7 +64,7 @@ import java.io.File;
                 SyncStat.class
 
         },
-        version = 17)
+        version = 18)
 @TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
 
 
@@ -113,7 +113,8 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                         FieldSightDatabase.class, DB_PATH)
                         .allowMainThreadQueries()//used in org.bcss.collect.naxa.jobs.LocalNotificationJob
                         .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
-                                MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17)
+                                MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14,
+                                MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18)
 
                         .build();
             }
@@ -227,6 +228,14 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         public void migrate(SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE project"
                     + " ADD COLUMN `terms_and_labels` TEXT");
+        }
+    };
+
+    private static final Migration MIGRATION_17_18 = new Migration(17, 18) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE sites"
+                    + " ADD COLUMN `site` TEXT ");
         }
     };
 

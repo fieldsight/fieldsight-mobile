@@ -95,7 +95,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         return siteListFragment;
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -105,14 +104,11 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         setupRecycleView();
         setHasOptionsMenu(true);
 
-
-        allSitesLiveData = SiteLocalSource.getInstance().getById(loadedProject.getId());
+        allSitesLiveData = SiteLocalSource.getInstance().getAllParentSite(loadedProject.getId());
         offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_OFFLINE);
 
-        collectFilterAndApply(new ArrayList<>(0));
+        collectFilterAndApply(new ArrayList<>());
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
-
-
 
         return view;
     }
@@ -148,6 +144,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         super.setMenuVisibility(menuVisible);
     }
 
+
     private void setupRecycleView() {
         siteListAdapter = new SiteListAdapter(new ArrayList<>(0), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -176,15 +173,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
-//        String selectedRegion = ProjectFilterLocalSource.getInstance()
-//                .getById(loadedProject.getId())
-//                .toObservable()
-//                .
-//                .getSelectedRegionLabel();
-//
-//        String regionLabel = ProjectFilterLocalSource.getInstance()
-//                .getById(loadedProject.getId())
-//                .getSelectedRegionId();
         String site = "", selectedRegion = "0", regionLabel = "";
 
         for (FilterOption filterOption : sortList) {
@@ -213,9 +201,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         source.observe(this, sites -> {
             siteListAdapter.updateList(sites);
         });
-
-//        ProjectFilter projectFilter = new ProjectFilter(loadedProject.getId(), selectedRegion, regionLabel);
-//        AsyncTask.execute(() -> FieldSightConfigDatabase.getDatabase(Collect.getInstance()).getProjectFilterDAO().insert(projectFilter));
 
     }
 
@@ -362,8 +347,25 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @Override
     public void onUselessLayoutClicked(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
-            FragmentHostActivity.start(getActivity(), site);
+            if (site.getSite() == null) {
+                List<Site> subSitesList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
+                if (subSitesList.size() > 0) {
+                    subSitesList.add(0, site);
+                    showSubSiteDialog(subSitesList);
+                } else {
+                    FragmentHostActivity.start(getActivity(), site, false);
+                }
+            }
         }
+    }
+
+    private void showSubSiteDialog( List<Site> subsiteList) {
+        Timber.i("SiteListFragment subsiteLength = %d", subsiteList.size());
+        DialogFactory.createSiteListDialog(requireActivity(), subsiteList, (dialog, which) -> {
+            Timber.i("SiteListFragment, which = %d", which);
+            boolean isParent = which == 0;
+            FragmentHostActivity.start(requireActivity(), subsiteList.get(which), isParent);
+        }).show();
     }
 
     @Override

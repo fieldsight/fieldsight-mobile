@@ -81,7 +81,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
                 if (syncableMap.containsKey(syncStat.getProjectId())) {
                     List<Syncable> list = syncableMap.get(syncStat.getProjectId());
                     int syncType = Integer.parseInt(syncStat.getType());
-                    boolean isValidList = syncStat.getFailedUrl().contains("[") && syncStat.getFailedUrl().contains(",");
+                    boolean isValidList = syncStat.getFailedUrl().contains("[") ;
                     if (syncType > -1) {
                         Syncable syncable = list.get(syncType);
                         syncable.setStatus(syncStat.getStatus());

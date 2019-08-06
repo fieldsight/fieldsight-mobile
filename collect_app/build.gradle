@@ -79,7 +79,7 @@ def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', '')
 
 def versionMajor = 3
 def versionMinor = 0
-def versionPatch = 8
+def versionPatch = 12
 
 android {
     compileSdkVersion(28)

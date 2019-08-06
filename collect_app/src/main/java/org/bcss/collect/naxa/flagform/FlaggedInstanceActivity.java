@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.notificationslist;
+package org.bcss.collect.naxa.flagform;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -46,9 +45,11 @@ import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.network.ApiInterface;
 import org.bcss.collect.naxa.network.ServiceGenerator;
+import org.bcss.collect.naxa.notificationslist.NotificationDetail;
+import org.bcss.collect.naxa.notificationslist.NotificationImage;
+import org.bcss.collect.naxa.notificationslist.NotificationImageAdapter;
 import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
-import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.DownloadFormListTask;
@@ -105,7 +106,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     private TextView tvSiteAddress;
     private ImageView ivCircleSite;
     private TextView tvSiteMissing;
-    private LinearLayout cardViewSite;
+    private RelativeLayout cardViewSite;
 
 
     public static void start(Context context, FieldSightNotification fieldSightNotification) {
@@ -158,7 +159,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                     setSiteData(site.getName(), site.getIdentifier(), site.getAddress());
 
-                    cardViewSite.setOnClickListener(v -> FragmentHostActivity.start(FlaggedInstanceActivity.this, site));
+                    cardViewSite.setOnClickListener(v -> FragmentHostActivity.start(FlaggedInstanceActivity.this, site, false));
                 });
 
 
@@ -245,11 +246,8 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            getNotificationDetail();
-        } catch (NullPointerException e) {
-            DialogFactory.createDataSyncErrorDialog(this, "Failed to load images", String.valueOf(500)).show();
-        }
+        getNotificationDetail();
+
     }
 
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
@@ -345,6 +343,13 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                     return;
                 }
 
+                boolean isFormApproved = "Approved".equals(loadedFieldSightNotification.getFormStatus());
+                if (isFormApproved) {
+                    showFormIsApprovedDialog();
+                    return;
+                }
+
+
                 boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
                 Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
                 if (isInstanceDownloadNeeded) {
@@ -355,6 +360,10 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                 break;
         }
+    }
+
+    private void showFormIsApprovedDialog() {
+        DialogFactory.createMessageDialog(this, "Cannot open form", "This form has already been approved.").show();
     }
 
     private void showDownloadInstanceDialog() {
@@ -690,7 +699,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     }
 
 
-    private void getNotificationDetail() throws NullPointerException {
+    private void getNotificationDetail() {
 
         String url = FieldSightUserSession.getServerUrl(Collect.getInstance()) + loadedFieldSightNotification.getDetails_url();
 
@@ -706,16 +715,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                     @Override
                     public void onError(Throwable e) {
-
-                        Timber.e(e);
-                        String message;
-                        if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {
-                            message = ((RetrofitException) e).getKind().getMessage();
-                        } else {
-                            message = e.getMessage();
-                        }
-                        DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_site_upload_fail), message).show();
-
+                        ToastUtils.showLongToast(getString(R.string.error_message_fail_to_load_images));
                     }
                 });
     }
@@ -727,7 +727,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onItemClick(View view, int position, List<NotificationImage> urls) {
-        Timber.i(" Load item at %s siteName the list of size %s ", position, urls.size());
+        Timber.i(" Load item at %s from the list of size %s ", position, urls.size());
         loadSlideShowLayout(position, new ArrayList<NotificationImage>(urls));
 
 

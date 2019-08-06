@@ -1,11 +1,7 @@
-<RelativeLayout android:id="@+id/icon_container"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:orientation="vertical"
-    android:layout_marginRight="@dimen/margin_large"
-    android:layout_marginEnd="@dimen/margin_large"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/icon_container"
+    android:layout_width="@dimen/icon_width_height"
+    android:layout_height="@dimen/icon_width_height">
 
     <RelativeLayout
         android:id="@+id/icon_back"
@@ -16,13 +12,13 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="@dimen/icon_width_height"
-            android:layout_height="@dimen/icon_width_height"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:src="@drawable/circle_green" />
 
         <ImageView
-            android:layout_width="@dimen/icon_width_height"
-            android:layout_height="@dimen/icon_width_height"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:background="@drawable/circle_green"
             android:padding="@dimen/margin_medium"
@@ -38,8 +34,8 @@
 
         <ImageView
             android:id="@+id/icon_profile"
-            android:layout_width="@dimen/icon_width_height"
-            android:layout_height="@dimen/icon_width_height" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <TextView
 

@@ -28,6 +28,7 @@ import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.data.FieldSightNotification;
 import org.bcss.collect.naxa.data.source.local.FieldSightNotificationLocalSource;
+import org.bcss.collect.naxa.flagform.FlaggedInstanceActivity;
 import org.bcss.collect.naxa.network.NetworkUtils;
 import org.bcss.collect.naxa.v3.network.NotificationRemoteSource;
 import org.json.JSONArray;

@@ -1,4 +1,4 @@
-package org.bcss.collect.naxa.notificationslist;
+package org.bcss.collect.naxa.flagform;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -14,7 +14,6 @@ import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.RxDownloader.RxDownloader;
 import org.bcss.collect.naxa.data.FieldSightNotification;
-import org.bcss.collect.naxa.network.APIEndpoint;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.DownloadFormsTask;

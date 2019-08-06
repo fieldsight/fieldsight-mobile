@@ -34,6 +34,7 @@ import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
+import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
 import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
@@ -44,11 +45,12 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.sitedocuments.SiteDocumentsListActivity;
 import org.bcss.collect.naxa.stages.StageListFragment;
+import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
-import org.odk.collect.android.activities.InstanceUploaderListActivity;
+import org.odk.collect.android.activities.InstanceUploaderList;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -69,6 +71,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
+import retrofit2.HttpException;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
@@ -79,9 +83,9 @@ import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimati
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.ViewUtils.showOrHide;
-import static org.odk.collect.android.activities.InstanceUploaderListActivity.INSTANCE_UPLOADER;
+import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
-
+import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;
 
 public class SiteDashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -95,15 +99,17 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private Unbinder unbinder;
     private View rootView;
     private LiveData<Site> siteLiveData;
+    boolean isParent = false;
 
     public SiteDashboardFragment() {
 
     }
 
 
-    public static SiteDashboardFragment newInstance(Site site) {
+    public static SiteDashboardFragment newInstance(Site site, boolean isParent) {
         SiteDashboardFragment fragment = new SiteDashboardFragment();
         Bundle bundle = new Bundle();
+        bundle.putBoolean("is_parent", isParent);
         bundle.putParcelable(EXTRA_OBJECT, site);
         fragment.setArguments(bundle);
         return fragment;
@@ -124,6 +130,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         //Constants.MY_FRAG = 1;
         unbinder = ButterKnife.bind(this, rootView);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
+        isParent = getArguments().getBoolean("is_parent");
 
         bindUI(rootView);
 
@@ -281,7 +288,10 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         btnToggleFinalized = rootView.findViewById(R.id.site_option_btn_finalize_site);
         btnShowInfo = rootView.findViewById(R.id.site_option_frag_btn_info);
         btnShowInfo.setOnClickListener(this);
+        CardView cv_stageform = rootView.findViewById(R.id.cv_stageform);
 
+        Timber.d("SitesdashboardFragment, isParentsite = %s", isParent);
+        cv_stageform.setVisibility(isParent? View.GONE : View.VISIBLE);
 
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);
@@ -335,20 +345,20 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.site_option_frag_btn_delete_form:
 
-                intent = new Intent(getActivity().getApplicationContext(), FileManagerTabs.class);
+                intent = new Intent(requireActivity(), FileManagerTabs.class);
                 intent.putExtra(EXTRA_OBJECT, loadedSite);
                 startActivity(intent);
 
                 break;
             case R.id.site_option_frag_btn_edit_saved_form:
-                Intent i = new Intent(getActivity().getApplicationContext(), InstanceChooserList.class);
+                Intent i = new Intent(requireActivity(), InstanceChooserList.class);
                 i.putExtra(EXTRA_OBJECT, loadedSite);
                 i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                         ApplicationConstants.FormModes.EDIT_SAVED);
                 startActivity(i);
                 break;
             case R.id.site_option_frag_btn_send_form:
-                intent = new Intent(getActivity().getApplicationContext(), InstanceUploaderListActivity.class);
+                intent = new Intent(requireActivity(), InstanceUploaderList.class);
                 intent.putExtra(EXTRA_OBJECT, loadedSite);
                 startActivity(intent);
                 break;

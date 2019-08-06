@@ -1,6 +1,6 @@
 package org.bcss.collect.naxa.common.exception;
 
-public class FormDownloadFailedException extends RuntimeException {
+public class FormDownloadFailedException extends Throwable {
 
     public FormDownloadFailedException(String message) {
         super(message);
