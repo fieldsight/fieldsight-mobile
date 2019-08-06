@@ -1,16 +1,13 @@
 package org.bcss.collect.naxa.common;
 
 import android.app.Activity;
-import androidx.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.os.Handler;
-import androidx.annotation.ColorInt;
+
 import androidx.annotation.NonNull;
-import androidx.core.graphics.drawable.DrawableCompat;
-import android.text.TextUtils;
+import androidx.lifecycle.MutableLiveData;
 
 import com.evernote.android.job.JobManager;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -51,6 +48,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
 
 public class FieldSightUserSession {
 

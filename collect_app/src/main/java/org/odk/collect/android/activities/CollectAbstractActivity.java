@@ -27,9 +27,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
@@ -39,9 +36,9 @@ import org.odk.collect.android.utilities.ToastUtils;
 
 import timber.log.Timber;
 
+import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActivity;
-import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 
 public abstract class CollectAbstractActivity extends AppCompatActivity {
 

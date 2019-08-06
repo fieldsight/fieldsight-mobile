@@ -51,7 +51,6 @@ import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
-
 import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
@@ -83,7 +82,6 @@ import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimati
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.ViewUtils.showOrHide;
-
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
 
 public class SiteDashboardFragment extends Fragment implements View.OnClickListener {
@@ -245,6 +243,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             }
         });
     }
+
     private void checkPermissionAndOpenMap() {
         if (!checkIfLocationPermissionsGranted(requireActivity())) {
             new PermissionUtils().requestLocationPermissions(requireActivity(), new PermissionListener() {
@@ -252,6 +251,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 public void granted() {
                     MapActivity.start(getActivity(), loadedSite);
                 }
+
                 @Override
                 public void denied() {
                     //unused
