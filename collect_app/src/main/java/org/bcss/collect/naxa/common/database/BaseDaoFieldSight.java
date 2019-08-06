@@ -1,6 +1,7 @@
 package org.bcss.collect.naxa.common.database;
 
 
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;

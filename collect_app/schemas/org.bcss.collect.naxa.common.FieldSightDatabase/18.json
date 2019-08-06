@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 18,
-    "identityHash": "8e9f767d115b80ea179c80bf1a1805fd",
+    "identityHash": "ec37ce0daa1494e573779f954b0b7708",
     "entities": [
       {
         "tableName": "sites",
@@ -1323,24 +1323,24 @@
         "foreignKeys": []
       },
       {
-        "tableName": "SyncStat",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`projectId` TEXT, `type` TEXT, `failedUrl` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL)",
+        "tableName": "syncstat",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))",
         "fields": [
           {
             "fieldPath": "projectId",
-            "columnName": "projectId",
+            "columnName": "project_id",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "type",
             "columnName": "type",
             "affinity": "TEXT",
-            "notNull": false
+            "notNull": true
           },
           {
             "fieldPath": "failedUrl",
-            "columnName": "failedUrl",
+            "columnName": "failed_url",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1364,16 +1364,20 @@
           }
         ],
         "primaryKey": {
-          "columnNames": [],
+          "columnNames": [
+            "project_id",
+            "type"
+          ],
           "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       }
     ],
+    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"8e9f767d115b80ea179c80bf1a1805fd\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ec37ce0daa1494e573779f954b0b7708')"
     ]
   }
 }

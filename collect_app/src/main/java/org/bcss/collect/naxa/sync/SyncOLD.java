@@ -10,7 +10,6 @@ import org.bcss.collect.naxa.onboarding.SyncableItem;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 @Deprecated
@@ -23,11 +22,6 @@ public interface SyncOLD {
     @Query("SELECT * FROM sync")
     LiveData<List<SyncableItem>> getAllSyncableItems();
 
-    @Query("SELECT checked FROM sync WHERE uid=:key")
-    Flowable<Boolean> isChecked(int key);
-
-    @Query("SELECT COUNT(*) FROM sync")
-    Flowable<Integer> getItemCount();
 
     @Query("UPDATE sync SET progressStatus=:value WHERE uid=:key")
     void updateProgress(int key, boolean value);

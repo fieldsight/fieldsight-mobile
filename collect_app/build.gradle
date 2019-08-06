@@ -465,6 +465,8 @@ dependencies {
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:${rootProject.okhttp3Version}"
 
     androidTestImplementation "android.arch.work:work-testing:${rootProject.workManagerVersion}"
+    implementation 'androidx.room:room-runtime:2.1.0'
+    annotationProcessor 'androidx.room:room-compiler:2.1.0'
 }
 
 // Must be at bottom to prevent dependency collisions

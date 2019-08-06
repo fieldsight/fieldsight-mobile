@@ -390,7 +390,7 @@ public class ProjectDashboardActivity extends BaseActivity {
             case R.id.nav_send_final_form:
 
                 startActivity(new Intent(getApplicationContext(),
-                        InstanceUploaderList.class));
+                        InstanceUploaderListActivity.class));
 
                 break;
             case R.id.nav_view_finalized_offline_site:
