@@ -308,11 +308,13 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
         boolean isEditedSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
         Button btnUploadSite = rootView.findViewById(R.id.site_option_btn_upload_site);
+        Button btnDelete = rootView.findViewById(R.id.site_option_btn_delete_site);
+
+        btnDelete.setEnabled(isOfflineSite);
 
         if (isOfflineSite || isEditedSite) {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(true);
-            rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.VISIBLE);
             btnUploadSite.setVisibility(View.VISIBLE);
         } else {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(true);
