@@ -1,9 +1,7 @@
 package org.bcss.collect.naxa.project;
 
-import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,58 +20,37 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.application.ForceUpdateChecker;
 import org.bcss.collect.naxa.BackupActivity;
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.common.InternetUtils;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
-import org.bcss.collect.naxa.common.RxSearchObservable;
 import org.bcss.collect.naxa.common.ViewModelFactory;
-import org.bcss.collect.naxa.common.ViewUtils;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
-import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.notificationslist.NotificationListActivity;
 import org.bcss.collect.naxa.preferences.SettingsActivity;
 import org.bcss.collect.naxa.project.adapter.MyProjectsAdapter;
 import org.bcss.collect.naxa.project.data.ProjectViewModel;
 import org.bcss.collect.naxa.report.ReportActivity;
-import org.bcss.collect.naxa.site.FragmentHostActivity;
 import org.bcss.collect.naxa.site.ProjectDashboardActivity;
-import org.bcss.collect.naxa.site.SearchAdapter;
-import org.bcss.collect.naxa.site.db.SiteViewModel;
 import org.bcss.collect.naxa.sync.ContentDownloadActivity;
-import org.bcss.collect.naxa.v3.network.SyncActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
-
-import static org.bcss.collect.android.application.Collect.allowClick;
 
 public class ProjectListActivity extends CollectAbstractActivity implements MyProjectsAdapter.OnItemClickListener, ForceUpdateChecker.OnUpdateNeededListener {
 
@@ -246,13 +223,13 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
         Timber.i(event.toString());
         switch (event.getEvent()) {
             case DataSyncEvent.EventStatus.EVENT_START:
-                FlashBarUtils.showFlashbar(this, getString(R.string.download_update_start_message, syncItem), true);
+                SnackBarUtils.showFlashbar(this, getString(R.string.download_update_start_message, syncItem), true);
                 break;
             case DataSyncEvent.EventStatus.EVENT_END:
-                FlashBarUtils.showFlashbar(this, getString(R.string.download_update_end_message, syncItem), false);
+                SnackBarUtils.showFlashbar(this, getString(R.string.download_update_end_message, syncItem), false);
                 break;
             case DataSyncEvent.EventStatus.EVENT_ERROR:
-                FlashBarUtils.showFlashbar(this, getString(R.string.download_update_error_message, syncItem), false);
+                SnackBarUtils.showFlashbar(this, getString(R.string.download_update_error_message, syncItem), false);
                 break;
         }
     }

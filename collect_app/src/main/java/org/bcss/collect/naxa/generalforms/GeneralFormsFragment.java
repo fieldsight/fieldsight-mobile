@@ -20,7 +20,7 @@ import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.login.model.Site;
@@ -217,13 +217,13 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         Timber.i(event.toString());
         switch (event.getEvent()) {
             case DataSyncEvent.EventStatus.EVENT_START:
-                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
+                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
                 break;
             case DataSyncEvent.EventStatus.EVENT_END:
-                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
+                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
                 break;
             case DataSyncEvent.EventStatus.EVENT_ERROR:
-                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
+                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
                 break;
         }
     }

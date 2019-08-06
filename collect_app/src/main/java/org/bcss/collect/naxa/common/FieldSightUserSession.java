@@ -3,23 +3,13 @@ package org.bcss.collect.naxa.common;
 import android.app.Activity;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.text.TextUtils;
 
-import com.evernote.android.job.DailyJob;
 import com.evernote.android.job.JobManager;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -29,10 +19,8 @@ import org.bcss.collect.android.logic.PropertyManager;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.database.FieldSightConfigDatabase;
-import org.bcss.collect.naxa.common.exception.FirebaseTokenException;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.firebase.FCMParameter;
-import org.bcss.collect.naxa.jobs.DailyNotificationJob;
 import org.bcss.collect.naxa.login.LoginActivity;
 import org.bcss.collect.naxa.login.model.MeResponse;
 import org.bcss.collect.naxa.login.model.Site;
@@ -48,21 +36,16 @@ import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
-import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class FieldSightUserSession {
@@ -192,7 +175,7 @@ public class FieldSightUserSession {
                                 public void logoutTaskFailed(String message) {
                                     Timber.e(message);
                                     ((CollectAbstractActivity) context).hideProgress();
-                                    FlashBarUtils.showFlashbar(context, "Logout failed ");
+                                    SnackBarUtils.showFlashbar(context, "Logout failed ");
                                 }
 
                                 @Override

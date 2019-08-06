@@ -43,7 +43,7 @@ import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ImageFileUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.login.model.McqOption;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
@@ -221,11 +221,11 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                     }
                     switch (createSiteFormStatus) {
                         case SUCCESS:
-                            FlashBarUtils.showFlashbar(this, "Offline Site Created");
+                            SnackBarUtils.showFlashbar(this, "Offline Site Created");
                             finishWithDelay();
                             break;
                         case UPDATE_SUCESS:
-                            FlashBarUtils.showFlashbar(this, "Site Information Updated");
+                            SnackBarUtils.showFlashbar(this, "Site Information Updated");
                             finishWithDelay();
 
                             break;

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -21,7 +20,7 @@ import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.SharedPreferenceUtils;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.educational.EducationalMaterialActivity;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.stages.data.SubStage;
@@ -214,13 +213,13 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         Timber.i(event.toString());
         switch (event.getEvent()) {
             case DataSyncEvent.EventStatus.EVENT_START:
-                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
+                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
                 break;
             case DataSyncEvent.EventStatus.EVENT_END:
-                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
+                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
                 break;
             case DataSyncEvent.EventStatus.EVENT_ERROR:
-                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
+                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
                 break;
         }
     }
