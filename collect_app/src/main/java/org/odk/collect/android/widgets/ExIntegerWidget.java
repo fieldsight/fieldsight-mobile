@@ -26,12 +26,16 @@ import org.bcss.collect.android.external.ExternalAppsUtils;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.IntegerData;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.external.ExternalAppsUtils;
+import org.odk.collect.android.utilities.ToastUtils;
+
 
 import java.util.Locale;
 
+import timber.log.Timber;
+
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
-
-
 
 /**
  * Launch an external app to supply an integer value. If the app
@@ -82,8 +86,12 @@ public class ExIntegerWidget extends ExStringWidget {
     @Override
     protected void fireActivity(Intent i) throws ActivityNotFoundException {
         i.putExtra("value", getIntegerAnswerValue());
-        ((Activity) getContext()).startActivityForResult(i,
-                RequestCodes.EX_INT_CAPTURE);
+        try {
+            ((Activity) getContext()).startActivityForResult(i, RequestCodes.EX_INT_CAPTURE);
+        } catch (SecurityException e) {
+            Timber.i(e);
+            ToastUtils.showLongToast(R.string.not_granted_permission);
+        }
     }
 
     @Override
@@ -107,5 +115,7 @@ public class ExIntegerWidget extends ExStringWidget {
     public void setBinaryData(Object answer) {
         IntegerData integerData = ExternalAppsUtils.asIntegerData(answer);
         this.answer.setText(integerData == null ? null : integerData.getValue().toString());
+
+        widgetValueChanged();
     }
 }

@@ -17,8 +17,8 @@
 package org.odk.collect.android.dao;
 
 import android.database.Cursor;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Form;

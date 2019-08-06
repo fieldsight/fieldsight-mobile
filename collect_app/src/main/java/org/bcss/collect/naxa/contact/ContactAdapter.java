@@ -6,15 +6,14 @@ package org.bcss.collect.naxa.contact;
  */
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.GlideApp;
@@ -62,9 +61,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     }
 
 
-    @android.support.annotation.NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@android.support.annotation.NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.contact_list_item, parent, false);
 
@@ -75,7 +73,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(@android.support.annotation.NonNull final MyViewHolder holder, int position) {
+    public void onBindViewHolder( final MyViewHolder holder, int position) {
         final FieldSightContactModel contact = contactList.get(position);
         holder.tvFullName.setText(contact.getFull_name());
         holder.tvUserName.setText(contact.getEmail());

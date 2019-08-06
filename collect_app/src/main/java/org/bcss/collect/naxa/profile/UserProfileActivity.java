@@ -2,12 +2,14 @@ package org.bcss.collect.naxa.profile;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
+
 import android.transition.TransitionManager;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import org.bcss.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;

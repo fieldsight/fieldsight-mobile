@@ -1,7 +1,5 @@
 package org.bcss.collect.naxa.survey;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -9,15 +7,18 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.appbar.AppBarLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -126,7 +127,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     private void setupRecyclerView() {
         adapter = new TitleDescAdapter();
         adapter.setOnCardClickListener(this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerSurveyFormList.setLayoutManager(linearLayoutManager);
         recyclerSurveyFormList.setItemAnimator(new DefaultItemAnimator());
         recyclerSurveyFormList.setEmptyView(findViewById(R.id.root_layout_empty_layout), getString(R.string.empty_message,"survey form(s)"), () -> {

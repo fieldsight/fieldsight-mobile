@@ -14,13 +14,15 @@
 
 package org.odk.collect.android.widgets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.core.content.FileProvider;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
@@ -29,16 +31,16 @@ import org.bcss.collect.android.listeners.PermissionListener;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.CaptureSelfieActivity;
 import org.odk.collect.android.activities.CaptureSelfieActivityNewApi;
-import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.utilities.CameraUtils;
 import org.odk.collect.android.utilities.FileUtils;
+import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 
 import java.io.File;
 import java.util.Locale;
 
-import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
-import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermission;
+import timber.log.Timber;
 
+import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
 /**
  * Widget that allows user to take pictures, sounds or video and add them to the form.
@@ -58,7 +60,7 @@ public class ImageWidget extends BaseImageWidget {
         imageClickHandler = new ViewImageClickHandler();
         imageCaptureHandler = new ImageCaptureHandler();
         setUpLayout();
-        setUpBinary();
+        addCurrentImageToLayout();
         addAnswerView(answerLayout);
     }
 
@@ -67,8 +69,8 @@ public class ImageWidget extends BaseImageWidget {
         super.setUpLayout();
 
         String appearance = getFormEntryPrompt().getAppearanceHint();
-        selfie = appearance != null && (appearance.equalsIgnoreCase("selfie")
-                || appearance.equalsIgnoreCase("new-front"));
+        selfie = appearance != null && (appearance.equalsIgnoreCase(WidgetAppearanceUtils.SELFIE)
+                || appearance.equalsIgnoreCase(WidgetAppearanceUtils.NEW_FRONT));
 
         captureButton = getSimpleButton(getContext().getString(R.string.capture_image), R.id.capture_image);
 
@@ -120,7 +122,7 @@ public class ImageWidget extends BaseImageWidget {
     public void onButtonClick(int buttonId) {
         switch (buttonId) {
             case R.id.capture_image:
-                requestCameraPermission((FormEntryActivity) getContext(), new PermissionListener() {
+                getPermissionUtils().requestCameraPermission((Activity) getContext(), new PermissionListener() {
                     @Override
                     public void granted() {
                         captureImage();
@@ -139,7 +141,7 @@ public class ImageWidget extends BaseImageWidget {
 
     private void hideButtonsIfNeeded(String appearance) {
         if (selfie || ((appearance != null
-                && appearance.toLowerCase(Locale.ENGLISH).contains("new")))) {
+                && appearance.toLowerCase(Locale.ENGLISH).contains(WidgetAppearanceUtils.NEW)))) {
             chooseButton.setVisibility(View.GONE);
         }
     }
@@ -163,13 +165,17 @@ public class ImageWidget extends BaseImageWidget {
             // images returned by the camera in 1.6 (and earlier) are ~1/4
             // the size. boo.
 
-            Uri uri = FileProvider.getUriForFile(getContext(),
-                    BuildConfig.APPLICATION_ID + ".provider",
-                    new File(Collect.TMPFILE_PATH));
-            // if this gets modified, the onActivityResult in
-            // FormEntyActivity will also need to be updated.
-            intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
-            FileUtils.grantFilePermissions(intent, uri, getContext());
+            try {
+                Uri uri = FileProvider.getUriForFile(getContext(),
+                        BuildConfig.APPLICATION_ID + ".provider",
+                        new File(Collect.TMPFILE_PATH));
+                // if this gets modified, the onActivityResult in
+                // FormEntyActivity will also need to be updated.
+                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, uri);
+                FileUtils.grantFilePermissions(intent, uri, getContext());
+            } catch (IllegalArgumentException e) {
+                Timber.e(e);
+            }
         }
 
         imageCaptureHandler.captureImage(intent, RequestCodes.IMAGE_CAPTURE, R.string.capture_image);

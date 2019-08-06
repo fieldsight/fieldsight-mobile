@@ -2,9 +2,9 @@ package org.bcss.collect.naxa.common.utilities;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import android.view.ViewGroup;
 
 import org.bcss.collect.android.R;

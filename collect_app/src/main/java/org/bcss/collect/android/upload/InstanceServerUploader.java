@@ -17,15 +17,17 @@ package org.bcss.collect.android.upload;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Instance;
 import org.bcss.collect.android.http.HttpHeadResult;
+
 import org.bcss.collect.android.http.OpenRosaHttpInterface;
-import org.odk.collect.android.preferences.PreferenceKeys;
-import org.odk.collect.android.utilities.FileUtils;
+
+import org.odk.collect.android.http.HttpPostResult;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.ResponseMessageParser;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
@@ -45,7 +47,6 @@ import timber.log.Timber;
 
 public class InstanceServerUploader extends InstanceUploader {
     private static final String URL_PATH_SEP = "/";
-    private static final String FAIL = "Error: ";
 
     private final OpenRosaHttpInterface httpInterface;
     private final WebCredentialsUtils webCredentialsUtils;
@@ -62,21 +63,19 @@ public class InstanceServerUploader extends InstanceUploader {
     /**
      * Uploads all files associated with an instance to the specified URL. Writes fail/success
      * status to database.
-     * <p>
+     *
      * Returns a custom success message if one is provided by the server.
      */
     @Override
     public String uploadOneSubmission(Instance instance, String urlString) throws UploadException {
         Uri submissionUri = Uri.parse(urlString);
 
-        // Used to determine if attachments should be sent for Aggregate < 0.9x servers
-        boolean openRosaServer = false;
+        long contentLength = 10000000L;
 
         // We already issued a head request and got a response, so we know it was an
         // OpenRosa-compliant server. We also know the proper URL to send the submission to and
         // the proper scheme.
         if (uriRemap.containsKey(submissionUri)) {
-            openRosaServer = true;
             submissionUri = uriRemap.get(submissionUri);
             Timber.i("Using Uri remap for submission %s. Now: %s", instance.getDatabaseId(),
                     submissionUri.toString());
@@ -98,8 +97,18 @@ public class InstanceServerUploader extends InstanceUploader {
             HttpHeadResult headResult;
             Map<String, String> responseHeaders;
             try {
-                headResult = httpInterface.head(uri, webCredentialsUtils.getCredentials(uri));
+                headResult = httpInterface.executeHeadRequest(uri, webCredentialsUtils.getCredentials(uri));
                 responseHeaders = headResult.getHeaders();
+
+                if (responseHeaders.containsKey("X-OpenRosa-Accept-Content-Length")) {
+                    String contentLengthString = responseHeaders.get("X-OpenRosa-Accept-Content-Length");
+                    try {
+                        contentLength = Long.parseLong(contentLengthString);
+                    } catch (Exception e) {
+                        Timber.e(e, "Exception thrown parsing contentLength %s", contentLengthString);
+                    }
+                }
+
             } catch (Exception e) {
                 saveFailedStatusToDatabase(instance);
                 throw new UploadException(FAIL
@@ -117,7 +126,6 @@ public class InstanceServerUploader extends InstanceUploader {
                         Uri newURI = Uri.parse(URLDecoder.decode(responseHeaders.get("Location"), "utf-8"));
                         // Allow redirects within same host. This could be redirecting to HTTPS.
                         if (submissionUri.getHost().equalsIgnoreCase(newURI.getHost())) {
-                            openRosaServer = true;
                             // Re-add params if server didn't respond with params
                             if (newURI.getQuery() == null) {
                                 newURI = newURI.buildUpon()
@@ -168,36 +176,38 @@ public class InstanceServerUploader extends InstanceUploader {
             throw new UploadException(FAIL + "instance XML file does not exist!");
         }
 
-        List<File> files = getFilesInParentDirectory(instanceFile, submissionFile, openRosaServer);
+        List<File> files = getFilesInParentDirectory(instanceFile, submissionFile);
 
         // TODO: when can this happen? It used to cause the whole submission attempt to fail. Should it?
         if (files == null) {
             throw new UploadException("Error reading files to upload");
         }
 
-        ResponseMessageParser messageParser;
+        HttpPostResult postResult;
+        ResponseMessageParser messageParser = new ResponseMessageParser();
 
         try {
             URI uri = URI.create(submissionUri.toString());
 
-            messageParser = httpInterface.uploadSubmissionFile(files, submissionFile, uri,
-                    webCredentialsUtils.getCredentials(uri));
+            postResult = httpInterface.uploadSubmissionFile(files, submissionFile, uri,
+                    webCredentialsUtils.getCredentials(uri), contentLength);
 
+            int responseCode = postResult.getResponseCode();
+            messageParser.setMessageResponse(postResult.getHttpResponse());
 
-            int responseCode = messageParser.getResponseCode();
 
             if (responseCode != HttpsURLConnection.HTTP_CREATED && responseCode != HttpsURLConnection.HTTP_ACCEPTED) {
                 UploadException exception;
                 if (responseCode == HttpsURLConnection.HTTP_OK) {
                     exception = new UploadException(FAIL + "Network login failure? Again?");
                 } else if (responseCode == HttpsURLConnection.HTTP_UNAUTHORIZED) {
-                    exception = new UploadException(FAIL + messageParser.getReasonPhrase()
+                    exception = new UploadException(FAIL + postResult.getReasonPhrase()
                             + " (" + responseCode + ") at " + urlString);
                 } else {
                     if (messageParser.isValid()) {
                         exception = new UploadException(FAIL + messageParser.getMessageResponse());
                     } else {
-                        exception = new UploadException(FAIL + messageParser.getReasonPhrase()
+                        exception = new UploadException(FAIL + postResult.getReasonPhrase()
                                 + " (" + responseCode + ") at " + urlString);
                     }
 
@@ -206,7 +216,7 @@ public class InstanceServerUploader extends InstanceUploader {
                 throw exception;
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             saveFailedStatusToDatabase(instance);
             throw new UploadException(FAIL + "Generic Exception: "
                     + (e.getMessage() != null ? e.getMessage() : e.toString()));
@@ -222,7 +232,7 @@ public class InstanceServerUploader extends InstanceUploader {
         return null;
     }
 
-    private List<File> getFilesInParentDirectory(File instanceFile, File submissionFile, boolean openRosaServer) {
+    private List<File> getFilesInParentDirectory(File instanceFile, File submissionFile) {
         List<File> files = new ArrayList<>();
 
         // find all files in parent directory
@@ -242,23 +252,7 @@ public class InstanceServerUploader extends InstanceUploader {
                 continue; // the xml file has already been added
             }
 
-            String extension = FileUtils.getFileExtension(fileName);
-
-            if (openRosaServer) {
-                files.add(f);
-            } else if (extension.equals("jpg")) { // legacy 0.9x
-                files.add(f);
-            } else if (extension.equals("3gpp")) { // legacy 0.9x
-                files.add(f);
-            } else if (extension.equals("3gp")) { // legacy 0.9x
-                files.add(f);
-            } else if (extension.equals("mp4")) { // legacy 0.9x
-                files.add(f);
-            } else if (extension.equals("osm")) { // legacy 0.9x
-                files.add(f);
-            } else {
-                Timber.w("unrecognized file type %s", f.getName());
-            }
+            files.add(f);
         }
 
         return files;
@@ -267,7 +261,7 @@ public class InstanceServerUploader extends InstanceUploader {
 
     /**
      * Returns the URL this instance should be submitted to with appended deviceId.
-     * <p>
+     *
      * If the upload was triggered by an external app and specified an override URL, use that one.
      * Otherwise, use the submission URL configured in the form
      * (https://opendatakit.github.io/xforms-spec/#submission-attributes). Finally, default to the
@@ -313,7 +307,7 @@ public class InstanceServerUploader extends InstanceUploader {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
                 Collect.getInstance());
-        String serverBase = settings.getString(PreferenceKeys.KEY_SERVER_URL,
+        String serverBase = settings.getString(GeneralKeys.KEY_SERVER_URL,
                 app.getString(R.string.default_server_url));
 
         if (serverBase.endsWith(URL_PATH_SEP)) {
@@ -321,7 +315,7 @@ public class InstanceServerUploader extends InstanceUploader {
         }
 
         // NOTE: /submission must not be translated! It is the well-known path on the server.
-        String submissionPath = settings.getString(PreferenceKeys.KEY_SUBMISSION_URL,
+        String submissionPath = settings.getString(GeneralKeys.KEY_SUBMISSION_URL,
                 app.getString(R.string.default_odk_submission));
 
         if (!submissionPath.startsWith(URL_PATH_SEP)) {

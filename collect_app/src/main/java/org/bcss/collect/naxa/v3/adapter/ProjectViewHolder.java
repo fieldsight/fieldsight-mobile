@@ -1,22 +1,19 @@
 package org.bcss.collect.naxa.v3.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.RecyclerView;
-import android.util.TimeUtils;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.login.model.Project;
-import org.json.JSONObject;
-import org.odk.collect.android.utilities.DateTimeUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

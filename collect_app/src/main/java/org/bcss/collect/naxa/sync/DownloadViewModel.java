@@ -1,7 +1,8 @@
 package org.bcss.collect.naxa.sync;
 
-import android.arch.lifecycle.ViewModel;
 import android.os.Handler;
+
+import androidx.lifecycle.ViewModel;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.Constant;
@@ -29,9 +30,7 @@ import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.StageRemoteSource;
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -44,11 +43,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.ResponseUtils.isListOfType;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.bcss.collect.naxa.common.Constant.DownloadUID.EDU_MATERIALS;

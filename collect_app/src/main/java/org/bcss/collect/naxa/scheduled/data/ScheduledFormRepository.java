@@ -1,8 +1,8 @@
 package org.bcss.collect.naxa.scheduled.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 
 import org.bcss.collect.naxa.common.BaseRepository;
 import org.bcss.collect.naxa.previoussubmission.model.ScheduledFormAndSubmission;

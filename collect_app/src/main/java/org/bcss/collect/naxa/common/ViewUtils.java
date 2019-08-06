@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.FloatingActionButton;
+
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.bcss.collect.android.application.Collect;
 

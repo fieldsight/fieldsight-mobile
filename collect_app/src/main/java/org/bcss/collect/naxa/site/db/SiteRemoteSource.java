@@ -297,4 +297,24 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 .getSites(params)
                 .subscribeOn(Schedulers.io());
     }
+
+    public Single<List<Site>> updateEditedSite(String siteId) {
+        return SiteLocalSource.getInstance()
+                .getSiteByIdAsSingle(siteId)
+                .toObservable()
+                .flatMap(new Function<Site, ObservableSource<Site>>() {
+                    @Override
+                    public ObservableSource<Site> apply(Site site) throws Exception {
+                        return updateSite(site);
+                    }
+                })
+                .map(site -> {
+                    SiteLocalSource.getInstance().updateSiteIdAsync(site.getId(), IS_ONLINE);
+                    return site;
+                })
+                .toList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+    }
 }

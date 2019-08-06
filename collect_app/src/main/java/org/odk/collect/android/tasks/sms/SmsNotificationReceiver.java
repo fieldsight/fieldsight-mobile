@@ -5,12 +5,13 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.activities.InstanceUploaderList;
+import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.tasks.sms.models.SmsProgress;
 import org.odk.collect.android.tasks.sms.models.SmsSubmission;
@@ -23,6 +24,7 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.tasks.sms.SmsSender.SMS_INSTANCE_ID;
 import static org.odk.collect.android.tasks.sms.SmsSender.SMS_RESULT_CODE;
+import static org.odk.collect.android.utilities.NotificationUtils.CHANNEL_ID;
 
 public class SmsNotificationReceiver extends BroadcastReceiver {
     public static final String SMS_NOTIFICATION_ACTION = "org.bcss.collect.android.COLLECT_SMS_NOTIFICATION_ACTION";
@@ -66,11 +68,11 @@ public class SmsNotificationReceiver extends BroadcastReceiver {
 
     private Notification buildNotification() {
 
-        Intent intent = new Intent(context, InstanceUploaderList.class);
+        Intent intent = new Intent(context, InstanceUploaderListActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        return new NotificationCompat.Builder(context)
+        return new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(smsSubmission.getDisplayName())
                 .setContentText(getContentText())
                 .setWhen(smsSubmission.getLastUpdated().getTime())
@@ -87,11 +89,11 @@ public class SmsNotificationReceiver extends BroadcastReceiver {
      * @return Notification
      */
     private Notification buildSummary() {
-        Intent intent = new Intent(context, InstanceUploaderList.class);
+        Intent intent = new Intent(context, InstanceUploaderListActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        return new NotificationCompat.Builder(context)
+        return new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(context.getString(R.string.sms_submissions_notif_title))
                 .setContentText(context.getString(R.string.sms_submissions_notif_description))
                 .setWhen(smsSubmission.getLastUpdated().getTime())

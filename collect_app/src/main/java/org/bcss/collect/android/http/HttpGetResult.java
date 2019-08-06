@@ -16,11 +16,9 @@
 
 package org.bcss.collect.android.http;
 
-import android.support.annotation.NonNull;
-
+import androidx.annotation.NonNull;
 import java.io.InputStream;
 import java.util.Map;
-
 import timber.log.Timber;
 
 public class HttpGetResult {

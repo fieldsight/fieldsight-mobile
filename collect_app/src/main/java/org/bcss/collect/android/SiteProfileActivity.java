@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import org.bcss.collect.naxa.common.ViewUtils;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.project.TermsLabels;
 import org.bcss.collect.naxa.project.data.ProjectLocalSource;
@@ -221,7 +221,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
                     @Override
                     public void onError(Throwable throwable) {
-                        FlashBarUtils.showFlashbar(SiteProfileActivity.this, throwable.getMessage());
+                        SnackBarUtils.showFlashbar(SiteProfileActivity.this, throwable.getMessage());
 
                         Timber.e(throwable);
                     }

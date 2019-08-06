@@ -1,11 +1,11 @@
 package org.bcss.collect.naxa.site.db;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 
 import org.bcss.collect.naxa.login.model.Site;
 
@@ -38,6 +38,9 @@ public interface SiteDao {
 
     @Query("SELECT * from sites WHERE id= :siteId")
     LiveData<Site> getSiteById(String siteId);
+
+    @Query("SELECT * from sites WHERE id= :siteId")
+    Single<Site> getSiteByIdAsSingle(String siteId);
 
     @Query("UPDATE sites SET isSiteVerified =:siteStatus WHERE id=:siteId")
     int updateSiteStatus(String siteId, int siteStatus);

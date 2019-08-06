@@ -1,43 +1,44 @@
 package org.bcss.collect.naxa.site;
 
-import android.arch.lifecycle.LiveData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 
 import com.google.common.primitives.Longs;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.SiteProfileActivity;
+import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.provider.FormsProviderAPI;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.naxa.common.Constant;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
-import org.bcss.collect.naxa.common.SingleLiveEvent;
 import org.bcss.collect.naxa.common.rx.RetrofitException;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.generalforms.GeneralFormsFragment;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.project.MapActivity;
@@ -46,13 +47,13 @@ import org.bcss.collect.naxa.site.db.SiteLocalSource;
 import org.bcss.collect.naxa.site.db.SiteRemoteSource;
 import org.bcss.collect.naxa.sitedocuments.SiteDocumentsListActivity;
 import org.bcss.collect.naxa.stages.StageListFragment;
-import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
-import org.odk.collect.android.activities.InstanceUploaderList;
+import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
@@ -71,8 +72,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
-import retrofit2.HttpException;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
@@ -83,9 +82,7 @@ import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopEnterAnimati
 import static org.bcss.collect.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.bcss.collect.naxa.common.ViewUtils.showOrHide;
-import static org.odk.collect.android.activities.InstanceUploaderList.INSTANCE_UPLOADER;
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
-import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;
 
 public class SiteDashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -246,13 +243,15 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             }
         });
     }
+
     private void checkPermissionAndOpenMap() {
         if (!checkIfLocationPermissionsGranted(requireActivity())) {
-            requestLocationPermissions(requireActivity(), new PermissionListener() {
+            new PermissionUtils().requestLocationPermissions(requireActivity(), new PermissionListener() {
                 @Override
                 public void granted() {
                     MapActivity.start(getActivity(), loadedSite);
                 }
+
                 @Override
                 public void denied() {
                     //unused
@@ -291,7 +290,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         CardView cv_stageform = rootView.findViewById(R.id.cv_stageform);
 
         Timber.d("SitesdashboardFragment, isParentsite = %s", isParent);
-        cv_stageform.setVisibility(isParent? View.GONE : View.VISIBLE);
+        cv_stageform.setVisibility(isParent ? View.GONE : View.VISIBLE);
 
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);
@@ -303,16 +302,20 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     }
 
+
     private void hideSendButtonIfMockedSite(View rootView) {
 
         boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
+        boolean isEditedSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
+        Button btnUploadSite = rootView.findViewById(R.id.site_option_btn_upload_site);
+        Button btnDelete = rootView.findViewById(R.id.site_option_btn_delete_site);
 
+        btnDelete.setEnabled(isOfflineSite);
 
-        if (isOfflineSite) {
+        if (isOfflineSite || isEditedSite) {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(true);
-            rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.VISIBLE);
-            rootView.findViewById(R.id.site_option_btn_upload_site).setVisibility(View.VISIBLE);
+            btnUploadSite.setVisibility(View.VISIBLE);
         } else {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(true);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(false);
@@ -358,7 +361,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 startActivity(i);
                 break;
             case R.id.site_option_frag_btn_send_form:
-                intent = new Intent(requireActivity(), InstanceUploaderList.class);
+                intent = new Intent(requireActivity(), InstanceUploaderListActivity.class);
                 intent.putExtra(EXTRA_OBJECT, loadedSite);
                 startActivity(intent);
                 break;
@@ -382,15 +385,66 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     @OnClick(R.id.site_option_btn_upload_site)
     public void showConfirmationDialog() {
 
-        DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_sites))
-                .setPositiveButton(R.string.dialog_action_upload_site_and_form, (dialog, which) -> {
-                    uploadSelectedSites(Collections.singletonList(loadedSite), true);
-                })
-                .setNegativeButton(R.string.dialog_action_only_upload_site, (dialog, which) -> {
-                    uploadSelectedSites(Collections.singletonList(loadedSite), false);
-                })
-                .setNeutralButton(R.string.dialog_action_dismiss, null)
-                .show();
+        switch (loadedSite.getIsSiteVerified()) {
+            case Constant.SiteStatus.IS_OFFLINE:
+                DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_sites))
+                        .setPositiveButton(R.string.dialog_action_upload_site_and_form, (dialog, which) -> {
+                            uploadSelectedSites(Collections.singletonList(loadedSite), true);
+                        })
+                        .setNegativeButton(R.string.dialog_action_only_upload_site, (dialog, which) -> {
+                            uploadSelectedSites(Collections.singletonList(loadedSite), false);
+                        })
+                        .setNeutralButton(R.string.dialog_action_dismiss, null)
+                        .show();
+
+                break;
+            case Constant.SiteStatus.IS_EDITED:
+
+                String progressMessage = getString(R.string.dialog_msg_uploading_sites);
+                final int progressNotifyId = FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
+
+                SiteRemoteSource.getInstance().updateEditedSite(loadedSite.getId())
+                        .subscribeWith(new DisposableSingleObserver<List<Site>>() {
+                            @Override
+                            public void onSuccess(List<Site> sites) {
+                                FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
+
+                                if (sites.size() > 0) {
+                                    String title = Collect.getInstance().getString(R.string.msg_edited_site_uploaded);
+                                    String msg;
+                                    if (sites.size() > 1) {
+                                        msg = Collect.getInstance().getString(R.string.msg_multiple_sites_upload, sites.get(0).getName(), sites.size());
+                                    } else {
+                                        msg = Collect.getInstance().getString(R.string.msg_single_site_upload, sites.get(0).getName());
+                                    }
+                                    FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, msg);
+                                    SnackBarUtils.showFlashbar(requireActivity(), msg);
+                                    requireActivity().onBackPressed();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
+
+                                Timber.e(e);
+                                String message;
+                                if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {
+                                    message = ((RetrofitException) e).getKind().getMessage();
+                                } else {
+                                    message = e.getMessage();
+                                }
+
+                                if (isAdded() && getActivity() != null) {
+                                    DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), message).show();
+                                } else {
+                                    FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), message);
+                                }
+                            }
+                        });
+                break;
+        }
+
 
     }
 
@@ -412,7 +466,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
                     public void accept(Disposable disposable) throws Exception {
-                        FlashBarUtils.showFlashbar(requireActivity(), progressMessage);
+                        SnackBarUtils.showFlashbar(requireActivity(), progressMessage);
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
@@ -425,9 +479,9 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                             if (instanceIDs.size() > 0) {
                                 Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
                                 i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
-                                startActivityForResult(i, INSTANCE_UPLOADER);
+                                startActivityForResult(i, InstanceUploaderListActivity.INSTANCE_UPLOADER);
                             } else {
-                                FlashBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                                SnackBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
                                 requireActivity().onBackPressed();
                             }
                         } else {
@@ -459,7 +513,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == INSTANCE_UPLOADER) {
+        if (requestCode == InstanceUploaderListActivity.INSTANCE_UPLOADER) {
             switch (resultCode) {
                 case RESULT_OK:
                 case RESULT_CANCELED:

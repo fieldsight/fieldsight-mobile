@@ -16,11 +16,10 @@
 
 package org.bcss.collect.android.adapters;
 
-import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView.Adapter;
-import android.support.v7.widget.RecyclerView.ViewHolder;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class RankingListAdapter extends Adapter<RankingListAdapter.ItemViewHolde
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ItemViewHolder(parent.getContext(), LayoutInflater.from(parent.getContext()).inflate(R.layout.ranking_item, parent, false));
+        return new ItemViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.ranking_item, parent, false));
     }
 
     @Override
@@ -88,16 +87,14 @@ public class RankingListAdapter extends Adapter<RankingListAdapter.ItemViewHolde
 
     public static class ItemViewHolder extends ViewHolder {
 
-        final Context context;
         final TextView textView;
         final ThemeUtils themeUtils;
 
-        ItemViewHolder(Context context, View itemView) {
+        ItemViewHolder(View itemView) {
             super(itemView);
-            this.context = context;
             textView = itemView.findViewById(R.id.rank_item_text);
             textView.setTextSize(Collect.getQuestionFontsize());
-            themeUtils = new ThemeUtils(context);
+            themeUtils = new ThemeUtils(itemView.getContext());
         }
 
         public void onItemSelected() {

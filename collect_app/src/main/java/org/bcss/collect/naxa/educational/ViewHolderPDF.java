@@ -1,9 +1,10 @@
 package org.bcss.collect.naxa.educational;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;
 

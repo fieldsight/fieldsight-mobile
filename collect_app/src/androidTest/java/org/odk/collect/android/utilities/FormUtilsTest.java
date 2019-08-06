@@ -19,7 +19,7 @@ package org.odk.collect.android.utilities;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.provider.BaseColumns;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import org.bcss.collect.android.dto.Form;
 import org.bcss.collect.android.provider.FormsProviderAPI;

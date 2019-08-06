@@ -19,21 +19,23 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.CursorLoader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.content.CursorLoader;
 
 import org.bcss.collect.android.R;
+
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.DeleteInstancesListener;
 import org.bcss.collect.android.listeners.DiskSyncListener;
 import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.bcss.collect.naxa.login.model.Site;
+import org.odk.collect.android.adapters.InstanceListCursorAdapter;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 import org.odk.collect.android.tasks.InstanceSyncTask;
@@ -150,10 +152,10 @@ public class DataManagerList extends InstanceListFragment
 
     private void setupAdapter() {
         String[] data = new String[]{InstanceColumns.DISPLAY_NAME, InstanceColumns.DISPLAY_SUBTEXT};
-        int[] view = new int[]{R.id.text1, R.id.text2};
+        int[] view = new int[]{R.id.form_title, R.id.form_subtitle};
 
-        listAdapter = new SimpleCursorAdapter(getActivity(),
-                R.layout.two_item_multiple_choice, null, data, view);
+        listAdapter = new InstanceListCursorAdapter(getActivity(),
+                R.layout.form_chooser_list_item_multiple_choice, null, data, view, false);
         setListAdapter(listAdapter);
         checkPreviouslyCheckedItems();
     }

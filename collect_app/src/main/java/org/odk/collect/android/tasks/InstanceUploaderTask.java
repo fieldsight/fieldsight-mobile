@@ -22,12 +22,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 
 import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.dao.InstancesDao;
 import org.bcss.collect.android.listeners.InstanceUploaderListener;
+import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.upload.InstanceServerUploader;
-import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public abstract class InstanceUploaderTask extends AsyncTask<Long, Integer, Inst
                                 List<Long> toDelete = new ArrayList<>();
                                 results.moveToPosition(-1);
 
-                                boolean isFormAutoDeleteOptionEnabled = (boolean) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_DELETE_AFTER_SEND);
+                                boolean isFormAutoDeleteOptionEnabled = (boolean) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_DELETE_AFTER_SEND);
 
                                 // The custom configuration from the third party app overrides
                                 // the app preferences set for delete after submission
@@ -149,7 +149,7 @@ public abstract class InstanceUploaderTask extends AsyncTask<Long, Integer, Inst
      * finalized form is written messages to {@link #messagesByInstanceId}. In the case of an
      * authentication request from the server, {@link #authRequestingServer} is set instead.
      */
-    public static class Outcome {
+    static class Outcome {
         /**
          * The URI for the server that requested authentication when the latest finalized form was
          * attempted to be sent. This URI may not match the server specified in the app settings or

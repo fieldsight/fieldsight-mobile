@@ -3,8 +3,9 @@ package org.bcss.collect.android.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.tasks.MediaLoadingTask;
@@ -40,5 +41,9 @@ public class MediaLoadingFragment extends Fragment {
         if (mediaLoadingTask != null) {
             mediaLoadingTask.onDetach();
         }
+    }
+
+    public boolean isMediaLoadingTaskRunning() {
+        return mediaLoadingTask != null && mediaLoadingTask.getStatus() == AsyncTask.Status.RUNNING;
     }
 }

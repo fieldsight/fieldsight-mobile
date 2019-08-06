@@ -1,10 +1,13 @@
 package org.bcss.collect.naxa.substages.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Query;
+import androidx.room.Transaction;
 
 import org.bcss.collect.naxa.common.database.BaseDaoFieldSight;
 import org.bcss.collect.naxa.stages.data.SubStage;

@@ -1,10 +1,12 @@
 package org.bcss.collect.naxa.generalforms.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
@@ -19,7 +21,7 @@ import java.util.List;
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
-import io.reactivex.Observer;
+
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -66,7 +68,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
         LiveData<List<GeneralForm>> source = dao.getSiteGeneralForms(siteId, projectId);
 
         generalFormMediator.addSource(source,
-                new android.arch.lifecycle.Observer<List<GeneralForm>>() {
+                new Observer<List<GeneralForm>>() {
                     @Override
                     public void onChanged(@Nullable List<GeneralForm> generalForms) {
                         if (generalForms != null) {
@@ -131,7 +133,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
         LiveData<List<GeneralForm>> source = dao.getProjectGeneralForms(projectId);
 
         generalFormMediator.addSource(source,
-                new android.arch.lifecycle.Observer<List<GeneralForm>>() {
+                new Observer<List<GeneralForm>>() {
                     @Override
                     public void onChanged(@Nullable List<GeneralForm> generalForms) {
                         if (generalForms != null) {
@@ -254,27 +256,6 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
         AsyncTask.execute(() -> dao.updateAll(items));
 
-    }
-
-    private <T> Observer applySubscriber() {
-        return new DisposableObserver() {
-
-            @Override
-            public void onNext(Object o) {
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-        };
     }
 
     private <T> ObservableTransformer applySchedulers() {

@@ -1,28 +1,27 @@
 package org.bcss.collect.naxa.stages;
 
 
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.OnFormItemClickListener;
 import org.bcss.collect.naxa.common.RecyclerViewEmptySupport;
 import org.bcss.collect.naxa.common.ViewModelFactory;
 import org.bcss.collect.naxa.common.event.DataSyncEvent;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.substages.SubStageListFragment;
@@ -225,13 +224,13 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         Timber.i(event.toString());
         switch (event.getEvent()) {
             case DataSyncEvent.EventStatus.EVENT_START:
-                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
+                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
                 break;
             case DataSyncEvent.EventStatus.EVENT_END:
-                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
+                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
                 break;
             case DataSyncEvent.EventStatus.EVENT_ERROR:
-                FlashBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
+                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
                 break;
         }
     }

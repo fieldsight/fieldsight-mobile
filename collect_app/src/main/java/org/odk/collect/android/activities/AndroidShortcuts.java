@@ -22,7 +22,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;

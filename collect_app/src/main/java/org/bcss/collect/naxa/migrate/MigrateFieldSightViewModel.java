@@ -1,10 +1,11 @@
 package org.bcss.collect.naxa.migrate;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -131,7 +132,6 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
                 SiteLocalSource.getInstance().save(site);
             }
-
 
 
         }

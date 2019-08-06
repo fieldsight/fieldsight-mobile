@@ -1,7 +1,9 @@
 package org.bcss.collect.naxa.generalforms.data;
 
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+
 
 import org.bcss.collect.naxa.common.BaseRepository;
 import org.bcss.collect.naxa.previoussubmission.model.GeneralFormAndSubmission;

@@ -4,7 +4,6 @@
   <string name="activity_not_found">လုပ္ေဆာင္ရန္ အလုပ္ မေတြ့ပါ 1%s</string>
   <string name="view_image">ပုံၾကည့္ပါ</string>
   <string name="annotate_image">ပုံတြင္ မွတ္ခ်က္ေရးပါ</string>
-  <string name="aligned_image_capture">ဘက္ညီပုံရိုက္ျခင္း</string>
   <string name="signature_capture">လက္မွတ္ရယူျခင္း</string>
   <string name="view_video">ဗီဒီယိုကြည့်ပါ</string>
   <string name="choose_audio">ဗီဒီယိုရွေးပါ</string>
@@ -194,7 +193,6 @@
   <string name="found_in_settings">Uncheck to hide from General Settings</string>
   <string name="save_preferences">Save Settings to Disk</string>
   <string name="form_forward">Next</string>
-  <string name="form_backward">Prev</string>
   <string name="navigation">Navigation</string>
   <string name="swipe_navigation">Use horizontal swipes</string>
   <string name="buttons_navigation">Use forward/backward buttons</string>
@@ -207,6 +205,7 @@
   <!--%1$s represents degrees, %2$s represents minutes and %3$s represents seconds as in E 18°48'8"-->
   <!--%1$s represents degrees, %2$s represents minutes and %3$s represents seconds as in S 18°48'8"-->
   <!--%1$s represents degrees, %2$s represents minutes and %3$s represents seconds as in N 18°48'8"-->
+  <!--<string name="submission_transport_admin_setting">Submission transport</string>-->
   <!--Displays dates in specialized calendars with the Gregorian dates in parentheses. This is translated so right-to-left languages can specify the correct order-->
   <!--Sms submission-->
 </resources>

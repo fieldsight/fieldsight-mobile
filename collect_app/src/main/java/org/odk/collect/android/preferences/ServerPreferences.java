@@ -19,14 +19,25 @@ package org.odk.collect.android.preferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 
 import org.bcss.collect.android.R;
 
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PROTOCOL;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
+import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;
 
 public class ServerPreferences extends ServerPreferencesFragment {
+
+    public static ServerPreferences newInstance(boolean adminMode) {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(INTENT_KEY_ADMIN_MODE, adminMode);
+
+        ServerPreferences serverPreferences = new ServerPreferences();
+        serverPreferences.setArguments(bundle);
+
+        return serverPreferences;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

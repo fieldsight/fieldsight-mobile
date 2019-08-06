@@ -19,26 +19,24 @@ package org.odk.collect.android.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.injection.config.AppComponent;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.utilities.PermissionUtils.checkIfStoragePermissionsGranted;
+import static org.odk.collect.android.utilities.PermissionUtils.areStoragePermissionsGranted;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 import static org.odk.collect.android.utilities.PermissionUtils.isEntryPointActivity;
 
@@ -62,7 +60,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
          * This code won't run on activities that are entry points to the app because those activities
          * are able to handle permission checks and requests by themselves.
          */
-        if (!checkIfStoragePermissionsGranted(this) && !isEntryPointActivity(this)) {
+        if (!areStoragePermissionsGranted(this) && !isEntryPointActivity(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_AppCompat_Light_Dialog);
 
             builder.setTitle(R.string.storage_runtime_permission_denied_title)
@@ -74,10 +72,6 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
                     .setCancelable(false)
                     .show();
         }
-    }
-
-    public AppComponent getComponent() {
-        return Collect.getInstance().getComponent();
     }
 
     @Override
@@ -105,14 +99,14 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         try {
             RelativeLayout relativeLayout = findViewById(R.id.fl_toolbar_progress_wrapper);
             if (relativeLayout != null) {
-                ViewUtils.animateViewVisibility(relativeLayout,View.VISIBLE);
+                ViewUtils.animateViewVisibility(relativeLayout, View.VISIBLE);
 //                relativeLayout.setVisibility(View.VISIBLE);
             } else {
                 progressDialog = DialogFactory.createProgressDialogHorizontal(this, getString(R.string.please_wait));
                 progressDialog.show();
             }
         } catch (Exception e) {
-            FlashBarUtils.showFlashbar(this, e.getMessage());
+            SnackBarUtils.showFlashbar(this, e.getMessage());
             Timber.e(e);
         }
 
@@ -131,7 +125,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
-            FlashBarUtils.showFlashbar(this, e.getMessage());
+            SnackBarUtils.showFlashbar(this, e.getMessage());
             Timber.e(e);
         }
     }

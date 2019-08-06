@@ -23,30 +23,29 @@ import java.util.HashMap;
 
 public class ApplicationConstants {
 
-    public static final String XML_OPENROSA_NAMESPACE = "http://openrosa.org/xforms";
-
     // based on http://www.sqlite.org/limits.html
     public static final int SQLITE_MAX_VARIABLE_NUMBER = 999;
 
-    public static final String[] TRANSLATIONS_AVAILABLE = {"af", "am", "ar", "bn",
-            "ca", "cs", "de", "en", "es", "et", "fa", "fi", "fr", "ha",
-            "hi", "hu", "in", "it", "ja", "ka", "km", "ln", "lo_LA", "lt", "mg", "ml", "mr",
-            "my", "nb", "ne_NP", "nl", "no", "pl", "ps", "pt", "ro", "ru", "si", "sl", "so",
-            "sq", "sv_SE", "sw", "sw_KE", "ta", "th_TH", "ti", "tl", "tr", "uk", "ur",
-            "ur_PK", "uz", "vi", "zh", "zu"};
+    static final String[] TRANSLATIONS_AVAILABLE = {"af", "am", "ar",
+            "bn", "ca", "cs", "de", "en", "es", "et", "fa", "fi", "fr",
+            "hi", "in", "it", "ja", "ka", "km", "ln", "lo_LA", "lt",
+            "mg", "ml", "mr", "ms", "my", "ne_NP", "nl", "no", "pl", "ps",
+            "pt", "ro", "ru", "si", "sl", "so", "sq", "sr", "sv_SE", "sw",
+            "sw_KE", "th_TH", "ti", "tl", "tr", "uk", "ur", "ur_PK",
+            "vi", "zh", "zu"};
 
     private ApplicationConstants() {
 
     }
 
-    public static HashMap<String, Integer> getSortLabelToIconMap() {
-        HashMap<String, Integer> hashMap = new HashMap<>();
-        hashMap.put(Collect.getInstance().getString(R.string.sort_by_name_asc), R.drawable.ic_sort_by_alpha);
-        hashMap.put(Collect.getInstance().getString(R.string.sort_by_name_desc), R.drawable.ic_sort_by_alpha);
-        hashMap.put(Collect.getInstance().getString(R.string.sort_by_date_asc), R.drawable.ic_access_time);
-        hashMap.put(Collect.getInstance().getString(R.string.sort_by_date_desc), R.drawable.ic_access_time);
-        hashMap.put(Collect.getInstance().getString(R.string.sort_by_status_asc), R.drawable.ic_assignment_turned_in);
-        hashMap.put(Collect.getInstance().getString(R.string.sort_by_status_desc), R.drawable.ic_assignment_late);
+    public static HashMap<Integer, Integer> getSortLabelToIconMap() {
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        hashMap.put(R.string.sort_by_name_asc, R.drawable.ic_sort_by_alpha);
+        hashMap.put(R.string.sort_by_name_desc, R.drawable.ic_sort_by_alpha);
+        hashMap.put(R.string.sort_by_date_asc, R.drawable.ic_access_time);
+        hashMap.put(R.string.sort_by_date_desc, R.drawable.ic_access_time);
+        hashMap.put(R.string.sort_by_status_asc, R.drawable.ic_assignment_turned_in);
+        hashMap.put(R.string.sort_by_status_desc, R.drawable.ic_assignment_late);
         return hashMap;
     }
 
@@ -104,5 +103,10 @@ public class ApplicationConstants {
         public static final int FORMS_UPLOADED_NOTIFICATION = 97;
         public static final int FORMS_DOWNLOADED_NOTIFICATION = 98;
         public static final int FORM_UPDATES_AVAILABLE_NOTIFICATION = 99;
+    }
+
+    public abstract static class Namespaces {
+        static final String XML_OPENROSA_NAMESPACE = "http://openrosa.org/xforms";
+        public static final String XML_OPENDATAKIT_NAMESPACE = "http://www.opendatakit.org/xforms";
     }
 }
