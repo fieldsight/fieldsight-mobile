@@ -20,8 +20,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import android.view.Gravity;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -35,11 +35,13 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtil;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 
 import java.io.File;
@@ -88,6 +90,8 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget {
     public void clearAnswer() {
         answerLayout.setVisibility(GONE);
         deleteFile();
+
+        widgetValueChanged();
     }
 
     @Override
@@ -124,6 +128,8 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget {
             chosenFileNameTextView.setText(binaryName);
             answerLayout.setVisibility(VISIBLE);
             Timber.i("Setting current answer to %s", newFile.getName());
+
+            widgetValueChanged();
         } else {
             Timber.e("Inserting Arbitrary file FAILED");
         }
@@ -194,6 +200,13 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget {
         intent.setAction(Intent.ACTION_VIEW);
         intent.setDataAndType(contentUri, getMimeType(getSourcePathFromUri(fileUri)));
         FileUtils.grantFileReadPermissions(intent, contentUri, getContext());
-        getContext().startActivity(intent);
+
+        if (new ActivityAvailability(getContext()).isActivityAvailable(intent)) {
+            getContext().startActivity(intent);
+        } else {
+            String message = getContext().getString(R.string.activity_not_found, getContext().getString(R.string.open_file));
+            ToastUtils.showLongToast(message);
+            Timber.w(message);
+        }
     }
 }

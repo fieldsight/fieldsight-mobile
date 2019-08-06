@@ -17,16 +17,17 @@
 package org.odk.collect.android.activities;
 
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,7 +62,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
 
     protected CursorAdapter listAdapter;
     protected LinkedHashSet<Long> selectedInstances = new LinkedHashSet<>();
-    protected String[] sortingOptions;
+    protected int[] sortingOptions;
     protected Integer selectedSortingOrder;
     protected ListView listView;
     protected LinearLayout llParent;
@@ -126,6 +127,12 @@ abstract class AppListActivity extends CollectAbstractActivity {
         listView.setEmptyView(findViewById(android.R.id.empty));
         progressBar = findViewById(R.id.progressBar);
         llParent = findViewById(R.id.llParent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Use the nicer-looking drawable with Material Design insets.
+            listView.setDivider(getResources().getDrawable(R.drawable.list_item_divider, getTheme()));
+            listView.setDividerHeight(1);
+        }
 
         setSupportActionBar(findViewById(R.id.toolbar));
     }
@@ -317,7 +324,7 @@ abstract class AppListActivity extends CollectAbstractActivity {
     }
 
     protected void showSnackbar(@NonNull String result) {
-        SnackbarUtils.showSnackbar(llParent, result);
+        SnackbarUtils.showShortSnackbar(llParent, result);
     }
 
     protected void hideProgressBarIfAllowed() {

@@ -1,16 +1,15 @@
 package org.bcss.collect.naxa.sync;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 
 import org.bcss.collect.naxa.onboarding.SyncableItem;
 
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 @Deprecated
@@ -23,11 +22,6 @@ public interface SyncOLD {
     @Query("SELECT * FROM sync")
     LiveData<List<SyncableItem>> getAllSyncableItems();
 
-    @Query("SELECT checked FROM sync WHERE uid=:key")
-    Flowable<Boolean> isChecked(int key);
-
-    @Query("SELECT COUNT(*) FROM sync")
-    Flowable<Integer> getItemCount();
 
     @Query("UPDATE sync SET progressStatus=:value WHERE uid=:key")
     void updateProgress(int key, boolean value);

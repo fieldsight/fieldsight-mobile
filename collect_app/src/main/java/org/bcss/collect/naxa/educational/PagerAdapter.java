@@ -1,8 +1,10 @@
 package org.bcss.collect.naxa.educational;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
         this.fragments = fragments;
     }
     /* (non-Javadoc)
-     * @see android.support.v4.app.FragmentPagerAdapter#getItem(int)
+     * @see androidx.fragment.app.FragmentPagerAdapter#getItem(int)
      */
     @Override
     public Fragment getItem(int position) {
@@ -30,7 +32,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
     }
 
     /* (non-Javadoc)
-     * @see android.support.v4.view.PagerAdapter#getCount()
+     * @see androidx.viewpager.widget.PagerAdapter#getCount()
      */
     @Override
     public int getCount() {

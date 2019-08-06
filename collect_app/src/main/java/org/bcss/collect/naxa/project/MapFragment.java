@@ -1,20 +1,20 @@
 package org.bcss.collect.naxa.project;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
@@ -34,7 +34,6 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +80,7 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         SiteMarker marker = new SiteMarker(map);
         marker.setSnippet(snippet);
         marker.setTitle(title);
-        marker.setIcon(ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.ic_place));
+        marker.setIcon(ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.ic_place_black));
         marker.setPosition(geoPoint);
         return marker;
     }
@@ -130,16 +129,16 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
 
 
-        if (helper == null) {
-            // For testing:
-            helper = new MapHelper(this.getContext(), map, this);
-
-            map.setMultiTouchControls(true);
-            map.setBuiltInZoomControls(true);
-            map.setTilesScaledToDpi(true);
-
-
-        }
+//        if (helper == null) {
+//            // For testing:
+//            helper = new MapHelper(this.getContext(), map, this);
+//
+//            map.setMultiTouchControls(true);
+//            map.setBuiltInZoomControls(true);
+//            map.setTilesScaledToDpi(true);
+//
+//
+//        }
 
 //        handler.postDelayed(new Runnable() {
 //            public void run() {

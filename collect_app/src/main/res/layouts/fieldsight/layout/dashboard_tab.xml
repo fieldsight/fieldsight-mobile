@@ -1,7 +1,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:parentTag="android.support.design.widget.CoordinatorLayout">
+    tools:parentTag="androidx.coordinatorlayout.widget.CoordinatorLayout">
 
     <org.bcss.collect.naxa.common.NonSwipeableViewPager
 
@@ -12,7 +12,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="150dp"
         android:layout_height="wrap_content"

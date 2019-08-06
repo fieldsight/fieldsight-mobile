@@ -16,7 +16,7 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.adapters.SelectMultipleListAdapter;
 import org.javarosa.core.model.data.IAnswerData;
@@ -60,9 +60,7 @@ public class SelectMultiWidget extends SelectTextWidget implements MultiChoiceWi
     }
 
     private void createLayout() {
-        readItems();
-
-        adapter = new SelectMultipleListAdapter(items, ve, this);
+        adapter = new SelectMultipleListAdapter(items, ve, this, numColumns);
 
         if (items != null) {
             // check if any values have spaces

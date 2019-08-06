@@ -1,6 +1,6 @@
 package org.bcss.collect.naxa.generalforms;
 
-import android.arch.persistence.room.TypeConverter;
+import androidx.room.TypeConverter;
 
 import com.google.common.reflect.TypeToken;
 

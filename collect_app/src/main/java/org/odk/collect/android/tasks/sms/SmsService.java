@@ -22,8 +22,8 @@ import org.bcss.collect.android.provider.InstanceProviderAPI;
 import org.bcss.collect.android.upload.InstanceServerUploader;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.tasks.sms.models.Message;
 import org.odk.collect.android.tasks.sms.models.SmsProgress;
@@ -44,8 +44,14 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
+import static android.telephony.SmsManager.RESULT_ERROR_GENERIC_FAILURE;
 import static android.telephony.SmsManager.RESULT_ERROR_NO_SERVICE;
 import static android.telephony.SmsManager.RESULT_ERROR_RADIO_OFF;
+import static org.odk.collect.android.tasks.sms.SmsNotificationReceiver.SMS_NOTIFICATION_ACTION;
+import static org.odk.collect.android.tasks.sms.SmsSender.SMS_INSTANCE_ID;
+import static org.odk.collect.android.tasks.sms.SmsSender.SMS_MESSAGE_ID;
+import static org.odk.collect.android.tasks.sms.SmsSender.SMS_RESULT_CODE;
+import static org.odk.collect.android.tasks.sms.SmsSender.checkIfSentIntentExists;
 import static org.odk.collect.android.utilities.FileUtil.getFileContents;
 import static org.odk.collect.android.utilities.FileUtil.getSmsInstancePath;
 
@@ -178,7 +184,7 @@ public class SmsService {
                 /*
                  * If there's a message that hasn't sent then a job should be added to continue the process.
                  */
-                if (!(message.isSending() && SmsSender.checkIfSentIntentExists(context, instanceId, message.getId())) || !message.isSent()) {
+                if (!(message.isSending() && checkIfSentIntentExists(context, instanceId, message.getId())) || !message.isSent()) {
                     startSendMessagesJob(instanceId);
                     break;
                 }
@@ -267,10 +273,10 @@ public class SmsService {
 
         rxEventBus.post(event);
 
-        Intent notificationIntent = new Intent(SmsNotificationReceiver.SMS_NOTIFICATION_ACTION);
-        notificationIntent.putExtra(SmsSender.SMS_MESSAGE_ID, messageId);
-        notificationIntent.putExtra(SmsSender.SMS_INSTANCE_ID, instanceId);
-        notificationIntent.putExtra(SmsSender.SMS_RESULT_CODE, resultCode);
+        Intent notificationIntent = new Intent(SMS_NOTIFICATION_ACTION);
+        notificationIntent.putExtra(SMS_MESSAGE_ID, messageId);
+        notificationIntent.putExtra(SMS_INSTANCE_ID, instanceId);
+        notificationIntent.putExtra(SMS_RESULT_CODE, resultCode);
         context.sendOrderedBroadcast(notificationIntent, null);
 
         /*
@@ -318,20 +324,15 @@ public class SmsService {
         contentValues.put(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT, getDisplaySubtext(RESULT_OK, date, progress, context));
         contentValues.put(InstanceProviderAPI.InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMITTED);
 
-        Collect.getInstance()
-                .getDefaultTracker()
-                .send(new HitBuilders.EventBuilder()
-                        .setCategory("Submission")
-                        .setAction("SMS")
-                        .build());
-
         try (Cursor cursor = instancesDao.getInstancesCursorForId(instanceId)) {
             cursor.moveToPosition(-1);
 
-            boolean isFormAutoDeleteOptionEnabled = (boolean) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_DELETE_AFTER_SEND);
-            String formId;
+            boolean isFormAutoDeleteOptionEnabled = (boolean) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_DELETE_AFTER_SEND);
+            String formId = null;
+            String formVersion = null;
             while (cursor.moveToNext()) {
                 formId = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_FORM_ID));
+                formVersion = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_VERSION));
                 if (InstanceServerUploader.formShouldBeAutoDeleted(formId, isFormAutoDeleteOptionEnabled)) {
 
                     List<String> instancesToDelete = new ArrayList<>();
@@ -342,6 +343,14 @@ public class SmsService {
                     instancesDao.updateInstance(contentValues, where, whereArgs);
                 }
             }
+
+            Collect.getInstance()
+                    .getDefaultTracker()
+                    .send(new HitBuilders.EventBuilder()
+                            .setCategory("Submission")
+                            .setAction("SMS")
+                            .setLabel(Collect.getFormIdentifierHash(formId, formVersion))
+                            .build());
         }
     }
 
@@ -368,6 +377,7 @@ public class SmsService {
 
         try {
             switch (resultCode) {
+                case RESULT_ERROR_GENERIC_FAILURE:
                 case RESULT_ERROR_NO_SERVICE:
                     return new SimpleDateFormat(context.getString(R.string.sms_no_reception), Locale.getDefault()).format(date);
                 case RESULT_ERROR_RADIO_OFF:

@@ -16,8 +16,6 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +25,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.bcss.collect.android.R;
-import org.bcss.collect.android.external.ExternalDataUtil;
 import org.bcss.collect.android.listeners.AdvanceToNextListener;
 import org.bcss.collect.android.views.ScrolledToTopSpinner;
 import org.javarosa.core.model.SelectChoice;
@@ -36,11 +36,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
-
-import java.util.List;
-
 
 /**
  * SpinnerWidget handles select-one fields. Instead of a list of buttons it uses a spinner, wherein
@@ -50,8 +46,7 @@ import java.util.List;
  * @author Jeff Beorse (jeff@beorse.net)
  */
 @SuppressLint("ViewConstructor")
-public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
-    List<SelectChoice> items;
+public class SpinnerWidget extends ItemsWidget implements MultiChoiceWidget {
     ScrolledToTopSpinner spinner;
     String[] choices;
 
@@ -63,15 +58,6 @@ public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
 
         if (context instanceof AdvanceToNextListener) {
             listener = (AdvanceToNextListener) context;
-        }
-
-        // SurveyCTO-added support for dynamic select content (from .csv files)
-        XPathFuncExpr xpathFuncExpr = ExternalDataUtil.getSearchXPathExpression(
-                prompt.getAppearanceHint());
-        if (xpathFuncExpr != null) {
-            items = ExternalDataUtil.populateExternalChoices(prompt, xpathFuncExpr);
-        } else {
-            items = prompt.getSelectChoices();
         }
 
         View view = inflate(context, R.layout.spinner_layout, null);
@@ -117,6 +103,8 @@ public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
                 if (position != items.size() && autoAdvance && listener != null) {
                     listener.advance();
                 }
+
+                widgetValueChanged();
             }
 
             @Override
@@ -130,7 +118,6 @@ public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
 
     @Override
     public IAnswerData getAnswer() {
-        clearFocus();
         int i = spinner.getSelectedItemPosition();
         if (i == -1 || i == items.size()) {
             return null;
@@ -145,6 +132,8 @@ public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
         // It seems that spinners cannot return a null answer. This resets the answer
         // to its original value, but it is not null.
         spinner.setSelection(items.size());
+
+        widgetValueChanged();
     }
 
     @Override
@@ -169,7 +158,6 @@ public class SpinnerWidget extends QuestionWidget implements MultiChoiceWidget {
             spinner.setSelection(choiceIndex);
 
         } else if (spinner.getSelectedItemPosition() == choiceIndex) {
-
             clearAnswer();
         }
     }

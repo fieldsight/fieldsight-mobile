@@ -3,14 +3,12 @@ package org.bcss.collect.android.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.bcss.collect.android.R;
@@ -23,7 +21,6 @@ import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.tasks.sms.SmsService;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.tasks.sms.models.SmsSubmission;
-import org.odk.collect.android.utilities.ThemeUtils;
 
 import javax.inject.Inject;
 
@@ -35,7 +32,12 @@ import io.reactivex.schedulers.Schedulers;
 
 import static org.bcss.collect.android.provider.InstanceProviderAPI.STATUS_SUBMISSION_FAILED;
 import static org.bcss.collect.android.provider.InstanceProviderAPI.STATUS_SUBMITTED;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
+import static org.odk.collect.android.tasks.sms.SmsService.RESULT_MESSAGE_READY;
+import static org.odk.collect.android.tasks.sms.SmsService.RESULT_OK_OTHERS_PENDING;
+import static org.odk.collect.android.tasks.sms.SmsService.RESULT_QUEUED;
+import static org.odk.collect.android.tasks.sms.SmsService.RESULT_SENDING;
+import static org.odk.collect.android.tasks.sms.SmsService.getDisplaySubtext;
 
 public class InstanceUploaderAdapter extends CursorAdapter {
 
@@ -64,7 +66,7 @@ public class InstanceUploaderAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.instance_upload_list_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.form_chooser_list_item_multiple_choice, parent, false);
         view.setTag(new ViewHolder(view));
         return view;
     }
@@ -73,13 +75,8 @@ public class InstanceUploaderAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-        GradientDrawable shapeDrawable = (GradientDrawable) viewHolder.imageBackground.getBackground();
-        shapeDrawable.setColor(new ThemeUtils(context).getAccentColor());
-
-        viewHolder.progressBar.setProgressPercent(0, false);
-
-        viewHolder.displayName.setText(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME)));
-        viewHolder.displaySubtext.setText(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT)));
+        viewHolder.formTitle.setText(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_NAME)));
+        viewHolder.formSubtitle.setText(cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT)));
 
         long instanceId = cursor.getLong(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID));
 
@@ -92,22 +89,20 @@ public class InstanceUploaderAdapter extends CursorAdapter {
         String status = cursor.getString(cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS));
 
         switch (status) {
-
             case STATUS_SUBMISSION_FAILED:
-
-                viewHolder.statusIcon.setImageResource(R.drawable.exclamation);
-
+                viewHolder.statusIcon.setImageResource(R.drawable.form_state_submission_failed);
                 break;
 
             case STATUS_SUBMITTED:
-                viewHolder.statusIcon.setImageResource(R.drawable.check);
+                viewHolder.statusIcon.setImageResource(R.drawable.form_state_submitted);
                 break;
 
             default:
-                viewHolder.statusIcon.setImageResource(R.drawable.pencil);
+                viewHolder.statusIcon.setImageResource(R.drawable.form_state_finalized);
         }
 
         if (isSmsSubmission) {
+            viewHolder.progressBar.setVisibility(View.VISIBLE);
             viewHolder.progressBar.setProgressPercent((int) model.getCompletion().getPercentage(), false);
 
             int smsStatus = submissionManager.checkNextMessageResultCode(String.valueOf(instanceId));
@@ -123,12 +118,6 @@ public class InstanceUploaderAdapter extends CursorAdapter {
 
             setupCloseButton(viewHolder, smsStatus);
             viewHolder.closeButton.setOnClickListener(v -> smsService.cancelFormSubmission(String.valueOf(instanceId)));
-        } else {
-            if (status.equals(STATUS_SUBMITTED)) {
-                viewHolder.progressBar.setProgressPercent(100, false);
-            } else if (status.equals(STATUS_SUBMISSION_FAILED)) {
-                viewHolder.progressBar.setProgressPercent(50, false);
-            }
         }
 
         compositeDisposable.add(eventBus.register(SmsRxEvent.class)
@@ -145,7 +134,7 @@ public class InstanceUploaderAdapter extends CursorAdapter {
 
     private void setupCloseButton(ViewHolder viewHolder, int resultCode) {
 
-        if (resultCode == SmsService.RESULT_QUEUED || resultCode == SmsService.RESULT_OK_OTHERS_PENDING) {
+        if (resultCode == RESULT_QUEUED || resultCode == RESULT_OK_OTHERS_PENDING) {
             viewHolder.closeButton.setVisibility(View.VISIBLE);
             viewHolder.checkbox.setVisibility(View.GONE);
         } else {
@@ -155,44 +144,41 @@ public class InstanceUploaderAdapter extends CursorAdapter {
     }
 
     private void setSmsSubmissionStateIcons(int smsStatus, ViewHolder viewHolder) {
-
         switch (smsStatus) {
             case Activity.RESULT_OK:
-                viewHolder.statusIcon.setImageResource(R.drawable.check);
+                viewHolder.statusIcon.setImageResource(R.drawable.form_state_submitted);
                 break;
 
-            case SmsService.RESULT_QUEUED:
-            case SmsService.RESULT_OK_OTHERS_PENDING:
-            case SmsService.RESULT_SENDING:
-            case SmsService.RESULT_MESSAGE_READY:
-                viewHolder.statusIcon.setImageResource(R.drawable.message_text_outline);
+            case RESULT_QUEUED:
+            case RESULT_OK_OTHERS_PENDING:
+            case RESULT_SENDING:
+            case RESULT_MESSAGE_READY:
+                viewHolder.statusIcon.setImageResource(R.drawable.form_state_sending);
                 break;
 
             default:
-                viewHolder.statusIcon.setImageResource(R.drawable.exclamation);
+                viewHolder.statusIcon.setImageResource(R.drawable.form_state_submission_failed);
                 break;
         }
     }
 
     private void setDisplaySubTextView(SmsRxEvent event, ViewHolder viewHolder) {
-        String text = SmsService.getDisplaySubtext(event.getResultCode(), event.getLastUpdated(), event.getProgress(), context);
+        String text = getDisplaySubtext(event.getResultCode(), event.getLastUpdated(), event.getProgress(), context);
         if (text != null) {
-            viewHolder.displaySubtext.setText(text);
+            viewHolder.formSubtitle.setText(text);
         }
     }
 
     static class ViewHolder {
-        @BindView(R.id.image_background)
-        LinearLayout imageBackground;
-        @BindView(R.id.display_name)
-        TextView displayName;
-        @BindView(R.id.display_subtext)
-        TextView displaySubtext;
+        @BindView(R.id.form_title)
+        TextView formTitle;
+        @BindView(R.id.form_subtitle)
+        TextView formSubtitle;
         @BindView(R.id.checkbox)
         CheckBox checkbox;
         @BindView(R.id.progress_bar)
         ProgressBar progressBar;
-        @BindView(R.id.status_icon)
+        @BindView(R.id.image)
         ImageView statusIcon;
         @BindView(R.id.close_box)
         ImageView closeButton;

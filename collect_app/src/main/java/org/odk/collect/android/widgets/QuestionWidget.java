@@ -23,8 +23,6 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.Nullable;
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -38,6 +36,9 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
+
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.listeners.AudioPlayListener;
@@ -46,12 +47,14 @@ import org.bcss.collect.android.views.MediaLayout;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.listeners.WidgetValueChangedListener;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GuidanceHint;
-import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.AnimateUtils;
 import org.odk.collect.android.utilities.DependencyProvider;
 import org.odk.collect.android.utilities.FormEntryPromptUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.TextUtils;
 import org.odk.collect.android.utilities.ThemeUtils;
@@ -82,11 +85,14 @@ public abstract class QuestionWidget
     private final View guidanceTextLayout;
     private final View textLayout;
     private final TextView warningText;
+    private PermissionUtils permissionUtils;
     private static final String GUIDANCE_EXPANDED_STATE = "expanded_state";
     private AtomicBoolean expanded;
     private Bundle state;
     protected ThemeUtils themeUtils;
     private int playColor;
+
+    private WidgetValueChangedListener valueChangedListener;
 
     public QuestionWidget(Context context, FormEntryPrompt prompt) {
         super(context);
@@ -96,6 +102,7 @@ public abstract class QuestionWidget
 
         if (context instanceof FormEntryActivity) {
             state = ((FormEntryActivity) context).getState();
+            permissionUtils = new PermissionUtils();
         }
 
         if (context instanceof DependencyProvider) {
@@ -139,12 +146,16 @@ public abstract class QuestionWidget
 
         addQuestionMediaLayout(getQuestionMediaLayout());
         addHelpTextLayout(getHelpTextLayout());
+
+        if (context instanceof FormEntryActivity && !getFormEntryPrompt().isReadOnly()) {
+            registerToClearAnswerOnLongPress((FormEntryActivity) context);
+        }
     }
 
     private TextView setupGuidanceTextAndLayout(TextView guidanceTextView, FormEntryPrompt prompt) {
 
         TextView guidance = null;
-        GuidanceHint setting = GuidanceHint.get((String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_GUIDANCE_HINT));
+        GuidanceHint setting = GuidanceHint.get((String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_GUIDANCE_HINT));
 
         if (setting.equals(GuidanceHint.No)) {
             return null;
@@ -231,7 +242,7 @@ public abstract class QuestionWidget
     }
 
     private static boolean isRTL(Locale locale) {
-        if (locale == null || locale.getDisplayName() == null || locale.getDisplayName().isEmpty()) {
+        if (locale.getDisplayName().isEmpty()) {
             return false;
         }
         final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
@@ -272,8 +283,7 @@ public abstract class QuestionWidget
         // Create the layout for audio, image, text
         MediaLayout questionMediaLayout = new MediaLayout(getContext());
         questionMediaLayout.setId(ViewIds.generateViewId()); // assign random id
-        questionMediaLayout.setAVT(prompt.getIndex(), "", questionText, audioURI, imageURI, videoURI,
-                bigImageURI, getPlayer());
+        questionMediaLayout.setAVT(questionText, audioURI, imageURI, videoURI, bigImageURI, getPlayer());
         questionMediaLayout.setAudioListener(this);
 
         String playColorString = prompt.getFormElement().getAdditionalAttribute(null, "playColor");
@@ -463,6 +473,15 @@ public abstract class QuestionWidget
     }
 
     /**
+     * Register this widget's child views to pop up a context menu to clear the widget when the
+     * user long presses on it. Widget subclasses may override this if some or all of their
+     * components need to intercept long presses.
+     */
+    protected void registerToClearAnswerOnLongPress(FormEntryActivity activity) {
+        activity.registerForContextMenu(this);
+    }
+
+    /**
      * Every subclassed widget should override this, adding any views they may contain, and calling
      * super.cancelLongPress()
      */
@@ -528,7 +547,7 @@ public abstract class QuestionWidget
             button.setLayoutParams(params);
 
             button.setOnClickListener(v -> {
-                if (Collect.allowClick(getClass().getName())) {
+                if (Collect.allowClick(QuestionWidget.class.getName())) {
                     ((ButtonWidget) this).onButtonClick(withId);
                 }
             });
@@ -668,5 +687,23 @@ public abstract class QuestionWidget
 
     public int getPlayColor() {
         return playColor;
+    }
+
+    public PermissionUtils getPermissionUtils() {
+        return permissionUtils;
+    }
+
+    public void setPermissionUtils(PermissionUtils permissionUtils) {
+        this.permissionUtils = permissionUtils;
+    }
+
+    public void setValueChangedListener(WidgetValueChangedListener valueChangedListener) {
+        this.valueChangedListener = valueChangedListener;
+    }
+
+    public void widgetValueChanged() {
+        if (valueChangedListener != null) {
+            valueChangedListener.widgetValueChanged(this);
+        }
     }
 }

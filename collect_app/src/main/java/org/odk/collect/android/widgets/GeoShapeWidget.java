@@ -28,15 +28,12 @@ import org.bcss.collect.android.listeners.PermissionListener;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.activities.GeoShapeActivity;
-import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.activities.GeoPolyActivity;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
-import static org.odk.collect.android.utilities.PermissionUtils.requestLocationPermissions;
-
 
 /**
  * GeoShapeWidget is the widget that allows the user to get Collect multiple GPS points.
@@ -47,18 +44,12 @@ import static org.odk.collect.android.utilities.PermissionUtils.requestLocationP
 public class GeoShapeWidget extends QuestionWidget implements BinaryWidget {
 
     public static final String SHAPE_LOCATION = "gp";
-    public static final String GOOGLE_MAP_KEY = "google_maps";
-    public SharedPreferences sharedPreferences;
-    public String mapSDK;
     private final Button createShapeButton;
     private final TextView answerDisplay;
 
     public GeoShapeWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
         // assemble the widget...
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        mapSDK = sharedPreferences.getString(PreferenceKeys.KEY_MAP_SDK, GOOGLE_MAP_KEY);
 
         answerDisplay = getCenteredAnswerTextView();
 
@@ -81,13 +72,17 @@ public class GeoShapeWidget extends QuestionWidget implements BinaryWidget {
     }
 
     private void startGeoShapeActivity() {
-        if (mapSDK.equals(GOOGLE_MAP_KEY) && !PlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String mapSDK = prefs.getString(GeneralKeys.KEY_MAP_SDK, GeneralKeys.DEFAULT_BASEMAP_KEY);
+
+        if (mapSDK.equals(GeneralKeys.GOOGLE_MAPS_BASEMAP_KEY) && !PlayServicesUtil.isGooglePlayServicesAvailable(getContext())) {
             PlayServicesUtil.showGooglePlayServicesAvailabilityErrorDialog(getContext());
             return;
         }
-        Intent intent = new Intent(getContext(), GeoShapeActivity.class)
-            .putExtra(SHAPE_LOCATION, answerDisplay.getText().toString())
-            .putExtra(PreferenceKeys.KEY_MAP_SDK, mapSDK);
+        Intent intent = new Intent(getContext(), GeoPolyActivity.class)
+            .putExtra(GeoPolyActivity.ANSWER_KEY, answerDisplay.getText().toString())
+            .putExtra(GeoPolyActivity.OUTPUT_MODE_KEY, GeoPolyActivity.OutputMode.GEOSHAPE)
+            .putExtra(GeneralKeys.KEY_MAP_SDK, mapSDK);
         ((Activity) getContext()).startActivityForResult(intent, RequestCodes.GEOSHAPE_CAPTURE);
     }
 
@@ -102,8 +97,10 @@ public class GeoShapeWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void setBinaryData(Object answer) {
-        String s = answer.toString();
-        answerDisplay.setText(s);
+        String answerText = answer.toString();
+        answerDisplay.setText(answerText);
+        updateButtonLabelsAndVisibility(!answerText.isEmpty());
+        widgetValueChanged();
     }
 
     @Override
@@ -119,6 +116,7 @@ public class GeoShapeWidget extends QuestionWidget implements BinaryWidget {
     public void clearAnswer() {
         answerDisplay.setText(null);
         updateButtonLabelsAndVisibility(false);
+        widgetValueChanged();
     }
 
     @Override
@@ -129,7 +127,7 @@ public class GeoShapeWidget extends QuestionWidget implements BinaryWidget {
 
     @Override
     public void onButtonClick(int buttonId) {
-        requestLocationPermissions((FormEntryActivity) getContext(), new PermissionListener() {
+        getPermissionUtils().requestLocationPermissions((Activity) getContext(), new PermissionListener() {
             @Override
             public void granted() {
                 waitForData();

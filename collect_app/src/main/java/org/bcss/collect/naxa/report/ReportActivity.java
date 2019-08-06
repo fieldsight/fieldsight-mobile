@@ -6,8 +6,6 @@ import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +15,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -96,7 +97,7 @@ public class ReportActivity extends CollectAbstractActivity {
         tv_app_version.setText(BuildConfig.VERSION_NAME);
         tv_os_version.setText(Build.VERSION.RELEASE);
         tv_device_name.setText(Build.MANUFACTURER);
-        PermissionUtils.requestLocationPermissions(this, new PermissionListener() {
+       new PermissionUtils().requestLocationPermissions(this, new PermissionListener() {
             @SuppressLint("MissingPermission")
             @Override
             public void granted() {

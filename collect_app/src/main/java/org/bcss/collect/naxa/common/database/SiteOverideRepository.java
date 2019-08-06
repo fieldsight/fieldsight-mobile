@@ -1,6 +1,6 @@
 package org.bcss.collect.naxa.common.database;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 
 import org.bcss.collect.naxa.common.BaseRepository;
 

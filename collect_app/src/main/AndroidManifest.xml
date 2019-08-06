@@ -1,4 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+ Copyright (C) 2009 University of Washington Licensed under the Apache
+License, Version 2.0 (the "License"); you may not use this file except in
+compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied. See the License for
+the specific language governing permissions and limitations under the License.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="org.bcss.collect.android">
@@ -17,7 +25,9 @@
         android:required="false" />
     <uses-feature
         android:name="android.hardware.wifi"
-        android:required="false" /> <!-- Dangerous permissions -->
+        android:required="false" />
+
+    <!-- Dangerous permissions -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -25,11 +35,16 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- Normal permissions -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!-- <uses-permission android:name="android.permission.SEND_SMS" /> -->
+
+    <!-- Normal permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- Removed in API 23 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Removed in API 23 -->
     <uses-permission
         android:name="android.permission.USE_CREDENTIALS"
         android:maxSdkVersion="22" />
@@ -56,6 +71,7 @@
     BUT, the gl setting is not modified by the required parameter, so
     do not declare anything here - detect capabilities at runtime.
     -->
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -65,26 +81,17 @@
         android:xlargeScreens="true" />
 
     <application
+        android:name=".application.Collect"
         android:allowBackup="false"
         android:fullBackupContent="false"
-        android:name=".application.Collect"
         android:icon="@drawable/ic_launcher_fieldsight"
         android:installLocation="auto"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true">
-        <activity android:name="org.bcss.collect.naxa.login.BaseLoginActivity"></activity>
 
         <provider
-            android:name=".provider.FormsProvider"
-            android:authorities="org.bcss.collect.android.provider.odk.forms"
-            android:exported="true" />
-        <provider
-            android:name=".provider.InstanceProvider"
-            android:authorities="org.bcss.collect.android.provider.odk.instances"
-            android:exported="true" />
-        <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -93,10 +100,71 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
+        <!--Activities from FieldSight [starts]-->
+        <activity android:name="org.bcss.collect.naxa.login.BaseLoginActivity" />
+
+        <activity
+            android:name="org.bcss.collect.naxa.login.LoginActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="org.bcss.collect.naxa.project.ProjectListActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme.Light" />
+        <activity android:name="org.bcss.collect.naxa.site.FragmentHostActivity" />
+        <activity android:name="org.bcss.collect.naxa.site.ProjectDashboardActivity" />
+        <activity android:name="org.bcss.collect.naxa.site.CreateSiteActivity" />
+        <activity android:name="org.bcss.collect.naxa.survey.SurveyFormsActivity" />
+        <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity" />
+        <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionDetailActivity" />
+        <activity android:name="org.bcss.collect.naxa.notificationslist.NotificationListActivity" />
+        <activity android:name="org.bcss.collect.naxa.notificationslist.FlaggedInstanceActivity" />
+        <activity android:name="org.bcss.collect.naxa.project.MapActivity" />
+        <activity android:name="org.bcss.collect.naxa.profile.UserProfileActivity" />
+        <activity android:name="org.bcss.collect.naxa.profile.UserActivity" />
+        <activity android:name="org.bcss.collect.naxa.sitedocuments.SiteDocumentsListActivity" />
+        <activity
+            android:name="org.bcss.collect.naxa.sitedocuments.ImageViewerActivity"
+            android:label="@string/title_activity_image_viewer"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity" />
+        <activity android:name="org.bcss.collect.naxa.educational.EducationalMaterialActivity" />
+        <activity android:name="org.bcss.collect.naxa.project.AppUpdateActivity" />
+        <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewTextTitleDetailsActivity" />
+        <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewImageDetailsActivity" />
+        <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewVideoDetailsActivity" />
+        <activity android:name="org.bcss.collect.naxa.sync.ContentDownloadActivity" />
+        <activity android:name="org.bcss.collect.naxa.onboarding.DownloadActivity" />
+        <activity
+            android:name=".SiteProfileActivity"
+            android:label="@string/title_activity_site_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name="org.bcss.collect.naxa.report.ReportActivity" />
+
+        <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivityNew" />
+        <activity android:name="org.bcss.collect.naxa.common.SettingsActivity" />
+        <activity android:name="org.bcss.collect.naxa.preferences.SettingsActivity" />
+
+        <activity android:name="org.bcss.collect.naxa.v3.ProjectListActivityV3" />
+        <activity android:name="org.bcss.collect.naxa.v3.network.SyncActivity" />
+        <activity android:name="org.bcss.collect.naxa.forms.FieldSightFormDownloadList" />
+
+        <!--Activities from FieldSight [ends]-->
+
+        <!--Services from FieldSight [ends]-->
+
+        <service android:name="org.bcss.collect.naxa.v3.network.SyncServiceV3" />
+        <service android:name="org.bcss.collect.naxa.onboarding.XMLFormDownloadService" /> <!-- ... -->
+        <service android:name="org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!--Services from FieldSight [ends]-->
         <activity
             android:name="org.odk.collect.android.activities.MainMenuActivity"
-            android:configChanges="locale|orientation|screenSize"
-            android:exported="true" />
+            android:configChanges="locale|orientation|screenSize" />
         <activity
             android:name="org.odk.collect.android.activities.ScannerWithFlashlightActivity"
             android:screenOrientation="portrait"
@@ -105,17 +173,7 @@
         <activity
             android:name="org.odk.collect.android.activities.FormEntryActivity"
             android:configChanges="orientation"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.item/vnd.bcss.form" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.bcss.instance" />
-            </intent-filter>
-        </activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="org.odk.collect.android.activities.NotificationActivity"
             android:excludeFromRecents="true"
@@ -129,36 +187,9 @@
             android:name="org.odk.collect.android.activities.GoogleDriveActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="org.odk.collect.android.activities.InstanceChooserList">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
-            </intent-filter>
-        </activity>
-        <activity android:name="org.odk.collect.android.activities.FormChooserList">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.PICK" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
-            </intent-filter>
-        </activity>
-        <activity android:name="org.odk.collect.android.activities.FormDownloadList">
-            <intent-filter>
-                <action android:name="org.bcss.collect.android.FORM_DOWNLOAD" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
-            </intent-filter>
-        </activity>
+        <activity android:name="org.odk.collect.android.activities.InstanceChooserList" />
+        <activity android:name="org.odk.collect.android.activities.FormChooserList" />
+        <activity android:name="org.odk.collect.android.activities.FormDownloadList" />
         <activity
             android:name="org.odk.collect.android.activities.FileManagerTabs"
             android:configChanges="orientation|screenSize" />
@@ -166,64 +197,31 @@
             android:name="org.odk.collect.android.activities.GoogleSheetsUploaderActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="org.odk.collect.android.activities.InstanceUploaderList"
-            android:configChanges="orientation|screenSize">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:name="org.odk.collect.android.activities.InstanceUploaderListActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity android:name="org.odk.collect.android.activities.InstanceUploaderActivity" />
         <activity android:name="org.odk.collect.android.activities.AboutActivity" />
         <activity android:name="org.odk.collect.android.preferences.PreferencesActivity" />
-        <activity
-            android:name="org.odk.collect.android.preferences.AdminPreferencesActivity"
-            android:exported="true" />
-        <activity android:name="org.odk.collect.android.activities.ViewFormHierarchyActivity" />
-        <activity android:name="org.odk.collect.android.activities.EditFormHierarchyActivity" />
+        <activity android:name="org.odk.collect.android.preferences.AdminPreferencesActivity" />
+        <activity android:name="org.odk.collect.android.activities.FormHierarchyActivity" />
+        <activity android:name="org.odk.collect.android.activities.ViewOnlyFormHierarchyActivity" />
         <activity android:name="org.odk.collect.android.activities.GeoPointActivity" />
-        <activity android:name="org.odk.collect.android.activities.InstanceUploaderActivity">
-            <intent-filter>
-                <action android:name="org.bcss.collect.android.INSTANCE_UPLOAD" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
-            </intent-filter>
-        </activity>
         <activity
-            android:name="org.odk.collect.android.activities.GeoPointOsmMapActivity"
+            android:name="org.odk.collect.android.activities.GeoPointMapActivity"
             android:configChanges="orientation" />
         <activity
-            android:name="org.odk.collect.android.activities.GeoShapeOsmMapActivity"
-            android:configChanges="orientation" />
-        <activity
-            android:name="org.odk.collect.android.activities.GeoTraceActivity"
+            android:name="org.odk.collect.android.activities.GeoPolyActivity"
             android:configChanges="orientation" />
         <activity android:name="org.odk.collect.android.activities.BearingActivity" />
         <activity
             android:name="org.odk.collect.android.activities.SplashScreenActivity"
-            android:theme="@android:style/Theme.Dialog">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> <!-- Enable Shortcuts for Command Actions -->
-        <activity
-            android:name="org.odk.collect.android.activities.AndroidShortcuts"
-            android:label="ODK Form"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.CREATE_SHORTCUT" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:theme="@android:style/Theme.Dialog" />
         <activity android:name="org.odk.collect.android.activities.CaptureSelfieActivity" />
         <activity android:name="org.odk.collect.android.activities.CaptureSelfieActivityNewApi" />
+        <activity android:name="org.odk.collect.android.activities.WebViewActivity" />
+        <activity android:name="org.odk.collect.android.activities.CaptureSelfieVideoActivity" />
+        <activity android:name="org.odk.collect.android.activities.CaptureSelfieVideoActivityNewApi" />
+
         <!--
         Register AnalyticsReceiver and AnalyticsService to support background
         dispatching on non-Google Play devices.
@@ -240,133 +238,141 @@
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
             android:exported="false" />
-        <service android:name="org.bcss.collect.naxa.onboarding.XMLFormDownloadService" /> <!-- ... -->
-        <service android:name="org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+        <!-- ... -->
+
+        <!-- Configure this key by setting GOOGLE_MAPS_API_KEY in collect_app/secrets.properties. -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBS-JQ-dnaZ_8qsbvSyr_I3rTPFd5fJsYI" />
+            android:value="@string/GOOGLE_MAPS_API_KEY" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"
             tools:replace="android:value" /> <!-- integer/google_play_services_version -->
+
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
+            android:value="@bool/FIREBASE_CRASHLYTICS_ENABLED" />
+
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
             android:value="@bool/FIREBASE_CRASHLYTICS_ENABLED" />
 
         <uses-library
             android:name="com.google.android.maps"
             android:required="false" />
 
-        <activity
-            android:name="org.odk.collect.android.location.GeoActivity"
-            android:configChanges="orientation"
+        <!--
+             ******************External API, DO NOT CHANGE BEFORE DISCUSSING***********************
+             * The providers and activities below are available for external applications to      *
+             * integrate with and are actively in use. If one of these needs to change for some   *
+             * reason, it needs to be placed on a deprecation path so users can adapt before the  *
+             * change. If an activity needs to be renamed internally, use an activity-alias. If   *
+             * the external API needs to be expanded, introduce carefully-named actions.          *
+             **************************************************************************************
+         -->
+
+        <provider
+            android:name=".provider.FormsProvider"
+            android:authorities="org.bcss.collect.android.provider.odk.forms"
             android:exported="true" />
-        <activity android:name="org.odk.collect.android.activities.WebViewActivity" />
-        <activity android:name="org.odk.collect.android.activities.CaptureSelfieVideoActivityNewApi" />
-        <activity
-            android:name="org.bcss.collect.naxa.login.LoginActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="org.bcss.collect.naxa.project.ProjectListActivity"
-            android:exported="true"
-            android:theme="@style/AppTheme.Light" />
-        <activity
-            android:name="org.bcss.collect.naxa.site.FragmentHostActivity"
-            android:exported="true" />
-        <activity android:name="org.bcss.collect.naxa.site.ProjectDashboardActivity" />
-        <activity
-            android:name="org.bcss.collect.naxa.site.CreateSiteActivity"
-            android:exported="true" />
-        <activity
-            android:name="org.bcss.collect.naxa.survey.SurveyFormsActivity"
-            android:exported="true" />
-        <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity" />
-        <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionDetailActivity" />
-        <activity android:name="org.bcss.collect.naxa.notificationslist.NotificationListActivity" />
-        <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivity" />
-        <activity
-            android:name="org.bcss.collect.naxa.site.SiteDetailActivity"
-            android:exported="true" />
-        <activity android:name="org.bcss.collect.naxa.project.MapActivity" />
-        <activity
-            android:name="org.bcss.collect.naxa.profile.UserProfileActivity"
-            android:exported="true" />
-        <activity
-            android:name="org.bcss.collect.naxa.profile.UserActivity"
-            android:exported="true" />
-        <activity android:name="org.bcss.collect.naxa.sitedocuments.SiteDocumentsListActivity" />
-        <activity
-            android:name="org.bcss.collect.naxa.sitedocuments.ImageViewerActivity"
-            android:label="@string/title_activity_image_viewer"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity"
-            android:exported="true" />
-        <activity android:name="org.bcss.collect.naxa.educational.EducationalMaterialActivity" />
-        <activity android:name="org.bcss.collect.naxa.project.AppUpdateActivity" />
-        <activity android:name="org.odk.collect.android.activities.GeoShapeActivity" />
-        <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewTextTitleDetailsActivity" />
-        <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewImageDetailsActivity" />
-        <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewVideoDetailsActivity" />
-        <activity android:name="org.bcss.collect.naxa.sync.ContentDownloadActivity" />
-        <activity
-            android:name="org.bcss.collect.naxa.onboarding.DownloadActivity"
+        <provider
+            android:name=".provider.InstanceProvider"
+            android:authorities="org.bcss.collect.android.provider.odk.instances"
             android:exported="true" />
 
-        <receiver
-            android:name="org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver"
-            android:enabled="true"
-            android:exported="false">
+        <activity-alias
+            android:name=".activities.FormEntryActivity"
+            android:targetActivity="org.odk.collect.android.activities.FormEntryActivity">
             <intent-filter>
-                <action android:name="org.bcss.collect.android.COLLECT_SMS_SEND_ACTION" />
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.bcss.form" />
+                <data android:mimeType="vnd.android.cursor.item/vnd.bcss.instance" />
             </intent-filter>
-        </receiver>
-        <receiver
-            android:name="org.odk.collect.android.tasks.sms.SmsNotificationReceiver"
-            android:enabled="true"
-            android:exported="false">
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.InstanceChooserList"
+            android:targetActivity="org.odk.collect.android.activities.InstanceChooserList">
             <intent-filter>
-                <action android:name="org.bcss.collect.android.COLLECT_SMS_NOTIFICATION_ACTION" />
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.dir/vnd.bcss.instance" />
             </intent-filter>
-        </receiver>
+        </activity-alias>
 
-        <activity
-            android:name=".TestingActivity"
-            android:exported="true"
-            android:label="@string/title_activity_testing"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SiteProfileActivity"
-            android:exported="true"
-            android:label="@string/title_activity_site_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="org.bcss.collect.naxa.project.NotificationTestActivity"
-            android:exported="true" />
-        <activity
-            android:name="org.bcss.collect.naxa.BackupActivity"/>
+        <activity-alias
+            android:name=".activities.FormChooserList"
+            android:targetActivity="org.odk.collect.android.activities.FormChooserList">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.PICK" />
 
-        <activity android:name="org.bcss.collect.naxa.report.ReportActivity"
-            android:exported="true"/>
+                <category android:name="android.intent.category.DEFAULT" />
 
-        <activity android:name="org.bcss.collect.naxa.common.SettingsActivity" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.bcss.form" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.FormDownloadList"
+            android:targetActivity="org.odk.collect.android.activities.FormDownloadList">
+            <intent-filter>
+                <action android:name="org.odk.collect.android.FORM_DOWNLOAD" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.form" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.InstanceUploaderList"
+            android:targetActivity="org.odk.collect.android.activities.InstanceUploaderListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.InstanceUploaderActivity"
+            android:targetActivity="org.odk.collect.android.activities.InstanceUploaderActivity">
+            <intent-filter>
+                <action android:name="org.odk.collect.android.INSTANCE_UPLOAD" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="vnd.android.cursor.dir/vnd.odk.instance" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".activities.SplashScreenActivity"
+            android:targetActivity="org.odk.collect.android.activities.SplashScreenActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Enable Shortcuts for Command Actions -->
         <activity
-            android:name="org.bcss.collect.naxa.preferences.SettingsActivity"
-            android:exported="true" />
-        <!-- v3 new activity list-->
-        <activity android:name="org.bcss.collect.naxa.v3.ProjectListActivityV3"
-            android:exported="true"/>
-        <activity android:name="org.bcss.collect.naxa.v3.network.SyncActivity" />
-        <activity
+            android:name="org.odk.collect.android.activities.AndroidShortcuts"
+            android:label="ODK Form"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
-            android:name="org.bcss.collect.naxa.forms.FieldSightFormDownloadList" />
-
-        <service android:name="org.bcss.collect.naxa.v3.network.SyncServiceV3"/>
-        <!-- end of new activity list -->
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
-
 </manifest>

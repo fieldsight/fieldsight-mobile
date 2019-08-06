@@ -1,8 +1,9 @@
 package org.bcss.collect.naxa.v3.network;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.BaseLocalDataSource;
@@ -12,9 +13,7 @@ import org.bcss.collect.naxa.common.FieldSightDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Completable;
 import io.reactivex.Single;
-import io.reactivex.functions.Action;
 
 public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
 

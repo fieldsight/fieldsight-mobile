@@ -2,12 +2,14 @@ package org.bcss.collect.naxa.project;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
+
 import android.view.View;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.naxa.common.FieldSightNotificationUtils;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+
+import edu.umd.cs.findbugs.annotations.Nullable;
 
 public class NotificationTestActivity extends CollectAbstractActivity {
 

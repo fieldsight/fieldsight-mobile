@@ -1,6 +1,6 @@
 package org.bcss.collect.naxa.common.rx;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

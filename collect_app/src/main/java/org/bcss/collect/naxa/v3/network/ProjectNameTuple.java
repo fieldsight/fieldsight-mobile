@@ -1,6 +1,6 @@
 package org.bcss.collect.naxa.v3.network;
 
-import android.arch.persistence.room.ColumnInfo;
+import androidx.room.ColumnInfo;
 
 public class ProjectNameTuple {
     @ColumnInfo(name = "project_id")

@@ -1,17 +1,17 @@
 package org.bcss.collect.naxa.sync;
 
-import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;
 import org.odk.collect.android.utilities.DateTimeUtils;
@@ -117,16 +117,16 @@ public class DownloadContentViewHolder extends RecyclerView.ViewHolder {
             case FAILED:
                 showProgress(false);
                 String formattedMessage = String.format("Failed %s \nReason: %s", DateTimeUtils.getRelativeTime(item.getLastSyncDateTime(), false), item.getErrorMessage());
-                statusIcon.setImageResource(R.drawable.exclamation);
+//                statusIcon.setImageResource(R.drawable.exclamation);
                 tvUpdatedInfo.setVisibility(View.VISIBLE);
-                tvUpdatedInfo.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.red));
+                tvUpdatedInfo.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.red_500));
                 tvUpdatedInfo.setText(formattedMessage);
 
                 break;
             case COMPLETED:
                 showProgress(false);
                 String message = String.format("Synced %s", DateTimeUtils.getRelativeTime(item.getLastSyncDateTime(), false));
-                statusIcon.setImageResource(R.drawable.check);
+//                statusIcon.setImageResource(R.drawable.check);
                 tvUpdatedInfo.setVisibility(View.VISIBLE);
                 tvUpdatedInfo.setText(message);
                 tvUpdatedInfo.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.green));

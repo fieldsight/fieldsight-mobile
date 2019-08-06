@@ -26,7 +26,7 @@ import org.bcss.collect.android.R;
 import org.bcss.collect.android.fragments.Camera2Fragment;
 import org.odk.collect.android.utilities.ToastUtils;
 
-import static org.odk.collect.android.utilities.PermissionUtils.checkIfCameraPermissionGranted;
+import static org.odk.collect.android.utilities.PermissionUtils.isCameraPermissionGranted;
 
 
 
@@ -37,7 +37,7 @@ public class CaptureSelfieActivityNewApi extends CollectAbstractActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!checkIfCameraPermissionGranted(this)) {
+        if (!isCameraPermissionGranted(this)) {
             finish();
             return;
         }

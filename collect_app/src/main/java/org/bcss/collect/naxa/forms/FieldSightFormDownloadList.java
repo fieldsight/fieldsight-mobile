@@ -27,14 +27,15 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.adapters.FormDownloadListAdapter;
@@ -44,7 +45,6 @@ import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
 import org.bcss.collect.android.listeners.FormListDownloaderListener;
 import org.bcss.collect.android.listeners.PermissionListener;
 import org.bcss.collect.android.logic.FormDetails;
-
 import org.bcss.collect.naxa.common.FieldSightUserSession;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.network.APIEndpoint;
@@ -53,11 +53,13 @@ import org.bcss.collect.naxa.onboarding.XMLFormBuilder;
 import org.bcss.collect.naxa.task.FieldSightDownloadFormListTask;
 import org.odk.collect.android.activities.FormListActivity;
 import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.DialogUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
@@ -78,7 +80,6 @@ import static org.bcss.collect.naxa.common.Constant.EXTRA_ID;
 import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
 import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
-import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePermissions;
 
 
 /**
@@ -177,12 +178,14 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.remote_file_manage_list);
-        getComponent().inject(this);
+        DaggerUtils.getComponent(this).inject(this);
+
+        setContentView(R.layout.form_download_list);
+
         setTitle(getString(R.string.get_forms));
 
         // This activity is accessed directly externally
-        requestStoragePermissions(this, new PermissionListener() {
+        new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
@@ -363,8 +366,8 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setItemsCanFocus(false);
 
-        sortingOptions = new String[]{
-                getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc)
+        sortingOptions = new int[]{
+                R.string.sort_by_name_asc, R.string.sort_by_name_desc
         };
     }
 

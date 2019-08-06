@@ -1,7 +1,7 @@
 package org.bcss.collect.naxa.profile;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.naxa.common.FieldSightUserSession;

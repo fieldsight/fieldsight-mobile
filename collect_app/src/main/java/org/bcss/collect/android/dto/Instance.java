@@ -16,7 +16,8 @@
 
 package org.bcss.collect.android.dto;
 
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 /**
  * This class represents a single row from the instances table which is located in

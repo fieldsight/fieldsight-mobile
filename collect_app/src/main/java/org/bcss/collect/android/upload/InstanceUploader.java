@@ -17,8 +17,8 @@ package org.bcss.collect.android.upload;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.dto.Instance;
@@ -34,6 +34,8 @@ import java.util.List;
 import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.AUTO_DELETE;
 
 public abstract class InstanceUploader {
+    static final String FAIL = "Error: ";
+
     /**
      * Uploads the specified instance to the specified destination URL. It may return a custom
      * success message on completion or null if none is available. Errors result in an UploadException.
@@ -120,7 +122,7 @@ public abstract class InstanceUploader {
     public static boolean formShouldBeAutoDeleted(String jrFormId, boolean isAutoDeleteAppSettingEnabled) {
         String autoDelete = null;
         try (Cursor cursor = new FormsDao().getFormsCursorForFormId(jrFormId)) {
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 int autoDeleteColumnIndex = cursor.getColumnIndex(AUTO_DELETE);
                 autoDelete = cursor.getString(autoDeleteColumnIndex);
             }

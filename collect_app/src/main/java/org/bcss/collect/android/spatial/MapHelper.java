@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabaseCorruptException;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 
@@ -35,7 +36,7 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
-import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.osmdroid.tileprovider.IRegisterReceiver;
 import org.osmdroid.tileprovider.tilesource.ITileSource;
@@ -44,20 +45,19 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.TilesOverlay;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 public class MapHelper {
     private static final String OFFLINE_LAYER_TAG = " (custom, offline)";
+    private static final String SLASH = File.separator;
 
     private static SharedPreferences sharedPreferences;
-    public static String[] offilineOverlays;
+    private static String[] offilineOverlays;
     private static final String NO_FOLDER_KEY = "None";
-
-    public GoogleMap googleMap;
-    public MapView osmMap;
 
     // GOOGLE MAPS BASEMAPS
     private static final String GOOGLE_MAP_STREETS = "streets";
@@ -75,49 +75,59 @@ public class MapHelper {
     private static final String OPENMAP_CARTODB_DARKMATTER = "openmap_cartodb_darkmatter";
     private int selectedLayer;
 
-    public static String[] geofileTypes = new String[]{".mbtiles", ".kml", ".kmz"};
-    private static final String SLASH = File.separator;
-
     private TilesOverlay osmTileOverlay;
     private TileOverlay googleTileOverlay;
+
     private IRegisterReceiver iregisterReceiver;
 
+    private final GoogleMap googleMap;
+    private final MapView osmMap;
     private final org.bcss.collect.android.spatial.TileSourceFactory tileFactory;
-
     private final Context context;
 
-    public MapHelper(Context context, GoogleMap googleMap) {
+    public MapHelper(Context context) {
         this.context = context;
-        this.googleMap = null;
+        googleMap = null;
+        osmMap = null;
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        offilineOverlays = getOfflineLayerList();
+        tileFactory = new org.bcss.collect.android.spatial.TileSourceFactory(context);
+    }
+
+    public MapHelper(Context context, GoogleMap googleMap, Integer selectedLayer) {
+        this.context = context;
         osmMap = null;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         offilineOverlays = getOfflineLayerList();
         this.googleMap = googleMap;
         tileFactory = new org.bcss.collect.android.spatial.TileSourceFactory(context);
+        this.selectedLayer = selectedLayer == null ? 0 : selectedLayer;
     }
 
-    public MapHelper(Context context, MapView osmMap, IRegisterReceiver iregisterReceiver) {
+    public MapHelper(Context context, MapView osmMap, IRegisterReceiver iregisterReceiver, Integer selectedLayer) {
         this.context = context;
         googleMap = null;
-        this.osmMap = null;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         offilineOverlays = getOfflineLayerList();
         this.iregisterReceiver = iregisterReceiver;
         this.osmMap = osmMap;
         tileFactory = new org.bcss.collect.android.spatial.TileSourceFactory(context);
+        this.selectedLayer = selectedLayer == null ? 0 : selectedLayer;
     }
 
     private static String getGoogleBasemap() {
-        return sharedPreferences.getString(PreferenceKeys.KEY_MAP_BASEMAP, GOOGLE_MAP_STREETS);
+        return sharedPreferences.getString(GeneralKeys.KEY_MAP_BASEMAP, GOOGLE_MAP_STREETS);
     }
 
     private static String getOsmBasemap() {
-        return sharedPreferences.getString(PreferenceKeys.KEY_MAP_BASEMAP, OPENMAP_STREETS);
+        return sharedPreferences.getString(GeneralKeys.KEY_MAP_BASEMAP, OPENMAP_STREETS);
     }
 
     public void setBasemap() {
         if (googleMap != null) {
-            String basemap = getGoogleBasemap();
+            String basemap = selectedLayer == 0 || selectedLayer >= offilineOverlays.length
+                    ? getGoogleBasemap()
+                    : offilineOverlays[selectedLayer];
             switch (basemap) {
                 case GOOGLE_MAP_STREETS:
                     googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -140,10 +150,10 @@ public class MapHelper {
             }
         } else if (osmMap != null) {
             //OSMMAP
-            String basemap = getOsmBasemap();
-
             ITileSource tileSource = null;
-
+            String basemap = selectedLayer == 0 || selectedLayer >= offilineOverlays.length
+                    ? getOsmBasemap()
+                    : offilineOverlays[selectedLayer];
             switch (basemap) {
                 case OPENMAP_USGS_TOPO:
                     tileSource = tileFactory.getUSGSTopo();
@@ -181,15 +191,19 @@ public class MapHelper {
                 osmMap.setTileSource(tileSource);
             }
         }
+        // setBasemap doesn't do anything in Mapbox mode; MapboxMapFragment will
+        // set the basemap according to the preferences.  This inconsistency
+        // between Mapbox and the other (Google, OSM) modes will be cleaned up
+        // when we reorganize the preferences for maps.
     }
 
     private boolean useOfflineBasemapIfAvailable(String basemap) {
         if (basemap.contains(OFFLINE_LAYER_TAG)) {
-            String originalLayerName = basemap.substring(0, basemap.indexOf(OFFLINE_LAYER_TAG));
-            if (Arrays.asList(offilineOverlays).contains(originalLayerName)) {
-                setOfflineBasemap(Arrays.asList(offilineOverlays).indexOf(originalLayerName));
-                return true;
-            }
+            basemap = basemap.substring(0, basemap.indexOf(OFFLINE_LAYER_TAG));
+        }
+        if (Arrays.asList(offilineOverlays).contains(basemap)) {
+            setOfflineBasemap(Arrays.asList(offilineOverlays).indexOf(basemap));
+            return true;
         }
         return false;
     }
@@ -222,14 +236,17 @@ public class MapHelper {
     }
 
     public void showLayersDialog() {
+        if (googleMap == null && osmMap == null) {
+            // The layers dialog doesn't work with the Mapbox SDK yet.  This
+            // will be fixed when we add offline tile support for Mapbox.
+            return;
+        }
         AlertDialog.Builder layerDialod = new AlertDialog.Builder(context);
         layerDialod.setTitle(context.getString(R.string.select_offline_layer));
         layerDialod.setSingleChoiceItems(offilineOverlays,
-                selectedLayer, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        setOfflineBasemap(item);
-                        dialog.dismiss();
-                    }
+                selectedLayer, (dialog, item) -> {
+                    setOfflineBasemap(item);
+                    dialog.dismiss();
                 });
         layerDialod.show();
     }
@@ -242,14 +259,15 @@ public class MapHelper {
                         googleTileOverlay.remove();
                     }
 
-                } else {
-                    //OSM
+                }
+                if (osmMap != null) {
                     if (osmTileOverlay != null) {
                         osmMap.getOverlays().remove(osmTileOverlay);
                         osmMap.invalidate();
                     }
                 }
                 selectedLayer = item;
+                setBasemap();
                 break;
             default:
                 File[] spFiles = getFileFromSelectedItem(item);
@@ -273,7 +291,8 @@ public class MapHelper {
                             } catch (Exception e) {
                                 break;
                             }
-                        } else {
+                        }
+                        if (osmMap != null) {
                             if (osmTileOverlay != null) {
                                 osmMap.getOverlays().remove(osmTileOverlay);
                                 osmMap.invalidate();
@@ -297,27 +316,35 @@ public class MapHelper {
 
     private File[] getFileFromSelectedItem(int item) {
         File directory = new File(Collect.OFFLINE_LAYERS + SLASH + offilineOverlays[item]);
-        return directory.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                return filename.toLowerCase(Locale.US).endsWith(".mbtiles");
-            }
-        });
+        return directory.listFiles((dir, filename) -> filename.toLowerCase(Locale.US).endsWith(".mbtiles"));
     }
 
     // osmdroid doesn't currently support pbf tiles: https://github.com/osmdroid/osmdroid/issues/101
     private boolean isFileFormatSupported(File file) {
         boolean result = true;
         SQLiteDatabase db = SQLiteDatabase.openDatabase(file.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
-        Cursor cursor = db.rawQuery("SELECT * FROM metadata where name =?", new String[]{"format"});
-        if (cursor != null && cursor.getCount() == 1) {
-            try {
-                cursor.moveToFirst();
-                result = !"pbf".equals(cursor.getString(cursor.getColumnIndex("value")));
-            } finally {
-                cursor.close();
+        try {
+            Cursor cursor = db.rawQuery("SELECT * FROM metadata where name =?", new String[]{"format"});
+            if (cursor != null && cursor.getCount() == 1) {
+                try {
+                    cursor.moveToFirst();
+                    result = !"pbf".equals(cursor.getString(cursor.getColumnIndex("value")));
+                } finally {
+                    cursor.close();
+                }
             }
+        } catch (SQLiteDatabaseCorruptException e) {
+            Timber.w(e);
         }
         return result;
+    }
+
+    /**
+     * If the current basemap is an offline layer, returns the index (1-x) of the offline
+     * layer's filename in the list of all the filenames ending in ".mbtiles" in the
+     * Collect.OFFLINE_LAYERS directory, otherwise returns 0 (None).
+     */
+    public int getSelectedLayer() {
+        return selectedLayer;
     }
 }

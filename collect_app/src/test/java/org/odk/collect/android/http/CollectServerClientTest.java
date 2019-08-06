@@ -1,18 +1,13 @@
 package org.odk.collect.android.http;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.http.CollectServerClient;
-import org.odk.collect.android.injection.DaggerTestComponent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.injection.TestComponent;
+import org.odk.collect.android.http.mock.MockHttpClientConnection;
+import org.odk.collect.android.http.mock.MockHttpClientConnectionError;
 import org.odk.collect.android.utilities.DocumentFetchResult;
+import org.odk.collect.android.utilities.WebCredentialsUtils;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
@@ -23,18 +18,13 @@ public class CollectServerClientTest {
 
     static final String URL_STRING = "http://testurl";
 
-    @Inject
-    @Named("StubbedData")
     CollectServerClient collectServerClient;
-
-    @Inject
-    @Named("NullGet") CollectServerClient collectServerClientError;
+    CollectServerClient collectServerClientError;
 
     @Before
     public void setup() {
-        TestComponent testComponent = DaggerTestComponent.builder().application(RuntimeEnvironment.application).build();
-        ((Collect) RuntimeEnvironment.application).setComponent(testComponent);
-        testComponent.inject(this);
+        collectServerClient = new CollectServerClient(new MockHttpClientConnection(), new WebCredentialsUtils());
+        collectServerClientError = new CollectServerClient(new MockHttpClientConnectionError(), new WebCredentialsUtils());
     }
 
     @Test

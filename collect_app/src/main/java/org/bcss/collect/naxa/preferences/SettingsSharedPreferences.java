@@ -17,7 +17,9 @@ package org.bcss.collect.naxa.preferences;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
+
+
+import androidx.annotation.Nullable;
 
 import org.bcss.collect.android.application.Collect;
 import org.odk.collect.android.tasks.ServerPollingJob;
@@ -27,8 +29,9 @@ import java.util.Set;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.preferences.PreferenceKeys.GENERAL_KEYS;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
+import static org.odk.collect.android.preferences.GeneralKeys.GENERAL_KEYS;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_PERIODIC_FORM_UPDATES_CHECK;
+
 
 public class SettingsSharedPreferences {
 
