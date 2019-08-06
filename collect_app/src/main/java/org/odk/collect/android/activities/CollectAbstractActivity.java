@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -31,7 +30,7 @@ import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.injection.config.AppComponent;
 import org.bcss.collect.naxa.common.DialogFactory;
 import org.bcss.collect.naxa.common.ViewUtils;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -112,7 +111,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
                 progressDialog.show();
             }
         } catch (Exception e) {
-            FlashBarUtils.showFlashbar(this, e.getMessage());
+            SnackBarUtils.showFlashbar(this, e.getMessage());
             Timber.e(e);
         }
 
@@ -131,7 +130,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
-            FlashBarUtils.showFlashbar(this, e.getMessage());
+            SnackBarUtils.showFlashbar(this, e.getMessage());
             Timber.e(e);
         }
     }

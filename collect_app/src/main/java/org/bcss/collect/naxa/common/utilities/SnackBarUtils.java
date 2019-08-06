@@ -19,8 +19,7 @@ import java.util.ArrayList;
 
 import timber.log.Timber;
 
-public class FlashBarUtils {
-
+public class SnackBarUtils {
 
 
     public static void showErrorFlashbar(@NonNull Activity context, @NonNull String message) {
@@ -39,17 +38,19 @@ public class FlashBarUtils {
             return;
         }
 
+        ToastUtils.showLongToast(message);
 
-        try {
-            View rootView = context.getWindow().getDecorView().getRootView();
-            Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
-            SnackbarHelper.configSnackbar(context, snack);
-            snack.show();
-        } catch (Exception e) {
-            Timber.e(e);
-            ToastUtils.showLongToast(message);
-
-
-        }
+//
+//        try {
+//            View rootView = context.getWindow().getDecorView().getRootView();
+//            Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
+//            SnackbarHelper.configSnackbar(context, snack);
+//            snack.show();
+//        } catch (Exception e) {
+//            Timber.e(e);
+//            ToastUtils.showLongToast(message);
+//
+//
+//        }
     }
 }

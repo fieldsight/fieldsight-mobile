@@ -17,7 +17,6 @@ import java.util.concurrent.Callable;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import timber.log.Timber;
 
 import static org.bcss.collect.naxa.common.Constant.SiteStatus.IS_ONLINE;
 
@@ -56,9 +55,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteByProjectIdAsSingle(projectId);
     }
 
-    public LiveData<List<Site>> getAllParentSite(String projectId){
+    public LiveData<List<Site>> getAllParentSite(String projectId) {
         return dao.getParentSite(projectId);
     }
+
     public LiveData<List<String>> getAllDistinctProjectIds() {
         return dao.getAllDistictProject();
     }
@@ -82,7 +82,6 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
-
     //todo return affected rows count
     public LiveData<Integer> delete(Site site) {
         MutableLiveData<Integer> affectedRowsMutData = new MutableLiveData<>();
@@ -92,17 +91,15 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
-    public List<Site> searchSites(String searchQuery,String projectId) {
+    public List<Site> searchSites(String searchQuery, String projectId) {
 
-        return dao.searchSites(searchQuery,projectId);
+        return dao.searchSites(searchQuery, projectId);
     }
 
     @Override
     public void save(Site... items) {
         AsyncTask.execute(() -> dao.insert(items));
     }
-
-
 
 
     public Completable saveAsCompletable(Site... sites) {
@@ -173,4 +170,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getAllByStatus(siteStatus);
     }
 
+    public Single<Site> getSiteByIdAsSingle(String siteId) {
+        return dao.getSiteByIdAsSingle(siteId);
+    }
 }

@@ -2,7 +2,6 @@ package org.bcss.collect.naxa.project;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.LiveDataReactiveStreams;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -19,7 +18,7 @@ import android.view.ViewGroup;
 import org.bcss.collect.android.R;
 import org.bcss.collect.android.application.Collect;
 import org.bcss.collect.android.spatial.MapHelper;
-import org.bcss.collect.naxa.common.utilities.FlashBarUtils;
+import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
 import org.bcss.collect.naxa.site.SiteInfoWindow;
@@ -34,7 +33,6 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +181,7 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
 
                     @Override
                     public void onError(Throwable e) {
-                        FlashBarUtils.showErrorFlashbar(getActivity(), "Failed to plot on map");
+                        SnackBarUtils.showErrorFlashbar(getActivity(), "Failed to plot on map");
                         e.printStackTrace();
                     }
                 });
