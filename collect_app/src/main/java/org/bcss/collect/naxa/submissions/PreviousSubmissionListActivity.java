@@ -103,6 +103,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
 
         offlineLatestResponse = null;
         urlFirstPage = FieldSightUserSession.getServerUrl(this) + "/forms/api/responses/" + fsFormId + "/" + siteId;
+        Timber.i(urlFirstPage);
         count = bundle.getString("count");
 
         bindUI();

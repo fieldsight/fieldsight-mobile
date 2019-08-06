@@ -46,8 +46,6 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
 
     @Override
     public void getAll() {
-
-
         getPageAndNext(APIEndpoint.GET_ALL_SUBMISSION)
                 .toList()
                 .subscribeOn(Schedulers.io())
