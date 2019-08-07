@@ -10,11 +10,12 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.GlideApp;
 
 import java.util.List;
 
@@ -113,10 +114,9 @@ public class SiteDocumentsAdapter extends RecyclerView.Adapter<SiteDocumentsAdap
             return;
         }
 
-        GlideApp.with(holder.imageView.getContext())
+        Glide.with(holder.imageView.getContext())
                 .load(url)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .apply(new RequestOptions().centerCrop().diskCacheStrategy(DiskCacheStrategy.ALL))
                 .into(holder.imageView);
     }
 
