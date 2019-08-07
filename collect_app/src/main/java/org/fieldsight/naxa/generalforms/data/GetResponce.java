@@ -3,8 +3,12 @@ package org.fieldsight.naxa.generalforms.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import org.fieldsight.naxa.common.GSONInstance;
+
 
 public class GetResponce implements Parcelable {
 
@@ -13,7 +17,7 @@ public class GetResponce implements Parcelable {
     private String answer;
     @SerializedName("question")
     @Expose
-    private String question;
+    private Object question;
     @SerializedName("type")
     @Expose
     private String type;
@@ -22,11 +26,7 @@ public class GetResponce implements Parcelable {
         return answer;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public String getQuestion() {
+    public Object getQuestion() {
         return question;
     }
 
@@ -49,8 +49,14 @@ public class GetResponce implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        boolean isKeyValuePair = question.toString().startsWith("{") && question.toString().endsWith("}") && question.toString().contains("=") && question.toString().contains(",");
+
         dest.writeString(this.answer);
-        dest.writeString(this.question);
+        if (isKeyValuePair) {
+            dest.writeString(GSONInstance.getInstance().toJson(this.question));
+        } else {
+            dest.writeString(this.question.toString());
+        }
         dest.writeString(this.type);
     }
 

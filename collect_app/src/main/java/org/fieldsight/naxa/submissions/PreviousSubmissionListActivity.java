@@ -99,6 +99,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
 
         offlineLatestResponse = null;
         urlFirstPage = FieldSightUserSession.getServerUrl(this) + "/forms/api/responses/" + fsFormId + "/" + siteId;
+        Timber.i(urlFirstPage);
         count = bundle.getString("count");
 
         bindUI();
@@ -353,10 +354,11 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         Intent toFormDetail = new Intent(this, PreviousSubmissionDetailActivity.class);
         toFormDetail.putExtra(EXTRA_OBJECT, form);
         toFormDetail.putExtra(Constant.EXTRA_MESSAGE, fsFormRecordName);
+        startActivity(toFormDetail);
 
-        String transitionName = getString(R.string.transition_previous_submission);
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, transitionName);
-        ActivityCompat.startActivity(this, toFormDetail, options.toBundle());
+//        String transitionName = getString(R.string.transition_previous_submission);
+//        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, transitionName);
+//        ActivityCompat.startActivity(this, toFormDetail, options.toBundle());
     }
 
     private void hideNoDataLayout() {

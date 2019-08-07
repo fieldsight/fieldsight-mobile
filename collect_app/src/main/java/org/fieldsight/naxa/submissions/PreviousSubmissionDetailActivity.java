@@ -3,13 +3,10 @@ package org.fieldsight.naxa.submissions;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,21 +18,25 @@ import org.fieldsight.naxa.generalforms.data.FormResponse;
 import org.fieldsight.naxa.generalforms.data.GetResponce;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 
 public class PreviousSubmissionDetailActivity extends CollectAbstractActivity implements MultiViewAdapter.OnCardClickListener {
 
     Toolbar toolbar;
-    TextView tvQuestionAnswer;
+
     RecyclerView rvFormHistory;
     ArrayList<ViewModel> answers = new ArrayList<>();
     private MultiViewAdapter adapter;
-    private NestedScrollView nestedScroll;
 
 
     @Override
@@ -59,9 +60,7 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
     private void bindUI() {
         toolbar = findViewById(R.id.toolbar);
-        tvQuestionAnswer = findViewById(R.id.tv_question_answer);
         rvFormHistory = findViewById(R.id.form_history_detail_recycler_view);
-        nestedScroll = findViewById(R.id.form_history_nested_scroll);
     }
 
     private void setupToolBar(FormResponse model) {
@@ -86,6 +85,7 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
     private void setupRecyclerView() {
         adapter = new MultiViewAdapter();
+
         adapter.setOnCardClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rvFormHistory.setLayoutManager(linearLayoutManager);
@@ -98,38 +98,52 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
     }
 
     private void mapJSONtoViewModel(@NonNull final List<GetResponce> submissions) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
 
-                ViewModel answer;
+        AsyncTask.execute(() -> {
+            ViewModel answer;
 
-                for (int i = 0; i < submissions.size(); i++) {
-                    GetResponce response = submissions.get(i);
-                    switch (response.getType()) {
-                        case "start":
-                        case "end":
-                        case "calculate":
-                        case "submitted_by":
-                        case "submittion_time":
-                            continue;
-
-                    }
-
-                    answer = new ViewModel(response.getQuestion(), response.getAnswer(), "id", "id");
-                    answers.add(answer);
+            for (int i = 0; i < submissions.size(); i++) {
+                GetResponce response = submissions.get(i);
+                switch (response.getType()) {
+                    case "start":
+                    case "end":
+                    case "calculate":
+                    case "submitted_by":
+                    case "submittion_time":
+                        continue;
 
                 }
 
-                adapter.addAll(answers);
+                StringBuilder question = new StringBuilder(response.getQuestion().toString());
+                try {
+                    JSONObject questionJson = new JSONObject(question.toString());
+                    Iterator<String> keys = questionJson.keys();
+                    if (keys.hasNext()) {
+                        question.setLength(0);
+                    }
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        question.append(questionJson.getString(key));
+                        if (keys.hasNext()) {
+                            question.append("\n");
+                        }
+                    }
+                } catch (JSONException e) {
+                    Timber.e(e);
+                }
+
+                answer = new ViewModel(question.toString(), response.getAnswer(), "id", "id");
+                answers.add(answer);
+
             }
+
+
+            adapter.updateList(answers);
+
+
         });
 
-
     }
-
-
-
 
     private String formatSubmissionDateTime(String dateTime) {
 
