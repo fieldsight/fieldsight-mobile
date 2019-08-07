@@ -44,12 +44,12 @@ import androidx.work.WorkStatus;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.adapters.InstanceUploaderAdapter;
-import org.bcss.collect.android.listeners.DiskSyncListener;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.upload.AutoSendWorker;
-import org.bcss.collect.naxa.login.model.Site;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.adapters.InstanceUploaderAdapter;
+import org.odk.collect.android.listeners.DiskSyncListener;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.upload.AutoSendWorker;
+import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
@@ -73,7 +73,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 import static org.odk.collect.android.tasks.sms.SmsSender.SMS_INSTANCE_ID;

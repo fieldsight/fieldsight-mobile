@@ -41,14 +41,14 @@ import android.widget.ListView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.drive.Drive;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.adapters.FileArrayAdapter;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.exception.MultipleFoldersFoundException;
-import org.bcss.collect.android.listeners.GoogleDriveFormDownloadListener;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.listeners.TaskListener;
-import org.bcss.collect.android.logic.DriveListItem;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.adapters.FileArrayAdapter;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.MultipleFoldersFoundException;
+import org.odk.collect.android.listeners.GoogleDriveFormDownloadListener;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.listeners.TaskListener;
+import org.odk.collect.android.logic.DriveListItem;
 import org.odk.collect.android.injection.DaggerUtils;
 
 import org.odk.collect.android.utilities.DialogUtils;

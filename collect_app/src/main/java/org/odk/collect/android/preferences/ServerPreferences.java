@@ -22,7 +22,7 @@ import android.preference.Preference;
 import androidx.annotation.Nullable;
 import android.view.View;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.PreferencesActivity.INTENT_KEY_ADMIN_MODE;

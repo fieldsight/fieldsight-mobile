@@ -18,7 +18,7 @@ package org.odk.collect.android.utilities;
 
 import android.util.DisplayMetrics;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 
 public class ScreenUtils {
 

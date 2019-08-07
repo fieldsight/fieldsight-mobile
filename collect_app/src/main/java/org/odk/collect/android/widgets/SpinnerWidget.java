@@ -28,9 +28,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.AdvanceToNextListener;
-import org.bcss.collect.android.views.ScrolledToTopSpinner;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.listeners.AdvanceToNextListener;
+import org.odk.collect.android.views.ScrolledToTopSpinner;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;

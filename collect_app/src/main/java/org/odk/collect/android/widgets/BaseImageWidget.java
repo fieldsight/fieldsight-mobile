@@ -34,8 +34,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;

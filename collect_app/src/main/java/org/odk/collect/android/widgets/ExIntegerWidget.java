@@ -22,12 +22,11 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 
-import org.bcss.collect.android.external.ExternalAppsUtils;
+import org.odk.collect.android.external.ExternalAppsUtils;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.IntegerData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.external.ExternalAppsUtils;
+import org.fieldsight.collect.android.R;
 import org.odk.collect.android.utilities.ToastUtils;
 
 

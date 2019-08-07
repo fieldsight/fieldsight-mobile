@@ -18,8 +18,8 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.bcss.collect.android.listeners.DeleteFormsListener;
-import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
+import org.odk.collect.android.listeners.DeleteFormsListener;
+import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 
 import timber.log.Timber;
 

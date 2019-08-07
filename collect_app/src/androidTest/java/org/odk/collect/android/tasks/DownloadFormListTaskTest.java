@@ -1,6 +1,6 @@
 package org.odk.collect.android.tasks;
 
-import org.bcss.collect.android.logic.FormDetails;
+import org.odk.collect.android.logic.FormDetails;
 import org.junit.Test;
 import org.odk.collect.android.test.MockedServerTest;
 

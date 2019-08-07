@@ -8,7 +8,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 
-import org.bcss.collect.android.listeners.Result;
+import org.odk.collect.android.listeners.Result;
 
 /**
  * Created by Ing. Oscar G. Medina Cruz on 18/06/2016.

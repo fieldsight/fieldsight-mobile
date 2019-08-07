@@ -1,7 +1,7 @@
 package org.odk.collect.android.preferences;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 
 import java.util.Arrays;
 import java.util.Collection;

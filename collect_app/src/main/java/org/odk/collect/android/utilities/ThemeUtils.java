@@ -23,7 +23,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.StyleRes;
 import android.util.TypedValue;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
 

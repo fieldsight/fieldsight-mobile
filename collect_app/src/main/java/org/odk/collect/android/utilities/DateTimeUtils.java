@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.Build;
 import android.text.format.DateUtils;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.logic.DatePickerDetails;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.logic.DatePickerDetails;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;

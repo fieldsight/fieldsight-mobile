@@ -6,13 +6,13 @@ import android.telephony.SmsManager;
 
 import com.google.android.gms.analytics.Tracker;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.events.RxEventBus;
-import org.bcss.collect.android.http.CollectServerClient;
-import org.bcss.collect.android.http.HttpClientConnection;
-import org.bcss.collect.android.http.OpenRosaHttpInterface;
+import org.odk.collect.android.events.RxEventBus;
+import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.http.HttpClientConnection;
+import org.odk.collect.android.http.OpenRosaHttpInterface;
 import org.odk.collect.android.tasks.sms.SmsSubmissionManager;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.utilities.PermissionUtils;

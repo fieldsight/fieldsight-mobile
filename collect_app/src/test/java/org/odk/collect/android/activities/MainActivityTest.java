@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

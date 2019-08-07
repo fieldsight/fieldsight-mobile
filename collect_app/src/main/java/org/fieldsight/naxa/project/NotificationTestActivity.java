@@ -1,0 +1,45 @@
+package org.fieldsight.naxa.project;
+
+import android.os.Bundle;
+import android.os.Handler;
+
+import android.view.View;
+
+import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.common.FieldSightNotificationUtils;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+
+import edu.umd.cs.findbugs.annotations.Nullable;
+
+public class NotificationTestActivity extends CollectAbstractActivity {
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test_notification);
+
+    }
+
+    public void showNotification(View view) {
+        FieldSightNotificationUtils.getINSTANCE().notifyNormal("Normal", "Body");
+    }
+
+
+    public void showHeadsUp(View view) {
+        FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp("Head's up", "Body");
+    }
+
+    public void showProgress(View view) {
+        FieldSightNotificationUtils.getINSTANCE().notifyProgress("A long running task", "running", FieldSightNotificationUtils.ProgressType.UPLOAD);
+    }
+
+    public void showDownload(View view) {
+        int id = FieldSightNotificationUtils.getINSTANCE().notifyProgress("A long running task", "running", FieldSightNotificationUtils.ProgressType.DOWNLOAD);
+        new Handler().postDelayed(() -> {
+            FieldSightNotificationUtils.getINSTANCE().cancelNotification(id);
+        }, 2000);
+
+    }
+
+}

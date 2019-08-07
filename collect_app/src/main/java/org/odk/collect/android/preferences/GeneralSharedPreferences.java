@@ -18,7 +18,7 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.tasks.ServerPollingJob;
 
 import java.util.Map;

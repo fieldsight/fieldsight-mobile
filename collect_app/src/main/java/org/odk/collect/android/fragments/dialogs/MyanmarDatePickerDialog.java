@@ -16,8 +16,7 @@
 
 package org.odk.collect.android.fragments.dialogs;
 
-import org.bcss.collect.android.fragments.dialogs.CustomDatePickerDialog;
-import org.bcss.collect.android.logic.DatePickerDetails;
+import org.odk.collect.android.logic.DatePickerDetails;
 import org.javarosa.core.model.FormIndex;
 import org.joda.time.LocalDateTime;
 import org.odk.collect.android.utilities.MyanmarDateUtils;

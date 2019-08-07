@@ -16,9 +16,9 @@ package org.odk.collect.android.utilities;
 
 import androidx.annotation.NonNull;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.exception.BadUrlException;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.BadUrlException;
 
 public class UrlUtils {
 

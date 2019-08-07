@@ -18,9 +18,8 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.naxa.contact.ProjectContactsFragment;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormChooserList;
 import org.odk.collect.android.activities.FormDownloadList;

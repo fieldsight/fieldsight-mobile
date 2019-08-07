@@ -27,7 +27,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.DatePicker;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.joda.time.LocalDateTime;
 

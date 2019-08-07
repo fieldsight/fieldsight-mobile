@@ -20,7 +20,7 @@ import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 
 /**
  * Implementation of cursor adapter that displays the version of a form if a form has a version.

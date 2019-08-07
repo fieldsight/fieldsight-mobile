@@ -29,12 +29,12 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.login.LoginActivity;
-import org.bcss.collect.naxa.v3.ProjectListActivityV3;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.login.LoginActivity;
+import org.fieldsight.naxa.v3.ProjectListActivityV3;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.utilities.DialogUtils;

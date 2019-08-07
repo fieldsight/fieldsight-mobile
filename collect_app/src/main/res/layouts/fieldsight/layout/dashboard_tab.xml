@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:parentTag="androidx.coordinatorlayout.widget.CoordinatorLayout">
 
-    <org.bcss.collect.naxa.common.NonSwipeableViewPager
+    <org.fieldsight.naxa.common.NonSwipeableViewPager
 
         android:id="@+id/pager"
         android:layout_width="match_parent"

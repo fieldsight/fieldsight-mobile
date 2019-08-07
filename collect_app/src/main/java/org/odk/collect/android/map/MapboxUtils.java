@@ -6,9 +6,9 @@ import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.Mapbox;
 
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+import org.fieldsight.collect.android.BuildConfig;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 
 
 public class MapboxUtils {

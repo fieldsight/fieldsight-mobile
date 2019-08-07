@@ -7,7 +7,7 @@
     android:background="@color/colorPrimary"
 
 
-    tools:context=".SiteProfileActivity">
+    tools:context="org.odk.collect.android.SiteProfileActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_flexible"
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
-            tools:context=".SiteProfileActivity"
+            tools:context="org.odk.collect.android.SiteProfileActivity"
             tools:showIn="@layout/activity_site_profile">
 
             <androidx.cardview.widget.CardView

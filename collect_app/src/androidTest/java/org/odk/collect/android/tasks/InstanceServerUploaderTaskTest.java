@@ -3,8 +3,8 @@ package org.odk.collect.android.tasks;
 import android.net.Uri;
 import androidx.test.rule.GrantPermissionRule;
 
-import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

@@ -38,10 +38,10 @@ import android.preference.PreferenceManager;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.InstanceUploaderListener;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.listeners.InstanceUploaderListener;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.injection.DaggerUtils;
 

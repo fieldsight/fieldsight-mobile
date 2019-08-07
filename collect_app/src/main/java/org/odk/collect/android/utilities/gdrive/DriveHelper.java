@@ -25,7 +25,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.Permission;
 
-import org.bcss.collect.android.exception.MultipleFoldersFoundException;
+import org.odk.collect.android.exception.MultipleFoldersFoundException;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;

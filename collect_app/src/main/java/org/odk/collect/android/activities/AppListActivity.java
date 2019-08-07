@@ -38,11 +38,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.adapters.SortDialogAdapter;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.RecyclerViewClickListener;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.adapters.SortDialogAdapter;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.RecyclerViewClickListener;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.SnackbarUtils;
 
 import java.util.ArrayList;

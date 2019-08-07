@@ -20,7 +20,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.external.ExternalDataUtil;
+import org.odk.collect.android.external.ExternalDataUtil;
 
 import java.util.Locale;
 

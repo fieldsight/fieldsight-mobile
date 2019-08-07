@@ -22,7 +22,7 @@ import android.preference.PreferenceScreen;
 import androidx.annotation.Nullable;
 import android.view.View;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 
 import java.util.Collection;
 

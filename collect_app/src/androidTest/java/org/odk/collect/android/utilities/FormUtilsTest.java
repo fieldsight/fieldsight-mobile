@@ -21,8 +21,8 @@ import android.database.MatrixCursor;
 import android.provider.BaseColumns;
 import androidx.test.runner.AndroidJUnit4;
 
-import org.bcss.collect.android.dto.Form;
-import org.bcss.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.dto.Form;
+import org.odk.collect.android.provider.FormsProviderAPI;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

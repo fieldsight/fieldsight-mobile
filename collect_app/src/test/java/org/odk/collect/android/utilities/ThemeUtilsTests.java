@@ -3,7 +3,7 @@ package org.odk.collect.android.utilities;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

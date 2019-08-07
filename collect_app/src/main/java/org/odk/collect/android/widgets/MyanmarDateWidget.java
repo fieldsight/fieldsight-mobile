@@ -22,7 +22,7 @@ import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.fragments.dialogs.MyanmarDatePickerDialog;
 
-import static org.bcss.collect.android.fragments.dialogs.CustomDatePickerDialog.DATE_PICKER_DIALOG;
+import static org.odk.collect.android.fragments.dialogs.CustomDatePickerDialog.DATE_PICKER_DIALOG;
 
 public class MyanmarDateWidget extends AbstractDateWidget {
 

@@ -16,7 +16,7 @@
 
 package org.odk.collect.android.utilities;
 
-import org.bcss.collect.android.logic.DatePickerDetails;
+import org.odk.collect.android.logic.DatePickerDetails;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;

@@ -3,9 +3,9 @@ package org.odk.collect.android;
 import androidx.test.filters.Suppress;
 import androidx.test.runner.AndroidJUnit4;
 
-import org.bcss.collect.android.http.CollectServerClient;
-import org.bcss.collect.android.http.HttpClientConnection;
-import org.bcss.collect.android.http.HttpGetResult;
+import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.http.HttpClientConnection;
+import org.odk.collect.android.http.HttpGetResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.utilities.WebCredentialsUtils;

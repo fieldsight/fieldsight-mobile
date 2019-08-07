@@ -22,8 +22,8 @@ import android.view.View;
 
 import com.google.android.gms.analytics.HitBuilders;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.tasks.ServerPollingJob;
 
 import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;

@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 
 import net.bytebuddy.utility.RandomString;
 
-import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.data.StringData;
@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.odk.collect.android.R;
-import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.widgets.base.BinaryWidgetTest;
 
 import java.io.File;

@@ -7,10 +7,10 @@ import android.os.SystemClock;
 
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.AuditConfig;
 import org.odk.collect.android.logic.AuditEvent;
-import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.tasks.AuditEventSaveTask;
 
 import java.io.File;
@@ -22,7 +22,7 @@ import timber.log.Timber;
 
 import static org.odk.collect.android.logic.AuditEvent.AuditEventType.LOCATION_PROVIDERS_DISABLED;
 import static org.odk.collect.android.logic.AuditEvent.AuditEventType.LOCATION_PROVIDERS_ENABLED;
-import static org.bcss.collect.android.logic.FormController.AUDIT_FILE_NAME;
+import static org.odk.collect.android.logic.FormController.AUDIT_FILE_NAME;
 
 /**
  * Handle logging of auditEvents (which contain time and might contain location coordinates),

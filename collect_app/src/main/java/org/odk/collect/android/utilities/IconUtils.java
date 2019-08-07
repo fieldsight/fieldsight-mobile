@@ -24,7 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import androidx.core.content.ContextCompat;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 
 public class IconUtils {
 

@@ -25,7 +25,7 @@ import android.widget.Button;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 

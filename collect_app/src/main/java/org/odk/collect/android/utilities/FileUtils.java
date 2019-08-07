@@ -24,8 +24,8 @@ import android.net.Uri;
 import android.os.Build;
 
 import org.apache.commons.io.IOUtils;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Document;
 import org.kxml2.kdom.Element;

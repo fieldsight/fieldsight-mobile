@@ -18,7 +18,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.bcss.collect.android.adapters.SelectMultipleListAdapter;
+import org.odk.collect.android.adapters.SelectMultipleListAdapter;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;

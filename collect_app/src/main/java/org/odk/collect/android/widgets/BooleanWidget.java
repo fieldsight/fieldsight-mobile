@@ -20,7 +20,7 @@ import android.content.Context;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import android.util.TypedValue;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.javarosa.core.model.data.BooleanData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;

@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 
 import net.bytebuddy.utility.RandomString;
 
-import org.bcss.collect.android.database.ItemsetDbAdapter;
+import org.odk.collect.android.database.ItemsetDbAdapter;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.QuestionDef;

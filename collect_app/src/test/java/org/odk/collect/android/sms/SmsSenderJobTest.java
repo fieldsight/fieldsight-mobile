@@ -5,10 +5,9 @@ import android.telephony.SmsManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.DaggerTestComponent;
 import org.odk.collect.android.injection.TestComponent;
-import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.sms.base.BaseSmsTest;
 import org.odk.collect.android.sms.base.SampleData;
 import org.odk.collect.android.tasks.sms.SmsSender;
@@ -23,7 +22,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.odk.collect.android.support.RobolectricHelpers.getApplicationComponent;
 import static org.robolectric.Shadows.shadowOf;
 
 /**

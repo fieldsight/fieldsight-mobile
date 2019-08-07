@@ -28,8 +28,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.fragments.dialogs.ResetSettingsResultDialog;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.utilities.ResetUtility;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static org.bcss.collect.android.fragments.dialogs.ResetSettingsResultDialog.RESET_SETTINGS_RESULT_DIALOG_TAG;
+import static org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog.RESET_SETTINGS_RESULT_DIALOG_TAG;
 import static org.odk.collect.android.utilities.ResetUtility.ResetAction.RESET_PREFERENCES;
 
 public class ResetDialogPreference extends DialogPreference implements CompoundButton.OnCheckedChangeListener {

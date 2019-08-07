@@ -29,8 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.fragments.dialogs.NumberPickerDialog;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.fragments.dialogs.NumberPickerDialog;
 import org.javarosa.core.model.RangeQuestion;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;

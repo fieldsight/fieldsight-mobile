@@ -17,7 +17,7 @@ package org.odk.collect.android.preferences;
 import android.preference.PreferenceFragment;
 import android.widget.Toast;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 
 /**
  * Extracted use case class to isolate and allow testing of functionality (in this

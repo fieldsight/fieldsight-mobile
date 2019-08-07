@@ -35,10 +35,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.analytics.HitBuilders;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.exception.ExternalParamsException;
-import org.bcss.collect.android.external.ExternalAppsUtils;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.ExternalParamsException;
+import org.odk.collect.android.external.ExternalAppsUtils;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;

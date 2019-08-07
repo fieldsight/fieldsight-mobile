@@ -22,16 +22,16 @@ import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
 
 import org.apache.commons.io.FileUtils;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.exception.EncryptionException;
-import org.bcss.collect.android.listeners.DiskSyncListener;
-import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.exception.EncryptionException;
+import org.odk.collect.android.listeners.DiskSyncListener;
+import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.preferences.GeneralKeys;
-import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.EncryptionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -50,7 +50,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import timber.log.Timber;
 
-import static org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import static org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 
 /**
  * Background task for syncing form instances from the instances folder to the instances table.

@@ -18,11 +18,11 @@ package org.odk.collect.android.widgets;
 
 import android.content.Context;
 
-import org.bcss.collect.android.fragments.dialogs.CopticDatePickerDialog;
+import org.odk.collect.android.fragments.dialogs.CopticDatePickerDialog;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
 
-import static org.bcss.collect.android.fragments.dialogs.CustomDatePickerDialog.DATE_PICKER_DIALOG;
+import static org.odk.collect.android.fragments.dialogs.CustomDatePickerDialog.DATE_PICKER_DIALOG;
 
 public class CopticDateWidget extends AbstractDateWidget {
 

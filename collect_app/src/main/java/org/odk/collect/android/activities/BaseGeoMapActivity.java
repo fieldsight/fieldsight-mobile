@@ -18,12 +18,12 @@ package org.odk.collect.android.activities;
 
 import android.os.Bundle;
 
-import org.bcss.collect.android.map.GoogleMapFragment;
-import org.bcss.collect.android.map.MapFragment;
+import org.odk.collect.android.map.GoogleMapFragment;
+import org.odk.collect.android.map.MapFragment;
 import org.odk.collect.android.map.MapboxMapFragment;
-import org.bcss.collect.android.map.OsmMapFragment;
+import org.odk.collect.android.map.OsmMapFragment;
 import org.odk.collect.android.preferences.GeneralKeys;
-import org.bcss.collect.android.spatial.MapHelper;
+import org.odk.collect.android.spatial.MapHelper;
 
 public abstract class BaseGeoMapActivity extends CollectAbstractActivity {
     private static final String MAP_LAYER_KEY = "map_layer_key";

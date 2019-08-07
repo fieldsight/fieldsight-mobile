@@ -21,10 +21,10 @@ import android.database.sqlite.SQLiteException;
 import androidx.annotation.NonNull;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.database.ItemsetDbAdapter;
-import org.bcss.collect.android.logic.FormController;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.database.ItemsetDbAdapter;
+import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.condition.EvaluationContext;

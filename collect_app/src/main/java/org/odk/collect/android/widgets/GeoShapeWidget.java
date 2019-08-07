@@ -23,8 +23,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.PermissionListener;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.listeners.PermissionListener;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
