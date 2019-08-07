@@ -16,14 +16,14 @@ package org.odk.collect.android.tasks;
 
 import com.google.android.gms.analytics.HitBuilders;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.http.OpenRosaHttpInterface;
-import org.bcss.collect.android.logic.PropertyManager;
-import org.bcss.collect.android.upload.InstanceServerUploader;
-import org.bcss.collect.android.upload.UploadAuthRequestedException;
-import org.bcss.collect.android.upload.UploadException;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.http.OpenRosaHttpInterface;
+import org.odk.collect.android.logic.PropertyManager;
+import org.odk.collect.android.upload.InstanceServerUploader;
+import org.odk.collect.android.upload.UploadAuthRequestedException;
+import org.odk.collect.android.upload.UploadException;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
 
 import java.util.HashMap;

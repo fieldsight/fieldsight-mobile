@@ -8,8 +8,8 @@ import androidx.test.espresso.util.HumanReadables;
 import androidx.test.espresso.util.TreeIterables;
 import android.view.View;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.hamcrest.Matcher;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 

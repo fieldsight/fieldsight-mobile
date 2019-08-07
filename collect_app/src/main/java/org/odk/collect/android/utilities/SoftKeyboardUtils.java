@@ -22,8 +22,8 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.FormController;
 
 public class SoftKeyboardUtils {
 

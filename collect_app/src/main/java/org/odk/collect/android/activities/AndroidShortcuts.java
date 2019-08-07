@@ -24,8 +24,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.dao.FormsDao;
 
 import java.util.ArrayList;

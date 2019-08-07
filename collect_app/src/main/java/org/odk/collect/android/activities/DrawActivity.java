@@ -35,11 +35,11 @@ import android.widget.ListView;
 import com.google.common.collect.ImmutableList;
 import com.rarepebble.colorpicker.ColorPickerView;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.adapters.IconMenuListAdapter;
-import org.bcss.collect.android.adapters.model.IconMenuItem;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.views.DrawView;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.adapters.IconMenuListAdapter;
+import org.odk.collect.android.adapters.model.IconMenuItem;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.views.DrawView;
 import org.odk.collect.android.utilities.AnimateUtils;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FileUtils;

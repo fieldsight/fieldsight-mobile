@@ -7,7 +7,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.GeneralKeys;
 
 import java.util.Locale;

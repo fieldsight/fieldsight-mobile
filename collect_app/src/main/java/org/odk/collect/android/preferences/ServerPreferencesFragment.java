@@ -39,11 +39,11 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.http.CollectServerClient;
-import org.bcss.collect.android.listeners.OnBackPressedListener;
-import org.bcss.collect.android.listeners.PermissionListener;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.listeners.OnBackPressedListener;
+import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.injection.DaggerUtils;
 
 import org.odk.collect.android.preferences.filters.ControlCharacterFilter;

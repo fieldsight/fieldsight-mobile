@@ -24,12 +24,12 @@ import android.widget.TextView;
 
 import androidx.annotation.VisibleForTesting;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.map.GoogleMapFragment;
-import org.bcss.collect.android.map.MapFragment;
-import org.bcss.collect.android.map.MapPoint;
-import org.bcss.collect.android.map.OsmMapFragment;
-import org.bcss.collect.android.spatial.MapHelper;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.map.GoogleMapFragment;
+import org.odk.collect.android.map.MapFragment;
+import org.odk.collect.android.map.MapPoint;
+import org.odk.collect.android.map.OsmMapFragment;
+import org.odk.collect.android.spatial.MapHelper;
 import org.odk.collect.android.map.MapboxMapFragment;
 import org.odk.collect.android.utilities.GeoPointUtils;
 import org.odk.collect.android.utilities.ToastUtils;

@@ -16,7 +16,7 @@ package org.odk.collect.android.dao.helpers;
 
 import android.database.Cursor;
 
-import org.bcss.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.dao.FormsDao;
 
 import timber.log.Timber;

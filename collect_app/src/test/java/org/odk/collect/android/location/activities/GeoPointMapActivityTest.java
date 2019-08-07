@@ -1,9 +1,6 @@
 package org.odk.collect.android.location.activities;
 
-import android.content.Intent;
-import android.location.Location;
-
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

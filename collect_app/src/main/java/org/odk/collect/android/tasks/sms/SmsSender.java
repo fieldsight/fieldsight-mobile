@@ -8,9 +8,9 @@ import android.preference.PreferenceManager;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.events.RxEventBus;
-import org.bcss.collect.android.events.SmsRxEvent;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.events.RxEventBus;
+import org.odk.collect.android.events.SmsRxEvent;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.tasks.sms.models.Message;

@@ -26,10 +26,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.naxa.common.DialogFactory;
-import org.bcss.collect.naxa.common.ViewUtils;
-import org.bcss.collect.naxa.common.utilities.SnackBarUtils;
+import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.common.DialogFactory;
+import org.fieldsight.naxa.common.ViewUtils;
+import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;

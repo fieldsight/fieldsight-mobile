@@ -21,11 +21,10 @@ import android.database.Cursor;
 import androidx.test.rule.GrantPermissionRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.site.db.SiteLocalSource;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.fieldsight.naxa.common.Constant;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

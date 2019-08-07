@@ -18,7 +18,7 @@ package org.odk.collect.android.utilities;
 
 import android.content.Context;
 
-import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.DateData;

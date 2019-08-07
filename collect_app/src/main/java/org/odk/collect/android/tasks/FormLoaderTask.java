@@ -19,18 +19,18 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 
 import org.apache.commons.io.IOUtils;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.database.ItemsetDbAdapter;
-import org.bcss.collect.android.external.ExternalAnswerResolver;
-import org.bcss.collect.android.external.ExternalDataHandler;
-import org.bcss.collect.android.external.ExternalDataManager;
-import org.bcss.collect.android.external.ExternalDataManagerImpl;
-import org.bcss.collect.android.external.ExternalDataReader;
-import org.bcss.collect.android.external.ExternalDataReaderImpl;
-import org.bcss.collect.android.listeners.FormLoaderListener;
-import org.bcss.collect.android.logic.FileReferenceFactory;
-import org.bcss.collect.android.logic.FormController;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.database.ItemsetDbAdapter;
+import org.odk.collect.android.external.ExternalAnswerResolver;
+import org.odk.collect.android.external.ExternalDataHandler;
+import org.odk.collect.android.external.ExternalDataManager;
+import org.odk.collect.android.external.ExternalDataManagerImpl;
+import org.odk.collect.android.external.ExternalDataReader;
+import org.odk.collect.android.external.ExternalDataReaderImpl;
+import org.odk.collect.android.listeners.FormLoaderListener;
+import org.odk.collect.android.logic.FileReferenceFactory;
+import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.instance.InstanceInitializationFactory;
@@ -158,7 +158,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         externalDataManager = new ExternalDataManagerImpl(formMediaDir);
 
         // add external data function handlers
-        ExternalDataHandler externalDataHandlerPull = new org.bcss.collect.android.external.handler.ExternalDataHandlerPull(
+        ExternalDataHandler externalDataHandlerPull = new org.odk.collect.android.external.handler.ExternalDataHandlerPull(
                 externalDataManager);
         formDef.getEvaluationContext().addFunctionHandler(externalDataHandlerPull);
 

@@ -1,6 +1,6 @@
 package org.odk.collect.android.activities;
 
-import org.bcss.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.provider.FormsProviderAPI;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_ASC;
 import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_DESC;

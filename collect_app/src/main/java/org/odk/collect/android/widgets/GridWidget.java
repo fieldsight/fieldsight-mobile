@@ -17,7 +17,7 @@ package org.odk.collect.android.widgets;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
-import org.bcss.collect.android.listeners.AdvanceToNextListener;
+import org.odk.collect.android.listeners.AdvanceToNextListener;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.helper.Selection;

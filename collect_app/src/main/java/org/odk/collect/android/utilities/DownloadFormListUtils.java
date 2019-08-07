@@ -24,13 +24,13 @@ import androidx.annotation.Nullable;
 
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Element;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
-import org.bcss.collect.android.http.CollectServerClient;
-import org.bcss.collect.android.logic.FormDetails;
-import org.bcss.collect.android.logic.ManifestFile;
-import org.bcss.collect.android.logic.MediaFile;
+import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.logic.FormDetails;
+import org.odk.collect.android.logic.ManifestFile;
+import org.odk.collect.android.logic.MediaFile;
 import org.odk.collect.android.preferences.GeneralKeys;
 
 import java.io.File;

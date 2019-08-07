@@ -3,7 +3,7 @@ package org.odk.collect.android.utilities;
 import android.graphics.Bitmap;
 import androidx.test.runner.AndroidJUnit4;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

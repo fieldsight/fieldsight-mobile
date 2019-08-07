@@ -21,7 +21,7 @@ import android.util.DisplayMetrics;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.javarosa.core.model.RangeQuestion;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.IntegerData;

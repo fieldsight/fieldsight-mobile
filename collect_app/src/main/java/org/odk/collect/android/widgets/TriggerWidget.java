@@ -20,11 +20,10 @@ import androidx.appcompat.widget.AppCompatCheckBox;
 import android.util.TypedValue;
 import android.widget.CheckBox;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.bcss.collect.android.R;
 import org.odk.collect.android.utilities.ViewIds;
 
 @SuppressLint("ViewConstructor")

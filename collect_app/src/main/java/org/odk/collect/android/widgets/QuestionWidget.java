@@ -39,11 +39,11 @@ import android.widget.TextView;
 import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.AudioPlayListener;
-import org.bcss.collect.android.logic.FormController;
-import org.bcss.collect.android.views.MediaLayout;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.AudioPlayListener;
+import org.odk.collect.android.logic.FormController;
+import org.odk.collect.android.views.MediaLayout;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;

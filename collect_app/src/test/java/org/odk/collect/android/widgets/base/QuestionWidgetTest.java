@@ -3,16 +3,14 @@ package org.odk.collect.android.widgets.base;
 import android.app.Activity;
 import androidx.annotation.NonNull;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.widgets.ItemsetWidgetTest;
 import org.odk.collect.android.widgets.interfaces.Widget;
 import org.robolectric.Robolectric;

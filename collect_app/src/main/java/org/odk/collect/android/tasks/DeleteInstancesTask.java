@@ -18,8 +18,8 @@ import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.bcss.collect.android.listeners.DeleteInstancesListener;
-import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.odk.collect.android.listeners.DeleteInstancesListener;
+import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 
 import timber.log.Timber;
 

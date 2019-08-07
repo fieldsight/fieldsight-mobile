@@ -24,10 +24,10 @@ import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.odk.collect.android.dao.FormsDao;
-import org.bcss.collect.android.provider.FormsProviderAPI;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

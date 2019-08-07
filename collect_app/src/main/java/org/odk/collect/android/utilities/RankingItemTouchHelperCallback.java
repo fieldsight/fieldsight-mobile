@@ -20,7 +20,7 @@ import android.graphics.Canvas;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
-import org.bcss.collect.android.adapters.RankingListAdapter;
+import org.odk.collect.android.adapters.RankingListAdapter;
 
 public class RankingItemTouchHelperCallback extends ItemTouchHelper.Callback {
 

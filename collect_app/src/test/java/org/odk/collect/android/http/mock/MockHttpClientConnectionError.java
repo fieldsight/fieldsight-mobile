@@ -3,8 +3,8 @@ package org.odk.collect.android.http.mock;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.bcss.collect.android.http.HttpCredentialsInterface;
-import org.bcss.collect.android.http.HttpGetResult;
+import org.odk.collect.android.http.HttpCredentialsInterface;
+import org.odk.collect.android.http.HttpGetResult;
 
 import java.net.URI;
 

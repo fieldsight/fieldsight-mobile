@@ -16,7 +16,7 @@ package org.odk.collect.android.preferences;
 
 import android.content.SharedPreferences.Editor;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 
 import static org.odk.collect.android.preferences.AdminKeys.ALL_KEYS;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;

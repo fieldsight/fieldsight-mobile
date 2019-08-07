@@ -1,7 +1,7 @@
 package org.odk.collect.android.event;
 
-import org.bcss.collect.android.events.RxEvent;
-import org.bcss.collect.android.events.RxEventBus;
+import org.odk.collect.android.events.RxEvent;
+import org.odk.collect.android.events.RxEventBus;
 import org.junit.Test;
 
 import io.reactivex.observers.TestObserver;

@@ -20,7 +20,7 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 import android.webkit.WebView;
 
-import org.bcss.collect.android.listeners.AdvanceToNextListener;
+import org.odk.collect.android.listeners.AdvanceToNextListener;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
 import org.javarosa.core.model.data.helper.Selection;

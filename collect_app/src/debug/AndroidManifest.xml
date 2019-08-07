@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.bcss.collect.android">
+    package="org.fieldsight.collect.android">
 
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
 
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" tools:ignore="ProtectedPermissions" />
 
     <application
-        android:name=".application.TestCollect"
+        android:name="org.odk.collect.android.application.TestCollect"
         tools:replace="android:name" />
 
 </manifest>

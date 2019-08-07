@@ -30,14 +30,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.fragments.ShowQRCodeFragment;
-import org.bcss.collect.android.fragments.dialogs.MovingBackwardsDialog;
-import org.bcss.collect.android.fragments.dialogs.SimpleDialog;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.fragments.ShowQRCodeFragment;
+import org.odk.collect.android.fragments.dialogs.MovingBackwardsDialog;
+import org.odk.collect.android.fragments.dialogs.SimpleDialog;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import static android.content.Context.MODE_PRIVATE;
-import static org.bcss.collect.android.fragments.dialogs.MovingBackwardsDialog.MOVING_BACKWARDS_DIALOG_TAG;
+import static org.odk.collect.android.fragments.dialogs.MovingBackwardsDialog.MOVING_BACKWARDS_DIALOG_TAG;
 import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_ADMIN_PW;
 import static org.odk.collect.android.preferences.AdminKeys.KEY_CHANGE_ADMIN_PASSWORD;

@@ -21,7 +21,7 @@ import android.content.Context;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.expr.XPathFuncExpr;
-import org.bcss.collect.android.external.ExternalDataUtil;
+import org.odk.collect.android.external.ExternalDataUtil;
 
 import java.util.List;
 

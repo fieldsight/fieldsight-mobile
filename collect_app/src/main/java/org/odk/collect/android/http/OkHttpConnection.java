@@ -12,13 +12,9 @@ import com.burgstaller.okhttp.basic.BasicAuthenticator;
 import com.burgstaller.okhttp.digest.CachingAuthenticator;
 
 import org.apache.commons.io.IOUtils;
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.http.HttpCredentialsInterface;
-import org.bcss.collect.android.http.HttpGetResult;
-import org.bcss.collect.android.http.HttpHeadResult;
-import org.bcss.collect.android.http.OpenRosaHttpInterface;
+import org.fieldsight.collect.android.BuildConfig;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.ByteArrayInputStream;

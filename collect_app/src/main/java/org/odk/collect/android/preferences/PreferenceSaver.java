@@ -16,7 +16,7 @@ package org.odk.collect.android.preferences;
 
 import androidx.annotation.Nullable;
 
-import org.bcss.collect.android.listeners.ActionListener;
+import org.odk.collect.android.listeners.ActionListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 

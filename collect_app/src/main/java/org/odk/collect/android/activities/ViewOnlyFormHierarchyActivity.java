@@ -18,8 +18,8 @@ import android.view.View;
 import android.widget.Button;
 
 import org.javarosa.core.model.FormIndex;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.logic.FormController;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.logic.FormController;
 
 /**
  * Displays the structure of a form along with the answers for the current instance. Disables all

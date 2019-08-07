@@ -26,11 +26,10 @@ import android.view.View;
 
 import com.google.common.collect.ObjectArrays;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.spatial.MapHelper;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.spatial.MapHelper;
 import org.odk.collect.android.activities.MainMenuActivity;
 import org.odk.collect.android.map.MapboxUtils;
-import org.bcss.collect.android.spatial.MapHelper;
 import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.MediaUtils;
 

@@ -44,10 +44,9 @@ import com.mapbox.mapboxsdk.style.sources.RasterSource;
 import com.mapbox.mapboxsdk.style.sources.TileSet;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.map.MapPoint;
+import org.fieldsight.collect.android.BuildConfig;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.mapboxsdk.MapFragment;
 import org.odk.collect.android.preferences.GeneralKeys;
 
@@ -61,7 +60,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import static android.os.Looper.getMainLooper;
 
-public class MapboxMapFragment extends MapFragment implements org.bcss.collect.android.map.MapFragment,
+public class MapboxMapFragment extends MapFragment implements org.odk.collect.android.map.MapFragment,
     OnMapReadyCallback, MapboxMap.OnMapClickListener, MapboxMap.OnMapLongClickListener,
     LocationEngineCallback<LocationEngineResult> {
 

@@ -27,10 +27,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.adapters.AbstractSelectListAdapter;
-import org.bcss.collect.android.external.ExternalSelectChoice;
-import org.bcss.collect.android.views.MediaLayout;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.adapters.AbstractSelectListAdapter;
+import org.odk.collect.android.external.ExternalSelectChoice;
+import org.odk.collect.android.views.MediaLayout;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryPrompt;

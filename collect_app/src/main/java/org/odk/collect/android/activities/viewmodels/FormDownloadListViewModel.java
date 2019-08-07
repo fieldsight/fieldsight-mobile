@@ -18,9 +18,9 @@ package org.odk.collect.android.activities.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormDetails;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.FormDetails;
 
 
 import java.util.ArrayList;

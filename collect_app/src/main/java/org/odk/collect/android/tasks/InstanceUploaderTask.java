@@ -21,13 +21,13 @@ import android.database.SQLException;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
-import org.bcss.collect.android.listeners.InstanceUploaderListener;
+import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.upload.InstanceServerUploader;
+import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.upload.InstanceServerUploader;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;

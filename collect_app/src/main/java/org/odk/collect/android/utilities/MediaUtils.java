@@ -33,8 +33,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.exception.GDriveConnectionException;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.GDriveConnectionException;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

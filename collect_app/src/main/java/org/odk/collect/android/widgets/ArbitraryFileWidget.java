@@ -29,8 +29,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.BuildConfig;
+import org.fieldsight.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;

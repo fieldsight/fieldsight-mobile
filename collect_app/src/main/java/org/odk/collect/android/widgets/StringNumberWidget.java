@@ -22,7 +22,7 @@ import android.text.method.DigitsKeyListener;
 import android.util.TypedValue;
 import android.widget.EditText;
 
-import org.bcss.collect.android.listeners.ThousandsSeparatorTextWatcher;
+import org.odk.collect.android.listeners.ThousandsSeparatorTextWatcher;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;

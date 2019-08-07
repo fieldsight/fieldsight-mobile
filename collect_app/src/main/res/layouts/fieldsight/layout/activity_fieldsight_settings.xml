@@ -10,7 +10,7 @@
 
     <fragment
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:name="org.bcss.collect.naxa.preferences.ScheduledNotificationSettingsFragment"
+        android:name="org.fieldsight.naxa.preferences.ScheduledNotificationSettingsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

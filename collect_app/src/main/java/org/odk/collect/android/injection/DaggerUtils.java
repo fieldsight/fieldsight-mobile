@@ -16,7 +16,7 @@ package org.odk.collect.android.injection;
 
 import android.app.Activity;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
 
 public class DaggerUtils {

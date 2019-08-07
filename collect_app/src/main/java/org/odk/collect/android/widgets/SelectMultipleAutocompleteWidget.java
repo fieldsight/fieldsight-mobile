@@ -18,7 +18,7 @@ package org.odk.collect.android.widgets;
 
 import android.content.Context;
 
-import org.bcss.collect.android.listeners.AudioPlayListener;
+import org.odk.collect.android.listeners.AudioPlayListener;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 

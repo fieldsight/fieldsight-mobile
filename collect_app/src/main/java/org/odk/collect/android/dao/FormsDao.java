@@ -24,15 +24,15 @@ import android.provider.BaseColumns;
 
 import androidx.loader.content.CursorLoader;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dto.Form;
-import org.bcss.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dto.Form;
+import org.odk.collect.android.provider.FormsProviderAPI;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is used to encapsulate all access to the {@link org.bcss.collect.android.database.helpers.FormsDatabaseHelper}
+ * This class is used to encapsulate all access to the {@link org.odk.collect.android.database.helpers.FormsDatabaseHelper}
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_access_object
  */
 public class FormsDao {

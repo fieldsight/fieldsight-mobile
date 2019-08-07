@@ -21,13 +21,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import androidx.loader.content.CursorLoader;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.network.APIEndpoint;
-import org.bcss.collect.naxa.site.db.SiteUploadHistoryLocalSource;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.network.APIEndpoint;
+import org.fieldsight.naxa.site.db.SiteUploadHistoryLocalSource;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
@@ -37,11 +37,11 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
+import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 /**
- * This class is used to encapsulate all access to the {@link org.bcss.collect.android.provider.InstanceProvider#DATABASE_NAME}
+ * This class is used to encapsulate all access to the {@link org.odk.collect.android.provider.InstanceProvider#DATABASE_NAME}
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_access_object
  */
 public class InstancesDao {

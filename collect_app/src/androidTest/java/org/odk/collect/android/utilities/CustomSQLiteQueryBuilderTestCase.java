@@ -20,7 +20,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.test.runner.AndroidJUnit4;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

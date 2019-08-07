@@ -6,12 +6,12 @@ import android.provider.MediaStore;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.exception.GDriveConnectionException;
-import org.bcss.collect.android.fragments.dialogs.ProgressDialogFragment;
-import org.bcss.collect.android.logic.FormController;
-import org.bcss.collect.android.views.ODKView;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.GDriveConnectionException;
+import org.odk.collect.android.fragments.dialogs.ProgressDialogFragment;
+import org.odk.collect.android.logic.FormController;
+import org.odk.collect.android.views.ODKView;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.utilities.FileUtils;

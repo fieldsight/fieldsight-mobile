@@ -21,7 +21,7 @@ import android.content.res.Resources;
 import androidx.annotation.DimenRes;
 import android.util.DisplayMetrics;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 
 /**
  * Created by laguta.yurii@gmail.com on 26/8/17.

@@ -31,13 +31,13 @@ import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.DiskSyncListener;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.bcss.collect.naxa.login.model.Site;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.DiskSyncListener;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.adapters.InstanceListCursorAdapter;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.InstanceSyncTask;
@@ -46,7 +46,7 @@ import org.odk.collect.android.utilities.PermissionUtils;
 
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
 /**

@@ -21,7 +21,7 @@ import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import androidx.test.runner.AndroidJUnit4;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.javarosa.core.model.instance.TreeElement;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.junit.Before;

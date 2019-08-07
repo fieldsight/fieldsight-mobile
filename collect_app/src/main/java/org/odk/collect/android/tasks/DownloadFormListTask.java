@@ -17,9 +17,9 @@ package org.odk.collect.android.tasks;
 import android.os.AsyncTask;
 import androidx.annotation.Nullable;
 
-import org.bcss.collect.android.listeners.FormListDownloaderListener;
-import org.bcss.collect.android.logic.FormDetails;
-import org.bcss.collect.naxa.onboarding.XMLForm;
+import org.odk.collect.android.listeners.FormListDownloaderListener;
+import org.odk.collect.android.logic.FormDetails;
+import org.fieldsight.naxa.onboarding.XMLForm;
 import org.odk.collect.android.utilities.DownloadFormListUtils;
 
 import java.util.HashMap;

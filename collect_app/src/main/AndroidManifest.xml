@@ -9,7 +9,7 @@ the specific language governing permissions and limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.bcss.collect.android">
+    package="org.fieldsight.collect.android">
 
     <uses-feature
         android:name="android.hardware.location"
@@ -81,7 +81,7 @@ the specific language governing permissions and limitations under the License.
         android:xlargeScreens="true" />
 
     <application
-        android:name=".application.Collect"
+        android:name="org.odk.collect.android.application.Collect"
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:icon="@drawable/ic_launcher_fieldsight"
@@ -101,61 +101,61 @@ the specific language governing permissions and limitations under the License.
         </provider>
 
         <!--Activities from FieldSight [starts]-->
-        <activity android:name="org.bcss.collect.naxa.login.BaseLoginActivity" />
+        <activity android:name="org.fieldsight.naxa.login.BaseLoginActivity" />
 
         <activity
-            android:name="org.bcss.collect.naxa.login.LoginActivity"
+            android:name="org.fieldsight.naxa.login.LoginActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="org.bcss.collect.naxa.project.ProjectListActivity"
+            android:name="org.fieldsight.naxa.project.ProjectListActivity"
             android:exported="true"
             android:theme="@style/AppTheme.Light" />
-        <activity android:name="org.bcss.collect.naxa.site.FragmentHostActivity" />
-        <activity android:name="org.bcss.collect.naxa.site.ProjectDashboardActivity" />
-        <activity android:name="org.bcss.collect.naxa.site.CreateSiteActivity" />
-        <activity android:name="org.bcss.collect.naxa.survey.SurveyFormsActivity" />
-        <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionListActivity" />
-        <activity android:name="org.bcss.collect.naxa.submissions.PreviousSubmissionDetailActivity" />
-        <activity android:name="org.bcss.collect.naxa.notificationslist.NotificationListActivity" />
-        <activity android:name="org.bcss.collect.naxa.notificationslist.FlaggedInstanceActivity" />
-        <activity android:name="org.bcss.collect.naxa.project.MapActivity" />
-        <activity android:name="org.bcss.collect.naxa.profile.UserProfileActivity" />
-        <activity android:name="org.bcss.collect.naxa.profile.UserActivity" />
-        <activity android:name="org.bcss.collect.naxa.sitedocuments.SiteDocumentsListActivity" />
+        <activity android:name="org.fieldsight.naxa.site.FragmentHostActivity" />
+        <activity android:name="org.fieldsight.naxa.site.ProjectDashboardActivity" />
+        <activity android:name="org.fieldsight.naxa.site.CreateSiteActivity" />
+        <activity android:name="org.fieldsight.naxa.survey.SurveyFormsActivity" />
+        <activity android:name="org.fieldsight.naxa.submissions.PreviousSubmissionListActivity" />
+        <activity android:name="org.fieldsight.naxa.submissions.PreviousSubmissionDetailActivity" />
+        <activity android:name="org.fieldsight.naxa.notificationslist.NotificationListActivity" />
+        <activity android:name="org.fieldsight.naxa.notificationslist.FlaggedInstanceActivity" />
+        <activity android:name="org.fieldsight.naxa.project.MapActivity" />
+        <activity android:name="org.fieldsight.naxa.profile.UserProfileActivity" />
+        <activity android:name="org.fieldsight.naxa.profile.UserActivity" />
+        <activity android:name="org.fieldsight.naxa.sitedocuments.SiteDocumentsListActivity" />
         <activity
-            android:name="org.bcss.collect.naxa.sitedocuments.ImageViewerActivity"
+            android:name="org.fieldsight.naxa.sitedocuments.ImageViewerActivity"
             android:label="@string/title_activity_image_viewer"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="org.bcss.collect.naxa.migrate.MigrateFieldSightActivity" />
-        <activity android:name="org.bcss.collect.naxa.educational.EducationalMaterialActivity" />
-        <activity android:name="org.bcss.collect.naxa.project.AppUpdateActivity" />
-        <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewTextTitleDetailsActivity" />
-        <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewImageDetailsActivity" />
-        <activity android:name="org.bcss.collect.naxa.educational.EduMat_ViewVideoDetailsActivity" />
-        <activity android:name="org.bcss.collect.naxa.sync.ContentDownloadActivity" />
-        <activity android:name="org.bcss.collect.naxa.onboarding.DownloadActivity" />
+        <activity android:name="org.fieldsight.naxa.migrate.MigrateFieldSightActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EducationalMaterialActivity" />
+        <activity android:name="org.fieldsight.naxa.project.AppUpdateActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewTextTitleDetailsActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewImageDetailsActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewVideoDetailsActivity" />
+        <activity android:name="org.fieldsight.naxa.sync.ContentDownloadActivity" />
+        <activity android:name="org.fieldsight.naxa.onboarding.DownloadActivity" />
         <activity
-            android:name=".SiteProfileActivity"
+            android:name="org.odk.collect.android.SiteProfileActivity"
             android:label="@string/title_activity_site_profile"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name="org.bcss.collect.naxa.report.ReportActivity" />
+        <activity android:name="org.fieldsight.naxa.report.ReportActivity" />
 
-        <activity android:name="org.bcss.collect.naxa.flagform.FlaggedInstanceActivityNew" />
-        <activity android:name="org.bcss.collect.naxa.common.SettingsActivity" />
-        <activity android:name="org.bcss.collect.naxa.preferences.SettingsActivity" />
+        <activity android:name="org.fieldsight.naxa.flagform.FlaggedInstanceActivityNew" />
+        <activity android:name="org.fieldsight.naxa.common.SettingsActivity" />
+        <activity android:name="org.fieldsight.naxa.preferences.SettingsActivity" />
 
-        <activity android:name="org.bcss.collect.naxa.v3.ProjectListActivityV3" />
-        <activity android:name="org.bcss.collect.naxa.v3.network.SyncActivity" />
-        <activity android:name="org.bcss.collect.naxa.forms.FieldSightFormDownloadList" />
+        <activity android:name="org.fieldsight.naxa.v3.ProjectListActivityV3" />
+        <activity android:name="org.fieldsight.naxa.v3.network.SyncActivity" />
+        <activity android:name="org.fieldsight.naxa.forms.FieldSightFormDownloadList" />
 
         <!--Activities from FieldSight [ends]-->
 
         <!--Services from FieldSight [ends]-->
 
-        <service android:name="org.bcss.collect.naxa.v3.network.SyncServiceV3" />
-        <service android:name="org.bcss.collect.naxa.onboarding.XMLFormDownloadService" /> <!-- ... -->
-        <service android:name="org.bcss.collect.naxa.firebase.FieldSightFirebaseMessagingService">
+        <service android:name="org.fieldsight.naxa.v3.network.SyncServiceV3" />
+        <service android:name="org.fieldsight.naxa.onboarding.XMLFormDownloadService" /> <!-- ... -->
+        <service android:name="org.fieldsight.naxa.firebase.FieldSightFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -276,12 +276,12 @@ the specific language governing permissions and limitations under the License.
          -->
 
         <provider
-            android:name=".provider.FormsProvider"
-            android:authorities="org.bcss.collect.android.provider.odk.forms"
+            android:name="org.odk.collect.android.provider.FormsProvider"
+            android:authorities="org.odk.collect.android.provider.odk.forms"
             android:exported="true" />
         <provider
-            android:name=".provider.InstanceProvider"
-            android:authorities="org.bcss.collect.android.provider.odk.instances"
+            android:name="org.odk.collect.android.provider.InstanceProvider"
+            android:authorities="org.odk.collect.android.provider.odk.instances"
             android:exported="true" />
 
         <activity-alias

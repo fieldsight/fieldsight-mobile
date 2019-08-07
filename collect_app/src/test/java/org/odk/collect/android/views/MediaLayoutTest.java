@@ -8,17 +8,13 @@ import android.widget.TextView;
 
 import junit.framework.Assert;
 
-import org.bcss.collect.android.logic.FileReference;
-import org.bcss.collect.android.views.AudioButton;
-import org.bcss.collect.android.views.MediaLayout;
-import org.javarosa.core.model.FormIndex;
+import org.odk.collect.android.logic.FileReference;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.logic.FileReference;
 import org.robolectric.ParameterizedRobolectricTestRunner;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;

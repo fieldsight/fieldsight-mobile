@@ -32,11 +32,11 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatRadioButton;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.external.ExternalSelectChoice;
-import org.bcss.collect.android.views.AudioButton;
-import org.bcss.collect.android.views.ExpandedHeightGridView;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.external.ExternalSelectChoice;
+import org.odk.collect.android.views.AudioButton;
+import org.odk.collect.android.views.ExpandedHeightGridView;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;

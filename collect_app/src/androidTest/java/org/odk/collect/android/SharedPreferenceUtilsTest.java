@@ -4,15 +4,15 @@ import android.content.Context;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.filters.SmallTest;
 
-import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.common.SharedPreferenceUtils;
-import org.bcss.collect.naxa.generalforms.data.GeneralForm;
+import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.SharedPreferenceUtils;
+import org.fieldsight.naxa.generalforms.data.GeneralForm;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.odk.collect.android.dao.InstancesDao;
 
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.junit.Assert.assertEquals;
 
 @SmallTest

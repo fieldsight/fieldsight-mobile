@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 
 import javax.inject.Inject;
 

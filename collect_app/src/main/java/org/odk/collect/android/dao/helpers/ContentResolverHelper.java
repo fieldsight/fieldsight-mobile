@@ -21,10 +21,10 @@ import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.webkit.MimeTypeMap;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormInfo;
-import org.bcss.collect.android.provider.FormsProviderAPI;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.FormInfo;
+import org.odk.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 
 public final class ContentResolverHelper {
 

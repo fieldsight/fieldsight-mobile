@@ -8,19 +8,19 @@ import android.preference.PreferenceManager;
 import androidx.annotation.Nullable;
 import android.view.View;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.logic.PropertyManager;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.Validator;
 
-import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_DEVICE_ID;
-import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_EMAIL;
-import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_PHONE_NUMBER;
-import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_SIM_SERIAL;
-import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_SUBSCRIBER_ID;
-import static org.bcss.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
+import static org.odk.collect.android.logic.PropertyManager.PROPMGR_DEVICE_ID;
+import static org.odk.collect.android.logic.PropertyManager.PROPMGR_EMAIL;
+import static org.odk.collect.android.logic.PropertyManager.PROPMGR_PHONE_NUMBER;
+import static org.odk.collect.android.logic.PropertyManager.PROPMGR_SIM_SERIAL;
+import static org.odk.collect.android.logic.PropertyManager.PROPMGR_SUBSCRIBER_ID;
+import static org.odk.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_METADATA_EMAIL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_METADATA_PHONENUMBER;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_METADATA_USERNAME;
