@@ -1,12 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
- Copyright (C) 2009 University of Washington Licensed under the Apache
-License, Version 2.0 (the "License"); you may not use this file except in
-compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
-OR CONDITIONS OF ANY KIND, either express or implied. See the License for
-the specific language governing permissions and limitations under the License.
--->
+<?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="org.fieldsight.collect.android">
@@ -101,8 +94,6 @@ the specific language governing permissions and limitations under the License.
         </provider>
 
         <!--Activities from FieldSight [starts]-->
-        <activity android:name="org.fieldsight.naxa.login.BaseLoginActivity" />
-
         <activity
             android:name="org.fieldsight.naxa.login.LoginActivity"
             android:windowSoftInputMode="adjustResize" />
@@ -117,7 +108,7 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="org.fieldsight.naxa.submissions.PreviousSubmissionListActivity" />
         <activity android:name="org.fieldsight.naxa.submissions.PreviousSubmissionDetailActivity" />
         <activity android:name="org.fieldsight.naxa.notificationslist.NotificationListActivity" />
-        <activity android:name="org.fieldsight.naxa.notificationslist.FlaggedInstanceActivity" />
+        <activity android:name="org.fieldsight.naxa.flagform.FlaggedInstanceActivity" />
         <activity android:name="org.fieldsight.naxa.project.MapActivity" />
         <activity android:name="org.fieldsight.naxa.profile.UserProfileActivity" />
         <activity android:name="org.fieldsight.naxa.profile.UserActivity" />
@@ -141,7 +132,6 @@ the specific language governing permissions and limitations under the License.
 
         <activity android:name="org.fieldsight.naxa.report.ReportActivity" />
 
-        <activity android:name="org.fieldsight.naxa.flagform.FlaggedInstanceActivityNew" />
         <activity android:name="org.fieldsight.naxa.common.SettingsActivity" />
         <activity android:name="org.fieldsight.naxa.preferences.SettingsActivity" />
 
@@ -277,17 +267,17 @@ the specific language governing permissions and limitations under the License.
 
         <provider
             android:name="org.odk.collect.android.provider.FormsProvider"
-            android:authorities="org.odk.collect.android.provider.odk.forms"
+            android:authorities="@string/authority_forms"
             android:exported="true" />
         <provider
             android:name="org.odk.collect.android.provider.InstanceProvider"
-            android:authorities="org.odk.collect.android.provider.odk.instances"
+            android:authorities="@string/authority_instance"
             android:exported="true" />
 
         <activity-alias
             android:name=".activities.FormEntryActivity"
             android:targetActivity="org.odk.collect.android.activities.FormEntryActivity">
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
 
@@ -301,7 +291,7 @@ the specific language governing permissions and limitations under the License.
         <activity-alias
             android:name=".activities.InstanceChooserList"
             android:targetActivity="org.odk.collect.android.activities.InstanceChooserList">
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
 
@@ -314,7 +304,7 @@ the specific language governing permissions and limitations under the License.
         <activity-alias
             android:name=".activities.FormChooserList"
             android:targetActivity="org.odk.collect.android.activities.FormChooserList">
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
                 <action android:name="android.intent.action.PICK" />
