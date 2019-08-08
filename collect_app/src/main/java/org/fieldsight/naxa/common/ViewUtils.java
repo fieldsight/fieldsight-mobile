@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -111,17 +110,6 @@ public final class ViewUtils {
                 .priority(Priority.LOW)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
     }
-
-    public static GlideRequest<Drawable> loadRemoteImageAndCache(Context context, String path) {
-        return GlideApp.with(context)
-                .load(path)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .centerInside()
-                .skipMemoryCache(false)
-                .priority(Priority.HIGH)
-                .diskCacheStrategy(DiskCacheStrategy.ALL);
-    }
-
 
     static Drawable getProgressBarIndeterminate() {
         final int[] attrs = {android.R.attr.indeterminateDrawable};

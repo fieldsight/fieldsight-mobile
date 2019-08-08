@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.Observer;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -26,7 +27,6 @@ import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
-import org.fieldsight.naxa.common.GlideApp;
 import org.fieldsight.naxa.common.ImageFileUtils;
 import org.fieldsight.naxa.login.model.User;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -157,7 +157,7 @@ public class UserActivity extends CollectAbstractActivity {
 
                         boolean userProfile = (user.getProfilepic().isEmpty() || (user.getProfilepic() == null));
                         if (!userProfile) {
-                            GlideApp.with(UserActivity.this)
+                            Glide.with(UserActivity.this)
                                     .load(user.getProfilepic())
                                     .into(civProfilePic);
                         }
@@ -345,7 +345,7 @@ public class UserActivity extends CollectAbstractActivity {
         switch (requestCode) {
             case Constant.RequestCode.RC_CAMERA:
                 userProfileViewModel.getUser().getValue().setProfilepic(photoToUpload.getAbsolutePath());
-                GlideApp.with(UserActivity.this)
+                Glide.with(UserActivity.this)
                         .load(photoToUpload)
                         .into(civProfilePic);
                 break;
@@ -353,7 +353,7 @@ public class UserActivity extends CollectAbstractActivity {
                 Uri uri = data.getData();
                 String path = ImageFileUtils.getPath(this, uri);
                 userProfileViewModel.getUser().getValue().setProfilepic(path);
-                GlideApp.with(UserActivity.this)
+                Glide.with(UserActivity.this)
                         .load(path)
                         .into(civProfilePic);
                 break;
