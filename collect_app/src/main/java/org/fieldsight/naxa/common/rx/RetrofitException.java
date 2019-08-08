@@ -93,6 +93,11 @@ public class RetrofitException extends RuntimeException {
         return new RetrofitException(exception.getMessage(), url.url().toString(), null, Kind.NETWORK, exception, null);
     }
 
+    static RetrofitException networkError(String mesage, IOException exception, HttpUrl url) {
+        return new RetrofitException(mesage, url.url().toString(), null, Kind.NETWORK, exception, null);
+    }
+
+
     static RetrofitException unexpectedError(Throwable exception, HttpUrl url) {
         return new RetrofitException(exception.getMessage(), url.url().toString(), null, Kind.UNEXPECTED, exception, null);
     }
@@ -184,7 +189,7 @@ public class RetrofitException extends RuntimeException {
     public String getProjectId() {
         String projectId = "-1";
         Uri uri = Uri.parse(url);
-        if(uri.getQueryParameterNames().contains("project_id")) {
+        if (uri.getQueryParameterNames().contains("project_id")) {
             projectId = uri.getQueryParameter("project_id");
             return projectId;
         }
