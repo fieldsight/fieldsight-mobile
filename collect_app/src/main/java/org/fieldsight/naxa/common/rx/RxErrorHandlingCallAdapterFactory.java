@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.net.UnknownHostException;
 
 import io.reactivex.Completable;
 import io.reactivex.CompletableSource;
@@ -95,13 +96,19 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
                 return RetrofitException.httpError(response.raw().request().url().toString(), response, retrofit);
             }
 
-            // A network error happened
-            if (throwable instanceof IOException) {
-                return RetrofitException.networkError((IOException) throwable,url);
+
+            if (throwable instanceof UnknownHostException) {
+                return RetrofitException.networkError("Server Not Found", (IOException) throwable, url);
             }
 
+            // A network error happened
+            if (throwable instanceof IOException) {
+                return RetrofitException.networkError((IOException) throwable, url);
+            }
+
+
             // We don't know what happened. We need to simply convert to an unknown error
-            return RetrofitException.unexpectedError(throwable,url);
+            return RetrofitException.unexpectedError(throwable, url);
         }
     }
 }

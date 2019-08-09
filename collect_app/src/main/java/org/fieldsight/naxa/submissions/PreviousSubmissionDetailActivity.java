@@ -65,7 +65,7 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
 
     private void setupToolBar(FormResponse model) {
         toolbar.setTitle("Submitted by " + model.getSubmittedByUsername());
-        toolbar.setSubtitle("on " + formatSubmissionDateTime(model.getDate()));
+        toolbar.setSubtitle("on " + formatSubmissionDateToLocal(model.getDate()));
         toolbar.setNavigationIcon(R.drawable.ic_close);
         setSupportActionBar(toolbar);
 
@@ -129,42 +129,31 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
                         }
                     }
                 } catch (JSONException e) {
-                    Timber.e(e);
+                    Timber.i("Failed to parse %s as json. his can be ignored",question);
                 }
 
                 answer = new ViewModel(question.toString(), response.getAnswer(), "id", "id");
                 answers.add(answer);
 
             }
-
-
             adapter.updateList(answers);
-
-
         });
-
     }
 
-    private String formatSubmissionDateTime(String dateTime) {
-
-
-        String msg = "";
+    private String formatSubmissionDateToLocal(String dateTime) {
+        String msg;
         try {
             DateTime dt = DateTime.parse(dateTime);
-            msg = dt.toString(DateTimeFormat.longDateTime());
-
-
+            msg = dt.toLocalDateTime().toString(DateTimeFormat.longDateTime());
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             msg = "Cannot load date time";
         }
-
-
         return msg;
     }
 
     @Override
     public void onCardClicked(ViewModel viewModel) {
-
+        //unused
     }
 }
