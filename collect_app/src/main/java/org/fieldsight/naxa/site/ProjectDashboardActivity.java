@@ -49,6 +49,7 @@ import com.crashlytics.android.Crashlytics;
 
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.FSInstanceUploaderListActivity;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.BaseActivity;
@@ -73,7 +74,6 @@ import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.InstanceChooserList;
-import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
@@ -389,8 +389,7 @@ public class ProjectDashboardActivity extends BaseActivity {
                 break;
             case R.id.nav_send_final_form:
 
-                startActivity(new Intent(getApplicationContext(),
-                        InstanceUploaderListActivity.class));
+                startActivity(new Intent(getApplicationContext(), FSInstanceUploaderListActivity.class));
 
                 break;
             case R.id.nav_view_finalized_offline_site:

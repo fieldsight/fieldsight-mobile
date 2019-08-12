@@ -15,7 +15,7 @@ import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
 import org.fieldsight.naxa.data.FieldSightNotification;
 import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 
 import java.io.File;
@@ -37,7 +37,7 @@ import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_M
 public class FlagFormRemoteSource {
     private static FlagFormRemoteSource INSTANCE;
     String INSTANCES_PATH = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
-    private InstancesDao instancesDao;
+    private FSInstancesDao instancesDao;
 
 
     public static FlagFormRemoteSource getINSTANCE() {
@@ -48,7 +48,7 @@ public class FlagFormRemoteSource {
     }
 
     private FlagFormRemoteSource() {
-        this.instancesDao = new InstancesDao();
+        this.instancesDao = new FSInstancesDao();
     }
 
     Observable<String> getXMLInstance(String submissionId) {

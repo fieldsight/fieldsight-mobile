@@ -29,6 +29,7 @@ import com.google.common.primitives.Longs;
 
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.FSInstanceUploaderListActivity;
 import org.odk.collect.android.SiteProfileActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
@@ -51,7 +52,6 @@ import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
-import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -361,7 +361,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 startActivity(i);
                 break;
             case R.id.site_option_frag_btn_send_form:
-                intent = new Intent(requireActivity(), InstanceUploaderListActivity.class);
+                intent = new Intent(requireActivity(), FSInstanceUploaderListActivity.class);
                 intent.putExtra(EXTRA_OBJECT, loadedSite);
                 startActivity(intent);
                 break;
@@ -479,7 +479,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                             if (instanceIDs.size() > 0) {
                                 Intent i = new Intent(getActivity(), InstanceUploaderActivity.class);
                                 i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
-                                startActivityForResult(i, InstanceUploaderListActivity.INSTANCE_UPLOADER);
+                                startActivityForResult(i, FSInstanceUploaderListActivity.INSTANCE_UPLOADER);
                             } else {
                                 SnackBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
                                 requireActivity().onBackPressed();
@@ -513,7 +513,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == InstanceUploaderListActivity.INSTANCE_UPLOADER) {
+        if (requestCode == FSInstanceUploaderListActivity.INSTANCE_UPLOADER) {
             switch (resultCode) {
                 case RESULT_OK:
                 case RESULT_CANCELED:

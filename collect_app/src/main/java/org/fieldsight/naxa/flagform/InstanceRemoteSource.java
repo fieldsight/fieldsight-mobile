@@ -14,7 +14,7 @@ import org.fieldsight.naxa.data.FieldSightNotification;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ApiInterface;
 import org.fieldsight.naxa.network.ServiceGenerator;
-import org.odk.collect.android.dao.InstancesDao;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -103,7 +103,7 @@ public class InstanceRemoteSource {
     }
 
     private Uri saveInstance(Instance instance) {
-        InstancesDao dao = new InstancesDao();
+        FSInstancesDao dao = new FSInstancesDao();
         ContentValues values = dao.getValuesFromInstanceObject(instance);
         Uri instanceUri = dao.saveInstance(values);
         Timber.i("Downloaded and saved instance at %s", instanceUri);
@@ -121,7 +121,7 @@ public class InstanceRemoteSource {
         String fsInstanceId = notificationFormDetail.getFormSubmissionId();
 
 
-        String url = InstancesDao.generateSubmissionUrl(
+        String url = FSInstancesDao.generateSubmissionUrl(
                 notificationFormDetail.isDeployedFromSite() ? SITE : PROJECT,
                 siteId, fsFormId);
 

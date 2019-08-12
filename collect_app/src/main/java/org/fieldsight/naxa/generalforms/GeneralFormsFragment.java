@@ -141,7 +141,6 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
     private void setupListAdapter() {
 
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(manager);
 
         generalFormsAdapter = new GeneralFormsAdapter(new ArrayList<>(0), this);

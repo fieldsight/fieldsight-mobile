@@ -3,12 +3,12 @@ package org.fieldsight.naxa.forms;
 import android.database.Cursor;
 
 import org.odk.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.dao.InstancesDao;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FieldSightInstanceDAO extends InstancesDao {
+public class FieldSightInstanceDAO extends FSInstancesDao {
 
     private Cursor getrecentFormCursor(String jrFormId) {
         String selection = InstanceProviderAPI.InstanceColumns.JR_FORM_ID + " =? ";
