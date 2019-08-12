@@ -65,26 +65,19 @@ public class InstanceChooserList extends InstanceListActivity implements
 
     private InstanceSyncTask instanceSyncTask;
 
-    private boolean editMode;
+    protected boolean editMode;
 
-    private Site loadedSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.form_chooser_list);
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
-        }
-
         String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
 
             setTitle(getString(R.string.review_data));
             editMode = true;
-            sortingOptions = new int[] {
+            sortingOptions = new int[]{
                     R.string.sort_by_name_asc, R.string.sort_by_name_desc,
                     R.string.sort_by_date_asc, R.string.sort_by_date_desc,
                     R.string.sort_by_status_asc, R.string.sort_by_status_desc
@@ -92,7 +85,7 @@ public class InstanceChooserList extends InstanceListActivity implements
         } else {
             setTitle(getString(R.string.view_sent_forms));
 
-            sortingOptions = new int[] {
+            sortingOptions = new int[]{
                     R.string.sort_by_name_asc, R.string.sort_by_name_desc,
                     R.string.sort_by_date_asc, R.string.sort_by_date_desc
             };
@@ -234,17 +227,9 @@ public class InstanceChooserList extends InstanceListActivity implements
         showProgressBar();
         InstancesDao instancesDao = new InstancesDao();
         if (editMode) {
-            if (loadedSite != null) {
-                return instancesDao.getUnsentInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
-            } else {
-                return instancesDao.getUnsentInstancesCursorLoader(getFilterText(), getSortingOrder());
-            }
+            return instancesDao.getUnsentInstancesCursorLoader(getFilterText(), getSortingOrder());
         } else {
-            if (loadedSite != null) {
-                return instancesDao.getSentInstancesCursorLoaderSite(loadedSite.getId(), getSortingOrder());
-            } else {
-                return instancesDao.getSentInstancesCursorLoader(getFilterText(), getSortingOrder());
-            }
+            return instancesDao.getSentInstancesCursorLoader(getFilterText(), getSortingOrder());
         }
     }
 

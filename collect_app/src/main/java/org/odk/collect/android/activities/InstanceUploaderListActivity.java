@@ -49,7 +49,6 @@ import org.odk.collect.android.adapters.InstanceUploaderAdapter;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.upload.AutoSendWorker;
-import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
@@ -73,12 +72,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_PROTOCOL;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 import static org.odk.collect.android.tasks.sms.SmsSender.SMS_INSTANCE_ID;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
-
 
 
 /**
@@ -108,9 +105,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
 
     private InstanceSyncTask instanceSyncTask;
 
-    private boolean showAllMode;
-
-    private Site loadedSite;
+    public boolean showAllMode;
 
     // Default to true so the send button is disabled until the worker status is updated by the
     // observer
@@ -155,13 +150,13 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
 
         if (savedInstanceState != null) {
             showAllMode = savedInstanceState.getBoolean(SHOW_ALL_MODE);
-            loadedSite = savedInstanceState.getParcelable(EXTRA_OBJECT);
+//            loadedSite = savedInstanceState.getParcelable(EXTRA_OBJECT);
         }
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
-        }
+//        Bundle bundle = getIntent().getExtras();
+//        if (bundle != null) {
+//            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
+//        }
 
         permissionUtils.requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -268,7 +263,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
         instanceSyncTask.setDiskSyncListener(this);
         instanceSyncTask.execute();
 
-        sortingOptions = new int[] {
+        sortingOptions = new int[]{
                 R.string.sort_by_name_asc, R.string.sort_by_name_desc,
                 R.string.sort_by_date_asc, R.string.sort_by_date_desc
         };
@@ -450,7 +445,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SHOW_ALL_MODE, showAllMode);
-        outState.putParcelable(EXTRA_OBJECT, loadedSite);
+//        outState.putParcelable(EXTRA_OBJECT, loadedSite);
 
     }
 
@@ -496,17 +491,9 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
         showProgressBar();
 
         if (showAllMode) {
-            if (loadedSite != null) {
-                return instancesDao.getCompletedUndeletedInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
-            } else {
-                return instancesDao.getCompletedUndeletedInstancesCursorLoaderHideOfflineSite(getFilterText(), getSortingOrder());
-            }
+            return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
         } else {
-            if (loadedSite != null) {
-                return instancesDao.getFinalizedInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
-            } else {
-                return instancesDao.getFinalizedInstancesCursorLoaderHideOfflineSite(getFilterText(), getSortingOrder());
-            }
+            return instancesDao.getFinalizedInstancesCursorLoader(getFilterText(), getSortingOrder());
         }
     }
 
@@ -553,9 +540,9 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
                             showAllMode = true;
                             updateAdapter();
                             tracker.send(new HitBuilders.EventBuilder()
-                                            .setCategory("FilterSendForms")
-                                            .setAction("SentAndUnsent")
-                                            .build());
+                                    .setCategory("FilterSendForms")
+                                    .setAction("SentAndUnsent")
+                                    .build());
                             break;
 
                         case 2:// do nothing
