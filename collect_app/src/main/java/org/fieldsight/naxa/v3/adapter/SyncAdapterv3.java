@@ -117,7 +117,10 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
                 }
                 totalSize++;
             }
-            progressMap.put(key, totalSynced * 100 / totalSize);
+
+            if(totalSize > 0) {
+                progressMap.put(key, totalSynced * 100 / totalSize);
+            }
         }
     }
 
