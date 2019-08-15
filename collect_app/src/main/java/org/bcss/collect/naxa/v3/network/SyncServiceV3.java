@@ -17,7 +17,6 @@ import org.bcss.collect.naxa.generalforms.data.GeneralForm;
 import org.bcss.collect.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.bcss.collect.naxa.login.model.Project;
 import org.bcss.collect.naxa.login.model.Site;
-import org.bcss.collect.naxa.network.APIEndpoint;
 import org.bcss.collect.naxa.scheduled.data.ScheduleForm;
 import org.bcss.collect.naxa.scheduled.data.ScheduledFormsRemoteSource;
 import org.bcss.collect.naxa.site.db.SiteLocalSource;
@@ -26,9 +25,9 @@ import org.bcss.collect.naxa.stages.data.Stage;
 import org.bcss.collect.naxa.stages.data.StageRemoteSource;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import io.reactivex.Observable;
@@ -39,7 +38,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function4;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
@@ -57,6 +55,7 @@ public class SyncServiceV3 extends IntentService {
     HashMap<String, List<Syncable>> selectedMap = null;
     private List<String> failedSiteUrls = new ArrayList<>();
     private ArrayList<Disposable> syncDisposable = new ArrayList<>();
+
 
     public SyncServiceV3() {
         super("SyncserviceV3");
@@ -160,6 +159,7 @@ public class SyncServiceV3 extends IntentService {
                         @Override
                         public ObservableSource<?> apply(Project project) throws Exception {
 
+                            final int[] progress = {0};
 
                             Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<ScheduleForm>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
@@ -178,23 +178,44 @@ public class SyncServiceV3 extends IntentService {
                                                 }
 
                                                 if (failed.size() > 0) {
-                                                    markAsFailed(project.getId(), 1, failed.toString());
-                                                    return Observable.error(new FormDownloadFailedException(getString(R.string.msg_forms_download_fail, failed.size())));
+                                                    return Observable.error(new FormDownloadFailedException(getString(R.string.msg_forms_download_fail, failed.size())
+                                                            , failed.toString()));
                                                 }
                                             }
                                             return Observable.just(objects);
                                         }
                                     })
-                                    .doOnNext(new Consumer<ArrayList<? extends Object>>() {
+                                    .onErrorReturn(throwable -> {
+                                        if (throwable instanceof FormDownloadFailedException) {
+                                            markAsFailed(project.getId(),
+                                                    1,
+                                                    ((FormDownloadFailedException) throwable).getFailedUrls());
+                                        } else {
+                                            markAsFailed(project.getId(), 1, "");
+                                        }
+
+                                        return new ArrayList<>(0);
+                                    })
+                                    .doOnNext(new Consumer<ArrayList<?>>() {
                                         @Override
                                         public void accept(ArrayList<?> objects) {
-                                            markAsCompleted(project.getId(), 1);
+                                            checkAndMarkAsComplete();
+                                        }
+
+                                        private void checkAndMarkAsComplete() {
+                                            if (4 == progress[0]) {
+                                                markAsCompleted(project.getId(), 1);
+                                                progress[0] = 0;
+                                            } else {
+                                                progress[0]++;
+                                            }
                                         }
                                     })
                                     .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1));
 
                         }
                     }, 1)
+
                     .subscribe(project -> {
                         //unused
                     }, Timber::e);

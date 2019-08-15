@@ -57,7 +57,7 @@ public class FormDetails implements Serializable {
     }
 
     public String getDownloadUrl() {
-        return downloadUrl;
+        return "https://app.fieldsight.org/forms/1639992/form123.xml";
     }
 
     public String getManifestUrl() {

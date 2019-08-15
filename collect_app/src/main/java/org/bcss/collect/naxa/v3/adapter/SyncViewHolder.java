@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,7 +115,7 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 TextView btnRetry = convertView.findViewById(R.id.btn_retry);
                 View finalConvertView = convertView;
 
-                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0;
+                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0 && TextUtils.equals("Forms",syncable.getTitle());
 
                 if (hasFailedUrls) {
                     btnRetry.setText(finalConvertView.getContext().getString(R.string.retry_forms, syncable.getFailedUrl().size()));
