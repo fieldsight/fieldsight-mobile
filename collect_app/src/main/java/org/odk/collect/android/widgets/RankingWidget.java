@@ -21,17 +21,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.external.ExternalDataUtil;
-import org.bcss.collect.android.fragments.dialogs.RankingWidgetDialog;
-import org.bcss.collect.android.logic.FormController;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.fragments.dialogs.RankingWidgetDialog;
+import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.javarosa.xpath.expr.XPathFuncExpr;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
@@ -40,9 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RankingWidget extends QuestionWidget implements BinaryWidget {
+public class RankingWidget extends ItemsWidget implements BinaryWidget {
 
-    private List<SelectChoice> originalItems;
     private List<SelectChoice> savedItems;
     private LinearLayout widgetLayout;
     private Button showRankingDialogButton;
@@ -50,7 +47,6 @@ public class RankingWidget extends QuestionWidget implements BinaryWidget {
     public RankingWidget(Context context, FormEntryPrompt prompt) {
         super(context, prompt);
 
-        readItems();
         setUpLayout(getOrderedItems());
     }
 
@@ -69,7 +65,7 @@ public class RankingWidget extends QuestionWidget implements BinaryWidget {
     @Override
     public void clearAnswer() {
         savedItems = null;
-        setUpLayout(originalItems);
+        setUpLayout(items);
     }
 
     @Override
@@ -100,7 +96,7 @@ public class RankingWidget extends QuestionWidget implements BinaryWidget {
             formController.setIndexWaitingForData(getFormEntryPrompt().getIndex());
         }
         RankingWidgetDialog rankingWidgetDialog = RankingWidgetDialog.newInstance(savedItems == null
-                ? getValues(originalItems)
+                ? getValues(items)
                 : getValues(savedItems), getFormEntryPrompt().getIndex());
         rankingWidgetDialog.show(((FormEntryActivity) getContext()).getSupportFragmentManager(), "RankingDialog");
     }
@@ -108,7 +104,7 @@ public class RankingWidget extends QuestionWidget implements BinaryWidget {
     private List<SelectChoice> getSavedItems(List<String> values) {
         List<SelectChoice> savedItems = new ArrayList<>();
         for (String value : values) {
-            for (SelectChoice item : originalItems) {
+            for (SelectChoice item : items) {
                 if (item.getValue().equals(value)) {
                     savedItems.add(item);
                     break;
@@ -126,28 +122,18 @@ public class RankingWidget extends QuestionWidget implements BinaryWidget {
         return values;
     }
 
-    private void readItems() {
-        // SurveyCTO-added support for dynamic select content (from .csv files)
-        XPathFuncExpr xpathFuncExpr = ExternalDataUtil.getSearchXPathExpression(getFormEntryPrompt().getAppearanceHint());
-        if (xpathFuncExpr != null) {
-            originalItems = ExternalDataUtil.populateExternalChoices(getFormEntryPrompt(), xpathFuncExpr);
-        } else {
-            originalItems = getFormEntryPrompt().getSelectChoices();
-        }
-    }
-
     private List<SelectChoice> getOrderedItems() {
         List<Selection> savedOrderedItems =
                 getFormEntryPrompt().getAnswerValue() == null
-                ? new ArrayList<>()
-                : (List<Selection>) getFormEntryPrompt().getAnswerValue().getValue();
+                        ? new ArrayList<>()
+                        : (List<Selection>) getFormEntryPrompt().getAnswerValue().getValue();
 
         if (savedOrderedItems.isEmpty()) {
-            return originalItems;
+            return items;
         } else {
             savedItems = new ArrayList<>();
             for (Selection selection : savedOrderedItems) {
-                for (SelectChoice selectChoice : originalItems) {
+                for (SelectChoice selectChoice : items) {
                     if (selection.getValue().equals(selectChoice.getValue())) {
                         savedItems.add(selectChoice);
                         break;
@@ -155,7 +141,7 @@ public class RankingWidget extends QuestionWidget implements BinaryWidget {
                 }
             }
 
-            for (SelectChoice selectChoice : originalItems) {
+            for (SelectChoice selectChoice : items) {
                 if (!savedItems.contains(selectChoice)) {
                     savedItems.add(selectChoice);
                 }

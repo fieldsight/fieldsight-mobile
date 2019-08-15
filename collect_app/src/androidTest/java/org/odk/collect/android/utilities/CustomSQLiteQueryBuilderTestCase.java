@@ -18,9 +18,9 @@ package org.odk.collect.android.utilities;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -26,8 +26,8 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.views.CustomWebView;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.views.CustomWebView;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.core.reference.InvalidReferenceException;
@@ -108,6 +108,7 @@ public abstract class SelectImageMapWidget extends SelectWidget {
     public void clearAnswer() {
         selections.clear();
         webView.loadUrl("javascript:clearAreas()");
+        widgetValueChanged();
     }
 
     @Override
@@ -116,8 +117,6 @@ public abstract class SelectImageMapWidget extends SelectWidget {
     }
 
     private void createLayout() {
-        readItems();
-
         webView = new CustomWebView(getContext());
 
         selectedAreasLabel = getAnswerTextView();
@@ -172,6 +171,7 @@ public abstract class SelectImageMapWidget extends SelectWidget {
         if (selectChoice != null) {
             selections.add(new Selection(selectChoice));
         }
+        widgetValueChanged();
     }
 
     private void unselectArea(String areaId) {
@@ -184,6 +184,7 @@ public abstract class SelectImageMapWidget extends SelectWidget {
         }
 
         selections.remove(selectionToRemove);
+        widgetValueChanged();
     }
 
     private void notifyChanges() {

@@ -19,8 +19,8 @@ package org.odk.collect.android.utilities;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 
-import org.bcss.collect.android.dto.Form;
-import org.bcss.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.dto.Form;
+import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.dao.FormsDao;
 
 import java.util.List;

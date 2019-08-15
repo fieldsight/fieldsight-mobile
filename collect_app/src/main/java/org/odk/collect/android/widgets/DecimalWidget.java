@@ -16,7 +16,7 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Selection;
@@ -24,7 +24,7 @@ import android.text.method.DigitsKeyListener;
 import android.util.TypedValue;
 import android.widget.EditText;
 
-import org.bcss.collect.android.listeners.ThousandsSeparatorTextWatcher;
+import org.odk.collect.android.listeners.ThousandsSeparatorTextWatcher;
 import org.javarosa.core.model.data.DecimalData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
@@ -122,7 +122,6 @@ public class DecimalWidget extends StringWidget {
 
     @Override
     public IAnswerData getAnswer() {
-        clearFocus();
         String s = getAnswerTextField().getText().toString();
         if (useThousandSeparator) {
             s = ThousandsSeparatorTextWatcher.getOriginalString(s);

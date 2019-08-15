@@ -6,8 +6,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.fragments.dialogs.SimpleDialog;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.fragments.dialogs.SimpleDialog;
 
 public class NotificationActivity extends CollectAbstractActivity {
 

@@ -26,7 +26,7 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.odk.collect.android.activities.FormEntryActivity;
@@ -221,6 +221,10 @@ public class AudioController implements SeekBar.OnSeekBarChangeListener {
 
     void hidePlayer() {
         view.setVisibility(GONE);
+    }
+
+    void showPlayer() {
+        view.setVisibility(View.VISIBLE);
     }
 
     View getPlayerLayout(ViewGroup parent) {

@@ -20,12 +20,12 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.fragments.dialogs.SimpleDialog;
-import org.bcss.collect.android.listeners.InstanceUploaderListener;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.fragments.dialogs.SimpleDialog;
+import org.odk.collect.android.listeners.InstanceUploaderListener;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
@@ -33,6 +33,7 @@ import org.odk.collect.android.utilities.ArrayUtils;
 import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.InstanceUploaderUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,8 +42,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import timber.log.Timber;
-
-import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePermissions;
 
 /**
  * Activity to upload completed forms.
@@ -83,7 +82,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
         Timber.i("onCreate: %s", savedInstanceState == null ? "creating" : "re-initializing");
 
         // This activity is accessed directly externally
-        requestStoragePermissions(this, new PermissionListener() {
+        new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent

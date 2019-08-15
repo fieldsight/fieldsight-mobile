@@ -14,8 +14,8 @@
 
 package org.odk.collect.android.utilities.gdrive;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.FileContent;
@@ -25,7 +25,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.Permission;
 
-import org.bcss.collect.android.exception.MultipleFoldersFoundException;
+import org.odk.collect.android.exception.MultipleFoldersFoundException;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;

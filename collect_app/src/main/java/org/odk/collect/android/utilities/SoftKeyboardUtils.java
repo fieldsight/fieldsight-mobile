@@ -17,12 +17,13 @@
 package org.odk.collect.android.utilities;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormController;
+import androidx.annotation.NonNull;
+
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.FormController;
 
 public class SoftKeyboardUtils {
 
@@ -30,10 +31,8 @@ public class SoftKeyboardUtils {
     }
 
     public static void showSoftKeyboard(@NonNull View view) {
-        if (shouldSoftKeyboardBeShown()) {
-            if (view.requestFocus()) {
-                getInputMethodManager().showSoftInput(view, 0);
-            }
+        if (view.requestFocus()) {
+            getInputMethodManager().showSoftInput(view, 0);
         }
     }
 

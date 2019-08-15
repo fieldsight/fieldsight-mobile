@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,17 +42,18 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.preferences.AdminKeys;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.preferences.Transport;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.SharedPreferencesUtils;
@@ -67,6 +68,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import timber.log.Timber;
+
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRANSPORT_TYPE;
 
 /**
  * Responsible for displaying buttons to launch the major activities. Launches
@@ -113,6 +116,8 @@ public class MainMenuActivity extends CollectAbstractActivity {
         setContentView(R.layout.main_menu);
         initToolbar();
 
+        disableSmsIfNeeded();
+
         // enter data button. expects a result.
         Button enterDataButton = findViewById(R.id.enter_data);
         enterDataButton.setText(getString(R.string.enter_data_button));
@@ -150,7 +155,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             public void onClick(View v) {
                 if (Collect.allowClick(getClass().getName())) {
                     Intent i = new Intent(getApplicationContext(),
-                            InstanceUploaderList.class);
+                            InstanceUploaderListActivity.class);
                     startActivity(i);
                 }
             }
@@ -180,7 +185,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                     SharedPreferences sharedPreferences = PreferenceManager
                             .getDefaultSharedPreferences(MainMenuActivity.this);
                     String protocol = sharedPreferences.getString(
-                            PreferenceKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
+                            GeneralKeys.KEY_PROTOCOL, getString(R.string.protocol_odk_default));
                     Intent i = null;
                     if (protocol.equalsIgnoreCase(getString(R.string.protocol_google_sheets))) {
                         if (PlayServicesUtil.isGooglePlayServicesAvailable(MainMenuActivity.this)) {
@@ -213,7 +218,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
         });
 
-        // must be at the beginning of any activity that can be called siteName an
+        // must be at the beginning of any activity that can be called from an
         // external intent
         Timber.i("Starting up, creating directories");
         try {
@@ -240,7 +245,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                 j.delete();
                 recreate();
 
-                // Delete settings file to prevent overwrite of settings siteName JSON file on next startup
+                // Delete settings file to prevent overwrite of settings from JSON file on next startup
                 if (f.exists()) {
                     f.delete();
                 }
@@ -521,7 +526,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
     private void setupGoogleAnalytics() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(Collect
                 .getInstance());
-        boolean isAnalyticsEnabled = settings.getBoolean(PreferenceKeys.KEY_ANALYTICS, true);
+        boolean isAnalyticsEnabled = settings.getBoolean(GeneralKeys.KEY_ANALYTICS, true);
         GoogleAnalytics googleAnalytics = GoogleAnalytics.getInstance(getApplicationContext());
         googleAnalytics.setAppOptOut(!isAnalyticsEnabled);
     }
@@ -600,7 +605,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             Collect.getInstance().initProperties();
             res = true;
         } catch (IOException | ClassNotFoundException e) {
-            Timber.e(e, "Exception while loading preferences siteName file due to : %s ", e.getMessage());
+            Timber.e(e, "Exception while loading preferences from file due to : %s ", e.getMessage());
         } finally {
             try {
                 if (input != null) {
@@ -648,4 +653,24 @@ public class MainMenuActivity extends CollectAbstractActivity {
         }
     }
 
+    private void disableSmsIfNeeded() {
+        if (Transport.Internet != Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE))) {
+            GeneralSharedPreferences.getInstance().save(KEY_SUBMISSION_TRANSPORT_TYPE, getString(R.string.transport_type_value_internet));
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                    .setTitle(R.string.sms_feature_disabled_dialog_title)
+                    .setMessage(R.string.sms_feature_disabled_dialog_message)
+                    .setPositiveButton(R.string.read_details, (dialog, which) -> {
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("url", "https://forum.opendatakit.org/t/17973");
+                        startActivity(intent);
+                    })
+                    .setNegativeButton(R.string.ok, (dialog, which) -> dialog.dismiss());
+
+            builder
+                    .create()
+                    .show();
+        }
+    }
 }

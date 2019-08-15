@@ -1,23 +1,22 @@
 package org.odk.collect.android.views;
 
 import android.media.MediaPlayer;
-import android.support.v7.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageButton;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import junit.framework.Assert;
 
-import org.bcss.collect.android.logic.FileReference;
-import org.bcss.collect.android.views.AudioButton;
-import org.bcss.collect.android.views.MediaLayout;
-import org.javarosa.core.model.FormIndex;
+import org.odk.collect.android.logic.FileReference;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.odk.collect.android.activities.FormEntryActivity;
 import org.robolectric.ParameterizedRobolectricTestRunner;
+import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 
 import java.util.Arrays;
@@ -37,7 +36,6 @@ public class MediaLayoutTest {
     private final String imageURI;
     private final String videoURI;
 
-    private FormIndex formIndex;
     private MediaPlayer mediaPlayer;
     private ReferenceManager referenceManager;
     private FileReference reference;
@@ -73,13 +71,12 @@ public class MediaLayoutTest {
 
     @Before
     public void setUp() throws InvalidReferenceException {
-        formIndex = mock(FormIndex.class);
         mediaPlayer = mock(MediaPlayer.class);
         reference = mock(FileReference.class);
         referenceManager = mock(ReferenceManager.class);
         textView = new TextView(RuntimeEnvironment.application);
 
-        mediaLayout = new MediaLayout(RuntimeEnvironment.application);
+        mediaLayout = new MediaLayout(Robolectric.buildActivity(FormEntryActivity.class).create().get());
 
         audioButton = mediaLayout.audioButton;
         videoButton = mediaLayout.videoButton;
@@ -102,7 +99,7 @@ public class MediaLayoutTest {
         Assert.assertEquals(VISIBLE, mediaLayout.getVisibility());
         assertVisibility(GONE, audioButton, videoButton, imageView, missingImage, divider);
 
-        mediaLayout.setAVT(formIndex, "", textView, audioURI, imageURI, videoURI, null, mediaPlayer);
+        mediaLayout.setAVT(textView, audioURI, imageURI, videoURI, null, mediaPlayer);
 
         // we do not check for the validity of the URIs for the audio and video while loading MediaLayout
         assertVisibility(audioURI == null ? GONE : VISIBLE, audioButton);

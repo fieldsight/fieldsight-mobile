@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="org.bcss.collect.naxa.common.SettingsActivity">
+    tools:context="org.fieldsight.naxa.common.SettingsActivity">
 
     <include layout="@layout/general_toolbar" />
 
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_base_url"
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:hint="Server url"
             android:inputType="text"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 
     <Button

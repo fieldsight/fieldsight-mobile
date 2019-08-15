@@ -4,7 +4,6 @@
   <string name="activity_not_found">Ne najdem aktivnosti za obravnavo %s</string>
   <string name="view_image">Poglej sliko</string>
   <string name="annotate_image">Označi na sliki</string>
-  <string name="aligned_image_capture">Poravnan zajem slike</string>
   <string name="signature_capture">Zajem podpisa</string>
   <string name="view_video">Poglej video</string>
   <string name="choose_audio">Izberi audio</string>
@@ -215,7 +214,6 @@
   <string name="found_in_settings">Ne izberi da ne prikaže v Splošne nastavitve</string>
   <string name="save_preferences">Shrani nastavitve</string>
   <string name="form_forward">Naprej</string>
-  <string name="form_backward">Nazaj</string>
   <string name="navigation">Navigacija</string>
   <string name="swipe_navigation">Uporabi horizontalne potege</string>
   <string name="buttons_navigation">Uporabi naprej/nazaj tipke</string>
@@ -267,7 +265,7 @@
   <string name="google_drive">Google Drive</string>
   <string name="go_drive">My Drive</string>
   <string name="go_shared">Deljeno z menoj</string>
-  <string name="modified_on_date_at_time">Spremenjeno \'EEE,MMM dd, yyyy\' ob HH:mm</string>
+  <string name="modified_on_date_at_time">\'Spremenjeno\' EEE, MMM dd,  yyyy \'ob\' HH:mm</string>
   <string name="aggregate_preferences">ODK Aggregate nastavitve</string>
   <string name="sms_submission_preferences">Nastavitve za predložitev preko SMS sporočil</string>
   <string name="submission_transport_types_title">Predloži preko</string>
@@ -283,7 +281,6 @@
   <string name="notification_error">Napaka pri prikazu obvestila</string>
   <string name="google_sheets_url">URL za nadomestno predložitev</string>
   <string name="send_in_progress">Pošiljanja se izvaja v ozadju, prosim poskusite znova cez malo časa</string>
-  <string name="sheets_max_columns">Največje število stolpcev je 255, obrazec pa ima %s. Ni mogoče prenesti v preglednico.</string>
   <string name="google_sheets_access_denied">Dostop zavrnjen. Prosim, prepričajte se, da je lastnik preglednice odobril urejanje.</string>
   <string name="google_sheets_missing_columns">Preglednici manjkajo naslednji stolpci: %1$s</string>
   <string name="password_error_whitespace">Presledki na začetku ali na koncu gesla niso dovoljeni</string>
@@ -294,11 +291,9 @@
   <string name="start">Začni</string>
   <string name="enable_gps">Omogoči GPS</string>
   <string name="gps_enable_message">GPS v napravi je onemogočen. Želite omogočiti?</string>
-  <string name="minutes">Minute</string>
   <string name="geo_clear_warning">Funkcija je že narejena. Želite izbrisati funkcijo?</string>
   <string name="geo_exit_warning">Želite zavreči spremembe in se vrniti v ODK?</string>
   <string name="clear">Počisti</string>
-  <string name="automatic_mode">Samodejni način</string>
   <string name="discard">Zavrzi</string>
   <!--&lt; and &gt; surrounds the text so it will appear as <no form loaded>-->
   <string name="no_form_loaded">&lt;noben obrazec ni naložen&gt;</string>
@@ -344,6 +339,7 @@
   <string name="cellular_autosend">Samo mobilno omrežje</string>
   <string name="wifi_cellular_autosend">WiFi ali mobilno omrežje</string>
   <string name="form_submission_category">Predložitev obrazca</string>
+  <!--<string name="submission_transport_admin_setting">Submission transport</string>-->
   <string name="form_delete_message">Izbriši izbrane obrazce</string>
   <!--Displays dates in specialized calendars with the Gregorian dates in parentheses. This is translated so right-to-left languages can specify the correct order-->
   <string name="multiple_media_folders_detected_notification">Več kot ena medijska mapa je najdena. Odstranite eno in poskusite znova</string>
@@ -378,5 +374,4 @@
   <string name="sms_submissions_notif_description">Trenutno se oddaja več obrazcev.</string>
   <string name="transport_type_internet">WiFi / mobilno omrežje (priporočeno)</string>
   <string name="transport_type_sms">SMS sporočilo</string>
-  <string name="seconds">Sekunde</string>
 </resources>

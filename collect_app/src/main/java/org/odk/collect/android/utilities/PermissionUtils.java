@@ -5,11 +5,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
 
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.DexterBuilder;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -17,16 +18,15 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.naxa.contact.ProjectContactsFragment;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormChooserList;
 import org.odk.collect.android.activities.FormDownloadList;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
-import org.odk.collect.android.activities.InstanceUploaderList;
+import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.activities.SplashScreenActivity;
 
 import java.util.ArrayList;
@@ -43,219 +43,204 @@ import timber.log.Timber;
 
 public class PermissionUtils {
 
-    private PermissionUtils() {
+    public static boolean areStoragePermissionsGranted(Context context) {
+        return isPermissionGranted(context,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
 
+    public static boolean isCameraPermissionGranted(Context context) {
+        return isPermissionGranted(context, Manifest.permission.CAMERA);
+    }
+
+    public static boolean areLocationPermissionsGranted(Context context) {
+        return isPermissionGranted(context,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+    }
+
+    public static boolean areCameraAndRecordAudioPermissionsGranted(Context context) {
+        return isPermissionGranted(context,
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO);
+    }
+
+    public static boolean isGetAccountsPermissionGranted(Context context) {
+        return isPermissionGranted(context, Manifest.permission.GET_ACCOUNTS);
+    }
+
+    public static boolean isReadPhoneStatePermissionGranted(Context context) {
+        return isPermissionGranted(context, Manifest.permission.READ_PHONE_STATE);
+    }
+
+    /**
+     * Returns true only if all of the requested permissions are granted to Collect, otherwise false
+     */
+    private static boolean isPermissionGranted(Context context, String... permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Checks to see if an activity is one of the entry points to the app i.e
+     * an activity that has a view action that can launch the app.
+     *
+     * @param activity that has permission requesting code.
+     * @return true if the activity is an entry point to the app.
+     */
+    public static boolean isEntryPointActivity(CollectAbstractActivity activity) {
+
+        List<Class<?>> activities = new ArrayList<>();
+        activities.add(FormEntryActivity.class);
+        activities.add(InstanceChooserList.class);
+        activities.add(FormChooserList.class);
+        activities.add(InstanceUploaderListActivity.class);
+        activities.add(SplashScreenActivity.class);
+        activities.add(FormDownloadList.class);
+        activities.add(InstanceUploaderActivity.class);
+
+        for (Class<?> act : activities) {
+            if (activity.getClass().equals(act)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void finishAllActivities(Activity activity) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.finishAndRemoveTask();
+        } else {
+            activity.finishAffinity();
+        }
     }
 
     /**
      * Checks to see if the user granted Collect the permissions necessary for reading
      * and writing to storage and if not utilizes the permissions API to request them.
      *
-     * @param activity required for context and spawning of Dexter's activity that handles
-     *                 permission checking.
-     * @param action   is a listener that provides the calling component with the permission result.
+     * @param activity needed for requesting permissions
+     * @param action is a listener that provides the calling component with the permission result.
      */
-    public static void requestStoragePermissions(@NonNull Activity activity, @NonNull PermissionListener action) {
-
-        MultiplePermissionsListener multiplePermissionsListener = new MultiplePermissionsListener() {
+    public void requestStoragePermissions(Activity activity, @NonNull PermissionListener action) {
+        requestPermissions(activity, new PermissionListener() {
             @Override
-            public void onPermissionsChecked(MultiplePermissionsReport report) {
-                if (report.areAllPermissionsGranted()) {
-                    action.granted();
-                } else {
-                    showAdditionalExplanation(activity, R.string.storage_runtime_permission_denied_title,
-                            R.string.storage_runtime_permission_denied_desc, R.drawable.sd, action);
-                }
-            }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        };
-
-        Dexter.withActivity(activity)
-                .withPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ).withListener(multiplePermissionsListener)
-                .withErrorListener(error -> {
-                    Timber.i(error.name());
-                })
-                .check();
-    }
-
-    public static void requestCameraPermission(@NonNull Activity activity, @NonNull PermissionListener action) {
-        com.karumi.dexter.listener.single.PermissionListener permissionListener = new com.karumi.dexter.listener.single.PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse response) {
+            public void granted() {
                 action.granted();
             }
 
             @Override
-            public void onPermissionDenied(PermissionDeniedResponse response) {
+            public void denied() {
+                showAdditionalExplanation(activity, R.string.storage_runtime_permission_denied_title,
+                        R.string.storage_runtime_permission_denied_desc, R.drawable.sd, action);
+            }
+        }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+    public void requestCameraPermission(Activity activity, @NonNull PermissionListener action) {
+        requestPermissions(activity, new PermissionListener() {
+            @Override
+            public void granted() {
+                action.granted();
+            }
+
+            @Override
+            public void denied() {
                 showAdditionalExplanation(activity, R.string.camera_runtime_permission_denied_title,
                         R.string.camera_runtime_permission_denied_desc, R.drawable.ic_photo_camera, action);
             }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        };
-
-        Dexter.withActivity(activity)
-                .withPermission(
-                        Manifest.permission.CAMERA
-                ).withListener(permissionListener)
-                .withErrorListener(error -> Timber.i(error.name()))
-                .check();
+        }, Manifest.permission.CAMERA);
     }
 
-    public static void requestLocationPermissions(@NonNull Activity activity, @NonNull PermissionListener action) {
-        MultiplePermissionsListener multiplePermissionsListener = new MultiplePermissionsListener() {
+    public void requestLocationPermissions(Activity activity, @NonNull PermissionListener action) {
+        requestPermissions(activity, new PermissionListener() {
             @Override
-            public void onPermissionsChecked(MultiplePermissionsReport report) {
-                if (report.areAllPermissionsGranted()) {
-                    action.granted();
-                } else {
-                    showAdditionalExplanation(activity, R.string.location_runtime_permissions_denied_title,
-                            R.string.location_runtime_permissions_denied_desc, R.drawable.ic_place_black, action);
-                }
-            }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        };
-
-        Dexter.withActivity(activity)
-                .withPermissions(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                ).withListener(multiplePermissionsListener)
-                .withErrorListener(error -> Timber.i(error.name()))
-                .check();
-    }
-
-    public static void requestRecordAudioPermission(@NonNull Activity activity, @NonNull PermissionListener action) {
-        com.karumi.dexter.listener.single.PermissionListener permissionListener = new com.karumi.dexter.listener.single.PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse response) {
+            public void granted() {
                 action.granted();
             }
 
             @Override
-            public void onPermissionDenied(PermissionDeniedResponse response) {
+            public void denied() {
+                showAdditionalExplanation(activity, R.string.location_runtime_permissions_denied_title,
+                        R.string.location_runtime_permissions_denied_desc, R.drawable.ic_place_black, action);
+            }
+        }, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
+    }
+
+    public void requestRecordAudioPermission(Activity activity, @NonNull PermissionListener action) {
+        requestPermissions(activity, new PermissionListener() {
+            @Override
+            public void granted() {
+                action.granted();
+            }
+
+            @Override
+            public void denied() {
                 showAdditionalExplanation(activity, R.string.record_audio_runtime_permission_denied_title,
                         R.string.record_audio_runtime_permission_denied_desc, R.drawable.ic_mic, action);
             }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        };
-
-        Dexter.withActivity(activity)
-                .withPermission(
-                        Manifest.permission.RECORD_AUDIO
-                ).withListener(permissionListener)
-                .withErrorListener(error -> Timber.i(error.name()))
-                .check();
+        }, Manifest.permission.RECORD_AUDIO);
     }
 
-    public static void requestCameraAndRecordAudioPermissions(@NonNull Activity activity, @NonNull PermissionListener action) {
-        MultiplePermissionsListener multiplePermissionsListener = new MultiplePermissionsListener() {
+    public void requestCameraAndRecordAudioPermissions(Activity activity, @NonNull PermissionListener action) {
+        requestPermissions(activity, new PermissionListener() {
             @Override
-            public void onPermissionsChecked(MultiplePermissionsReport report) {
-                if (report.areAllPermissionsGranted()) {
-                    action.granted();
-                } else {
-                    showAdditionalExplanation(activity, R.string.camera_runtime_permission_denied_title,
-                            R.string.camera_runtime_permission_denied_desc, R.drawable.ic_photo_camera, action);
-                }
-            }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        };
-
-        Dexter.withActivity(activity)
-                .withPermissions(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.RECORD_AUDIO
-                ).withListener(multiplePermissionsListener)
-                .withErrorListener(error -> Timber.i(error.name()))
-                .check();
-    }
-
-    public static void requestGetAccountsPermission(@NonNull Activity activity, @NonNull PermissionListener action) {
-        com.karumi.dexter.listener.single.PermissionListener permissionListener = new com.karumi.dexter.listener.single.PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse response) {
+            public void granted() {
                 action.granted();
             }
 
             @Override
-            public void onPermissionDenied(PermissionDeniedResponse response) {
+            public void denied() {
+                showAdditionalExplanation(activity, R.string.camera_runtime_permission_denied_title,
+                        R.string.camera_runtime_permission_denied_desc, R.drawable.ic_photo_camera, action);
+            }
+        }, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO);
+    }
+
+    public void requestGetAccountsPermission(Activity activity, @NonNull PermissionListener action) {
+        requestPermissions(activity, new PermissionListener() {
+            @Override
+            public void granted() {
+                action.granted();
+            }
+
+            @Override
+            public void denied() {
                 showAdditionalExplanation(activity, R.string.get_accounts_runtime_permission_denied_title,
                         R.string.get_accounts_runtime_permission_denied_desc, R.drawable.ic_get_accounts, action);
             }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        };
-
-        Dexter.withActivity(activity)
-                .withPermission(
-                        Manifest.permission.GET_ACCOUNTS
-                ).withListener(permissionListener)
-                .withErrorListener(error -> Timber.i(error.name()))
-                .check();
+        }, Manifest.permission.GET_ACCOUNTS);
     }
 
-    public static void requestSendSMSPermission(@NonNull Activity activity, @NonNull PermissionListener action) {
-        com.karumi.dexter.listener.single.PermissionListener permissionListener = new com.karumi.dexter.listener.single.PermissionListener() {
+    public void requestSendSMSPermission(Activity activity, @NonNull PermissionListener action) {
+        requestPermissions(activity, new PermissionListener() {
             @Override
-            public void onPermissionGranted(PermissionGrantedResponse response) {
+            public void granted() {
                 action.granted();
             }
 
             @Override
-            public void onPermissionDenied(PermissionDeniedResponse response) {
+            public void denied() {
                 showAdditionalExplanation(activity, R.string.send_sms_runtime_permission_denied_title,
                         R.string.send_sms_runtime_permission_denied_desc, R.drawable.ic_sms, action);
             }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                token.continuePermissionRequest();
-            }
-        };
-
-        Dexter.withActivity(activity)
-                .withPermission(
-                        Manifest.permission.SEND_SMS
-                ).withListener(permissionListener)
-                .withErrorListener(error -> Timber.i(error.name()))
-                .check();
+        }, Manifest.permission.SEND_SMS);
     }
 
-    public static void requestReadPhoneStatePermission(@NonNull Activity activity, @NonNull PermissionListener action, boolean displayPermissionDeniedDialog) {
-        com.karumi.dexter.listener.single.PermissionListener permissionListener = new com.karumi.dexter.listener.single.PermissionListener() {
+    public void requestReadPhoneStatePermission(Activity activity, boolean displayPermissionDeniedDialog, @NonNull PermissionListener action) {
+        requestPermissions(activity, new PermissionListener() {
             @Override
-            public void onPermissionGranted(PermissionGrantedResponse response) {
+            public void granted() {
                 action.granted();
             }
 
             @Override
-            public void onPermissionDenied(PermissionDeniedResponse response) {
+            public void denied() {
                 if (displayPermissionDeniedDialog) {
                     showAdditionalExplanation(activity, R.string.read_phone_state_runtime_permission_denied_title,
                             R.string.read_phone_state_runtime_permission_denied_desc, R.drawable.ic_phone, action);
@@ -263,24 +248,62 @@ public class PermissionUtils {
                     action.denied();
                 }
             }
+        }, Manifest.permission.READ_PHONE_STATE);
+    }
+
+    public void requestSendSMSAndReadPhoneStatePermissions(Activity activity, @NonNull PermissionListener action) {
+        requestPermissions(activity, new PermissionListener() {
+            @Override
+            public void granted() {
+                action.granted();
+            }
 
             @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                token.continuePermissionRequest();
+            public void denied() {
+                showAdditionalExplanation(activity, R.string.send_sms_runtime_permission_denied_title,
+                        R.string.send_sms_runtime_permission_denied_desc, R.drawable.ic_sms, action);
             }
-        };
+        }, Manifest.permission.SEND_SMS, Manifest.permission.READ_PHONE_STATE);
+    }
 
-        Dexter.withActivity(activity)
-                .withPermission(
-                        Manifest.permission.READ_PHONE_STATE
-                ).withListener(permissionListener)
-                .withErrorListener(error -> Timber.i(error.name()))
-                .check();
+    protected void requestPermissions(Activity activity, @NonNull PermissionListener listener, String... permissions) {
+        DexterBuilder builder = null;
+
+        if (permissions.length == 1) {
+            builder = createSinglePermissionRequest(activity, permissions[0], listener);
+        } else if (permissions.length > 1) {
+            builder = createMultiplePermissionsRequest(activity, listener, permissions);
+        }
+
+        if (builder != null) {
+            builder.withErrorListener(error -> Timber.i(error.name())).check();
+        }
+    }
+
+    private DexterBuilder createSinglePermissionRequest(Activity activity, String permission, PermissionListener listener) {
+        return Dexter.withActivity(activity)
+                .withPermission(permission)
+                .withListener(new com.karumi.dexter.listener.single.PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        listener.granted();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        listener.denied();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                });
     }
 
 
 
-    public static void requestPhoneAndStoragePermission(@NonNull Activity activity, @NonNull PermissionListener action) {
+    public  void requestPhoneAndStoragePermission(@NonNull Activity activity, @NonNull PermissionListener action) {
         MultiplePermissionsListener multiplePermissionsListener = new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -330,69 +353,35 @@ public class PermissionUtils {
                 && accessCoarseLocation == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static boolean checkIfCameraAndRecordAudioPermissionsGranted(Context context) {
-        int cameraPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
-        int recordAudioPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO);
+    private DexterBuilder createMultiplePermissionsRequest(Activity activity, PermissionListener listener, String[] permissions) {
+        return Dexter.withActivity(activity)
+                .withPermissions(permissions)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        if (report.areAllPermissionsGranted()) {
+                            listener.granted();
+                        } else {
+                            listener.denied();
+                        }
+                    }
 
-        return cameraPermission == PackageManager.PERMISSION_GRANTED
-                && recordAudioPermission == PackageManager.PERMISSION_GRANTED;
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                });
     }
 
-    public static boolean checkIfGetAccountsPermissionGranted(Context context) {
-        return ContextCompat.checkSelfPermission(context, Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static boolean checkIfReadPhoneStatePermissionGranted(Context context) {
-        return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    /**
-     * Checks to see if an activity is one of the entry points to the app i.e
-     * an activity that has a view action that can launch the app.
-     *
-     * @param activity that has permission requesting code.
-     * @return true if the activity is an entry point to the app.
-     */
-    public static boolean isEntryPointActivity(CollectAbstractActivity activity) {
-
-        List<Class<?>> activities = new ArrayList<>();
-        activities.add(FormEntryActivity.class);
-        activities.add(InstanceChooserList.class);
-        activities.add(FormChooserList.class);
-        activities.add(InstanceUploaderList.class);
-        activities.add(SplashScreenActivity.class);
-        activities.add(FormDownloadList.class);
-        activities.add(InstanceUploaderActivity.class);
-
-        for (Class<?> act : activities) {
-            if (activity.getClass().equals(act)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static void finishAllActivities(Activity activity) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.finishAndRemoveTask();
-        } else {
-            activity.finishAffinity();
-        }
-    }
-
-    private static void showAdditionalExplanation(@NonNull Activity activity, int title,
-                                                  int message, int drawable,
-                                                  @NonNull PermissionListener action) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.Theme_AppCompat_Light_Dialog);
-
-        builder.setTitle(title)
+    protected void showAdditionalExplanation(Activity activity, int title, int message, int drawable, @NonNull PermissionListener action) {
+        AlertDialog alertDialog = new AlertDialog.Builder(activity, R.style.PermissionAlertDialogTheme)
+                .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> action.denied())
                 .setCancelable(false)
-                .setIcon(drawable);
+                .setIcon(drawable)
+                .create();
 
-        DialogUtils.showDialog(builder.create(), activity);
+        DialogUtils.showDialog(alertDialog, activity);
     }
-
 }

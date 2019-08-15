@@ -22,7 +22,7 @@
             android:orientation="vertical">
 
 
-            <android.support.v7.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatImageButton
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:id="@+id/layer_menu"
                 android:layout_width="wrap_content"

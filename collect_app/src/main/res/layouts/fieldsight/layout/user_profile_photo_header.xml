@@ -11,7 +11,7 @@
         android:src="@drawable/bcss_old_man"
    />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_picture_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

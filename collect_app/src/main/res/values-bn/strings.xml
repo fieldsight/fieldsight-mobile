@@ -177,7 +177,6 @@
   <string name="enter_admin_password">এডমিন পাসওয়ার্ড দিন।</string>
   <string name="found_in_main">প্রধান মেনু্তে পাবেন</string>
   <string name="form_forward">ফর্মের সামনের দিকে</string>
-  <string name="form_backward">ফর্মের পিছনের দিকে</string>
   <string name="navigation">নেভিগেশান</string>
   <string name="swipe_navigation">swipe নেভিগেশান</string>
   <string name="buttons_navigation">buttons নেভিগেশান</string>
@@ -193,7 +192,6 @@
   <string name="start">শুরু</string>
   <string name="enable_gps">GPS সক্ষম</string>
   <string name="gps_enable_message">জিপিএস বার্তা সক্রিয় করা</string>
-  <string name="minutes">মিনিট</string>
   <string name="clear">মুছে ফেলুন।</string>
   <string name="direction">অভিমুখ: %s</string>
   <!--&lt; and &gt; surrounds the text so it will appear as <no form loaded>-->
@@ -201,6 +199,7 @@
   <!--%1$s represents degrees, %2$s represents minutes and %3$s represents seconds as in E 18°48'8"-->
   <!--%1$s represents degrees, %2$s represents minutes and %3$s represents seconds as in S 18°48'8"-->
   <!--%1$s represents degrees, %2$s represents minutes and %3$s represents seconds as in N 18°48'8"-->
+  <!--<string name="submission_transport_admin_setting">Submission transport</string>-->
   <!--Displays dates in specialized calendars with the Gregorian dates in parentheses. This is translated so right-to-left languages can specify the correct order-->
   <!--Sms submission-->
 </resources>

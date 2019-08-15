@@ -17,15 +17,15 @@ package org.odk.collect.android.utilities;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.AttrRes;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.StyleRes;
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.StyleRes;
 import android.util.TypedValue;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.preferences.GeneralKeys;
 
 public final class ThemeUtils {
 
@@ -91,7 +91,7 @@ public final class ThemeUtils {
     }
 
     public boolean isDarkTheme() {
-        String theme = (String) GeneralSharedPreferences.getInstance().get(PreferenceKeys.KEY_APP_THEME);
+        String theme = (String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_APP_THEME);
         return theme.equals(context.getString(R.string.app_theme_dark));
     }
 

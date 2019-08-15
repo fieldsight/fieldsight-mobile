@@ -18,9 +18,9 @@ package org.odk.collect.android.preferences;
 
 import android.os.Bundle;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.OnBackPressedListener;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ThemeUtils;
 

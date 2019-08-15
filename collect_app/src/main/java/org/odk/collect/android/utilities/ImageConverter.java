@@ -20,9 +20,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.support.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.javarosa.core.model.instance.TreeElement;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.widgets.QuestionWidget;
@@ -31,8 +31,8 @@ import java.io.IOException;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_IMAGE_SIZE;
-import static org.odk.collect.android.utilities.ApplicationConstants.XML_OPENROSA_NAMESPACE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_IMAGE_SIZE;
+import static org.odk.collect.android.utilities.ApplicationConstants.Namespaces.XML_OPENROSA_NAMESPACE;
 
 public class ImageConverter {
 
@@ -157,5 +157,10 @@ public class ImageConverter {
             Timber.w(e);
         }
         FileUtils.saveBitmapToFile(image, imagePath);
+    }
+
+    public static Bitmap scaleImageToNewWidth(Bitmap bitmap, int newWidth) {
+        int newHeight = (int) (((double) newWidth / (double) bitmap.getWidth()) * bitmap.getHeight());
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 }

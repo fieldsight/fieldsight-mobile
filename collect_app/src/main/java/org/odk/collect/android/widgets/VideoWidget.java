@@ -26,29 +26,30 @@ import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore.Video;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.PermissionListener;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.fieldsight.collect.android.BuildConfig;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.activities.CaptureSelfieVideoActivity;
 import org.odk.collect.android.activities.CaptureSelfieVideoActivityNewApi;
-import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.preferences.PreferenceKeys;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.CameraUtils;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtil;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.odk.collect.android.utilities.WidgetAppearanceUtils;
 import org.odk.collect.android.widgets.interfaces.FileWidget;
 
 import java.io.File;
@@ -60,8 +61,6 @@ import timber.log.Timber;
 
 import static android.os.Build.MODEL;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
-import static org.odk.collect.android.utilities.PermissionUtils.requestCameraAndRecordAudioPermissions;
-import static org.odk.collect.android.utilities.PermissionUtils.requestCameraPermission;
 
 /**
  * Widget that allows user to take pictures, sounds or video and add them to the
@@ -105,7 +104,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
         this.mediaUtil = mediaUtil;
 
         String appearance = getFormEntryPrompt().getAppearanceHint();
-        selfie = appearance != null && (appearance.equalsIgnoreCase("selfie") || appearance.equalsIgnoreCase("new-front"));
+        selfie = appearance != null && (appearance.equalsIgnoreCase(WidgetAppearanceUtils.SELFIE) || appearance.equalsIgnoreCase(WidgetAppearanceUtils.NEW_FRONT));
 
         captureButton = getSimpleButton(getContext().getString(R.string.capture_video), R.id.capture_video);
 
@@ -115,11 +114,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
 
         // retrieve answer from data model and update ui
         binaryName = prompt.getAnswerText();
-        if (binaryName != null) {
-            playButton.setEnabled(true);
-        } else {
-            playButton.setEnabled(false);
-        }
+        playButton.setEnabled(binaryName != null);
 
         // finish complex layout
         LinearLayout answerLayout = new LinearLayout(getContext());
@@ -203,6 +198,8 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
 
         // reset buttons
         playButton.setEnabled(false);
+
+        widgetValueChanged();
     }
 
     @Override
@@ -281,11 +278,14 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
                 Timber.i("Deleting original capture of file: %s count: %d", binaryName, delCount);
             }
         }
+
+        widgetValueChanged();
+        playButton.setEnabled(binaryName != null);
     }
 
     private void hideButtonsIfNeeded() {
         if (selfie || (getFormEntryPrompt().getAppearanceHint() != null
-                && getFormEntryPrompt().getAppearanceHint().toLowerCase(Locale.ENGLISH).contains("new"))) {
+                && getFormEntryPrompt().getAppearanceHint().toLowerCase(Locale.ENGLISH).contains(WidgetAppearanceUtils.NEW))) {
             chooseButton.setVisibility(View.GONE);
         }
     }
@@ -320,7 +320,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
         switch (id) {
             case R.id.capture_video:
                 if (selfie) {
-                    requestCameraAndRecordAudioPermissions((FormEntryActivity) getContext(), new PermissionListener() {
+                    getPermissionUtils().requestCameraAndRecordAudioPermissions((Activity) getContext(), new PermissionListener() {
                         @Override
                         public void granted() {
                             captureVideo();
@@ -331,7 +331,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
                         }
                     });
                 } else {
-                    requestCameraPermission((FormEntryActivity) getContext(), new PermissionListener() {
+                    getPermissionUtils().requestCameraPermission((Activity) getContext(), new PermissionListener() {
                         @Override
                         public void granted() {
                             captureVideo();
@@ -358,7 +358,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 i = new Intent(getContext(), CaptureSelfieVideoActivityNewApi.class);
             } else {
-                i = new Intent(getContext(), org.odk.collect.android.activities.CaptureSelfieVideoActivity.class);
+                i = new Intent(getContext(), CaptureSelfieVideoActivity.class);
             }
         } else {
             i = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
@@ -382,7 +382,7 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
 
         // request high resolution if configured for that...
         boolean highResolution = settings.getBoolean(
-                PreferenceKeys.KEY_HIGH_RESOLUTION,
+                GeneralKeys.KEY_HIGH_RESOLUTION,
                 VideoWidget.DEFAULT_HIGH_RESOLUTION);
         if (highResolution) {
             i.putExtra(android.provider.MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -423,13 +423,17 @@ public class VideoWidget extends QuestionWidget implements FileWidget {
     }
 
     private void playVideoFile() {
-        Intent intent = new Intent("android.intent.action.VIEW");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
         File file = new File(getInstanceFolder() + File.separator + binaryName);
 
-        Uri uri =
-                FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+        Uri uri = null;
+        try {
+            uri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", file);
+            FileUtils.grantFileReadPermissions(intent, uri, getContext());
+        } catch (IllegalArgumentException e) {
+            Timber.e(e);
+        }
 
-        FileUtils.grantFileReadPermissions(intent, uri, getContext());
         intent.setDataAndType(uri, "video/*");
         try {
             getContext().startActivity(intent);

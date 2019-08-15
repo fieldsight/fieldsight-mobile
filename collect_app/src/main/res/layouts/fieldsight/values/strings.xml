@@ -278,6 +278,8 @@
     <string name="retry_forms">Retry %d form(s)</string>
     <string name="error_message_fail_to_load_images">Fail to load notification images</string>
     <string name="msg_forms_download_fail">%d forms failed to download</string>
+    <string name="upload_site">Upload Site</string>
+    <string name="upload_edited_site">Upload Site</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>
@@ -286,8 +288,7 @@
         <item>UI error</item>
         <item>Other</item>
     </string-array>
-
-
     <!--Notification sitelist ends here-->
+
 
 </resources>

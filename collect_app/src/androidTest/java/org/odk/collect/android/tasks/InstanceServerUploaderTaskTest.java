@@ -1,11 +1,13 @@
 package org.odk.collect.android.tasks;
 
 import android.net.Uri;
+import androidx.test.rule.GrantPermissionRule;
 
-import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.test.MockedServerTest;
@@ -22,6 +24,10 @@ import static org.odk.collect.android.test.TestUtils.createTempFile;
 import static org.odk.collect.android.test.TestUtils.resetInstancesContentProvider;
 
 public class InstanceServerUploaderTaskTest extends MockedServerTest {
+
+    @Rule
+    public GrantPermissionRule runtimepermissionrule = GrantPermissionRule.grant(android.Manifest.permission.READ_PHONE_STATE);
+
     private InstancesDao dao;
 
     @Before

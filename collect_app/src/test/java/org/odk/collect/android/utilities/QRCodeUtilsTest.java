@@ -7,7 +7,7 @@ import com.google.zxing.FormatException;
 import com.google.zxing.NotFoundException;
 import com.google.zxing.WriterException;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -18,7 +18,7 @@ package org.odk.collect.android.utilities;
 
 import android.content.Context;
 
-import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.DateData;
@@ -75,7 +75,7 @@ public class FormEntryPromptUtils {
                     DateTimeUtils.getDatePickerDetails(appearance), false, context);
         }
 
-        if (data != null && appearance != null && appearance.contains("thousands-sep")) {
+        if (data != null && appearance != null && appearance.contains(WidgetAppearanceUtils.THOUSANDS_SEP)) {
             try {
                 final BigDecimal answerAsDecimal = new BigDecimal(fep.getAnswerText());
 
@@ -125,8 +125,8 @@ public class FormEntryPromptUtils {
         return questionText;
     }
 
-    public static String getItemText(FormEntryPrompt formEntryPrompt, SelectChoice selectChoice) {
+    public static CharSequence getItemText(FormEntryPrompt formEntryPrompt, SelectChoice selectChoice) {
         String choiceName = formEntryPrompt.getSelectChoiceText(selectChoice);
-        return choiceName != null ? TextUtils.textToHtml(choiceName).toString() : "";
+        return choiceName != null ? TextUtils.textToHtml(choiceName) : "";
     }
 }

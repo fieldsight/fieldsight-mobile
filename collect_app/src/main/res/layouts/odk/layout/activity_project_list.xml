@@ -1,4 +1,4 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinatorLayout_project_listing"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
     <include layout="@layout/general_toolbar" />
 
 
-    <org.bcss.collect.naxa.common.RecyclerViewEmptySupport
+    <org.fieldsight.naxa.common.RecyclerViewEmptySupport
 
         android:id="@+id/my_projects_list"
         android:layout_width="match_parent"
@@ -19,4 +19,4 @@
 
     <include layout="@layout/progress_layout" />
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

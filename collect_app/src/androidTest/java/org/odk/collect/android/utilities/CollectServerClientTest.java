@@ -1,7 +1,7 @@
 package org.odk.collect.android.utilities;
 
-import org.bcss.collect.android.http.CollectServerClient;
-import org.bcss.collect.android.http.HttpClientConnection;
+import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.http.HttpClientConnection;
 import org.junit.Before;
 import org.junit.Test;
 import org.odk.collect.android.test.MockedServerTest;

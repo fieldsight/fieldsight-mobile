@@ -1,13 +1,13 @@
 package org.odk.collect.android.http.mock;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import org.bcss.collect.android.http.HttpCredentialsInterface;
-import org.bcss.collect.android.http.HttpGetResult;
-import org.bcss.collect.android.http.HttpHeadResult;
-import org.bcss.collect.android.http.OpenRosaHttpInterface;
-import org.odk.collect.android.utilities.ResponseMessageParser;
+import org.odk.collect.android.http.HttpCredentialsInterface;
+import org.odk.collect.android.http.HttpGetResult;
+import org.odk.collect.android.http.HttpHeadResult;
+import org.odk.collect.android.http.HttpPostResult;
+import org.odk.collect.android.http.OpenRosaHttpInterface;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -22,15 +22,15 @@ public class MockHttpClientConnection implements OpenRosaHttpInterface {
 
     @Override
     @NonNull
-    public HttpGetResult get(@NonNull URI uri, @Nullable String contentType, @Nullable HttpCredentialsInterface credentials) throws Exception {
+    public HttpGetResult executeGetRequest(@NonNull URI uri, @Nullable String contentType, @Nullable HttpCredentialsInterface credentials) throws Exception {
 
         String xml =
-        "<forms>" +
-        "<form url=\"https://opendatakit.appspot.com/formXml?formId=CascadingSelect\">Cascading Select Form</form>" +
-        "<form url=\"https://opendatakit.appspot.com/formXml?formId=widgets\">Widgets</form>" +
-        "<form url=\"https://opendatakit.appspot.com/formXml?formId=NewWidgets\">New Widgets</form>" +
-        "<form url=\"https://opendatakit.appspot.com/formXml?formId=sample\">sample</form>" +
-        "</forms>";
+                "<forms>" +
+                        "<form url=\"https://opendatakit.appspot.com/formXml?formId=CascadingSelect\">Cascading Select Form</form>" +
+                        "<form url=\"https://opendatakit.appspot.com/formXml?formId=widgets\">Widgets</form>" +
+                        "<form url=\"https://opendatakit.appspot.com/formXml?formId=NewWidgets\">New Widgets</form>" +
+                        "<form url=\"https://opendatakit.appspot.com/formXml?formId=sample\">sample</form>" +
+                        "</forms>";
 
         InputStream is = new ByteArrayInputStream(xml.getBytes());
 
@@ -43,13 +43,20 @@ public class MockHttpClientConnection implements OpenRosaHttpInterface {
 
     @NonNull
     @Override
-    public HttpHeadResult head(@NonNull URI uri, @Nullable HttpCredentialsInterface credentials) {
+    public HttpHeadResult executeHeadRequest(@NonNull URI uri, @Nullable HttpCredentialsInterface credentials) throws Exception {
         return new HttpHeadResult(0, new HashMap<String, String>());
     }
 
     @NonNull
     @Override
-    public ResponseMessageParser uploadSubmissionFile(@NonNull List<File> fileList, @NonNull File submissionFile, @NonNull URI uri, @Nullable HttpCredentialsInterface credentials) {
-        return null;
+    public HttpPostResult uploadSubmissionFile(@NonNull List<File> fileList, @NonNull File submissionFile, @NonNull URI uri, @Nullable HttpCredentialsInterface credentials, @NonNull long contentLength) throws IOException {
+        return new HttpPostResult("", 0, "");
+    }
+
+    @NonNull
+    @Override
+    public HttpPostResult executePostRequest(@NonNull URI uri, @Nullable HttpCredentialsInterface credentials) throws Exception {
+        return new HttpPostResult("", 0, "");
+
     }
 }
