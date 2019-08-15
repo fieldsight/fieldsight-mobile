@@ -55,7 +55,7 @@ public class SyncServiceV3 extends IntentService {
     HashMap<String, List<Syncable>> selectedMap = null;
     private List<String> failedSiteUrls = new ArrayList<>();
     private ArrayList<Disposable> syncDisposable = new ArrayList<>();
-
+    private int downloadProgress = 0;
 
     public SyncServiceV3() {
         super("SyncserviceV3");
@@ -159,13 +159,13 @@ public class SyncServiceV3 extends IntentService {
                         @Override
                         public ObservableSource<?> apply(Project project) throws Exception {
 
-                            final int[] progress = {0};
 
                             Observable<ArrayList<GeneralForm>> generalForms = GeneralFormRemoteSource.getInstance().fetchGeneralFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<ScheduleForm>> scheduledForms = ScheduledFormsRemoteSource.getInstance().fetchFormByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<FormDetails>> odkForms = ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
 
+                            downloadProgress = 0;
 
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
                                     .flatMap(new Function<ArrayList<? extends Object>, ObservableSource<ArrayList<?>>>() {
@@ -203,11 +203,11 @@ public class SyncServiceV3 extends IntentService {
                                         }
 
                                         private void checkAndMarkAsComplete() {
-                                            if (4 == progress[0]) {
+                                            if (4 == downloadProgress) {
                                                 markAsCompleted(project.getId(), 1);
-                                                progress[0] = 0;
+                                                downloadProgress = 0;
                                             } else {
-                                                progress[0]++;
+                                                downloadProgress++;
                                             }
                                         }
                                     })
