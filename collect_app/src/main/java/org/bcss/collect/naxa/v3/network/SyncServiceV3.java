@@ -152,7 +152,11 @@ public class SyncServiceV3 extends IntentService {
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
-                    .flatMap(new Function<Project, ObservableSource<?>>() {
+                    .map(project -> {
+                        SyncLocalSourcev3.getInstance().markAsQueued(project.getId(), 1);
+                        return project;
+                    })
+                    .concatMap(new Function<Project, ObservableSource<?>>() {
                         @Override
                         public ObservableSource<?> apply(Project project) throws Exception {
 
@@ -162,7 +166,6 @@ public class SyncServiceV3 extends IntentService {
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<FormDetails>> odkForms = ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
 
-                            int totalConcatCall = 0;
 
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
                                     .flatMap(new Function<ArrayList<? extends Object>, ObservableSource<ArrayList<?>>>() {
@@ -191,7 +194,7 @@ public class SyncServiceV3 extends IntentService {
                                     .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1));
 
                         }
-                    })
+                    }, 1)
                     .subscribe(project -> {
                         //unused
                     }, Timber::e);

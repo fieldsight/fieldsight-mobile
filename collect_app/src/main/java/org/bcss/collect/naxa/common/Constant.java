@@ -139,7 +139,7 @@ public class Constant {
         public static final int RUNNING = 3;
         public static final int COMPLETED = 4;
         public static final int DISABLED = 5;
-        public static final int RETRY = 5;
+        public static final int QUEUED = 6;
     }
 
     public final static class FormStatus {
@@ -168,6 +168,7 @@ public class Constant {
         put(DownloadStatus.FAILED, "Failed");
         put(DownloadStatus.RUNNING, "Syncing data");
         put(DownloadStatus.COMPLETED, "Completed");
+        put(DownloadStatus.QUEUED, "Queued");
     }};
 
     public static class SERVICE {

@@ -48,13 +48,13 @@ public class ODKFormRemoteSource {
                 .map(mapProjectsToXMLForm())
                 .flatMap(new Function<ArrayList<XMLForm>, Observable<HashMap<FormDetails, String>>>() {
                     @Override
-                    public Observable<HashMap<FormDetails, String>> apply(ArrayList<XMLForm> xmlForms) throws Exception {
+                    public Observable<HashMap<FormDetails, String>> apply(ArrayList<XMLForm> xmlForms) {
                         return createFormDownloadObservable(xmlForms);
                     }
                 })
                 .map(new Function<HashMap<FormDetails, String>, ArrayList<FormDetails>>() {
                     @Override
-                    public ArrayList<FormDetails> apply(HashMap<FormDetails, String> formDetailsStringHashMap) throws Exception {
+                    public ArrayList<FormDetails> apply(HashMap<FormDetails, String> formDetailsStringHashMap) {
 
                         ArrayList<FormDetails> failedForms = new ArrayList<>();
                         for (FormDetails key : formDetailsStringHashMap.keySet()) {
@@ -65,9 +65,7 @@ public class ODKFormRemoteSource {
                                     failedForms.add(key);
                                 }
                             }
-
                         }
-
 
                         Timber.i("%d forms failed to download",failedForms.size());
                         return failedForms;
