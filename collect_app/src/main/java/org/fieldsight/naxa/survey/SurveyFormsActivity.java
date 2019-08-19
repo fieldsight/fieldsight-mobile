@@ -21,15 +21,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.AppBarLayout;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.helpers.FSInstancesDao;;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.provider.FormsProviderAPI;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.common.ViewModelFactory;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.login.model.Project;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.List;
@@ -38,16 +38,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.fieldsight.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
+
+;
 
 public class SurveyFormsActivity extends CollectAbstractActivity implements TitleDescAdapter.OnCardClickListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-
 
 
     @BindView(R.id.appbar_general)
@@ -95,7 +95,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
                         adapter.clear();
                         adapter.addAll(surveyForms);
                         adapter.notifyDataSetChanged();
-                        runLayoutAnimation(recyclerSurveyFormList);
+
                     }
                 });
 
@@ -130,7 +130,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         recyclerSurveyFormList.setLayoutManager(linearLayoutManager);
         recyclerSurveyFormList.setItemAnimator(new DefaultItemAnimator());
-        recyclerSurveyFormList.setEmptyView(findViewById(R.id.root_layout_empty_layout), getString(R.string.empty_message,"survey form(s)"), () -> {
+        recyclerSurveyFormList.setEmptyView(findViewById(R.id.root_layout_empty_layout), getString(R.string.empty_message, "survey form(s)"), () -> {
 
         });
 
@@ -146,7 +146,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, projectIdForSurveyForm);
 
-        if(isFormSaveCacheSafe(submissionUrl,projectIdForSurveyForm)){
+        if (isFormSaveCacheSafe(submissionUrl, projectIdForSurveyForm)) {
             fillODKForm(surveyForm.getIdString());
         }
     }
@@ -190,7 +190,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
 
         String[] projection = new String[]{FormsProviderAPI.FormsColumns._ID, FormsProviderAPI.FormsColumns.FORM_FILE_PATH};
-        String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=? AND " + "("+FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " =? OR " + FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " IS NULL)";
+        String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=? AND " + "(" + FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " =? OR " + FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " IS NULL)";
         String[] selectionArgs = new String[]{jrFormId, "0"};
         String sortOrder = FormsProviderAPI.FormsColumns._ID + " DESC LIMIT 1";
 

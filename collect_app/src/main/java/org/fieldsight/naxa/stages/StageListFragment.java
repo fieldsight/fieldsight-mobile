@@ -1,20 +1,21 @@
 package org.fieldsight.naxa.stages;
 
 
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
@@ -42,7 +43,6 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.fieldsight.naxa.common.Constant.ANIM.fragmentEnterAnimation;
 import static org.fieldsight.naxa.common.Constant.ANIM.fragmentExitAnimation;
 import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
@@ -122,9 +122,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
                 .subscribe(new DisposableObserver<List<Stage>>() {
                     @Override
                     public void onNext(List<Stage> stages) {
-                        if (listAdapter.getItemCount() == 0) {
-                            runLayoutAnimation(recyclerView);
-                        }
+
                         listAdapter.updateList(stages);
                     }
 

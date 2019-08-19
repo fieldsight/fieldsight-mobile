@@ -307,7 +307,6 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
     }
 
     private void setupViewModel() {
-//        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
         viewModel = ViewModelProviders.of(this).get(DownloadViewModel.class);
     }
 
