@@ -64,31 +64,13 @@ public class DataManagerList extends InstanceListFragment
     private InstanceSyncTask instanceSyncTask;
     private ProgressDialog progressDialog;
 
-    private Site loadedSite;
-
-
     @Inject
     SmsSubmissionManagerContract smsSubmissionManager;
-
-    public static DataManagerList newInstance(Site loadedSite) {
-        DataManagerList dataManagerList = new DataManagerList();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(EXTRA_OBJECT, loadedSite);
-        dataManagerList.setArguments(bundle);
-        return dataManagerList;
-
-    }
-
-
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        if (getArguments() != null) {
-            loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
-        }
-
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -167,11 +149,7 @@ public class DataManagerList extends InstanceListFragment
 
     @Override
     protected CursorLoader getCursorLoader() {
-        if (loadedSite != null) {
-            return new InstancesDao().getSavedInstancesCursorLoaderSite(loadedSite.getId(), getSortingOrder());
-        } else {
-            return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
-        }
+        return new InstancesDao().getSavedInstancesCursorLoader(getFilterText(), getSortingOrder());
     }
 
     /**

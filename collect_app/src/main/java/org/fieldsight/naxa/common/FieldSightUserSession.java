@@ -33,7 +33,7 @@ import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.sync.SyncRepository;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DeleteInstancesTask;
 
@@ -86,7 +86,7 @@ public class FieldSightUserSession {
                     @Override
                     public void onSuccess(List<Site> sites) {
                         String msg;
-                        int unsentFormCount = new InstancesDao().getUnsentInstancesCursor().getCount();
+                        int unsentFormCount = new FSInstancesDao().getUnsentInstancesCursor().getCount();
                         int offlineSitesNumber = sites.size();
 
                         if (offlineSitesNumber == 0 && unsentFormCount == 0) {
@@ -156,7 +156,7 @@ public class FieldSightUserSession {
                 .subscribe(new DisposableSingleObserver<List<Site>>() {
                     @Override
                     public void onSuccess(List<Site> sites) {
-                        int unsentFormCount = new InstancesDao().getUnsentInstancesCursor().getCount();
+                        int unsentFormCount = new FSInstancesDao().getUnsentInstancesCursor().getCount();
                         int offlineSitesNumber = sites.size();
 
                         boolean isSafeToLogout = (unsentFormCount + offlineSitesNumber) == 0;
@@ -376,7 +376,7 @@ public class FieldSightUserSession {
         Cursor results = null;
         ArrayList<Long> ids = new ArrayList<>();
         try {
-            results = new InstancesDao().getInstanceCursor();
+            results = new FSInstancesDao().getInstanceCursor();
             if (results.getCount() > 0) {
                 results.moveToPosition(-1);
                 while (results.moveToNext()) {

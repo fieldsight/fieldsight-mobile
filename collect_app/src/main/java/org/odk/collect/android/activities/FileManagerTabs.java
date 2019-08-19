@@ -25,6 +25,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.widget.Toolbar;
 
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.fragments.FSDataManagerList;
 import org.odk.collect.android.adapters.ViewPagerAdapter;
 import org.odk.collect.android.fragments.DataManagerList;
 import org.odk.collect.android.fragments.FormManagerList;
@@ -68,7 +69,7 @@ public class FileManagerTabs extends CollectAbstractActivity {
         ViewPager viewPager = findViewById(R.id.pager);
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(DataManagerList.newInstance(loadedSite));
+        fragments.add(FSDataManagerList.newInstance(loadedSite));
 //        fragments.add(formManagerList);
 
         viewPager.setAdapter(new ViewPagerAdapter(

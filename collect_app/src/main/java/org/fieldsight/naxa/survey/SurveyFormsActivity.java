@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.AppBarLayout;
 
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.helpers.FSInstancesDao;;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.provider.FormsProviderAPI;
 import org.fieldsight.naxa.common.DialogFactory;
@@ -29,7 +30,6 @@ import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.common.ViewModelFactory;
 import org.fieldsight.naxa.login.model.Project;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.List;
@@ -183,7 +183,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     }
 
     protected String generateSubmissionUrl(String formDeployedFrom, String creatorsId, String fsFormId) {
-        return InstancesDao.generateSubmissionUrl(formDeployedFrom, creatorsId, fsFormId);
+        return FSInstancesDao.generateSubmissionUrl(formDeployedFrom, creatorsId, fsFormId);
     }
 
 
@@ -206,6 +206,4 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
 
         return formId;
     }
-
-
 }

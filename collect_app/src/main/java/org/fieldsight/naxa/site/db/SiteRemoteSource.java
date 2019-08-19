@@ -16,7 +16,7 @@ import org.fieldsight.naxa.sync.DownloadableItemLocalSource;
 import org.fieldsight.naxa.sync.SyncRepository;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
 import org.fieldsight.naxa.v3.network.SiteResponse;
-import org.odk.collect.android.dao.InstancesDao;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
@@ -155,7 +155,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
 
     public Observable<Site> uploadMultipleSites(List<Site> sites) {
-        InstancesDao instancesDao = new InstancesDao();
+        FSInstancesDao instancesDao = new FSInstancesDao();
         return Observable.just(sites)
                 .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
                 .filter(site -> site.getIsSiteVerified() == IS_OFFLINE)

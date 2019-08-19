@@ -20,7 +20,7 @@ import org.fieldsight.naxa.login.model.SiteMetaAttribute;
 import org.fieldsight.naxa.project.data.ProjectRepository;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
@@ -152,7 +152,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
     private void copyInstances() {
         SQLiteDatabase db = getInstancesDB();
-        InstancesDao dao = new InstancesDao();
+        FSInstancesDao dao = new FSInstancesDao();
         Cursor cursor;
         cursor = selectAll(db, MigrationHelper.Table.instances);
         while (cursor.moveToNext()) {
@@ -161,7 +161,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
             String fsFormId = getString(cursor, MigrationHelper.InstanceColumns.FS_FORM_ID);
             String siteId = getString(cursor, MigrationHelper.InstanceColumns.FS_SITE_ID);
 
-            String fixedSubmissionUrl = InstancesDao.generateSubmissionUrl(formDeployedFrom, siteId, fsFormId);
+            String fixedSubmissionUrl = FSInstancesDao.generateSubmissionUrl(formDeployedFrom, siteId, fsFormId);
 
             String fixedInstancePath = migrationHelper.fixFormAndInstancesPath(
                     getString(cursor, MigrationHelper.InstanceColumns.INSTANCE_FILE_PATH),

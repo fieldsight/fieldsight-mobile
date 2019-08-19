@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import org.fieldsight.collect.android.R;
 import org.odk.collect.android.provider.FormsProviderAPI;
-import org.odk.collect.android.dao.InstancesDao;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 
 import timber.log.Timber;
 
@@ -47,7 +47,7 @@ public class FieldSightFormListFragment extends Fragment {
     }
 
     protected String generateSubmissionUrl(String formDeployedFrom, String creatorsId, String fsFormId) {
-        return InstancesDao.generateSubmissionUrl(formDeployedFrom, creatorsId, fsFormId);
+        return FSInstancesDao.generateSubmissionUrl(formDeployedFrom, creatorsId, fsFormId);
     }
 
     protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {

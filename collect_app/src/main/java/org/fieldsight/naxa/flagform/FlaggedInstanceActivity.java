@@ -50,7 +50,7 @@ import org.fieldsight.naxa.notificationslist.NotificationImageAdapter;
 import org.fieldsight.naxa.site.FragmentHostActivity;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.dao.InstancesDao;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
@@ -98,7 +98,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     private HashMap<String, Boolean> formResult;
     private Dialog errorDialog;
     private FormsDao formsDao;
-    private InstancesDao instancesDao;
+    private FSInstancesDao instancesDao;
     private TextView tvSiteIdentifier;
     private TextView tvSiteName;
     private TextView tvIconText;
@@ -130,7 +130,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         setupToolbar();
 
         formsDao = new FormsDao();
-        instancesDao = new InstancesDao();
+        instancesDao = new FSInstancesDao();
         formBox.setOnClickListener(this);
 
         loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
