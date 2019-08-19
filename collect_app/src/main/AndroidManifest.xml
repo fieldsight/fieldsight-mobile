@@ -124,7 +124,7 @@
         <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewImageDetailsActivity" />
         <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewVideoDetailsActivity" />
         <activity android:name="org.fieldsight.naxa.FSInstanceUploaderListActivity" />
-        <activity android:name="org.fieldsight.naxa.FsInstanceChooserList" />
+        <activity android:name="org.fieldsight.naxa.FSInstanceChooserList" />
         <activity android:name="org.fieldsight.naxa.sync.ContentDownloadActivity" />
         <activity android:name="org.fieldsight.naxa.onboarding.DownloadActivity" />
         <activity
