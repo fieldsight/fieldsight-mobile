@@ -1,20 +1,20 @@
 package org.fieldsight.naxa.scheduled.data;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightFormListFragment;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
@@ -31,6 +31,7 @@ import org.fieldsight.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
 import static org.fieldsight.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
@@ -103,9 +103,6 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
                 .observe(this, new Observer<List<ScheduledFormAndSubmission>>() {
                     @Override
                     public void onChanged(@Nullable List<ScheduledFormAndSubmission> scheduledFormAndSubmissions) {
-                        if (scheduledFormsAdapter.getItemCount() == 0) {
-                            runLayoutAnimation(recyclerView);
-                        }
                         scheduledFormsAdapter.updateList(scheduledFormAndSubmissions);
                     }
                 });
@@ -116,7 +113,6 @@ public class ScheduledFormsFragment extends FieldSightFormListFragment implement
     private void setupListAdapter() {
 
         LinearLayoutManager manager = new LinearLayoutManager(getActivity());
-        manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         scheduledFormsAdapter = new ScheduledFormsAdapter(new ArrayList<>(0), this);

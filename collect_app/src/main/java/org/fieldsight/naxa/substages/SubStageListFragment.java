@@ -1,19 +1,19 @@
 package org.fieldsight.naxa.substages;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.FieldSightFormListFragment;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
@@ -28,6 +28,7 @@ import org.fieldsight.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.fieldsight.naxa.common.Constant.EXTRA_FORM_DEPLOYED_FORM;
 import static org.fieldsight.naxa.common.Constant.EXTRA_ID;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
@@ -124,9 +124,7 @@ public class SubStageListFragment extends FieldSightFormListFragment implements 
         setupListAdapter();
         viewModel.loadSubStages(loadedSite.getId(), loadedSite.getProject(), stageId, loadedSite.getTypeId())
                 .observe(this, substages -> {
-                    if (listAdapter.getItemCount() == 0) {
-                        runLayoutAnimation(recyclerView);
-                    }
+
                     listAdapter.updateList(substages);
                 });
     }

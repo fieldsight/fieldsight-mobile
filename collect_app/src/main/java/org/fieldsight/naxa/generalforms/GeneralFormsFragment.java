@@ -1,18 +1,18 @@
 package org.fieldsight.naxa.generalforms;
 
-import androidx.lifecycle.Observer;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightFormListFragment;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
@@ -30,6 +30,7 @@ import org.fieldsight.naxa.submissions.PreviousSubmissionListActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.AnimationUtils.runLayoutAnimation;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
 import static org.fieldsight.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
@@ -127,9 +127,6 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
                             return;
                         }
 
-                        if (generalFormsAdapter.getItemCount() == 0) {
-                            runLayoutAnimation(recyclerView);
-                        }
 
                         generalFormsAdapter.updateList(generalFormAndSubmissions);
 
