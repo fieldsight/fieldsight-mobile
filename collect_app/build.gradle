@@ -78,8 +78,8 @@ def googleMapsApiKey = secrets.getProperty('GOOGLE_MAPS_API_KEY', '')
 def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', '')
 
 def versionMajor = 3
-def versionMinor = 0
-def versionPatch = 13
+def versionMinor = 1
+def versionPatch = 0
 
 android {
     compileSdkVersion(28)
@@ -285,6 +285,8 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:${rootProject.glideVersion}"
     annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.glideVersion}"
+    internalImplementation "com.squareup.leakcanary:leakcanary-android-no-op:${rootProject.leakyCanaryVersion}"
+
     //naxa [ends]
 
 
