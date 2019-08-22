@@ -166,6 +166,7 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -996,7 +997,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         menu.findItem(R.id.menu_languages).setVisible(useability)
                 .setEnabled(useability);
 
-        useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
+        //useability = (boolean) AdminSharedPreferences.getInstance().get(AdminKeys.KEY_ACCESS_SETTINGS);
+        useability = false;
 
         menu.findItem(R.id.menu_preferences).setVisible(useability)
                 .setEnabled(useability);
@@ -1410,27 +1412,27 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (showNavigationButtons) {
             updateNavigationButtonVisibility();
         }
-                // Create 'send' button
-                endView.findViewById(R.id.save_send_exit_button)
-                        .setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // Form is marked as 'saved' here.
-                                if (saveAs.getText().length() < 1) {
-                                    ToastUtils.showShortToast(R.string.save_as_error);
-                                } else {
-                                    saveSendAndExit = true;
-                                    saveDataToDisk(EXIT, instanceComplete
-                                            .isChecked(), saveAs.getText()
-                                            .toString());
-                                }
-                            }
-                        });
+        // Create 'send' button
+        endView.findViewById(R.id.save_send_exit_button)
+                .setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Form is marked as 'saved' here.
+                        if (saveAs.getText().length() < 1) {
+                            ToastUtils.showShortToast(R.string.save_as_error);
+                        } else {
+                            saveSendAndExit = true;
+                            saveDataToDisk(EXIT, instanceComplete
+                                    .isChecked(), saveAs.getText()
+                                    .toString());
+                        }
+                    }
+                });
 
-                if (showNavigationButtons) {
-                    backButton.setEnabled(allowMovingBackwards);
-                    nextButton.setEnabled(false);
-                }
+        if (showNavigationButtons) {
+            backButton.setEnabled(allowMovingBackwards);
+            nextButton.setEnabled(false);
+        }
 
         return endView;
     }
@@ -1654,11 +1656,11 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 for (int i = 0; i < attrs.size(); i++) {
                     if (!autoSaved && "saveIncomplete".equals(attrs.get(i).getName())) {
                         Collect.getInstance().getDefaultTracker()
-                            .send(new HitBuilders.EventBuilder()
-                                .setCategory("WidgetAttribute")
-                                .setAction("saveIncomplete")
-                                .setLabel(Collect.getCurrentFormIdentifierHash())
-                                .build());
+                                .send(new HitBuilders.EventBuilder()
+                                        .setCategory("WidgetAttribute")
+                                        .setAction("saveIncomplete")
+                                        .setLabel(Collect.getCurrentFormIdentifierHash())
+                                        .build());
                         saveDataToDisk(false, false, null, false);
                         autoSaved = true;
                     }
@@ -2125,7 +2127,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * - we are at the first question in the form so the back button is hidden
      * - we are at the end screen so the next button is hidden
      * - settings prevent backwards navigation of the form so the back button is hidden
-     *
+     * <p>
      * The visibility of the container for these buttons is determined once {@link #onResume()}.
      */
     private void updateNavigationButtonVisibility() {
@@ -2237,13 +2239,13 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     t.cancel(true);
                     t.destroy();
                     // there is no formController -- fire MainMenu activity?
-                    startActivity(new Intent(this, MainMenuActivity.class));
+                    startActivity(new Intent(this, SplashScreenActivity.class));
                 }
             }
         } else {
             if (formController == null) {
                 // there is no formController -- fire MainMenu activity?
-                startActivity(new Intent(this, MainMenuActivity.class));
+                startActivity(new Intent(this, SplashScreenActivity.class));
                 finish();
                 return;
             }
@@ -2378,7 +2380,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * existing instance, shows that instance to the user. Either launches {@link FormHierarchyActivity}
      * if an existing instance is being edited or builds the view for the current question(s) if a
      * new instance is being created.
-     *
+     * <p>
      * May do some or all of these depending on current state:
      * - Ensures phone state permissions are given if this form needs them
      * - Cleans up {@link #formLoaderTask}
@@ -2997,7 +2999,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * - adds widgets corresponding to questions that are newly-relevant
      * - removes and rebuilds widgets corresponding to questions that have changed in some way. For
      * example, the question text or hint may have updated due to a value they refer to changing.
-     *
+     * <p>
      * The widget corresponding to the {@param lastChangedIndex} is never changed.
      */
     private void updateFieldListQuestions(FormIndex lastChangedIndex) {
