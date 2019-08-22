@@ -29,12 +29,8 @@ import com.google.common.primitives.Longs;
 
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.FSInstanceChooserList;
 import org.fieldsight.naxa.FSInstanceUploaderListActivity;
-import org.odk.collect.android.SiteProfileActivity;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.provider.FormsProviderAPI;
-import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
@@ -48,10 +44,14 @@ import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.sitedocuments.SiteDocumentsListActivity;
 import org.fieldsight.naxa.stages.StageListFragment;
+import org.odk.collect.android.SiteProfileActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.activities.InstanceChooserList;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -354,7 +354,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
                 break;
             case R.id.site_option_frag_btn_edit_saved_form:
-                Intent i = new Intent(requireActivity(), InstanceChooserList.class);
+                Intent i = new Intent(requireActivity(), FSInstanceChooserList.class);
                 i.putExtra(EXTRA_OBJECT, loadedSite);
                 i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
                         ApplicationConstants.FormModes.EDIT_SAVED);

@@ -29,8 +29,6 @@ import com.google.common.primitives.Longs;
 import com.google.gson.reflect.TypeToken;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.provider.FormsProviderAPI;
-import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
@@ -48,6 +46,8 @@ import org.fieldsight.naxa.v3.network.Region;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
+import org.odk.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.lang.reflect.Type;

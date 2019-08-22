@@ -13,23 +13,24 @@ import org.odk.collect.android.activities.InstanceChooserList;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 
-public class FsInstanceChooserList  extends InstanceChooserList {
+public class FSInstanceChooserList extends InstanceChooserList {
 
     private Site loadedSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
-        }
+
     }
 
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
+        }
         FSInstancesDao instancesDao = new FSInstancesDao();
         if (editMode) {
             if (loadedSite != null) {

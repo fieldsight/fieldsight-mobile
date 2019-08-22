@@ -12,20 +12,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-
-import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.core.view.GravityCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.cardview.widget.CardView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.transition.Transition;
 import android.util.Pair;
@@ -45,17 +31,30 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.FSInstanceUploaderListActivity;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.BaseActivity;
+import org.fieldsight.naxa.FSInstanceChooserList;
+import org.fieldsight.naxa.FSInstanceUploaderListActivity;
 import org.fieldsight.naxa.common.AppBarStateChangeListener;
 import org.fieldsight.naxa.common.FieldSightUserSession;
-//import org.bcss.naxa.common.GlideApp;
 import org.fieldsight.naxa.common.InternetUtils;
 import org.fieldsight.naxa.common.NonSwipeableViewPager;
 import org.fieldsight.naxa.common.RxSearchObservable;
@@ -73,7 +72,7 @@ import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
-import org.odk.collect.android.activities.InstanceChooserList;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
@@ -90,8 +89,10 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.odk.collect.android.application.Collect.allowClick;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
+import static org.odk.collect.android.application.Collect.allowClick;
+
+//import org.bcss.naxa.common.GlideApp;
 
 public class ProjectDashboardActivity extends BaseActivity {
 
@@ -383,7 +384,7 @@ public class ProjectDashboardActivity extends BaseActivity {
                 break;
             case R.id.nav_edit_saved_form:
 
-                Intent i = new Intent(getApplicationContext(), InstanceChooserList.class);
+                Intent i = new Intent(getApplicationContext(), FSInstanceChooserList.class);
                 i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
                 startActivity(i);
                 break;
