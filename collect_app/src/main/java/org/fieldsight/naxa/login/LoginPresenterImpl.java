@@ -28,17 +28,19 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
 
     @Override
     public void validateCredentials(String username, String password) {
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            loginView.showPasswordError(R.string.error_incorrect_password);
-            return;
-        }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(username)) {
             loginView.showUsernameError(R.string.error_invalid_email);
             return;
         }
+
+        // Check for a valid password, if the user entered one.
+        if (TextUtils.isEmpty(password)) {
+            loginView.showPasswordError(R.string.error_incorrect_password);
+            return;
+        }
+
         loginView.showProgress(true);
         ReactiveNetwork.checkInternetConnectivity()
                 .subscribeOn(Schedulers.io())
