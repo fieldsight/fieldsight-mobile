@@ -218,6 +218,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
     }
 
     private void showErrorDialog(String msg) {
+
         Dialog dialog = DialogFactory.createActionDialog(LoginActivity.this, "Login Failed", msg)
                 .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                     @Override
