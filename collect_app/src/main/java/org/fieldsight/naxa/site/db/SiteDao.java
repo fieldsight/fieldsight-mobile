@@ -64,10 +64,10 @@ public interface SiteDao {
     @Delete
     int delete(Site site);
 
-    @Query("SELECT * from sites where isSiteVerified =:status and project =:projectId AND site IS NULL")
+    @Query("SELECT * FROM sites WHERE isSiteVerified =:status AND project =:projectId AND site IS NULL")
     LiveData<List<Site>> getByIdOfflineSites(String projectId, int status);
 
-    @Query("SELECT * from sites where project =:projectId and regionId=:cluster ")
+    @Query("SELECT * from sites where site IS NULL AND project =:projectId and regionId=:cluster ")
     LiveData<List<Site>> getSiteFromFilter(String projectId, String cluster);
 
     @Query("SELECT * from sites where site =:parentId")
