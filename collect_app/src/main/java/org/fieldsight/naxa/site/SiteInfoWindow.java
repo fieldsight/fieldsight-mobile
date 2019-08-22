@@ -32,7 +32,7 @@ public class SiteInfoWindow extends InfoWindow {
         txtDescription.setText(site.getIdentifier());
         txtSubdescription.setText(site.getAddress());
 
-        btnMoreInfo.setOnClickListener(v -> FragmentHostActivity.start(Collect.getInstance().getApplicationContext(),site, false));
+        btnMoreInfo.setOnClickListener(v -> FragmentHostActivity.start(getView().getContext(),site, false));
 
     }
 
