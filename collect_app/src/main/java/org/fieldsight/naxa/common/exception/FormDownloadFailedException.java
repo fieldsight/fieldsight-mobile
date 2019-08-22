@@ -1,12 +1,15 @@
 package org.fieldsight.naxa.common.exception;
 
-public class FormDownloadFailedException extends Throwable {
+public class FormDownloadFailedException extends Exception {
 
-    public FormDownloadFailedException(String message) {
+    private String failedUrls;
+
+    public FormDownloadFailedException(String message, String failedUrls) {
         super(message);
+        this.failedUrls = failedUrls;
     }
 
-    public FormDownloadFailedException(String message, Throwable throwable) {
-        super(message, throwable);
+    public String getFailedUrls() {
+        return failedUrls;
     }
 }

@@ -1,6 +1,10 @@
 package org.fieldsight.naxa.v3.adapter;
 
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -97,7 +98,7 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                     Timber.i("syncable item name = %s and status = %s", syncable.getTitle(), syncable.getStatus());
                 }
                 tv_stat.setTextColor(syncable.status == Constant.DownloadStatus.FAILED ?
-                        getContext().getResources().getColor(R.color.red_500) :
+                        getContext().getResources().getColor(R.color.red) :
                         getContext().getResources().getColor(R.color.green));
                 tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
                 chkbx.setEnabled(!disable);
@@ -109,7 +110,7 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 TextView btnRetry = convertView.findViewById(R.id.btn_retry);
                 View finalConvertView = convertView;
 
-                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0;
+                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0 && TextUtils.equals("Forms",syncable.getTitle());
 
                 if (hasFailedUrls) {
                     btnRetry.setText(finalConvertView.getContext().getString(R.string.retry_forms, syncable.getFailedUrl().size()));

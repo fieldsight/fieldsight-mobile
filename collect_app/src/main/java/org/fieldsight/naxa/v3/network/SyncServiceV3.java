@@ -25,6 +25,7 @@ import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.stages.data.StageRemoteSource;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +55,7 @@ public class SyncServiceV3 extends IntentService {
     HashMap<String, List<Syncable>> selectedMap = null;
     private List<String> failedSiteUrls = new ArrayList<>();
     private ArrayList<Disposable> syncDisposable = new ArrayList<>();
+    private int downloadProgress = 0;
 
     public SyncServiceV3() {
         super("SyncserviceV3");
@@ -149,7 +151,11 @@ public class SyncServiceV3 extends IntentService {
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
-                    .flatMap(new Function<Project, ObservableSource<?>>() {
+                    .map(project -> {
+                        SyncLocalSourcev3.getInstance().markAsQueued(project.getId(), 1);
+                        return project;
+                    })
+                    .concatMap(new Function<Project, ObservableSource<?>>() {
                         @Override
                         public ObservableSource<?> apply(Project project) throws Exception {
 
@@ -159,7 +165,7 @@ public class SyncServiceV3 extends IntentService {
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<FormDetails>> odkForms = ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
 
-                            int totalConcatCall = 0;
+                            downloadProgress = 0;
 
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
                                     .flatMap(new Function<ArrayList<? extends Object>, ObservableSource<ArrayList<?>>>() {
@@ -172,23 +178,44 @@ public class SyncServiceV3 extends IntentService {
                                                 }
 
                                                 if (failed.size() > 0) {
-                                                    markAsFailed(project.getId(), 1, failed.toString());
-                                                    return Observable.error(new FormDownloadFailedException(getString(R.string.msg_forms_download_fail, failed.size())));
+                                                    return Observable.error(new FormDownloadFailedException(getString(R.string.msg_forms_download_fail, failed.size())
+                                                            , failed.toString()));
                                                 }
                                             }
                                             return Observable.just(objects);
                                         }
                                     })
-                                    .doOnNext(new Consumer<ArrayList<? extends Object>>() {
+                                    .onErrorReturn(throwable -> {
+                                        if (throwable instanceof FormDownloadFailedException) {
+                                            markAsFailed(project.getId(),
+                                                    1,
+                                                    ((FormDownloadFailedException) throwable).getFailedUrls());
+                                        } else {
+                                            markAsFailed(project.getId(), 1, "");
+                                        }
+
+                                        return new ArrayList<>(0);
+                                    })
+                                    .doOnNext(new Consumer<ArrayList<?>>() {
                                         @Override
                                         public void accept(ArrayList<?> objects) {
-                                            markAsCompleted(project.getId(), 1);
+                                            checkAndMarkAsComplete();
+                                        }
+
+                                        private void checkAndMarkAsComplete() {
+                                            if (4 == downloadProgress) {
+                                                markAsCompleted(project.getId(), 1);
+                                                downloadProgress = 0;
+                                            } else {
+                                                downloadProgress++;
+                                            }
                                         }
                                     })
                                     .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1));
 
                         }
-                    })
+                    }, 1)
+
                     .subscribe(project -> {
                         //unused
                     }, Timber::e);

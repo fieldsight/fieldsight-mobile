@@ -57,7 +57,10 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
         AsyncTask.execute(() -> dao.insert(items));
     }
 
-
+    public void markAsQueued(String projectId, int type) {
+        SyncStat syncStat = new SyncStat(projectId, type + "", "", false, Constant.DownloadStatus.QUEUED, System.currentTimeMillis());
+        save(syncStat);
+    }
 
     public void markAsFailed(String projectId, int type, String failedUrl) {
         SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, false, Constant.DownloadStatus.FAILED, System.currentTimeMillis());
