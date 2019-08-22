@@ -218,7 +218,9 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
     }
 
     private void showErrorDialog(String msg) {
-
+        if(isFinishing()){
+            return;
+        }
         Dialog dialog = DialogFactory.createActionDialog(LoginActivity.this, "Login Failed", msg)
                 .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                     @Override
@@ -229,7 +231,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
                 })
                 .setNegativeButton(R.string.dialog_action_dismiss, null)
                 .create();
-        new Handler().postDelayed(dialog::show, 500);
+       dialog.show();
     }
 
     /**
