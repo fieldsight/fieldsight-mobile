@@ -367,7 +367,7 @@ public class InstancesDao {
 
                     Instance instance = new Instance.Builder()
                             .displayName(cursor.getString(displayNameColumnIndex))
-//                            .submissionUri(fixUploadUrl(cursor.getString(submissionUriColumnIndex)))
+                            .submissionUri(cursor.getString(submissionUriColumnIndex))
                             .canEditWhenComplete(cursor.getString(canEditWhenCompleteIndex))
                             .instanceFilePath(cursor.getString(instanceFilePathIndex))
                             .jrFormId(cursor.getString(jrFormIdColumnIndex))
@@ -376,8 +376,8 @@ public class InstancesDao {
                             .lastStatusChangeDate(cursor.getLong(lastStatusChangeDateColumnIndex))
                             .displaySubtext(cursor.getString(displaySubtextColumnIndex))
                             .deletedDate(cursor.getLong(deletedDateColumnIndex))
-//                            .fieldSightInstanceId(cursor.getString(fsInstanceIdColumnIndex))
-//                            .fieldSightSiteId(cursor.getString(fsSiteColumnIndex))
+                            .fieldSightInstanceId(cursor.getString(fsInstanceIdColumnIndex))
+                            .fieldSightSiteId(cursor.getString(fsSiteColumnIndex))
                             .databaseId(cursor.getLong(databaseIdIndex))
                             .build();
 
