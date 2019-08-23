@@ -37,8 +37,6 @@ public class ODKFormRemoteSource {
     }
 
 
-
-
     public Observable<ArrayList<FormDetails>> getFormsUsingProjectId(Project project) {
         ArrayList<Project> projects = new ArrayList<>();
         projects.add(project);
