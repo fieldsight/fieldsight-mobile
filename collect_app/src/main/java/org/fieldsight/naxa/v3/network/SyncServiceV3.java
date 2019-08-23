@@ -203,7 +203,8 @@ public class SyncServiceV3 extends IntentService {
                                         }
 
                                         private void checkAndMarkAsComplete() {
-                                            if (4 == downloadProgress) {
+                                            Timber.i("concat check %d", downloadProgress);
+                                            if (3 == downloadProgress) {
                                                 markAsCompleted(project.getId(), 1);
                                                 downloadProgress = 0;
                                             } else {
