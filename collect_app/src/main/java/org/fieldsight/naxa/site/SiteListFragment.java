@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,11 +40,13 @@ import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.data.SiteRegion;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.survey.SurveyFormsActivity;
 import org.fieldsight.naxa.v3.network.Region;
+import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
@@ -85,6 +89,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
     private LiveData<List<Site>> filteredSiteLiveData;
     private MenuItem sortActionFilter;
+    TermsLabels tl = null;
 
 
     public static SiteListFragment getInstance(Project project) {
@@ -95,6 +100,13 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         return siteListFragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // has own menu-item
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -102,14 +114,12 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         unbinder = ButterKnife.bind(this, view);
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
         setupRecycleView();
-        setHasOptionsMenu(true);
-
         allSitesLiveData = SiteLocalSource.getInstance().getAllParentSite(loadedProject.getId());
         offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_OFFLINE);
 
         collectFilterAndApply(new ArrayList<>());
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
-
+        tl = getTermsAndLabels();
         return view;
     }
 
@@ -117,6 +127,14 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    private String getSiteName() {
+        if( tl == null) {
+            return "Site(s)";
+        }else {
+            return tl.site;
+        }
     }
 
     private void changeActionVisibility(boolean visible) {
@@ -130,6 +148,24 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
             return;
         }
         sortActionFilter.setVisible(visible);
+    }
+
+    private TermsLabels getTermsAndLabels() {
+        if(loadedProject == null) {
+            return null;
+        }
+        if(!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
+            try{
+                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
+                JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
+                return TermsLabels.fromJSON(tlJson);
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return null;
+        }
 
     }
 
@@ -138,6 +174,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         sortActionFilter = menu.findItem(R.id.action_filter);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 
     @Override
     public void setMenuVisibility(boolean menuVisible) {
@@ -228,6 +265,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }
         bottomSheetDialog = new BottomSheetDialog(activity, new ThemeUtils(getContext()).getBottomDialogTheme());
         View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet_site_filter, null);
+        ((TextView)sheetView.findViewById(R.id.label)).setText(String.format("Filter %s by", getSiteName()));
         final RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
         bottomSheetDialog.setContentView(sheetView);
 
@@ -288,7 +326,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 .map(new Function<List<Pair>, List<Pair>>() {
                     @Override
                     public List<Pair> apply(List<Pair> pairs) {
-                        pairs.add(Pair.create("0", "All sites"));
+                        pairs.add(Pair.create("0", "All " + getSiteName()));
 
                         return pairs;
                     }
@@ -428,11 +466,11 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     private void showConfirmationDialog() {
-        DialogFactory.createActionDialog(requireActivity(), "Upload selected site(s)", "Upload selected site(s) along with their filled form(s) ?")
-                .setPositiveButton("Yes, upload Site(s) and Form(s)", (dialog, which) -> {
+        DialogFactory.createActionDialog(requireActivity(), "Upload selected " + getSiteName(), "Upload selected "+ getSiteName() +" along with their filled form(s) ?")
+                .setPositiveButton("Yes, upload " + getSiteName()+ " and Form(s)", (dialog, which) -> {
                     uploadSelectedSites(siteListAdapter.getSelected(), true);
                 })
-                .setNegativeButton("No, Upload Site(s) only", (dialog, which) -> {
+                .setNegativeButton("No, Upload "+ getSiteName() +" only", (dialog, which) -> {
                     uploadSelectedSites(siteListAdapter.getSelected(), false);
                 })
                 .setOnDismissListener(dialog -> actionMode.finish())
@@ -444,7 +482,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     private void uploadSelectedSites(ArrayList<Site> selected, boolean uploadForms) {
 
-        String progressMessage = "Uploading site(s)";
+        String progressMessage = "Uploading " + getSiteName();
 
         final int progressNotifyId = FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
 
