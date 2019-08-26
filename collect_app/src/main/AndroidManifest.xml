@@ -140,6 +140,7 @@
         <activity android:name="org.fieldsight.naxa.v3.ProjectListActivityV3" />
         <activity android:name="org.fieldsight.naxa.v3.network.SyncActivity" />
         <activity android:name="org.fieldsight.naxa.forms.FieldSightFormDownloadList" />
+        <activity android:name="org.fieldsight.naxa.BackupActivity" />
 
         <!--Activities from FieldSight [ends]-->
 
