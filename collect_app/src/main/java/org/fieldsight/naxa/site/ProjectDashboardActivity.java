@@ -102,7 +102,6 @@ public class ProjectDashboardActivity extends BaseActivity {
     private NonSwipeableViewPager pager;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private String projectId;
     private TabLayout tabLayout;
     private CardView searchView;
     private AppBarLayout appBarLayout;
@@ -114,8 +113,6 @@ public class ProjectDashboardActivity extends BaseActivity {
     private boolean mapIsVisible = false;
     private FrameLayout navigationHeader;
     private int mapExistReachesPosition;
-
-    private ImageView ivToolbarBackground;
     TermsLabels tl = null;
 
     public static void start(Context context, Project project) {
@@ -160,7 +157,7 @@ public class ProjectDashboardActivity extends BaseActivity {
         setupSearchView();
         setupNavigation();
         setupAnimation();
-        getTermsAndLabels();
+        tl = getTermsAndLabels();
         setupNavigationHeader();
         if(tl != null) {
             if(!TextUtils.isEmpty(tl.site)) {
@@ -170,14 +167,20 @@ public class ProjectDashboardActivity extends BaseActivity {
         }
     }
 
-    private void getTermsAndLabels() {
+    private TermsLabels getTermsAndLabels() {
         if(!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
             try{
                 Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
                 JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
-                tl = TermsLabels.fromJSON(tlJson);
-            }catch (Exception e){e.printStackTrace();}
+                return TermsLabels.fromJSON(tlJson);
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return null;
         }
+
     }
 
     private void setupAnimation() {
@@ -470,8 +473,6 @@ public class ProjectDashboardActivity extends BaseActivity {
         drawerLayout = findViewById(R.id.activity_dashboard_drawer_layout);
         navigationView = findViewById(R.id.activity_dashboard_navigation_view);
         navigationHeader = (FrameLayout) navigationView.getHeaderView(0);
-        ivToolbarBackground = findViewById(R.id.iv_bg_toolbar);
-
 //        pager.setVisibility(View.GONE);
     }
 
@@ -532,6 +533,11 @@ public class ProjectDashboardActivity extends BaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem menuItem = menu.findItem(R.id.action_app_settings);
         menuItem.setVisible((BuildConfig.BUILD_TYPE.equals("internal")));
+        // change the title of the filter with terms and labels case
+        if( tl != null ) {
+            menu.findItem(R.id.action_filter).setTitle("Filter " + tl.site);
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
