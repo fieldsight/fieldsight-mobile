@@ -6,7 +6,7 @@
     <string name="nav_edit_saved_form">Edit Forms</string>
     <string name="nav_send_final_form">Upload Forms</string>
     <string name="nav_delete_saved_form">Delete Forms</string>
-    <string name="nav_overall_forms">Overall Forms</string>
+    <string name="nav_overall_forms">Manage Form(s)</string>
     <string name="msg_coming_soon">Coming Soon</string>
     <string name="msg_form_submitted_by">Submitted by %s</string>
     <string name="msg_loading_failed">Loading Failed</string>
@@ -280,6 +280,7 @@
     <string name="msg_forms_download_fail">%d forms failed to download</string>
     <string name="upload_site">Upload Site</string>
     <string name="upload_edited_site">Upload Site</string>
+    <string name="nav_configure">Configure</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>

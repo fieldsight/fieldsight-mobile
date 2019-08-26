@@ -1,0 +1,36 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/nav_overall_forms">
+        <menu>
+            <item
+                android:id="@+id/nav_delete_saved_form"
+                android:icon="@drawable/ic_delete"
+                android:title="@string/nav_delete_saved_form" />
+            <item
+                android:id="@+id/nav_send_final_form"
+                android:icon="@drawable/ic_cloud_upload_legacy"
+                android:title="@string/nav_send_final_form" />
+            <item
+                android:id="@+id/nav_edit_saved_form"
+                android:icon="@drawable/ic_edit"
+                android:title="@string/nav_edit_saved_form" />
+        </menu>
+    </item>
+
+    <item android:title="@string/nav_configure">
+        <menu>
+            <item
+                android:icon="@drawable/ic_action_backup"
+                android:id="@+id/nav_backup"
+                android:title="@string/backup_data" />
+
+
+            <item
+                android:icon="@drawable/ic_setting"
+                android:id="@+id/nav_setting"
+                android:title="@string/toolbar_settings" />
+        </menu>
+    </item>
+
+
+
+</menu>

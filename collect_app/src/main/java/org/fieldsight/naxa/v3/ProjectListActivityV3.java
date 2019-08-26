@@ -1,39 +1,61 @@
 package org.fieldsight.naxa.v3;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.navigation.NavigationView;
+
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
+import org.fieldsight.naxa.BaseActivity;
+import org.fieldsight.naxa.FSInstanceChooserList;
+import org.fieldsight.naxa.FSInstanceUploaderListActivity;
 import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.login.model.Project;
+import org.fieldsight.naxa.login.model.User;
 import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.preferences.SettingsActivity;
+import org.fieldsight.naxa.profile.UserActivity;
+import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.project.data.ProjectRepository;
 import org.fieldsight.naxa.report.ReportActivity;
+import org.fieldsight.naxa.site.CreateSiteActivity;
+import org.fieldsight.naxa.site.ProjectDashboardActivity;
 import org.fieldsight.naxa.v3.adapter.ProjectListAdapter;
 import org.fieldsight.naxa.v3.network.LoadProjectCallback;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.fieldsight.naxa.v3.network.SyncLocalSourcev3;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.activities.FileManagerTabs;
+import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
@@ -45,7 +67,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
 
-public class ProjectListActivityV3 extends CollectAbstractActivity {
+public class ProjectListActivityV3 extends BaseActivity {
     @BindView(R.id.rv_projectlist)
     RecyclerView rv_projectlist;
 
@@ -76,6 +98,19 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     Observer<List<ProjectNameTuple>> projectObserver = null;
     boolean showSyncMenu = true;
 
+
+    @BindView(R.id.activity_dashboard_drawer_layout)
+    public DrawerLayout drawerLayout;
+
+    @BindView(R.id.activity_dashboard_navigation_view)
+    public NavigationView navigationView;
+
+
+    private FrameLayout navigationHeader;
+    private ActionBarDrawerToggle drawerToggle;
+    TermsLabels tl = null;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +118,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         setTitle("Projects");
         adapter = new ProjectListAdapter(projectList, allSelected);
         observer = new RecyclerView.AdapterDataObserver() {
@@ -120,20 +157,140 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             invalidateOptionsMenu();
         };
         projectIds = SyncLocalSourcev3.getInstance().getAllSiteSyncingProject();
+        setupNavigation();
+        setupNavigationHeader();
+    }
+
+
+    @Override
+    public void onBackClicked(boolean isHome) {
+        toggleNavDrawer();
+    }
+
+    private void setupNavigationHeader() {
+        try {
+            User user = FieldSightUserSession.getUser();
+            ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFullName());
+            ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
+            if (tl != null && !TextUtils.isEmpty(tl.site_supervisor)) {
+                Timber.i("ProjectDashboardActivity, data:: sitesv = %s", tl.site_supervisor);
+                ((TextView) navigationHeader.findViewById(R.id.tv_user_post)).setText(tl.site_supervisor);
+            }
+
+            ImageView ivProfilePicture = navigationHeader.findViewById(R.id.image_profile);
+
+            ViewUtils.loadRemoteImage(this, user.getProfilepic())
+                    .circleCrop()
+                    .into(ivProfilePicture);
+
+
+            navigationHeader.setOnClickListener(v -> {
+                toggleNavDrawer();
+                new Handler()
+                        .postDelayed(() -> {
+                            UserActivity.start(ProjectListActivityV3.this);
+                        }, 250);
+            });
+        } catch (IllegalArgumentException e) {
+            Timber.e(e);
+        }
+    }
+
+    private void toggleNavDrawer() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            drawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+
+    private void setupNavigation() {
+        navigationHeader = (FrameLayout) navigationView.getHeaderView(0);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                toggleNavDrawer();
+                final int selectedItemId = item.getItemId();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        handleNavDrawerClicks(selectedItemId);
+                    }
+                }, 250);
+
+
+                return false;
+            }
+        });
+
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name);
+        drawerLayout.addDrawerListener(drawerToggle);
+    }
+
+    private void handleNavDrawerClicks(int id) {
+        switch (id) {
+            case R.id.nav_create_offline_site:
+
+                break;
+            case R.id.nav_delete_saved_form:
+
+                startActivity(new Intent(getApplicationContext(), FileManagerTabs.class));
+                break;
+            case R.id.nav_edit_saved_form:
+
+                Intent i = new Intent(getApplicationContext(), FSInstanceChooserList.class);
+                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE, ApplicationConstants.FormModes.EDIT_SAVED);
+                startActivity(i);
+                break;
+            case R.id.nav_send_final_form:
+
+                startActivity(new Intent(getApplicationContext(), FSInstanceUploaderListActivity.class));
+
+                break;
+            case R.id.nav_view_finalized_offline_site:
+
+                break;
+            case R.id.nav_view_site_dashboard:
+
+                break;
+            case R.id.nav_backup:
+                startActivity(new Intent(this, BackupActivity.class));
+                return;
+            case R.id.nav_setting:
+                startActivity(new Intent(this, org.fieldsight.naxa.preferences.SettingsActivity.class));
+                break;
+        }
+    }
+
+
+    @Override
+    public void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Timber.i("ProjectListActivityv3 :: anyProject checked = " + adapter.anyProjectSelectedForSync());
-        if(tv_sync_project.getVisibility() == View.VISIBLE && !adapter.anyProjectSelectedForSync()) {
+        Timber.i("ProjectListActivityv3 :: anyProject checked = %s", adapter.anyProjectSelectedForSync());
+        if (tv_sync_project.getVisibility() == View.VISIBLE && !adapter.anyProjectSelectedForSync()) {
             tv_sync_project.setVisibility(View.GONE);
         }
     }
 
     @OnClick(R.id.cv_resync)
     void resyncProject() {
-        if(NetworkUtils.isNetworkConnected()) {
+        if (NetworkUtils.isNetworkConnected()) {
             getDataFromServer();
             manageNodata(true);
         } else {
@@ -216,7 +373,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 //        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
-        if(showSyncMenu) {
+        if (showSyncMenu) {
             menu.findItem(R.id.action_refresh).setIcon(allSelected ?
                     R.drawable.ic_cancel_white_24dp :
                     R.drawable.ic_action_sync
@@ -238,7 +395,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 allSelected = !allSelected;
                 for (Project project : projectList) {
 //                    if (!project.isSynced()) {
-                        project.setChecked(allSelected);
+                    project.setChecked(allSelected);
 //                    } else {
 //                        project.setChecked(false);
 //                    }
