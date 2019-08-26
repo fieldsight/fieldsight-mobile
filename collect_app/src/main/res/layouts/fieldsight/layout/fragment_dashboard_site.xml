@@ -44,7 +44,7 @@
             android:drawableStart="@drawable/ic_city_white_legacy"
             android:drawableLeft="@drawable/ic_city_white_legacy"
             android:gravity="center"
-            android:text="Bagmati"
+            tools:text="Site Type"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_small"
             android:textStyle="bold" />
@@ -65,11 +65,12 @@
             android:gravity="start"
             android:maxLines="1"
             android:minLines="1"
-            android:text="Nishon"
+            tools:text="Site Name"
             android:textAlignment="textStart"
             android:textSize="@dimen/text_size_large" />
 
         <TextView
+            tools:text="Site Address"
             android:id="@+id/site_option_frag_site_address"
             style="@style/TextAppearance.AppCompat.Title.Inverse"
             android:layout_width="wrap_content"
