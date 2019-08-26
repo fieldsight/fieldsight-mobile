@@ -13,5 +13,7 @@ public abstract class ContacstDao implements BaseDaoFieldSight<FieldSightContact
     @Query("SELECT * FROM contacts")
     public abstract LiveData<List<FieldSightContactModel>> getAll();
 
+    @Query("DELETE FROM contacts")
+    public abstract void deleteAll();
 
 }

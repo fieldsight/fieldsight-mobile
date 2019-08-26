@@ -48,6 +48,9 @@ public class ContactLocalSource implements BaseLocalDataSource<FieldSightContact
 
     @Override
     public void updateAll(ArrayList<FieldSightContactModel> items) {
-
+        AsyncTask.execute(() -> {
+            dao.deleteAll();
+            dao.insert(items);
+        });
     }
 }

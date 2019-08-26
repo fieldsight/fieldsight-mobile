@@ -174,7 +174,7 @@ public class ProjectDashboardActivity extends BaseActivity {
                 JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
                 return TermsLabels.fromJSON(tlJson);
             }catch (Exception e){
-                e.printStackTrace();
+                Timber.e("Failed to load terms and labels; Reason: %s",e.getMessage());
                 return null;
             }
         } else {

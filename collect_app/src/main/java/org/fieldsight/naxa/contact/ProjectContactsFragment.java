@@ -53,7 +53,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
         unbinder = ButterKnife.bind(this, view);
         setupRecycleView();
 
-
+        ContactRemoteSource.getInstance().getAll();
         ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
         viewModel = ViewModelProviders.of(getActivity(), factory).get(ProjectContactViewModel.class);
         viewModel.getContacts()
