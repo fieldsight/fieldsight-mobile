@@ -39,35 +39,15 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
                 .getAllContacts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnDispose(new Action() {
-                    @Override
-                    public void run() {
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(PROJECT_CONTACTS);
-                    }
-                })
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) {
-                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(PROJECT_CONTACTS);
-                    }
-                })
                 .subscribeWith(new DisposableObserver<ArrayList<FieldSightContactModel>>() {
                     @Override
                     public void onNext(ArrayList<FieldSightContactModel> fieldSightContactModels) {
-                        ContactLocalSource.getInstance().save(fieldSightContactModels);
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(PROJECT_CONTACTS);
+                        ContactLocalSource.getInstance().updateAll(fieldSightContactModels);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
-                        String message;
-                        if (e instanceof RetrofitException) {
-                            message = ((RetrofitException) e).getKind().getMessage();
-                        } else {
-                            message = e.getMessage();
-                        }
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(PROJECT_CONTACTS,message);
                     }
 
                     @Override
@@ -76,6 +56,6 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
                     }
                 });
 
-        DisposableManager.add(d);
+
     }
 }
