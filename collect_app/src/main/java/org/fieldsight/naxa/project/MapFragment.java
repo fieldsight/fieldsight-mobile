@@ -129,30 +129,21 @@ public class MapFragment extends Fragment implements IRegisterReceiver {
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
 
 
-//        if (helper == null) {
-//            // For testing:
-//            helper = new MapHelper(this.getContext(), map, this);
-//
-//            map.setMultiTouchControls(true);
-//            map.setBuiltInZoomControls(true);
-//            map.setTilesScaledToDpi(true);
-//
-//
-//        }
+        if (helper == null) {
 
-//        handler.postDelayed(new Runnable() {
-//            public void run() {
-//
-//                map.getController().setZoom(4);
-//
-//            }
-//        }, 100);
+            helper = new MapHelper(this.getContext(), map, this, 0);
+            map.setMultiTouchControls(true);
+            map.setBuiltInZoomControls(true);
+            map.setTilesScaledToDpi(true);
+
+        }
+
+        handler.postDelayed(() -> map.getController().setZoom(4), 100);
 
 
         myLocationOverlay = new MyLocationNewOverlay(map);
 
-        LiveData<List<Site>> livedata = new SiteViewModel(Collect.getInstance())
-                .getSiteByProject(loadedProject);
+
 
 
         SiteLocalSource.getInstance().getByIdAsSingle(loadedProject.getId())
