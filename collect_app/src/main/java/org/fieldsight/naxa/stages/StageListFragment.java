@@ -138,7 +138,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
                 });
 
 //        viewModel
-//                .getForms(false, loadedSite)
+//                .getScheduleForms(false, loadedSite)
 //                .observe(this, new Observer<List<Stage>>() {
 //                    @Override
 //                    public void onChanged(@Nullable List<Stage> stages) {

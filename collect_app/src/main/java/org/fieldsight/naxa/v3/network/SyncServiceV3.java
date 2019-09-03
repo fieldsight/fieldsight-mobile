@@ -153,15 +153,20 @@ public class SyncServiceV3 extends IntentService {
 
 
             FieldSightFormsRemoteSource.getInstance().getFormsByProjectId(selectedProject)
-                    .subscribe(new DisposableSingleObserver<FieldSightFormResponse>() {
+                    .subscribe(new DisposableObserver<Object>() {
                         @Override
-                        public void onSuccess(FieldSightFormResponse fieldSightFormResponse) {
-                            Timber.i("We had it ");
+                        public void onNext(Object o) {
+                            Timber.i("We did it");
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Timber.e(e);
+                            Timber.i(e);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
                         }
                     });
 

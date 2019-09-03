@@ -70,6 +70,22 @@ public class ScheduleForm {
     private String lastSubmissionBy;
     private String lastSubmissionDateTime;
 
+    @Ignore
+    @SerializedName("downloadUrl")
+    private String downloadUrl;
+
+    @Ignore
+    @SerializedName("manifestUrl")
+    private String manifestUrl;
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public String getManifestUrl() {
+        return manifestUrl;
+    }
+
     public void setScheduleId(String scheduleId) {
         this.scheduleId = scheduleId;
     }

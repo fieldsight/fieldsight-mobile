@@ -5,6 +5,7 @@ import org.fieldsight.naxa.v3.forms.FieldSightFormResponse;
 
 import java.util.Map;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
@@ -28,6 +29,6 @@ public interface ApiV3Interface {
     Single<ResponseBody> getSiteDocuments(@QueryMap Map<String, String> queryParams);
 
     @GET(APIEndpoint.V3.GET_FORMS)
-    Single<FieldSightFormResponse> getForms(@QueryMap Map<String, String> queryParams);
+    Observable<FieldSightFormResponse> getForms(@QueryMap Map<String, String> queryParams);
 
 }
