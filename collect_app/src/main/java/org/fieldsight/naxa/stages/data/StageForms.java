@@ -1,6 +1,8 @@
 
 package org.fieldsight.naxa.stages.data;
 
+import androidx.room.Ignore;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,6 +21,30 @@ public class StageForms {
     @SerializedName("manifestUrl")
     private String manifestUrl;
 
+    @Ignore
+    @SerializedName("name")
+    private String formName;
+
+    @Ignore
+    @SerializedName("hash")
+    private String hash;
+
+    @Ignore
+    @SerializedName("version")
+    private String version;
+
+
+    public String getFormName() {
+        return formName;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public String getVersion() {
+        return version;
+    }
 
     public String getDownloadUrl() {
         return downloadUrl;

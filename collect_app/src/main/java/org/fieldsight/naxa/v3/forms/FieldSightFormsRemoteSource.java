@@ -56,8 +56,11 @@ public class FieldSightFormsRemoteSource {
                         String manifestUrl = APIEndpoint.BASE_URL.concat(generalForm.getManifestUrl());
                         String formId = generalForm.getFsFormId();
 
+                        String hash = generalForm.getHash();
+                        String version = generalForm.getVersion();
+
                         formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
-                                null, null, null,
+                                version, hash, null,
                                 false, false));
                     }
 
@@ -68,9 +71,12 @@ public class FieldSightFormsRemoteSource {
                         String downloadUrl = APIEndpoint.BASE_URL.concat(scheduleForm.getDownloadUrl());
                         String manifestUrl = APIEndpoint.BASE_URL.concat(scheduleForm.getManifestUrl());
                         String formId = scheduleForm.getFsFormId();
+                        String hash = scheduleForm.getHash();
+                        String version = scheduleForm.getVersion();
+
 
                         formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
-                                null, null, null,
+                                version, hash, null,
                                 false, false));
                     }
 
@@ -82,9 +88,11 @@ public class FieldSightFormsRemoteSource {
                         String downloadUrl = APIEndpoint.BASE_URL.concat(surveyForm.getDownloadUrl());
                         String manifestUrl = APIEndpoint.BASE_URL.concat(surveyForm.getManifestUrl());
                         String formId = surveyForm.getFsFormId();
+                        String hash = surveyForm.getHash();
+                        String version = surveyForm.getVersion();
 
                         formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
-                                null, null, null,
+                                version, hash, null,
                                 false, false));
                     }
 
@@ -96,10 +104,12 @@ public class FieldSightFormsRemoteSource {
                             String formName = subStage.getName();
                             String downloadUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getDownloadUrl());
                             String manifestUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getManifestUrl());
-                            String formId = subStage.getFsFormId();
+                            String hash = subStage.getStageForms().getHash();
+                            String formId = subStage.getStageForms().getId();
+                            String version = subStage.getStageForms().getVersion();
 
                             formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
-                                    null, null, null,
+                                    version, hash, null,
                                     false, false));
                         }
 

@@ -14,12 +14,13 @@ public class SurveyForm {
     @PrimaryKey
     @SerializedName("id")
     private String fsFormId;
+
+    @SerializedName("project")
     private String projectId;
 
     @Ignore
     @SerializedName("downloadUrl")
     private String downloadUrl;
-
 
     @Ignore
     @SerializedName("manifestUrl")
@@ -31,6 +32,15 @@ public class SurveyForm {
     @SerializedName("name")
     private String name;
 
+    @Ignore
+    @SerializedName("version")
+    private String version;
+
+    @Ignore
+    @SerializedName("hash")
+    private String hash;
+
+
     public SurveyForm() {
 
     }
@@ -41,6 +51,14 @@ public class SurveyForm {
         this.projectId = projectId;
         this.idString = idString;
         this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getHash() {
+        return hash;
     }
 
     public String getDownloadUrl() {

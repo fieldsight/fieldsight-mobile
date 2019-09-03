@@ -88,6 +88,13 @@ public class GeneralForm {
     private String lastSubmissionBy;
     private String lastSubmissionDateTime;
 
+    @Ignore
+    @SerializedName("version")
+    private String version;
+
+    @Ignore
+    @SerializedName("hash")
+    private String hash;
 
     //@SerializedName("latest_submission")
     @Expose
@@ -110,6 +117,14 @@ public class GeneralForm {
 
     public void setFormDeployedFrom(@NonNull String formDeployedFrom) {
         this.formDeployedFrom = formDeployedFrom;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getHash() {
+        return hash;
     }
 
     public Em getEm() {

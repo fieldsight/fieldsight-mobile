@@ -78,6 +78,14 @@ public class ScheduleForm {
     @SerializedName("manifestUrl")
     private String manifestUrl;
 
+    @Ignore
+    @SerializedName("version")
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
     public String getDownloadUrl() {
         return downloadUrl;
     }
