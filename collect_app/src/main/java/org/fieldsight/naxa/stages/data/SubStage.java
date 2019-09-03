@@ -87,7 +87,6 @@ public class SubStage {
     private String lastSubmissionBy;
     private String lastSubmissionDateTime;
 
-
     public String getSubStageDeployedFrom() {
         return subStageDeployedFrom;
     }
@@ -114,6 +113,8 @@ public class SubStage {
         this.jrFormId = stageForms.getXf().getJrFormId();
         this.fsFormId = stageForms.getId();
     }
+
+
 
     public String getFsFormId() {
         return fsFormId;

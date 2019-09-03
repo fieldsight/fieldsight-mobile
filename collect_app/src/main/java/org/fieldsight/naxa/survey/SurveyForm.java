@@ -5,17 +5,33 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity(tableName = "survey_forms")
 public class SurveyForm {
 
     @NonNull
     @PrimaryKey
+    @SerializedName("id")
     private String fsFormId;
     private String projectId;
+
+    @Ignore
+    @SerializedName("downloadUrl")
+    private String downloadUrl;
+
+
+    @Ignore
+    @SerializedName("manifestUrl")
+    private String manifestUrl;
+
+    @SerializedName("formID")
     private String idString;
+
+    @SerializedName("name")
     private String name;
 
-    public SurveyForm(){
+    public SurveyForm() {
 
     }
 
@@ -25,6 +41,18 @@ public class SurveyForm {
         this.projectId = projectId;
         this.idString = idString;
         this.name = name;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public String getManifestUrl() {
+        return manifestUrl;
+    }
+
+    public void setManifestUrl(String manifestUrl) {
+        this.manifestUrl = manifestUrl;
     }
 
     public String getFsFormId() {
