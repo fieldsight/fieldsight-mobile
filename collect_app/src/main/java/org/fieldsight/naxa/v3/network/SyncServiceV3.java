@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.v3.forms.FieldSightFormResponse;
+import org.fieldsight.naxa.v3.forms.FieldSightFormsRemoteSource;
 import org.odk.collect.android.logic.FormDetails;
 import org.fieldsight.naxa.ResponseUtils;
 import org.fieldsight.naxa.common.Constant;
@@ -40,6 +42,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -147,6 +150,22 @@ public class SyncServiceV3 extends IntentService {
 
 
             DisposableManager.add(projectEduMatObservable);
+
+
+            FieldSightFormsRemoteSource.getInstance().getFormsByProjectId(selectedProject)
+                    .subscribe(new DisposableSingleObserver<FieldSightFormResponse>() {
+                        @Override
+                        public void onSuccess(FieldSightFormResponse fieldSightFormResponse) {
+                            Timber.i("We had it ");
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Timber.e(e);
+                        }
+                    });
+
+            if (true) return;
 
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
