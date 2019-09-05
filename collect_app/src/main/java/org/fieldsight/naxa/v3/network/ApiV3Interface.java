@@ -31,4 +31,7 @@ public interface ApiV3Interface {
     @GET(APIEndpoint.V3.GET_FORMS)
     Observable<FieldSightFormResponse> getForms(@QueryMap Map<String, String> queryParams);
 
+    @GET
+    Observable<FieldSightFormResponse> getForms(@Url String url);
+
 }

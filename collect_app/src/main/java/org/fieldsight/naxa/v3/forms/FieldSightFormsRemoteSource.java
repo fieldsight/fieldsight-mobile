@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.v3.forms;
 
+import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.generalforms.data.GeneralForm;
 import org.fieldsight.naxa.generalforms.data.GeneralFormLocalSource;
 import org.fieldsight.naxa.login.model.Project;
@@ -7,9 +8,6 @@ import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.scheduled.data.ScheduleForm;
 import org.fieldsight.naxa.scheduled.data.ScheduledFormsLocalSource;
-import org.fieldsight.naxa.scheduled.data.ScheduledFormsRemoteSource;
-import org.fieldsight.naxa.stages.data.Stage;
-import org.fieldsight.naxa.stages.data.SubStage;
 import org.fieldsight.naxa.survey.SurveyForm;
 import org.fieldsight.naxa.survey.SurveyFormLocalSource;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
@@ -24,7 +22,6 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 public class FieldSightFormsRemoteSource {
 
@@ -37,16 +34,25 @@ public class FieldSightFormsRemoteSource {
         return INSTANCE;
     }
 
+    private String buildUrlParams(ArrayList<Project> projects) {
+        StringBuilder url = new StringBuilder();
+        url.append(APIEndpoint.V3.GET_FORMS);
+        url.append("?");
+        for (int i = 0; i < projects.size(); i++) {
+            url.append(APIEndpoint.PARAMS.PROJECT_ID);
+            url.append("=");
+            url.append(projects.get(i).getId());
+            if (i != projects.size() - 1) {
+                url.append("&");
+            }
+        }
+        return url.toString();
+    }
 
     public Observable<Object> getFormsByProjectId(ArrayList<Project> projects) {
-        HashMap<String, String> params = new HashMap<>();
-
-        for (Project project : projects) {
-            params.put(APIEndpoint.PARAMS.PROJECT_ID, project.getId());
-        }
 
         return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
-                .getForms(params)
+                .getForms(buildUrlParams(projects))
                 .map(fieldSightFormResponse -> {
                     HashSet<FormDetails> formList = new HashSet<>();
 
@@ -55,16 +61,18 @@ public class FieldSightFormsRemoteSource {
                         String downloadUrl = APIEndpoint.BASE_URL.concat(generalForm.getDownloadUrl());
                         String manifestUrl = APIEndpoint.BASE_URL.concat(generalForm.getManifestUrl());
                         String formId = generalForm.getFsFormId();
-
                         String hash = generalForm.getHash();
                         String version = generalForm.getVersion();
+
+                        String deployedFrom = generalForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+                        generalForm.setFormDeployedFrom(deployedFrom);
 
                         formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
                                 version, hash, null,
                                 false, false));
                     }
 
-//                    GeneralFormLocalSource.getInstance().save(fieldSightFormResponse.getGeneralForms());
+                    GeneralFormLocalSource.getInstance().save(fieldSightFormResponse.getGeneralForms());
 
                     for (ScheduleForm scheduleForm : fieldSightFormResponse.getScheduleForms()) {
                         String formName = scheduleForm.getFormName();
@@ -74,6 +82,8 @@ public class FieldSightFormsRemoteSource {
                         String hash = scheduleForm.getHash();
                         String version = scheduleForm.getVersion();
 
+                        String deployedFrom = scheduleForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+                        scheduleForm.setFormDeployedFrom(deployedFrom);
 
                         formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
                                 version, hash, null,
@@ -81,7 +91,7 @@ public class FieldSightFormsRemoteSource {
                     }
 
 
-//                    ScheduledFormsLocalSource.getInstance().save(fieldSightFormResponse.getScheduleForms());
+                    ScheduledFormsLocalSource.getInstance().save(fieldSightFormResponse.getScheduleForms());
 
                     for (SurveyForm surveyForm : fieldSightFormResponse.getSurveyForms()) {
                         String formName = surveyForm.getName();
@@ -96,24 +106,24 @@ public class FieldSightFormsRemoteSource {
                                 false, false));
                     }
 
-//                    SurveyFormLocalSource.getInstance().save(fieldSightFormResponse.getSurveyForms());
+                    SurveyFormLocalSource.getInstance().save(fieldSightFormResponse.getSurveyForms());
 
 
-                    for (Stage stage : fieldSightFormResponse.getStages()) {
-                        for (SubStage subStage : stage.getSubStage()) {
-                            String formName = subStage.getName();
-                            String downloadUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getDownloadUrl());
-                            String manifestUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getManifestUrl());
-                            String hash = subStage.getStageForms().getHash();
-                            String formId = subStage.getStageForms().getId();
-                            String version = subStage.getStageForms().getVersion();
-
-                            formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
-                                    version, hash, null,
-                                    false, false));
-                        }
-
-                    }
+//                    for (Stage stage : fieldSightFormResponse.getStages()) {
+//                        for (SubStage subStage : stage.getSubStage()) {
+//                            String formName = subStage.getName();
+//                            String downloadUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getDownloadUrl());
+//                            String manifestUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getManifestUrl());
+//                            String hash = subStage.getStageForms().getHash();
+//                            String formId = subStage.getStageForms().getId();
+//                            String version = subStage.getStageForms().getVersion();
+//
+//                            formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
+//                                    version, hash, null,
+//                                    false, false));
+//                        }
+//
+//                    }
 
                     return new ArrayList<>(formList);
                 })
@@ -123,7 +133,6 @@ public class FieldSightFormsRemoteSource {
                         return createFormDownloadObservable(formDetails);
                     }
                 })
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
 

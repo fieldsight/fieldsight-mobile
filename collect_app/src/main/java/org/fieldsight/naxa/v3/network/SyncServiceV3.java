@@ -153,6 +153,12 @@ public class SyncServiceV3 extends IntentService {
 
 
             FieldSightFormsRemoteSource.getInstance().getFormsByProjectId(selectedProject)
+                    .doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+
+                        }
+                    })
                     .subscribe(new DisposableObserver<Object>() {
                         @Override
                         public void onNext(Object o) {
