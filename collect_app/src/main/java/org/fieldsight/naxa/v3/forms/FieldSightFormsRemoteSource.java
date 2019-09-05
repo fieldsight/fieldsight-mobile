@@ -1,5 +1,7 @@
 package org.fieldsight.naxa.v3.forms;
 
+import android.util.SparseIntArray;
+
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.generalforms.data.GeneralForm;
 import org.fieldsight.naxa.generalforms.data.GeneralFormLocalSource;
@@ -49,12 +51,45 @@ public class FieldSightFormsRemoteSource {
         return url.toString();
     }
 
+
+    private void putOrUpdate(SparseIntArray projectFormMap, Integer projectId) {
+        projectFormMap.put(projectId, projectFormMap.get(projectId, 0) + 1);
+    }
+
+    /**
+     * Option:
+     * project_id -->
+     *
+     *
+     *
+     *
+     * @param generalForm
+     * @return
+     */
+
+    private int getProjectId(GeneralForm generalForm) {
+        String value = generalForm.getProjectId() != null ? generalForm.getProjectId() : generalForm.getSiteProjectId();
+        return Integer.parseInt(value);
+    }
+
+    private int getProjectId(ScheduleForm scheduleForm) {
+        String value = scheduleForm.getProjectId() != null ? scheduleForm.getProjectId() : scheduleForm.getSiteProjectId();
+        return Integer.parseInt(value);
+    }
+
+    private int getProjectId(SurveyForm surveyForm) {
+        String value = surveyForm.getProjectId() != null ? surveyForm.getProjectId() : surveyForm.getSiteProjectId();
+        return Integer.parseInt(value);
+    }
+
     public Observable<Object> getFormsByProjectId(ArrayList<Project> projects) {
+
 
         return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
                 .getForms(buildUrlParams(projects))
                 .map(fieldSightFormResponse -> {
                     HashSet<FormDetails> formList = new HashSet<>();
+                    SparseIntArray projectFormMap = new SparseIntArray();
 
                     for (GeneralForm generalForm : fieldSightFormResponse.getGeneralForms()) {
                         String formName = generalForm.getName();
@@ -70,6 +105,9 @@ public class FieldSightFormsRemoteSource {
                         formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
                                 version, hash, null,
                                 false, false));
+
+                        putOrUpdate(projectFormMap, getProjectId(generalForm));
+
                     }
 
                     GeneralFormLocalSource.getInstance().save(fieldSightFormResponse.getGeneralForms());
@@ -88,8 +126,9 @@ public class FieldSightFormsRemoteSource {
                         formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
                                 version, hash, null,
                                 false, false));
-                    }
 
+                        putOrUpdate(projectFormMap, getProjectId(scheduleForm));
+                    }
 
                     ScheduledFormsLocalSource.getInstance().save(fieldSightFormResponse.getScheduleForms());
 
@@ -104,6 +143,8 @@ public class FieldSightFormsRemoteSource {
                         formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
                                 version, hash, null,
                                 false, false));
+
+                        putOrUpdate(projectFormMap, getProjectId(surveyForm));
                     }
 
                     SurveyFormLocalSource.getInstance().save(fieldSightFormResponse.getSurveyForms());

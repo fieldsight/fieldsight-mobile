@@ -52,7 +52,7 @@ public class FormDownloader {
 
     private FormDownloaderListener stateListener;
 
-    private FormsDao formsDao;
+    protected FormsDao formsDao;
 
     private boolean isTempDownload;
 
@@ -76,7 +76,7 @@ public class FormDownloader {
         return e.getNamespace().equalsIgnoreCase(NAMESPACE_OPENROSA_ORG_XFORMS_XFORMS_MANIFEST);
     }
 
-    private static class TaskCancelledException extends Exception {
+    protected static class TaskCancelledException extends Exception {
         private final File file;
 
         TaskCancelledException(File file) {
@@ -119,7 +119,7 @@ public class FormDownloader {
      * @return an empty string for success, or a nonblank string with one or more error messages
      * @throws TaskCancelledException to signal that form downloading is to be canceled
      */
-    private String processOneForm(int total, int count, FormDetails fd) throws TaskCancelledException {
+    protected String processOneForm(int total, int count, FormDetails fd) throws TaskCancelledException {
         if (stateListener != null) {
             stateListener.progressUpdate(fd.getFormName(), String.valueOf(count), String.valueOf(total));
         }

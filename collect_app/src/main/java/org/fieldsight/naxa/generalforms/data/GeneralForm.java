@@ -70,9 +70,14 @@ public class GeneralForm {
     @SerializedName("site")
     @Expose
     private String siteId;
-    @SerializedName("project")
+    @SerializedName(value = "project")
     @Expose
     private String projectId;
+
+    @Ignore
+    @SerializedName("site_project_id")
+    @Expose
+    private String siteProjectId;
 
     @SerializedName("downloadUrl")
     private String downloadUrl;
@@ -95,6 +100,10 @@ public class GeneralForm {
     @Ignore
     @SerializedName("hash")
     private String hash;
+
+    public String getSiteProjectId() {
+        return siteProjectId;
+    }
 
     //@SerializedName("latest_submission")
     @Expose

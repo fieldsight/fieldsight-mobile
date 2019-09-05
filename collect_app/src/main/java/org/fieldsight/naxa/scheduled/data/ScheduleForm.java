@@ -195,6 +195,11 @@ public class ScheduleForm {
     private String formName;
     private String formDescFromXML;
 
+    @Ignore
+    @SerializedName("site_project_id")
+    @Expose
+    private String siteProjectId;
+
     public ScheduleForm() {
     }
 
@@ -384,4 +389,7 @@ public class ScheduleForm {
         this.lastSubmissionDateTime = lastSubmissionDateTime;
     }
 
+    public String getSiteProjectId() {
+        return siteProjectId;
+    }
 }

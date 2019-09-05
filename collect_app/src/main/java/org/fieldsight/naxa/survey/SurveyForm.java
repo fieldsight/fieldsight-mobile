@@ -5,6 +5,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "survey_forms")
@@ -40,6 +41,10 @@ public class SurveyForm {
     @SerializedName("hash")
     private String hash;
 
+    @Ignore
+    @SerializedName("site_project_id")
+    @Expose
+    private String siteProjectId;
 
     public SurveyForm() {
 
@@ -103,5 +108,9 @@ public class SurveyForm {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSiteProjectId() {
+        return siteProjectId;
     }
 }
