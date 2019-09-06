@@ -28,6 +28,7 @@ import org.fieldsight.naxa.v3.network.Syncable;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,7 +101,19 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 tv_stat.setTextColor(syncable.status == Constant.DownloadStatus.FAILED ?
                         getContext().getResources().getColor(R.color.red_500) :
                         getContext().getResources().getColor(R.color.green));
-                tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
+
+
+                if (syncable.getStatus() == Constant.DownloadStatus.RUNNING) {
+                    String messageWithProgress = "";
+                    if (syncable.isProgressBarEnabled()) {
+                        messageWithProgress = "(" + syncable.getProgress() + "/" + syncable.getTotal() + ")";
+                    }
+
+                    tv_stat.setText(String.format(Objects.requireNonNull(Constant.DOWNLOADMAP.get(syncable.getStatus())), messageWithProgress));
+                } else {
+                    tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
+                }
+
                 chkbx.setEnabled(!disable);
                 chkbx.setOnClickListener(v -> {
                     if (!disable)
@@ -135,9 +148,10 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 }
 
 
-                progressBar.setVisibility(syncable.isProgressBarEnabled() ? View.VISIBLE : View.GONE);
+                progressBar.setVisibility(syncable.isProgressBarEnabled() ? View.GONE : View.GONE);
 
                 if (syncable.isProgressBarEnabled()) {
+
                     progressBar.setMax(syncable.getTotal());
                     progressBar.setProgress(syncable.getProgress());
                 }

@@ -15,7 +15,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large" />
 
 
     <ProgressBar
@@ -29,7 +31,8 @@
         android:layout_toEndOf="@id/chkbx_sync_select"
         android:layout_toRightOf="@id/chkbx_sync_select"
         android:max="100"
-        android:progress="10" />
+        android:progress="10"
+        android:visibility="gone" />
 
 
     <TextView

@@ -50,8 +50,6 @@ import timber.log.Timber;
 
 public class SyncServiceV3 extends IntentService {
     /***
-     *
-     *
      * @Author: Yubaraj Poudel
      * @Since : 14/05/2019
      */
@@ -80,7 +78,7 @@ public class SyncServiceV3 extends IntentService {
     protected void onHandleIntent(Intent intent) {
         try {
             selectedProject = Objects.requireNonNull(intent).getParcelableArrayListExtra("projects");
-            Timber.i("SyncServiceV3 slectedProject size = %d", selectedProject.size());
+            Timber.i("SyncServiceV3 selectedProject size = %d", selectedProject.size());
 
             selectedMap = (HashMap<String, List<Syncable>>) intent.getSerializableExtra("selection");
             for (String key : selectedMap.keySet()) {
@@ -150,25 +148,49 @@ public class SyncServiceV3 extends IntentService {
                         //unused
                     }, Timber::e);
 
-
             DisposableManager.add(projectEduMatObservable);
-
             SparseIntArray completedForms = new SparseIntArray();
             HashMapUtils hashMapUtils = new HashMapUtils();
 
             FieldSightFormsRemoteSource.getInstance().getFormsByProjectId(selectedProject)
+                    .doOnSubscribe(disposable -> {
+                        for (Project project : selectedProject) {
+                            SyncLocalSourcev3.getInstance().updateDownloadProgress(project.getId(), 0, 0);
+                        }
+                    })
+                    .doOnNext(new Consumer<Pair<FieldSightFormDetails, String>>() {
+                        @Override
+                        public void accept(Pair<FieldSightFormDetails, String> fieldSightFormDetailsStringPair) throws Exception {
+                            FieldSightFormDetails fd = fieldSightFormDetailsStringPair.first;
+                            String projectId = String.valueOf(fd.getProjectId());
+                            int progress = completedForms.get(fd.getProjectId());
+                            int total = fd.getTotalFormsInProject();
+                            updateProgress(projectId, fd);
+
+                            if (progress == total) {
+                                SyncLocalSourcev3.getInstance().markAsCompleted(projectId, 1);
+                            }
+
+                            //TODO: Error checking
+                        }
+
+                        private void updateProgress(String projectId, FieldSightFormDetails fd) {
+                            int progress = completedForms.get(fd.getProjectId());
+                            int total = fd.getTotalFormsInProject();
+
+                            hashMapUtils.putOrUpdate(completedForms, fd.getProjectId());
+                            SyncLocalSourcev3.getInstance().updateDownloadProgress(projectId, progress, total);
+                            Timber.i(completedForms.toString());
+
+                        }
+                    })
+
                     .subscribe(new DisposableObserver<Pair<FieldSightFormDetails, String>>() {
                         @Override
                         public void onNext(Pair<FieldSightFormDetails, String> fieldSightFormDetailsStringPair) {
-                            FieldSightFormDetails fd = fieldSightFormDetailsStringPair.first;
-                            hashMapUtils.putOrUpdate(completedForms, fd.getProjectId());
-                            Timber.i(completedForms.toString());
-                            String projectId = String.valueOf(fd.getProjectId());
 
-                            int progress = completedForms.get(fd.getProjectId());
-                            int total = fd.getTotalFormsInProject();
-                            SyncLocalSourcev3.getInstance().updateDownloadProgress(projectId, progress, total);
                         }
+
 
                         @Override
                         public void onError(Throwable e) {

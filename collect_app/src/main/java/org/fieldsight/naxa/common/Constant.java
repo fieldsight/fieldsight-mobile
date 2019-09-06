@@ -165,7 +165,7 @@ public class Constant {
 
     public final static HashMap<Integer, String> DOWNLOADMAP = new HashMap<Integer, String>(){{
         put(DownloadStatus.FAILED, "Failed");
-        put(DownloadStatus.RUNNING, "Syncing data");
+        put(DownloadStatus.RUNNING, "Syncing data %s");
         put(DownloadStatus.COMPLETED, "Completed");
         put(DownloadStatus.QUEUED, "Queued");
     }};
