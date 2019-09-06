@@ -110,7 +110,10 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 TextView btnRetry = convertView.findViewById(R.id.btn_retry);
                 View finalConvertView = convertView;
 
-                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0 && TextUtils.equals("Forms",syncable.getTitle());
+                ProgressBar progressBar = convertView.findViewById(R.id.progress_bar_row_text_checkbox_v2);
+
+
+                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0 && TextUtils.equals("Forms", syncable.getTitle());
 
 
                 if (hasFailedUrls) {
@@ -132,6 +135,12 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 }
 
 
+                progressBar.setVisibility(syncable.isProgressBarEnabled() ? View.VISIBLE : View.GONE);
+
+                if (syncable.isProgressBarEnabled()) {
+                    progressBar.setMax(syncable.getTotal());
+                    progressBar.setProgress(syncable.getProgress());
+                }
 
 
                 return convertView;

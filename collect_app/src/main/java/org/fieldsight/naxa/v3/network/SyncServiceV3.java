@@ -167,7 +167,6 @@ public class SyncServiceV3 extends IntentService {
 
                             int progress = completedForms.get(fd.getProjectId());
                             int total = fd.getTotalFormsInProject();
-
                             SyncLocalSourcev3.getInstance().updateDownloadProgress(projectId, progress, total);
                         }
 
