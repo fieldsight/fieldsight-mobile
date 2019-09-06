@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.v3.forms;
 
+import android.util.Pair;
 import android.util.SparseIntArray;
 
 import org.fieldsight.naxa.common.Constant;
@@ -13,17 +14,18 @@ import org.fieldsight.naxa.scheduled.data.ScheduledFormsLocalSource;
 import org.fieldsight.naxa.survey.SurveyForm;
 import org.fieldsight.naxa.survey.SurveyFormLocalSource;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
-import org.odk.collect.android.logic.FormDetails;
-import org.odk.collect.android.utilities.FormDownloader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import timber.log.Timber;
 
 public class FieldSightFormsRemoteSource {
 
@@ -56,17 +58,6 @@ public class FieldSightFormsRemoteSource {
         projectFormMap.put(projectId, projectFormMap.get(projectId, 0) + 1);
     }
 
-    /**
-     * Option:
-     * project_id -->
-     *
-     *
-     *
-     *
-     * @param generalForm
-     * @return
-     */
-
     private int getProjectId(GeneralForm generalForm) {
         String value = generalForm.getProjectId() != null ? generalForm.getProjectId() : generalForm.getSiteProjectId();
         return Integer.parseInt(value);
@@ -82,74 +73,99 @@ public class FieldSightFormsRemoteSource {
         return Integer.parseInt(value);
     }
 
-    public Observable<Object> getFormsByProjectId(ArrayList<Project> projects) {
-
-
+    public Observable<Pair<FieldSightFormDetails, String>> getFormsByProjectId(ArrayList<Project> projects) {
         return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
                 .getForms(buildUrlParams(projects))
-                .map(fieldSightFormResponse -> {
-                    HashSet<FormDetails> formList = new HashSet<>();
-                    SparseIntArray projectFormMap = new SparseIntArray();
+                .map(this::getFormDetails)
+                .flatMap((Function<ArrayList<FieldSightFormDetails>, ObservableSource<Pair<FieldSightFormDetails, String>>>) fieldSightFormDetails -> {
+                    FieldSightFormDownloader fieldSightFormDownloader = new FieldSightFormDownloader(false);
 
-                    for (GeneralForm generalForm : fieldSightFormResponse.getGeneralForms()) {
-                        String formName = generalForm.getName();
-                        String downloadUrl = APIEndpoint.BASE_URL.concat(generalForm.getDownloadUrl());
-                        String manifestUrl = APIEndpoint.BASE_URL.concat(generalForm.getManifestUrl());
-                        String formId = generalForm.getFsFormId();
-                        String hash = generalForm.getHash();
-                        String version = generalForm.getVersion();
+                    return Observable.just(fieldSightFormDetails)
+                            .flatMapIterable((Function<ArrayList<FieldSightFormDetails>, Iterable<FieldSightFormDetails>>) fieldSightFormDetails1 -> fieldSightFormDetails1)
+                            .concatMap((Function<FieldSightFormDetails, ObservableSource<Pair<FieldSightFormDetails, String>>>) formDetails -> downloadSingleForm(formDetails, fieldSightFormDownloader)).doOnNext(new Consumer<Pair<FieldSightFormDetails, String>>() {
+                                @Override
+                                public void accept(Pair<FieldSightFormDetails, String> fieldSightFormDetailsStringPair) {
+                                    if (fieldSightFormDetailsStringPair == null) {
+                                        Timber.w("FieldSightFormDetails pair is null");
+                                        return;
+                                    }
 
-                        String deployedFrom = generalForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
-                        generalForm.setFormDeployedFrom(deployedFrom);
+                                    String message = fieldSightFormDetailsStringPair.second;
+                                    Timber.i(message);
+                                }
+                            });
+                })
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
-                        formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
-                                version, hash, null,
-                                false, false));
+    /**
+     * Saves forms and then generates FormDetails
+     *
+     * @param fieldSightFormResponse a wrapper for general, schedule, survey and staged forms
+     * @return FormDetails: which contains details about each xml form
+     */
+    private ArrayList<FieldSightFormDetails> getFormDetails(FieldSightFormResponse fieldSightFormResponse) {
+        HashSet<FieldSightFormDetails> formListSet = new HashSet<>();
+        SparseIntArray projectFormMap = new SparseIntArray();
 
-                        putOrUpdate(projectFormMap, getProjectId(generalForm));
+        for (GeneralForm generalForm : fieldSightFormResponse.getGeneralForms()) {
+            String formName = generalForm.getName();
+            String downloadUrl = APIEndpoint.BASE_URL.concat(generalForm.getDownloadUrl());
+            String manifestUrl = APIEndpoint.BASE_URL.concat(generalForm.getManifestUrl());
+            String formId = generalForm.getFsFormId();
+            String hash = generalForm.getHash();
+            String version = generalForm.getVersion();
 
-                    }
+            String deployedFrom = generalForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+            generalForm.setFormDeployedFrom(deployedFrom);
 
-                    GeneralFormLocalSource.getInstance().save(fieldSightFormResponse.getGeneralForms());
+            formListSet.add(new FieldSightFormDetails(getProjectId(generalForm), formName, downloadUrl, manifestUrl, formId,
+                    version, hash, null,
+                    false, false));
 
-                    for (ScheduleForm scheduleForm : fieldSightFormResponse.getScheduleForms()) {
-                        String formName = scheduleForm.getFormName();
-                        String downloadUrl = APIEndpoint.BASE_URL.concat(scheduleForm.getDownloadUrl());
-                        String manifestUrl = APIEndpoint.BASE_URL.concat(scheduleForm.getManifestUrl());
-                        String formId = scheduleForm.getFsFormId();
-                        String hash = scheduleForm.getHash();
-                        String version = scheduleForm.getVersion();
+            putOrUpdate(projectFormMap, getProjectId(generalForm));
 
-                        String deployedFrom = scheduleForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
-                        scheduleForm.setFormDeployedFrom(deployedFrom);
+        }
 
-                        formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
-                                version, hash, null,
-                                false, false));
+        GeneralFormLocalSource.getInstance().save(fieldSightFormResponse.getGeneralForms());
 
-                        putOrUpdate(projectFormMap, getProjectId(scheduleForm));
-                    }
+        for (ScheduleForm scheduleForm : fieldSightFormResponse.getScheduleForms()) {
+            String formName = scheduleForm.getFormName();
+            String downloadUrl = APIEndpoint.BASE_URL.concat(scheduleForm.getDownloadUrl());
+            String manifestUrl = APIEndpoint.BASE_URL.concat(scheduleForm.getManifestUrl());
+            String formId = scheduleForm.getFsFormId();
+            String hash = scheduleForm.getHash();
+            String version = scheduleForm.getVersion();
 
-                    ScheduledFormsLocalSource.getInstance().save(fieldSightFormResponse.getScheduleForms());
+            String deployedFrom = scheduleForm.getProjectId() != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
+            scheduleForm.setFormDeployedFrom(deployedFrom);
 
-                    for (SurveyForm surveyForm : fieldSightFormResponse.getSurveyForms()) {
-                        String formName = surveyForm.getName();
-                        String downloadUrl = APIEndpoint.BASE_URL.concat(surveyForm.getDownloadUrl());
-                        String manifestUrl = APIEndpoint.BASE_URL.concat(surveyForm.getManifestUrl());
-                        String formId = surveyForm.getFsFormId();
-                        String hash = surveyForm.getHash();
-                        String version = surveyForm.getVersion();
+            formListSet.add(new FieldSightFormDetails(getProjectId(scheduleForm), formName, downloadUrl, manifestUrl, formId,
+                    version, hash, null,
+                    false, false));
 
-                        formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
-                                version, hash, null,
-                                false, false));
+            putOrUpdate(projectFormMap, getProjectId(scheduleForm));
+        }
 
-                        putOrUpdate(projectFormMap, getProjectId(surveyForm));
-                    }
+        ScheduledFormsLocalSource.getInstance().save(fieldSightFormResponse.getScheduleForms());
 
-                    SurveyFormLocalSource.getInstance().save(fieldSightFormResponse.getSurveyForms());
+        for (SurveyForm surveyForm : fieldSightFormResponse.getSurveyForms()) {
+            String formName = surveyForm.getName();
+            String downloadUrl = APIEndpoint.BASE_URL.concat(surveyForm.getDownloadUrl());
+            String manifestUrl = APIEndpoint.BASE_URL.concat(surveyForm.getManifestUrl());
+            String formId = surveyForm.getFsFormId();
+            String hash = surveyForm.getHash();
+            String version = surveyForm.getVersion();
 
 
+            formListSet.add(new FieldSightFormDetails(getProjectId(surveyForm), formName, downloadUrl, manifestUrl, formId,
+                    version, hash, null,
+                    false, false));
+
+            putOrUpdate(projectFormMap, getProjectId(surveyForm));
+        }
+
+        SurveyFormLocalSource.getInstance().save(fieldSightFormResponse.getSurveyForms());
 //                    for (Stage stage : fieldSightFormResponse.getStages()) {
 //                        for (SubStage subStage : stage.getSubStage()) {
 //                            String formName = subStage.getName();
@@ -166,29 +182,28 @@ public class FieldSightFormsRemoteSource {
 //
 //                    }
 
-                    return new ArrayList<>(formList);
-                })
-                .switchMap(new Function<ArrayList<FormDetails>, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(ArrayList<FormDetails> formDetails) throws Exception {
-                        return createFormDownloadObservable(formDetails);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread());
+        ArrayList<FieldSightFormDetails> formList = new ArrayList<>(formListSet);
+        for (FieldSightFormDetails fd : formList) {
+            fd.setTotalFormsInProject(projectFormMap.get(fd.getProjectId()));
+        }
 
-
+        return formList;
     }
 
-
-    private Observable<HashMap<FormDetails, String>> createFormDownloadObservable(ArrayList<FormDetails> formDetailsArrayList) {
-
+    private Observable<HashMap<FieldSightFormDetails, String>> createFormDownloadObservable(ArrayList<FieldSightFormDetails> formDetailsArrayList) {
         return Observable.fromCallable(() -> {
 
+            FieldSightFormDownloader formDownloader = new FieldSightFormDownloader(false);
+            return formDownloader.downloadFieldSightForms(formDetailsArrayList);
+        });
+    }
 
-            FormDownloader formDownloader = new FormDownloader(false);
-            HashMap<FormDetails, String> forms = formDownloader.downloadForms(formDetailsArrayList);
-
-            return forms;
+    private Observable<Pair<FieldSightFormDetails, String>> downloadSingleForm(FieldSightFormDetails formDetails, FieldSightFormDownloader formDownloader) {
+        return Observable.fromCallable(new Callable<Pair<FieldSightFormDetails, String>>() {
+            @Override
+            public Pair<FieldSightFormDetails, String> call() throws Exception {
+                return formDownloader.downloadSingleFieldSightForm(formDetails);
+            }
         });
     }
 }

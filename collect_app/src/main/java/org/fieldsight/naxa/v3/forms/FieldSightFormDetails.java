@@ -4,6 +4,7 @@ import org.odk.collect.android.logic.FormDetails;
 
 public class FieldSightFormDetails extends FormDetails {
     private int projectId;
+    private int totalFormsInProject;
 
     public FieldSightFormDetails(String error) {
         super(error);
@@ -18,5 +19,11 @@ public class FieldSightFormDetails extends FormDetails {
         return projectId;
     }
 
+    public void setTotalFormsInProject(int totalFormsInProject) {
+        this.totalFormsInProject = totalFormsInProject;
+    }
 
+    public int getTotalFormsInProject() {
+        return totalFormsInProject;
+    }
 }

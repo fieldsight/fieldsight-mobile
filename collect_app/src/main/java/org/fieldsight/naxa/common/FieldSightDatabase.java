@@ -64,7 +64,7 @@ import java.io.File;
                 SyncStat.class
 
         },
-        version = 19)
+        version = 18)
 @TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
 
 

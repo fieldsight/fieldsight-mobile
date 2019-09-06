@@ -1,5 +1,7 @@
 package org.fieldsight.naxa.v3.forms;
 
+import android.util.Pair;
+
 import org.fieldsight.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
@@ -35,5 +37,19 @@ public class FieldSightFormDownloader extends FormDownloader {
         return result;
     }
 
+    public Pair<FieldSightFormDetails, String> downloadSingleFieldSightForm(FieldSightFormDetails fd) {
+        formsDao = new FormsDao();
+        String message;
+        Pair<FieldSightFormDetails, String> pair = null;
+        try {
+            message = processOneForm(1, 1, fd);
+            pair = Pair.create(fd, message.isEmpty() ?
+                    Collect.getInstance().getString(R.string.success) : message);
+        } catch (TaskCancelledException e) {
+            e.printStackTrace();
+        }
+
+        return pair;
+    }
 
 }

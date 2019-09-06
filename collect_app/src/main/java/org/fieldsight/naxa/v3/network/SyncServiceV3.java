@@ -3,8 +3,14 @@ package org.fieldsight.naxa.v3.network;
 import android.app.IntentService;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Pair;
+import android.util.SparseIntArray;
+
+import androidx.lifecycle.LiveData;
 
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.v3.HashMapUtils;
+import org.fieldsight.naxa.v3.forms.FieldSightFormDetails;
 import org.fieldsight.naxa.v3.forms.FieldSightFormResponse;
 import org.fieldsight.naxa.v3.forms.FieldSightFormsRemoteSource;
 import org.odk.collect.android.logic.FormDetails;
@@ -151,23 +157,20 @@ public class SyncServiceV3 extends IntentService {
 
             DisposableManager.add(projectEduMatObservable);
 
+            SparseIntArray completedForms = new SparseIntArray();
+            HashMapUtils hashMapUtils = new HashMapUtils();
 
             FieldSightFormsRemoteSource.getInstance().getFormsByProjectId(selectedProject)
-                    .doOnSubscribe(new Consumer<Disposable>() {
+                    .subscribe(new DisposableObserver<Pair<FieldSightFormDetails, String>>() {
                         @Override
-                        public void accept(Disposable disposable) throws Exception {
-
-                        }
-                    })
-                    .subscribe(new DisposableObserver<Object>() {
-                        @Override
-                        public void onNext(Object o) {
-                            Timber.i("We did it");
+                        public void onNext(Pair<FieldSightFormDetails, String> fieldSightFormDetailsStringPair) {
+                            hashMapUtils.putOrUpdate(completedForms, fieldSightFormDetailsStringPair.first.getProjectId());
+                            Timber.i(completedForms.toString());
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Timber.i(e);
+
                         }
 
                         @Override
