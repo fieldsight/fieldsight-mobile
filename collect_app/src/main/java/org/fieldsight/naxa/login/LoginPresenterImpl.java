@@ -85,7 +85,6 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     @Override
     public void googleOauthCredentials(String googleAccessToken, String username) {
         loginView.showProgress(true);
-
         String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
         if (!TextUtils.isEmpty(fcmToken)) {
             Timber.i("token generated: %s", fcmToken);
