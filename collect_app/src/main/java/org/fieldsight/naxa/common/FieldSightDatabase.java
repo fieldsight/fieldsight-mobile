@@ -6,7 +6,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
+
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import org.odk.collect.android.application.Collect;
@@ -236,6 +238,18 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE sites"
                     + " ADD COLUMN `site` TEXT ");
+        }
+    };
+
+    //TODO: needs to be tested
+    private static final Migration MIGRATION_18_19 = new Migration(18, 19) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE syncstat"
+                    + " ADD COLUMN `total` INTEGER ");
+
+            database.execSQL("ALTER TABLE syncstat"
+                    + " ADD COLUMN `progress` INTEGER ");
         }
     };
 

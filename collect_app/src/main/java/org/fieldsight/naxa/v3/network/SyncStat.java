@@ -6,7 +6,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
-@Entity(tableName = "syncstat", primaryKeys = {"project_id","type"})
+@Entity(tableName = "syncstat", primaryKeys = {"project_id", "type"})
 
 public class SyncStat {
     @NonNull
@@ -29,7 +29,12 @@ public class SyncStat {
     @ColumnInfo(name = "created_date")
     long created_date;
 
-    public SyncStat() {}
+    private int total;
+    private int progress;
+
+    public SyncStat() {
+    }
+
     /*
             @params projectId
             @params type
@@ -44,6 +49,22 @@ public class SyncStat {
         this.started = started;
         this.status = status;
         this.created_date = created_date;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public long getCreated_date() {

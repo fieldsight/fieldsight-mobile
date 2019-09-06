@@ -6,12 +6,9 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseIntArray;
 
-import androidx.lifecycle.LiveData;
-
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.v3.HashMapUtils;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDetails;
-import org.fieldsight.naxa.v3.forms.FieldSightFormResponse;
 import org.fieldsight.naxa.v3.forms.FieldSightFormsRemoteSource;
 import org.odk.collect.android.logic.FormDetails;
 import org.fieldsight.naxa.ResponseUtils;
@@ -48,7 +45,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -164,8 +160,15 @@ public class SyncServiceV3 extends IntentService {
                     .subscribe(new DisposableObserver<Pair<FieldSightFormDetails, String>>() {
                         @Override
                         public void onNext(Pair<FieldSightFormDetails, String> fieldSightFormDetailsStringPair) {
-                            hashMapUtils.putOrUpdate(completedForms, fieldSightFormDetailsStringPair.first.getProjectId());
+                            FieldSightFormDetails fd = fieldSightFormDetailsStringPair.first;
+                            hashMapUtils.putOrUpdate(completedForms, fd.getProjectId());
                             Timber.i(completedForms.toString());
+                            String projectId = String.valueOf(fd.getProjectId());
+
+                            int progress = completedForms.get(fd.getProjectId());
+                            int total = fd.getTotalFormsInProject();
+
+                            SyncLocalSourcev3.getInstance().updateDownloadProgress(projectId, progress, total);
                         }
 
                         @Override

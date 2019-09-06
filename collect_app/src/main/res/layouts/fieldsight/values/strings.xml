@@ -280,6 +280,7 @@
     <string name="msg_forms_download_fail">%d forms failed to download</string>
     <string name="upload_site">Upload Site</string>
     <string name="upload_edited_site">Upload Site</string>
+    <string name="msg_syncing_data">Syncing data</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>

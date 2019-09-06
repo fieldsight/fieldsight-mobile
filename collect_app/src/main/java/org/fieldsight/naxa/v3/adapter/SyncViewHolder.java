@@ -78,12 +78,12 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
 
     void manageChildView(List<Syncable> syncableList, boolean disable) {
         Timber.i("SyncViewHolder, syncablelistsize = %d", syncableList.size());
-        lv_options.setAdapter(new ArrayAdapter<Syncable>(itemView.getContext(), R.layout.row_text_checkbox, syncableList) {
+        lv_options.setAdapter(new ArrayAdapter<Syncable>(itemView.getContext(), R.layout.row_text_checkbox_v2, syncableList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_text_checkbox, null);
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_text_checkbox_v2, null);
                 }
                 Syncable syncable = getItem(position);
                 CheckBox chkbx = convertView.findViewById(R.id.chkbx_sync_select);
@@ -112,6 +112,7 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
 
                 boolean hasFailedUrls = syncable.getFailedUrl().size() > 0 && TextUtils.equals("Forms",syncable.getTitle());
 
+
                 if (hasFailedUrls) {
                     btnRetry.setText(finalConvertView.getContext().getString(R.string.retry_forms, syncable.getFailedUrl().size()));
                     btnRetry.setVisibility(View.VISIBLE);
@@ -129,6 +130,8 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 } else {
                     btnRetry.setVisibility(View.GONE);
                 }
+
+
 
 
                 return convertView;
