@@ -32,7 +32,7 @@ public class GeneralForm {
     @Expose
     private String name;
 
-    @SerializedName("id_string")
+    @SerializedName(value = "id_string", alternate = "formID")
     @Expose
     private String idString;
 

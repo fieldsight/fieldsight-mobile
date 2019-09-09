@@ -112,7 +112,7 @@ public class FieldSightFormsRemoteSource {
             String formName = generalForm.getName();
             String downloadUrl = APIEndpoint.BASE_URL.concat(generalForm.getDownloadUrl());
             String manifestUrl = APIEndpoint.BASE_URL.concat(generalForm.getManifestUrl());
-            String formId = generalForm.getFsFormId();
+            String formId = generalForm.getIdString();
             String hash = generalForm.getHash();
             String version = generalForm.getVersion();
 
@@ -130,10 +130,10 @@ public class FieldSightFormsRemoteSource {
         GeneralFormLocalSource.getInstance().save(fieldSightFormResponse.getGeneralForms());
 
         for (ScheduleForm scheduleForm : fieldSightFormResponse.getScheduleForms()) {
-            String formName = scheduleForm.getFormName();
+            String formName = scheduleForm.getScheduleName();
             String downloadUrl = APIEndpoint.BASE_URL.concat(scheduleForm.getDownloadUrl());
             String manifestUrl = APIEndpoint.BASE_URL.concat(scheduleForm.getManifestUrl());
-            String formId = scheduleForm.getFsFormId();
+            String formId = scheduleForm.getIdString();
             String hash = scheduleForm.getHash();
             String version = scheduleForm.getVersion();
 
@@ -153,7 +153,7 @@ public class FieldSightFormsRemoteSource {
             String formName = surveyForm.getName();
             String downloadUrl = APIEndpoint.BASE_URL.concat(surveyForm.getDownloadUrl());
             String manifestUrl = APIEndpoint.BASE_URL.concat(surveyForm.getManifestUrl());
-            String formId = surveyForm.getFsFormId();
+            String formId = surveyForm.getIdString();
             String hash = surveyForm.getHash();
             String version = surveyForm.getVersion();
 

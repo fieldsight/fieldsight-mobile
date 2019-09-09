@@ -6,10 +6,13 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseIntArray;
 
+import com.google.common.collect.Sets;
+
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.v3.HashMapUtils;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDetails;
 import org.fieldsight.naxa.v3.forms.FieldSightFormsRemoteSource;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.FormDetails;
 import org.fieldsight.naxa.ResponseUtils;
 import org.fieldsight.naxa.common.Constant;
@@ -32,8 +35,10 @@ import org.fieldsight.naxa.stages.data.StageRemoteSource;
 import java.util.ArrayList;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -45,6 +50,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -151,6 +157,7 @@ public class SyncServiceV3 extends IntentService {
             DisposableManager.add(projectEduMatObservable);
             SparseIntArray completedForms = new SparseIntArray();
             HashMapUtils hashMapUtils = new HashMapUtils();
+            ArrayList<String> failed = new ArrayList<>();
 
             FieldSightFormsRemoteSource.getInstance().getFormsByProjectId(selectedProject)
                     .doOnSubscribe(disposable -> {
@@ -158,47 +165,65 @@ public class SyncServiceV3 extends IntentService {
                             SyncLocalSourcev3.getInstance().updateDownloadProgress(project.getId(), 0, 0);
                         }
                     })
+
                     .doOnNext(new Consumer<Pair<FieldSightFormDetails, String>>() {
                         @Override
                         public void accept(Pair<FieldSightFormDetails, String> fieldSightFormDetailsStringPair) throws Exception {
                             FieldSightFormDetails fd = fieldSightFormDetailsStringPair.first;
+
                             String projectId = String.valueOf(fd.getProjectId());
-                            int progress = completedForms.get(fd.getProjectId());
                             int total = fd.getTotalFormsInProject();
                             updateProgress(projectId, fd);
-
-                            if (progress == total) {
-                                SyncLocalSourcev3.getInstance().markAsCompleted(projectId, 1);
-                            }
-
                             //TODO: Error checking
                         }
 
                         private void updateProgress(String projectId, FieldSightFormDetails fd) {
-                            int progress = completedForms.get(fd.getProjectId());
-                            int total = fd.getTotalFormsInProject();
-
                             hashMapUtils.putOrUpdate(completedForms, fd.getProjectId());
-                            SyncLocalSourcev3.getInstance().updateDownloadProgress(projectId, progress, total);
+
+                            int total = fd.getTotalFormsInProject();
+                            SyncLocalSourcev3.getInstance().updateDownloadProgress(projectId, completedForms.get(fd.getProjectId()), total);
                             Timber.i(completedForms.toString());
 
                         }
                     })
-
-                    .subscribe(new DisposableObserver<Pair<FieldSightFormDetails, String>>() {
+                    .toList()
+                    .doOnSuccess(new Consumer<List<Pair<FieldSightFormDetails, String>>>() {
                         @Override
-                        public void onNext(Pair<FieldSightFormDetails, String> fieldSightFormDetailsStringPair) {
+                        public void accept(List<Pair<FieldSightFormDetails, String>> pairs) throws Exception {
+                            HashMap<Integer, ArrayList<String>> failedFormsMap = new HashMap<>();
+                            HashSet<Integer> projects = new HashSet<>();
+
+
+                            for (Pair<FieldSightFormDetails, String> pair : pairs) {
+                                String message = pair.second;
+                                FieldSightFormDetails fd = pair.first;
+                                boolean hasDownloadFailed = !Collect.getInstance().getString(R.string.success).equals(message);
+                                if (hasDownloadFailed) {
+                                    hashMapUtils.putOrUpdate(failedFormsMap, fd.getProjectId(), fd.getFormID());
+                                }
+
+                                projects.add(fd.getProjectId());
+                            }
+
+                            for (Integer projectId : failedFormsMap.keySet()) {
+                                SyncLocalSourcev3.getInstance().markAsFailed(String.valueOf(projectId), 1, Objects.requireNonNull(failedFormsMap.get(projectId)).toString());
+                            }
+
+                            Sets.SetView<Integer> downloadedProjects = Sets.symmetricDifference(projects, failedFormsMap.keySet());
+
+                            for (Integer projectId :downloadedProjects) {
+                                SyncLocalSourcev3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
+                            }
+                        }
+                    })
+                    .subscribe(new DisposableSingleObserver<List<Pair<FieldSightFormDetails, String>>>() {
+                        @Override
+                        public void onSuccess(List<Pair<FieldSightFormDetails, String>> pairs) {
 
                         }
-
 
                         @Override
                         public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
 
                         }
                     });
@@ -399,7 +424,7 @@ public class SyncServiceV3 extends IntentService {
 
     private void markAsCompleted(String projectId, int type) {
         saveState(projectId, type, "", false, Constant.DownloadStatus.COMPLETED);
-        Timber.e("Download completed for project %s", projectId);
+        Timber.i("Download completed for project %s", projectId);
     }
 
     private void saveState(String projectId, int type, String failedUrl, boolean started, int status) {

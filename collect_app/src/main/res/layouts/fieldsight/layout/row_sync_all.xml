@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     app:cardUseCompatPadding="true"
-    app:contentPadding="8dp">
+    app:contentPadding="8dp"
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,52 +26,52 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:minHeight="24dp">
-
-                    <ProgressBar
-                        android:id="@+id/progress_bar"
-                        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp" />
-
-                    <TextView
-                        android:id="@+id/tv_project_other"
-                        android:layout_width="120dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="#727272"
-                        android:textSize="16sp"
-                        tools:text="by build change" />
-
-                    <TextView
-                        android:id="@+id/tv_project_progress_percentage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginLeft="4dp"
-                        android:textColor="#727272"
-                        android:textSize="12sp"
-                        tools:text="50%" />
-
-                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_project_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    tools:text="STFC - NUWAKOT"
                     android:textColor="#212121"
-                    android:textSize="18sp"
-                    tools:text="STFC - NUWAKOT" />
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:minHeight="24dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_project_other"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        tools:text="by build change"
+                        android:textColor="#727272"
+                        android:textSize="16sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="100dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp" />
+
+                    <TextView
+                        android:id="@+id/tv_project_progress_percentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="50%"
+                        android:layout_marginLeft="4dp"
+                        android:textColor="#727272"
+                        android:textSize="12sp"
+                        android:layout_marginStart="4dp" />
+
+                </LinearLayout>
+
 
 
             </LinearLayout>
@@ -80,17 +80,17 @@
                 android:id="@+id/iv_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_close" />
+                app:srcCompat="@drawable/ic_close"/>
 
         </LinearLayout>
 
         <ListView
+            android:scrollbars="none"
             android:id="@+id/lv_options"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:paddingStart="32dp"
             android:paddingLeft="32dp"
-            android:scrollbars="none" />
+            android:layout_height="200dp"
+            android:paddingStart="32dp" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 18,
-    "identityHash": "ec37ce0daa1494e573779f954b0b7708",
+    "identityHash": "939654a47089e17c3b289c5425509e91",
     "entities": [
       {
         "tableName": "sites",
@@ -1324,7 +1324,7 @@
       },
       {
         "tableName": "syncstat",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `total` INTEGER NOT NULL, `progress` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))",
         "fields": [
           {
             "fieldPath": "projectId",
@@ -1361,6 +1361,18 @@
             "columnName": "created_date",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "total",
+            "columnName": "total",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "progress",
+            "columnName": "progress",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1377,7 +1389,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ec37ce0daa1494e573779f954b0b7708')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '939654a47089e17c3b289c5425509e91')"
     ]
   }
 }

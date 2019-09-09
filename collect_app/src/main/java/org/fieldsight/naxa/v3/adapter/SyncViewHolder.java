@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.v3.adapter;
 
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +70,11 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
 
         tv_project_name.setText(project.getName());
         tv_project_other.setText(String.format("By %s", project.getOrganizationName()));
-        progressBar.setProgress(progressMap.get(project.getId()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            progressBar.setProgress(progressMap.get(project.getId()), true);
+        } else {
+            progressBar.setProgress(progressMap.get(project.getId()));
+        }
         iv_cancel.setVisibility(disable ? View.GONE : View.VISIBLE);
         tv_project_progress_percentage.setText(progressMap.get(project.getId()) + "%");
         Timber.i("SyncViewHolder, projectImage = %s", project.getUrl());

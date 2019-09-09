@@ -64,7 +64,7 @@ public class ScheduleForm {
     @SerializedName("site")
     private String siteId;
 
-    @SerializedName("id_string")
+    @SerializedName(value = "id_string", alternate = "formID")
     private String idString;
 
     private String lastSubmissionBy;
