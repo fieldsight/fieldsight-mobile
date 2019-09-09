@@ -118,7 +118,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
 
-        viewModel.getFormsAndSubmission(loadedSite)
+        viewModel.getFormsAndSubmission(loadedSite.getId(), loadedSite.getProject())
                 .observe(this, new Observer<List<GeneralFormAndSubmission>>() {
                     @Override
                     public void onChanged(@Nullable List<GeneralFormAndSubmission> generalFormAndSubmissions) {
@@ -165,7 +165,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 
-        if(isFormSaveCacheSafe(submissionUrl,loadedSite.getId())){
+        if (isFormSaveCacheSafe(submissionUrl, loadedSite.getId())) {
             fillODKForm(generalForm.getIdString());
         }
     }

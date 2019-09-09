@@ -11,6 +11,10 @@ import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.scheduled.data.ScheduleForm;
 import org.fieldsight.naxa.scheduled.data.ScheduledFormsLocalSource;
+import org.fieldsight.naxa.stages.data.Stage;
+import org.fieldsight.naxa.stages.data.StageLocalSource;
+import org.fieldsight.naxa.stages.data.SubStage;
+import org.fieldsight.naxa.substages.data.SubStageLocalSource;
 import org.fieldsight.naxa.survey.SurveyForm;
 import org.fieldsight.naxa.survey.SurveyFormLocalSource;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
@@ -54,7 +58,7 @@ public class FieldSightFormsRemoteSource {
     }
 
 
-    private void putOrUpdate(SparseIntArray projectFormMap, Integer projectId) {
+    private void incrementFormCountForProject(SparseIntArray projectFormMap, Integer projectId) {
         projectFormMap.put(projectId, projectFormMap.get(projectId, 0) + 1);
     }
 
@@ -79,6 +83,7 @@ public class FieldSightFormsRemoteSource {
                 .map(this::getFormDetails)
                 .flatMap((Function<ArrayList<FieldSightFormDetails>, ObservableSource<Pair<FieldSightFormDetails, String>>>) fieldSightFormDetails -> {
                     FieldSightFormDownloader fieldSightFormDownloader = new FieldSightFormDownloader(false);
+
 
                     return Observable.just(fieldSightFormDetails)
                             .flatMapIterable((Function<ArrayList<FieldSightFormDetails>, Iterable<FieldSightFormDetails>>) fieldSightFormDetails1 -> fieldSightFormDetails1)
@@ -123,7 +128,7 @@ public class FieldSightFormsRemoteSource {
                     version, hash, null,
                     false, false));
 
-            putOrUpdate(projectFormMap, getProjectId(generalForm));
+            incrementFormCountForProject(projectFormMap, getProjectId(generalForm));
 
         }
 
@@ -144,7 +149,7 @@ public class FieldSightFormsRemoteSource {
                     version, hash, null,
                     false, false));
 
-            putOrUpdate(projectFormMap, getProjectId(scheduleForm));
+            incrementFormCountForProject(projectFormMap, getProjectId(scheduleForm));
         }
 
         ScheduledFormsLocalSource.getInstance().save(fieldSightFormResponse.getScheduleForms());
@@ -162,25 +167,34 @@ public class FieldSightFormsRemoteSource {
                     version, hash, null,
                     false, false));
 
-            putOrUpdate(projectFormMap, getProjectId(surveyForm));
+            incrementFormCountForProject(projectFormMap, getProjectId(surveyForm));
         }
 
         SurveyFormLocalSource.getInstance().save(fieldSightFormResponse.getSurveyForms());
-//                    for (Stage stage : fieldSightFormResponse.getStages()) {
-//                        for (SubStage subStage : stage.getSubStage()) {
-//                            String formName = subStage.getName();
-//                            String downloadUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getDownloadUrl());
-//                            String manifestUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getManifestUrl());
-//                            String hash = subStage.getStageForms().getHash();
-//                            String formId = subStage.getStageForms().getId();
-//                            String version = subStage.getStageForms().getVersion();
-//
-//                            formList.add(new FormDetails(formName, downloadUrl, manifestUrl, formId,
-//                                    version, hash, null,
-//                                    false, false));
-//                        }
-//
-//                    }
+        StageLocalSource.getInstance().save(fieldSightFormResponse.getStages());
+
+        for (Stage stage : fieldSightFormResponse.getStages()) {
+
+
+            for (SubStage subStage : stage.getSubStage()) {
+                String formName = subStage.getName();
+                String downloadUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getDownloadUrl());
+                String manifestUrl = APIEndpoint.BASE_URL.concat(subStage.getStageForms().getManifestUrl());
+                String hash = subStage.getStageForms().getHash();
+                String formId = subStage.getStageForms().getIdString();
+                String version = subStage.getStageForms().getVersion();
+
+                subStage.setStageId(stage.getId());
+                SubStageLocalSource.getInstance().save(subStage);
+
+                formListSet.add(new FieldSightFormDetails(getProjectId(stage), formName, downloadUrl, manifestUrl, formId,
+                        version, hash, null,
+                        false, false));
+
+
+                incrementFormCountForProject(projectFormMap, getProjectId(stage));
+            }
+        }
 
         ArrayList<FieldSightFormDetails> formList = new ArrayList<>(formListSet);
         for (FieldSightFormDetails fd : formList) {
@@ -188,6 +202,10 @@ public class FieldSightFormsRemoteSource {
         }
 
         return formList;
+    }
+
+    private int getProjectId(Stage stage) {
+        return stage.getProject() != null ? stage.getProject() : stage.getSite();
     }
 
     private Observable<HashMap<FieldSightFormDetails, String>> createFormDownloadObservable(ArrayList<FieldSightFormDetails> formDetailsArrayList) {

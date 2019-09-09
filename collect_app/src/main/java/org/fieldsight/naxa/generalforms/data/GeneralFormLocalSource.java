@@ -62,6 +62,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
         return dao.getProjectGeneralForms(projectId);
     }
 
+
     public LiveData<List<GeneralFormAndSubmission>> getFormsBySiteId(@NonNull String siteId, @NonNull String projectId) {
 
         MediatorLiveData<List<GeneralFormAndSubmission>> generalFormMediator = new MediatorLiveData<>();
@@ -258,4 +259,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
 
+    public Integer getSiteFormCount(String siteId) {
+        return dao.getSiteFormCount(siteId);
+    }
 }

@@ -33,6 +33,10 @@ public class StageForms {
     @SerializedName("version")
     private String version;
 
+    @Ignore
+    @SerializedName("formID")
+    private String idString;
+
 
     public String getFormName() {
         return formName;
@@ -78,5 +82,7 @@ public class StageForms {
         this.id = id;
     }
 
-
+    public String getIdString() {
+        return idString;
+    }
 }
