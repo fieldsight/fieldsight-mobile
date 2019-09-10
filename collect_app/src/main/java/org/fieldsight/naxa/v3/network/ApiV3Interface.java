@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.v3.network;
 
+import org.fieldsight.naxa.forms.source.remote.FieldSightFormsResponse;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.v3.forms.FieldSightFormResponse;
 
@@ -33,5 +34,8 @@ public interface ApiV3Interface {
 
     @GET
     Observable<FieldSightFormResponse> getForms(@Url String url);
+
+    @GET
+    Observable<FieldSightFormsResponse> getFormsFromUrl(@Url String url);
 
 }

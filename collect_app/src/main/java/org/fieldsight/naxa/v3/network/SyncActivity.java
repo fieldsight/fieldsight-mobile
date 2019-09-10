@@ -116,7 +116,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             adapterv3.notifyBySyncStat(syncStats);
         };
 
-        syncdata = SyncLocalSourcev3.getInstance().getAll();
+        syncdata = SyncLocalSource3.getInstance().getAll();
         syncdata.observe(this, syncObserver);
 
         runningLiveDataObserver = count -> {
@@ -126,7 +126,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
                 enableDisableAdapter(false);
             }
         };
-        runningLiveData = SyncLocalSourcev3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING);
+        runningLiveData = SyncLocalSource3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING);
         runningLiveData.observe(this, runningLiveDataObserver);
         if (syncing) {
             enableDisableAdapter(syncing);
@@ -258,9 +258,9 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             projectId = data.getStringExtra(Constant.EXTRA_ID);
 
             if (failedUrls.size() > 0) {
-                SyncLocalSourcev3.getInstance().markAsFailed(projectId, 1, failedUrls.toString());
+                SyncLocalSource3.getInstance().markAsFailed(projectId, 1, failedUrls.toString());
             } else {
-                SyncLocalSourcev3.getInstance().markAsCompleted(projectId, 1);
+                SyncLocalSource3.getInstance().markAsCompleted(projectId, 1);
             }
         }
     }

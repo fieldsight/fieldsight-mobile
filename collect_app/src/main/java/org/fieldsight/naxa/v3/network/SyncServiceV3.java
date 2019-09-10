@@ -4,11 +4,13 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 
 import com.google.common.collect.Sets;
 
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.forms.source.remote.FieldSightFormRemoteSourceV2;
 import org.fieldsight.naxa.v3.HashMapUtils;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDetails;
 import org.fieldsight.naxa.v3.forms.FieldSightFormsRemoteSource;
@@ -50,7 +52,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -159,6 +160,62 @@ public class SyncServiceV3 extends IntentService {
             SparseIntArray completedForms = new SparseIntArray();
             HashMapUtils hashMapUtils = new HashMapUtils();
 
+            Disposable formDisposable = filterSelectedProjects()
+                    .subscribeOn(Schedulers.io())
+                    .flatMapSingle((Function<List<Project>, SingleSource<ArrayList<Integer>>>) projects -> FieldSightFormRemoteSourceV2.getInstance().getFormFromProjectId(projects)
+                            .doOnNext(fieldSightFormDetailsStringPair -> {
+                                FieldSightFormDetails fd = fieldSightFormDetailsStringPair.first;
+                                String projectId = String.valueOf(fd.getProjectId());
+                                hashMapUtils.putOrUpdate(completedForms, fd.getProjectId());
+                                SyncLocalSource3.getInstance().updateDownloadProgress(projectId, completedForms.get(fd.getProjectId()), fd.getTotalFormsInProject());
+                                Timber.i(completedForms.toString());
+                            })
+                            .toList()
+                            .map(pairs -> {
+                                SparseArray<ArrayList<String>> failedFormsMap = new SparseArray<>();
+                                HashSet<Integer> projectIds = new HashSet<>();
+                                HashSet<Integer> failedProjectId = new HashSet<>();
+
+
+                                for (Project project : projects) {
+                                    projectIds.add(Integer.valueOf(project.getId()));
+                                }
+
+                                //collect project ids with failed forms
+                                for (Pair<FieldSightFormDetails, String> pair : pairs) {
+                                    String message = pair.second;
+                                    FieldSightFormDetails fd = pair.first;
+                                    boolean hasDownloadFailed = !Collect.getInstance().getString(R.string.success).equals(message);
+                                    if (hasDownloadFailed) {
+                                        hashMapUtils.putOrUpdate(failedFormsMap, fd.getProjectId(), fd.getFormID());
+                                        failedProjectId.add(fd.getProjectId());
+                                    }
+
+                                }
+
+                                for (int i = 0; i < failedFormsMap.size(); i++) {
+                                    int projectId = failedFormsMap.keyAt(i);
+                                    SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, Objects.requireNonNull(failedFormsMap.get(projectId)).toString());
+                                }
+
+
+                                Set<Integer> downloadedProjects = Sets.symmetricDifference(projectIds, failedProjectId);
+
+                                Timber.i("%s projects download succeeded", downloadedProjects.toString());
+                                Timber.i("%s projects download failed", failedProjectId.toString());
+
+                                return new ArrayList<>(downloadedProjects);
+                            }))
+                    .subscribe(projectIds -> {
+                        for (Integer projectId : projectIds) {
+                            Timber.i("Marking %s project completed", projectId);
+                            SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
+                        }
+                    }, Timber::e);
+
+
+            if (true) return;
+
             Observable<ArrayList<Integer>> formDownloads = filterSelectedProjects()
                     .flatMapSingle(new Function<List<Project>, SingleSource<ArrayList<Integer>>>() {
                         @Override
@@ -167,12 +224,7 @@ public class SyncServiceV3 extends IntentService {
                                     .doOnNext(new Consumer<Pair<FieldSightFormDetails, String>>() {
                                         @Override
                                         public void accept(Pair<FieldSightFormDetails, String> fieldSightFormDetailsStringPair) throws Exception {
-                                            FieldSightFormDetails fd = fieldSightFormDetailsStringPair.first;
-                                            String projectId = String.valueOf(fd.getProjectId());
-                                            hashMapUtils.putOrUpdate(completedForms, fd.getProjectId());
-                                            int total = fd.getTotalFormsInProject();
-                                            SyncLocalSourcev3.getInstance().updateDownloadProgress(projectId, completedForms.get(fd.getProjectId()), total);
-                                            Timber.i(completedForms.toString());
+
                                         }
                                     })
                                     .toList()
@@ -197,7 +249,7 @@ public class SyncServiceV3 extends IntentService {
                                             }
 
                                             for (Integer projectId : failedFormsMap.keySet()) {
-                                                SyncLocalSourcev3.getInstance().markAsFailed(String.valueOf(projectId), 1, Objects.requireNonNull(failedFormsMap.get(projectId)).toString());
+                                                SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, Objects.requireNonNull(failedFormsMap.get(projectId)).toString());
                                             }
 
                                             Set<Integer> downloadedProjects = Sets.symmetricDifference(projectIds, failedFormsMap.keySet());
@@ -215,8 +267,8 @@ public class SyncServiceV3 extends IntentService {
                 @Override
                 public void onNext(ArrayList<Integer> projectIds) {
                     for (Integer projectId : projectIds) {
-                        Timber.i("Marking %s project completed",projectId);
-                        SyncLocalSourcev3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
+                        Timber.i("Marking %s project completed", projectId);
+                        SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
                     }
                 }
 
@@ -232,14 +284,11 @@ public class SyncServiceV3 extends IntentService {
             });
 
 
-
-            if (true) return;
-
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
                     .map(project -> {
-                        SyncLocalSourcev3.getInstance().markAsQueued(project.getId(), 1);
+                        SyncLocalSource3.getInstance().markAsQueued(project.getId(), 1);
                         return project;
                     })
                     .concatMap(new Function<Project, ObservableSource<?>>() {
@@ -455,7 +504,7 @@ public class SyncServiceV3 extends IntentService {
         if (selectedMap != null && selectedMap.containsKey(projectId)) {
 //            selectedMap.get(projectId).get(type).completed = true;
             SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, started, status, System.currentTimeMillis());
-            SyncLocalSourcev3.getInstance().save(syncStat);
+            SyncLocalSource3.getInstance().save(syncStat);
         }
     }
 

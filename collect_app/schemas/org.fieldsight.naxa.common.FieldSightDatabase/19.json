@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 19,
-    "identityHash": "ec37ce0daa1494e573779f954b0b7708",
+    "identityHash": "5f3662da511d83eff9acac30f04ff4e3",
     "entities": [
       {
         "tableName": "sites",
@@ -1324,7 +1324,7 @@
       },
       {
         "tableName": "syncstat",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`project_id` TEXT NOT NULL, `type` TEXT NOT NULL, `failed_url` TEXT, `started` INTEGER NOT NULL, `status` INTEGER NOT NULL, `created_date` INTEGER NOT NULL, `total` INTEGER NOT NULL, `progress` INTEGER NOT NULL, PRIMARY KEY(`project_id`, `type`))",
         "fields": [
           {
             "fieldPath": "projectId",
@@ -1361,6 +1361,18 @@
             "columnName": "created_date",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "total",
+            "columnName": "total",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "progress",
+            "columnName": "progress",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1372,12 +1384,98 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "fieldsight_forms",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fieldSightFormId` TEXT NOT NULL, `formDeployedSiteId` TEXT, `formDeployedProjectId` TEXT, `projectId` TEXT, `formDownloadUrl` TEXT, `manifestDownloadUrl` TEXT, `formName` TEXT, `formDescriptionText` TEXT, `odkFormID` TEXT, `odkFormVersion` TEXT, `odkFormHash` TEXT, `formType` TEXT, PRIMARY KEY(`fieldSightFormId`))",
+        "fields": [
+          {
+            "fieldPath": "fieldSightFormId",
+            "columnName": "fieldSightFormId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "formDeployedSiteId",
+            "columnName": "formDeployedSiteId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "formDeployedProjectId",
+            "columnName": "formDeployedProjectId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "projectId",
+            "columnName": "projectId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "formDownloadUrl",
+            "columnName": "formDownloadUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "manifestDownloadUrl",
+            "columnName": "manifestDownloadUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "formName",
+            "columnName": "formName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "formDescriptionText",
+            "columnName": "formDescriptionText",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "odkFormID",
+            "columnName": "odkFormID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "odkFormVersion",
+            "columnName": "odkFormVersion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "odkFormHash",
+            "columnName": "odkFormHash",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "formType",
+            "columnName": "formType",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "fieldSightFormId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ec37ce0daa1494e573779f954b0b7708')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5f3662da511d83eff9acac30f04ff4e3')"
     ]
   }
 }

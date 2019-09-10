@@ -59,18 +59,11 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
         });
     }
 
-
     @Override
-    public Completable save(ArrayList<DownloadableItem> items) {
+    public void save(ArrayList<DownloadableItem> items) {
         throw new RuntimeException("Not implemented yet");
     }
 
-    @Override
-    public void saveAsAsync(DownloadableItem... items) {
-        AsyncTask.execute(() -> {
-            syncDAO.insertOrIgnore(items);
-        });
-    }
 
     @Override
     public void updateAll(ArrayList<DownloadableItem> items) {
