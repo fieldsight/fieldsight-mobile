@@ -65,10 +65,12 @@ import butterknife.OnClick;
 import butterknife.OnLongClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
@@ -246,6 +248,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             }
         });
     }
+
     private void checkPermissionAndOpenMap() {
         if (!checkIfLocationPermissionsGranted(requireActivity())) {
             requestLocationPermissions(requireActivity(), new PermissionListener() {
@@ -253,6 +256,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 public void granted() {
                     MapActivity.start(getActivity(), loadedSite);
                 }
+
                 @Override
                 public void denied() {
                     //unused
@@ -291,7 +295,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         CardView cv_stageform = rootView.findViewById(R.id.cv_stageform);
 
         Timber.d("SitesdashboardFragment, isParentsite = %s", isParent);
-        cv_stageform.setVisibility(isParent? View.GONE : View.VISIBLE);
+        cv_stageform.setVisibility(isParent ? View.GONE : View.VISIBLE);
 
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);
@@ -306,18 +310,24 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private void hideSendButtonIfMockedSite(View rootView) {
 
         boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
-
+        boolean isEditedSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
 
         if (isOfflineSite) {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(true);
             rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.site_option_btn_upload_site).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.site_option_btn_upload_edited_site).setVisibility(View.GONE);
+        } else if (isEditedSite) {
+            rootView.findViewById(R.id.site_option_btn_upload_edited_site).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.GONE);
+            rootView.findViewById(R.id.site_option_btn_upload_site).setVisibility(View.GONE);
         } else {
             rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(true);
             rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(false);
             rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.GONE);
             rootView.findViewById(R.id.site_option_btn_upload_site).setVisibility(View.GONE);
+            rootView.findViewById(R.id.site_option_btn_upload_edited_site).setVisibility(View.GONE);
         }
 
     }
@@ -385,12 +395,68 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_sites))
                 .setPositiveButton(R.string.dialog_action_upload_site_and_form, (dialog, which) -> {
                     uploadSelectedSites(Collections.singletonList(loadedSite), true);
+
                 })
                 .setNegativeButton(R.string.dialog_action_only_upload_site, (dialog, which) -> {
-                    uploadSelectedSites(Collections.singletonList(loadedSite), false);
+                    uploadSelectedSites(Collections.singletonList(
+                            loadedSite), false);
                 })
                 .setNeutralButton(R.string.dialog_action_dismiss, null)
                 .show();
+
+
+    }
+
+    @OnClick(R.id.site_option_btn_upload_edited_site)
+    public void showEditedSiteUploadDialog() {
+
+        DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_edited_sites))
+                .setPositiveButton(R.string.upload, (dialog, which) -> {
+                    uploadEditedSites(Collections.singletonList(loadedSite));
+                })
+                .setNegativeButton(R.string.dialog_action_dismiss, null)
+                .show();
+    }
+
+    private void uploadEditedSites(List<Site> sites) {
+        String progressMessage = getString(R.string.dialog_msg_uploading_sites);
+        final int progressNotifyId = FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
+
+        SiteRemoteSource.getInstance().uploadMultipleEditedSites(sites)
+                .subscribeOn(Schedulers.io())
+                .flatMap((Function<Site, ObservableSource<?>>) site -> SiteLocalSource.getInstance().updateSiteStatus(site.getId(), Constant.SiteStatus.IS_ONLINE))
+                .subscribe(new DisposableObserver<Object>() {
+                    @Override
+                    public void onNext(Object o) {
+                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
+                        requireActivity().onBackPressed();
+                        ToastUtils.showLongToast(R.string.msg_site_upload_sucess);
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Timber.e(e);
+                        String message;
+                        if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {
+                            message = ((RetrofitException) e).getKind().getMessage();
+                        } else {
+                            message = e.getMessage();
+                        }
+
+                        FieldSightNotificationUtils.getINSTANCE().cancelNotification(progressNotifyId);
+                        if (isAdded() && getActivity() != null) {
+                            DialogFactory.createMessageDialog(getActivity(), getString(R.string.msg_site_upload_fail), message).show();
+                        } else {
+                            FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(getString(R.string.msg_site_upload_fail), message);
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 
     }
 
@@ -427,10 +493,13 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                                 i.putExtra(FormEntryActivity.KEY_INSTANCES, Longs.toArray(instanceIDs));
                                 startActivityForResult(i, INSTANCE_UPLOADER);
                             } else {
+
                                 FlashBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                                FlashBarUtils.showFlashbar(requireActivity(), requireActivity().getString(R.string.msg_site_upload_sucess));
                                 requireActivity().onBackPressed();
                             }
                         } else {
+                            FlashBarUtils.showFlashbar(requireActivity(), requireActivity().getString(R.string.msg_site_upload_sucess));
                             requireActivity().onBackPressed();
                         }
                     }

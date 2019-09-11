@@ -39,17 +39,18 @@ public class FlashBarUtils {
             return;
         }
 
+        ToastUtils.showLongToast(message);
 
-        try {
-            View rootView = context.getWindow().getDecorView().getRootView();
-            Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
-            SnackbarHelper.configSnackbar(context, snack);
-            snack.show();
-        } catch (Exception e) {
-            Timber.e(e);
-            ToastUtils.showLongToast(message);
-
-
-        }
+//        try {
+//            View rootView = context.getWindow().getDecorView().getRootView();
+//            Snackbar snack = Snackbar.make(rootView, message, Snackbar.LENGTH_LONG);
+//            SnackbarHelper.configSnackbar(context, snack);
+//            snack.show();
+//        } catch (Exception e) {
+//            Timber.e(e);
+//            ToastUtils.showLongToast(message);
+//
+//
+//        }
     }
 }
