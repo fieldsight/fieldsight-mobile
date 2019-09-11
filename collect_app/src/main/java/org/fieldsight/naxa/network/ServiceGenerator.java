@@ -1,14 +1,14 @@
 package org.fieldsight.naxa.network;
 
+import android.text.TextUtils;
+
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.fieldsight.collect.android.BuildConfig;
 import org.odk.collect.android.application.Collect;
-import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightUserSession;
-import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.common.rx.RxErrorHandlingCallAdapterFactory;
 
 import java.util.concurrent.TimeUnit;
@@ -37,47 +37,7 @@ public class ServiceGenerator {
     }
 
     private static Interceptor createAuthInterceptor(final String token) {
-
         return chain -> {
-            Request request = chain.request().newBuilder()
-                    .addHeader("Authorization",
-                            token)
-                    .build();
-            return chain.proceed(request);
-        };
-    }
-
-    private static OkHttpClient createOkHttpClient() {
-        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-        String token = FieldSightUserSession.getAuthToken();
-
-        boolean isTokenEmpty = token == null || token.trim().length() == 0;
-
-        if (!isTokenEmpty) {
-            okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
-        }
-
-        okHttpClientBuilder.connectTimeout(60, TimeUnit.SECONDS);
-        okHttpClientBuilder.writeTimeout(60, TimeUnit.SECONDS);
-        okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);
-
-
-        if (BuildConfig.DEBUG) {
-            okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
-        }
-
-        return okHttpClientBuilder
-                .build();
-    }
-
-    private static OkHttpClient createCacheablesOkHttpClient() {
-        String token = SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
-        int cacheSize = 10 * 1024 * 1024;
-        Cache cache = new Cache(Collect.getInstance().getCacheDir(), cacheSize);
-
-        OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
-        okHttpBuilder.cache(cache);
-        okHttpBuilder.addInterceptor(chain -> {
             try {
                 Request authorization = chain.request().newBuilder()
                         .addHeader("Authorization", "Token " + token).build();
@@ -90,20 +50,38 @@ public class ServiceGenerator {
                         .build();
                 return chain.proceed(offlineRequest);
             }
-        });
-
-        if (BuildConfig.DEBUG) {
-            okHttpBuilder.addNetworkInterceptor(new StethoInterceptor());
-        }
-
-        return okHttpBuilder.build();
+        };
     }
 
+    private static OkHttpClient createOkHttpClient(boolean cacheRequest) {
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        String token = FieldSightUserSession.getAuthToken();
+        if (!TextUtils.isEmpty(token)) {
+            okHttpClientBuilder.addInterceptor(createAuthInterceptor(token));
+        }
+
+        okHttpClientBuilder.connectTimeout(60, TimeUnit.SECONDS);
+        okHttpClientBuilder.writeTimeout(60, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);
+
+        if(cacheRequest) {
+            int cacheSize = 10 * 1024 * 1024;
+            Cache cache = new Cache(Collect.getInstance().getCacheDir(), cacheSize);
+            okHttpClientBuilder.cache(cache);
+
+        }
+        if (BuildConfig.DEBUG) {
+            okHttpClientBuilder.addNetworkInterceptor(new StethoInterceptor());
+        }
+
+        return okHttpClientBuilder
+                .build();
+    }
 
     public static <T> T createService(Class<T> serviceClass) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .client(createOkHttpClient())
+                    .client(createOkHttpClient(false))
                     .baseUrl(FieldSightUserSession.getServerUrl(Collect.getInstance()))
                     .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -115,7 +93,7 @@ public class ServiceGenerator {
     public static <T> T createCacheService(Class<T> serviceClass) {
         if (cacheablesRetrofit == null) {
             cacheablesRetrofit = new Retrofit.Builder()
-                    .client(createCacheablesOkHttpClient())
+                    .client(createOkHttpClient(true))
                     .addCallAdapterFactory(RxErrorHandlingCallAdapterFactory.create())
                     .baseUrl(FieldSightUserSession.getServerUrl(Collect.getInstance()))
                     .addConverterFactory(GsonConverterFactory.create())
@@ -129,7 +107,7 @@ public class ServiceGenerator {
 
 
         if (okHttp == null) {
-            okHttp = createOkHttpClient();
+            okHttp = createOkHttpClient(false);
         }
 
         if (rxRetrofit == null) {

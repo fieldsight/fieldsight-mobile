@@ -1,6 +1,9 @@
 package org.fieldsight.naxa.login;
 
+import android.text.TextUtils;
+
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.exception.FirebaseTokenException;
@@ -19,6 +22,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.internal.Util;
+import retrofit2.Retrofit;
 import timber.log.Timber;
 
 public class LoginModelImpl implements LoginModel {
@@ -91,27 +96,27 @@ public class LoginModelImpl implements LoginModel {
     }
 
     private void authenticateUser(String username, String password, String token, OnLoginFinishedListener onLoginFinishedListener) {
-        ServiceGenerator.createService(ApiInterface.class)
-                .getAuthToken(username, password)
+        ServiceGenerator.createService(ApiInterface.class).getAuthToken(username, password)
                 .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
                     @Override
                     public ObservableSource<FCMParameter> apply(AuthResponse authResponse) {
                         ServiceGenerator.clearInstance();
-                        return ServiceGenerator
-                                .createService(ApiInterface.class)
-                                .postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCMParameter(username, token, true))
+                        ApiInterface apiService = ServiceGenerator.createService(ApiInterface.class);
+                        String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance(),  SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
+                        if(TextUtils.isEmpty(fcmToken) || fcmToken.contains("BAD")) {
+                            return null;
+                        }
+                        return apiService.postFCMUserParameter(APIEndpoint.ADD_FCM, FieldSightUserSession.getFCMParameter(username, token, true))
                                 .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
                                     @Override
                                     public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
                                         if ("false".equals(fcmParameter.getIs_active())) {
                                             throw new FirebaseTokenException("Failed to add token in server");
                                         }
-
                                         FieldSightUserSession.saveAuthToken(authResponse.getToken());
                                         return Observable.just(fcmParameter);
                                     }
-                                })
-                                ;
+                                });
                     }
                 })
                 .subscribeOn(Schedulers.io())
