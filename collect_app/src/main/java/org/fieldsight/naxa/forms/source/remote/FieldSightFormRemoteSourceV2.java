@@ -6,6 +6,7 @@ import android.util.SparseIntArray;
 import com.google.android.gms.common.util.ArrayUtils;
 
 import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.GSONInstance;
 import org.fieldsight.naxa.forms.source.local.FieldSightForm;
 import org.fieldsight.naxa.forms.source.local.FieldSightFormsLocalSource;
 import org.fieldsight.naxa.login.model.Project;
@@ -100,7 +101,10 @@ public class FieldSightFormRemoteSourceV2 {
 
         for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getScheduleForms()) {
             fieldSightForm.setFormType(Constant.FormType.SCHEDULE);
+            fieldSightForm.setMetadata(GSONInstance.getInstance()
+                    .toJson(fieldSightForm.getSchedules()));
             addToDownloadList(fieldSightForm, formListSet, projectFormMap);
+
         }
 
         for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getSurveyForms()) {

@@ -8,8 +8,6 @@ import androidx.room.Ignore;
 import com.google.gson.annotations.SerializedName;
 
 import org.fieldsight.naxa.stages.data.SubStage;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -51,15 +49,22 @@ public class FieldSightForm {
     @SerializedName("hash")
     private String odkFormHash;
 
+    @SerializedName("metadata")
+    private String metadata;
+
     @Ignore
     @SerializedName("schedule")
-    private JSONObject schedules;
+    private FormSchedule schedules;
 
     @Ignore
     @SerializedName("sub_stages")
     private ArrayList<SubStage> subStages;
 
     private String formType;
+
+    public String getMetadata() {
+        return metadata;
+    }
 
     @NonNull
     String getFieldSightFormId() {
@@ -106,7 +111,7 @@ public class FieldSightForm {
         return odkFormHash;
     }
 
-    public JSONObject getSchedules() {
+    public FormSchedule getSchedules() {
         return schedules;
     }
 
@@ -122,7 +127,7 @@ public class FieldSightForm {
         this.formType = type;
     }
 
-    void setFieldSightFormId(String fieldSightFormId) {
+    void setFieldSightFormId(@NonNull String fieldSightFormId) {
         this.fieldSightFormId = fieldSightFormId;
     }
 
@@ -170,11 +175,16 @@ public class FieldSightForm {
         this.odkFormHash = odkFormHash;
     }
 
-    public void setSchedules(JSONObject schedules) {
+    public void setSchedules(FormSchedule schedules) {
         this.schedules = schedules;
     }
 
     public void setSubStages(ArrayList<SubStage> subStages) {
         this.subStages = subStages;
     }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
+
 }
