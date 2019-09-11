@@ -1,5 +1,8 @@
 package org.fieldsight.naxa.v3.forms;
 
+import androidx.annotation.NonNull;
+
+
 import org.odk.collect.android.logic.FormDetails;
 
 public class FieldSightFormDetails extends FormDetails {
@@ -25,5 +28,15 @@ public class FieldSightFormDetails extends FormDetails {
 
     public int getTotalFormsInProject() {
         return totalFormsInProject;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "FieldSightFormDetails{" +
+                "projectId=" + projectId +
+                ", formName=" + getFormName() +
+                ", downloadUrl=" + getDownloadUrl() +
+                '}';
     }
 }

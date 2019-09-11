@@ -7,6 +7,8 @@ import androidx.room.Ignore;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.fieldsight.naxa.stages.data.SubStage;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -55,11 +57,12 @@ public class FieldSightForm {
 
     @Ignore
     @SerializedName("sub_stages")
-    private ArrayList<JSONObject> subStages;
+    private ArrayList<SubStage> subStages;
 
     private String formType;
 
-    public String getFieldSightFormId() {
+    @NonNull
+    String getFieldSightFormId() {
         return fieldSightFormId;
     }
 
@@ -107,7 +110,7 @@ public class FieldSightForm {
         return schedules;
     }
 
-    public ArrayList<JSONObject> getSubStages() {
+    public ArrayList<SubStage> getSubStages() {
         return subStages;
     }
 
@@ -117,18 +120,17 @@ public class FieldSightForm {
 
     public void setFormType(String type) {
         this.formType = type;
-
     }
 
-    public void setFieldSightFormId(String fieldSightFormId) {
+    void setFieldSightFormId(String fieldSightFormId) {
         this.fieldSightFormId = fieldSightFormId;
     }
 
-    public void setFormDeployedSiteId(String formDeployedSiteId) {
+    void setFormDeployedSiteId(String formDeployedSiteId) {
         this.formDeployedSiteId = formDeployedSiteId;
     }
 
-    public void setFormDeployedProjectId(String formDeployedProjectId) {
+    void setFormDeployedProjectId(String formDeployedProjectId) {
         this.formDeployedProjectId = formDeployedProjectId;
     }
 
@@ -136,11 +138,11 @@ public class FieldSightForm {
         this.projectId = projectId;
     }
 
-    public void setFormDownloadUrl(String formDownloadUrl) {
+    void setFormDownloadUrl(String formDownloadUrl) {
         this.formDownloadUrl = formDownloadUrl;
     }
 
-    public void setManifestDownloadUrl(String manifestDownloadUrl) {
+    void setManifestDownloadUrl(String manifestDownloadUrl) {
         this.manifestDownloadUrl = manifestDownloadUrl;
     }
 
@@ -152,19 +154,19 @@ public class FieldSightForm {
         this.formName = formName;
     }
 
-    public void setFormDescriptionText(String formDescriptionText) {
+    void setFormDescriptionText(String formDescriptionText) {
         this.formDescriptionText = formDescriptionText;
     }
 
-    public void setOdkFormID(String odkFormID) {
+    void setOdkFormID(String odkFormID) {
         this.odkFormID = odkFormID;
     }
 
-    public void setOdkFormVersion(String odkFormVersion) {
+    void setOdkFormVersion(String odkFormVersion) {
         this.odkFormVersion = odkFormVersion;
     }
 
-    public void setOdkFormHash(String odkFormHash) {
+    void setOdkFormHash(String odkFormHash) {
         this.odkFormHash = odkFormHash;
     }
 
@@ -172,7 +174,7 @@ public class FieldSightForm {
         this.schedules = schedules;
     }
 
-    public void setSubStages(ArrayList<JSONObject> subStages) {
+    public void setSubStages(ArrayList<SubStage> subStages) {
         this.subStages = subStages;
     }
 }

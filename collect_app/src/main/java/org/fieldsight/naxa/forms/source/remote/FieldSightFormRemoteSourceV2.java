@@ -11,6 +11,7 @@ import org.fieldsight.naxa.forms.source.local.FieldSightFormsLocalSource;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ServiceGenerator;
+import org.fieldsight.naxa.stages.data.SubStage;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDetails;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDownloader;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
@@ -107,11 +108,24 @@ public class FieldSightFormRemoteSourceV2 {
             addToDownloadList(fieldSightForm, formListSet, projectFormMap);
         }
 
-//        for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getStages()) {
-//            fieldSightForm.setFormType(Constant.FormType.STAGED);
-//            addToDownloadList(fieldSightForm, formListSet, projectFormMap);
-//        }
+        for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getStages()) {
+            fieldSightForm.setFormType(Constant.FormType.STAGED);
 
+            for (SubStage subStage : fieldSightForm.getSubStages()) {
+                String formName = subStage.getStageForms().getFormName();
+                String downloadUrl = APIEndpoint.BASE_URL + subStage.getStageForms().getDownloadUrl();
+                String manifestUrl = APIEndpoint.BASE_URL + subStage.getStageForms().getManifestUrl();
+                String formId = subStage.getStageForms().getIdString();
+                String hash = subStage.getStageForms().getHash();
+                String version = subStage.getStageForms().getVersion();
+
+                formListSet.add(new FieldSightFormDetails(getProjectId(fieldSightForm), formName, downloadUrl, manifestUrl, formId,
+                        version, hash, null,
+                        false, false));
+            }
+        }
+
+        Timber.i(formListSet.toString());
         ArrayList<FieldSightForm> formsToSave = new ArrayList<>();
         formsToSave.addAll(fieldSightFormsResponse.getGeneralForms());
         formsToSave.addAll(fieldSightFormsResponse.getScheduleForms());
@@ -133,6 +147,8 @@ public class FieldSightFormRemoteSourceV2 {
         formListSet.add(new FieldSightFormDetails(getProjectId(fieldSightForm), formName, downloadUrl, manifestUrl, formId,
                 version, hash, null,
                 false, false));
+
+
         incrementFormCountForProject(projectFormMap, getProjectId(fieldSightForm));
     }
 
