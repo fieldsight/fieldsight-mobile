@@ -60,6 +60,9 @@ public class FieldSightForm {
     @SerializedName("sub_stages")
     private ArrayList<SubStage> subStages;
 
+    @SerializedName("order")
+    private Integer formOrder;
+
     private String formType;
 
     public String getMetadata() {
@@ -137,6 +140,14 @@ public class FieldSightForm {
 
     void setFormDeployedProjectId(String formDeployedProjectId) {
         this.formDeployedProjectId = formDeployedProjectId;
+    }
+
+    public Integer getFormOrder() {
+        return formOrder;
+    }
+
+    public void setFormOrder(Integer formOrder) {
+        this.formOrder = formOrder;
     }
 
     public void setProjectId(String projectId) {

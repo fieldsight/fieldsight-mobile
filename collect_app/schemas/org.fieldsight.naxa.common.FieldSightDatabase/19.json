@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 19,
-    "identityHash": "95edeb033fe23fe1b2e5ff2328247170",
+    "identityHash": "07272e5d3eb8351bc940ad9879f87019",
     "entities": [
       {
         "tableName": "sites",
@@ -1387,7 +1387,7 @@
       },
       {
         "tableName": "fieldsight_forms",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fieldSightFormId` TEXT NOT NULL, `formDeployedSiteId` TEXT, `formDeployedProjectId` TEXT, `projectId` TEXT, `formDownloadUrl` TEXT, `manifestDownloadUrl` TEXT, `formName` TEXT, `formDescriptionText` TEXT, `odkFormID` TEXT, `odkFormVersion` TEXT, `odkFormHash` TEXT, `metadata` TEXT, `formType` TEXT, PRIMARY KEY(`fieldSightFormId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fieldSightFormId` TEXT NOT NULL, `formDeployedSiteId` TEXT, `formDeployedProjectId` TEXT, `projectId` TEXT, `formDownloadUrl` TEXT, `manifestDownloadUrl` TEXT, `formName` TEXT, `formDescriptionText` TEXT, `odkFormID` TEXT, `odkFormVersion` TEXT, `odkFormHash` TEXT, `metadata` TEXT, `formOrder` INTEGER, `formType` TEXT, PRIMARY KEY(`fieldSightFormId`))",
         "fields": [
           {
             "fieldPath": "fieldSightFormId",
@@ -1462,6 +1462,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "formOrder",
+            "columnName": "formOrder",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
             "fieldPath": "formType",
             "columnName": "formType",
             "affinity": "TEXT",
@@ -1481,7 +1487,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '95edeb033fe23fe1b2e5ff2328247170')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '07272e5d3eb8351bc940ad9879f87019')"
     ]
   }
 }

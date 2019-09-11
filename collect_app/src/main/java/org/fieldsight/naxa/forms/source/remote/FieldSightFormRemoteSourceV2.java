@@ -126,6 +126,8 @@ public class FieldSightFormRemoteSourceV2 {
 
         for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getStages()) {
             fieldSightForm.setFormType(Constant.FormType.STAGED);
+            fieldSightForm.setMetadata(GSONInstance.getInstance()
+                    .toJson(fieldSightForm.getSubStages()));
 
             for (SubStage subStage : fieldSightForm.getSubStages()) {
                 String formName = subStage.getStageForms().getFormName();
@@ -134,6 +136,7 @@ public class FieldSightFormRemoteSourceV2 {
                 String formId = subStage.getStageForms().getIdString();
                 String hash = subStage.getStageForms().getHash();
                 String version = subStage.getStageForms().getVersion();
+
 
                 boolean formExist = formsDao.getFormsCursorForMd5Hash(hash.split(":")[1]).getCount() > 0;
                 if (formExist) continue;
@@ -153,8 +156,8 @@ public class FieldSightFormRemoteSourceV2 {
         ArrayList<FieldSightForm> formsToSave = new ArrayList<>();
         formsToSave.addAll(fieldSightFormsResponse.getGeneralForms());
         formsToSave.addAll(fieldSightFormsResponse.getScheduleForms());
-        formsToSave.addAll(fieldSightFormsResponse.getStages());
         formsToSave.addAll(fieldSightFormsResponse.getSurveyForms());
+        formsToSave.addAll(fieldSightFormsResponse.getStages());
         FieldSightFormsLocalSource.getInstance().save(formsToSave);
 
         return new ArrayList<>(formListSet);
@@ -171,8 +174,6 @@ public class FieldSightFormRemoteSourceV2 {
         formListSet.add(new FieldSightFormDetails(getProjectId(fieldSightForm), formName, downloadUrl, manifestUrl, formId,
                 version, hash, null,
                 false, false));
-
-
     }
 
     private int getProjectId(FieldSightForm fieldSightForm) {
