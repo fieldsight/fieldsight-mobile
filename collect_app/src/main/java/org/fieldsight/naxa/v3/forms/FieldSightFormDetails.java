@@ -9,9 +9,6 @@ public class FieldSightFormDetails extends FormDetails {
     private int projectId;
     private int totalFormsInProject;
 
-    public FieldSightFormDetails(String error) {
-        super(error);
-    }
 
     public FieldSightFormDetails(Integer projectId, String formName, String downloadUrl, String manifestUrl, String formID, String formVersion, String hash, String manifestFileHash, boolean isNewerFormVersionAvailable, boolean areNewerMediaFilesAvailable) {
         super(formName, downloadUrl, manifestUrl, formID, formVersion, hash, manifestFileHash, isNewerFormVersionAvailable, areNewerMediaFilesAvailable);

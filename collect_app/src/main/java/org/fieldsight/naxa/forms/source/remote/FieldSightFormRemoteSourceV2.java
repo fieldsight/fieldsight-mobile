@@ -3,8 +3,6 @@ package org.fieldsight.naxa.forms.source.remote;
 import android.util.Pair;
 import android.util.SparseIntArray;
 
-import com.google.android.gms.common.util.ArrayUtils;
-
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.GSONInstance;
 import org.fieldsight.naxa.forms.source.local.FieldSightForm;
@@ -16,9 +14,9 @@ import org.fieldsight.naxa.stages.data.SubStage;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDetails;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDownloader;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
+import org.odk.collect.android.dao.FormsDao;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -32,12 +30,17 @@ import timber.log.Timber;
 public class FieldSightFormRemoteSourceV2 {
 
     private static FieldSightFormRemoteSourceV2 INSTANCE;
+    private FormsDao formsDao;
 
     public static FieldSightFormRemoteSourceV2 getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new FieldSightFormRemoteSourceV2();
         }
         return INSTANCE;
+    }
+
+    private FieldSightFormRemoteSourceV2() {
+        this.formsDao = new FormsDao();
     }
 
     private String buildUrlWithParams(List<Project> projects) {
@@ -95,21 +98,30 @@ public class FieldSightFormRemoteSourceV2 {
         SparseIntArray projectFormMap = new SparseIntArray();
         Timber.i("getFormDetails %d", formListSet.size());
         for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getGeneralForms()) {
+            boolean formExist = formsDao.getFormsCursorForMd5Hash(fieldSightForm.getOdkFormHash().split(":")[1]).getCount() > 0;
+            if (formExist) continue;
             fieldSightForm.setFormType(Constant.FormType.GENERAl);
             addToDownloadList(fieldSightForm, formListSet, projectFormMap);
+            incrementFormCountForProject(projectFormMap, getProjectId(fieldSightForm));
         }
 
         for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getScheduleForms()) {
+            boolean formExist = formsDao.getFormsCursorForMd5Hash(fieldSightForm.getOdkFormHash().split(":")[1]).getCount() > 0;
+            if (formExist) continue;
             fieldSightForm.setFormType(Constant.FormType.SCHEDULE);
             fieldSightForm.setMetadata(GSONInstance.getInstance()
                     .toJson(fieldSightForm.getSchedules()));
             addToDownloadList(fieldSightForm, formListSet, projectFormMap);
+            incrementFormCountForProject(projectFormMap, getProjectId(fieldSightForm));
 
         }
 
         for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getSurveyForms()) {
+            boolean formExist = formsDao.getFormsCursorForMd5Hash(fieldSightForm.getOdkFormHash().split(":")[1]).getCount() > 0;
+            if (formExist) continue;
             fieldSightForm.setFormType(Constant.FormType.SURVEY);
             addToDownloadList(fieldSightForm, formListSet, projectFormMap);
+            incrementFormCountForProject(projectFormMap, getProjectId(fieldSightForm));
         }
 
         for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getStages()) {
@@ -123,10 +135,18 @@ public class FieldSightFormRemoteSourceV2 {
                 String hash = subStage.getStageForms().getHash();
                 String version = subStage.getStageForms().getVersion();
 
+                boolean formExist = formsDao.getFormsCursorForMd5Hash(hash.split(":")[1]).getCount() > 0;
+                if (formExist) continue;
+
                 formListSet.add(new FieldSightFormDetails(getProjectId(fieldSightForm), formName, downloadUrl, manifestUrl, formId,
                         version, hash, null,
                         false, false));
+                incrementFormCountForProject(projectFormMap, getProjectId(fieldSightForm));
             }
+        }
+
+        for (FieldSightFormDetails fd : formListSet) {
+            fd.setTotalFormsInProject(projectFormMap.get(fd.getProjectId()));
         }
 
         Timber.i(formListSet.toString());
@@ -153,16 +173,15 @@ public class FieldSightFormRemoteSourceV2 {
                 false, false));
 
 
-        incrementFormCountForProject(projectFormMap, getProjectId(fieldSightForm));
     }
 
     private int getProjectId(FieldSightForm fieldSightForm) {
-        String value = fieldSightForm.getFormDeployedProjectId() != null ? fieldSightForm.getFormDeployedProjectId() : fieldSightForm.getFormDeployedSiteId();
+        String value = fieldSightForm.getFormDeployedProjectId() != null ? fieldSightForm.getFormDeployedProjectId() : fieldSightForm.getProjectId();
         return Integer.parseInt(value);
     }
 
 
-    private void incrementFormCountForProject(SparseIntArray projectFormMap, Integer projectId) {
-        projectFormMap.put(projectId, projectFormMap.get(projectId, 0) + 1);
+    private void incrementFormCountForProject(SparseIntArray projectTotalFormMap, Integer projectId) {
+        projectTotalFormMap.put(projectId, projectTotalFormMap.get(projectId, 0) + 1);
     }
 }

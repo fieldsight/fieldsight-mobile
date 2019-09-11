@@ -204,9 +204,9 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             adapterv3.enableItemClick();
         }
         downloadButton.setEnabled(!isSyncing);
-        downloadButton.setBackgroundColor(isSyncing ? getResources().getColor(R.color.disabled_gray) :
-                getResources().getColor(R.color.primaryColor));
-        downloadButton.setTextColor(getResources().getColor(R.color.white));
+//        downloadButton.setBackgroundColor(isSyncing ? getResources().getColor(R.color.disabled_gray) :
+//                getResources().getColor(R.color.primaryColor));
+//        downloadButton.setTextColor(getResources().getColor(R.color.white));
         this.syncing = isSyncing;
     }
 

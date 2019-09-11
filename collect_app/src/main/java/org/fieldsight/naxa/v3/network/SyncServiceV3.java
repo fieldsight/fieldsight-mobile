@@ -162,6 +162,12 @@ public class SyncServiceV3 extends IntentService {
 
             Disposable formDisposable = filterSelectedProjects()
                     .subscribeOn(Schedulers.io())
+                    .map(projects -> {
+                        for (Project project : projects) {
+                            SyncLocalSource3.getInstance().markAsQueued(project.getId(), 1);
+                        }
+                        return projects;
+                    })
                     .flatMapSingle((Function<List<Project>, SingleSource<ArrayList<Integer>>>) projects -> FieldSightFormRemoteSourceV2.getInstance().getFormFromProjectId(projects)
                             .doOnNext(fieldSightFormDetailsStringPair -> {
                                 FieldSightFormDetails fd = fieldSightFormDetailsStringPair.first;
