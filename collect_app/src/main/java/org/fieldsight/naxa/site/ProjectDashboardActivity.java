@@ -92,8 +92,6 @@ import timber.log.Timber;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.application.Collect.allowClick;
 
-//import org.bcss.naxa.common.GlideApp;
-
 public class ProjectDashboardActivity extends BaseActivity {
 
     private Project loadedProject;

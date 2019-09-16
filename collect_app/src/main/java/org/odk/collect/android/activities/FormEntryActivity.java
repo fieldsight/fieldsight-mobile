@@ -1413,10 +1413,14 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (showNavigationButtons) {
             updateNavigationButtonVisibility();
         }
+        boolean isOfflineSite = false;
+        try {
+            String fsSiteId = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
+                    SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, "");
+            isOfflineSite = SiteLocalSource.getInstance().isSiteOffline(fsSiteId);
+        } catch (NullPointerException ignored) {
+        }
 
-        String fsSiteId = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
-                SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, "");
-        boolean isOfflineSite = SiteLocalSource.getInstance().isSiteOffline(fsSiteId);
         endView.findViewById(R.id.save_send_exit_button).setVisibility(isOfflineSite ? View.GONE : View.VISIBLE);
 
         // Create 'send' button
