@@ -17,7 +17,7 @@ package org.odk.collect.android.utilities;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -37,8 +37,8 @@ import com.google.zxing.multi.qrcode.QRCodeMultiReader;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
 
 import java.io.File;
 import java.io.IOException;

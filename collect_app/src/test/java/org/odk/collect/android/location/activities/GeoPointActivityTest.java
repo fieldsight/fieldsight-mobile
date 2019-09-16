@@ -54,7 +54,6 @@ public class GeoPointActivityTest extends BaseGeoActivityTest {
         activityController = Robolectric.buildActivity(GeoPointActivity.class);
         activity = activityController.get();
         shadowActivity = shadowOf(activity);
-
         LocationClients.setTestClient(locationClient);
     }
 

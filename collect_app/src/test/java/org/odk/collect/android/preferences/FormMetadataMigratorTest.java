@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,12 +21,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.odk.collect.android.preferences.FormMetadataMigrator.SOURCE_TARGET_VALUE_PAIRS;
 import static org.odk.collect.android.preferences.FormMetadataMigrator.migrate;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_EMAIL;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_MIGRATED;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_PHONENUMBER;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_METADATA_USERNAME;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_USERNAME;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_METADATA_EMAIL;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_METADATA_MIGRATED;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_METADATA_PHONENUMBER;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_METADATA_USERNAME;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SELECTED_GOOGLE_ACCOUNT;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_USERNAME;
 
 
 /** Tests the FormMetadataFragment */

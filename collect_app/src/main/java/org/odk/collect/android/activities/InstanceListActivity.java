@@ -1,6 +1,6 @@
 package org.odk.collect.android.activities;
 
-import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 
 import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_ASC;
 import static org.odk.collect.android.utilities.ApplicationConstants.SortingOrder.BY_DATE_DESC;

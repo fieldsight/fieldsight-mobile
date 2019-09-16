@@ -18,9 +18,9 @@ package org.odk.collect.android.utilities;
 
 import android.database.Cursor;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 
 import java.util.Map;
 

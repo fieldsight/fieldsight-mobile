@@ -23,16 +23,16 @@
 //
 //import org.apache.commons.io.FilenameUtils;
 //import org.bcss.collect.android.R;
-//import org.bcss.collect.android.application.Collect;
+//import org.odk.collect.android.application.Collect;
 //import org.odk.collect.android.dao.InstancesDao;
-//import org.bcss.collect.android.logic.PropertyManager;
+//import org.odk.collect.android.logic.PropertyManager;
 //import org.odk.collect.android.preferences.PreferenceKeys;
-//import org.bcss.collect.android.provider.InstanceProviderAPI;
-//import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+//import org.odk.collect.android.provider.InstanceProviderAPI;
+//import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 //import org.odk.collect.android.utilities.ApplicationConstants;
 //import org.odk.collect.android.utilities.ResponseMessageParser;
 //import org.odk.collect.android.utilities.WebUtils;
-//import org.bcss.collect.naxa.ResponseUtils;
+//import org.bcss.naxa.ResponseUtils;
 //import org.opendatakit.httpclientandroidlib.Header;
 //import org.opendatakit.httpclientandroidlib.HttpEntity;
 //import org.opendatakit.httpclientandroidlib.HttpResponse;

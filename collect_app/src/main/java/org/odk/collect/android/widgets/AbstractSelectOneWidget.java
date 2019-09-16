@@ -16,15 +16,15 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 import android.widget.RadioButton;
 
-import org.bcss.collect.android.adapters.SelectOneListAdapter;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.exception.JavaRosaException;
-import org.bcss.collect.android.listeners.AdvanceToNextListener;
-import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.adapters.SelectOneListAdapter;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.JavaRosaException;
+import org.odk.collect.android.listeners.AdvanceToNextListener;
+import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
@@ -75,6 +75,8 @@ public abstract class AbstractSelectOneWidget extends SelectTextWidget implement
         if (adapter != null) {
             adapter.clearAnswer();
         }
+
+        widgetValueChanged();
     }
 
     @Override
@@ -89,9 +91,7 @@ public abstract class AbstractSelectOneWidget extends SelectTextWidget implement
     }
 
     protected void createLayout() {
-        readItems();
-
-        adapter = new SelectOneListAdapter(items, selectedValue, this);
+        adapter = new SelectOneListAdapter(items, selectedValue, this, numColumns);
 
         if (items != null) {
             RecyclerView recyclerView = setUpRecyclerView();
@@ -132,6 +132,8 @@ public abstract class AbstractSelectOneWidget extends SelectTextWidget implement
         if (autoAdvance && listener != null) {
             listener.advance();
         }
+
+        widgetValueChanged();
     }
 
     public boolean isAutoAdvance() {

@@ -17,18 +17,16 @@ package org.odk.collect.android.tasks;
 import android.database.Cursor;
 
 import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.auth.GoogleAuthException;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dto.Form;
-import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.upload.InstanceGoogleSheetsUploader;
-import org.bcss.collect.android.upload.UploadException;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dto.Form;
+import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.upload.InstanceGoogleSheetsUploader;
+import org.odk.collect.android.upload.UploadException;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
-import java.io.IOException;
 import java.util.List;
 
 import timber.log.Timber;
@@ -38,8 +36,6 @@ import static org.odk.collect.android.utilities.InstanceUploaderUtils.DEFAULT_SU
 public class InstanceGoogleSheetsUploaderTask extends InstanceUploaderTask {
     private final GoogleAccountsManager accountsManager;
 
-    private boolean authFailed;
-
     public InstanceGoogleSheetsUploaderTask(GoogleAccountsManager accountsManager) {
         this.accountsManager = accountsManager;
     }
@@ -48,16 +44,6 @@ public class InstanceGoogleSheetsUploaderTask extends InstanceUploaderTask {
     protected Outcome doInBackground(Long... instanceIdsToUpload) {
         InstanceGoogleSheetsUploader uploader = new InstanceGoogleSheetsUploader(accountsManager);
         final Outcome outcome = new Outcome();
-
-        try {
-            // User-recoverable auth error
-            if (uploader.getAuthToken() == null) {
-                return null;
-            }
-        } catch (IOException | GoogleAuthException e) {
-            Timber.d(e);
-            authFailed = true;
-        }
 
         // TODO: check this behavior against master -- is there an error message shown?
         if (!uploader.submissionsFolderExistsAndIsUnique()) {
@@ -97,6 +83,7 @@ public class InstanceGoogleSheetsUploaderTask extends InstanceUploaderTask {
                             .send(new HitBuilders.EventBuilder()
                                     .setCategory("Submission")
                                     .setAction("HTTP-Sheets")
+                                    .setLabel(Collect.getFormIdentifierHash(instance.getJrFormId(), instance.getJrVersion()))
                                     .build());
                 } catch (UploadException e) {
                     Timber.d(e);
@@ -106,13 +93,5 @@ public class InstanceGoogleSheetsUploaderTask extends InstanceUploaderTask {
             }
         }
         return outcome;
-    }
-
-    public boolean isAuthFailed() {
-        return authFailed;
-    }
-
-    public void setAuthFailedToFalse() {
-        authFailed = false;
     }
 }

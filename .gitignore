@@ -4,7 +4,7 @@ build
 local.properties
 *.iml
 .DS_Store
-*.sublime-projectId
+*.sublime-project
 
 # emacs backup files
 *.*~
@@ -33,11 +33,8 @@ out/
 .navigation/
 captures/
 
-# Debug
-/collect_app/src/main/java/org/bcss/collect/naxa/common/Login.java
+# Submodules
+javarosa/
 
 # Config for the official ODK Collect build
 collect_app/src/odkCollectRelease/
-
-
-

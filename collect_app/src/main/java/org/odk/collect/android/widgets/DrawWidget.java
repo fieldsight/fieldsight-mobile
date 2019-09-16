@@ -20,7 +20,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.DrawActivity;
 
@@ -40,7 +40,7 @@ public class DrawWidget extends BaseImageWidget {
         super(context, prompt);
         imageClickHandler = new DrawImageClickHandler(DrawActivity.OPTION_DRAW, RequestCodes.DRAW_IMAGE, R.string.draw_image);
         setUpLayout();
-        setUpBinary();
+        addCurrentImageToLayout();
         addAnswerView(answerLayout);
     }
 

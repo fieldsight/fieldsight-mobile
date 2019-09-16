@@ -21,8 +21,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.logic.DatePickerDetails;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.logic.DatePickerDetails;
 import org.javarosa.core.model.data.DateData;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryPrompt;
@@ -80,6 +80,11 @@ public abstract class AbstractDateWidget extends QuestionWidget implements Binar
 
     @Override
     public void clearAnswer() {
+        clearAnswerWithoutValueChangeEvent();
+        widgetValueChanged();
+    }
+
+    void clearAnswerWithoutValueChangeEvent() {
         isNullAnswer = true;
         dateTextView.setText(R.string.no_date_selected);
         setDateToCurrent();
@@ -87,7 +92,6 @@ public abstract class AbstractDateWidget extends QuestionWidget implements Binar
 
     @Override
     public IAnswerData getAnswer() {
-        clearFocus();
         return isNullAnswer ? null : new DateData(date.toDate());
     }
 

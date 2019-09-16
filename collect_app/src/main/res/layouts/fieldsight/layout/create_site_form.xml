@@ -10,7 +10,7 @@
         android:layout_marginRight="@dimen/margin_large"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ILSiteIdentifier"
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
@@ -24,9 +24,9 @@
             android:hint="Identifier"
             android:inputType="text"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ILSiteName"
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
@@ -40,9 +40,9 @@
             android:hint="name"
             android:inputType="text"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/collect_site_ti_phone"
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
@@ -58,9 +58,9 @@
             android:maxLines="1"
             android:minLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/collect_site_ti_address"
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
@@ -76,9 +76,9 @@
             android:maxLines="3"
             android:minLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/collect_site_ti_public_desc"
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="match_parent"
@@ -94,7 +94,7 @@
             android:maxLines="5"
             android:minLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Spinner
         android:id="@+id/spinnerSiteType"

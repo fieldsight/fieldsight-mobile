@@ -22,31 +22,32 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.adapters.ViewSentListAdapter;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.DiskSyncListener;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.bcss.collect.naxa.login.model.Site;
+import androidx.annotation.NonNull;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.DiskSyncListener;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.fieldsight.naxa.login.model.Site;
+import org.odk.collect.android.adapters.InstanceListCursorAdapter;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
+import org.odk.collect.android.utilities.PermissionUtils;
 
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.EXTRA_OBJECT;
+import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
-import static org.odk.collect.android.utilities.PermissionUtils.requestStoragePermissions;
 
 /**
  * Responsible for displaying all the valid instances in the instance directory.
@@ -64,41 +65,34 @@ public class InstanceChooserList extends InstanceListActivity implements
 
     private InstanceSyncTask instanceSyncTask;
 
-    private boolean editMode;
+    protected boolean editMode;
 
-    private Site loadedSite;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chooser_list_layout);
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
-        }
-
+        setContentView(R.layout.form_chooser_list);
         String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
 
             setTitle(getString(R.string.review_data));
             editMode = true;
-            sortingOptions = new String[]{
-                    getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
-                    getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc),
-                    getString(R.string.sort_by_status_asc), getString(R.string.sort_by_status_desc)
+            sortingOptions = new int[]{
+                    R.string.sort_by_name_asc, R.string.sort_by_name_desc,
+                    R.string.sort_by_date_asc, R.string.sort_by_date_desc,
+                    R.string.sort_by_status_asc, R.string.sort_by_status_desc
             };
         } else {
             setTitle(getString(R.string.view_sent_forms));
 
-            sortingOptions = new String[]{
-                    getString(R.string.sort_by_name_asc), getString(R.string.sort_by_name_desc),
-                    getString(R.string.sort_by_date_asc), getString(R.string.sort_by_date_desc)
+            sortingOptions = new int[]{
+                    R.string.sort_by_name_asc, R.string.sort_by_name_desc,
+                    R.string.sort_by_date_asc, R.string.sort_by_date_desc
             };
             ((TextView) findViewById(android.R.id.empty)).setText(R.string.no_items_display_sent_forms);
         }
 
-        requestStoragePermissions(this, new PermissionListener() {
+        new PermissionUtils().requestStoragePermissions(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
@@ -133,16 +127,15 @@ public class InstanceChooserList extends InstanceListActivity implements
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (Collect.allowClick(getClass().getName())) {
-            Cursor c = (Cursor) listView.getAdapter().getItem(position);
-            startManagingCursor(c);
-            Uri instanceUri =
-                    ContentUris.withAppendedId(InstanceColumns.CONTENT_URI,
-                            c.getLong(c.getColumnIndex(InstanceColumns._ID)));
+            if (view.isEnabled()) {
+                Cursor c = (Cursor) listView.getAdapter().getItem(position);
+                Uri instanceUri =
+                        ContentUris.withAppendedId(InstanceColumns.CONTENT_URI,
+                                c.getLong(c.getColumnIndex(InstanceColumns._ID)));
 
-            if (view.findViewById(R.id.visible_off).getVisibility() != View.VISIBLE) {
                 String action = getIntent().getAction();
                 if (Intent.ACTION_PICK.equals(action)) {
-                    // caller is waiting on a picked forminstanceUri
+                    // caller is waiting on a picked form
                     setResult(RESULT_OK, new Intent().setData(instanceUri));
                 } else {
                     // the form can be edited if it is incomplete or if, when it was
@@ -171,6 +164,9 @@ public class InstanceChooserList extends InstanceListActivity implements
                     startActivity(intent);
                 }
                 finish();
+            } else {
+                TextView disabledCause = view.findViewById(R.id.form_subtitle2);
+                Toast.makeText(this, disabledCause.getText(), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -206,14 +202,12 @@ public class InstanceChooserList extends InstanceListActivity implements
                 InstanceColumns.DISPLAY_NAME, InstanceColumns.DISPLAY_SUBTEXT, InstanceColumns.DELETED_DATE
         };
         int[] view = new int[]{
-                R.id.text1, R.id.text2, R.id.text4
+                R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2
         };
 
-        if (editMode) {
-            listAdapter = new SimpleCursorAdapter(this, R.layout.two_item, null, data, view);
-        } else {
-            listAdapter = new ViewSentListAdapter(this, R.layout.two_item, null, data, view);
-        }
+        boolean shouldCheckDisabled = !editMode;
+        listAdapter = new InstanceListCursorAdapter(
+                this, R.layout.form_chooser_list_item, null, data, view, shouldCheckDisabled);
         listView.setAdapter(listAdapter);
     }
 
@@ -233,17 +227,9 @@ public class InstanceChooserList extends InstanceListActivity implements
         showProgressBar();
         InstancesDao instancesDao = new InstancesDao();
         if (editMode) {
-            if (loadedSite != null) {
-                return instancesDao.getUnsentInstancesCursorLoaderBySite(loadedSite.getId(), getSortingOrder());
-            } else {
-                return instancesDao.getUnsentInstancesCursorLoader(getFilterText(), getSortingOrder());
-            }
+            return instancesDao.getUnsentInstancesCursorLoader(getFilterText(), getSortingOrder());
         } else {
-            if (loadedSite != null) {
-                return instancesDao.getSentInstancesCursorLoaderSite(loadedSite.getId(), getSortingOrder());
-            } else {
-                return instancesDao.getSentInstancesCursorLoader(getFilterText(), getSortingOrder());
-            }
+            return instancesDao.getSentInstancesCursorLoader(getFilterText(), getSortingOrder());
         }
     }
 

@@ -29,16 +29,16 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.listeners.PermissionListener;
-import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.login.LoginActivity;
-import org.bcss.collect.naxa.project.ProjectListActivity;
-import org.bcss.collect.naxa.v3.ProjectListActivityV3;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.PermissionListener;
+import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.login.LoginActivity;
+import org.fieldsight.naxa.v3.ProjectListActivityV3;
+import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
-import org.odk.collect.android.preferences.PreferenceKeys;
 import org.odk.collect.android.utilities.DialogUtils;
+import org.odk.collect.android.utilities.PermissionUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,9 +47,8 @@ import java.io.IOException;
 
 import timber.log.Timber;
 
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_SPLASH_PATH;
-import static org.odk.collect.android.utilities.PermissionUtils.requestPhoneAndStoragePermission;
-import static org.odk.collect.android.utilities.PermissionUtils.requestReadPhoneStatePermission;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_SPLASH_PATH;
+
 
 public class SplashScreenActivity extends Activity {
 
@@ -64,7 +63,7 @@ public class SplashScreenActivity extends Activity {
         // this splash screen should be a blank slate
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        requestPhoneAndStoragePermission(this, new PermissionListener() {
+        new PermissionUtils().requestPhoneAndStoragePermission(this, new PermissionListener() {
             @Override
             public void granted() {
                 // must be at the beginning of any activity that can be called from an external intent
@@ -86,17 +85,6 @@ public class SplashScreenActivity extends Activity {
             }
         });
 
-        requestReadPhoneStatePermission(this, new PermissionListener() {
-            @Override
-            public void granted() {
-
-            }
-
-            @Override
-            public void denied() {
-
-            }
-        }, true);
     }
 
     private void init() {
@@ -119,15 +107,15 @@ public class SplashScreenActivity extends Activity {
             Timber.e(e, "Unable to get package info");
         }
 
-        boolean firstRun = sharedPreferences.getBoolean(PreferenceKeys.KEY_FIRST_RUN, true);
+        boolean firstRun = sharedPreferences.getBoolean(GeneralKeys.KEY_FIRST_RUN, true);
         boolean showSplash =
-                sharedPreferences.getBoolean(PreferenceKeys.KEY_SHOW_SPLASH, false);
+                sharedPreferences.getBoolean(GeneralKeys.KEY_SHOW_SPLASH, false);
         String splashPath = (String) GeneralSharedPreferences.getInstance().get(KEY_SPLASH_PATH);
 
         // if you've increased version code, then update the version number and set firstRun to true
-        if (sharedPreferences.getLong(PreferenceKeys.KEY_LAST_VERSION, 0)
+        if (sharedPreferences.getLong(GeneralKeys.KEY_LAST_VERSION, 0)
                 < packageInfo.versionCode) {
-            editor.putLong(PreferenceKeys.KEY_LAST_VERSION, packageInfo.versionCode);
+            editor.putLong(GeneralKeys.KEY_LAST_VERSION, packageInfo.versionCode);
             editor.apply();
 
             firstRun = true;
@@ -135,7 +123,7 @@ public class SplashScreenActivity extends Activity {
 
         // do all the first run things
         if (firstRun || showSplash) {
-            editor.putBoolean(PreferenceKeys.KEY_FIRST_RUN, false);
+            editor.putBoolean(GeneralKeys.KEY_FIRST_RUN, false);
             editor.commit();
             startSplashScreen(splashPath);
         } else {

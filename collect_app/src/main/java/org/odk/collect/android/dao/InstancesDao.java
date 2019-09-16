@@ -19,15 +19,16 @@ package org.odk.collect.android.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.content.CursorLoader;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dto.Instance;
-import org.bcss.collect.android.provider.InstanceProviderAPI;
-import org.bcss.collect.naxa.common.Constant;
-import org.bcss.collect.naxa.common.FieldSightUserSession;
-import org.bcss.collect.naxa.network.APIEndpoint;
-import org.bcss.collect.naxa.site.db.SiteUploadHistoryLocalSource;
+import androidx.loader.content.CursorLoader;
+
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.provider.InstanceProviderAPI;
+import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.network.APIEndpoint;
+import org.fieldsight.naxa.site.db.SiteUploadHistoryLocalSource;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
@@ -37,11 +38,11 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import timber.log.Timber;
 
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.PROJECT;
-import static org.bcss.collect.naxa.common.Constant.FormDeploymentFrom.SITE;
+import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 /**
- * This class is used to encapsulate all access to the {@link org.bcss.collect.android.provider.InstanceProvider#DATABASE_NAME}
+ * This class is used to encapsulate all access to the {@link org.odk.collect.android.provider.InstanceProvider#DATABASE_NAME}
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_access_object
  */
 public class InstancesDao {
@@ -130,23 +131,6 @@ public class InstancesDao {
         return cursorLoader;
     }
 
-    public CursorLoader getUnsentInstancesCursorLoaderBySite(String siteId, String sortOrder) {
-        CursorLoader cursorLoader;
-        if (siteId.length() == 0) {
-            cursorLoader = getUnsentInstancesCursorLoader(sortOrder);
-        } else {
-            String selection =
-                    InstanceProviderAPI.InstanceColumns.STATUS + " !=? and "
-                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
-            String[] selectionArgs = {
-                    InstanceProviderAPI.STATUS_SUBMITTED,
-                    siteId};
-
-            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
-        }
-
-        return cursorLoader;
-    }
 
     public Cursor getSavedInstancesCursor(String sortOrder) {
         String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL ";
@@ -175,20 +159,6 @@ public class InstancesDao {
         return cursorLoader;
     }
 
-    public CursorLoader getSavedInstancesCursorLoaderSite(String siteId, String sortOrder) {
-        CursorLoader cursorLoader;
-        if (siteId.length() == 0) {
-            cursorLoader = getSavedInstancesCursorLoader(sortOrder);
-        } else {
-            String selection =
-                    InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and "
-                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
-            String[] selectionArgs = {siteId};
-            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
-        }
-
-        return cursorLoader;
-    }
 
     public Cursor getFinalizedInstancesCursor() {
         String selection = InstanceProviderAPI.InstanceColumns.STATUS + "=? or " + InstanceProviderAPI.InstanceColumns.STATUS + "=?";
@@ -218,26 +188,6 @@ public class InstancesDao {
                     InstanceProviderAPI.STATUS_COMPLETE,
                     InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
                     "%" + charSequence + "%"};
-
-            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
-        }
-
-        return cursorLoader;
-    }
-
-    public CursorLoader getFinalizedInstancesCursorLoaderBySite(String siteId, String sortOrder) {
-        CursorLoader cursorLoader;
-        if (siteId.length() == 0) {
-            cursorLoader = getFinalizedInstancesCursorLoader(sortOrder);
-        } else {
-            String selection =
-                    "(" + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                            + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
-            String[] selectionArgs = {
-                    InstanceProviderAPI.STATUS_COMPLETE,
-                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
-                    siteId};
 
             cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
         }
@@ -302,74 +252,6 @@ public class InstancesDao {
         return cursorLoader;
     }
 
-    public CursorLoader getCompletedUndeletedInstancesCursorLoaderHideOfflineSite(CharSequence charSequence, String sortOrder) {
-        CursorLoader cursorLoader;
-
-        String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and ("
-                + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                + "("
-                + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12 "
-                + "OR " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE '%fake%'"
-                + ")";
-
-        String[] selectionArgs = {
-                InstanceProviderAPI.STATUS_COMPLETE,
-                InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
-                InstanceProviderAPI.STATUS_SUBMITTED
-        };
-
-        cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
-
-        return cursorLoader;
-    }
-
-    public CursorLoader getFinalizedInstancesCursorLoaderHideOfflineSite(CharSequence charSequence, String sortOrder) {
-        CursorLoader cursorLoader;
-
-
-        String selection =
-                "(" + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                        + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                        + "("
-                        + "length(" + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + ")" + " < 12 "
-                        + "OR " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " NOT LIKE '%fake%'"
-                        + ")";
-
-        String[] selectionArgs = {
-                InstanceProviderAPI.STATUS_COMPLETE,
-                InstanceProviderAPI.STATUS_SUBMISSION_FAILED};
-
-        cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
-
-        return cursorLoader;
-    }
-
-    public CursorLoader getCompletedUndeletedInstancesCursorLoaderBySite(String siteId, String
-            sortOrder) {
-        CursorLoader cursorLoader;
-        if (siteId.length() == 0) {
-            cursorLoader = getAllCompletedUndeletedInstancesCursorLoader(sortOrder);
-        } else {
-            String selection = InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and ("
-                    + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                    + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
-                    + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                    + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
-
-
-            String[] selectionArgs = {
-                    InstanceProviderAPI.STATUS_COMPLETE,
-                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
-                    InstanceProviderAPI.STATUS_SUBMITTED,
-                    siteId};
-
-            cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
-        }
-        return cursorLoader;
-    }
-
 
     public Cursor getInstancesCursorForId(String id) {
         String selection = InstanceProviderAPI.InstanceColumns._ID + "=?";
@@ -414,7 +296,6 @@ public class InstancesDao {
     }
 
 
-
     public int updateInstance(ContentValues values, String where, String[] whereArgs) {
         return Collect.getInstance().getContentResolver().update(InstanceProviderAPI.InstanceColumns.CONTENT_URI, values, where, whereArgs);
     }
@@ -423,20 +304,6 @@ public class InstancesDao {
         Collect.getInstance().getContentResolver().delete(InstanceProviderAPI.InstanceColumns.CONTENT_URI, null, null);
     }
 
-
-    public int updateSiteId(String newSiteId, String oldSiteId) {
-
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, newSiteId);
-        String where = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?";
-
-        String[] whereArgs = {
-                oldSiteId
-        };
-
-        return updateInstance(contentValues, where, whereArgs);
-    }
 
     public void deleteInstancesFromIDs(List<String> ids) {
         int count = ids.size();
@@ -500,7 +367,7 @@ public class InstancesDao {
 
                     Instance instance = new Instance.Builder()
                             .displayName(cursor.getString(displayNameColumnIndex))
-                            .submissionUri(fixUploadUrl(cursor.getString(submissionUriColumnIndex)))
+                            .submissionUri(cursor.getString(submissionUriColumnIndex))
                             .canEditWhenComplete(cursor.getString(canEditWhenCompleteIndex))
                             .instanceFilePath(cursor.getString(instanceFilePathIndex))
                             .jrFormId(cursor.getString(jrFormIdColumnIndex))
@@ -521,33 +388,6 @@ public class InstancesDao {
             }
         }
         return instances;
-    }
-
-
-    private String fixUploadUrl(String url) {
-        try {
-            if (checkContainsFakeSiteID(url)) {
-                String mockedSiteId = getSiteIdFromUrl(url);
-                String fsFormId = getFsFormIdFromUrl(url);
-                String deployedFrom = getFormDeployedFrom(url);
-
-                url = generateSubmissionUrl(deployedFrom, mockedSiteId.split("-")[0], fsFormId);
-
-                String siteId = SiteUploadHistoryLocalSource.getInstance().getById(mockedSiteId).getNewSiteId();
-                url = generateSubmissionUrl(deployedFrom, siteId, fsFormId);
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            Timber.e("Failed to fix url");
-        }
-        return url;
-    }
-
-    public static boolean checkContainsFakeSiteID(String url) {
-        String[] split = url.split("/");
-        String siteId = split[split.length - 1];
-        return siteId.contains("fake");
-
     }
 
 
@@ -575,86 +415,6 @@ public class InstancesDao {
         return values;
     }
 
-    public static String generateSubmissionUrl(String formDeployedFrom, String siteId, String fsFormId) {
-
-        String submissionUrl = FieldSightUserSession.getServerUrl(Collect.getInstance()) + APIEndpoint.FORM_SUBMISSION_PAGE;
-
-        switch (formDeployedFrom) {
-            case PROJECT:
-                submissionUrl += "project/" + fsFormId + "/" + siteId;
-                break;
-            case SITE:
-                submissionUrl += fsFormId + "/" + siteId;
-                break;
-            default:
-                throw new RuntimeException("Unknown form deployed");
-        }
-
-        return submissionUrl;
-
-    }
-
-    private String getSiteIdFromUrl(String url) {
-        String[] split = url.split("/");
-        return split[split.length - 1];
-    }
-
-    private String getFormDeployedFrom(String url) {
-        String[] split = url.split("/");
-        if (Constant.FormDeploymentFrom.PROJECT.equals(split[split.length - 3])) {
-            return Constant.FormDeploymentFrom.PROJECT;
-        } else {
-            return Constant.FormDeploymentFrom.SITE;
-        }
-    }
-
-
-    public Observable<Integer> cascadedSiteIds(String oldId, String newId) {
-        return Observable.just(getBySiteId(oldId))
-                .flatMapIterable((Function<List<Instance>, Iterable<Instance>>) instances -> instances)
-                .map(new Function<Instance, Integer>() {
-                    @Override
-                    public Integer apply(Instance instance) {
-                        String url = instance.getSubmissionUri();
-                        String deployedFrom = getFormDeployedFrom(url);
-                        String fsFormId = getFsFormIdFromUrl(url);
-
-                        String oldUrl = generateSubmissionUrl(deployedFrom, oldId, fsFormId);
-                        String newUrl = generateSubmissionUrl(deployedFrom, newId, fsFormId);
-
-
-                        ContentValues contentValues = new ContentValues();
-                        contentValues.put(InstanceProviderAPI.InstanceColumns.SUBMISSION_URI, newUrl);
-                        contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, newId);
-
-                        String selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?" +
-                                " AND " +
-                                InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + "=?";
-                        String[] selectionArgs = new String[]{oldId, oldUrl};
-
-                        return updateInstance(contentValues, selection, selectionArgs);
-                    }
-                });
-
-
-    }
-
-    public String getFsFormIdFromUrl(String url) {
-        String[] split = url.split("/");
-        return split[split.length - 2];
-    }
-
-    public List<Instance> getBySiteId(String siteId) {
-
-        Cursor cursor;
-        String selection = InstanceProviderAPI.InstanceColumns.FS_SITE_ID + "=?";
-
-        String[] selectionArgs = new String[]{siteId};
-
-        cursor = getInstancesCursor(selection, selectionArgs);
-        List<Instance> list = getInstancesFromCursor(cursor);
-        return list;
-    }
 
 }
 

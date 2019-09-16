@@ -23,15 +23,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormDetails;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.activities.FormDownloadList;
 import org.odk.collect.android.activities.NotificationActivity;
 import org.odk.collect.android.dao.FormsDao;
@@ -45,10 +46,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.JR_FORM_ID;
-import static org.bcss.collect.android.provider.FormsProviderAPI.FormsColumns.LAST_DETECTED_FORM_VERSION_HASH;
+import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.JR_FORM_ID;
+import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.LAST_DETECTED_FORM_VERSION_HASH;
 import static org.odk.collect.android.activities.FormDownloadList.DISPLAY_ONLY_UPDATED_FORMS;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_AUTOMATIC_UPDATE;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_AUTOMATIC_UPDATE;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes.FORMS_DOWNLOADED_NOTIFICATION;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes.FORM_UPDATES_AVAILABLE_NOTIFICATION;
 import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_REQUIRED;
@@ -76,11 +77,11 @@ public class ServerPollingJob extends Job {
         DownloadFormListUtils downloadFormListTask = new DownloadFormListUtils();
         HashMap<String, FormDetails> formList = downloadFormListTask.downloadFormList(true);
 
-        if (formList != null && !formList.containsKey(DL_ERROR_MSG)) {
+        if (!formList.containsKey(DL_ERROR_MSG)) {
             if (formList.containsKey(DL_AUTH_REQUIRED)) {
                 formList = downloadFormListTask.downloadFormList(true);
 
-                if (formList == null || formList.containsKey(DL_AUTH_REQUIRED) || formList.containsKey(DL_ERROR_MSG)) {
+                if (formList.containsKey(DL_AUTH_REQUIRED) || formList.containsKey(DL_ERROR_MSG)) {
                     return Result.FAILURE;
                 }
             }
@@ -172,7 +173,7 @@ public class ServerPollingJob extends Job {
     private void updateLastDetectedFormVersionHash(String formId, String formVersionHash) {
         ContentValues values = new ContentValues();
         values.put(LAST_DETECTED_FORM_VERSION_HASH, formVersionHash);
-        new FormsDao().updateForm(values, JR_FORM_ID + "=?", new String[]{formId});
+        new FormsDao().updateForm(values, JR_FORM_ID + "=?", new String[] {formId});
     }
 
     private boolean isDeviceOnline() {

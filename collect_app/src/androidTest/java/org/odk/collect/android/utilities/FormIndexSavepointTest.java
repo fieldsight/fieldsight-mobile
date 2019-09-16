@@ -16,8 +16,8 @@
 
 package org.odk.collect.android.utilities;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.logic.FormController;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.FormIndex;
 import org.junit.Test;
 import org.junit.runner.RunWith;

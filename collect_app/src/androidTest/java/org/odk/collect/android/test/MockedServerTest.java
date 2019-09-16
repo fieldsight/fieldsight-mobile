@@ -3,13 +3,13 @@ package org.odk.collect.android.test;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-import org.bcss.collect.android.application.Collect;
-import org.junit.After;
-import org.junit.Before;
-import org.odk.collect.android.preferences.PreferenceKeys;
-
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import org.junit.After;
+import org.junit.Before;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.preferences.GeneralKeys;
 
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -83,7 +83,7 @@ public abstract class MockedServerTest {
 
     private static void configAppFor(MockWebServer server) {
         Editor prefs = PreferenceManager.getDefaultSharedPreferences(Collect.getInstance().getBaseContext()).edit();
-        prefs.putString(PreferenceKeys.KEY_SERVER_URL, server.url("/").toString());
+        prefs.putString(GeneralKeys.KEY_SERVER_URL, server.url("/").toString());
         if (!prefs.commit()) {
             throw new RuntimeException("Failed to set up SharedPreferences for MockWebServer");
         }

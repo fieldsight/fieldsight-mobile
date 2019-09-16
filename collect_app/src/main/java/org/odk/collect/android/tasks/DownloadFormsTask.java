@@ -16,9 +16,9 @@ package org.odk.collect.android.tasks;
 
 import android.os.AsyncTask;
 
-import org.bcss.collect.android.listeners.DownloadFormsTaskListener;
-import org.bcss.collect.android.listeners.FormDownloaderListener;
-import org.bcss.collect.android.logic.FormDetails;
+import org.odk.collect.android.listeners.DownloadFormsTaskListener;
+import org.odk.collect.android.listeners.FormDownloaderListener;
+import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.utilities.FormDownloader;
 
 import java.util.ArrayList;

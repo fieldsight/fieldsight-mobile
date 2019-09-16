@@ -16,7 +16,7 @@
 
 package org.odk.collect.android.utilities;
 
-import org.bcss.collect.android.logic.DatePickerDetails;
+import org.odk.collect.android.logic.DatePickerDetails;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.junit.Before;
@@ -48,6 +48,9 @@ public class DateTimeUtilsTest {
     private DatePickerDetails bikramSambat;
     private DatePickerDetails bikramSambatMonthYear;
     private DatePickerDetails bikramSambatYear;
+    private DatePickerDetails myanmar;
+    private DatePickerDetails myanmarMonthYear;
+    private DatePickerDetails myanmarYear;
 
     @Before
     public void setUp() {
@@ -67,6 +70,9 @@ public class DateTimeUtilsTest {
         bikramSambat = new DatePickerDetails(DatePickerDetails.DatePickerType.BIKRAM_SAMBAT, DatePickerDetails.DatePickerMode.SPINNERS);
         bikramSambatMonthYear = new DatePickerDetails(DatePickerDetails.DatePickerType.BIKRAM_SAMBAT, DatePickerDetails.DatePickerMode.MONTH_YEAR);
         bikramSambatYear = new DatePickerDetails(DatePickerDetails.DatePickerType.BIKRAM_SAMBAT, DatePickerDetails.DatePickerMode.YEAR);
+        myanmar = new DatePickerDetails(DatePickerDetails.DatePickerType.MYANMAR, DatePickerDetails.DatePickerMode.SPINNERS);
+        myanmarMonthYear = new DatePickerDetails(DatePickerDetails.DatePickerType.MYANMAR, DatePickerDetails.DatePickerMode.MONTH_YEAR);
+        myanmarYear = new DatePickerDetails(DatePickerDetails.DatePickerType.MYANMAR, DatePickerDetails.DatePickerMode.YEAR);
     }
 
     @Test
@@ -143,5 +149,16 @@ public class DateTimeUtilsTest {
         assertEquals(bikramSambatYear, DateTimeUtils.getDatePickerDetails(appearance));
         appearance = "year bikram-sambat";
         assertEquals(bikramSambatYear, DateTimeUtils.getDatePickerDetails(appearance));
+
+        appearance = "myanmar";
+        assertEquals(myanmar, DateTimeUtils.getDatePickerDetails(appearance));
+        appearance = "Myanmar month-year";
+        assertEquals(myanmarMonthYear, DateTimeUtils.getDatePickerDetails(appearance));
+        appearance = "month-year myanmar";
+        assertEquals(myanmarMonthYear, DateTimeUtils.getDatePickerDetails(appearance));
+        appearance = "Myanmar year";
+        assertEquals(myanmarYear, DateTimeUtils.getDatePickerDetails(appearance));
+        appearance = "year myanmar";
+        assertEquals(myanmarYear, DateTimeUtils.getDatePickerDetails(appearance));
     }
 }

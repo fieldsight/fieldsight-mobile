@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.TimeData;
 import org.javarosa.form.api.FormEntryPrompt;
@@ -73,13 +73,17 @@ public class TimeWidget extends QuestionWidget implements ButtonWidget, TimePick
 
     @Override
     public void clearAnswer() {
+        clearAnswerWithoutValueChangeEvent();
+        widgetValueChanged();
+    }
+
+    void clearAnswerWithoutValueChangeEvent() {
         nullAnswer = true;
         timeTextView.setText(R.string.no_time_selected);
     }
 
     @Override
     public IAnswerData getAnswer() {
-        clearFocus();
         // use picker time, convert to today's date, store as utc
         DateTime localDateTime = new DateTime()
                 .withTime(hourOfDay, minuteOfHour, 0, 0);
@@ -174,6 +178,7 @@ public class TimeWidget extends QuestionWidget implements ButtonWidget, TimePick
         this.minuteOfHour = minute;
 
         setTimeLabel();
+        widgetValueChanged();
     }
 
     @Override

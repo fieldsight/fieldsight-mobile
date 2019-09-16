@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,15 +7,15 @@
     android:background="@color/colorPrimary"
 
 
-    tools:context=".SiteProfileActivity">
+    tools:context="org.odk.collect.android.SiteProfileActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_flexible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="150dp"
@@ -41,7 +41,7 @@
                 android:tint="@color/colorTransparentBlue"
                 tools:ignore="ContentDescription" />
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -49,10 +49,10 @@
                 app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/ic_arrow_back" />
 
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:visibility="invisible"
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
@@ -67,16 +67,16 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
-            tools:context=".SiteProfileActivity"
+            tools:context="org.odk.collect.android.SiteProfileActivity"
             tools:showIn="@layout/activity_site_profile">
 
-            <android.support.design.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/card_intro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="@dimen/corner_radius">
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -99,10 +99,10 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
 
-                </android.support.constraint.ConstraintLayout>
-            </android.support.design.card.MaterialCardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.design.card.MaterialCardView
+            <com.google.android.material.card.MaterialCardView
 
                 android:id="@+id/card_list"
                 android:layout_width="match_parent"
@@ -118,7 +118,7 @@
                     android:orientation="vertical">
 
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -132,13 +132,13 @@
                         android:text="Edit Site" />
                 </LinearLayout>
 
-            </android.support.design.card.MaterialCardView>
+            </com.google.android.material.card.MaterialCardView>
 
 
         </RelativeLayout>
 
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <ImageView
         android:id="@+id/iv_site"
@@ -170,4 +170,4 @@
         tools:text="T" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

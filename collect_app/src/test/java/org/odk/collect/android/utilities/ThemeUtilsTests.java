@@ -3,7 +3,7 @@ package org.odk.collect.android.utilities;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
-import static org.odk.collect.android.preferences.PreferenceKeys.KEY_APP_THEME;
+import static org.odk.collect.android.preferences.GeneralKeys.KEY_APP_THEME;
 
 /**
  * Unit tests for checking the behaviour of updating themes from User Interface settings

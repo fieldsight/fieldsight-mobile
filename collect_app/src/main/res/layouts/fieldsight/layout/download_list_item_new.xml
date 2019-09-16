@@ -1,9 +1,9 @@
-<org.bcss.collect.android.views.TwoItemMultipleChoiceView xmlns:android="http://schemas.android.com/apk/res/android"
+<org.odk.collect.android.views.TwoItemMultipleChoiceView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/download_list_item_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/instance_list_icon_layout_margin"
                 android:layout_marginRight="@dimen/instance_list_icon_layout_margin"
-                android:background="@drawable/instance_list_icon_background">
+              >
 
                 <ImageView
                     android:id="@+id/status_icon"
@@ -90,7 +90,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_toStartOf="@+id/checkbox"
                         android:layout_toLeftOf="@+id/checkbox"
-                        android:textColor="@color/red" />
+                        android:textColor="@color/red_500" />
 
 
                     <TextView
@@ -128,7 +128,7 @@
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
                         android:visibility="gone"
-                        app:srcCompat="@drawable/close_box_outline" />
+                         />
                 </RelativeLayout>
 
 
@@ -153,5 +153,5 @@
                     android:text="@string/cancel" />
             </RelativeLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
-</org.bcss.collect.android.views.TwoItemMultipleChoiceView>
+    </androidx.cardview.widget.CardView>
+</org.odk.collect.android.views.TwoItemMultipleChoiceView>

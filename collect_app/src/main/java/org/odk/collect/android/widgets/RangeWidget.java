@@ -18,9 +18,9 @@ package org.odk.collect.android.widgets;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,8 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
-import org.bcss.collect.android.fragments.dialogs.NumberPickerDialog;
+import org.fieldsight.collect.android.R;
+import org.odk.collect.android.fragments.dialogs.NumberPickerDialog;
 import org.javarosa.core.model.RangeQuestion;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
@@ -85,6 +85,7 @@ public abstract class RangeWidget extends QuestionWidget implements ButtonWidget
     @Override
     public void clearAnswer() {
         setUpNullValue();
+        widgetValueChanged();
     }
 
     @Override
@@ -338,6 +339,7 @@ public abstract class RangeWidget extends QuestionWidget implements ButtonWidget
         }
 
         setUpActualValueLabel();
+        widgetValueChanged();
     }
 
     public int getElementCount() {

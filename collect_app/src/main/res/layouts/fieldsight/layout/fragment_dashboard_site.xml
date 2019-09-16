@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -44,7 +44,7 @@
             android:drawableStart="@drawable/ic_city_white_legacy"
             android:drawableLeft="@drawable/ic_city_white_legacy"
             android:gravity="center"
-            android:text="Bagmati"
+            tools:text="Site Type"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_small"
             android:textStyle="bold" />
@@ -65,11 +65,12 @@
             android:gravity="start"
             android:maxLines="1"
             android:minLines="1"
-            android:text="Nishon"
+            tools:text="Site Name"
             android:textAlignment="textStart"
             android:textSize="@dimen/text_size_large" />
 
         <TextView
+            tools:text="Site Address"
             android:id="@+id/site_option_frag_site_address"
             style="@style/TextAppearance.AppCompat.Title.Inverse"
             android:layout_width="wrap_content"
@@ -153,7 +154,7 @@
         android:weightSum="3"
         app:behavior_overlapTop="78dp">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
 
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -215,9 +216,9 @@
 
 
             </RelativeLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/margin_medium"
@@ -275,9 +276,9 @@
 
 
             </RelativeLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cv_stageform"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -340,7 +341,7 @@
 
 
             </RelativeLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
             android:id="@+id/buttonholder"
@@ -411,4 +412,4 @@
 
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

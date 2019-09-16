@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <org.bcss.collect.naxa.common.RecyclerViewEmptySupport
+    <org.fieldsight.naxa.common.RecyclerViewEmptySupport
         android:id="@+id/android_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

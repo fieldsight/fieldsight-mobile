@@ -20,7 +20,7 @@ import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import org.bcss.collect.android.R;
+import org.fieldsight.collect.android.R;
 
 /**
  * Implementation of cursor adapter that displays the version of a form if a form has a version.
@@ -46,6 +46,7 @@ public class VersionHidingCursorAdapter extends SimpleCursorAdapter {
                     int columnIndex) {
                 String columnName = cursor.getColumnName(columnIndex);
                 if (!columnName.equals(VersionHidingCursorAdapter.this.versionColumnName)) {
+                    view.setVisibility(View.VISIBLE);
                     return originalBinder != null && originalBinder.setViewValue(view, cursor, columnIndex);
                 } else {
                     String version = cursor.getString(columnIndex);

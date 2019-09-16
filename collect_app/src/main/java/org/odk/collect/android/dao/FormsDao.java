@@ -20,17 +20,19 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.support.v4.content.CursorLoader;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.dto.Form;
-import org.bcss.collect.android.provider.FormsProviderAPI;
+
+import androidx.loader.content.CursorLoader;
+
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dto.Form;
+import org.odk.collect.android.provider.FormsProviderAPI;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is used to encapsulate all access to the {@link org.bcss.collect.android.database.helpers.FormsDatabaseHelper#DATABASE_NAME}
+ * This class is used to encapsulate all access to the {@link org.odk.collect.android.database.helpers.FormsDatabaseHelper}
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_access_object
  */
 public class FormsDao {
@@ -68,38 +70,24 @@ public class FormsDao {
         return getFormsCursor(null, selection, selectionArgs, order);
     }
 
-    public Cursor getFormsCursor(String formId){
-        String[] selectionArgs;
-        String selection;
-        selectionArgs = new String[]{formId};
-        selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
-
-        // As long as we allow storing multiple forms with the same id and version number, choose
-        // the newest one
-        String order = FormsProviderAPI.FormsColumns.DATE + " DESC";
-
-        return getFormsCursor(null, selection, selectionArgs, order);
-    }
-
-
-    private CursorLoader getFormsCursorLoader(String sortOrder, boolean uniqueByFormId) {
-        return getFormsCursorLoader(null, null, sortOrder, uniqueByFormId);
+    private CursorLoader getFormsCursorLoader(String sortOrder, boolean newestByFormId) {
+        return getFormsCursorLoader(null, null, sortOrder, newestByFormId);
     }
 
     /**
      * Returns a loader filtered by the specified charSequence in the specified sortOrder. If
-     * uniqueByFormId is true, only the most recently-downloaded version of each form is included.
+     * newestByFormId is true, only the most recently-downloaded version of each form is included.
      */
-    public CursorLoader getFormsCursorLoader(CharSequence charSequence, String sortOrder, boolean uniqueByFormId) {
+    public CursorLoader getFormsCursorLoader(CharSequence charSequence, String sortOrder, boolean newestByFormId) {
         CursorLoader cursorLoader;
 
         if (charSequence.length() == 0) {
-            cursorLoader = getFormsCursorLoader(sortOrder, uniqueByFormId);
+            cursorLoader = getFormsCursorLoader(sortOrder, newestByFormId);
         } else {
             String selection = FormsProviderAPI.FormsColumns.DISPLAY_NAME + " LIKE ?";
             String[] selectionArgs = new String[]{"%" + charSequence + "%"};
 
-            cursorLoader = getFormsCursorLoader(selection, selectionArgs, sortOrder, uniqueByFormId);
+            cursorLoader = getFormsCursorLoader(selection, selectionArgs, sortOrder, newestByFormId);
         }
         return cursorLoader;
     }
@@ -110,10 +98,10 @@ public class FormsDao {
 
     /**
      * Builds and returns a new CursorLoader, passing on the configuration parameters. If
-     * uniqueByFormID is true, only the most recently-downloaded version of each form is included.
+     * newestByFormID is true, only the most recently-downloaded version of each form is included.
      */
-    private CursorLoader getFormsCursorLoader(String selection, String[] selectionArgs, String sortOrder, boolean uniqueByFormId) {
-        Uri formUri = uniqueByFormId ? FormsProviderAPI.FormsColumns.UNIQUE_FORMS_BY_FORMID_URI
+    private CursorLoader getFormsCursorLoader(String selection, String[] selectionArgs, String sortOrder, boolean newestByFormId) {
+        Uri formUri = newestByFormId ? FormsProviderAPI.FormsColumns.CONTENT_NEWEST_FORMS_BY_FORMID_URI
                 : FormsProviderAPI.FormsColumns.CONTENT_URI;
 
         return new CursorLoader(Collect.getInstance(), formUri, null, selection, selectionArgs, sortOrder);
@@ -124,6 +112,23 @@ public class FormsDao {
         String[] selectionArgs = {formId};
 
         return getFormsCursor(null, selection, selectionArgs, null);
+    }
+
+    public String getFormTitleForFormIdAndFormVersion(String formId, String formVersion) {
+        String formTitle = "";
+
+        Cursor cursor = getFormsCursor(formId, formVersion);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    formTitle = cursor.getString(cursor.getColumnIndex(FormsProviderAPI.FormsColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        return formTitle;
     }
 
     public boolean isFormEncrypted(String formId, String formVersion) {
@@ -180,14 +185,14 @@ public class FormsDao {
     }
 
     public void deleteFormsFromIDs(String[] idsToDelete) {
-        String selection = FormsProviderAPI.FormsColumns._ID + " in (";
+        StringBuilder selection = new StringBuilder(FormsProviderAPI.FormsColumns._ID + " in (");
         for (int i = 0; i < idsToDelete.length - 1; i++) {
-            selection += "?, ";
+            selection.append("?, ");
         }
-        selection += "? )";
+        selection.append("? )");
 
         //This will break if the number of forms to delete > SQLITE_MAX_VARIABLE_NUMBER (999)
-        Collect.getInstance().getContentResolver().delete(FormsProviderAPI.FormsColumns.CONTENT_URI, selection, idsToDelete);
+        Collect.getInstance().getContentResolver().delete(FormsProviderAPI.FormsColumns.CONTENT_URI, selection.toString(), idsToDelete);
     }
 
     public void deleteFormsFromMd5Hash(String... hashes) {
@@ -196,13 +201,12 @@ public class FormsDao {
         try {
             for (String hash : hashes) {
                 c = getFormsCursorForMd5Hash(hash);
-                if (c.getCount() > 0) {
-                    c.moveToFirst();
+                if (c != null && c.moveToFirst()) {
                     String id = c.getString(c.getColumnIndex(FormsProviderAPI.FormsColumns._ID));
                     idsToDelete.add(id);
+                    c.close();
+                    c = null;
                 }
-                c.close();
-                c = null;
             }
         } finally {
             if (c != null) {
@@ -282,6 +286,19 @@ public class FormsDao {
         return forms;
     }
 
+    public Cursor getFormsCursor(String formId){
+        String[] selectionArgs;
+        String selection;
+        selectionArgs = new String[]{formId};
+        selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
+
+        // As long as we allow storing multiple forms with the same id and version number, choose
+        // the newest one
+        String order = FormsProviderAPI.FormsColumns.DATE + " DESC";
+
+        return getFormsCursor(null, selection, selectionArgs, order);
+    }
+
     public ContentValues getValuesFromFormObject(Form form) {
         ContentValues values = new ContentValues();
         values.put(FormsProviderAPI.FormsColumns.DISPLAY_NAME, form.getDisplayName());
@@ -300,6 +317,4 @@ public class FormsDao {
         values.put(FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD, form.getIsTempDownload());
         return values;
     }
-
-
 }

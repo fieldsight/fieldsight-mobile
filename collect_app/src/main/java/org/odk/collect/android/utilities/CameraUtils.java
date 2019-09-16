@@ -25,7 +25,7 @@ import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.view.Surface;
 
-import org.bcss.collect.android.application.Collect;
+import org.odk.collect.android.application.Collect;
 
 import java.io.File;
 import java.io.FileOutputStream;

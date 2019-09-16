@@ -2,9 +2,9 @@
 //
 //import android.net.Uri;
 //
-//import org.bcss.collect.android.dto.Instance;
-//import org.bcss.collect.android.provider.InstanceProviderAPI;
-//import org.bcss.collect.android.upload.InstanceServerUploader;
+//import org.odk.collect.android.dto.Instance;
+//import org.odk.collect.android.provider.InstanceProviderAPI;
+//import org.odk.collect.android.upload.InstanceServerUploader;
 //import org.junit.After;
 //import org.junit.Before;
 //import org.junit.Test;

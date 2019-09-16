@@ -18,8 +18,8 @@ package org.odk.collect.android.utilities;
 
 import android.content.Context;
 
-import org.bcss.collect.android.application.Collect;
-import org.bcss.collect.android.database.ItemsetDbAdapter;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.database.ItemsetDbAdapter;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
@@ -113,9 +113,10 @@ public class ResetUtility {
         File file = new File(path);
         if (file.exists()) {
             File[] files = file.listFiles();
-
-            for (File f : files) {
-                result = deleteRecursive(f);
+            if (files != null) {
+                for (File f : files) {
+                    result = deleteRecursive(f);
+                }
             }
         }
         return result;
