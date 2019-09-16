@@ -37,7 +37,10 @@ public interface SiteDao {
     Single<List<Site>> getSiteByProjectIdAsSingle(String projectID);
 
     @Query("SELECT * from sites WHERE id= :siteId")
-    LiveData<Site> getSiteById(String siteId);
+    LiveData<Site> getSiteByIdAsLive(String siteId);
+
+    @Query("SELECT * from sites WHERE id= :siteId")
+    Site getSiteById(String siteId);
 
     @Query("SELECT * from sites WHERE id= :siteId")
     Single<Site> getSiteByIdAsSingle(String siteId);

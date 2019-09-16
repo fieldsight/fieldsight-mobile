@@ -79,7 +79,11 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
     public LiveData<Site> getBySiteId(String siteId) {
-        return dao.getSiteById(siteId);
+        return dao.getSiteByIdAsLive(siteId);
+    }
+
+    public boolean isSiteOffline(String siteId){
+        return dao.getSiteById(siteId).getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
     }
 
 
