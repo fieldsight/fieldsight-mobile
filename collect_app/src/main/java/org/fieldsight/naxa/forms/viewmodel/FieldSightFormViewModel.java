@@ -11,19 +11,17 @@ import java.util.List;
 
 public class FieldSightFormViewModel extends ViewModel {
 
-
-
-    public LiveData<List<FieldSightForm>> loadForm(String type) {
+    public LiveData<List<FieldSightForm>> loadForm(String type,String projectId, String siteId) {
         LiveData<List<FieldSightForm>> forms;
         switch (type) {
             case Constant.FormType.GENERAl:
-                forms = FieldSightFormsLocalSource.getInstance().getGeneralForms();
+                forms = FieldSightFormsLocalSource.getInstance().getGeneralForms(projectId,siteId);
                 break;
             case Constant.FormType.SCHEDULE:
-                forms = FieldSightFormsLocalSource.getInstance().getScheduledForms();
+                forms = FieldSightFormsLocalSource.getInstance().getScheduledForms(projectId,siteId);
                 break;
             case Constant.FormType.STAGED:
-                forms = FieldSightFormsLocalSource.getInstance().getStagedForms();
+                forms = FieldSightFormsLocalSource.getInstance().getStagedForms(projectId,siteId);
                 break;
             default:
                 throw new IllegalArgumentException("Form type is unknown");

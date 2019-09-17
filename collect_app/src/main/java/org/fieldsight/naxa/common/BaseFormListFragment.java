@@ -1,6 +1,5 @@
 package org.fieldsight.naxa.common;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,8 +24,9 @@ import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
 import org.fieldsight.naxa.forms.source.local.FieldSightForm;
 import org.fieldsight.naxa.forms.ui.FieldSightFormVH;
 import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
-import org.odk.collect.android.provider.FormsProviderAPI;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.provider.FormsProviderAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +40,7 @@ public class BaseFormListFragment extends Fragment {
     private RecyclerView recyclerView;
     private FieldSightFormViewModel viewModel;
     private BaseRecyclerViewAdapter<FieldSightForm, FieldSightFormVH> adapter;
+    private String siteId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,6 +137,7 @@ public class BaseFormListFragment extends Fragment {
                 return new FieldSightFormVH(view) {
                     @Override
                     public void openForm(FieldSightForm form) {
+                        cacheFormAndSite(form, siteId);
                         fillODKForm(form.getOdkFormID());
                     }
                 };
@@ -145,16 +147,26 @@ public class BaseFormListFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
     }
 
+    private void cacheFormAndSite(FieldSightForm form, String siteId) {
+        String formDeployedFrom = form.getFormDeployedProjectId() == null ? Constant.FormDeploymentFrom.SITE : Constant.FormDeploymentFrom.PROJECT;
+        String submissionUrl = generateSubmissionUrl(formDeployedFrom, siteId, form.getFieldSightFormId());
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, siteId);
+    }
+
 
     private FieldSightFormViewModel obtainViewModel(FragmentActivity activity) {
         ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
         return ViewModelProviders.of(activity, factory).get(FieldSightFormViewModel.class);
     }
 
-    public void updateList(List<FieldSightForm> fieldSightForms) {
+    public void updateList(List<FieldSightForm> fieldSightForms, String siteId) {
+        this.siteId = siteId;
+
         adapter.getData().clear();
         adapter.getData().addAll(fieldSightForms);
         adapter.notifyDataSetChanged();
+
     }
 
 

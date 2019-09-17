@@ -54,9 +54,10 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getViewModel().loadForm(formType).observe(this, fieldSightForms -> {
-            Timber.i(fieldSightForms.toString());
-            updateList(fieldSightForms);
-        });
+        getViewModel().loadForm(formType, loadedSite.getProject(), loadedSite.getId())
+                .observe(this, fieldSightForms -> {
+                    Timber.i(fieldSightForms.toString());
+                    updateList(fieldSightForms, loadedSite.getId());
+                });
     }
 }

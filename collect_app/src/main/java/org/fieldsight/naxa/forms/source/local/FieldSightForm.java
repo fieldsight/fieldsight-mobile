@@ -65,12 +65,15 @@ public class FieldSightForm {
 
     private String formType;
 
+    @Ignore
+    private String siteId;
+
     public String getMetadata() {
         return metadata;
     }
 
     @NonNull
-    String getFieldSightFormId() {
+    public String getFieldSightFormId() {
         return fieldSightFormId;
     }
 
@@ -198,6 +201,13 @@ public class FieldSightForm {
         this.metadata = metadata;
     }
 
+    public String getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(String siteId) {
+        this.siteId = siteId;
+    }
 
     @NonNull
     @Override
