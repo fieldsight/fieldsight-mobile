@@ -198,4 +198,15 @@ public class FieldSightForm {
         this.metadata = metadata;
     }
 
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "FieldSightForm{" +
+                "fieldSightFormId='" + fieldSightFormId + '\'' +
+                ", formDeployedSiteId='" + formDeployedSiteId + '\'' +
+                ", formDeployedProjectId='" + formDeployedProjectId + '\'' +
+                ", formType='" + formType + '\'' +
+                '}';
+    }
 }

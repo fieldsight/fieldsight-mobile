@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.FieldSightFormListFragment;
+import org.fieldsight.naxa.common.BaseFormListFragment;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
@@ -47,7 +47,7 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_POSITION;
 import static org.fieldsight.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
 import static org.fieldsight.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
-public class SubStageListFragment extends FieldSightFormListFragment implements OnFormItemClickListener<SubStage> {
+public class SubStageListFragment extends BaseFormListFragment implements OnFormItemClickListener<SubStage> {
 
     @Inject
     ViewModelFactory viewModelFactory;
