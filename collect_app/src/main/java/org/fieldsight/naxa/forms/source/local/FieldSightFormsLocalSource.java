@@ -33,6 +33,10 @@ public class FieldSightFormsLocalSource implements BaseLocalDataSourceRX<FieldSi
         return dao.getFormByType(Constant.FormType.GENERAl, projectId, siteId);
     }
 
+    public LiveData<List<FieldSightForm>> getFormByType(String formType, String projectId, String siteId) {
+        return dao.getFormByType(formType, projectId, siteId);
+    }
+
     public LiveData<List<FieldSightForm>> getSurveyForms(String projectId, String siteId) {
         return dao.getFormByType(Constant.FormType.SURVEY, projectId, siteId);
     }

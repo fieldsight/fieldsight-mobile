@@ -4,10 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.BaseFormListFragment;
 import org.fieldsight.naxa.common.Constant;
-import org.fieldsight.naxa.common.utilities.SnackBarUtils;
+import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 
 import timber.log.Timber;
@@ -20,34 +19,36 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
     private Site loadedSite;
     private String formType;
 
-    public static FieldSightFormListFragment newInstance(String loadFormType, Site loadedSite) {
+    public static FieldSightFormListFragment newInstance(String formType, Site site) {
+        return newInstance(formType, site, null);
+    }
+
+    public static FieldSightFormListFragment newInstance(String loadFormType, Site site, Project project) {
         FieldSightFormListFragment fragment = new FieldSightFormListFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(Constant.EXTRA_OBJECT, loadedSite);
+
+        //hacking way to load survey forms - Nishon
+        if (site == null) {
+            site = new Site();
+            site.setName(project.getName());
+            site.setProject(project.getId());
+        }
+
+        bundle.putParcelable(Constant.EXTRA_OBJECT, site);
         bundle.putString(Constant.EXTRA_ID, loadFormType);
-        fragment.setArguments(bundle);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     private FieldSightFormListFragment() {
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if (getArguments() != null) {
-            loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
-            formType = getArguments().getString(EXTRA_ID);
-        }
-        if (loadedSite == null || formType == null) {
-            requireActivity().onBackPressed();
-            SnackBarUtils.showFlashbar(requireActivity(), getString(R.string.dialog_unexpected_error_title));
-            return;
-        }
-
+        loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
+        formType = getArguments().getString(EXTRA_ID);
         setToolbarText(loadedSite.getName(), loadedSite.getName());
     }
 

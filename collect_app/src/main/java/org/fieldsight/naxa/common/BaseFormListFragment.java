@@ -83,7 +83,7 @@ public class BaseFormListFragment extends Fragment {
         return FSInstancesDao.generateSubmissionUrl(formDeployedFrom, creatorsId, fsFormId);
     }
 
-    protected long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
+    private long getFormId(String jrFormId) throws CursorIndexOutOfBoundsException, NullPointerException, NumberFormatException {
 
         String[] projection = new String[]{FormsProviderAPI.FormsColumns._ID, FormsProviderAPI.FormsColumns.FORM_FILE_PATH};
         String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=? AND " + "(" + FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " =? OR " + FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + " IS NULL)";

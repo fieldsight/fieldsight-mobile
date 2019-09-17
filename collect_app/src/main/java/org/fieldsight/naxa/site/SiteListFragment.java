@@ -19,6 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -38,6 +40,7 @@ import org.fieldsight.naxa.common.FilterDialogAdapter;
 import org.fieldsight.naxa.common.FilterOption;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
+import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.project.TermsLabels;
@@ -70,6 +73,10 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static org.fieldsight.naxa.common.Constant.ANIM.fragmentEnterAnimation;
+import static org.fieldsight.naxa.common.Constant.ANIM.fragmentExitAnimation;
+import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
+import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.InstanceUploaderListActivity.INSTANCE_UPLOADER;
 
@@ -130,9 +137,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     private String getSiteName() {
-        if( tl == null) {
+        if (tl == null) {
             return "Site(s)";
-        }else {
+        } else {
             return tl.site;
         }
     }
@@ -151,15 +158,15 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     private TermsLabels getTermsAndLabels() {
-        if(loadedProject == null) {
+        if (loadedProject == null) {
             return null;
         }
-        if(!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
-            try{
+        if (!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
+            try {
                 Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
                 JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
                 return TermsLabels.fromJSON(tlJson);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
@@ -265,7 +272,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }
         bottomSheetDialog = new BottomSheetDialog(activity, new ThemeUtils(getContext()).getBottomDialogTheme());
         View sheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet_site_filter, null);
-        ((TextView)sheetView.findViewById(R.id.label)).setText(String.format("Filter %s by", getSiteName()));
+        ((TextView) sheetView.findViewById(R.id.label)).setText(String.format("Filter %s by", getSiteName()));
         final RecyclerView recyclerView = sheetView.findViewById(R.id.recyclerView);
         bottomSheetDialog.setContentView(sheetView);
 
@@ -397,7 +404,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }
     }
 
-    private void showSubSiteDialog( List<Site> subsiteList) {
+    private void showSubSiteDialog(List<Site> subsiteList) {
         Timber.i("SiteListFragment subsiteLength = %d", subsiteList.size());
         DialogFactory.createSiteListDialog(requireActivity(), subsiteList, (dialog, which) -> {
             Timber.i("SiteListFragment, which = %d", which);
@@ -408,7 +415,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void onSurveyFormClicked() {
-        SurveyFormsActivity.start(getActivity(), loadedProject);
+        FragmentHostActivity.startWithSurveyForm(requireActivity(),loadedProject);
     }
 
 
@@ -466,11 +473,11 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     private void showConfirmationDialog() {
-        DialogFactory.createActionDialog(requireActivity(), "Upload selected " + getSiteName(), "Upload selected "+ getSiteName() +" along with their filled form(s) ?")
-                .setPositiveButton("Yes, upload " + getSiteName()+ " and Form(s)", (dialog, which) -> {
+        DialogFactory.createActionDialog(requireActivity(), "Upload selected " + getSiteName(), "Upload selected " + getSiteName() + " along with their filled form(s) ?")
+                .setPositiveButton("Yes, upload " + getSiteName() + " and Form(s)", (dialog, which) -> {
                     uploadSelectedSites(siteListAdapter.getSelected(), true);
                 })
-                .setNegativeButton("No, Upload "+ getSiteName() +" only", (dialog, which) -> {
+                .setNegativeButton("No, Upload " + getSiteName() + " only", (dialog, which) -> {
                     uploadSelectedSites(siteListAdapter.getSelected(), false);
                 })
                 .setOnDismissListener(dialog -> actionMode.finish())
