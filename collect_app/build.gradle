@@ -80,7 +80,7 @@ if (secretsFile.exists()) {
 
 def versionMajor = 3
 def versionMinor = 0
-def versionPatch = 14
+def versionPatch = 15
 
 android {
     compileSdkVersion(28)
