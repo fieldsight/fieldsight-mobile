@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.forms.data.local.FieldSightForm;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 
 public class FieldSightFormVH extends RecyclerView.ViewHolder {
     private TextView tvTitle, tvSubtitle, tvIconText;
 
-    public FieldSightFormVH(@NonNull View itemView) {
+    protected FieldSightFormVH(@NonNull View itemView) {
         super(itemView);
         tvTitle = itemView.findViewById(R.id.tv_form_primary);
         tvSubtitle = itemView.findViewById(R.id.tv_form_secondary);
@@ -21,7 +22,7 @@ public class FieldSightFormVH extends RecyclerView.ViewHolder {
 
     }
 
-    public void bindView(FieldSightForm form) {
+    public void bindView(FieldSightFormDetails form) {
         tvTitle.setText(form.getFormName());
         tvSubtitle.setText(form.getOdkFormName());
         tvIconText.setText(form.getFormName().substring(0, 1));
@@ -29,7 +30,7 @@ public class FieldSightFormVH extends RecyclerView.ViewHolder {
 
     }
 
-    public void openForm(FieldSightForm form) {
+    public void openForm(FieldSightFormDetails form) {
 
     }
 

@@ -25,6 +25,7 @@ import com.google.common.reflect.TypeToken;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
 import org.fieldsight.naxa.forms.data.local.FieldSightForm;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.forms.ui.FieldSightFormVH;
 import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
@@ -47,7 +48,7 @@ public class BaseFormListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private FieldSightFormViewModel viewModel;
-    private BaseRecyclerViewAdapter<FieldSightForm, FieldSightFormVH> adapter;
+    private BaseRecyclerViewAdapter<FieldSightFormDetails, FieldSightFormVH> adapter;
     private String siteId;
 
     @Override
@@ -133,9 +134,9 @@ public class BaseFormListFragment extends Fragment {
 
     private void setupListAdapter() {
         LinearLayoutManager manager = new LinearLayoutManager(requireActivity());
-        adapter = new BaseRecyclerViewAdapter<FieldSightForm, FieldSightFormVH>(new ArrayList<>(), R.layout.list_item_fieldsight_form) {
+        adapter = new BaseRecyclerViewAdapter<FieldSightFormDetails, FieldSightFormVH>(new ArrayList<>(), R.layout.list_item_fieldsight_form) {
             @Override
-            public void viewBinded(FieldSightFormVH activityVH, FieldSightForm activity) {
+            public void viewBinded(FieldSightFormVH activityVH, FieldSightFormDetails activity) {
                 activityVH.bindView(activity);
             }
 
@@ -143,13 +144,13 @@ public class BaseFormListFragment extends Fragment {
             public FieldSightFormVH attachViewHolder(View view) {
                 return new FieldSightFormVH(view) {
                     @Override
-                    public void openForm(FieldSightForm form) {
+                    public void openForm(FieldSightFormDetails form) {
                         if (TextUtils.equals(form.getFormType(), Constant.FormType.STAGED)) {
-                            prepareSubStage( form)
+                            prepareSubStage(form)
                                     .subscribe(onSubStateSubscribe());
                         } else {
                             cacheFormAndSite(form, siteId);
-                            fillODKForm(form.getOdkFormID());
+                            fillODKForm(form.getFormID());
                         }
                     }
                 };
@@ -159,10 +160,10 @@ public class BaseFormListFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
     }
 
-    private DisposableObserver<ArrayList<FieldSightForm>> onSubStateSubscribe() {
-        return new DisposableObserver<ArrayList<FieldSightForm>>() {
+    private DisposableObserver<ArrayList<FieldSightFormDetails>> onSubStateSubscribe() {
+        return new DisposableObserver<ArrayList<FieldSightFormDetails>>() {
             @Override
-            public void onNext(ArrayList<FieldSightForm> fieldSightForms) {
+            public void onNext(ArrayList<FieldSightFormDetails> fieldSightForms) {
                 updateList(fieldSightForms, siteId);
             }
 
@@ -179,23 +180,23 @@ public class BaseFormListFragment extends Fragment {
     }
 
 
-    private Observable<ArrayList<FieldSightForm>> prepareSubStage(FieldSightForm form) {
-        return Observable.fromCallable(new Callable<ArrayList<FieldSightForm>>() {
+    private Observable<ArrayList<FieldSightFormDetails>> prepareSubStage(FieldSightFormDetails form) {
+        return Observable.fromCallable(new Callable<ArrayList<FieldSightFormDetails>>() {
             @Override
-            public ArrayList<FieldSightForm> call() throws Exception {
+            public ArrayList<FieldSightFormDetails> call() throws Exception {
                 Type listType = new TypeToken<List<SubStage>>() {
                 }.getType();
                 ArrayList<SubStage> subStages = GSONInstance.getInstance().fromJson(form.getMetadata(), listType);
-                ArrayList<FieldSightForm> fieldSightForms = new ArrayList<>();
+                ArrayList<FieldSightFormDetails> fieldSightForms = new ArrayList<>();
                 FieldSightForm fieldSightForm;
-                for (SubStage subStage : subStages) {
-                    fieldSightForm = new FieldSightForm();
-                    fieldSightForm.setFormName(subStage.getName());
-                    fieldSightForm.setSiteId(form.getSiteId());
-                    fieldSightForm.setProjectId(form.getProjectId());
-
-                    fieldSightForms.add(fieldSightForm);
-                }
+//                for (SubStage subStage : subStages) {
+//                    fieldSightForm = new FieldSightForm();
+//                    fieldSightForm.setFormName(subStage.getName());
+//                    fieldSightForm.setSiteId(form.getSiteId());
+//                    fieldSightForm.setProjectId(form.getProjectId());
+//
+//                    fieldSightForms.add(fieldSightForm);
+//                }
 
 
                 return fieldSightForms;
@@ -203,7 +204,7 @@ public class BaseFormListFragment extends Fragment {
         });
     }
 
-    private void cacheFormAndSite(FieldSightForm form, String siteId) {
+    private void cacheFormAndSite(FieldSightFormDetails form, String siteId) {
         String formDeployedFrom = form.getFormDeployedProjectId() == null ? Constant.FormDeploymentFrom.SITE : Constant.FormDeploymentFrom.PROJECT;
         String submissionUrl = generateSubmissionUrl(formDeployedFrom, siteId, form.getFieldSightFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
@@ -216,7 +217,7 @@ public class BaseFormListFragment extends Fragment {
         return ViewModelProviders.of(activity, factory).get(FieldSightFormViewModel.class);
     }
 
-    public void updateList(List<FieldSightForm> fieldSightForms, String siteId) {
+    public void updateList(List<FieldSightFormDetails> fieldSightForms, String siteId) {
         this.siteId = siteId;
 
         adapter.getData().clear();

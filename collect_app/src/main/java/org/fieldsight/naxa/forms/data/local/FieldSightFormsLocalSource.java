@@ -29,25 +29,10 @@ public class FieldSightFormsLocalSource implements BaseLocalDataSourceRX<FieldSi
         return INSTANCE;
     }
 
-    public LiveData<List<FieldSightForm>> getGeneralForms(String projectId, String siteId) {
-        return dao.getFormByType(Constant.FormType.GENERAl, projectId, siteId);
-    }
-
-    public LiveData<List<FieldSightForm>> getFormByType(String formType, String projectId, String siteId) {
+    public LiveData<List<FieldSightFormDetails>> getFormByType(String formType, String projectId, String siteId) {
         return dao.getFormByType(formType, projectId, siteId);
     }
 
-    public LiveData<List<FieldSightForm>> getSurveyForms(String projectId, String siteId) {
-        return dao.getFormByType(Constant.FormType.SURVEY, projectId, siteId);
-    }
-
-    public LiveData<List<FieldSightForm>> getScheduledForms(String projectId, String siteId) {
-        return dao.getFormByType(Constant.FormType.SCHEDULE, projectId, siteId);
-    }
-
-    public LiveData<List<FieldSightForm>> getStagedForms(String projectId, String siteId) {
-        return dao.getFormByType(Constant.FormType.STAGED, projectId, siteId);
-    }
 
     public void saveForms(FieldSightFormDetails... fieldSightForm) {
         dao.insert(fieldSightForm);
