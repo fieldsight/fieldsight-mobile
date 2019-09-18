@@ -373,7 +373,6 @@ public class SyncServiceV3 extends IntentService {
     private Consumer<? super SiteResponse> saveSites() {
         return (Consumer<SiteResponse>) siteResponse -> {
             Timber.i("Saving %d sites", siteResponse.getResult().size());
-
             SiteLocalSource.getInstance().save((ArrayList<Site>) siteResponse.getResult());
         };
     }
