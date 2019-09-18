@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.forms.data.local.FieldSightForm;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 
 public class FieldSightFormVH extends RecyclerView.ViewHolder {

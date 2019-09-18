@@ -1,8 +1,6 @@
 package org.fieldsight.naxa.v3.network;
 
-import org.fieldsight.naxa.forms.data.remote.FieldSightFormsResponse;
 import org.fieldsight.naxa.network.APIEndpoint;
-import org.fieldsight.naxa.v3.forms.FieldSightFormResponse;
 
 import java.util.Map;
 
@@ -28,17 +26,6 @@ public interface ApiV3Interface {
 
     @GET(APIEndpoint.V3.GET_SITE_DOCUMENTS)
     Single<ResponseBody> getSiteDocuments(@QueryMap Map<String, String> queryParams);
-
-    @GET(APIEndpoint.V3.GET_FORMS)
-    Observable<FieldSightFormResponse> getForms(@QueryMap Map<String, String> queryParams);
-
-    @GET
-    Observable<FieldSightFormResponse> getForms(@Url String url);
-
-
-    @Deprecated
-    @GET
-    Observable<FieldSightFormsResponse> getFormsFromUrl(@Url String url);
 
 
     @GET

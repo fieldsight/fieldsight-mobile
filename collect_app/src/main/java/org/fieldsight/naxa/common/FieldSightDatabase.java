@@ -11,8 +11,6 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import org.fieldsight.naxa.forms.data.local.FieldSightForm;
-import org.fieldsight.naxa.forms.data.local.FieldSightFormDAO;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetailDAO;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.odk.collect.android.application.Collect;
