@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +20,25 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.common.reflect.TypeToken;
+
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
 import org.fieldsight.naxa.forms.source.local.FieldSightForm;
 import org.fieldsight.naxa.forms.ui.FieldSightFormVH;
 import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
+import org.fieldsight.naxa.stages.data.SubStage;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.provider.FormsProviderAPI;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
+import io.reactivex.Observable;
+import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
@@ -58,7 +66,6 @@ public class BaseFormListFragment extends Fragment {
             Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, formId);
             String action = getActivity().getIntent().getAction();
 
-
             if (Intent.ACTION_PICK.equals(action)) {
                 // caller is waiting on a picked form
                 getActivity().setResult(RESULT_OK, new Intent().setData(formUri));
@@ -67,13 +74,13 @@ public class BaseFormListFragment extends Fragment {
                 Intent toFormEntry = new Intent(Intent.ACTION_EDIT, formUri);
                 toFormEntry.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(toFormEntry);
-
             }
+
         } catch (CursorIndexOutOfBoundsException e) {
             DialogFactory.createGenericErrorDialog(getActivity(), getString(R.string.msg_form_not_present)).show();
             Timber.e("Failed to load xml form  %s", e.getMessage());
         } catch (NullPointerException | NumberFormatException e) {
-            e.printStackTrace();
+            Timber.e(e);
             DialogFactory.createGenericErrorDialog(getActivity(), e.getMessage()).show();
             Timber.e("Failed to load xml form %s", e.getMessage());
         }
@@ -137,14 +144,63 @@ public class BaseFormListFragment extends Fragment {
                 return new FieldSightFormVH(view) {
                     @Override
                     public void openForm(FieldSightForm form) {
-                        cacheFormAndSite(form, siteId);
-                        fillODKForm(form.getOdkFormID());
+                        if (TextUtils.equals(form.getFormType(), Constant.FormType.STAGED)) {
+                            prepareSubStage( form)
+                                    .subscribe(onSubStateSubscribe());
+                        } else {
+                            cacheFormAndSite(form, siteId);
+                            fillODKForm(form.getOdkFormID());
+                        }
                     }
                 };
             }
         };
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
+    }
+
+    private DisposableObserver<ArrayList<FieldSightForm>> onSubStateSubscribe() {
+        return new DisposableObserver<ArrayList<FieldSightForm>>() {
+            @Override
+            public void onNext(ArrayList<FieldSightForm> fieldSightForms) {
+                updateList(fieldSightForms, siteId);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        };
+    }
+
+
+    private Observable<ArrayList<FieldSightForm>> prepareSubStage(FieldSightForm form) {
+        return Observable.fromCallable(new Callable<ArrayList<FieldSightForm>>() {
+            @Override
+            public ArrayList<FieldSightForm> call() throws Exception {
+                Type listType = new TypeToken<List<SubStage>>() {
+                }.getType();
+                ArrayList<SubStage> subStages = GSONInstance.getInstance().fromJson(form.getMetadata(), listType);
+                ArrayList<FieldSightForm> fieldSightForms = new ArrayList<>();
+                FieldSightForm fieldSightForm;
+                for (SubStage subStage : subStages) {
+                    fieldSightForm = new FieldSightForm();
+                    fieldSightForm.setFormName(subStage.getName());
+                    fieldSightForm.setSiteId(form.getSiteId());
+                    fieldSightForm.setProjectId(form.getProjectId());
+
+                    fieldSightForms.add(fieldSightForm);
+                }
+
+
+                return fieldSightForms;
+            }
+        });
     }
 
     private void cacheFormAndSite(FieldSightForm form, String siteId) {
