@@ -51,12 +51,13 @@ public class FieldSightFormRemoteSourceV2 {
             url.append(APIEndpoint.PARAMS.PROJECT_ID);
             url.append("=");
             url.append(projects.get(i).getId());
-            if (i != projects.size() - 1) {
+            if (i < projects.size() - 1) {
                 url.append("&");
             }
         }
         return url.toString();
     }
+
 
     public Observable<Pair<FieldSightFormDetails, String>> getFormFromProjectId(List<Project> projects) {
         return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
@@ -97,6 +98,7 @@ public class FieldSightFormRemoteSourceV2 {
         HashSet<FieldSightFormDetails> formListSet = new HashSet<>();
         SparseIntArray projectFormMap = new SparseIntArray();
         Timber.i("getFormDetails %d", formListSet.size());
+
         for (FieldSightForm fieldSightForm : fieldSightFormsResponse.getGeneralForms()) {
             boolean formExist = formsDao.getFormsCursorForMd5Hash(fieldSightForm.getOdkFormHash().split(":")[1]).getCount() > 0;
             if (formExist) continue;
