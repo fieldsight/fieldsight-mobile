@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-class FormSchedule {
+public class FormSchedule {
     @SerializedName("date_range_start")
     private String startDate;
 

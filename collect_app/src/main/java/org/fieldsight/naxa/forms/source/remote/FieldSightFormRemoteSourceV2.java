@@ -14,10 +14,15 @@ import org.fieldsight.naxa.stages.data.SubStage;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDetails;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDownloader;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.odk.collect.android.dao.FormsDao;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -25,6 +30,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import okhttp3.ResponseBody;
 import timber.log.Timber;
 
 public class FieldSightFormRemoteSourceV2 {
@@ -59,6 +65,7 @@ public class FieldSightFormRemoteSourceV2 {
     }
 
 
+    @Deprecated
     public Observable<Pair<FieldSightFormDetails, String>> getFormFromProjectId(List<Project> projects) {
         return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
                 .getFormsFromUrl(buildUrlWithParams(projects))
@@ -85,6 +92,69 @@ public class FieldSightFormRemoteSourceV2 {
                 });
     }
 
+    public Observable<Pair<FieldSightFormDetails, String>> getFormUsingProjectId(List<Project> projects) {
+        return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
+                .getFormsFromUrlAsRaw(buildUrlWithParams(projects))
+                .map(this::mapToFieldSightFormDetails)
+                .doOnNext(new Consumer<ArrayList<FieldSightFormDetails>>() {
+                    @Override
+                    public void accept(ArrayList<FieldSightFormDetails> fieldSightFormDetails) {
+//                        FieldSightFormsLocalSource.getInstance().save(fieldSightFormDetails);
+                    }
+                })
+                .flatMap((Function<ArrayList<FieldSightFormDetails>, ObservableSource<Pair<FieldSightFormDetails, String>>>) fieldSightFormDetails -> {
+                    FieldSightFormDownloader fieldSightFormDownloader = new FieldSightFormDownloader(false);
+
+                    return Observable.just(fieldSightFormDetails)
+                            .flatMapIterable((Function<ArrayList<FieldSightFormDetails>, Iterable<FieldSightFormDetails>>) fieldSightFormDetails1 -> fieldSightFormDetails1)
+                            .concatMap((Function<FieldSightFormDetails, ObservableSource<Pair<FieldSightFormDetails, String>>>) formDetails -> downloadSingleForm(formDetails, fieldSightFormDownloader))
+                            .doOnNext(new Consumer<Pair<FieldSightFormDetails, String>>() {
+                                @Override
+                                public void accept(Pair<FieldSightFormDetails, String> fieldSightFormDetailsStringPair) {
+                                    if (fieldSightFormDetailsStringPair == null) {
+                                        Timber.w("FieldSightFormDetails pair is null");
+                                        return;
+                                    }
+
+                                    String message = fieldSightFormDetailsStringPair.second;
+                                    Timber.i(message);
+                                }
+                            });
+                });
+    }
+
+    private ArrayList<FieldSightFormDetails> mapToFieldSightFormDetails(ResponseBody responseBody) throws IOException, JSONException {
+        JSONObject response = new JSONObject(responseBody.string());
+        Iterator<String> formTypes = response.keys();
+        FieldSightFormDetails
+                fieldSightForm;
+        ArrayList<FieldSightFormDetails> fieldSightForms = new ArrayList<>();
+        SparseIntArray projectFormMap = new SparseIntArray();
+
+        while (formTypes.hasNext()) {
+            String formKey = formTypes.next();
+            JSONArray formList = response.getJSONArray(formKey);
+
+            for (int i = 0; i < formList.length(); i++) {
+                JSONObject form = formList.getJSONObject(i);
+                fieldSightForm = GSONInstance.getInstance()
+                        .fromJson(form.toString(), FieldSightFormDetails.class);
+                fieldSightForm.setFormType(formKey);
+                fieldSightForms.add(fieldSightForm);
+                incrementFormCountForProject(projectFormMap, getProjectId(fieldSightForm));
+            }
+
+
+        }
+        return fieldSightForms;
+    }
+
+    private Integer getProjectId(FieldSightFormDetails fieldSightForm) {
+        String value = fieldSightForm.getFormDeployedProjectId() != null ? fieldSightForm.getFormDeployedProjectId() : String.valueOf(fieldSightForm.getProjectId());
+        return Integer.parseInt(value);
+    }
+
+
     private Observable<Pair<FieldSightFormDetails, String>> downloadSingleForm(FieldSightFormDetails formDetails, FieldSightFormDownloader formDownloader) {
         return Observable.fromCallable(new Callable<Pair<FieldSightFormDetails, String>>() {
             @Override
@@ -94,6 +164,7 @@ public class FieldSightFormRemoteSourceV2 {
         });
     }
 
+    @Deprecated
     private ArrayList<FieldSightFormDetails> getFormDetails(FieldSightFormsResponse fieldSightFormsResponse) {
         HashSet<FieldSightFormDetails> formListSet = new HashSet<>();
         SparseIntArray projectFormMap = new SparseIntArray();

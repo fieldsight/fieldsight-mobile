@@ -160,6 +160,34 @@ public class SyncServiceV3 extends IntentService {
             SparseIntArray completedForms = new SparseIntArray();
             HashMapUtils hashMapUtils = new HashMapUtils();
 
+
+            filterSelectedProjects()
+                    .subscribeOn(Schedulers.io())
+                    .flatMap(new Function<List<Project>, ObservableSource<?>>() {
+                        @Override
+                        public ObservableSource<?> apply(List<Project> projects) throws Exception {
+                            return FieldSightFormRemoteSourceV2.getInstance().getFormUsingProjectId(projects);
+                        }
+                    })
+                    .subscribe(new DisposableObserver<Object>() {
+                        @Override
+                        public void onNext(Object o) {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Timber.e(e);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+
+            if (true) return;
+
             Disposable formDisposable = filterSelectedProjects()
                     .subscribeOn(Schedulers.io())
                     .map(projects -> {

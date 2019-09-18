@@ -87,4 +87,12 @@ public class FormDetails implements Serializable {
     public boolean areNewerMediaFilesAvailable() {
         return areNewerMediaFilesAvailable;
     }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
+    public void setManifestUrl(String manifestUrl) {
+        this.manifestUrl = manifestUrl;
+    }
 }

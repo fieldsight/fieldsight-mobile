@@ -35,7 +35,13 @@ public interface ApiV3Interface {
     @GET
     Observable<FieldSightFormResponse> getForms(@Url String url);
 
+
+    @Deprecated
     @GET
     Observable<FieldSightFormsResponse> getFormsFromUrl(@Url String url);
+
+
+    @GET
+    Observable<ResponseBody> getFormsFromUrlAsRaw(@Url String url);
 
 }
