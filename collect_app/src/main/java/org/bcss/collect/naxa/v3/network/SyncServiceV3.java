@@ -57,6 +57,7 @@ public class SyncServiceV3 extends IntentService {
     HashMap<String, List<Syncable>> selectedMap = null;
     private List<String> failedSiteUrls = new ArrayList<>();
     private ArrayList<Disposable> syncDisposable = new ArrayList<>();
+    private int downloadProgress = 0;
 
     public SyncServiceV3() {
         super("SyncserviceV3");
@@ -152,7 +153,11 @@ public class SyncServiceV3 extends IntentService {
             Disposable formsDownloadObservable = Observable.just(selectedProject)
                     .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(1).sync)
-                    .flatMap(new Function<Project, ObservableSource<?>>() {
+                    .map(project -> {
+                        SyncLocalSourcev3.getInstance().markAsQueued(project.getId(), 1);
+                        return project;
+                    })
+                    .concatMap(new Function<Project, ObservableSource<?>>() {
                         @Override
                         public ObservableSource<?> apply(Project project) throws Exception {
 
@@ -162,7 +167,7 @@ public class SyncServiceV3 extends IntentService {
                             Observable<ArrayList<Stage>> stagedForms = StageRemoteSource.getInstance().fetchByProjectId(project.getId()).toObservable();
                             Observable<ArrayList<FormDetails>> odkForms = ODKFormRemoteSource.getInstance().getFormsUsingProjectId(project);
 
-                            int totalConcatCall = 0;
+                            downloadProgress = 0;
 
                             return Observable.concat(odkForms, generalForms, scheduledForms, stagedForms)
                                     .flatMap(new Function<ArrayList<? extends Object>, ObservableSource<ArrayList<?>>>() {
@@ -175,23 +180,45 @@ public class SyncServiceV3 extends IntentService {
                                                 }
 
                                                 if (failed.size() > 0) {
-                                                    markAsFailed(project.getId(), 1, failed.toString());
-                                                    return Observable.error(new FormDownloadFailedException(getString(R.string.msg_forms_download_fail, failed.size())));
+                                                    return Observable.error(new FormDownloadFailedException(getString(R.string.msg_forms_download_fail, failed.size())
+                                                            , failed.toString()));
                                                 }
                                             }
                                             return Observable.just(objects);
                                         }
                                     })
-                                    .doOnNext(new Consumer<ArrayList<? extends Object>>() {
+                                    .onErrorReturn(throwable -> {
+                                        if (throwable instanceof FormDownloadFailedException) {
+                                            markAsFailed(project.getId(),
+                                                    1,
+                                                    ((FormDownloadFailedException) throwable).getFailedUrls());
+                                        } else {
+                                            markAsFailed(project.getId(), 1, "");
+                                        }
+
+                                        return new ArrayList<>(0);
+                                    })
+                                    .doOnNext(new Consumer<ArrayList<?>>() {
                                         @Override
                                         public void accept(ArrayList<?> objects) {
-                                            markAsCompleted(project.getId(), 1);
+                                            checkAndMarkAsComplete();
+                                        }
+
+                                        private void checkAndMarkAsComplete() {
+                                            Timber.i("concat check %d", downloadProgress);
+                                            if (3 == downloadProgress) {
+                                                markAsCompleted(project.getId(), 1);
+                                                downloadProgress = 0;
+                                            } else {
+                                                downloadProgress++;
+                                            }
                                         }
                                     })
                                     .doOnSubscribe(disposable -> markAsRunning(project.getId(), 1));
 
                         }
-                    })
+                    }, 1)
+
                     .subscribe(project -> {
                         //unused
                     }, Timber::e);
@@ -214,12 +241,13 @@ public class SyncServiceV3 extends IntentService {
     }
 
 
-    private Function<Project, Observable<Object>> getSitesObservable() {
-        return new Function<Project, Observable<Object>>() {
+    private Function<Project, Observable<List<Object>>> getSitesObservable() {
+        return new Function<Project, Observable<List<Object>>>() {
             @Override
-            public Observable<Object> apply(Project project) throws Exception {
+            public Observable<List<Object>> apply(Project project) throws Exception {
                 Observable<Object> regionSitesObservable = Observable.just(project.getRegionList())
                         .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
+                        .filter(region -> !TextUtils.isEmpty(region.id))
                         .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
                             @Override
                             public SingleSource<SiteResponse> apply(Region region) {
@@ -243,7 +271,9 @@ public class SyncServiceV3 extends IntentService {
 
                 Observable<Object> projectObservable = Observable.just(project)
                         .filter(Project::getHasClusteredSites)
-                        .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance().getSitesByProjectId(project1.getId()).doOnSuccess(saveSites()))
+                        .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance()
+                                .getSitesByProjectId(project1.getId())
+                                .doOnSuccess(saveSites()))
                         .concatMap(new Function<SiteResponse, ObservableSource<?>>() {
                             @Override
                             public ObservableSource<?> apply(SiteResponse siteResponse) {
@@ -264,22 +294,36 @@ public class SyncServiceV3 extends IntentService {
                             failedSiteUrls.add(url);
                             return project.getId();
                         })
-                        .doOnNext(o -> {
-                            boolean hasErrorBeenThrown = o instanceof String;
-                            if (!hasErrorBeenThrown) {//error has been thrown
-                                markAsCompleted(project.getId(), 0);
-                            }
+                        .toList()
+                        .doOnSuccess(new Consumer<List<Object>>() {
+                            @Override
+                            public void accept(List<Object> objects) throws Exception {
 
-                            if (failedSiteUrls.size() > 0) {
-                                markAsFailed(project.getId(), 0, failedSiteUrls.toString());
-                                failedSiteUrls.clear();
+                                boolean hasErrorBeenThrown = false;
+                                for (Object o : objects) {
+                                    hasErrorBeenThrown = o instanceof String;
+                                    if (hasErrorBeenThrown) break;
+                                }
+
+                                if (!hasErrorBeenThrown) {//error has been thrown
+                                    markAsCompleted(project.getId(), 0);
+                                }
+
+                                if (failedSiteUrls.size() > 0) {
+                                    markAsFailed(project.getId(), 0, failedSiteUrls.toString());
+                                    failedSiteUrls.clear();
+                                }
                             }
-                        }).doOnDispose(new Action() {
+                        })
+                        .doOnDispose(new Action() {
                             @Override
                             public void run() throws Exception {
                                 markAsFailed(project.getId(), 0, "");
                             }
-                        });
+                        })
+                        .toObservable();
+
+
             }
         };
 
@@ -350,13 +394,14 @@ public class SyncServiceV3 extends IntentService {
     private ObservableSource<? extends SiteResponse> getSitesByUrl(String url) {
         return SiteRemoteSource.getInstance().getSitesByURL(url)
                 .toObservable()
+                .doOnNext(saveSites())
                 .filter(new Predicate<SiteResponse>() {
                     @Override
                     public boolean test(SiteResponse siteResponse) {
                         return siteResponse.getNext() != null;
                     }
                 })
-                .doOnNext(saveSites())
+
                 .flatMap(new Function<SiteResponse, ObservableSource<? extends SiteResponse>>() {
                     @Override
                     public ObservableSource<? extends SiteResponse> apply(SiteResponse siteResponse) {
