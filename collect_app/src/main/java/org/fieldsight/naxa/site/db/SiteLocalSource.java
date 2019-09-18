@@ -18,6 +18,7 @@ import java.util.concurrent.Callable;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.SiteStatus.IS_ONLINE;
 
@@ -109,7 +110,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     @Override
     public void save(ArrayList<Site> items) {
-        AsyncTask.execute(() -> dao.insert(items));
+        AsyncTask.execute(() ->  {
+            long[] rowAffected = dao.insert(items);
+            Timber.i("Saving %d Total affected row = %d in saving ", items.size(), rowAffected.length);
+        });
     }
 
     @Override

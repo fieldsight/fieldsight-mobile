@@ -20,7 +20,7 @@ public interface SiteDao {
     void insert(Site... sites);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(List<Site> sites);
+    long[] insert(List<Site> sites);
 
     @Query("SELECT * FROM sites")
     LiveData<List<Site>> getSites();
