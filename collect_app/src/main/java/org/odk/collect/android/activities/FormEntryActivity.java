@@ -69,7 +69,7 @@ import org.odk.collect.android.adapters.model.IconMenuItem;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.educational.EducationalMaterialActivity;
-import org.fieldsight.naxa.forms.source.FieldSightInstanceDAO;
+import org.fieldsight.naxa.forms.data.local.FieldSightInstanceDAO;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;

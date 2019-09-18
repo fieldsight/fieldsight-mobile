@@ -1,4 +1,4 @@
-package org.fieldsight.naxa.forms.source.local;
+package org.fieldsight.naxa.forms.data.local;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

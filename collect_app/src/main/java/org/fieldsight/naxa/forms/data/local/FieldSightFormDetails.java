@@ -1,4 +1,4 @@
-package org.fieldsight.naxa.v3.forms;
+package org.fieldsight.naxa.forms.data.local;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -8,15 +8,16 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.fieldsight.naxa.forms.source.local.FormSchedule;
+import org.fieldsight.naxa.forms.data.local.FormSchedule;
 import org.fieldsight.naxa.stages.data.SubStage;
 import org.odk.collect.android.logic.FormDetails;
 
 import java.util.ArrayList;
 
-
+@Entity(tableName = "fieldsight_forms")
 public class FieldSightFormDetails extends FormDetails {
 
+    @PrimaryKey
     @NonNull
     @SerializedName("id")
     private String fieldSightFormId;
@@ -31,7 +32,7 @@ public class FieldSightFormDetails extends FormDetails {
     private Integer projectId;
 
     @SerializedName("name")
-    private String formName;
+    private String odkFormName;
 
     @SerializedName("descriptionText")
     private String formDescriptionText;
@@ -39,7 +40,6 @@ public class FieldSightFormDetails extends FormDetails {
 
     @SerializedName("version")
     private String odkFormVersion;
-
 
 
     @SerializedName("metadata")
@@ -99,11 +99,9 @@ public class FieldSightFormDetails extends FormDetails {
     }
 
 
-
     public String getOdkFormName() {
-        return formName;
+        return odkFormName;
     }
-
 
 
     public String getFormDescriptionText() {
@@ -111,11 +109,9 @@ public class FieldSightFormDetails extends FormDetails {
     }
 
 
-
     public String getOdkFormVersion() {
         return odkFormVersion;
     }
-
 
 
     public FormSchedule getSchedules() {
@@ -158,13 +154,8 @@ public class FieldSightFormDetails extends FormDetails {
         this.projectId = projectId;
     }
 
-
-    public String getFormName() {
-        return formName;
-    }
-
-    public void setFormName(String formName) {
-        this.formName = formName;
+    public void setOdkFormName(String odkFormName) {
+        this.odkFormName = odkFormName;
     }
 
     void setFormDescriptionText(String formDescriptionText) {
@@ -175,7 +166,6 @@ public class FieldSightFormDetails extends FormDetails {
     void setOdkFormVersion(String odkFormVersion) {
         this.odkFormVersion = odkFormVersion;
     }
-
 
 
     public void setSchedules(FormSchedule schedules) {
@@ -202,9 +192,9 @@ public class FieldSightFormDetails extends FormDetails {
     @Override
     public String toString() {
         return "FieldSightFormDetails{" +
-                "projectId=" + projectId +
                 ", formName=" + getFormName() +
                 ", downloadUrl=" + getDownloadUrl() +
+                ", manifestUrl=" + getManifestUrl() +
                 '}';
     }
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 19,
-    "identityHash": "07272e5d3eb8351bc940ad9879f87019",
+    "identityHash": "3724e40200e67023c158af1f3c8cb6d0",
     "entities": [
       {
         "tableName": "sites",
@@ -1387,7 +1387,7 @@
       },
       {
         "tableName": "fieldsight_forms",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fieldSightFormId` TEXT NOT NULL, `formDeployedSiteId` TEXT, `formDeployedProjectId` TEXT, `projectId` TEXT, `formDownloadUrl` TEXT, `manifestDownloadUrl` TEXT, `formName` TEXT, `formDescriptionText` TEXT, `odkFormID` TEXT, `odkFormVersion` TEXT, `odkFormHash` TEXT, `metadata` TEXT, `formOrder` INTEGER, `formType` TEXT, PRIMARY KEY(`fieldSightFormId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fieldSightFormId` TEXT NOT NULL, `formDeployedSiteId` TEXT, `formDeployedProjectId` TEXT, `projectId` INTEGER, `odkFormName` TEXT, `formDescriptionText` TEXT, `odkFormVersion` TEXT, `metadata` TEXT, `formOrder` INTEGER, `formType` TEXT, `totalFormsInProject` INTEGER NOT NULL, `errorStr` TEXT, `formName` TEXT, `downloadUrl` TEXT, `manifestUrl` TEXT, `formID` TEXT, `formVersion` TEXT, `hash` TEXT, `manifestFileHash` TEXT, `isNewerFormVersionAvailable` INTEGER NOT NULL, `areNewerMediaFilesAvailable` INTEGER NOT NULL, PRIMARY KEY(`fieldSightFormId`))",
         "fields": [
           {
             "fieldPath": "fieldSightFormId",
@@ -1410,24 +1410,12 @@
           {
             "fieldPath": "projectId",
             "columnName": "projectId",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "formDownloadUrl",
-            "columnName": "formDownloadUrl",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "manifestDownloadUrl",
-            "columnName": "manifestDownloadUrl",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "formName",
-            "columnName": "formName",
+            "fieldPath": "odkFormName",
+            "columnName": "odkFormName",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1438,20 +1426,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "odkFormID",
-            "columnName": "odkFormID",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
             "fieldPath": "odkFormVersion",
             "columnName": "odkFormVersion",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "odkFormHash",
-            "columnName": "odkFormHash",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1472,6 +1448,72 @@
             "columnName": "formType",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "totalFormsInProject",
+            "columnName": "totalFormsInProject",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "errorStr",
+            "columnName": "errorStr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "formName",
+            "columnName": "formName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "downloadUrl",
+            "columnName": "downloadUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "manifestUrl",
+            "columnName": "manifestUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "formID",
+            "columnName": "formID",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "formVersion",
+            "columnName": "formVersion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hash",
+            "columnName": "hash",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "manifestFileHash",
+            "columnName": "manifestFileHash",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isNewerFormVersionAvailable",
+            "columnName": "isNewerFormVersionAvailable",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "areNewerMediaFilesAvailable",
+            "columnName": "areNewerMediaFilesAvailable",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -1487,7 +1529,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '07272e5d3eb8351bc940ad9879f87019')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3724e40200e67023c158af1f3c8cb6d0')"
     ]
   }
 }

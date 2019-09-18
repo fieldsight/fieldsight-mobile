@@ -1,6 +1,6 @@
 package org.fieldsight.naxa.v3.network;
 
-import org.fieldsight.naxa.forms.source.remote.FieldSightFormsResponse;
+import org.fieldsight.naxa.forms.data.remote.FieldSightFormsResponse;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.v3.forms.FieldSightFormResponse;
 

@@ -1,4 +1,4 @@
-package org.fieldsight.naxa.forms.source.local;
+package org.fieldsight.naxa.forms.data.local;
 
 import androidx.lifecycle.LiveData;
 
@@ -12,10 +12,10 @@ import java.util.List;
 
 import io.reactivex.Completable;
 
-public class FieldSightFormsLocalSource implements BaseLocalDataSourceRX<FieldSightForm> {
+public class FieldSightFormsLocalSource implements BaseLocalDataSourceRX<FieldSightFormDetails> {
 
     private static FieldSightFormsLocalSource INSTANCE;
-    private FieldSightFormDAO dao;
+    private FieldSightFormDetailDAO dao;
 
     private FieldSightFormsLocalSource() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
@@ -49,28 +49,28 @@ public class FieldSightFormsLocalSource implements BaseLocalDataSourceRX<FieldSi
         return dao.getFormByType(Constant.FormType.STAGED, projectId, siteId);
     }
 
-    public void saveForms(FieldSightForm... fieldSightForm) {
+    public void saveForms(FieldSightFormDetails... fieldSightForm) {
         dao.insert(fieldSightForm);
     }
 
     @Override
-    public LiveData<List<FieldSightForm>> getAll() {
+    public LiveData<List<FieldSightFormDetails>> getAll() {
         throw new RuntimeException("Not Implemented");
     }
 
     @Override
-    public Completable save(FieldSightForm... items) {
+    public Completable save(FieldSightFormDetails... items) {
         return Completable.fromAction(() -> dao.insert(items));
     }
 
     @Override
-    public void save(ArrayList<FieldSightForm> items) {
+    public void save(ArrayList<FieldSightFormDetails> items) {
         dao.insert(items);
     }
 
 
     @Override
-    public void updateAll(ArrayList<FieldSightForm> items) {
+    public void updateAll(ArrayList<FieldSightFormDetails> items) {
 
     }
 }

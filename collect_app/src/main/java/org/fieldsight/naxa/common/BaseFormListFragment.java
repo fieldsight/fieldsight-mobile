@@ -24,7 +24,7 @@ import com.google.common.reflect.TypeToken;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
-import org.fieldsight.naxa.forms.source.local.FieldSightForm;
+import org.fieldsight.naxa.forms.data.local.FieldSightForm;
 import org.fieldsight.naxa.forms.ui.FieldSightFormVH;
 import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.helpers.FSInstancesDao;

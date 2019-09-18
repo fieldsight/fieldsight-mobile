@@ -10,9 +10,9 @@ import android.util.SparseIntArray;
 import com.google.common.collect.Sets;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.forms.source.remote.FieldSightFormRemoteSourceV2;
+import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV2;
 import org.fieldsight.naxa.v3.HashMapUtils;
-import org.fieldsight.naxa.v3.forms.FieldSightFormDetails;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.v3.forms.FieldSightFormsRemoteSource;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.FormDetails;
@@ -161,34 +161,78 @@ public class SyncServiceV3 extends IntentService {
             HashMapUtils hashMapUtils = new HashMapUtils();
 
 
-            filterSelectedProjects()
+            Disposable formDisposable = filterSelectedProjects()
                     .subscribeOn(Schedulers.io())
-                    .flatMap(new Function<List<Project>, ObservableSource<?>>() {
+                    .map(projects -> {
+                        for (Project project : projects) {
+                            SyncLocalSource3.getInstance().markAsQueued(project.getId(), 1);
+                        }
+                        return projects;
+                    })
+                    .flatMapSingle(new Function<List<Project>, SingleSource<ArrayList<Integer>>>() {
                         @Override
-                        public ObservableSource<?> apply(List<Project> projects) throws Exception {
-                            return FieldSightFormRemoteSourceV2.getInstance().getFormUsingProjectId(projects);
+                        public SingleSource<ArrayList<Integer>> apply(List<Project> projects) throws Exception {
+                            return FieldSightFormRemoteSourceV2.getInstance().getFormUsingProjectId(projects)
+                                    .doOnNext(fieldSightFormDetailsStringPair -> {
+                                        FieldSightFormDetails fd = fieldSightFormDetailsStringPair.first;
+                                        String projectId = String.valueOf(fd.getProjectId());
+                                        hashMapUtils.putOrUpdate(completedForms, fd.getProjectId());
+                                        SyncLocalSource3.getInstance().updateDownloadProgress(projectId, completedForms.get(fd.getProjectId()), fd.getTotalFormsInProject());
+                                        Timber.i(completedForms.toString());
+                                    })
+                                    .toList()
+                                    .map(new Function<List<Pair<FieldSightFormDetails, String>>, ArrayList<Integer>>() {
+                                        @Override
+                                        public ArrayList<Integer> apply(List<Pair<FieldSightFormDetails, String>> pairs) throws Exception {
+                                            SparseArray<ArrayList<String>> failedFormsMap = new SparseArray<>();
+                                            HashSet<Integer> projectIds = new HashSet<>();
+                                            HashSet<Integer> failedProjectId = new HashSet<>();
+
+                                            for (Project project : projects) {
+                                                projectIds.add(Integer.valueOf(project.getId()));
+                                            }
+
+                                            //collect project ids with failed forms
+                                            for (Pair<FieldSightFormDetails, String> pair : pairs) {
+                                                String message = pair.second;
+                                                FieldSightFormDetails fd = pair.first;
+                                                boolean hasDownloadFailed = !Collect.getInstance().getString(R.string.success).equals(message);
+                                                if (hasDownloadFailed) {
+                                                    hashMapUtils.putOrUpdate(failedFormsMap, fd.getProjectId(), fd.getFormID());
+                                                    failedProjectId.add(fd.getProjectId());
+                                                }
+
+                                            }
+
+                                            for (int i = 0; i < failedFormsMap.size(); i++) {
+                                                int projectId = failedFormsMap.keyAt(i);
+                                                SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, Objects.requireNonNull(failedFormsMap.get(projectId)).toString());
+                                            }
+
+
+                                            Set<Integer> downloadedProjects = Sets.symmetricDifference(projectIds, failedProjectId);
+
+                                            Timber.i("%s projects download succeeded", downloadedProjects.toString());
+                                            Timber.i("%s projects download failed", failedProjectId.toString());
+
+                                            return new ArrayList<>(downloadedProjects);
+                                        }
+                                    });
+
+
                         }
                     })
-                    .subscribe(new DisposableObserver<Object>() {
-                        @Override
-                        public void onNext(Object o) {
-
+                    .subscribe(projectIds -> {
+                        for (Integer projectId : projectIds) {
+                            Timber.i("Marking %s project completed", projectId);
+                            SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
                         }
+                    }, Timber::e);
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Timber.e(e);
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
 
             if (true) return;
 
-            Disposable formDisposable = filterSelectedProjects()
+            Disposable formDisposable2 = filterSelectedProjects()
                     .subscribeOn(Schedulers.io())
                     .map(projects -> {
                         for (Project project : projects) {

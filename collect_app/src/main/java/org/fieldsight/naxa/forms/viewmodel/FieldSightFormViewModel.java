@@ -3,8 +3,8 @@ package org.fieldsight.naxa.forms.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.fieldsight.naxa.forms.source.local.FieldSightForm;
-import org.fieldsight.naxa.forms.source.local.FieldSightFormsLocalSource;
+import org.fieldsight.naxa.forms.data.local.FieldSightForm;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSource;
 
 import java.util.List;
 

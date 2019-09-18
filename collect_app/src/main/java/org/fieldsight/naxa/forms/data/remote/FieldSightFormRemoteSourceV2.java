@@ -1,17 +1,18 @@
-package org.fieldsight.naxa.forms.source.remote;
+package org.fieldsight.naxa.forms.data.remote;
 
+import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseIntArray;
 
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.GSONInstance;
-import org.fieldsight.naxa.forms.source.local.FieldSightForm;
-import org.fieldsight.naxa.forms.source.local.FieldSightFormsLocalSource;
+import org.fieldsight.naxa.forms.data.local.FieldSightForm;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSource;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.stages.data.SubStage;
-import org.fieldsight.naxa.v3.forms.FieldSightFormDetails;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDownloader;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
 import org.json.JSONArray;
@@ -99,7 +100,8 @@ public class FieldSightFormRemoteSourceV2 {
                 .doOnNext(new Consumer<ArrayList<FieldSightFormDetails>>() {
                     @Override
                     public void accept(ArrayList<FieldSightFormDetails> fieldSightFormDetails) {
-//                        FieldSightFormsLocalSource.getInstance().save(fieldSightFormDetails);
+
+                        FieldSightFormsLocalSource.getInstance().save(fieldSightFormDetails);
                     }
                 })
                 .flatMap((Function<ArrayList<FieldSightFormDetails>, ObservableSource<Pair<FieldSightFormDetails, String>>>) fieldSightFormDetails -> {
@@ -139,13 +141,25 @@ public class FieldSightFormRemoteSourceV2 {
                 JSONObject form = formList.getJSONObject(i);
                 fieldSightForm = GSONInstance.getInstance()
                         .fromJson(form.toString(), FieldSightFormDetails.class);
+                fieldSightForm.setFormName(fieldSightForm.getOdkFormName());
                 fieldSightForm.setFormType(formKey);
+
+                if (TextUtils.equals("stage", formKey)) {
+                    //todo: stopping stage download form tests; needs to be removed - Nishon
+                    continue;
+                }
+
+                fieldSightForm.setProjectId(getProjectId(fieldSightForm));
                 fieldSightForms.add(fieldSightForm);
                 incrementFormCountForProject(projectFormMap, getProjectId(fieldSightForm));
             }
-
-
         }
+
+
+        for (FieldSightFormDetails fd : fieldSightForms) {
+            fd.setTotalFormsInProject(projectFormMap.get(fd.getProjectId()));
+        }
+
         return fieldSightForms;
     }
 
@@ -231,7 +245,7 @@ public class FieldSightFormRemoteSourceV2 {
         formsToSave.addAll(fieldSightFormsResponse.getScheduleForms());
         formsToSave.addAll(fieldSightFormsResponse.getSurveyForms());
         formsToSave.addAll(fieldSightFormsResponse.getStages());
-        FieldSightFormsLocalSource.getInstance().save(formsToSave);
+//        FieldSightFormsLocalSource.getInstance().save(formsToSave);
 
         return new ArrayList<>(formListSet);
     }

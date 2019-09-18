@@ -73,10 +73,10 @@ public class Constant {
     }
 
     public static final class FormType {
-        public static final String SCHEDULE = "schedule_form";
-        public static final String STAGED = "staged_form";
-        public static final String GENERAl = "general_form";
-        public static final String SURVEY = "survey_form";
+        public static final String SCHEDULE = "schedule";
+        public static final String STAGED = "stage";
+        public static final String GENERAl = "general";
+        public static final String SURVEY = "survey";
     }
 
     public final static class FormDeploymentFrom {

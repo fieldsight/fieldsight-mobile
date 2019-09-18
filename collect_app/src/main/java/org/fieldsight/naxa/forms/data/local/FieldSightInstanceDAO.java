@@ -1,4 +1,4 @@
-package org.fieldsight.naxa.forms.source;
+package org.fieldsight.naxa.forms.data.local;
 
 import android.database.Cursor;
 

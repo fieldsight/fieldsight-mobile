@@ -11,8 +11,10 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import org.fieldsight.naxa.forms.source.local.FieldSightForm;
-import org.fieldsight.naxa.forms.source.local.FieldSightFormDAO;
+import org.fieldsight.naxa.forms.data.local.FieldSightForm;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDAO;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetailDAO;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.contact.ContacstDao;
 import org.fieldsight.naxa.contact.FieldSightContactModel;
@@ -66,7 +68,7 @@ import java.io.File;
                 FieldSightContactModel.class,
                 SubmissionDetail.class,
                 SyncStat.class,
-                FieldSightForm.class
+                FieldSightFormDetails.class
 
         },
         version = 19)
@@ -105,7 +107,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
 
     public abstract SyncDaoV3 getSyncDaoV3();
 
-    public abstract FieldSightFormDAO getFieldSightFormDAO();
+    public abstract FieldSightFormDetailDAO getFieldSightFormDAO();
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 

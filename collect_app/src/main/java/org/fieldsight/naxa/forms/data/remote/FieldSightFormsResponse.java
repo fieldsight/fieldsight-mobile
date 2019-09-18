@@ -1,8 +1,8 @@
-package org.fieldsight.naxa.forms.source.remote;
+package org.fieldsight.naxa.forms.data.remote;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.fieldsight.naxa.forms.source.local.FieldSightForm;
+import org.fieldsight.naxa.forms.data.local.FieldSightForm;
 
 import java.util.ArrayList;
 

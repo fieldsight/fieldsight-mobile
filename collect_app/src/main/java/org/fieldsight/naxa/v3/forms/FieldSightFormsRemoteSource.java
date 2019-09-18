@@ -4,6 +4,7 @@ import android.util.Pair;
 import android.util.SparseIntArray;
 
 import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.generalforms.data.GeneralForm;
 import org.fieldsight.naxa.generalforms.data.GeneralFormLocalSource;
 import org.fieldsight.naxa.login.model.Project;

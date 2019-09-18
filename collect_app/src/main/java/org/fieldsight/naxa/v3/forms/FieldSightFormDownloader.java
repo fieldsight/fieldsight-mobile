@@ -3,10 +3,10 @@ package org.fieldsight.naxa.v3.forms;
 import android.util.Pair;
 
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.utilities.FormDownloader;
 
 import java.util.HashMap;
@@ -27,14 +27,14 @@ public class FieldSightFormDownloader extends FormDownloader {
 
         for (FieldSightFormDetails fd : toDownload) {
 
-//            if (!fd.getDownloadUrl().contains("http")) {
-//                String formURL = APIEndpoint.BASE_URL + fd.getDownloadUrl();
-//                fd.setDownloadUrl(formURL);
-//            }
-//            if (!fd.getManifestUrl().contains("http")) {
-//                String manifestURL = APIEndpoint.BASE_URL + fd.getDownloadUrl();
-//                fd.setManifestUrl(manifestURL);
-//            }
+            if (!fd.getDownloadUrl().contains("http")) {
+                String formURL = APIEndpoint.BASE_URL + fd.getDownloadUrl();
+                fd.setDownloadUrl(formURL);
+            }
+            if (!fd.getManifestUrl().contains("http")) {
+                String manifestURL = APIEndpoint.BASE_URL + fd.getManifestUrl();
+                fd.setManifestUrl(manifestURL);
+            }
 
             try {
                 String message = processOneForm(total, count++, fd);
@@ -52,15 +52,15 @@ public class FieldSightFormDownloader extends FormDownloader {
         formsDao = new FormsDao();
         String message;
         Pair<FieldSightFormDetails, String> pair = null;
-//
-//        if (!fd.getDownloadUrl().contains("http")) {
-//            String formURL = APIEndpoint.BASE_URL + fd.getDownloadUrl();
-//            fd.setDownloadUrl(formURL);
-//        }
-//        if (!fd.getManifestUrl().contains("http")) {
-//            String manifestURL = APIEndpoint.BASE_URL + fd.getDownloadUrl();
-//            fd.setManifestUrl(manifestURL);
-//        }
+
+        if (!fd.getDownloadUrl().contains("http")) {
+            String formURL = APIEndpoint.BASE_URL + fd.getDownloadUrl();
+            fd.setDownloadUrl(formURL);
+        }
+        if (!fd.getManifestUrl().contains("http")) {
+            String manifestURL = APIEndpoint.BASE_URL + fd.getManifestUrl();
+            fd.setManifestUrl(manifestURL);
+        }
 
         try {
             message = processOneForm(1, 1, fd);
