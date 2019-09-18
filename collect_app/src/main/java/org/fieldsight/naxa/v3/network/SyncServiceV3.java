@@ -245,6 +245,12 @@ public class SyncServiceV3 extends IntentService {
             public Observable<Object> apply(Project project) throws Exception {
                 Observable<Object> regionSitesObservable = Observable.just(project.getRegionList())
                         .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
+                        .filter(new Predicate<Region>() {
+                            @Override
+                            public boolean test(Region region) throws Exception {
+                                return !TextUtils.isEmpty(region.id);
+                            }
+                        })
                         .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
                             @Override
                             public SingleSource<SiteResponse> apply(Region region) {
@@ -375,13 +381,13 @@ public class SyncServiceV3 extends IntentService {
     private ObservableSource<? extends SiteResponse> getSitesByUrl(String url) {
         return SiteRemoteSource.getInstance().getSitesByURL(url)
                 .toObservable()
+                .doOnNext(saveSites())
                 .filter(new Predicate<SiteResponse>() {
                     @Override
                     public boolean test(SiteResponse siteResponse) {
                         return siteResponse.getNext() != null;
                     }
                 })
-                .doOnNext(saveSites())
                 .flatMap(new Function<SiteResponse, ObservableSource<? extends SiteResponse>>() {
                     @Override
                     public ObservableSource<? extends SiteResponse> apply(SiteResponse siteResponse) {
