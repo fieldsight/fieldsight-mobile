@@ -12,7 +12,9 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetailDAO;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetailDAOV3;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
+import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.contact.ContacstDao;
 import org.fieldsight.naxa.contact.FieldSightContactModel;
@@ -66,7 +68,8 @@ import java.io.File;
                 FieldSightContactModel.class,
                 SubmissionDetail.class,
                 SyncStat.class,
-                FieldSightFormDetails.class
+                FieldSightFormDetails.class,
+                FieldsightFormDetailsv3.class
 
         },
         version = 19)
@@ -106,6 +109,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     public abstract SyncDaoV3 getSyncDaoV3();
 
     public abstract FieldSightFormDetailDAO getFieldSightFormDAO();
+    public abstract FieldSightFormDetailDAOV3 getFieldSightFOrmDAOV3();
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 
@@ -246,7 +250,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         }
     };
 
-    //TODO: needs to be tested
+    //TODO: needs to be teadb sted
     private static final Migration MIGRATION_18_19 = new Migration(18, 19) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {

@@ -97,8 +97,7 @@ public class FieldSightFormRemoteSourceV2 {
     private ArrayList<FieldSightFormDetails> mapToFieldSightFormDetails(ResponseBody responseBody) throws IOException, JSONException {
         JSONObject response = new JSONObject(responseBody.string());
         Iterator<String> formTypes = response.keys();
-        FieldSightFormDetails
-                fieldSightForm;
+        FieldSightFormDetails fieldSightForm;
         ArrayList<FieldSightFormDetails> fieldSightForms = new ArrayList<>();
         SparseIntArray projectFormMap = new SparseIntArray();
 
@@ -108,8 +107,7 @@ public class FieldSightFormRemoteSourceV2 {
 
             for (int i = 0; i < formList.length(); i++) {
                 JSONObject form = formList.getJSONObject(i);
-                fieldSightForm = GSONInstance.getInstance()
-                        .fromJson(form.toString(), FieldSightFormDetails.class);
+                fieldSightForm = GSONInstance.getInstance().fromJson(form.toString(), FieldSightFormDetails.class);
                 fieldSightForm.setFormName(fieldSightForm.getOdkFormName());
                 fieldSightForm.setFormType(formKey);
 
