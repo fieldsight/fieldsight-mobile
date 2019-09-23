@@ -98,7 +98,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         return dao.getFailedUrls(projectId, type);
     }
 
-    void updateDownloadProgress(String projectId, int progress, int totalFormsInProject) {
+    public void updateDownloadProgress(String projectId, int progress, int totalFormsInProject) {
         SyncStat syncStat = new SyncStat(projectId, 1 + "", "", false, Constant.DownloadStatus.RUNNING, System.currentTimeMillis());
         syncStat.setProgress(progress);
         syncStat.setTotal(totalFormsInProject);

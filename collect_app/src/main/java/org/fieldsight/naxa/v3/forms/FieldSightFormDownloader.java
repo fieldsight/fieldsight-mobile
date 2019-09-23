@@ -23,6 +23,8 @@ public class FieldSightFormDownloader extends FormDownloader {
 
 
     HashMap<FieldSightFormDetails, String> downloadFieldSightForms(List<FieldSightFormDetails> toDownload) {
+
+        // if form successfully downloaded it returns empty string else failed
         formsDao = new FormsDao();
         int total = toDownload.size();
         int count = 1;
@@ -53,8 +55,9 @@ public class FieldSightFormDownloader extends FormDownloader {
     }
 
     public Pair<FieldsightFormDetailsv3, String> downloadSingleFieldSightForm(FieldsightFormDetailsv3 fieldsightFormDetailsv3) {
+        // if form successfully downloaded it returns empty string else failed
         FormDetails fd = fieldsightFormDetailsv3.getFormDetails();
-        formsDao = new FormsDao();
+//        formsDao = new FormsDao();
         String message;
         Pair<FieldsightFormDetailsv3, String> pair = null;
 
@@ -69,13 +72,12 @@ public class FieldSightFormDownloader extends FormDownloader {
 
         try {
             message = processOneForm(1, 1, fd);
-            pair = Pair.create(fieldsightFormDetailsv3, message.isEmpty() ?
-                    Collect.getInstance().getString(R.string.success) : message);
+            pair = Pair.create(fieldsightFormDetailsv3, message);
             Timber.d("form downloading starts for project = " + fieldsightFormDetailsv3.getSite_project_id() + " or " + fieldsightFormDetailsv3.getProject() + " for = " + fd.getFormName());
         } catch (TaskCancelledException e) {
             e.printStackTrace();
+            pair = Pair.create(fieldsightFormDetailsv3, "Failed to create form download request");
         }
-
         return pair;
     }
 

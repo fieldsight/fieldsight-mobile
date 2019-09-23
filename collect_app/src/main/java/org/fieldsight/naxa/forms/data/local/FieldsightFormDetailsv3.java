@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 @Entity(tableName = "fieldsight_formv3")
 public class FieldsightFormDetailsv3 {
 
@@ -182,7 +184,9 @@ public class FieldsightFormDetailsv3 {
             atJSON.put(prefix + "_type", fromJSON.optJSONArray("types"));
             atJSON.put(prefix + "_order", fromJSON.optString("order"));
             atJSON.put(prefix + "_weight", fromJSON.optString("weight"));
-            atJSON.put(prefix + "_regions", fromJSON.optJSONArray("regions"));
+            if(fromJSON.has("regions")) {
+                atJSON.put(prefix + "_regions", fromJSON.optJSONArray("regions"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -195,12 +199,13 @@ public class FieldsightFormDetailsv3 {
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject stageFormJSON = jsonArray.optJSONObject(i);
+                Timber.i("FieldSightFormDetailsv3, stageFormJSON = " + stageFormJSON.toString());
                 // stage for basic id
                 JSONObject metaJSON = new JSONObject();
                 getMetaJSON("stage", stageFormJSON, metaJSON);
                 JSONArray subStageArray = stageFormJSON.optJSONArray("sub_stages");
                 for (int j = 0; j < subStageArray.length(); j++) {
-                    JSONObject subStageFormJSON = subStageArray.optJSONObject(i);
+                    JSONObject subStageFormJSON = subStageArray.optJSONObject(j);
                     getMetaJSON("substage", subStageFormJSON, metaJSON);
 
                     FieldsightFormDetailsv3 fieldsightFormDetails = new FieldsightFormDetailsv3();
@@ -209,10 +214,12 @@ public class FieldsightFormDetailsv3 {
                     fieldsightFormDetails.setProject(stageFormJSON.optString("project"));
                     fieldsightFormDetails.setSite_project_id(stageFormJSON.optString("site_project_id"));
                     fieldsightFormDetails.setSite(stageFormJSON.optString("site"));
-                    fieldsightFormDetails.setFormDetails(formDetailsfromJSON(subStageFormJSON));
-                    fieldsightFormDetails.setDescription(subStageFormJSON.optString("descriptionText"));
-                    fieldsightFormDetails.setEm(subStageFormJSON.optString("em"));
-                    fieldsightFormDetails.setSettings(subStageFormJSON.optString("settings"));
+
+                    JSONObject subStageFormDetailJSON = subStageFormJSON.optJSONObject("stage_forms");
+                    fieldsightFormDetails.setFormDetails(formDetailsfromJSON(subStageFormDetailJSON));
+                    fieldsightFormDetails.setDescription(subStageFormDetailJSON.optString("descriptionText"));
+                    fieldsightFormDetails.setEm(subStageFormDetailJSON.optString("em"));
+                    fieldsightFormDetails.setSettings(subStageFormDetailJSON.optString("settings"));
                     fieldsightFormDetails.setType("stage");
                     fieldsightFormDetails.setMetaAttributes(metaJSON.toString());
                     fieldsightFormDetailsNewArrayList.add(fieldsightFormDetails);

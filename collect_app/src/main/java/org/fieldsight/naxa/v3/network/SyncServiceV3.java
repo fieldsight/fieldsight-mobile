@@ -174,10 +174,13 @@ public class SyncServiceV3 extends IntentService {
                         public SingleSource<ArrayList<Integer>> apply(List<Project> projects) throws Exception {
                             return FieldSightFormRemoteSourceV3.getInstance().getFormUsingProjectId(projects)
                                     .doOnNext(fieldSightFormDetailsStringPair -> {
+
+                                       // steps
+                                        // increment the counter of synced project
                                         FieldsightFormDetailsv3 fd = fieldSightFormDetailsStringPair.first;
                                         int projectId = Integer.parseInt(TextUtils.isEmpty(fd.getSite_project_id()) ? fd.getSite_project_id() : fd.getProject());
                                         hashMapUtils.putOrUpdate(completedForms, projectId);
-                                        //SyncLocalSource3.getInstance().updateDownloadProgress(projectId, completedForms.get(projectId), fd.getTotalFormsInProject());
+                                       // SyncLocalSource3.getInstance().updateDownloadProgress(projectId, completedForms.get(projectId), fd.getTotalFormsInProject());
                                         Timber.i(completedForms.toString());
                                     })
                                     .toList()
