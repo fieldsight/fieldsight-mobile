@@ -172,7 +172,8 @@ public class SyncServiceV3 extends IntentService {
                     .flatMapSingle(new Function<List<Project>, SingleSource<ArrayList<Integer>>>() {
                         @Override
                         public SingleSource<ArrayList<Integer>> apply(List<Project> projects) throws Exception {
-                            return FieldSightFormRemoteSourceV3.getInstance().getFormUsingProjectId(projects)
+                            return FieldSightFormRemoteSourceV3.getInstance()
+                                    .getFormUsingProjectId(projects)
                                     .doOnNext(fieldSightFormDetailsStringPair -> {
 
                                        // steps
@@ -180,8 +181,8 @@ public class SyncServiceV3 extends IntentService {
                                         FieldsightFormDetailsv3 fd = fieldSightFormDetailsStringPair.first;
                                         int projectId = Integer.parseInt(TextUtils.isEmpty(fd.getSite_project_id()) ? fd.getSite_project_id() : fd.getProject());
                                         hashMapUtils.putOrUpdate(completedForms, projectId);
-                                       // SyncLocalSource3.getInstance().updateDownloadProgress(projectId, completedForms.get(projectId), fd.getTotalFormsInProject());
-                                        Timber.i(completedForms.toString());
+//                                        SyncLocalSource3.getInstance().updateDownloadProgress(projectId, completedForms.get(projectId), fd.getTotalFormsInProject());
+                                        Timber.i("SyncServicev3:: " + completedForms.toString());
                                     })
                                     .toList()
                                     .map(new Function<List<Pair<FieldsightFormDetailsv3, String>>, ArrayList<Integer>>() {
@@ -208,10 +209,10 @@ public class SyncServiceV3 extends IntentService {
 
                                             }
 
-                                            for (int i = 0; i < failedFormsMap.size(); i++) {
-                                                int projectId = failedFormsMap.keyAt(i);
-                                                SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, Objects.requireNonNull(failedFormsMap.get(projectId)).toString());
-                                            }
+//                                            for (int i = 0; i < failedFormsMap.size(); i++) {
+//                                                int projectId = failedFormsMap.keyAt(i);
+//                                                SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, Objects.requireNonNull(failedFormsMap.get(projectId)).toString());
+//                                            }
 
 
                                             Set<Integer> downloadedProjects = Sets.symmetricDifference(projectIds, failedProjectId);
@@ -223,14 +224,13 @@ public class SyncServiceV3 extends IntentService {
                                         }
                                     });
 
-
                         }
                     })
                     .subscribe(projectIds -> {
-                        for (Integer projectId : projectIds) {
-                            Timber.i("Marking %s project completed", projectId);
-                            SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
-                        }
+//                        for (Integer projectId : projectIds) {
+//                            Timber.i("Marking %s project completed", projectId);
+//                            SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
+//                        }
                     }, Timber::e);
 
 
