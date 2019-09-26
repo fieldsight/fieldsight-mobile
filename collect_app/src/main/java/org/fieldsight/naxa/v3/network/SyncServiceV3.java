@@ -2,6 +2,7 @@ package org.fieldsight.naxa.v3.network;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseArray;
@@ -9,12 +10,17 @@ import android.util.SparseIntArray;
 
 import com.google.common.collect.Sets;
 
+import org.apache.commons.io.FilenameUtils;
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV2;
 import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV3;
 import org.fieldsight.naxa.v3.HashMapUtils;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.FormDetails;
 import org.fieldsight.naxa.ResponseUtils;
@@ -34,7 +40,9 @@ import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.stages.data.StageRemoteSource;
+import org.odk.collect.android.utilities.FileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -116,50 +124,107 @@ public class SyncServiceV3 extends IntentService {
 
             DisposableManager.add(sitesObservable);
 
-            Disposable projectEduMatObservable = Observable.just(selectedProject)
-                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
-                    .flatMap(new Function<Project, Observable<String>>() {
-                        @Override
-                        public Observable<String> apply(Project project) throws Exception {
-
-                            return EducationalMaterialsRemoteSource.getInstance()
-                                    .getByProjectId(project.getId())
-                                    .toObservable()
-                                    .doOnDispose(new Action() {
-                                        @Override
-                                        public void run() throws Exception {
-                                            markAsFailed(project.getId(), 2, "");
-                                        }
-                                    })
-                                    .doOnSubscribe(new Consumer<Disposable>() {
-                                        @Override
-                                        public void accept(Disposable disposable) throws Exception {
-                                            markAsRunning(project.getId(), 2);
-                                        }
-                                    })
-                                    .onErrorReturn(throwable -> {
-                                        String url = getFailedFormUrl(throwable)[0];
-                                        markAsFailed(project.getId(), 2, url);
-                                        return "error";
-                                    })
-                                    .doOnNext(o -> {
-                                        boolean hasErrorBeenThrown = TextUtils.equals(o, "error");
-                                        if (!hasErrorBeenThrown) {//error has been thrown
-                                            markAsCompleted(project.getId(), 2);
-                                        }
-                                    });
-                        }
-                    })
-
-                    .subscribe(projectId -> {
-                        //unused
-                    }, Timber::e);
-
-            DisposableManager.add(projectEduMatObservable);
+//            Disposable projectEduMatObservable = Observable.just(selectedProject)
+//                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
+//                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
+//                    .flatMap(new Function<Project, Observable<String>>() {
+//                        @Override
+//                        public Observable<String> apply(Project project) throws Exception {
+//
+//                            return EducationalMaterialsRemoteSource.getInstance()
+//                                    .getByProjectId(project.getId())
+//                                    .toObservable()
+//                                    .doOnDispose(new Action() {
+//                                        @Override
+//                                        public void run() throws Exception {
+//                                            markAsFailed(project.getId(), 2, "");
+//                                        }
+//                                    })
+//                                    .doOnSubscribe(new Consumer<Disposable>() {
+//                                        @Override
+//                                        public void accept(Disposable disposable) throws Exception {
+//                                            markAsRunning(project.getId(), 2);
+//                                        }
+//                                    })
+//                                    .onErrorReturn(throwable -> {
+//                                        String url = getFailedFormUrl(throwable)[0];
+//                                        markAsFailed(project.getId(), 2, url);
+//                                        return "error";
+//                                    })
+//                                    .doOnNext(o -> {
+//                                        boolean hasErrorBeenThrown = TextUtils.equals(o, "error");
+//                                        if (!hasErrorBeenThrown) {//error has been thrown
+//                                            markAsCompleted(project.getId(), 2);
+//                                        }
+//                                    });
+//                        }
+//                    })
+//
+//                    .subscribe(projectId -> {
+//                        //unused
+//                    }, Timber::e);
+//
+//            DisposableManager.add(projectEduMatObservable);
 
             SparseIntArray completedForms = new SparseIntArray();
             HashMapUtils hashMapUtils = new HashMapUtils();
+            // for education material
+            // get all the list of em by project id whose em is not null from local source
+            // iterate through each projectid
+            // download all links
+            HashMap<String, List<String>>  eduMaterialsMap = new HashMap<>();
+            Disposable educationMaterialObserver = Observable.just(selectedProject)
+                    .flatMapIterable(projects -> projects)
+                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
+                    .map(new Function<Project, List<String>>() {
+                        @Override
+                        public List<String> apply(Project project) throws Exception {
+                            // get the education material from database
+                            List<String> educationMaterialUrls = new ArrayList<>();
+                            List<String> educationMaterial = FieldSightFormsLocalSourcev3.getInstance().getEducationMaterial(project.getId());
+                            for(String em : educationMaterial) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(em);
+                                    // add image
+                                    if(jsonObject.has("em_images")) {
+                                        JSONArray jsonArray = jsonObject.optJSONArray("em_images");
+                                        for(int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject imageJSON = jsonArray.optJSONObject(i);
+                                            String imageUrl = imageJSON.optString("image");
+                                            if(!TextUtils.isEmpty(imageUrl)) {
+                                                boolean isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.IMAGES + File.separator + FilenameUtils.getName(imageUrl));
+                                                if(isFileAlreadyDownloaded) {
+                                                    educationMaterialUrls.add(imageUrl);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // get the pdf url
+                                    if(jsonObject.optBoolean("pdf")) {
+                                        String pdfUrl = jsonObject.optString("pdf");
+                                        // check if file exists
+                                        if(!TextUtils.isEmpty(pdfUrl)) {
+                                            boolean isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.IMAGES +  File.separator + FilenameUtils.getName(pdfUrl));
+                                            if(!isFileAlreadyDownloaded) {
+                                                educationMaterialUrls.add(pdfUrl);
+                                            }
+                                        }
+                                    }
+
+                                }catch (Exception e) {e.printStackTrace();}
+                            }
+                            Timber.i("SyncServiceV3, educationMaterialurls = %d", educationMaterialUrls.size());
+                            eduMaterialsMap.put(project.getId(), educationMaterialUrls);
+                            return educationMaterialUrls;
+                        }
+                    }).flatMapIterable(strings -> strings)
+                    .flatMap(new Function<String, ObservableSource<?>>() {
+                        @Override
+                        public ObservableSource<?> apply(String url) throws Exception {
+                            return RxDownloader.getINSTANCE(getApplicationContext()).download(url, FilenameUtils.getName(url), getSavePath(url), "*/*", false);
+                        }
+                    }).subscribe();
+
 
             Disposable formDisposable = filterSelectedProjects()
                     .subscribeOn(Schedulers.io())
@@ -227,87 +292,34 @@ public class SyncServiceV3 extends IntentService {
                         }
                     })
                     .subscribe(projectIds -> {
-//                        for (Integer projectId : projectIds) {
-//                            Timber.i("Marking %s project completed", projectId);
-//                            SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
-//                        }
+
                     }, Timber::e);
 
-
-
-//            Disposable formDisposable = filterSelectedProjects()
-//                    .subscribeOn(Schedulers.io())
-//                    .map(projects -> {
-//                        for (Project project : projects) {
-//                            SyncLocalSource3.getInstance().markAsQueued(project.getId(), 1);
-//                        }
-//                        return projects;
-//                    })
-//                    .flatMapSingle(new Function<List<Project>, SingleSource<ArrayList<Integer>>>() {
-//                        @Override
-//                        public SingleSource<ArrayList<Integer>> apply(List<Project> projects) throws Exception {
-//                            return FieldSightFormRemoteSourceV2.getInstance().getFormUsingProjectId(projects)
-//                                    .doOnNext(fieldSightFormDetailsStringPair -> {
-//                                        FieldSightFormDetails fd = fieldSightFormDetailsStringPair.first;
-//                                        String projectId = String.valueOf(fd.getProjectId());
-//                                        hashMapUtils.putOrUpdate(completedForms, fd.getProjectId());
-//                                        SyncLocalSource3.getInstance().updateDownloadProgress(projectId, completedForms.get(fd.getProjectId()), fd.getTotalFormsInProject());
-//                                        Timber.i(completedForms.toString());
-//                                    })
-//                                    .toList()
-//                                    .map(new Function<List<Pair<FieldSightFormDetails, String>>, ArrayList<Integer>>() {
-//                                        @Override
-//                                        public ArrayList<Integer> apply(List<Pair<FieldSightFormDetails, String>> pairs) throws Exception {
-//                                            SparseArray<ArrayList<String>> failedFormsMap = new SparseArray<>();
-//                                            HashSet<Integer> projectIds = new HashSet<>();
-//                                            HashSet<Integer> failedProjectId = new HashSet<>();
-//
-//                                            for (Project project : projects) {
-//                                                projectIds.add(Integer.valueOf(project.getId()));
-//                                            }
-//
-//                                            //collect project ids with failed forms
-//                                            for (Pair<FieldSightFormDetails, String> pair : pairs) {
-//                                                String message = pair.second;
-//                                                FieldSightFormDetails fd = pair.first;
-//                                                boolean hasDownloadFailed = !Collect.getInstance().getString(R.string.success).equals(message);
-//                                                if (hasDownloadFailed) {
-//                                                    hashMapUtils.putOrUpdate(failedFormsMap, fd.getProjectId(), fd.getFormID());
-//                                                    failedProjectId.add(fd.getProjectId());
-//                                                }
-//
-//                                            }
-//
-//                                            for (int i = 0; i < failedFormsMap.size(); i++) {
-//                                                int projectId = failedFormsMap.keyAt(i);
-//                                                SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, Objects.requireNonNull(failedFormsMap.get(projectId)).toString());
-//                                            }
-//
-//
-//                                            Set<Integer> downloadedProjects = Sets.symmetricDifference(projectIds, failedProjectId);
-//
-//                                            Timber.i("%s projects download succeeded", downloadedProjects.toString());
-//                                            Timber.i("%s projects download failed", failedProjectId.toString());
-//
-//                                            return new ArrayList<>(downloadedProjects);
-//                                        }
-//                                    });
-//
-//
-//                        }
-//                    })
-//                    .subscribe(projectIds -> {
-//                        for (Integer projectId : projectIds) {
-//                            Timber.i("Marking %s project completed", projectId);
-//                            SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
-//                        }
-//                    }, Timber::e);
+                        DisposableManager.add(formDisposable);
+                        DisposableManager.add(educationMaterialObserver);
 
 
 
         } catch (NullPointerException e) {
             Timber.e(e);
         }
+    }
+
+
+    private String getSavePath(String url) {
+
+        //todo bug RxDownloadmanager is adding /storage/emulated so remove it before we send path
+        String savePath = "";
+        switch (FileUtils.getFileExtension(url).toLowerCase()) {
+            case "pdf":
+                savePath = Collect.PDF.replace(Environment.getExternalStorageDirectory().toString(), "");
+                break;
+            default:
+                savePath = Collect.IMAGES.replace(Environment.getExternalStorageDirectory().toString(), "");
+                break;
+        }
+
+        return savePath;
     }
 
 

@@ -86,7 +86,6 @@ public class FieldSightFormRemoteSourceV3 {
                                     if(hash.matches("\\w+:\\w+")) {
                                         String formHash = hash.split(":")[0];
                                         isALreadyDownloadedOrInvalidFormat = formsDao.getFormsCursorForMd5Hash(formHash).getCount() > 0;
-
                                     }
                                     Timber.i("FieldsightFormRemoteSourcev3, isALreadyDownloaded = " + isALreadyDownloadedOrInvalidFormat + "skipping download " + fieldsightFormDetailsv3.getFormDetails().getDownloadUrl());
                                     return !isALreadyDownloadedOrInvalidFormat;

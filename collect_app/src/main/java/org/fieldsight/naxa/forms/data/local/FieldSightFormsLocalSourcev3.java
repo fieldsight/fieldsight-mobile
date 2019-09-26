@@ -57,4 +57,8 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
     public void updateAll(ArrayList<FieldsightFormDetailsv3> items) {
 
     }
+
+    public List<String> getEducationMaterial(String projectId) {
+        return dao.getEducationMaterailByProjectIds(projectId);
+    }
 }
