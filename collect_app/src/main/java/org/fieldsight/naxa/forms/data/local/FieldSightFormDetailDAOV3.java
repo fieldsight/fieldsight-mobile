@@ -23,6 +23,6 @@ public abstract class FieldSightFormDetailDAOV3 implements BaseDaoFieldSight<Fie
     @Query("SELECT * from fieldsight_formv3 WHERE type=:type AND (project=:projectId OR site_project_id=:siteId)")
     abstract LiveData<List<FieldsightFormDetailsv3>> getFormByType(String type, String projectId, String siteId);
 
-    @Query("SELECT em from fieldsight_formv3 WHERE project=:projectId OR site_project_id=:projectId AND em IS NOT NULL")
+    @Query("SELECT em from fieldsight_formv3 WHERE project=:projectId OR site_project_id=:projectId AND em IS NOT NULL AND em <> 'null'")
     public abstract List<String> getEducationMaterailByProjectIds(String projectId);
 }

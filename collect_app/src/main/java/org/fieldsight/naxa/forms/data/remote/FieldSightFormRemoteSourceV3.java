@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.forms.data.remote;
 
+import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseIntArray;
@@ -82,13 +83,17 @@ public class FieldSightFormRemoteSourceV3 {
                                 @Override
                                 public boolean test(FieldsightFormDetailsv3 fieldsightFormDetailsv3) throws Exception {
                                     String hash = fieldsightFormDetailsv3.getFormDetails().getHash();
-                                    boolean isALreadyDownloadedOrInvalidFormat = true;
+                                    boolean downloadFile;
                                     if(hash.matches("\\w+:\\w+")) {
-                                        String formHash = hash.split(":")[0];
-                                        isALreadyDownloadedOrInvalidFormat = formsDao.getFormsCursorForMd5Hash(formHash).getCount() > 0;
+                                        String formHash = hash.split(":")[1];
+                                        Cursor fileCursor = formsDao.getFormsCursorForMd5Hash(formHash);
+                                        Timber.i("FieldsightFormRemoteSourcev3, formhash = %s, cursor = %s count = %d", formHash, fileCursor.getColumnCount(), fileCursor.getCount());
+                                        downloadFile = fileCursor.getCount() == 0;
+                                    } else {
+                                        downloadFile = false;
                                     }
-                                    Timber.i("FieldsightFormRemoteSourcev3, isALreadyDownloaded = " + isALreadyDownloadedOrInvalidFormat + "skipping download " + fieldsightFormDetailsv3.getFormDetails().getDownloadUrl());
-                                    return !isALreadyDownloadedOrInvalidFormat;
+                                    Timber.i("FieldsightFormRemoteSourcev3, downloadFile = " + downloadFile + " skipping download " + fieldsightFormDetailsv3.getFormDetails().getDownloadUrl());
+                                    return downloadFile;
                                 }
                             })
                             .concatMap((Function<FieldsightFormDetailsv3, ObservableSource<Pair<FieldsightFormDetailsv3, String>>>) fieldSightFormDetailV3 ->
@@ -148,7 +153,9 @@ public class FieldSightFormRemoteSourceV3 {
         projectIdUrlMap.put(projectId, projectIdUrlMap.get(projectId, 0) + 1);
     }
     private Integer getProjectId(FieldsightFormDetailsv3 fieldSightForm) {
-        String value = TextUtils.isEmpty(fieldSightForm.getProject())? fieldSightForm.getSite_project_id() : fieldSightForm.getProject();
+        String value = TextUtils.isEmpty(fieldSightForm.getProject()) || TextUtils.equals(fieldSightForm.getProject(), "null")? fieldSightForm.getSite_project_id() : fieldSightForm.getProject();
+        Timber.i("Fieldsightformremotesourcev3, id = %s, value = %s, projectName = %s, project = %s, site_project_id = %s",
+                fieldSightForm.getId(), value, fieldSightForm.getDescription(), fieldSightForm.getProject(), fieldSightForm.getSite_project_id());
         return Integer.parseInt(value);
     }
 

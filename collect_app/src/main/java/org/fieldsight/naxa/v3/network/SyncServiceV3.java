@@ -244,7 +244,7 @@ public class SyncServiceV3 extends IntentService {
                                        // steps
                                         // increment the counter of synced project
                                         FieldsightFormDetailsv3 fd = fieldSightFormDetailsStringPair.first;
-                                        int projectId = Integer.parseInt(TextUtils.isEmpty(fd.getSite_project_id()) ? fd.getSite_project_id() : fd.getProject());
+                                        int projectId = Integer.parseInt(getProjectId(fd));
                                         hashMapUtils.putOrUpdate(completedForms, projectId);
 //                                        SyncLocalSource3.getInstance().updateDownloadProgress(projectId, completedForms.get(projectId), fd.getTotalFormsInProject());
                                         Timber.i("SyncServicev3:: " + completedForms.toString());
@@ -265,7 +265,7 @@ public class SyncServiceV3 extends IntentService {
                                             for (Pair<FieldsightFormDetailsv3, String> pair : pairs) {
                                                 String message = pair.second;
                                                 FieldsightFormDetailsv3 fd = pair.first;
-                                                int projectId = Integer.parseInt(TextUtils.isEmpty(fd.getSite_project_id()) ? fd.getSite_project_id() : fd.getProject());
+                                                int projectId = Integer.parseInt(getProjectId(fd));
                                                 boolean hasDownloadFailed = !Collect.getInstance().getString(R.string.success).equals(message);
                                                 if (hasDownloadFailed) {
                                                     hashMapUtils.putOrUpdate(failedFormsMap, projectId, fd.getFormDetails().getFormID());
@@ -493,7 +493,7 @@ public class SyncServiceV3 extends IntentService {
     }
 
     private String getProjectId(FieldsightFormDetailsv3 fd) {
-        return TextUtils.isEmpty(fd.getSite_project_id())? fd.getProject() : fd.getSite_project_id();
+        return TextUtils.isEmpty(fd.getProject()) || TextUtils.equals(fd.getProject(), "null")? fd.getSite_project_id() : fd.getProject();
     }
 
 
