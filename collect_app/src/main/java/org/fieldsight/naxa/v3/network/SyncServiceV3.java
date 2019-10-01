@@ -51,8 +51,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import butterknife.internal.Utils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -74,7 +76,6 @@ public class SyncServiceV3 extends IntentService {
     HashMap<String, List<Syncable>> selectedMap = null;
     private List<String> failedSiteUrls = new ArrayList<>();
     private ArrayList<Disposable> syncDisposable = new ArrayList<>();
-    private int downloadProgress = 0;
 
     public SyncServiceV3() {
         super("SyncserviceV3");
@@ -124,54 +125,8 @@ public class SyncServiceV3 extends IntentService {
 
             DisposableManager.add(sitesObservable);
 
-//            Disposable projectEduMatObservable = Observable.just(selectedProject)
-//                    .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-//                    .filter(project -> selectedMap.get(project.getId()).get(2).sync)
-//                    .flatMap(new Function<Project, Observable<String>>() {
-//                        @Override
-//                        public Observable<String> apply(Project project) throws Exception {
-//
-//                            return EducationalMaterialsRemoteSource.getInstance()
-//                                    .getByProjectId(project.getId())
-//                                    .toObservable()
-//                                    .doOnDispose(new Action() {
-//                                        @Override
-//                                        public void run() throws Exception {
-//                                            markAsFailed(project.getId(), 2, "");
-//                                        }
-//                                    })
-//                                    .doOnSubscribe(new Consumer<Disposable>() {
-//                                        @Override
-//                                        public void accept(Disposable disposable) throws Exception {
-//                                            markAsRunning(project.getId(), 2);
-//                                        }
-//                                    })
-//                                    .onErrorReturn(throwable -> {
-//                                        String url = getFailedFormUrl(throwable)[0];
-//                                        markAsFailed(project.getId(), 2, url);
-//                                        return "error";
-//                                    })
-//                                    .doOnNext(o -> {
-//                                        boolean hasErrorBeenThrown = TextUtils.equals(o, "error");
-//                                        if (!hasErrorBeenThrown) {//error has been thrown
-//                                            markAsCompleted(project.getId(), 2);
-//                                        }
-//                                    });
-//                        }
-//                    })
-//
-//                    .subscribe(projectId -> {
-//                        //unused
-//                    }, Timber::e);
-//
-//            DisposableManager.add(projectEduMatObservable);
-
             SparseIntArray completedForms = new SparseIntArray();
             HashMapUtils hashMapUtils = new HashMapUtils();
-            // for education material
-            // get all the list of em by project id whose em is not null from local source
-            // iterate through each projectid
-            // download all links
             HashMap<String, List<String>>  eduMaterialsMap = new HashMap<>();
             Disposable educationMaterialObserver = Observable.just(selectedProject)
                     .flatMapIterable(projects -> projects)
@@ -181,9 +136,14 @@ public class SyncServiceV3 extends IntentService {
                         public List<String> apply(Project project) throws Exception {
                             // get the education material from database
                             List<String> educationMaterialUrls = new ArrayList<>();
-                            List<String> educationMaterial = FieldSightFormsLocalSourcev3.getInstance().getEducationMaterial(project.getId());
-                            for(String em : educationMaterial) {
-                                try {
+                            List<FieldsightFormDetailsv3> educationMaterial = FieldSightFormsLocalSourcev3.getInstance().getEducationMaterial(project.getId());
+                            Timber.i("SyncService3, educationMaterial list = %s", educationMaterial.size());
+                            for(FieldsightFormDetailsv3 fieldsightFormDetailsv3 : educationMaterial) {
+                                 String em = fieldsightFormDetailsv3.getEm();
+                                    Timber.i("SyncServicev3, em = %s", em);
+                                    if(TextUtils.isEmpty(em) || TextUtils.equals(em, "null"))
+                                        continue;
+
                                     JSONObject jsonObject = new JSONObject(em);
                                     // add image
                                     if(jsonObject.has("em_images")) {
@@ -193,38 +153,47 @@ public class SyncServiceV3 extends IntentService {
                                             String imageUrl = imageJSON.optString("image");
                                             if(!TextUtils.isEmpty(imageUrl)) {
                                                 boolean isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.IMAGES + File.separator + FilenameUtils.getName(imageUrl));
-                                                if(isFileAlreadyDownloaded) {
+                                                if(!isFileAlreadyDownloaded) {
                                                     educationMaterialUrls.add(imageUrl);
                                                 }
                                             }
                                         }
                                     }
                                     // get the pdf url
-                                    if(jsonObject.optBoolean("pdf")) {
+                                    if(jsonObject.optBoolean("is_pdf")) {
                                         String pdfUrl = jsonObject.optString("pdf");
                                         // check if file exists
                                         if(!TextUtils.isEmpty(pdfUrl)) {
-                                            boolean isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.IMAGES +  File.separator + FilenameUtils.getName(pdfUrl));
+                                            boolean isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.PDF +  File.separator + FilenameUtils.getName(pdfUrl));
+                                            Timber.i("syncServicev3, isAlreadyExists = " + isFileAlreadyDownloaded + " pdf url = %s", pdfUrl);
                                             if(!isFileAlreadyDownloaded) {
                                                 educationMaterialUrls.add(pdfUrl);
                                             }
                                         }
                                     }
-
-                                }catch (Exception e) {e.printStackTrace();}
                             }
                             Timber.i("SyncServiceV3, educationMaterialurls = %d", educationMaterialUrls.size());
                             eduMaterialsMap.put(project.getId(), educationMaterialUrls);
                             return educationMaterialUrls;
                         }
                     }).flatMapIterable(strings -> strings)
-                    .flatMap(new Function<String, ObservableSource<?>>() {
+                    .concatMap(new Function<String, ObservableSource<?>>() {
                         @Override
                         public ObservableSource<?> apply(String url) throws Exception {
+                            Timber.i("SyncServicev3, educationMaterial, downloading url = %s", url);
                             return RxDownloader.getINSTANCE(getApplicationContext()).download(url, FilenameUtils.getName(url), getSavePath(url), "*/*", false);
                         }
-                    }).subscribe();
-
+                    }).subscribe(new Consumer<Object>() {
+                        @Override
+                        public void accept(Object o) throws Exception {
+                            Timber.i("SyncService: educationMaterials finalized = %s", o.toString());
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            Timber.e(throwable);
+                        }
+                    });
 
             Disposable formDisposable = filterSelectedProjects()
                     .subscribeOn(Schedulers.io())
@@ -240,7 +209,6 @@ public class SyncServiceV3 extends IntentService {
                             return FieldSightFormRemoteSourceV3.getInstance()
                                     .getFormUsingProjectId(projects)
                                     .doOnNext(fieldSightFormDetailsStringPair -> {
-
                                        // steps
                                         // increment the counter of synced project
                                         FieldsightFormDetailsv3 fd = fieldSightFormDetailsStringPair.first;
@@ -318,6 +286,7 @@ public class SyncServiceV3 extends IntentService {
                 savePath = Collect.IMAGES.replace(Environment.getExternalStorageDirectory().toString(), "");
                 break;
         }
+        Timber.i("SyncServicev3, savePath = %s", url);
 
         return savePath;
     }

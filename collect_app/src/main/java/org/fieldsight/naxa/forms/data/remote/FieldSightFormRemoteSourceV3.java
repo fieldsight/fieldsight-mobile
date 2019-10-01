@@ -92,6 +92,9 @@ public class FieldSightFormRemoteSourceV3 {
                                     } else {
                                         downloadFile = false;
                                     }
+                                    if(!downloadFile) {
+                                        projectIdUrlMap.put(getProjectId(fieldsightFormDetailsv3), projectIdUrlMap.get(getProjectId(fieldsightFormDetailsv3)) -1);
+                                    }
                                     Timber.i("FieldsightFormRemoteSourcev3, downloadFile = " + downloadFile + " skipping download " + fieldsightFormDetailsv3.getFormDetails().getDownloadUrl());
                                     return downloadFile;
                                 }
@@ -99,7 +102,9 @@ public class FieldSightFormRemoteSourceV3 {
                             .concatMap((Function<FieldsightFormDetailsv3, ObservableSource<Pair<FieldsightFormDetailsv3, String>>>) fieldSightFormDetailV3 ->
                             {
                                 int projectId = getProjectId(fieldSightFormDetailV3);
-                                SyncLocalSource3.getInstance().updateDownloadProgress(projectId+"", 1, projectIdUrlMap.get(projectId));
+                                int progressCount = downloadProjectFormProgressUrlMap.get(projectId, 0) + 1;
+                                downloadProjectFormProgressUrlMap.put(projectId, progressCount);
+                                SyncLocalSource3.getInstance().updateDownloadProgress(projectId+"", progressCount, projectIdUrlMap.get(projectId));
                                 return downloadSingleForm(fieldSightFormDetailV3);
                             })
                             .doOnNext(new Consumer<Pair<FieldsightFormDetailsv3, String>>() {
@@ -107,7 +112,6 @@ public class FieldSightFormRemoteSourceV3 {
                                 public void accept(Pair<FieldsightFormDetailsv3, String> fieldSightFormDetailsStringPair) {
                                     String message = fieldSightFormDetailsStringPair.second;
                                     int projectId = getProjectId(fieldSightFormDetailsStringPair.first);
-                                    downloadProjectFormProgressUrlMap.put(projectId, downloadProjectFormProgressUrlMap.get(projectId, 0) + 1);
                                     Timber.i(message);
                                     if(downloadProjectFormProgressUrlMap.get(projectId) == projectIdUrlMap.get(projectId)) {
                                         SyncLocalSource3.getInstance().markAsCompleted(projectId+"", 1);
@@ -135,6 +139,7 @@ public class FieldSightFormRemoteSourceV3 {
             } else {
                 for (int i = 0; i < formJsonArray.length(); i++) {
                     JSONObject formJSON = formJsonArray.getJSONObject(i);
+                    Timber.i("FieldsightFormRemoteSourcev3, type = %s, data = %s", formKey, formJSON.toString());
                     FieldsightFormDetailsv3 fieldsightFormDetailsv3 = FieldsightFormDetailsv3.parseFromJSON(formJSON, formKey);
                      fieldSightFormsv3List.add(fieldsightFormDetailsv3);
                      updateProjectIdUrlMap(fieldsightFormDetailsv3);

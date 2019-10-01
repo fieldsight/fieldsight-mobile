@@ -159,6 +159,7 @@ public class FieldsightFormDetailsv3 {
         fieldsightFormDetailsv3.setSite_project_id(jsonObject.optString("site_project_id"));
         fieldsightFormDetailsv3.setSite(jsonObject.optString("site"));
         fieldsightFormDetailsv3.setFormDetails(formDetailsfromJSON(jsonObject));
+        Timber.i("Fieldsightformdetailsv3, type = %s, em = %s", type, jsonObject.optString("em"));
         fieldsightFormDetailsv3.setEm(jsonObject.optString("em"));
         fieldsightFormDetailsv3.setSettings(jsonObject.optString("settings"));
         fieldsightFormDetailsv3.setDescription(jsonObject.optString("descriptionText"));
@@ -222,6 +223,7 @@ public class FieldsightFormDetailsv3 {
 
                     fieldsightFormDetails.setFormDetails(formDetailsfromJSON(subStageFormDetailJSON));
                     fieldsightFormDetails.setDescription(subStageFormDetailJSON.optString("descriptionText"));
+                    Timber.i("FieldsightFormdetailsv3, em = %s", subStageFormDetailJSON.optString("em"));
                     fieldsightFormDetails.setEm(subStageFormDetailJSON.optString("em"));
                     fieldsightFormDetails.setSettings(subStageFormDetailJSON.optString("settings"));
                     fieldsightFormDetails.setType("stage");
