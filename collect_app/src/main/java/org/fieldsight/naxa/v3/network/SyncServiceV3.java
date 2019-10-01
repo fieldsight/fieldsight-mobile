@@ -127,7 +127,7 @@ public class SyncServiceV3 extends IntentService {
 
             SparseIntArray completedForms = new SparseIntArray();
             HashMapUtils hashMapUtils = new HashMapUtils();
-            HashMap<String, List<String>>  eduMaterialsMap = new HashMap<>();
+            HashMap<String, List<String>> eduMaterialsMap = new HashMap<>();
             Disposable educationMaterialObserver = Observable.just(selectedProject)
                     .flatMapIterable(projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(2).sync)
@@ -138,39 +138,40 @@ public class SyncServiceV3 extends IntentService {
                             List<String> educationMaterialUrls = new ArrayList<>();
                             List<FieldsightFormDetailsv3> educationMaterial = FieldSightFormsLocalSourcev3.getInstance().getEducationMaterial(project.getId());
                             Timber.i("SyncService3, educationMaterial list = %s", educationMaterial.size());
-                            for(FieldsightFormDetailsv3 fieldsightFormDetailsv3 : educationMaterial) {
-                                 String em = fieldsightFormDetailsv3.getEm();
-                                    Timber.i("SyncServicev3, em = %s", em);
-                                    if(TextUtils.isEmpty(em) || TextUtils.equals(em, "null"))
-                                        continue;
+                            markAsRunning(project.getId(), 2);
+                            for (FieldsightFormDetailsv3 fieldsightFormDetailsv3 : educationMaterial) {
+                                String em = fieldsightFormDetailsv3.getEm();
+                                Timber.i("SyncServicev3, em = %s", em);
+                                if (TextUtils.isEmpty(em) || TextUtils.equals(em, "null"))
+                                    continue;
 
-                                    JSONObject jsonObject = new JSONObject(em);
-                                    // add image
-                                    if(jsonObject.has("em_images")) {
-                                        JSONArray jsonArray = jsonObject.optJSONArray("em_images");
-                                        for(int i = 0; i < jsonArray.length(); i++) {
-                                            JSONObject imageJSON = jsonArray.optJSONObject(i);
-                                            String imageUrl = imageJSON.optString("image");
-                                            if(!TextUtils.isEmpty(imageUrl)) {
-                                                boolean isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.IMAGES + File.separator + FilenameUtils.getName(imageUrl));
-                                                if(!isFileAlreadyDownloaded) {
-                                                    educationMaterialUrls.add(imageUrl);
-                                                }
+                                JSONObject jsonObject = new JSONObject(em);
+                                // add image
+                                if (jsonObject.has("em_images")) {
+                                    JSONArray jsonArray = jsonObject.optJSONArray("em_images");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject imageJSON = jsonArray.optJSONObject(i);
+                                        String imageUrl = imageJSON.optString("image");
+                                        if (!TextUtils.isEmpty(imageUrl)) {
+                                            boolean isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.IMAGES + File.separator + FilenameUtils.getName(imageUrl));
+                                            if (!isFileAlreadyDownloaded) {
+                                                educationMaterialUrls.add(imageUrl);
                                             }
                                         }
                                     }
-                                    // get the pdf url
-                                    if(jsonObject.optBoolean("is_pdf")) {
-                                        String pdfUrl = jsonObject.optString("pdf");
-                                        // check if file exists
-                                        if(!TextUtils.isEmpty(pdfUrl)) {
-                                            boolean isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.PDF +  File.separator + FilenameUtils.getName(pdfUrl));
-                                            Timber.i("syncServicev3, isAlreadyExists = " + isFileAlreadyDownloaded + " pdf url = %s", pdfUrl);
-                                            if(!isFileAlreadyDownloaded) {
-                                                educationMaterialUrls.add(pdfUrl);
-                                            }
+                                }
+                                // get the pdf url
+                                if (jsonObject.optBoolean("is_pdf")) {
+                                    String pdfUrl = jsonObject.optString("pdf");
+                                    // check if file exists
+                                    if (!TextUtils.isEmpty(pdfUrl)) {
+                                        boolean isFileAlreadyDownloaded = FileUtils.isFileExists(Collect.PDF + File.separator + FilenameUtils.getName(pdfUrl));
+                                        Timber.i("syncServicev3, isAlreadyExists = " + isFileAlreadyDownloaded + " pdf url = %s", pdfUrl);
+                                        if (!isFileAlreadyDownloaded) {
+                                            educationMaterialUrls.add(pdfUrl);
                                         }
                                     }
+                                }
                             }
                             Timber.i("SyncServiceV3, educationMaterialurls = %d", educationMaterialUrls.size());
                             eduMaterialsMap.put(project.getId(), educationMaterialUrls);
@@ -192,6 +193,7 @@ public class SyncServiceV3 extends IntentService {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             Timber.e(throwable);
+                            Timber.i("SyncService: educationMaterials error = %s", throwable.toString());
                         }
                     });
 
@@ -208,64 +210,34 @@ public class SyncServiceV3 extends IntentService {
                         public SingleSource<ArrayList<Integer>> apply(List<Project> projects) throws Exception {
                             return FieldSightFormRemoteSourceV3.getInstance()
                                     .getFormUsingProjectId(projects)
-                                    .doOnNext(fieldSightFormDetailsStringPair -> {
-                                       // steps
-                                        // increment the counter of synced project
-                                        FieldsightFormDetailsv3 fd = fieldSightFormDetailsStringPair.first;
-                                        int projectId = Integer.parseInt(getProjectId(fd));
-                                        hashMapUtils.putOrUpdate(completedForms, projectId);
-//                                        SyncLocalSource3.getInstance().updateDownloadProgress(projectId, completedForms.get(projectId), fd.getTotalFormsInProject());
-                                        Timber.i("SyncServicev3:: " + completedForms.toString());
-                                    })
                                     .toList()
                                     .map(new Function<List<Pair<FieldsightFormDetailsv3, String>>, ArrayList<Integer>>() {
                                         @Override
                                         public ArrayList<Integer> apply(List<Pair<FieldsightFormDetailsv3, String>> pairs) throws Exception {
-                                            SparseArray<ArrayList<String>> failedFormsMap = new SparseArray<>();
-                                            HashSet<Integer> projectIds = new HashSet<>();
                                             HashSet<Integer> failedProjectId = new HashSet<>();
-
-                                            for (Project project : projects) {
-                                                projectIds.add(Integer.valueOf(project.getId()));
-                                            }
-
                                             //collect project ids with failed forms
                                             for (Pair<FieldsightFormDetailsv3, String> pair : pairs) {
                                                 String message = pair.second;
                                                 FieldsightFormDetailsv3 fd = pair.first;
-                                                int projectId = Integer.parseInt(getProjectId(fd));
-                                                boolean hasDownloadFailed = !Collect.getInstance().getString(R.string.success).equals(message);
-                                                if (hasDownloadFailed) {
-                                                    hashMapUtils.putOrUpdate(failedFormsMap, projectId, fd.getFormDetails().getFormID());
-                                                    failedProjectId.add(projectId);
-                                                }
 
+                                                int projectId = Integer.parseInt(getProjectId(fd));
+                                                boolean hasDowloadFailed = !TextUtils.isEmpty(message);
+                                                if (hasDowloadFailed && !failedProjectId.contains(projectId)) {
+                                                    failedProjectId.add(projectId);
+                                                    SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, fd.getFormDetails().getDownloadUrl());
+                                                }
                                             }
 
-//                                            for (int i = 0; i < failedFormsMap.size(); i++) {
-//                                                int projectId = failedFormsMap.keyAt(i);
-//                                                SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, Objects.requireNonNull(failedFormsMap.get(projectId)).toString());
-//                                            }
-
-
-                                            Set<Integer> downloadedProjects = Sets.symmetricDifference(projectIds, failedProjectId);
-
-                                            Timber.i("%s projects download succeeded", downloadedProjects.toString());
                                             Timber.i("%s projects download failed", failedProjectId.toString());
-
-                                            return new ArrayList<>(downloadedProjects);
+                                            return new ArrayList<>(failedProjectId);
                                         }
                                     });
-
                         }
                     })
-                    .subscribe(projectIds -> {
+                    .subscribe();
 
-                    }, Timber::e);
-
-                        DisposableManager.add(formDisposable);
-                        DisposableManager.add(educationMaterialObserver);
-
+            DisposableManager.add(formDisposable);
+            DisposableManager.add(educationMaterialObserver);
 
 
         } catch (NullPointerException e) {
@@ -462,7 +434,7 @@ public class SyncServiceV3 extends IntentService {
     }
 
     private String getProjectId(FieldsightFormDetailsv3 fd) {
-        return TextUtils.isEmpty(fd.getProject()) || TextUtils.equals(fd.getProject(), "null")? fd.getSite_project_id() : fd.getProject();
+        return TextUtils.isEmpty(fd.getProject()) || TextUtils.equals(fd.getProject(), "null") ? fd.getSite_project_id() : fd.getProject();
     }
 
 
