@@ -85,6 +85,12 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         if (projectList == null || projectList.size() == 0) {
             return;
         }
+
+        // clear the sync stat table if it is not syncing when opened
+        if(!syncing) {
+            SyncLocalSource3.getInstance().delete();
+        }
+
         setTitle(String.format(Locale.getDefault(), "Projects (%d)", projectList.size()));
         /// create the map of the syncing
         if (syncableMap == null)
@@ -126,11 +132,12 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
                 enableDisableAdapter(false);
             }
         };
-        runningLiveData = SyncLocalSource3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING);
+        runningLiveData = SyncLocalSource3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING, Constant.DownloadStatus.QUEUED);
         runningLiveData.observe(this, runningLiveDataObserver);
         if (syncing) {
             enableDisableAdapter(syncing);
         }
+
     }
 
     // this class will manage the sync list to determine which should be synced
@@ -241,7 +248,6 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == Constant.RequestCode.DOWNLOAD_FORMS) {
             String projectId;
             HashMap<String, Boolean> statusAndForms = (HashMap<String, Boolean>) data.getSerializableExtra(ApplicationConstants.BundleKeys.FORM_IDS);

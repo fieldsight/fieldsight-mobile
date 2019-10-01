@@ -47,7 +47,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         AsyncTask.execute(() -> dao.delete(stat));
     }
 
-    public LiveData<Integer> getCountByStatus(int status) {
+    public LiveData<Integer> getCountByStatus(int... status) {
         return dao.countByStatus(status);
     }
 

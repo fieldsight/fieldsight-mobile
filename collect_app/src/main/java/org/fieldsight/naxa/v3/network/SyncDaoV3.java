@@ -32,8 +32,8 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
 //    @Query("")
 //    void updateFailedurlById(String projectid, String type, String failedUrl);
 
-    @Query("SELECT COUNT(*) FROM (SELECT * FROM syncstat WHERE status=:status)")
-    LiveData<Integer> countByStatus(int status);
+    @Query("SELECT COUNT(*) FROM (SELECT * FROM syncstat WHERE status in (:status))")
+    LiveData<Integer> countByStatus(int... status);
 
     @Insert
     void insertAll(SyncStat... syncStats);

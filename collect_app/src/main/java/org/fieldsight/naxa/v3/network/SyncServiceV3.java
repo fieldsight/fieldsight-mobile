@@ -76,6 +76,7 @@ public class SyncServiceV3 extends IntentService {
     HashMap<String, List<Syncable>> selectedMap = null;
     private List<String> failedSiteUrls = new ArrayList<>();
     private ArrayList<Disposable> syncDisposable = new ArrayList<>();
+    int currentWorkingProjectIndex = 0;
 
     public SyncServiceV3() {
         super("SyncserviceV3");
@@ -125,9 +126,51 @@ public class SyncServiceV3 extends IntentService {
 
             DisposableManager.add(sitesObservable);
 
-            SparseIntArray completedForms = new SparseIntArray();
-            HashMapUtils hashMapUtils = new HashMapUtils();
-            HashMap<String, List<String>> eduMaterialsMap = new HashMap<>();
+            // sync form begins
+            Disposable formDisposable = filterSelectedProjects()
+                    .subscribeOn(Schedulers.io())
+                    .map(projects -> {
+                        for (Project project : projects) {
+                            SyncLocalSource3.getInstance().markAsQueued(project.getId(), 1);
+                        }
+                        return projects;
+                    })
+                    .flatMapSingle(new Function<List<Project>, SingleSource<ArrayList<Integer>>>() {
+                        @Override
+                        public SingleSource<ArrayList<Integer>> apply(List<Project> projects) throws Exception {
+                            return FieldSightFormRemoteSourceV3.getInstance()
+                                    .getFormUsingProjectId(projects)
+                                    .toList()
+                                    .map(new Function<List<Pair<FieldsightFormDetailsv3, String>>, ArrayList<Integer>>() {
+                                        @Override
+                                        public ArrayList<Integer> apply(List<Pair<FieldsightFormDetailsv3, String>> pairs) throws Exception {
+                                            HashSet<Integer> failedProjectId = new HashSet<>();
+                                            //collect project ids with failed forms
+                                            for (Pair<FieldsightFormDetailsv3, String> pair : pairs) {
+                                                String message = pair.second;
+                                                FieldsightFormDetailsv3 fd = pair.first;
+
+                                                int projectId = Integer.parseInt(getProjectId(fd));
+                                                boolean hasDowloadFailed = !TextUtils.isEmpty(message);
+                                                if (hasDowloadFailed) {
+                                                    failedProjectId.add(projectId);
+                                                    // update the mark as failed. (currently failed will not be shown. new design will be added to handle this)
+                                                }
+                                            }
+
+                                            Timber.i("%s projects download failed", failedProjectId.toString());
+                                            return new ArrayList<>(failedProjectId);
+                                        }
+                                    });
+                        }
+                    }).subscribe();
+
+            DisposableManager.add(formDisposable);
+            // sync form ends
+
+            // Education material sync begins
+            HashMap<String, Integer> eduMaterialsMap = new HashMap<>();
+            List<String> projectidList = new ArrayList<>();
             Disposable educationMaterialObserver = Observable.just(selectedProject)
                     .flatMapIterable(projects -> projects)
                     .filter(project -> selectedMap.get(project.getId()).get(2).sync)
@@ -138,7 +181,6 @@ public class SyncServiceV3 extends IntentService {
                             List<String> educationMaterialUrls = new ArrayList<>();
                             List<FieldsightFormDetailsv3> educationMaterial = FieldSightFormsLocalSourcev3.getInstance().getEducationMaterial(project.getId());
                             Timber.i("SyncService3, educationMaterial list = %s", educationMaterial.size());
-                            markAsRunning(project.getId(), 2);
                             for (FieldsightFormDetailsv3 fieldsightFormDetailsv3 : educationMaterial) {
                                 String em = fieldsightFormDetailsv3.getEm();
                                 Timber.i("SyncServicev3, em = %s", em);
@@ -173,11 +215,17 @@ public class SyncServiceV3 extends IntentService {
                                     }
                                 }
                             }
+                            if(educationMaterialUrls.size() == 0) {
+                                markAsCompleted(project.getId(), 2);
+                            } else {
+                                markAsRunning(project.getId(), 2);
+                                projectidList.add(project.getId());
+                                eduMaterialsMap.put(project.getId(), educationMaterialUrls.size());
+                            }
                             Timber.i("SyncServiceV3, educationMaterialurls = %d", educationMaterialUrls.size());
-                            eduMaterialsMap.put(project.getId(), educationMaterialUrls);
                             return educationMaterialUrls;
                         }
-                    }).flatMapIterable(strings -> strings)
+                    }).concatMapIterable(strings -> strings)
                     .concatMap(new Function<String, ObservableSource<?>>() {
                         @Override
                         public ObservableSource<?> apply(String url) throws Exception {
@@ -187,7 +235,15 @@ public class SyncServiceV3 extends IntentService {
                     }).subscribe(new Consumer<Object>() {
                         @Override
                         public void accept(Object o) throws Exception {
-                            Timber.i("SyncService: educationMaterials finalized = %s", o.toString());
+                            Timber.i("SyncService: educationMaterials finalized = %s, currentWorkingIndex = %s, currentWorkingProject = %s", o.toString(), currentWorkingProjectIndex, projectidList.get(currentWorkingProjectIndex));
+                            String projectId = projectidList.get(currentWorkingProjectIndex);
+                            if(eduMaterialsMap.containsKey(projectId)) {
+                                eduMaterialsMap.put(projectId, eduMaterialsMap.get(projectId) - 1);
+                                if (eduMaterialsMap.get(projectId) <= 0) {
+                                    markAsCompleted(projectId, 2);
+                                    currentWorkingProjectIndex = currentWorkingProjectIndex + 1;
+                                }
+                            }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -196,49 +252,8 @@ public class SyncServiceV3 extends IntentService {
                             Timber.i("SyncService: educationMaterials error = %s", throwable.toString());
                         }
                     });
-
-            Disposable formDisposable = filterSelectedProjects()
-                    .subscribeOn(Schedulers.io())
-                    .map(projects -> {
-                        for (Project project : projects) {
-                            SyncLocalSource3.getInstance().markAsQueued(project.getId(), 1);
-                        }
-                        return projects;
-                    })
-                    .flatMapSingle(new Function<List<Project>, SingleSource<ArrayList<Integer>>>() {
-                        @Override
-                        public SingleSource<ArrayList<Integer>> apply(List<Project> projects) throws Exception {
-                            return FieldSightFormRemoteSourceV3.getInstance()
-                                    .getFormUsingProjectId(projects)
-                                    .toList()
-                                    .map(new Function<List<Pair<FieldsightFormDetailsv3, String>>, ArrayList<Integer>>() {
-                                        @Override
-                                        public ArrayList<Integer> apply(List<Pair<FieldsightFormDetailsv3, String>> pairs) throws Exception {
-                                            HashSet<Integer> failedProjectId = new HashSet<>();
-                                            //collect project ids with failed forms
-                                            for (Pair<FieldsightFormDetailsv3, String> pair : pairs) {
-                                                String message = pair.second;
-                                                FieldsightFormDetailsv3 fd = pair.first;
-
-                                                int projectId = Integer.parseInt(getProjectId(fd));
-                                                boolean hasDowloadFailed = !TextUtils.isEmpty(message);
-                                                if (hasDowloadFailed && !failedProjectId.contains(projectId)) {
-                                                    failedProjectId.add(projectId);
-                                                    SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, fd.getFormDetails().getDownloadUrl());
-                                                }
-                                            }
-
-                                            Timber.i("%s projects download failed", failedProjectId.toString());
-                                            return new ArrayList<>(failedProjectId);
-                                        }
-                                    });
-                        }
-                    })
-                    .subscribe();
-
-            DisposableManager.add(formDisposable);
             DisposableManager.add(educationMaterialObserver);
-
+            // education Material sync ends
 
         } catch (NullPointerException e) {
             Timber.e(e);
