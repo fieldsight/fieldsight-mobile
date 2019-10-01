@@ -120,6 +120,7 @@ public class FormDownloader {
      * @throws TaskCancelledException to signal that form downloading is to be canceled
      */
     protected String processOneForm(int total, int count, FormDetails fd) throws TaskCancelledException {
+
         if (stateListener != null) {
             stateListener.progressUpdate(fd.getFormName(), String.valueOf(count), String.valueOf(total));
         }

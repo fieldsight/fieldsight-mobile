@@ -57,7 +57,7 @@ public class FieldSightFormDownloader extends FormDownloader {
     public Pair<FieldsightFormDetailsv3, String> downloadSingleFieldSightForm(FieldsightFormDetailsv3 fieldsightFormDetailsv3) {
         // if form successfully downloaded it returns empty string else failed
         FormDetails fd = fieldsightFormDetailsv3.getFormDetails();
-//        formsDao = new FormsDao();
+        formsDao = new FormsDao();
         String message;
         Pair<FieldsightFormDetailsv3, String> pair = null;
 

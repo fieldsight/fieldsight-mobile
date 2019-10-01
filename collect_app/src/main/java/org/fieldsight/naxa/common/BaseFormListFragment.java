@@ -25,11 +25,13 @@ import com.google.common.reflect.TypeToken;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
+import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.ui.FieldSightFormVH;
 import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.stages.data.SubStage;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.provider.FormsProviderAPI;
 
 import java.lang.reflect.Type;
@@ -47,8 +49,10 @@ public class BaseFormListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private FieldSightFormViewModel viewModel;
-    private BaseRecyclerViewAdapter<FieldSightFormDetails, FieldSightFormVH> adapter;
+    private BaseRecyclerViewAdapter<FieldsightFormDetailsv3, FieldSightFormVH> adapter;
     private String siteId;
+    private View emptyLayout;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,6 +62,11 @@ public class BaseFormListFragment extends Fragment {
 
     protected FieldSightFormViewModel getViewModel() {
         return viewModel;
+    }
+
+
+    protected void showEmptyLayout(boolean isEmpty) {
+        emptyLayout.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
     }
 
     protected void fillODKForm(String idString) {
@@ -78,7 +87,8 @@ public class BaseFormListFragment extends Fragment {
 
         } catch (CursorIndexOutOfBoundsException e) {
             DialogFactory.createGenericErrorDialog(getActivity(), getString(R.string.msg_form_not_present)).show();
-            Timber.e("Failed to load xml form  %s", e.getMessage());
+            Timber.e("Failed to load xml form with id %s %s", idString, e.getMessage());
+            Timber.e(e);
         } catch (NullPointerException | NumberFormatException e) {
             Timber.e(e);
             DialogFactory.createGenericErrorDialog(getActivity(), e.getMessage()).show();
@@ -115,6 +125,7 @@ public class BaseFormListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fieldsight_forms_list_fragment, container, false);
         recyclerView = view.findViewById(R.id.recycler_view_fieldsight_form_list);
+        emptyLayout = view.findViewById(R.id.root_layout_empty_layout);
 
         return view;
     }
@@ -133,9 +144,9 @@ public class BaseFormListFragment extends Fragment {
 
     private void setupListAdapter() {
         LinearLayoutManager manager = new LinearLayoutManager(requireActivity());
-        adapter = new BaseRecyclerViewAdapter<FieldSightFormDetails, FieldSightFormVH>(new ArrayList<>(), R.layout.list_item_fieldsight_form) {
+        adapter = new BaseRecyclerViewAdapter<FieldsightFormDetailsv3, FieldSightFormVH>(new ArrayList<>(), R.layout.list_item_fieldsight_form) {
             @Override
-            public void viewBinded(FieldSightFormVH activityVH, FieldSightFormDetails activity) {
+            public void viewBinded(FieldSightFormVH activityVH, FieldsightFormDetailsv3 activity) {
                 activityVH.bindView(activity);
             }
 
@@ -143,14 +154,9 @@ public class BaseFormListFragment extends Fragment {
             public FieldSightFormVH attachViewHolder(View view) {
                 return new FieldSightFormVH(view) {
                     @Override
-                    public void openForm(FieldSightFormDetails form) {
-                        if (TextUtils.equals(form.getFormType(), Constant.FormType.STAGED)) {
-                            prepareSubStage(form)
-                                    .subscribe(onSubStateSubscribe());
-                        } else {
-                            cacheFormAndSite(form, siteId);
-                            fillODKForm(form.getFormID());
-                        }
+                    public void openForm(FieldsightFormDetailsv3 form) {
+                        cacheFormAndSite(form, siteId);
+                        fillODKForm(form.getFormDetails().getFormID());
                     }
                 };
             }
@@ -159,10 +165,10 @@ public class BaseFormListFragment extends Fragment {
         recyclerView.setLayoutManager(manager);
     }
 
-    private DisposableObserver<ArrayList<FieldSightFormDetails>> onSubStateSubscribe() {
-        return new DisposableObserver<ArrayList<FieldSightFormDetails>>() {
+    private DisposableObserver<ArrayList<FieldsightFormDetailsv3>> onSubStateSubscribe() {
+        return new DisposableObserver<ArrayList<FieldsightFormDetailsv3>>() {
             @Override
-            public void onNext(ArrayList<FieldSightFormDetails> fieldSightForms) {
+            public void onNext(ArrayList<FieldsightFormDetailsv3> fieldSightForms) {
                 updateList(fieldSightForms, siteId);
             }
 
@@ -203,9 +209,9 @@ public class BaseFormListFragment extends Fragment {
         });
     }
 
-    private void cacheFormAndSite(FieldSightFormDetails form, String siteId) {
-        String formDeployedFrom = form.getFormDeployedProjectId() == null ? Constant.FormDeploymentFrom.SITE : Constant.FormDeploymentFrom.PROJECT;
-        String submissionUrl = generateSubmissionUrl(formDeployedFrom, siteId, form.getFieldSightFormId());
+    private void cacheFormAndSite(FieldsightFormDetailsv3 form, String siteId) {
+        String formDeployedFrom = form.getProject() == null ? Constant.FormDeploymentFrom.SITE : Constant.FormDeploymentFrom.PROJECT;
+        String submissionUrl = generateSubmissionUrl(formDeployedFrom, siteId, form.getId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, siteId);
     }
@@ -216,7 +222,7 @@ public class BaseFormListFragment extends Fragment {
         return ViewModelProviders.of(activity, factory).get(FieldSightFormViewModel.class);
     }
 
-    public void updateList(List<FieldSightFormDetails> fieldSightForms, String siteId) {
+    public void updateList(List<FieldsightFormDetailsv3> fieldSightForms, String siteId) {
         this.siteId = siteId;
 
         adapter.getData().clear();

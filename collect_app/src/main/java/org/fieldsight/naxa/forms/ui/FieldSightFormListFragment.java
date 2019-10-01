@@ -1,6 +1,7 @@
 package org.fieldsight.naxa.forms.ui;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 
@@ -58,7 +59,9 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         getViewModel().loadForm(formType, loadedSite.getProject(), loadedSite.getId())
                 .observe(this, fieldSightForms -> {
                     Timber.i(fieldSightForms.toString());
+                    showEmptyLayout(fieldSightForms.isEmpty());
                     updateList(fieldSightForms, loadedSite.getId());
                 });
     }
+
 }
