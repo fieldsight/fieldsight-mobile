@@ -185,30 +185,6 @@ public class BaseFormListFragment extends Fragment {
     }
 
 
-    private Observable<ArrayList<FieldSightFormDetails>> prepareSubStage(FieldSightFormDetails form) {
-        return Observable.fromCallable(new Callable<ArrayList<FieldSightFormDetails>>() {
-            @Override
-            public ArrayList<FieldSightFormDetails> call() throws Exception {
-                Type listType = new TypeToken<List<SubStage>>() {
-                }.getType();
-                ArrayList<SubStage> subStages = GSONInstance.getInstance().fromJson(form.getMetadata(), listType);
-                ArrayList<FieldSightFormDetails> fieldSightForms = new ArrayList<>();
-
-//                for (SubStage subStage : subStages) {
-//                    fieldSightForm = new FieldSightForm();
-//                    fieldSightForm.setFormName(subStage.getName());
-//                    fieldSightForm.setSiteId(form.getSiteId());
-//                    fieldSightForm.setProjectId(form.getProjectId());
-//
-//                    fieldSightForms.add(fieldSightForm);
-//                }
-
-
-                return fieldSightForms;
-            }
-        });
-    }
-
     private void cacheFormAndSite(FieldsightFormDetailsv3 form, String siteId) {
         String formDeployedFrom = form.getProject() == null ? Constant.FormDeploymentFrom.SITE : Constant.FormDeploymentFrom.PROJECT;
         String submissionUrl = generateSubmissionUrl(formDeployedFrom, siteId, form.getId());

@@ -1,7 +1,6 @@
 package org.fieldsight.naxa.forms.ui;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
 

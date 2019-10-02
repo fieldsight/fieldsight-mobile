@@ -210,27 +210,5 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         super.onStop();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(DataSyncEvent event) {
-
-        if (!isAdded() || getActivity() == null) {
-            //Fragment is not added
-            return;
-        }
-
-
-        Timber.i(event.toString());
-        switch (event.getEvent()) {
-            case DataSyncEvent.EventStatus.EVENT_START:
-                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
-                break;
-            case DataSyncEvent.EventStatus.EVENT_END:
-                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
-                break;
-            case DataSyncEvent.EventStatus.EVENT_ERROR:
-                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
-                break;
-        }
-    }
 
 }

@@ -2,18 +2,18 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_form_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/margin_small"
     android:layout_marginRight="@dimen/margin_small"
-    app:cardUseCompatPadding="true"
-    android:stateListAnimator="@animator/lift_on_touch"
-
-
     android:foreground="?selectableItemBackground"
+
+
     app:cardCornerRadius="@dimen/corner_radius"
-    app:cardElevation="@dimen/elevation_card_resting">
+    app:cardElevation="0dp"
+    app:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:id="@+id/rl_form_list_item"
@@ -61,6 +61,7 @@
         </RelativeLayout>
 
         <TextView
+            android:layout_toLeftOf="@id/status"
             android:id="@+id/tv_form_primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,7 +69,8 @@
             android:layout_toEndOf="@id/rela_round"
             android:layout_toRightOf="@id/rela_round"
             android:text="Title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:layout_toStartOf="@id/status" />
 
         <TextView
             android:id="@+id/tv_form_secondary"
@@ -104,6 +106,19 @@
             android:layout_toRightOf="@id/btn_form_responses"
             android:text="@string/btn_education_materials" />
 
+
+        <TextView
+
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            tools:text="Stage 1"
+            android:textAppearance="@style/ColoredCaption"
+            android:layout_marginEnd="@dimen/margin_large" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
