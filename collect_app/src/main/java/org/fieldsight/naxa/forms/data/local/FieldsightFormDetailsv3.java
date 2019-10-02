@@ -7,15 +7,13 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import org.fieldsight.naxa.common.GSONInstance;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.logic.FormDetails;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import timber.log.Timber;
 
@@ -203,7 +201,7 @@ public class FieldsightFormDetailsv3 {
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 JSONObject stageFormJSON = jsonArray.optJSONObject(i);
-                Timber.i("FieldSightFormDetailsv3, stageFormJSON = " + stageFormJSON.toString());
+                Timber.i("FieldSightFormDetailsv3, stageFormJSON = %s", stageFormJSON.toString());
                 // stage for basic id
                 JSONObject metaJSON = new JSONObject();
                 getMetaJSON("stage", stageFormJSON, metaJSON);
@@ -237,5 +235,12 @@ public class FieldsightFormDetailsv3 {
         }
         return fieldsightFormDetailsNewArrayList;
     }
+
+
+    //TODO: replace with manual parsing
+    public static StageSubStage getStageAndSubstage(String stageAndSubstage){
+        return GSONInstance.getInstance().fromJson(stageAndSubstage, StageSubStage.class);
+    }
+
 
 }

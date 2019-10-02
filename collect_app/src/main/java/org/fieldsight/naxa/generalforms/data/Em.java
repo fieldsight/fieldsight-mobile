@@ -1,6 +1,9 @@
 package org.fieldsight.naxa.generalforms.data;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -12,10 +15,11 @@ import com.google.gson.annotations.SerializedName;
 
 import org.fieldsight.naxa.generalforms.EmImageTypeConverter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "educational_materials")
-public class Em {
+public class Em implements Parcelable {
 
 
     @SerializedName("id")
@@ -108,4 +112,45 @@ public class Em {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeList(this.emImages);
+        dest.writeValue(this.isPdf);
+        dest.writeString(this.pdf);
+        dest.writeString(this.title);
+        dest.writeString(this.text);
+        dest.writeString(this.fsFormId);
+    }
+
+    public Em() {
+    }
+
+    protected Em(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.emImages = new ArrayList<EmImage>();
+        in.readList(this.emImages, EmImage.class.getClassLoader());
+        this.isPdf = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.pdf = in.readString();
+        this.title = in.readString();
+        this.text = in.readString();
+        this.fsFormId = in.readString();
+    }
+
+    public static final Parcelable.Creator<Em> CREATOR = new Parcelable.Creator<Em>() {
+        @Override
+        public Em createFromParcel(Parcel source) {
+            return new Em(source);
+        }
+
+        @Override
+        public Em[] newArray(int size) {
+            return new Em[size];
+        }
+    };
 }

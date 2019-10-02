@@ -574,12 +574,13 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void toStageList() {
 
-        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.STAGED, loadedSite);
+
+        StageListFragment stageListFragment = StageListFragment.newInstance(loadedSite);
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation)
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.fragment_container, stageListFragment)
                 .addToBackStack("myfrag2").commit();
 
 

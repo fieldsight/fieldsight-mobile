@@ -1,6 +1,9 @@
 
 package org.fieldsight.naxa.stages.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -25,7 +28,7 @@ import java.util.List;
 //                onDelete = CASCADE))
 
 @Entity(tableName = "substage")
-public class SubStage {
+public class SubStage implements Parcelable {
 
     @PrimaryKey
     @SerializedName("id")
@@ -247,7 +250,8 @@ public class SubStage {
                 Objects.equal(projectStageId, subStage.projectStageId) &&
                 Objects.equal(latestSubmission, subStage.latestSubmission) &&
                 Objects.equal(lastSubmissionBy, subStage.lastSubmissionBy) &&
-                Objects.equal(lastSubmissionDateTime, subStage.lastSubmissionDateTime);
+                Objects.equal(lastSubmissionDateTime, subStage.lastSubmissionDateTime) &&
+                Objects.equal(formDeployedFrom, subStage.formDeployedFrom);
     }
 
     @Override
@@ -263,4 +267,73 @@ public class SubStage {
         this.lastSubmissionDateTime = lastSubmissionDateTime;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.stageId);
+        dest.writeString(this.subStageDeployedFrom);
+        dest.writeString(this.fsFormId);
+        dest.writeString(this.jrFormId);
+        dest.writeParcelable(this.stageForms, flags);
+        dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeValue(this.order);
+        dest.writeStringList(this.tagIds);
+        dest.writeString(this.responseCount);
+        dest.writeParcelable(this.em, flags);
+        dest.writeValue(this.projectStageId);
+        dest.writeTypedList(this.latestSubmission);
+        dest.writeString(this.lastSubmissionBy);
+        dest.writeString(this.lastSubmissionDateTime);
+        dest.writeString(this.formDeployedFrom);
+    }
+
+    protected SubStage(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.stageId = in.readString();
+        this.subStageDeployedFrom = in.readString();
+        this.fsFormId = in.readString();
+        this.jrFormId = in.readString();
+        this.stageForms = in.readParcelable(StageForms.class.getClassLoader());
+        this.name = in.readString();
+        this.description = in.readString();
+        this.order = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.tagIds = in.createStringArrayList();
+        this.responseCount = in.readString();
+        this.em = in.readParcelable(Em.class.getClassLoader());
+        this.projectStageId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.latestSubmission = in.createTypedArrayList(FormResponse.CREATOR);
+        this.lastSubmissionBy = in.readString();
+        this.lastSubmissionDateTime = in.readString();
+        this.formDeployedFrom = in.readString();
+    }
+
+    public static final Parcelable.Creator<SubStage> CREATOR = new Parcelable.Creator<SubStage>() {
+        @Override
+        public SubStage createFromParcel(Parcel source) {
+            return new SubStage(source);
+        }
+
+        @Override
+        public SubStage[] newArray(int size) {
+            return new SubStage[size];
+        }
+    };
+
+    @Ignore
+    private String formDeployedFrom;
+
+    public String getFormDeployedFrom() {
+        return formDeployedFrom;
+    }
+
+    public void setFormDeployedFrom(String formDeployedFrom) {
+        this.formDeployedFrom = formDeployedFrom;
+    }
 }
