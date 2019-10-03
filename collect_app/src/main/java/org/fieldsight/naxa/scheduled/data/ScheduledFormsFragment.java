@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
-import org.fieldsight.naxa.common.FieldSightFormListFragment;
+import org.fieldsight.naxa.common.BaseFormListFragment;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
@@ -47,7 +47,7 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
 import static org.fieldsight.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
-public class ScheduledFormsFragment extends FieldSightFormListFragment implements OnFormItemClickListener<ScheduleForm> {
+public class ScheduledFormsFragment extends BaseFormListFragment implements OnFormItemClickListener<ScheduleForm> {
 
     @Inject
     ViewModelFactory viewModelFactory;

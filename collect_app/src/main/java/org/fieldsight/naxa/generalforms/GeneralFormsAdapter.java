@@ -2,11 +2,13 @@ package org.fieldsight.naxa.generalforms;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +48,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         generalForms.addAll(newList);
         diffResult.dispatchUpdatesTo(this);
 
-        if(newList.isEmpty()){
+        if (newList.isEmpty()) {
             //triggers observer so it display empty layout - nishon
             this.notifyDataSetChanged();
         }
@@ -56,7 +58,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_expanded, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.form_list_item_expanded, null, true);
         return new ViewHolder(view);
 
 

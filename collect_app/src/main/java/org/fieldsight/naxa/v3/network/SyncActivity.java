@@ -85,6 +85,12 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         if (projectList == null || projectList.size() == 0) {
             return;
         }
+
+        // clear the sync stat table if it is not syncing when opened
+        if(!syncing) {
+            SyncLocalSource3.getInstance().delete();
+        }
+
         setTitle(String.format(Locale.getDefault(), "Projects (%d)", projectList.size()));
         /// create the map of the syncing
         if (syncableMap == null)
@@ -116,7 +122,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             adapterv3.notifyBySyncStat(syncStats);
         };
 
-        syncdata = SyncLocalSourcev3.getInstance().getAll();
+        syncdata = SyncLocalSource3.getInstance().getAll();
         syncdata.observe(this, syncObserver);
 
         runningLiveDataObserver = count -> {
@@ -126,22 +132,22 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
                 enableDisableAdapter(false);
             }
         };
-        runningLiveData = SyncLocalSourcev3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING);
+        runningLiveData = SyncLocalSource3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING, Constant.DownloadStatus.QUEUED);
         runningLiveData.observe(this, runningLiveDataObserver);
         if (syncing) {
             enableDisableAdapter(syncing);
         }
+
     }
 
     // this class will manage the sync list to determine which should be synced
     ArrayList<Syncable> createList() {
-//        -1 refers here as never started
-        ArrayList<Syncable> list = new ArrayList<Syncable>() {{
+        // -1 refers here as never started
+        return new ArrayList<Syncable>() {{
             add(0, new Syncable("Regions and sites", auto, -1));
             add(1, new Syncable("Forms", auto, -1));
             add(2, new Syncable("Materials", auto, -1));
         }};
-        return list;
     }
 
     void createSyncableList(List<Project> selectedProjectList) {
@@ -205,9 +211,9 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             adapterv3.enableItemClick();
         }
         downloadButton.setEnabled(!isSyncing);
-        downloadButton.setBackgroundColor(isSyncing ? getResources().getColor(R.color.disabled_gray) :
-                getResources().getColor(R.color.primaryColor));
-        downloadButton.setTextColor(getResources().getColor(R.color.white));
+//        downloadButton.setBackgroundColor(isSyncing ? getResources().getColor(R.color.disabled_gray) :
+//                getResources().getColor(R.color.primaryColor));
+//        downloadButton.setTextColor(getResources().getColor(R.color.white));
         this.syncing = isSyncing;
     }
 
@@ -242,7 +248,6 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == Constant.RequestCode.DOWNLOAD_FORMS) {
             String projectId;
             HashMap<String, Boolean> statusAndForms = (HashMap<String, Boolean>) data.getSerializableExtra(ApplicationConstants.BundleKeys.FORM_IDS);
@@ -259,9 +264,9 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             projectId = data.getStringExtra(Constant.EXTRA_ID);
 
             if (failedUrls.size() > 0) {
-                SyncLocalSourcev3.getInstance().markAsFailed(projectId, 1, failedUrls.toString());
+                SyncLocalSource3.getInstance().markAsFailed(projectId, 1, failedUrls.toString());
             } else {
-                SyncLocalSourcev3.getInstance().markAsCompleted(projectId, 1);
+                SyncLocalSource3.getInstance().markAsCompleted(projectId, 1);
             }
         }
     }

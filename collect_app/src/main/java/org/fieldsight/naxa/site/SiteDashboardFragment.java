@@ -37,6 +37,7 @@ import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FilterOption;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
+import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
 import org.fieldsight.naxa.generalforms.GeneralFormsFragment;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.project.MapActivity;
@@ -571,7 +572,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void toForms() {
-        GeneralFormsFragment fragment = GeneralFormsFragment.newInstance(loadedSite);
+        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.GENERAl, loadedSite);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation);
@@ -583,6 +584,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void toStageList() {
+
 
         StageListFragment stageListFragment = StageListFragment.newInstance(loadedSite);
 
@@ -597,15 +599,13 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     private void toScheduleList() {
 
-
-        ScheduledFormsFragment scheduleFormListFragment = ScheduledFormsFragment
-                .newInstance(loadedSite);
+        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.SCHEDULE, loadedSite);
 
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation)
-                .replace(R.id.fragment_container, scheduleFormListFragment)
+                .replace(R.id.fragment_container, fragment)
                 .addToBackStack("myfrag1").commit();
 
 

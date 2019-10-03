@@ -6,9 +6,15 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.room.migration.Migration;
+
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetailDAO;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetailDAOV3;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
+import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.contact.ContacstDao;
 import org.fieldsight.naxa.contact.FieldSightContactModel;
@@ -61,10 +67,12 @@ import java.io.File;
                 Em.class,
                 FieldSightContactModel.class,
                 SubmissionDetail.class,
-                SyncStat.class
+                SyncStat.class,
+                FieldSightFormDetails.class,
+                FieldsightFormDetailsv3.class
 
         },
-        version = 18)
+        version = 21)
 @TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
 
 
@@ -100,6 +108,9 @@ public abstract class FieldSightDatabase extends RoomDatabase {
 
     public abstract SyncDaoV3 getSyncDaoV3();
 
+    public abstract FieldSightFormDetailDAO getFieldSightFormDAO();
+    public abstract FieldSightFormDetailDAOV3 getFieldSightFOrmDAOV3();
+
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 
     public static FieldSightDatabase getDatabase(final Context context) {
@@ -114,7 +125,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                         .allowMainThreadQueries()//used in org.bcss.naxa.jobs.LocalNotificationJob
                         .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
                                 MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14,
-                                MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18)
+                                MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21)
 
                         .build();
             }
@@ -238,5 +249,34 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                     + " ADD COLUMN `site` TEXT ");
         }
     };
+
+    private static final Migration MIGRATION_18_19 = new Migration(18, 19) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `fieldsight_formv3` (`id` TEXT NOT NULL, `site` TEXT, `project` TEXT, `site_project_id` TEXT, `type` TEXT, `em` TEXT, `description` TEXT, `settings` TEXT, `formDetails` TEXT, `metaAttributes` TEXT, PRIMARY KEY(`id`))");
+
+        }
+    };
+
+    private static final Migration MIGRATION_19_20 = new Migration(19, 20) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE syncstat"
+                    + " ADD COLUMN `total` INTEGER NOT NULL DEFAULT 0");
+
+            database.execSQL("ALTER TABLE syncstat"
+                    + " ADD COLUMN `progress` INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
+    private static final Migration MIGRATION_20_21 = new Migration(20, 21) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `fieldsight_forms` (`fieldSightFormId` TEXT NOT NULL, `formDeployedSiteId` TEXT, `formDeployedProjectId` TEXT, `projectId` INTEGER, `odkFormName` TEXT, `formDescriptionText` TEXT, `odkFormVersion` TEXT, `metadata` TEXT, `formOrder` INTEGER, `formType` TEXT, `totalFormsInProject` INTEGER NOT NULL, `errorStr` TEXT, `formName` TEXT, `downloadUrl` TEXT, `manifestUrl` TEXT, `formID` TEXT, `formVersion` TEXT, `hash` TEXT, `manifestFileHash` TEXT, `isNewerFormVersionAvailable` INTEGER NOT NULL, `areNewerMediaFilesAvailable` INTEGER NOT NULL, PRIMARY KEY(`fieldSightFormId`))");
+        }
+    };
+
+
 
 }

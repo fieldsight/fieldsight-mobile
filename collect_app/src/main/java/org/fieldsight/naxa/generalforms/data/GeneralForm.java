@@ -32,7 +32,7 @@ public class GeneralForm {
     @Expose
     private String name;
 
-    @SerializedName("id_string")
+    @SerializedName(value = "id_string", alternate = "formID")
     @Expose
     private String idString;
 
@@ -70,9 +70,14 @@ public class GeneralForm {
     @SerializedName("site")
     @Expose
     private String siteId;
-    @SerializedName("project")
+    @SerializedName(value = "project")
     @Expose
     private String projectId;
+
+    @Ignore
+    @SerializedName("site_project_id")
+    @Expose
+    private String siteProjectId;
 
     @SerializedName("downloadUrl")
     private String downloadUrl;
@@ -88,6 +93,17 @@ public class GeneralForm {
     private String lastSubmissionBy;
     private String lastSubmissionDateTime;
 
+    @Ignore
+    @SerializedName("version")
+    private String version;
+
+    @Ignore
+    @SerializedName("hash")
+    private String hash;
+
+    public String getSiteProjectId() {
+        return siteProjectId;
+    }
 
     //@SerializedName("latest_submission")
     @Expose
@@ -110,6 +126,14 @@ public class GeneralForm {
 
     public void setFormDeployedFrom(@NonNull String formDeployedFrom) {
         this.formDeployedFrom = formDeployedFrom;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getHash() {
+        return hash;
     }
 
     public Em getEm() {

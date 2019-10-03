@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
 import org.fieldsight.naxa.common.ViewModelFactory;
 import org.fieldsight.naxa.common.event.DataSyncEvent;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.substages.SubStageListFragment;
@@ -116,35 +118,10 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
 
-        viewModel.getStages(false, loadedSite)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<List<Stage>>() {
-                    @Override
-                    public void onNext(List<Stage> stages) {
+        FieldSightFormsLocalSourcev3.getInstance().getStageForms(loadedSite.getProject(), loadedSite.getSite(), loadedSite.getTypeId())
+                .observe(this, stages -> listAdapter.updateList(stages));
 
-                        listAdapter.updateList(stages);
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-//        viewModel
-//                .getForms(false, loadedSite)
-//                .observe(this, new Observer<List<Stage>>() {
-//                    @Override
-//                    public void onChanged(@Nullable List<Stage> stages) {
-//                        listAdapter.updateList(stages);
-//                    }
-//                });
     }
 
     @Override
@@ -178,7 +155,9 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
 
     @Override
     public void onFormItemClicked(Stage stage, int position) {
-        Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getId(), String.valueOf(position), stage.getFormDeployedFrom());
+        Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getSubStage(), String.valueOf(position));
+
+
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation);
@@ -198,39 +177,5 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(DataSyncEvent event) {
-
-        if (!isAdded() || getActivity() == null) {
-            //Fragment is not added
-            return;
-        }
-
-
-        Timber.i(event.toString());
-        switch (event.getEvent()) {
-            case DataSyncEvent.EventStatus.EVENT_START:
-                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
-                break;
-            case DataSyncEvent.EventStatus.EVENT_END:
-                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
-                break;
-            case DataSyncEvent.EventStatus.EVENT_ERROR:
-                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
-                break;
-        }
-    }
 
 }

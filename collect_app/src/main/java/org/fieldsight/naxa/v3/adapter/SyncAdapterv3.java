@@ -82,6 +82,13 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
                     List<Syncable> list = syncableMap.get(syncStat.getProjectId());
                     int syncType = Integer.parseInt(syncStat.getType());
                     boolean isValidList = syncStat.getFailedUrl().contains("[") ;
+
+                    if(syncStat.isProgressBarEnabled()){
+                        Syncable syncable = list.get(syncType);
+                        syncable.setProgress(syncStat.getProgress());
+                        syncable.setTotal(syncStat.getTotal());
+                    }
+
                     if (syncType > -1) {
                         Syncable syncable = list.get(syncType);
                         syncable.setStatus(syncStat.getStatus());

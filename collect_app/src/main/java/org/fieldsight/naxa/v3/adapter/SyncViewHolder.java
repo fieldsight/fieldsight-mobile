@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.v3.adapter;
 
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import org.fieldsight.naxa.v3.network.Syncable;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +70,11 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
 
         tv_project_name.setText(project.getName());
         tv_project_other.setText(String.format("By %s", project.getOrganizationName()));
-        progressBar.setProgress(progressMap.get(project.getId()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            progressBar.setProgress(progressMap.get(project.getId()), true);
+        } else {
+            progressBar.setProgress(progressMap.get(project.getId()));
+        }
         iv_cancel.setVisibility(disable ? View.GONE : View.VISIBLE);
         tv_project_progress_percentage.setText(progressMap.get(project.getId()) + "%");
         Timber.i("SyncViewHolder, projectImage = %s", project.getUrl());
@@ -78,12 +84,12 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
 
     void manageChildView(List<Syncable> syncableList, boolean disable) {
         Timber.i("SyncViewHolder, syncablelistsize = %d", syncableList.size());
-        lv_options.setAdapter(new ArrayAdapter<Syncable>(itemView.getContext(), R.layout.row_text_checkbox, syncableList) {
+        lv_options.setAdapter(new ArrayAdapter<Syncable>(itemView.getContext(), R.layout.row_text_checkbox_v2, syncableList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 if (convertView == null) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_text_checkbox, null);
+                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_text_checkbox_v2, null);
                 }
                 Syncable syncable = getItem(position);
                 CheckBox chkbx = convertView.findViewById(R.id.chkbx_sync_select);
@@ -100,7 +106,19 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 tv_stat.setTextColor(syncable.status == Constant.DownloadStatus.FAILED ?
                         getContext().getResources().getColor(R.color.red_500) :
                         getContext().getResources().getColor(R.color.green));
-                tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
+
+
+                if (syncable.getStatus() == Constant.DownloadStatus.RUNNING) {
+                    String messageWithProgress = "";
+                    if (syncable.isProgressBarEnabled()) {
+                        messageWithProgress = "(" + syncable.getProgress() + "/" + syncable.getTotal() + ")";
+                    }
+
+                    tv_stat.setText(String.format(Objects.requireNonNull(Constant.DOWNLOADMAP.get(syncable.getStatus())), messageWithProgress));
+                } else {
+                    tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
+                }
+
                 chkbx.setEnabled(!disable);
                 chkbx.setOnClickListener(v -> {
                     if (!disable)
@@ -110,7 +128,11 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 TextView btnRetry = convertView.findViewById(R.id.btn_retry);
                 View finalConvertView = convertView;
 
-                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0 && TextUtils.equals("Forms",syncable.getTitle());
+                ProgressBar progressBar = convertView.findViewById(R.id.progress_bar_row_text_checkbox_v2);
+
+
+                boolean hasFailedUrls = syncable.getFailedUrl().size() > 0 && TextUtils.equals("Forms", syncable.getTitle());
+
 
                 if (hasFailedUrls) {
                     btnRetry.setText(finalConvertView.getContext().getString(R.string.retry_forms, syncable.getFailedUrl().size()));
@@ -128,6 +150,15 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                     });
                 } else {
                     btnRetry.setVisibility(View.GONE);
+                }
+
+
+                progressBar.setVisibility(syncable.isProgressBarEnabled() ? View.GONE : View.GONE);
+
+                if (syncable.isProgressBarEnabled()) {
+
+                    progressBar.setMax(syncable.getTotal());
+                    progressBar.setProgress(syncable.getProgress());
                 }
 
 

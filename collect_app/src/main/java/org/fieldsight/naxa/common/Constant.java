@@ -73,10 +73,10 @@ public class Constant {
     }
 
     public static final class FormType {
-        public static final String SCHEDULE = "schedule_form";
-        public static final String STAGED = "staged_form";
-        public static final String GENERAl = "general_form";
-        public static final String SURVEY = "survey_form";
+        public static final String SCHEDULE = "schedule";
+        public static final String STAGED = "stage";
+        public static final String GENERAl = "general";
+        public static final String SURVEY = "survey";
     }
 
     public final static class FormDeploymentFrom {
@@ -111,6 +111,7 @@ public class Constant {
 
 
     public static final String EXTRA_OBJECT = "extra_object";
+    public static final String EXTRA_PROJECT = "extra_object_project";
     public static final String EXTRA_ID = "extra_id";
     public static final String EXTRA_MESSAGE = "extra_msg";
     public static final String EXTRA_PROJECT_ID = "extra_msg";
@@ -165,7 +166,7 @@ public class Constant {
 
     public final static HashMap<Integer, String> DOWNLOADMAP = new HashMap<Integer, String>(){{
         put(DownloadStatus.FAILED, "Failed");
-        put(DownloadStatus.RUNNING, "Syncing data");
+        put(DownloadStatus.RUNNING, "Syncing data %s");
         put(DownloadStatus.COMPLETED, "Completed");
         put(DownloadStatus.QUEUED, "Queued");
     }};

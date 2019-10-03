@@ -6,7 +6,9 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
-@Entity(tableName = "syncstat", primaryKeys = {"project_id","type"})
+import org.jetbrains.annotations.NotNull;
+
+@Entity(tableName = "syncstat", primaryKeys = {"project_id", "type"})
 
 public class SyncStat {
     @NonNull
@@ -18,9 +20,11 @@ public class SyncStat {
     String type;
 
     @ColumnInfo(name = "failed_url")
+    private
     String failedUrl;
 
     @ColumnInfo(name = "started")
+    private
     boolean started;
 
     @ColumnInfo(name = "status")
@@ -29,7 +33,12 @@ public class SyncStat {
     @ColumnInfo(name = "created_date")
     long created_date;
 
-    public SyncStat() {}
+    private int total;
+    private int progress;
+
+    SyncStat() {
+    }
+
     /*
             @params projectId
             @params type
@@ -37,13 +46,29 @@ public class SyncStat {
             @params started
      */
     @Ignore
-    public SyncStat(String projectId, String type, String failedUrl, boolean started, int status, long created_date) {
+    public SyncStat(@NotNull String projectId, @NotNull String type, String failedUrl, boolean started, int status, long created_date) {
         this.projectId = projectId;
         this.type = type;
         this.failedUrl = failedUrl;
         this.started = started;
         this.status = status;
         this.created_date = created_date;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public int getTotal() {
+        return total;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
     }
 
     public long getCreated_date() {
@@ -62,19 +87,21 @@ public class SyncStat {
         this.status = status;
     }
 
+    @NotNull
     public String getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(String projectId) {
+    public void setProjectId(@NotNull String projectId) {
         this.projectId = projectId;
     }
 
+    @NotNull
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(@NotNull String type) {
         this.type = type;
     }
 
@@ -93,4 +120,9 @@ public class SyncStat {
     public void setStarted(boolean started) {
         this.started = started;
     }
+
+    public boolean isProgressBarEnabled() {
+        return getTotal() > 0;
+    }
+
 }

@@ -32,7 +32,7 @@ import org.fieldsight.naxa.v3.adapter.ProjectListAdapter;
 import org.fieldsight.naxa.v3.network.LoadProjectCallback;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
-import org.fieldsight.naxa.v3.network.SyncLocalSourcev3;
+import org.fieldsight.naxa.v3.network.SyncLocalSource3;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
@@ -119,7 +119,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             showSyncMenu = projectNameList.size() == 0 || projectNameList.size() < adapter.getItemCount();
             invalidateOptionsMenu();
         };
-        projectIds = SyncLocalSourcev3.getInstance().getAllSiteSyncingProject();
+        projectIds = SyncLocalSource3.getInstance().getAllSiteSyncingProject();
     }
 
     @Override

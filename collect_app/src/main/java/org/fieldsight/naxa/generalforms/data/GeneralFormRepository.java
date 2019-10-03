@@ -53,8 +53,10 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
         return localSource.getByProjectId(project);
     }
 
-    public LiveData<List<GeneralFormAndSubmission>> getFormsBySiteId(@NonNull String siteId,@NonNull String projectId) {
-        return localSource.getFormsBySiteId(siteId,projectId);
+
+
+    public LiveData<List<GeneralFormAndSubmission>> getFormsBySiteId(@NonNull String siteId, @NonNull String projectId) {
+        return localSource.getFormsBySiteId(siteId, projectId);
     }
 
     public LiveData<List<GeneralFormAndSubmission>> getFormsByProjectIdId(@NonNull String projectId) {
@@ -88,5 +90,8 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
     }
 
 
-
+    public LiveData<List<GeneralFormAndSubmission>> getForms(@NonNull String siteId, @NonNull String projectId) {
+        boolean hasSiteForms = localSource.getSiteFormCount(siteId) > 0;
+        return hasSiteForms ? localSource.getFormsBySiteId(siteId, projectId) : localSource.getFormsByProjectId(projectId);
+    }
 }

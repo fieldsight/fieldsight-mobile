@@ -26,7 +26,7 @@ public class Stage {
     private Integer projectStageId;
 
     @Ignore
-    @SerializedName("parent")
+    @SerializedName(value = "parent",alternate = "sub_stages")
     @Expose
     private ArrayList<SubStage> subStage;
 

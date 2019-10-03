@@ -64,11 +64,35 @@ public class ScheduleForm {
     @SerializedName("site")
     private String siteId;
 
-    @SerializedName("id_string")
+    @SerializedName(value = "id_string", alternate = "formID")
     private String idString;
 
     private String lastSubmissionBy;
     private String lastSubmissionDateTime;
+
+    @Ignore
+    @SerializedName("downloadUrl")
+    private String downloadUrl;
+
+    @Ignore
+    @SerializedName("manifestUrl")
+    private String manifestUrl;
+
+    @Ignore
+    @SerializedName("version")
+    private String version;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public String getManifestUrl() {
+        return manifestUrl;
+    }
 
     public void setScheduleId(String scheduleId) {
         this.scheduleId = scheduleId;
@@ -170,6 +194,11 @@ public class ScheduleForm {
     @SerializedName("form_name")
     private String formName;
     private String formDescFromXML;
+
+    @Ignore
+    @SerializedName("site_project_id")
+    @Expose
+    private String siteProjectId;
 
     public ScheduleForm() {
     }
@@ -360,4 +389,7 @@ public class ScheduleForm {
         this.lastSubmissionDateTime = lastSubmissionDateTime;
     }
 
+    public String getSiteProjectId() {
+        return siteProjectId;
+    }
 }

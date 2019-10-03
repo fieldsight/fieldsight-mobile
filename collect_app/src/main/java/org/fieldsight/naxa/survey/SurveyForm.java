@@ -5,17 +5,48 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 @Entity(tableName = "survey_forms")
 public class SurveyForm {
 
     @NonNull
     @PrimaryKey
+    @SerializedName("id")
     private String fsFormId;
+
+    @SerializedName("project")
     private String projectId;
+
+    @Ignore
+    @SerializedName("downloadUrl")
+    private String downloadUrl;
+
+    @Ignore
+    @SerializedName("manifestUrl")
+    private String manifestUrl;
+
+    @SerializedName("formID")
     private String idString;
+
+    @SerializedName("name")
     private String name;
 
-    public SurveyForm(){
+    @Ignore
+    @SerializedName("version")
+    private String version;
+
+    @Ignore
+    @SerializedName("hash")
+    private String hash;
+
+    @Ignore
+    @SerializedName("site_project_id")
+    @Expose
+    private String siteProjectId;
+
+    public SurveyForm() {
 
     }
 
@@ -25,6 +56,26 @@ public class SurveyForm {
         this.projectId = projectId;
         this.idString = idString;
         this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public String getManifestUrl() {
+        return manifestUrl;
+    }
+
+    public void setManifestUrl(String manifestUrl) {
+        this.manifestUrl = manifestUrl;
     }
 
     public String getFsFormId() {
@@ -57,5 +108,9 @@ public class SurveyForm {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSiteProjectId() {
+        return siteProjectId;
     }
 }

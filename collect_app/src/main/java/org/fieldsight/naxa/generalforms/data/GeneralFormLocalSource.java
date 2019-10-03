@@ -62,6 +62,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
         return dao.getProjectGeneralForms(projectId);
     }
 
+
     public LiveData<List<GeneralFormAndSubmission>> getFormsBySiteId(@NonNull String siteId, @NonNull String projectId) {
 
         MediatorLiveData<List<GeneralFormAndSubmission>> generalFormMediator = new MediatorLiveData<>();
@@ -226,29 +227,9 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
     @Override
     public void save(ArrayList<GeneralForm> items) {
-        io.reactivex.Observable.just(items)
-                .flatMap(generalForms -> {
-                    dao.insert(generalForms);
-                    return io.reactivex.Observable.empty();
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new DisposableObserver<Object>() {
-                    @Override
-                    public void onNext(Object o) {
 
-                    }
+        dao.insert(items);
 
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 
     @Override
@@ -269,8 +250,6 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
 
-
-
     public LiveData<List<GeneralForm>> getById(String fsFormId) {
         return dao.getById(fsFormId);
     }
@@ -280,4 +259,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
 
+    public Integer getSiteFormCount(String siteId) {
+        return dao.getSiteFormCount(siteId);
+    }
 }

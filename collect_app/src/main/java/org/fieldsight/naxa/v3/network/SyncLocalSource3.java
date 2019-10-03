@@ -15,22 +15,22 @@ import java.util.List;
 
 import io.reactivex.Single;
 
-public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
+public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
 
-    private static SyncLocalSourcev3 INSTANCE;
+    private static SyncLocalSource3 INSTANCE;
     private SyncDaoV3 dao;
 
 
-    private SyncLocalSourcev3() {
+    private SyncLocalSource3() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
         this.dao = database.getSyncDaoV3();
     }
 
 
-    public static SyncLocalSourcev3 getInstance() {
+    public static SyncLocalSource3 getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new SyncLocalSourcev3();
+            INSTANCE = new SyncLocalSource3();
         }
         return INSTANCE;
     }
@@ -47,7 +47,7 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
         AsyncTask.execute(() -> dao.delete(stat));
     }
 
-    public LiveData<Integer> getCountByStatus(int status) {
+    public LiveData<Integer> getCountByStatus(int... status) {
         return dao.countByStatus(status);
     }
 
@@ -98,4 +98,10 @@ public class SyncLocalSourcev3 implements BaseLocalDataSource<SyncStat> {
         return dao.getFailedUrls(projectId, type);
     }
 
+    public void updateDownloadProgress(String projectId, int progress, int totalFormsInProject) {
+        SyncStat syncStat = new SyncStat(projectId, 1 + "", "", false, Constant.DownloadStatus.RUNNING, System.currentTimeMillis());
+        syncStat.setProgress(progress);
+        syncStat.setTotal(totalFormsInProject);
+        save(syncStat);
+    }
 }

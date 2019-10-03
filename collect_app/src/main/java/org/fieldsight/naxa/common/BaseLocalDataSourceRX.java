@@ -13,10 +13,8 @@ public interface BaseLocalDataSourceRX<T> {
 
     Completable save(T... items);
 
-    Completable save(ArrayList<T> items);
 
-    void saveAsAsync(T... items);
-
+    void save(ArrayList<T> items);
 
 
     void updateAll(ArrayList<T> items);

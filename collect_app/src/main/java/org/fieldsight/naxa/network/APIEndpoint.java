@@ -4,8 +4,8 @@ public class APIEndpoint {
 
     public final static int NEW_RECORD_CREATED = 201;
 
-        public static final String BASE_URL = "https://app.fieldsight.org";
-//    public static final String BASE_URL = "https://fieldsight.naxa.com.np";
+//    public static final String BASE_URL = "https://app.fieldsight.org";
+    public static final String BASE_URL = "https://fieldsight.naxa.com.np";
 
 //  public static final String BASE_URL = "http://192.168.1.107:8001";
 //  public static final String BASE_URL = "http://192.168.1.251:8001";
@@ -60,6 +60,7 @@ public class APIEndpoint {
         public static final String GET_SITES = "/fv3/api/sites/";
         public static final String GET_NOTIFICATION = "/fv3/api/user/logs/";
         public static final String GET_SITE_DOCUMENTS = "/fv3/api/site/blueprint/";
+        public static final String GET_FORMS = "/fv3/api/forms";
     }
 
     public class PARAMS {

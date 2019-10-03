@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
-import org.fieldsight.naxa.common.FieldSightFormListFragment;
+import org.fieldsight.naxa.common.BaseFormListFragment;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
@@ -46,7 +46,7 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
 import static org.fieldsight.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
-public class GeneralFormsFragment extends FieldSightFormListFragment implements OnFormItemClickListener<GeneralForm> {
+public class GeneralFormsFragment extends BaseFormListFragment implements OnFormItemClickListener<GeneralForm> {
 
     @Inject
     ViewModelFactory viewModelFactory;
@@ -118,7 +118,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
 
-        viewModel.getFormsAndSubmission(loadedSite)
+        viewModel.getFormsAndSubmission(loadedSite.getId(), loadedSite.getProject())
                 .observe(this, new Observer<List<GeneralFormAndSubmission>>() {
                     @Override
                     public void onChanged(@Nullable List<GeneralFormAndSubmission> generalFormAndSubmissions) {
@@ -165,7 +165,7 @@ public class GeneralFormsFragment extends FieldSightFormListFragment implements 
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
 
-        if(isFormSaveCacheSafe(submissionUrl,loadedSite.getId())){
+        if (isFormSaveCacheSafe(submissionUrl, loadedSite.getId())) {
             fillODKForm(generalForm.getIdString());
         }
     }

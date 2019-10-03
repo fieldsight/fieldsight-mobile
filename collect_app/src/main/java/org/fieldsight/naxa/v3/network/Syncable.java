@@ -12,58 +12,83 @@ import java.util.Set;
  */
 
 public class Syncable implements Serializable {
-        String title;
-//        this flag is used to enable it to sync or not
-        boolean sync = true;
-        Set<String> lastFailedUrl = new HashSet<>();
 
-        public String getTitle(){
-            return this.title;
-        }
+    private String title;
+    boolean sync; // this flag is used to enable it to sync or not
+    private Set<String> lastFailedUrl = new HashSet<>();
+    private int total;
+    private int progress;
+    public int status;
 
-        public void setSync(boolean sync) {
-            this.sync = sync;
-        }
-        public boolean getSync() {
-            return this.sync;
-        }
-        public int status;
-        public void toggleSync() {
-            this.sync = !this.sync;
-        }
+    /**
+     * @param title  - title that is show in the list
+     * @param sync   - selector to include in the downlod or not. if no need to download {@code sync = false }
+     * @param status - status of the download
+     */
 
-        /**
-         * @param title - title that is show in the list
-         * @param sync  - selector to include in the downlod or not. if no need to download {@code sync = false }
-         * @param status - status of the download
-         */
+    Syncable(String title, boolean sync, int status) {
+        this.title = title;
+        this.sync = sync;
+        this.status = status;
+    }
 
-        public Syncable(String title, boolean sync, int status) {
-            this.title = title;
-            this.sync = sync;
-            this.status = status;
-        }
+    Syncable(String title, boolean sync, int status, int total, int progress) {
+        this.title = title;
+        this.sync = sync;
+        this.status = status;
+        this.total = total;
+        this.progress = progress;
+    }
 
-        public void addFailedUrl(String url) {
-            this.lastFailedUrl.add(url);
-        }
+    public int getTotal() {
+        return total;
+    }
 
-        public Set<String> getFailedUrl() {
-            return this.lastFailedUrl;
-        }
+    public int getProgress() {
+        return progress;
+    }
 
-        public Syncable(String title) {
-            this.title = title;
-        }
-        public void setStatus(int status) {
-            this.status = status;
-        }
+    public String getTitle() {
+        return this.title;
+    }
 
-        public int getStatus() {
-            return this.status;
-        }
+    public void setSync(boolean sync) {
+        this.sync = sync;
+    }
+
+    public boolean getSync() {
+        return this.sync;
+    }
+
+    public void toggleSync() {
+        this.sync = !this.sync;
+    }
+
+    public Set<String> getFailedUrl() {
+        return this.lastFailedUrl;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return this.status;
+    }
 
     public void addFailedUrl(String[] urlList) {
         this.lastFailedUrl.addAll(Arrays.asList(urlList));
+    }
+
+    public void setTotal(int total) {
+        this.total = total;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public boolean isProgressBarEnabled() {
+        return getTotal() > 0;
     }
 }

@@ -15,6 +15,7 @@ import org.fieldsight.naxa.contact.ContactRemoteSource;
 import org.fieldsight.naxa.contact.ContactRepository;
 import org.fieldsight.naxa.contact.ProjectContactViewModel;
 import org.fieldsight.naxa.data.source.local.FieldSightNotificationLocalSource;
+import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.generalforms.GeneralFormViewModel;
 import org.fieldsight.naxa.generalforms.data.GeneralFormLocalSource;
 import org.fieldsight.naxa.generalforms.data.GeneralFormRemoteSource;
@@ -158,18 +159,12 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
             //noinspection unchecked
             return (T) new FragmentHostViewModel();
         }
+        else if (modelClass.isAssignableFrom(FieldSightFormViewModel.class)) {
+            //noinspection unchecked
+            return (T) new FieldSightFormViewModel();
+        }
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());
     }
 
 
-    public static FragmentHostViewModel obtainViewModel(FragmentActivity activity) {
-        // Use a Factory to inject dependencies into the ViewModel
-
-        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
-
-        FragmentHostViewModel viewModel =
-                ViewModelProviders.of(activity, factory).get(FragmentHostViewModel.class);
-
-        return viewModel;
-    }
 }

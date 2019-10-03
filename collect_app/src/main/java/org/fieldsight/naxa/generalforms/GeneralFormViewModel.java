@@ -22,8 +22,6 @@ public class GeneralFormViewModel extends ViewModel {
     }
 
 
-
-
     @Deprecated
     public LiveData<List<GeneralForm>> getForms(boolean forcedUpdate, Site loadedSite) {
         switch (loadedSite.getGeneralFormDeployedFrom()) {
@@ -36,10 +34,16 @@ public class GeneralFormViewModel extends ViewModel {
         }
     }
 
+    public LiveData<List<GeneralFormAndSubmission>> getFormsAndSubmission(String siteId, String projectId) {
+        return repository.getForms(siteId, projectId);
+    }
+
+    @Deprecated
     public LiveData<List<GeneralFormAndSubmission>> getFormsAndSubmission(Site loadedSite) {
+
         switch (loadedSite.getGeneralFormDeployedFrom()) {
             case SITE:
-                return repository.getFormsBySiteId(loadedSite.getId(),loadedSite.getProject());
+                return repository.getFormsBySiteId(loadedSite.getId(), loadedSite.getProject());
             case PROJECT:
             default:
                 return repository.getFormsByProjectIdId(loadedSite.getProject());

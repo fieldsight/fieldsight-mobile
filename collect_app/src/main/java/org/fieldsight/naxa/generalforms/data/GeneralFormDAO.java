@@ -50,4 +50,6 @@ public abstract class GeneralFormDAO implements BaseDaoFieldSight<GeneralForm> {
     @Query("SELECT * FROM general_forms WHERE fsFormId =:fsFormId")
     public abstract LiveData<List<GeneralForm>> getById(String fsFormId);
 
+    @Query("SELECT COUNT(*) FROM general_forms WHERE siteId=:siteId")
+    public abstract Integer getSiteFormCount(String siteId);
 }
