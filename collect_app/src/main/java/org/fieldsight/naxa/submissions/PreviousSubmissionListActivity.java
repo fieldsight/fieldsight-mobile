@@ -353,7 +353,6 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     public void onFormClicked(FormResponse form, View view) {
         Intent toFormDetail = new Intent(this, PreviousSubmissionDetailActivity.class);
         toFormDetail.putExtra(EXTRA_OBJECT, form);
-        toFormDetail.putExtra(Constant.EXTRA_MESSAGE, fsFormRecordName);
         startActivity(toFormDetail);
 
 //        String transitionName = getString(R.string.transition_previous_submission);

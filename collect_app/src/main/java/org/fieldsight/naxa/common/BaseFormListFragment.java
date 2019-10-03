@@ -24,12 +24,14 @@ import com.google.common.reflect.TypeToken;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
+import org.fieldsight.naxa.educational.EducationalMaterialActivity;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.ui.FieldSightFormVH;
 import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.stages.data.SubStage;
+import org.fieldsight.naxa.submissions.PreviousSubmissionListActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.provider.FormsProviderAPI;
@@ -44,6 +46,9 @@ import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
+import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
+import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
+import static org.fieldsight.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class BaseFormListFragment extends Fragment {
 
@@ -153,6 +158,24 @@ public class BaseFormListFragment extends Fragment {
             @Override
             public FieldSightFormVH attachViewHolder(View view) {
                 return new FieldSightFormVH(view) {
+                    @Override
+                    public void openEducationalMaterial(FieldsightFormDetailsv3 form) {
+
+                    }
+
+                    @Override
+                    public void openPreviousSubmission(FieldsightFormDetailsv3 form) {
+                        PreviousSubmissionListActivity.start(getActivity(),
+                                form.getId(),
+                                form.getFormDetails().getFormName(),
+                                form.getFormDetails().getFormName(),
+                                null,
+                                siteId,
+                                null,
+                                form.getType()
+                        );
+                    }
+
                     @Override
                     public void openForm(FieldsightFormDetailsv3 form) {
                         cacheFormAndSite(form, siteId);
