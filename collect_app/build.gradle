@@ -79,7 +79,7 @@ def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', '')
 
 def versionMajor = 3
 def versionMinor = 1
-def versionPatch = 1
+def versionPatch = 3
 
 android {
     compileSdkVersion(28)
@@ -141,8 +141,6 @@ android {
             debuggable false
             minifyEnabled false
             shrinkResources false
-            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
-
         }
         internal {
             if (secrets.getProperty('RELEASE_STORE_FILE')) {
@@ -150,14 +148,14 @@ android {
             }
             minifyEnabled(true)
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "false")
+
+            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
 
             debuggable false
             minifyEnabled false
             shrinkResources false
-            resValue("bool", "FIREBASE_CRASHLYTICS_ENABLED", "true")
 
         }
         // Release build for the official ODK Collect app

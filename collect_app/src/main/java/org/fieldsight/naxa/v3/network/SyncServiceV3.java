@@ -297,12 +297,13 @@ public class SyncServiceV3 extends IntentService {
     }
 
 
-    private Function<Project, Observable<Object>> getSitesObservable() {
-        return new Function<Project, Observable<Object>>() {
+    private Function<Project, Observable<List<Object>>> getSitesObservable() {
+        return new Function<Project, Observable<List<Object>>>() {
             @Override
-            public Observable<Object> apply(Project project) throws Exception {
+            public Observable<List<Object>> apply(Project project) throws Exception {
                 Observable<Object> regionSitesObservable = Observable.just(project.getRegionList())
                         .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
+                        .filter(region -> !TextUtils.isEmpty(region.id))
                         .flatMapSingle(new Function<Region, SingleSource<SiteResponse>>() {
                             @Override
                             public SingleSource<SiteResponse> apply(Region region) {
@@ -326,7 +327,9 @@ public class SyncServiceV3 extends IntentService {
 
                 Observable<Object> projectObservable = Observable.just(project)
                         .filter(Project::getHasClusteredSites)
-                        .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance().getSitesByProjectId(project1.getId()).doOnSuccess(saveSites()))
+                        .flatMapSingle((Function<Project, SingleSource<SiteResponse>>) project1 -> SiteRemoteSource.getInstance()
+                                .getSitesByProjectId(project1.getId())
+                                .doOnSuccess(saveSites()))
                         .concatMap(new Function<SiteResponse, ObservableSource<?>>() {
                             @Override
                             public ObservableSource<?> apply(SiteResponse siteResponse) {
@@ -347,22 +350,36 @@ public class SyncServiceV3 extends IntentService {
                             failedSiteUrls.add(url);
                             return project.getId();
                         })
-                        .doOnNext(o -> {
-                            boolean hasErrorBeenThrown = o instanceof String;
-                            if (!hasErrorBeenThrown) {//error has been thrown
-                                markAsCompleted(project.getId(), 0);
-                            }
+                        .toList()
+                        .doOnSuccess(new Consumer<List<Object>>() {
+                            @Override
+                            public void accept(List<Object> objects) throws Exception {
 
-                            if (failedSiteUrls.size() > 0) {
-                                markAsFailed(project.getId(), 0, failedSiteUrls.toString());
-                                failedSiteUrls.clear();
+                                boolean hasErrorBeenThrown = false;
+                                for (Object o : objects) {
+                                    hasErrorBeenThrown = o instanceof String;
+                                    if (hasErrorBeenThrown) break;
+                                }
+
+                                if (!hasErrorBeenThrown) {//error has been thrown
+                                    markAsCompleted(project.getId(), 0);
+                                }
+
+                                if (failedSiteUrls.size() > 0) {
+                                    markAsFailed(project.getId(), 0, failedSiteUrls.toString());
+                                    failedSiteUrls.clear();
+                                }
                             }
-                        }).doOnDispose(new Action() {
+                        })
+                        .doOnDispose(new Action() {
                             @Override
                             public void run() throws Exception {
                                 markAsFailed(project.getId(), 0, "");
                             }
-                        });
+                        })
+                        .toObservable();
+
+
             }
         };
 
@@ -433,13 +450,14 @@ public class SyncServiceV3 extends IntentService {
     private ObservableSource<? extends SiteResponse> getSitesByUrl(String url) {
         return SiteRemoteSource.getInstance().getSitesByURL(url)
                 .toObservable()
+                .doOnNext(saveSites())
                 .filter(new Predicate<SiteResponse>() {
                     @Override
                     public boolean test(SiteResponse siteResponse) {
                         return siteResponse.getNext() != null;
                     }
                 })
-                .doOnNext(saveSites())
+
                 .flatMap(new Function<SiteResponse, ObservableSource<? extends SiteResponse>>() {
                     @Override
                     public ObservableSource<? extends SiteResponse> apply(SiteResponse siteResponse) {

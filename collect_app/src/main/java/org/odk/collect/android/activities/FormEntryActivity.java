@@ -65,6 +65,7 @@ import com.google.zxing.integration.android.IntentResult;
 import org.apache.commons.io.IOUtils;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity;
+import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.adapters.IconMenuListAdapter;
 import org.odk.collect.android.adapters.model.IconMenuItem;
 import org.odk.collect.android.application.Collect;
@@ -1413,6 +1414,16 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         if (showNavigationButtons) {
             updateNavigationButtonVisibility();
         }
+        boolean isOfflineSite = false;
+        try {
+            String fsSiteId = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(),
+                    SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, "");
+            isOfflineSite = SiteLocalSource.getInstance().isSiteOffline(fsSiteId);
+        } catch (NullPointerException ignored) {
+        }
+
+        endView.findViewById(R.id.save_send_exit_button).setVisibility(isOfflineSite ? View.GONE : View.VISIBLE);
+
         // Create 'send' button
         endView.findViewById(R.id.save_send_exit_button)
                 .setOnClickListener(new OnClickListener() {

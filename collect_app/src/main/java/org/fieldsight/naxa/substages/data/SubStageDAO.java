@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Query;
+import androidx.room.RoomWarnings;
 import androidx.room.Transaction;
 
 import org.fieldsight.naxa.common.database.BaseDaoFieldSight;
@@ -20,11 +21,8 @@ public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
     @Query("SELECT * FROM SubStage")
     public abstract LiveData<List<SubStage>> getAllSubStages();
 
-
     @Delete
     public abstract void deleteAll(ArrayList<SubStage> subStages);
-
-
 
     @Transaction
     public void updateAll(ArrayList<SubStage> items) {
@@ -36,13 +34,5 @@ public abstract class SubStageDAO implements BaseDaoFieldSight<SubStage> {
 
     @Query("SELECT * FROM substage WHERE stageId= :stageId ORDER BY `order` ASC")
     public abstract Maybe<List<SubStage>> getByStageIdMaybe(String stageId);
-
-    @Deprecated
-    @Query("SELECT * FROM substage left join submission_detail on substage.fsFormId = submission_detail.siteFsFormId WHERE stageId =:stageId ")
-    public abstract LiveData<List<SubStage>> getByStageIdAsLiveData(String stageId);
-
-    @Deprecated
-    @Query("SELECT * FROM substage left join submission_detail on substage.fsFormId = submission_detail.siteFsFormId WHERE stageId =:stageId ")
-    public abstract Maybe<List<SubStage>> getByStageIdAsMaybe(String stageId);
 
 }

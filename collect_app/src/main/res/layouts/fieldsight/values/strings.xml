@@ -254,7 +254,7 @@
     <string name="msg_choose_a_day">Choose an day</string>
     <string name="msg_choose_month_option">Choose month option</string>
     <string name="backup_data">Backup all data</string>
-
+    <string name="dialog_msg_upload_edited_sites">Upload changes made to the selected site?</string>
     <string name="logout_warn_message">"Cannot logout, You have %s"</string>
     <string name="label_and">and</string>
 
@@ -278,6 +278,7 @@
     <string name="retry_forms">Retry %d form(s)</string>
     <string name="error_message_fail_to_load_images">Fail to load notification images</string>
     <string name="msg_forms_download_fail">%d forms failed to download</string>
+    <string name="msg_site_upload_sucess">Site has been uploaded</string>
     <string name="upload_site">Upload Site</string>
     <string name="upload_edited_site">Upload Site</string>
     <string name="msg_syncing_data">Syncing data</string>
@@ -290,7 +291,8 @@
         <item>UI error</item>
         <item>Other</item>
     </string-array>
-    <!--Notification sitelist ends here-->
 
+
+    <!--Notification sitelist ends here-->
 
 </resources>

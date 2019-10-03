@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -47,18 +48,11 @@ public class FieldSightNotification implements Parcelable {
     @ColumnInfo(name = "schedule_forms_count")
     private String scheduleFormsCount;
 
-    public void setReceivedDateTime(String receivedDateTime) {
-        this.receivedDateTime = receivedDateTime;
+    public FieldSightNotification() {
+
     }
 
-    public String getFormSubmissionId() {
-        return formSubmissionId;
-    }
-
-    public void setFormSubmissionId(String formSubmissionId) {
-        this.formSubmissionId = formSubmissionId;
-    }
-
+    @Ignore
     public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString,
                                   String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId,
                                   String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment,
@@ -90,8 +84,17 @@ public class FieldSightNotification implements Parcelable {
         this.receivedDateTime = receivedDateTime;
         this.receivedDateTimeInMillis = receivedDateTimeInMillis;
     }
-    public FieldSightNotification() {
 
+    public void setReceivedDateTime(String receivedDateTime) {
+        this.receivedDateTime = receivedDateTime;
+    }
+
+    public String getFormSubmissionId() {
+        return formSubmissionId;
+    }
+
+    public void setFormSubmissionId(String formSubmissionId) {
+        this.formSubmissionId = formSubmissionId;
     }
 
     public boolean isDeployedFromSite() {

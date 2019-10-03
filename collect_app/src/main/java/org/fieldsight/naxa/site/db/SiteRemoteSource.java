@@ -153,6 +153,12 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         DisposableManager.add(dis);
     }
 
+    public Observable<Site> uploadMultipleEditedSites(List<Site> sites) {
+        return Observable.just(sites)
+                .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
+                .filter(site -> site.getIsSiteVerified() == IS_EDITED)
+                .flatMap((Function<Site, ObservableSource<Site>>) this::updateSite);
+    }
 
     public Observable<Site> uploadMultipleSites(List<Site> sites) {
         FSInstancesDao instancesDao = new FSInstancesDao();

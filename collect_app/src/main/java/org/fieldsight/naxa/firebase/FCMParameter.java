@@ -25,6 +25,8 @@ public class FCMParameter {
                 '}';
     }
 
+    public FCMParameter() {}
+
     public FCMParameter(String deviceId, String deviceToken, String deviceName, String deviceStatus) {
         this.dev_id = deviceId;
         this.reg_id = deviceToken;
