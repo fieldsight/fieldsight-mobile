@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.gson.reflect.TypeToken;
 
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.GSONInstance;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
@@ -32,6 +33,7 @@ import org.fieldsight.naxa.common.ViewModelFactory;
 import org.fieldsight.naxa.common.event.DataSyncEvent;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.educational.EducationalMaterialActivity;
+import org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.fieldsight.naxa.stages.data.SubStage;
@@ -160,10 +162,10 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
         setupListAdapter();
 
         parseSubstage().subscribeOn(Schedulers.computation())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(subStageAndSubmissions -> {
-            listAdapter.updateList(subStageAndSubmissions);
-        }, Timber::e);
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subStageAndSubmissions -> {
+                    listAdapter.updateList(subStageAndSubmissions);
+                }, Timber::e);
     }
 
     private Observable<List<SubStageAndSubmission>> parseSubstage() {
@@ -210,14 +212,14 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
 
     @Override
     public void onGuideBookButtonClicked(SubStage subStage, int position) {
-        EducationalMaterialActivity.startFromSubstage(getActivity(), listAdapter.getAll(), position);
+        EducationalMaterialListActivity.start(requireActivity(), subStage.getFsFormId());
     }
 
     @Override
     public void onFormItemClicked(SubStage subStage, int position) {
 
         String formDeployedFrom = subStage.getFormDeployedFrom();
-        Timber.i("Nishon %s",formDeployedFrom);
+        Timber.i("Nishon %s", formDeployedFrom);
         String submissionUrl = generateSubmissionUrl(formDeployedFrom, loadedSite.getId(), subStage.getFsFormId());
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_URL, submissionUrl);
         SharedPreferenceUtils.saveToPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_SITE_ID, loadedSite.getId());
@@ -282,6 +284,7 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
 
     @Override
     public void onFormHistoryButtonClicked(SubStage subStage) {
+
         PreviousSubmissionListActivity.start(getActivity(),
                 subStage.getFsFormId(),
                 subStage.getName(),
@@ -289,43 +292,9 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
                 null,
                 loadedSite.getId(),
                 null,
-                TABLE_GENERAL_FORM
+                Constant.FormType.STAGED
         );
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(DataSyncEvent event) {
-
-        if (!isAdded() || getActivity() == null) {
-            //Fragment is not added
-            return;
-        }
-
-
-        Timber.i(event.toString());
-        switch (event.getEvent()) {
-            case DataSyncEvent.EventStatus.EVENT_START:
-                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_start_message), true);
-                break;
-            case DataSyncEvent.EventStatus.EVENT_END:
-                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_end_message), false);
-                break;
-            case DataSyncEvent.EventStatus.EVENT_ERROR:
-                SnackBarUtils.showFlashbar(getActivity(), getString(R.string.forms_update_error_message), false);
-                break;
-        }
-    }
 
 }

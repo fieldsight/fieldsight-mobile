@@ -25,8 +25,10 @@ import com.google.common.reflect.TypeToken;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
 import org.fieldsight.naxa.educational.EducationalMaterialActivity;
+import org.fieldsight.naxa.forms.data.local.FieldSightFormDetailDAOV3;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
+import org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity;
 import org.fieldsight.naxa.forms.ui.FieldSightFormVH;
 import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
@@ -160,7 +162,7 @@ public class BaseFormListFragment extends Fragment {
                 return new FieldSightFormVH(view) {
                     @Override
                     public void openEducationalMaterial(FieldsightFormDetailsv3 form) {
-
+                        EducationalMaterialListActivity.start(requireActivity(), form.getFormDetails().getFormName(), FieldsightFormDetailsv3.mapStringToEm(form.getEm()));
                     }
 
                     @Override

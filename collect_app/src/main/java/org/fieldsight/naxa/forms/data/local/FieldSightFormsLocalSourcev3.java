@@ -18,9 +18,7 @@ import org.odk.collect.android.application.Collect;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
@@ -271,5 +269,9 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
 
     public List<FieldsightFormDetailsv3> getEducationMaterial(String projectId) {
         return dao.getEducationMaterailByProjectIds(projectId);
+    }
+
+    public FieldsightFormDetailsv3 getByFsFormId(String fsFormId) {
+        return dao.getByFsFormId(fsFormId);
     }
 }

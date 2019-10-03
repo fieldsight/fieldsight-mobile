@@ -281,6 +281,7 @@
     <string name="upload_site">Upload Site</string>
     <string name="upload_edited_site">Upload Site</string>
     <string name="msg_syncing_data">Syncing data</string>
+    <string name="msg_education_material_not_present">No education materials present for this form</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>

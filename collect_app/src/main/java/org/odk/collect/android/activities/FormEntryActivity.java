@@ -64,6 +64,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 import org.apache.commons.io.IOUtils;
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity;
 import org.odk.collect.android.adapters.IconMenuListAdapter;
 import org.odk.collect.android.adapters.model.IconMenuItem;
 import org.odk.collect.android.application.Collect;
@@ -1050,7 +1051,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 if (submissionUri != null && submissionUri.length() > 0) {
                     String[] a = submissionUri.split("/");
                     String fsFormId = a[a.length - 2];
-                    EducationalMaterialActivity.start(this, fsFormId);
+                    EducationalMaterialListActivity.start(this, fsFormId);
                 }
 
                 break;

@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import org.fieldsight.naxa.common.GSONInstance;
+import org.fieldsight.naxa.generalforms.data.Em;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.logic.FormDetails;
@@ -47,7 +48,7 @@ public class FieldsightFormDetailsv3 {
     String settings;
 
     @TypeConverters(FormDetailsConverter.class) // add here
-    FormDetails formDetails;
+            FormDetails formDetails;
 
     String metaAttributes;
 
@@ -171,7 +172,9 @@ public class FieldsightFormDetailsv3 {
                 }
             }
             fieldsightFormDetailsv3.setMetaAttributes(metaJSON.toString());
-        }catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return fieldsightFormDetailsv3;
     }
 
@@ -183,10 +186,10 @@ public class FieldsightFormDetailsv3 {
             atJSON.put(prefix + "_type", fromJSON.optJSONArray("types"));
             atJSON.put(prefix + "_order", fromJSON.optString("order"));
             atJSON.put(prefix + "_weight", fromJSON.optString("weight"));
-            if(fromJSON.has("tags")) {
+            if (fromJSON.has("tags")) {
                 atJSON.put(prefix + "_tags", fromJSON.optJSONArray("tags"));
             }
-            if(fromJSON.has("regions")) {
+            if (fromJSON.has("regions")) {
                 atJSON.put(prefix + "_regions", fromJSON.optJSONArray("regions"));
             }
         } catch (Exception e) {
@@ -238,9 +241,13 @@ public class FieldsightFormDetailsv3 {
 
 
     //TODO: replace with manual parsing
-    public static StageSubStage getStageAndSubstage(String stageAndSubstage){
+    public static StageSubStage getStageAndSubstage(String stageAndSubstage) {
         return GSONInstance.getInstance().fromJson(stageAndSubstage, StageSubStage.class);
     }
 
+    //TODO: replace with manual parsing
+    public static Em mapStringToEm(String em) {
+        return GSONInstance.getInstance().fromJson(em, Em.class);
+    }
 
 }

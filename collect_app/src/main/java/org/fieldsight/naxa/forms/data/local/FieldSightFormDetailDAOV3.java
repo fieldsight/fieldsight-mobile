@@ -25,4 +25,7 @@ public abstract class FieldSightFormDetailDAOV3 implements BaseDaoFieldSight<Fie
 
     @Query("SELECT * from fieldsight_formv3 WHERE project=:projectId OR site_project_id=:projectId AND em IS NOT NULL AND em !='null'")
     public abstract List<FieldsightFormDetailsv3> getEducationMaterailByProjectIds(String projectId);
+
+    @Query("SELECT * FROM fieldsight_formv3 WHERE id=:fsFormId")
+    abstract FieldsightFormDetailsv3 getByFsFormId(String fsFormId);
 }

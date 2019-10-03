@@ -45,6 +45,7 @@ import io.reactivex.schedulers.Schedulers;
 import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 
+@Deprecated
 public class EducationalMaterialActivity extends CollectAbstractActivity implements ViewPager.OnPageChangeListener {
 
 

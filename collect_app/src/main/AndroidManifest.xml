@@ -372,5 +372,6 @@
             </intent-filter>
         </activity>
         <activity android:name="org.fieldsight.naxa.forms.FormsFragmentHostActivity" />
+        <activity android:name="org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity" />
     </application>
 </manifest>
