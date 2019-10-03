@@ -2,7 +2,11 @@ package org.fieldsight.naxa.v3.forms;
 
 import android.util.Pair;
 
+import androidx.room.ColumnInfo;
+
+import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.network.APIEndpoint;
@@ -20,7 +24,7 @@ public class FieldSightFormDownloader extends FormDownloader {
     public FieldSightFormDownloader(boolean isTempDownload) {
         super(isTempDownload);
     }
-
+    private String urlPrefix = BuildConfig.BUILD_TYPE.equals("release") ? APIEndpoint.BASE_URL : FieldSightUserSession.getServerUrl(Collect.getInstance());
 
     HashMap<FieldSightFormDetails, String> downloadFieldSightForms(List<FieldSightFormDetails> toDownload) {
 
@@ -30,15 +34,14 @@ public class FieldSightFormDownloader extends FormDownloader {
         int count = 1;
 
         final HashMap<FieldSightFormDetails, String> result = new HashMap<>();
-
         for (FieldSightFormDetails fd : toDownload) {
 
             if (!fd.getDownloadUrl().contains("http")) {
-                String formURL = APIEndpoint.BASE_URL + fd.getDownloadUrl();
+                String formURL = urlPrefix + fd.getDownloadUrl();
                 fd.setDownloadUrl(formURL);
             }
             if (!fd.getManifestUrl().contains("http")) {
-                String manifestURL = APIEndpoint.BASE_URL + fd.getManifestUrl();
+                String manifestURL = urlPrefix + fd.getManifestUrl();
                 fd.setManifestUrl(manifestURL);
             }
 
@@ -62,11 +65,11 @@ public class FieldSightFormDownloader extends FormDownloader {
         Pair<FieldsightFormDetailsv3, String> pair = null;
 
         if (!fd.getDownloadUrl().startsWith("http") || !fd.getDownloadUrl().startsWith("https")) {
-            String formURL = APIEndpoint.BASE_URL + fd.getDownloadUrl();
+            String formURL = urlPrefix + fd.getDownloadUrl();
             fd.setDownloadUrl(formURL);
         }
         if (!fd.getManifestUrl().startsWith("http") || !fd.getDownloadUrl().startsWith("https")) {
-            String manifestURL = APIEndpoint.BASE_URL + fd.getManifestUrl();
+            String manifestURL = urlPrefix + fd.getManifestUrl();
             fd.setManifestUrl(manifestURL);
         }
 
@@ -87,11 +90,11 @@ public class FieldSightFormDownloader extends FormDownloader {
         Pair<FieldSightFormDetails, String> pair = null;
 
         if (!fd.getDownloadUrl().contains("http")) {
-            String formURL = APIEndpoint.BASE_URL + fd.getDownloadUrl();
+            String formURL = urlPrefix + fd.getDownloadUrl();
             fd.setDownloadUrl(formURL);
         }
         if (!fd.getManifestUrl().contains("http")) {
-            String manifestURL = APIEndpoint.BASE_URL + fd.getManifestUrl();
+            String manifestURL = urlPrefix + fd.getManifestUrl();
             fd.setManifestUrl(manifestURL);
         }
 
