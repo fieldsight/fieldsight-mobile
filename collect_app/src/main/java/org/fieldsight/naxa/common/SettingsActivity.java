@@ -3,6 +3,7 @@ package org.fieldsight.naxa.common;
 import android.os.Bundle;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Patterns;
 
@@ -47,14 +48,21 @@ public class SettingsActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                textInputLayoutBaseUrl.getEditText().setError(null);
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (textInputLayoutBaseUrl.getEditText().getError() != null)
+                    textInputLayoutBaseUrl.getEditText().setError(null);
             }
         });
+
+        String savedUrl = FieldSightUserSession.getServerUrl(getApplicationContext());
+
+        if (!TextUtils.isEmpty(savedUrl)) {
+            textInputLayoutBaseUrl.getEditText().setText(savedUrl);
+        }
     }
 
     private void setupToolbar() {
