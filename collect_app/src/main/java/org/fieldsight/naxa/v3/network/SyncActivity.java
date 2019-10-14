@@ -86,6 +86,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
             return;
         }
 
+        Timber.i("SyncActivity, isSyncing = " + syncing);
         // clear the sync stat table if it is not syncing when opened
         if(!syncing) {
             SyncLocalSource3.getInstance().delete();
@@ -162,7 +163,10 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         if (item.getItemId() == android.R.id.home) {
             super.onBackPressed();
         } else if (item.getItemId() == R.id.menu_item_cancel) {
+            // finish sync service
             DisposableManager.dispose();
+            syncing = false;
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
