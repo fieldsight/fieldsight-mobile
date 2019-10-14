@@ -24,7 +24,8 @@ public class FieldSightFormDownloader extends FormDownloader {
     public FieldSightFormDownloader(boolean isTempDownload) {
         super(isTempDownload);
     }
-    private String urlPrefix = BuildConfig.BUILD_TYPE.equals("release") ? APIEndpoint.BASE_URL : FieldSightUserSession.getServerUrl(Collect.getInstance());
+
+    private String urlPrefix = FieldSightUserSession.getServerUrl(Collect.getInstance());
 
     HashMap<FieldSightFormDetails, String> downloadFieldSightForms(List<FieldSightFormDetails> toDownload) {
 
@@ -36,11 +37,11 @@ public class FieldSightFormDownloader extends FormDownloader {
         final HashMap<FieldSightFormDetails, String> result = new HashMap<>();
         for (FieldSightFormDetails fd : toDownload) {
 
-            if (!fd.getDownloadUrl().contains("http")) {
+            if (!fd.getDownloadUrl().startsWith("http")) {
                 String formURL = urlPrefix + fd.getDownloadUrl();
                 fd.setDownloadUrl(formURL);
             }
-            if (!fd.getManifestUrl().contains("http")) {
+            if (!fd.getManifestUrl().startsWith("http")) {
                 String manifestURL = urlPrefix + fd.getManifestUrl();
                 fd.setManifestUrl(manifestURL);
             }
