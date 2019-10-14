@@ -90,12 +90,16 @@ public class FieldSightFormRemoteSourceV3 {
                                         String formHash = hash.split(":")[1];
                                         Cursor fileCursor = formsDao.getFormsCursorForMd5Hash(formHash);
                                         Timber.i("FieldsightFormRemoteSourcev3, formhash = %s, cursor = %s count = %d", formHash, fileCursor.getColumnCount(), fileCursor.getCount());
-                                        downloadFile = fileCursor.getCount() == 0;
+                                        downloadFile = fileCursor.getCount() < 2;
                                     } else {
                                         downloadFile = false;
                                     }
                                     if(!downloadFile) {
                                         projectIdUrlMap.put(getProjectId(fieldsightFormDetailsv3), projectIdUrlMap.get(getProjectId(fieldsightFormDetailsv3)) -1);
+                                        Timber.i("FieldsightformRemotesourcev3, projectIdUrlMapSize = %d", projectIdUrlMap.size());
+                                    }
+                                    if(projectIdUrlMap.get(getProjectId(fieldsightFormDetailsv3)) == 0) {
+                                        SyncLocalSource3.getInstance().markAsCompleted(getProjectId(fieldsightFormDetailsv3)+"", 1);
                                     }
                                     Timber.i("FieldsightFormRemoteSourcev3, downloadFile = " + downloadFile + " skipping download " + fieldsightFormDetailsv3.getFormDetails().getDownloadUrl());
                                     return downloadFile;
@@ -114,7 +118,8 @@ public class FieldSightFormRemoteSourceV3 {
                                 public void accept(Pair<FieldsightFormDetailsv3, String> fieldSightFormDetailsStringPair) {
                                     String message = fieldSightFormDetailsStringPair.second;
                                     int projectId = getProjectId(fieldSightFormDetailsStringPair.first);
-                                    Timber.i(message);
+                                    Timber.i("FieldsightformRemotesourcev3, response = %s", message);
+                                    Timber.i("FieldsightformRemotesourcev3, downloadCount = %d, projectCunt = %d", downloadProjectFormProgressUrlMap.get(projectId), projectIdUrlMap.get(projectId));
                                     if(downloadProjectFormProgressUrlMap.get(projectId) == projectIdUrlMap.get(projectId)) {
                                         SyncLocalSource3.getInstance().markAsCompleted(projectId+"", 1);
                                     }
