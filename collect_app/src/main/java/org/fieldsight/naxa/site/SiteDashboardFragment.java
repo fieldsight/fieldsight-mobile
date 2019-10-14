@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -34,14 +33,11 @@ import org.fieldsight.naxa.FSInstanceUploaderListActivity;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
-import org.fieldsight.naxa.common.FilterOption;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
-import org.fieldsight.naxa.generalforms.GeneralFormsFragment;
 import org.fieldsight.naxa.login.model.Site;
-import org.fieldsight.naxa.project.MapActivity;
-import org.fieldsight.naxa.scheduled.data.ScheduledFormsFragment;
+
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.sitedocuments.SiteDocumentsListActivity;
@@ -50,7 +46,6 @@ import org.odk.collect.android.SiteProfileActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
@@ -252,7 +247,8 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             new PermissionUtils().requestLocationPermissions(requireActivity(), new PermissionListener() {
                 @Override
                 public void granted() {
-                    MapActivity.start(getActivity(), loadedSite);
+//                    MapActivity.start(getActivity(), loadedSite);
+                    ToastUtils.showLongToast("Map has been disabled");
                 }
                 @Override
                 public void denied() {

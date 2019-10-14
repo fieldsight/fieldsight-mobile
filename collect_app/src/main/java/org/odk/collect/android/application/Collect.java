@@ -16,10 +16,14 @@ package org.odk.collect.android.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -37,8 +41,11 @@ import com.facebook.stetho.Stetho;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.security.ProviderInstaller;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -47,23 +54,23 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.external.ExternalDataManager;
-import org.odk.collect.android.jobs.CollectJobCreator;
-import org.odk.collect.android.logic.FormController;
-import org.odk.collect.android.logic.PropertyManager;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.jobs.DailyNotificationJob;
-import org.fieldsight.naxa.login.APIErrorUtils;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.v3.network.Syncable;
 import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.external.ExternalDataManager;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.injection.config.DaggerAppDependencyComponent;
+import org.odk.collect.android.jobs.CollectJobCreator;
+import org.odk.collect.android.logic.FormController;
+import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.AutoSendPreferenceMigrator;
 import org.odk.collect.android.preferences.FormMetadataMigrator;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
+import org.odk.collect.android.preferences.PrefMigrator;
 import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
 import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
 import org.odk.collect.android.utilities.FileUtils;
@@ -80,12 +87,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.net.ssl.SSLException;
-
 import io.fabric.sdk.android.Fabric;
-import io.reactivex.functions.Consumer;
-import io.reactivex.plugins.RxJavaPlugins;
-import retrofit2.HttpException;
 import timber.log.Timber;
 
 import static org.odk.collect.android.logic.PropertyManager.PROPMGR_USERNAME;
@@ -133,6 +135,7 @@ public class Collect extends Application {
     private FormController formController;
     private ExternalDataManager externalDataManager;
     private Tracker tracker;
+    private FirebaseAnalytics firebaseAnalytics;
     private AppDependencyComponent applicationComponent;
 
     public static Collect getInstance() {
@@ -184,39 +187,6 @@ public class Collect extends Application {
     }
 
 
-    private void setGlobalRxErrorConsumer() {
-        RxJavaPlugins.setErrorHandler(new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable e) {
-
-                String message;
-
-                if (e instanceof HttpException) {
-                    HttpException httpException = (HttpException) e;
-                    int statusCode = httpException.response().code();
-                    switch (statusCode) {
-                        case 400:
-                            message = APIErrorUtils.getNonFieldError(httpException);
-                            break;
-                        case 502:
-                            message = "BAD GATEWAY";
-                            break;
-                        default:
-                            message = "SERVER RETURNED " + statusCode;
-                            break;
-                    }
-                } else if (e instanceof SSLException) {
-                    message = "An SSL exception occurred";
-                } else {
-                    message = "Generic error occurred: " + e.getMessage();
-
-                }
-
-
-            }
-        });
-    }
-
     /**
      * Predicate that tests whether a directory path might refer to an
      * ODK Tables instance data directory (e.g., for media attachments).
@@ -261,6 +231,19 @@ public class Collect extends Application {
         return getString(R.string.app_name) + versionName;
     }
 
+    /**
+     * Get a User-Agent string that provides the platform details followed by the application ID
+     * and application version name: {@code Dalvik/<version> (platform info) org.odk.collect.android/v<version>}.
+     *
+     * This deviates from the recommended format as described in https://github.com/opendatakit/collect/issues/3253.
+     */
+    public String getUserAgentString() {
+        return String.format("%s %s/%s",
+                System.getProperty("http.agent"),
+                BuildConfig.APPLICATION_ID,
+                BuildConfig.VERSION_NAME);
+    }
+
     public boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getInstance()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -282,6 +265,8 @@ public class Collect extends Application {
     public void onCreate() {
         super.onCreate();
         singleton = this;
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
 
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
@@ -289,7 +274,7 @@ public class Collect extends Application {
         setupFirebaseRemoteConfig();
         OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
-
+        installTls12();
         setupDagger();
 
         NotificationUtils.createNotificationChannel(singleton);
@@ -306,6 +291,11 @@ public class Collect extends Application {
             Timber.e(e);
         }
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        FormMetadataMigrator.migrate(prefs);
+        PrefMigrator.migrateSharedPrefs();
+        AutoSendPreferenceMigrator.migrate();
+
         reloadSharedPreferences();
 
         PRNGFixes.apply();
@@ -315,10 +305,7 @@ public class Collect extends Application {
         defaultSysLanguage = Locale.getDefault().getLanguage();
         new LocaleHelper().updateLocale(this);
 
-        FormMetadataMigrator.migrate(PreferenceManager.getDefaultSharedPreferences(this));
-        AutoSendPreferenceMigrator.migrate();
-
-        initProperties();
+        initializeJavaRosa();
 
         if (BuildConfig.BUILD_TYPE.equals("release")) {
             setupCrashlytics();
@@ -328,9 +315,14 @@ public class Collect extends Application {
         }
 
         setupLeakCanary();
-
         DailyNotificationJob.schedule();
 
+
+        setupOSMDroid();
+    }
+
+    protected void setupOSMDroid() {
+        org.osmdroid.config.Configuration.getInstance().setUserAgentValue(getUserAgentString());
     }
 
 
@@ -357,6 +349,23 @@ public class Collect extends Application {
                 .build();
 
         applicationComponent.inject(this);
+    }
+
+    private void installTls12() {
+        if (Build.VERSION.SDK_INT <= 20) {
+            ProviderInstaller.installIfNeededAsync(getApplicationContext(), new ProviderInstaller.ProviderInstallListener() {
+                @Override
+                public void onProviderInstalled() {
+                }
+
+                @Override
+                public void onProviderInstallFailed(int i, Intent intent) {
+                    GoogleApiAvailability
+                            .getInstance()
+                            .showErrorNotification(getApplicationContext(), i);
+                }
+            });
+        }
     }
 
     protected RefWatcher setupLeakCanary() {
@@ -391,6 +400,27 @@ public class Collect extends Application {
         return tracker;
     }
 
+    public void logRemoteAnalytics(String event, String action, String label) {
+        // Google Analytics
+        Collect.getInstance()
+                .getDefaultTracker()
+                .send(new HitBuilders.EventBuilder()
+                        .setCategory(event)
+                        .setAction(action)
+                        .setLabel(label)
+                        .build());
+
+        // Firebase Analytics
+        Bundle bundle = new Bundle();
+        bundle.putString("action", action);
+        bundle.putString("label", label);
+        firebaseAnalytics.logEvent(event, bundle);
+    }
+
+    public void setAnalyticsCollectionEnabled(boolean isAnalyticsEnabled) {
+        firebaseAnalytics.setAnalyticsCollectionEnabled(isAnalyticsEnabled);
+    }
+
     private static class CrashReportingTree extends Timber.Tree {
         @Override
         protected void log(int priority, String tag, String message, Throwable t) {
@@ -407,7 +437,7 @@ public class Collect extends Application {
 
     }
 
-    public void initProperties() {
+    public void initializeJavaRosa() {
         PropertyManager mgr = new PropertyManager(this);
 
         // Use the server username by default if the metadata username is not defined
@@ -479,11 +509,7 @@ public class Collect extends Application {
     }
 
     public void logNullFormControllerEvent(String action) {
-        Collect.getInstance().getDefaultTracker()
-                .send(new HitBuilders.EventBuilder()
-                        .setCategory("NullFormControllerEvent")
-                        .setAction(action)
-                        .build());
+        logRemoteAnalytics("NullFormControllerEvent", action, null);
     }
 
     private void setupFirebaseRemoteConfig() {

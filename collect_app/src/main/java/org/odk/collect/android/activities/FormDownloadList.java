@@ -16,9 +16,6 @@ package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,16 +25,16 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 
 import org.fieldsight.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.FormDownloadListViewModel;
@@ -55,6 +52,7 @@ import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.AuthDialogUtility;
 import org.odk.collect.android.utilities.DialogUtils;
+import org.odk.collect.android.utilities.DownloadFormListUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.utilities.WebCredentialsUtils;
@@ -123,6 +121,9 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
     @Inject
     WebCredentialsUtils webCredentialsUtils;
+
+    @Inject
+    DownloadFormListUtils downloadFormListUtils;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -269,7 +270,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setItemsCanFocus(false);
 
-        sortingOptions = new int[]{
+        sortingOptions = new int[] {
                 R.string.sort_by_name_asc, R.string.sort_by_name_desc
         };
     }
@@ -323,7 +324,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                 downloadFormListTask = null;
             }
 
-            downloadFormListTask = new DownloadFormListTask();
+            downloadFormListTask = new DownloadFormListTask(downloadFormListUtils);
             downloadFormListTask.setDownloaderListener(this);
 
             if (viewModel.isDownloadOnlyMode()) {
@@ -338,8 +339,9 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     @Override
     protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
-        toggleButtonLabel(toggleButton, listView);
-        updateAdapter();
+        if (PermissionUtils.areStoragePermissionsGranted(this)) {
+            updateAdapter();
+        }
     }
 
     @Override
@@ -608,13 +610,13 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             if (viewModel.isDownloadOnlyMode()) {
                 //1. First check if all form IDS could be found on the server - Register forms that could not be found
 
-                for (String formId : viewModel.getFormIdsToDownload()) {
+                for (String formId: viewModel.getFormIdsToDownload()) {
                     viewModel.putFormResult(formId, false);
                 }
 
-                ArrayList<FormDetails> filesToDownload = new ArrayList<>();
+                ArrayList<FormDetails> filesToDownload  = new ArrayList<>();
 
-                for (FormDetails formDetails : viewModel.getFormNamesAndURLs().values()) {
+                for (FormDetails formDetails: viewModel.getFormNamesAndURLs().values()) {
                     String formId = formDetails.getFormID();
 
                     if (viewModel.getFormResults().containsKey(formId)) {
@@ -756,7 +758,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
         // Set result to true for forms which were downloaded
         if (viewModel.isDownloadOnlyMode()) {
-            for (FormDetails formDetails : result.keySet()) {
+            for (FormDetails formDetails: result.keySet()) {
                 String successKey = result.get(formDetails);
                 if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
                     if (viewModel.getFormResults().containsKey(formDetails.getFormID())) {

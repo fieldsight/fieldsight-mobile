@@ -66,7 +66,7 @@ import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.login.model.User;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.profile.UserActivity;
-import org.fieldsight.naxa.project.MapFragment;
+
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.v3.network.SyncActivity;
@@ -498,10 +498,10 @@ public class ProjectDashboardActivity extends BaseActivity {
         SiteListFragment siteListFragment = SiteListFragment.getInstance(loadedProject);
         ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.getInstance();
 
-        MapFragment mapFragment = MapFragment.getInstance(loadedProject);
-        fragments.add(siteListFragment);
-        fragments.add(projectContactsFragment);
-        fragments.add(mapFragment);
+//        MapFragment mapFragment = MapFragment.getInstance(loadedProject);
+//        fragments.add(siteListFragment);
+//        fragments.add(projectContactsFragment);
+//        fragments.add(mapFragment);
 
 
         DashboardAdapter dashboardAdapter = new DashboardAdapter(getSupportFragmentManager());

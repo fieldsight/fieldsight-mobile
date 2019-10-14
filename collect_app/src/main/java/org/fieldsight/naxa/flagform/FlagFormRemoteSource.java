@@ -180,8 +180,7 @@ public class FlagFormRemoteSource {
                 .jrFormId(jrFormId)
                 .fieldSightSiteId(siteId == null ? "0" : siteId)//survey form have 0 as siteId
                 .displayName(formName)
-                .canEditWhenComplete("true")
-                .displaySubtext("");
+                .canEditWhenComplete("true");
 
 
         return Observable.just(flaggedInstance)
@@ -246,8 +245,7 @@ public class FlagFormRemoteSource {
                 .status(InstanceProviderAPI.STATUS_FLAGGED)
                 .jrFormId(jrFormId)
                 .fieldSightSiteId(siteId == null ? "0" : siteId)//survey form have 0 as siteId
-                .displayName(formName)
-                .displaySubtext("");
+                .displayName(formName);
 
 
         return Observable.just(flaggedInstance)

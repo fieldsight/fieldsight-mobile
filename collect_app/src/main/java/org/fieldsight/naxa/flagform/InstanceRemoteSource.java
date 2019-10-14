@@ -135,8 +135,7 @@ public class InstanceRemoteSource {
                 .fieldSightSiteId(siteId)
                 .displayName(formName)
                 .canEditWhenComplete("true")
-                .lastStatusChangeDate(System.currentTimeMillis())
-                .displaySubtext("");
+                .lastStatusChangeDate(System.currentTimeMillis());
     }
 
     private String formatFileName(String text) {
