@@ -255,9 +255,9 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
                 .end();
     }
 
-    private void upgradeToVersion7(SQLiteDatabase db) {
+    private void upgradeToVersion8(SQLiteDatabase db) {
         String temporaryTable = FORMS_TABLE_NAME + "_tmp";
-        String[] formsTableColumnsInV7 = new String[]{_ID, DISPLAY_NAME, DESCRIPTION,
+        String[] formsTableColumnsInV7 = new String[]{_ID,IS_TEMP_DOWNLOAD, DISPLAY_NAME, DESCRIPTION,
                 JR_FORM_ID, JR_VERSION, MD5_HASH, DATE, FORM_MEDIA_PATH, FORM_FILE_PATH, LANGUAGE,
                 SUBMISSION_URI, BASE64_RSA_PUBLIC_KEY, JRCACHE_FILE_PATH, AUTO_SEND, AUTO_DELETE,
                 LAST_DETECTED_FORM_VERSION_HASH};
@@ -285,7 +285,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
                 .end();
     }
 
-    private void upgradeToVersion8(SQLiteDatabase db) {
+    private void upgradeToVersion7(SQLiteDatabase db) {
 
         CustomSQLiteQueryBuilder
                 .begin(db)
