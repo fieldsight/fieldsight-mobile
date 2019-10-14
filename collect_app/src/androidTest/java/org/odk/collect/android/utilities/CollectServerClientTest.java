@@ -1,9 +1,12 @@
 package org.odk.collect.android.utilities;
 
-import org.odk.collect.android.http.CollectServerClient;
-import org.odk.collect.android.http.HttpClientConnection;
+import android.webkit.MimeTypeMap;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.http.CollectThenSystemContentTypeMapper;
+import org.odk.collect.android.http.OkHttpConnection;
 import org.odk.collect.android.test.MockedServerTest;
 
 import okhttp3.mockwebserver.MockResponse;
@@ -22,7 +25,7 @@ public class CollectServerClientTest extends MockedServerTest {
     public void setUp() throws Exception {
         // server hangs without a response queued:
         server.enqueue(new MockResponse());
-        collectServerClient = new CollectServerClient(new HttpClientConnection(), new WebCredentialsUtils());
+        collectServerClient = new CollectServerClient(new OkHttpConnection(null, new CollectThenSystemContentTypeMapper(MimeTypeMap.getSingleton())), new WebCredentialsUtils());
     }
 
         @Test
@@ -77,7 +80,7 @@ public class CollectServerClientTest extends MockedServerTest {
     }
 
     @Test
-    public void getXmlDocument_request_shouldReportInvalidUrl() {
+    public void getXmlDocument_request_shouldReportInvalidUrl() throws Exception {
         // when
         DocumentFetchResult res = collectServerClient.getXmlDocument("NOT_A_URL");
 
@@ -87,7 +90,7 @@ public class CollectServerClientTest extends MockedServerTest {
     }
 
     @Test
-    public void getXmlDocument_request_shouldReportInvalidHost() {
+    public void getXmlDocument_request_shouldReportInvalidHost() throws Exception {
         // when
         DocumentFetchResult res = collectServerClient.getXmlDocument("file:/some/path");
 

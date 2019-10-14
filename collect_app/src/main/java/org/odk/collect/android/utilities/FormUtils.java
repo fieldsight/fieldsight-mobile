@@ -55,7 +55,6 @@ public class FormUtils {
                 filteredCursor.addRow(new Object[] {
                         form.getId(),
                         form.getDisplayName(),
-                        form.getDisplaySubtext(),
                         form.getJrFormId(),
                         form.getJrVersion(),
                         form.getDate()

@@ -19,7 +19,11 @@ import androidx.annotation.Nullable;
 
 import org.odk.collect.android.exception.JavaRosaException;
 import org.odk.collect.android.external.ExternalDataUtil;
+import org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointActionHandler;
 import org.odk.collect.android.views.ODKView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.javarosa.core.model.CoreModelModule;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
@@ -29,6 +33,7 @@ import org.javarosa.core.model.IFormElement;
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.SubmissionProfile;
 import org.javarosa.core.model.ValidateOutcome;
+import org.javarosa.core.model.actions.setgeopoint.SetGeopointActionHandler;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
@@ -50,6 +55,9 @@ import org.javarosa.model.xform.XPathReference;
 import org.javarosa.xform.parse.XFormParser;
 import org.javarosa.xpath.XPathParseTool;
 import org.javarosa.xpath.expr.XPathExpression;
+import org.odk.collect.android.exception.JavaRosaException;
+import org.odk.collect.android.external.ExternalDataUtil;
+import org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointActionHandler;
 import org.odk.collect.android.utilities.AuditEventLogger;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.RegexUtils;
@@ -127,6 +135,10 @@ public class FormController {
             PrototypeManager.registerPrototypes(JavaRosaCoreModule.classNames);
             PrototypeManager.registerPrototypes(CoreModelModule.classNames);
             new XFormsModule().registerModule();
+
+            // When registering prototypes from Collect, a proguard exception also needs to be added
+            PrototypeManager.registerPrototype("org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointAction");
+            XFormParser.registerActionHandler(CollectSetGeopointActionHandler.ELEMENT_NAME, new CollectSetGeopointActionHandler());
 
             isJavaRosaInitialized = true;
         }
@@ -1281,6 +1293,23 @@ public class FormController {
         }
 
         return new InstanceMetadata(instanceId, instanceName, auditConfig);
+    }
+
+    /**
+     * Returns true if the current form definition audits user location in the background.
+     */
+    public boolean currentFormAuditsLocation() {
+        AuditConfig auditConfig = getSubmissionMetadata().auditConfig;
+
+        return auditConfig != null && auditConfig.isLocationEnabled();
+    }
+
+    /**
+     * Returns true if the current form definition collects user location in the background either
+     * because of the audit configuration or because it contains odk:setgeopoint actions.
+     */
+    public boolean currentFormCollectsBackgroundLocation() {
+        return currentFormAuditsLocation() || getFormDef().hasAction(SetGeopointActionHandler.ELEMENT_NAME);
     }
 
     /**

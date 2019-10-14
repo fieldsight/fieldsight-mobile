@@ -83,20 +83,6 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         sheetsHelper = accountsManager.getSheetsHelper();
     }
 
-    /**
-     * Returns whether the submissions folder previously existed or was successfully created. False
-     * if multiple folders match or there was another exception.
-     */
-    public boolean submissionsFolderExistsAndIsUnique() {
-        try {
-            driveHelper.createOrGetIDOfSubmissionsFolder();
-            return true;
-        } catch (IOException | MultipleFoldersFoundException e) {
-            Timber.d(e, "Exception getting or creating root folder for submissions");
-            return false;
-        }
-    }
-
     @Override
     public String uploadOneSubmission(Instance instance, String spreadsheetUrl) throws UploadException {
         if (new FormsDao().isFormEncrypted(instance.getJrFormId(), instance.getJrVersion())) {
@@ -134,11 +120,29 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         } catch (UploadException e) {
             saveFailedStatusToDatabase(instance);
             throw e;
+        } catch (GoogleJsonResponseException e) {
+            saveFailedStatusToDatabase(instance);
+            throw new UploadException(getErrorMessageFromGoogleJsonResponseException(e));
         }
 
         saveSuccessStatusToDatabase(instance);
         // Google Sheets can't provide a custom success message
         return null;
+    }
+
+    private String getErrorMessageFromGoogleJsonResponseException(GoogleJsonResponseException e) {
+        String message = e.getMessage();
+        if (e.getDetails() != null) {
+            switch (e.getDetails().getCode()) {
+                case 403 :
+                    message = Collect.getInstance().getString(R.string.google_sheets_access_denied);
+                    break;
+                case 429 :
+                    message = FAIL + "Too many requests per 100 seconds";
+                    break;
+            }
+        }
+        return message;
     }
 
     @Override
@@ -209,6 +213,8 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
                 sheetsHelper.insertRow(spreadsheet.getSpreadsheetId(), sheetTitle,
                         new ValueRange().setValues(Collections.singletonList(prepareListOfValues(sheetCells.get(0), columnTitles, answers))));
             }
+        } catch (GoogleJsonResponseException e) {
+            throw new UploadException(getErrorMessageFromGoogleJsonResponseException(e));
         } catch (IOException e) {
             throw new UploadException(e);
         }
@@ -257,7 +263,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
 
         String folderId;
         try {
-            folderId = driveHelper.createOrGetIDOfFolderWithName(instance.getJrFormId());
+            folderId = driveHelper.createOrGetIDOfSubmissionsFolder();
         } catch (IOException | MultipleFoldersFoundException e) {
             Timber.e(e);
             throw new UploadException(e);
@@ -357,7 +363,21 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         } else if (hasRepeatableGroups(element)) {
             answers.put(KEY, key);
         }
-        return answers;
+        return makeAnswersFormattingResistant(answers);
+    }
+
+    public static HashMap<String, String> makeAnswersFormattingResistant(HashMap<String, String> answers) {
+        HashMap<String, String> fixedAnswers = new HashMap<>();
+        for (Map.Entry<String, String> item : answers.entrySet()) {
+            String value = item.getValue();
+            if (!value.startsWith("http") && !value.startsWith("=HYPERLINK")) {
+                // Avoid formatting answers https://stackoverflow.com/a/37827066/5479029
+                value = "'" + value;
+            }
+            fixedAnswers.put(item.getKey(), value);
+        }
+
+        return fixedAnswers;
     }
 
     /**
@@ -531,17 +551,14 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         return false;
     }
 
-    private void setUpSpreadsheet(String urlString) throws UploadException {
+    private void setUpSpreadsheet(String urlString) throws UploadException, GoogleJsonResponseException {
         if (spreadsheet == null || spreadsheet.getSpreadsheetUrl() == null || !urlString.equals(spreadsheet.getSpreadsheetUrl())) {
             try {
                 spreadsheet = sheetsHelper.getSpreadsheet(UrlUtils.getSpreadsheetID(urlString));
                 spreadsheet.setSpreadsheetUrl(urlString);
             } catch (GoogleJsonResponseException e) {
-                String message = e.getMessage();
-                if (e.getDetails() != null && e.getDetails().getCode() == 403) {
-                    message = Collect.getInstance().getString(R.string.google_sheets_access_denied);
-                }
-                throw new UploadException(message);
+                Timber.i(e);
+                throw e;
             } catch (IOException | BadUrlException e) {
                 Timber.i(e);
                 throw new UploadException(e);

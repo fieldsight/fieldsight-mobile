@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.odk.collect.android.activities.GeoPointMapActivity;
-import org.odk.collect.android.map.MapPoint;
+import org.odk.collect.android.geo.MapPoint;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
@@ -17,6 +17,7 @@ import static android.app.Activity.RESULT_OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.odk.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
+import static org.odk.collect.android.location.LocationTestUtils.createLocation;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)

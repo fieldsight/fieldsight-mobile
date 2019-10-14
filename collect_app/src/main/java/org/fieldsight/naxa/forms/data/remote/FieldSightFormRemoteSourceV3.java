@@ -148,9 +148,11 @@ public class FieldSightFormRemoteSourceV3 {
                 }
             }
         }
+
         for(int i = 0; i < projectIdUrlMap.size(); i ++ ) {
             SyncLocalSource3.getInstance().markAsQueued(projectIdUrlMap.keyAt(i)+"", 1);
         }
+
         return fieldSightFormsv3List;
     }
 

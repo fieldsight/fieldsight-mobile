@@ -59,7 +59,6 @@ import timber.log.Timber;
 import static android.content.Intent.ACTION_SENDTO;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
 
-
 /**
  * <p>Launch an external app to supply a string value. If the app
  * does not launch, enable the text area for regular data entry.</p>
@@ -158,13 +157,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         answerLayout.addView(answer);
         addAnswerView(answerLayout);
 
-        Collect.getInstance().getDefaultTracker()
-                .send(new HitBuilders.EventBuilder()
-                        .setCategory("WidgetType")
-                        .setAction("ExternalApp")
-                        .setLabel(Collect.getCurrentFormIdentifierHash())
-                        .build());
-
+        Collect.getInstance().logRemoteAnalytics("WidgetType", "ExternalApp", Collect.getCurrentFormIdentifierHash());
     }
 
     protected void fireActivity(Intent i) throws ActivityNotFoundException {

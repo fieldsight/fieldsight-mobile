@@ -174,7 +174,6 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
                     int jrVersionColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_VERSION);
                     int statusColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS);
                     int lastStatusChangeDateColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.LAST_STATUS_CHANGE_DATE);
-                    int displaySubtextColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT);
                     int deletedDateColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DELETED_DATE);
                     int fsSiteColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.FS_SITE_ID);
                     int fsInstanceIdColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID);
@@ -191,7 +190,6 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
                             .jrVersion(cursor.getString(jrVersionColumnIndex))
                             .status(cursor.getString(statusColumnIndex))
                             .lastStatusChangeDate(cursor.getLong(lastStatusChangeDateColumnIndex))
-                            .displaySubtext(cursor.getString(displaySubtextColumnIndex))
                             .deletedDate(cursor.getLong(deletedDateColumnIndex))
                             .fieldSightInstanceId(cursor.getString(fsInstanceIdColumnIndex))
                             .fieldSightSiteId(cursor.getString(fsSiteColumnIndex))
