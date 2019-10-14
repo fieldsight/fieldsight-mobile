@@ -8,6 +8,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.events.RxEventBus;
 import org.odk.collect.android.fragments.DataManagerList;
 import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.http.OpenRosaHttpInterface;
 import org.odk.collect.android.logic.PropertyManager;
 import org.fieldsight.naxa.common.utilities.FieldSightFormListDownloadUtils;
 import org.fieldsight.naxa.forms.FieldSightFormDownloadList;
@@ -19,6 +20,7 @@ import org.odk.collect.android.activities.InstanceUploaderListActivity;
 
 import org.odk.collect.android.preferences.ServerPreferencesFragment;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
+import org.odk.collect.android.tasks.ServerPollingJob;
 import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
 import org.odk.collect.android.tasks.sms.SmsSender;
 import org.odk.collect.android.tasks.sms.SmsSentBroadcastReceiver;
@@ -95,7 +97,7 @@ public interface AppDependencyComponent {
 
     void inject(FormDownloader formDownloader);
 
-    void inject(DownloadFormListUtils downloadFormListUtils);
+    void inject(ServerPollingJob serverPollingJob);
 
     void inject(FieldSightFormListDownloadUtils downloadFormListUtils);
 
@@ -116,4 +118,8 @@ public interface AppDependencyComponent {
     SmsSubmissionManagerContract smsSubmissionManagerContract();
 
     RxEventBus rxEventBus();
+
+    OpenRosaHttpInterface openRosaHttpInterface();
+
+    DownloadFormListUtils downloadFormListUtils();
 }

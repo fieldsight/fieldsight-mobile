@@ -178,7 +178,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
                     .fieldSightSiteId(getString(cursor, MigrationHelper.InstanceColumns.FS_SITE_ID))
                     .jrVersion(getString(cursor, MigrationHelper.InstanceColumns.JR_VERSION))
                     .status(getString(cursor, MigrationHelper.InstanceColumns.STATUS))
-                    .displaySubtext(getString(cursor, MigrationHelper.InstanceColumns.DISPLAY_SUBTEXT))
+
                     .lastStatusChangeDate(lastStatusChangeDate)
                     .build();
 
@@ -203,7 +203,6 @@ public class MigrateFieldSightViewModel extends ViewModel {
                     .formFilePath(fixedFormFilePath)
                     .jrCacheFilePath(fixedJrCacheFilePath)
                     .displayName(getString(cursor, MigrationHelper.FormColumns.DISPLAY_NAME))
-                    .displaySubtext(getString(cursor, MigrationHelper.FormColumns.DISPLAY_SUBTEXT))
                     .description(getString(cursor, MigrationHelper.FormColumns.DESCRIPTION))
                     .jrFormId(getString(cursor, MigrationHelper.FormColumns.JR_FORM_ID))
                     .jrVersion(getString(cursor, MigrationHelper.FormColumns.JR_VERSION))

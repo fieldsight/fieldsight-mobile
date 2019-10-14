@@ -4,14 +4,17 @@ import android.content.Context;
 import android.os.Build;
 import android.text.format.DateUtils;
 
+
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.logic.DatePickerDetails;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.joda.time.chrono.CopticChronology;
 import org.joda.time.chrono.EthiopicChronology;
 import org.joda.time.chrono.IslamicChronology;
+
+import org.joda.time.chrono.PersianChronologyKhayyamBorkowski;
+import org.odk.collect.android.logic.DatePickerDetails;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -78,6 +81,10 @@ public class DateTimeUtils {
                         customDate.getMonthOfYear(), customDate.getDayOfMonth(), customDate.getHourOfDay(),
                         customDate.getMinuteOfHour(), customDate.getSecondOfMinute());
                 monthArray = MyanmarDateUtils.getMyanmarMonthsArray(myanmarDate.getYearInt());
+                break;
+            case PERSIAN:
+                customDate = new DateTime(date).withChronology(PersianChronologyKhayyamBorkowski.getInstance());
+                monthArray = context.getResources().getStringArray(R.array.persian_months);
                 break;
             default:
                 Timber.w("Not supported date type.");
@@ -183,6 +190,9 @@ public class DateTimeUtils {
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             } else if (appearance.contains(WidgetAppearanceUtils.MYANMAR)) {
                 datePickerType = DatePickerDetails.DatePickerType.MYANMAR;
+                datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
+            } else if (appearance.contains(WidgetAppearanceUtils.PERSIAN)) {
+                datePickerType = DatePickerDetails.DatePickerType.PERSIAN;
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             } else if (appearance.contains(WidgetAppearanceUtils.NO_CALENDAR)) {
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;

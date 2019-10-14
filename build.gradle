@@ -53,6 +53,7 @@ ext {
     glideVersion = '4.8.0'
     archLifecycleVersion = '1.1.0'
     workManagerVersion = "1.0.0-alpha10"
+    okhttp3Version = '3.12.3'
     okhttp3Version = '3.11.0'
     playServicesVersion = '10.0.1'
 }
