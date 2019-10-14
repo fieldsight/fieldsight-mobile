@@ -316,14 +316,14 @@ public class ProjectDashboardActivity extends BaseActivity {
         ArrayList<Integer> totalTabs = new ArrayList<>();
         totalTabs.add(0);
         totalTabs.add(1);
-        totalTabs.add(2);
+//        totalTabs.add(2);
         totalTabs.remove(position);
 
         FloatingActionButton unselectedFab1 = (FloatingActionButton) tabLayout.getTabAt(totalTabs.get(0)).getCustomView();
         ViewUtils.setButtonTint(unselectedFab1, ColorStateList.valueOf(Color.parseColor("#00628e")));
 
-        FloatingActionButton unselectedFab2 = (FloatingActionButton) tabLayout.getTabAt(totalTabs.get(1)).getCustomView();
-        ViewUtils.setButtonTint(unselectedFab2, ColorStateList.valueOf(Color.parseColor("#00628e")));
+//        FloatingActionButton unselectedFab2 = (FloatingActionButton) tabLayout.getTabAt(totalTabs.get(1)).getCustomView();
+//        ViewUtils.setButtonTint(unselectedFab2, ColorStateList.valueOf(Color.parseColor("#00628e")));
 
     }
 
