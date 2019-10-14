@@ -485,8 +485,8 @@ public class ProjectDashboardActivity extends BaseActivity {
 
         tabLayout.getTabAt(0).setCustomView(fabTabSitelist);
         tabLayout.getTabAt(1).setCustomView(fabTabContactList);
-        tabLayout.getTabAt(2).setCustomView(fabMap);
-
+//        tabLayout.getTabAt(2).setCustomView(fabMap);
+//
         ViewUtils.setButtonTint(fabTabSitelist, ColorStateList.valueOf(Color.parseColor("#4b8fbe")));
     }
 
@@ -499,8 +499,8 @@ public class ProjectDashboardActivity extends BaseActivity {
         ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.getInstance();
 
 //        MapFragment mapFragment = MapFragment.getInstance(loadedProject);
-//        fragments.add(siteListFragment);
-//        fragments.add(projectContactsFragment);
+        fragments.add(siteListFragment);
+        fragments.add(projectContactsFragment);
 //        fragments.add(mapFragment);
 
 
