@@ -13,6 +13,7 @@ import com.burgstaller.okhttp.digest.DigestAuthenticator;
 
 import org.apache.commons.io.IOUtils;
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
 
@@ -52,6 +53,7 @@ public class OkHttpConnection implements OpenRosaHttpInterface {
     private static final String OPEN_ROSA_VERSION = "1.0";
     private static final String DATE_HEADER = "Date";
     private static final String HTTP_CONTENT_TYPE_TEXT_XML = "text/xml";
+    private static final String FIELDSIGHT_AUTH_HEADER = "Authorization";
 
     /**
      * Shared client object used for all HTTP requests. Credentials are set on a per-request basis.
@@ -302,6 +304,7 @@ public class OkHttpConnection implements OpenRosaHttpInterface {
                 .addHeader(USER_AGENT_HEADER, Collect.getInstance().getUserAgentString())
                 .addHeader(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION)
                 .addHeader(DATE_HEADER, getHeaderDate())
+                .addHeader(FIELDSIGHT_AUTH_HEADER, FieldSightUserSession.getAuthToken())
                 .get()
                 .build();
     }
@@ -312,6 +315,7 @@ public class OkHttpConnection implements OpenRosaHttpInterface {
                 .addHeader(USER_AGENT_HEADER, Collect.getInstance().getUserAgentString())
                 .addHeader(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION)
                 .addHeader(DATE_HEADER, getHeaderDate())
+                .addHeader(FIELDSIGHT_AUTH_HEADER, FieldSightUserSession.getAuthToken())
                 .head()
                 .build();
     }
@@ -322,6 +326,7 @@ public class OkHttpConnection implements OpenRosaHttpInterface {
                 .addHeader(USER_AGENT_HEADER, Collect.getInstance().getUserAgentString())
                 .addHeader(OPEN_ROSA_VERSION_HEADER, OPEN_ROSA_VERSION)
                 .addHeader(DATE_HEADER, getHeaderDate())
+                .addHeader(FIELDSIGHT_AUTH_HEADER, FieldSightUserSession.getAuthToken())
                 .post(body)
                 .build();
     }
