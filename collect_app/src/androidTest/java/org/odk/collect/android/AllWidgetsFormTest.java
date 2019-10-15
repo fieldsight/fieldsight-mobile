@@ -17,6 +17,7 @@ import androidx.test.rule.GrantPermissionRule;
 
 import net.bytebuddy.utility.RandomString;
 
+import org.fieldsight.collect.android.R;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.BeforeClass;
