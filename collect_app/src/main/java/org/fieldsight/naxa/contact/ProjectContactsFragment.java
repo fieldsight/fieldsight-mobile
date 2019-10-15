@@ -42,7 +42,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    public static ProjectContactsFragment getInstance() {
+    public static ProjectContactsFragment newInstance() {
         return new ProjectContactsFragment();
     }
 
@@ -96,7 +96,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
 
     @Override
     public void onContactClicked(FieldSightContactModel contactModel) {
-        ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.getInstance();
+        ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.newInstance();
         contactDetailsBottomSheetFragmentDialog.setContact(contactModel);
         contactDetailsBottomSheetFragmentDialog.show(requireFragmentManager(), "Contact Bottom Sheet");
     }

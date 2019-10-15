@@ -174,7 +174,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         smsGatewayPreference.getEditText().setFilters(
                 new InputFilter[]{new ControlCharacterFilter()});
 
-        Transport transport = Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
+        Transport transport = Transport.fromPreference(GeneralSharedPreferences.newInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
 
         boolean smsEnabled = !transport.equals(Transport.Internet);
         smsGatewayPreference.setEnabled(smsEnabled);
@@ -482,7 +482,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
      */
     /*
     private void runSmsPhoneNumberValidation() {
-        Transport transport = Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
+        Transport transport = Transport.fromPreference(GeneralSharedPreferences.newInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
 
         if (!transport.equals(Transport.Internet)) {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());

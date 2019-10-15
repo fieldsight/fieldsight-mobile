@@ -485,10 +485,10 @@ public class ProjectDashboardActivity extends BaseActivity {
 
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        SiteListFragment siteListFragment = SiteListFragment.getInstance(loadedProject);
-        ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.getInstance();
+        SiteListFragment siteListFragment = SiteListFragment.newInstance(loadedProject);
+        ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.newInstance();
 
-//        MapFragment mapFragment = MapFragment.getInstance(loadedProject);
+//        MapFragment mapFragment = MapFragment.newInstance(loadedProject);
         fragments.add(siteListFragment);
         fragments.add(projectContactsFragment);
 //        fragments.add(mapFragment);

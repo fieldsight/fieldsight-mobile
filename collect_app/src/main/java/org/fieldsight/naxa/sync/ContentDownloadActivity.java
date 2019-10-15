@@ -280,7 +280,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
 //                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) throws Exception {
 //                        boolean hasAPIRunning = ServiceGenerator.getRunningAPICount() > 0;
 //                        if(!hasAPIRunning){
-//                            SyncRepository.getInstance().setError(syncableItem.getUid());
+//                            SyncRepository.newInstance().setError(syncableItem.getUid());
 //                        }
 //                        return Observable.just(syncableItem);
 //                    }

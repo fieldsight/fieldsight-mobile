@@ -30,7 +30,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.primitives.Longs;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FilterDialogAdapter;
@@ -85,7 +84,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     TermsLabels tl;
 
 
-    public static SiteListFragment getInstance(Project project) {
+    public static SiteListFragment newInstance(Project project) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_OBJECT, project);
         SiteListFragment siteListFragment = new SiteListFragment();
@@ -108,7 +107,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
         setupRecycleView();
         allSitesLiveData = SiteLocalSource.getInstance().getAllParentSite(loadedProject.getId());
-        offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_OFFLINE);
 
         collectFilterAndApply(new ArrayList<>());
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();

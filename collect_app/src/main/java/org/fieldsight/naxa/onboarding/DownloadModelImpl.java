@@ -57,7 +57,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //                        ProjectSitesRemoteSource
-//                                .getInstance()
+//                                .newInstance()
 //                                .fetchProjecSites()
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
@@ -106,7 +106,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //        ProjectSitesRemoteSource
-//                .getInstance()
+//                .newInstance()
 //                .fetchProjecSites()
                 .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
                     /*note:
@@ -150,7 +150,7 @@ public class DownloadModelImpl implements DownloadModel {
     public void fetchStagedForms() {
 
 //        ProjectSitesRemoteSource
-//                .getInstance()
+//                .newInstance()
 //                .fetchProjecSites()
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
@@ -241,7 +241,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //        ProjectSitesRemoteSource
-//                .getInstance()
+//                .newInstance()
 //                .fetchProjecSites()
                 .flatMap((Function<List<Project>, SingleSource<List<DownloadProgress>>>) projects -> {
                     /*note:

@@ -26,7 +26,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
     private ImageView profilePicture;
     private TextView fullname, username, role, address, gender, email, skype, twitter, tango, hike, qq, googletalk, viber, whatsapp, wechat;
 
-    public static ContactDetailsBottomSheetFragment getInstance() {
+    public static ContactDetailsBottomSheetFragment newInstance() {
         return new ContactDetailsBottomSheetFragment();
     }
 

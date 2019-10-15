@@ -27,6 +27,7 @@ import org.odk.collect.android.utilities.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -174,7 +175,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
         //todo bug RxDownloadmanager is adding /storage/emulated so remove it before we send path
         String savePath = "";
-        switch (FileUtils.getFileExtension(url).toLowerCase()) {
+        switch (FileUtils.getFileExtension(url).toLowerCase(Locale.getDefault())) {
             case "pdf":
                 savePath = Collect.PDF.replace(Environment.getExternalStorageDirectory().toString(), "");
                 break;

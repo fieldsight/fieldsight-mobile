@@ -90,31 +90,33 @@
 <!--        <exclude name="UncommentedEmptyMethodBody" />-->
 <!--    </rule>-->
 
-<!--    <rule ref="category/java/errorprone.xml">-->
-<!--        <exclude name="AssignmentInOperand" />-->
-<!--        <exclude name="AssignmentToNonFinalStatic" />-->
-<!--        <exclude name="AvoidBranchingStatementAsLastInLoop" />-->
-<!--        <exclude name="AvoidCatchingNPE" />-->
-<!--        <exclude name="AvoidCatchingThrowable" />-->
-<!--        <exclude name="AvoidDuplicateLiterals" />-->
-<!--        <exclude name="AvoidFieldNameMatchingMethodName" />-->
-<!--        <exclude name="AvoidFieldNameMatchingTypeName" />-->
-<!--        <exclude name="AvoidInstanceofChecksInCatchClause" />-->
-<!--        <exclude name="AvoidLiteralsInIfCondition" />-->
-<!--        <exclude name="BeanMembersShouldSerialize" />-->
-<!--        <exclude name="CompareObjectsWithEquals" />-->
-<!--        <exclude name="ConstructorCallsOverridableMethod" />-->
-<!--        <exclude name="DataflowAnomalyAnalysis" />-->
-<!--        <exclude name="EmptyCatchBlock" />-->
-<!--        <exclude name="EmptyIfStmt" />-->
-<!--        <exclude name="EmptyWhileStmt" />-->
-<!--        <exclude name="JUnitSpelling" />-->
-<!--        <exclude name="MissingBreakInSwitch" />-->
-<!--        <exclude name="MissingSerialVersionUID" />-->
-<!--        <exclude name="NullAssignment" />-->
-<!--        <exclude name="TestClassWithoutTestCases" />-->
-<!--        <exclude name="UnnecessaryBooleanAssertion" />-->
-<!--    </rule>-->
+    <rule ref="category/java/errorprone.xml">
+        <exclude name="AssignmentInOperand" />
+        <exclude name="AssignmentToNonFinalStatic" />
+        <exclude name="AvoidBranchingStatementAsLastInLoop" />
+        <exclude name="AvoidCatchingNPE" />
+        <exclude name="AvoidCatchingThrowable" />
+        <exclude name="AvoidDuplicateLiterals" />
+        <exclude name="AvoidFieldNameMatchingMethodName" />
+        <exclude name="AvoidFieldNameMatchingTypeName" />
+        <exclude name="AvoidInstanceofChecksInCatchClause" />
+        <exclude name="AvoidLiteralsInIfCondition" />
+        <exclude name="BeanMembersShouldSerialize" />
+        <exclude name="CompareObjectsWithEquals" />
+        <exclude name="ConstructorCallsOverridableMethod" />
+        <exclude name="DataflowAnomalyAnalysis" />
+        <exclude name="EmptyCatchBlock" />
+        <exclude name="EmptyIfStmt" />
+        <exclude name="EmptyWhileStmt" />
+        <exclude name="JUnitSpelling" />
+        <exclude name="MissingBreakInSwitch" />
+        <exclude name="MissingSerialVersionUID" />
+        <exclude name="NullAssignment" />
+        <exclude name="TestClassWithoutTestCases" />
+        <exclude name="UnnecessaryBooleanAssertion" />
+        <exclude name="UseProperClassLoader" />
+        <exclude name="NonStaticInitializer" />
+    </rule>
 
 <!--    <rule ref="category/java/multithreading.xml">-->
 <!--        <exclude name="AvoidSynchronizedAtMethodLevel" />-->

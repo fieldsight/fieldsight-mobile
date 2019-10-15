@@ -65,7 +65,7 @@
 //
 //    private ArrayList<GeoPoint> plottedSites = new ArrayList<>(0);
 //
-//    public static MapFragment getInstance(Project loadedProject) {
+//    public static MapFragment newInstance(Project loadedProject) {
 //        MapFragment frag = new MapFragment();
 //        Bundle bundle = new Bundle();
 //        bundle.putParcelable(EXTRA_OBJECT, loadedProject);
@@ -78,7 +78,7 @@
 //        SiteMarker marker = new SiteMarker(map);
 //        marker.setSnippet(snippet);
 //        marker.setTitle(title);
-//        marker.setIcon(ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.ic_place_black));
+//        marker.setIcon(ContextCompat.getDrawable(Collect.newInstance().getApplicationContext(), R.drawable.ic_place_black));
 //        marker.setPosition(geoPoint);
 //        return marker;
 //    }
@@ -144,7 +144,7 @@
 //
 //
 //
-//        SiteLocalSource.getInstance().getByIdAsSingle(loadedProject.getId())
+//        SiteLocalSource.newInstance().getByIdAsSingle(loadedProject.getId())
 //                .toObservable()
 //                .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites -> sites)
 //                .flatMap((Function<Site, ObservableSource<GeoPoint>>) site -> {

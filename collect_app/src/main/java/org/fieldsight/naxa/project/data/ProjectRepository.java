@@ -35,6 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import timber.log.Timber;
 
+@SuppressWarnings({"PMD.SingleMethodSingleton"})
 public class ProjectRepository implements BaseRepository<Project> {
 
     private static ProjectRepository projectRepository;

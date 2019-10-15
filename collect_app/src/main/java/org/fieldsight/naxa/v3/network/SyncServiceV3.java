@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import io.reactivex.Observable;
@@ -244,7 +245,7 @@ public class SyncServiceV3 extends IntentService {
 
         //todo bug RxDownloadmanager is adding /storage/emulated so remove it before we send path
         String savePath = "";
-        switch (FileUtils.getFileExtension(url).toLowerCase()) {
+        switch (FileUtils.getFileExtension(url).toLowerCase(Locale.getDefault())) {
             case "pdf":
                 savePath = Collect.PDF.replace(Environment.getExternalStorageDirectory().toString(), "");
                 break;

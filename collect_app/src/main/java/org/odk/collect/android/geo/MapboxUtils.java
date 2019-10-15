@@ -31,7 +31,7 @@ public class MapboxUtils {
             mapbox = null;
         }
 
-        // It's not safe to call Mapbox.getInstance() more than once.  It can fail on
+        // It's not safe to call Mapbox.newInstance() more than once.  It can fail on
         // the first call and then succeed on the second call, returning an invalid,
         // crashy Mapbox object.  We trust only the result of the first attempt.
         initAttempted = true;

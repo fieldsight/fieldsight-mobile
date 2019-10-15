@@ -75,15 +75,13 @@ public class LongSparseArray<E> implements Cloneable {
 
     @Override
     @SuppressWarnings("unchecked")
-    public LongSparseArray<E> clone() {
+    public LongSparseArray<E> clone() throws CloneNotSupportedException {
         LongSparseArray<E> clone = null;
-        try {
-            clone = (LongSparseArray<E>) super.clone();
-            clone.mKeys = mKeys.clone();
-            clone.mValues = mValues.clone();
-        } catch (CloneNotSupportedException cnse) {
-            /* ignore */
-        }
+
+        clone = (LongSparseArray<E>) super.clone();
+        clone.mKeys = mKeys.clone();
+        clone.mValues = mValues.clone();
+
         return clone;
     }
 

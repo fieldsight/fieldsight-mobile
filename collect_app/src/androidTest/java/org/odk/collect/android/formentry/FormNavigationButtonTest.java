@@ -59,7 +59,7 @@ import static org.odk.collect.android.test.FormLoadingUtils.ALL_WIDGETS_FORM;
  * separately check the option to navigate with either swipes or buttons:
  *
  * <code>
- * String navigation = (String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_NAVIGATION);
+ * String navigation = (String) GeneralSharedPreferences.newInstance().get(GeneralKeys.KEY_NAVIGATION);
  * showNavigationButtons = navigation.contains(GeneralKeys.NAVIGATION_BUTTONS);
  * </code>
  */

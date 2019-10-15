@@ -130,7 +130,7 @@
 //    private boolean uploadOneSubmission(String urlString, String id, String instanceFilePath,
 //                                        Uri toUpdate, HttpContext localContext, Map<Uri, Uri> uriRemap, Outcome outcome) {
 //
-//        Collect.getInstance().getActivityLogger().logAction(this, urlString, instanceFilePath);
+//        Collect.newInstance().getActivityLogger().logAction(this, urlString, instanceFilePath);
 //
 //        File instanceFile = new File(instanceFilePath);
 //        ContentValues cv = new ContentValues();
@@ -158,7 +158,7 @@
 //                Timber.i("Host name may not be null");
 //                outcome.messagesByInstanceId.put(id, FAIL + "Host name may not be null");
 //                cv.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMISSION_FAILED);
-//                Collect.getInstance().getContentResolver().update(toUpdate, cv, null, null);
+//                Collect.newInstance().getContentResolver().update(toUpdate, cv, null, null);
 //                return true;
 //            }
 //
@@ -172,7 +172,7 @@
 //                uri = URI.create(submissionUri.toString());
 //            } catch (IllegalArgumentException e) {
 //                Timber.i(e);
-//                outcome.messagesByInstanceId.put(id, Collect.getInstance().getString(R.string.url_error));
+//                outcome.messagesByInstanceId.put(id, Collect.newInstance().getString(R.string.url_error));
 //                return false;
 //            }
 //
@@ -190,7 +190,7 @@
 //                int statusCode = response.getStatusLine().getStatusCode();
 //                if (statusCode == HttpStatus.SC_UNAUTHORIZED) {
 //                    // clear the cookies -- should not be necessary?
-//                    Collect.getInstance().getCookieStore().clear();
+//                    Collect.newInstance().getCookieStore().clear();
 //
 //                    WebUtils.discardEntityBytes(response);
 //                    // we need authentication, so stop and return what we've
@@ -227,7 +227,7 @@
 //                                                + newURI.toString());
 //                                cv.put(InstanceColumns.STATUS,
 //                                        InstanceProviderAPI.STATUS_SUBMISSION_FAILED);
-//                                Collect.getInstance().getContentResolver()
+//                                Collect.newInstance().getContentResolver()
 //                                        .update(toUpdate, cv, null, null);
 //                                return true;
 //                            }
@@ -236,7 +236,7 @@
 //                            outcome.messagesByInstanceId.put(id, FAIL + urlString + " " + e.toString());
 //                            cv.put(InstanceColumns.STATUS,
 //                                    InstanceProviderAPI.STATUS_SUBMISSION_FAILED);
-//                            Collect.getInstance().getContentResolver()
+//                            Collect.newInstance().getContentResolver()
 //                                    .update(toUpdate, cv, null, null);
 //                            return true;
 //                        }
@@ -255,7 +255,7 @@
 //                                        + "web proxy, you may need to login to your network. ");
 //                        cv.put(InstanceColumns.STATUS,
 //                                InstanceProviderAPI.STATUS_SUBMISSION_FAILED);
-//                        Collect.getInstance().getContentResolver()
+//                        Collect.newInstance().getContentResolver()
 //                                .update(toUpdate, cv, null, null);
 //                        return true;
 //                    }
@@ -278,7 +278,7 @@
 //                    Timber.i(e, "Network Connection Refused");
 //                }
 //                cv.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMISSION_FAILED);
-//                Collect.getInstance().getContentResolver().update(toUpdate, cv, null, null);
+//                Collect.newInstance().getContentResolver().update(toUpdate, cv, null, null);
 //                return true;
 //            } catch (Exception e) {
 //                String msg = e.getMessage();
@@ -288,7 +288,7 @@
 //                outcome.messagesByInstanceId.put(id, FAIL + "Generic Exception: " + msg);
 //                Timber.e(e);
 //                cv.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMISSION_FAILED);
-//                Collect.getInstance().getContentResolver().update(toUpdate, cv, null, null);
+//                Collect.newInstance().getContentResolver().update(toUpdate, cv, null, null);
 //                return true;
 //            }
 //        }
@@ -323,7 +323,7 @@
 //        if (!instanceFile.exists() && !submissionFile.exists()) {
 //            outcome.messagesByInstanceId.put(id, FAIL + "instance XML file does not exist!");
 //            cv.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMISSION_FAILED);
-//            Collect.getInstance().getContentResolver().update(toUpdate, cv, null, null);
+//            Collect.newInstance().getContentResolver().update(toUpdate, cv, null, null);
 //            return true;
 //        }
 //
@@ -448,7 +448,7 @@
 //                        outcome.messagesByInstanceId.put(id, FAIL + "Network login failure? Again?");
 //                    } else if (responseCode == HttpStatus.SC_UNAUTHORIZED) {
 //                        // clear the cookies -- should not be necessary?
-//                        Collect.getInstance().getCookieStore().clear();
+//                        Collect.newInstance().getCookieStore().clear();
 //                        outcome.messagesByInstanceId.put(id, FAIL + response.getStatusLine().getReasonPhrase()
 //                                + " (" + responseCode + ") at " + urlString);
 //                    } else {
@@ -463,7 +463,7 @@
 //                    }
 //                    cv.put(InstanceColumns.STATUS,
 //                            InstanceProviderAPI.STATUS_SUBMISSION_FAILED);
-//                    Collect.getInstance().getContentResolver()
+//                    Collect.newInstance().getContentResolver()
 //                            .update(toUpdate, cv, null, null);
 //                    return true;
 //                }
@@ -481,7 +481,7 @@
 //                }
 //                outcome.messagesByInstanceId.put(id, FAIL + "Generic Exception: " + msg);
 //                cv.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMISSION_FAILED);
-//                Collect.getInstance().getContentResolver().update(toUpdate, cv, null, null);
+//                Collect.newInstance().getContentResolver().update(toUpdate, cv, null, null);
 //                return true;
 //            }
 //        }
@@ -491,11 +491,11 @@
 //            outcome.messagesByInstanceId.put(id, messageParser.getMessageResponse());
 //        } else {
 //            // Default messaging
-//            outcome.messagesByInstanceId.put(id, Collect.getInstance().getString(R.string.success));
+//            outcome.messagesByInstanceId.put(id, Collect.newInstance().getString(R.string.success));
 //        }
 //
 //        cv.put(InstanceColumns.STATUS, InstanceProviderAPI.STATUS_SUBMITTED);
-//        Collect.getInstance().getContentResolver().update(toUpdate, cv, null, null);
+//        Collect.newInstance().getContentResolver().update(toUpdate, cv, null, null);
 //        return true;
 //    }
 //
@@ -518,11 +518,11 @@
 //        selectionBuf.append(")");
 //        String selection = selectionBuf.toString();
 //
-//        String deviceId = new PropertyManager(Collect.getInstance().getApplicationContext())
+//        String deviceId = new PropertyManager(Collect.newInstance().getApplicationContext())
 //                .getSingularProperty(PropertyManager.withUri(PropertyManager.PROPMGR_DEVICE_ID));
 //
 //        // get shared HttpContext so that authentication and cookies are retained.
-//        HttpContext localContext = Collect.getInstance().getHttpContext();
+//        HttpContext localContext = Collect.newInstance().getHttpContext();
 //
 //        Map<Uri, Uri> uriRemap = new HashMap<Uri, Uri>();
 //
@@ -590,10 +590,10 @@
 //
 //    private String getServerSubmissionURL() {
 //
-//        Collect app = Collect.getInstance();
+//        Collect app = Collect.newInstance();
 //
 //        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(
-//                Collect.getInstance());
+//                Collect.newInstance());
 //        String serverBase = settings.getString(PreferenceKeys.KEY_SERVER_URL,
 //                app.getString(R.string.default_server_url));
 //

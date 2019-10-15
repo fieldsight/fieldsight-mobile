@@ -14,15 +14,16 @@ public class FormDetailsConverter implements Serializable {
     @TypeConverter
     public String fromFormDetail(FormDetails formDetails) {
         String jsonData = "{";
-        try{
-           jsonData += "\"downloadUrl\": \""+formDetails.getDownloadUrl()+"\",\n" +
-                   "            \"manifestUrl\": \""+formDetails.getManifestUrl()+"\",\n" +
-                   "            \"name\": \""+formDetails.getFormName()+"\",\n" +
-                   "            \"formID\": \""+formDetails.getFormID()+"\",\n" +
-                   "            \"version\": \""+formDetails.getFormVersion()+"\",\n" +
-                   "            \"hash\": \""+formDetails.getHash()+"\"";
-        }catch (Exception e){
-            Timber.e(e);;}
+        try {
+            jsonData += "\"downloadUrl\": \"" + formDetails.getDownloadUrl() + "\",\n" +
+                    "            \"manifestUrl\": \"" + formDetails.getManifestUrl() + "\",\n" +
+                    "            \"name\": \"" + formDetails.getFormName() + "\",\n" +
+                    "            \"formID\": \"" + formDetails.getFormID() + "\",\n" +
+                    "            \"version\": \"" + formDetails.getFormVersion() + "\",\n" +
+                    "            \"hash\": \"" + formDetails.getHash() + "\"";
+        } catch (Exception e) {
+            Timber.e(e);
+        }
         return jsonData += "}";
     }
 
@@ -32,7 +33,7 @@ public class FormDetailsConverter implements Serializable {
             JSONObject jsonObject = new JSONObject(value);
             return FieldsightFormDetailsv3.formDetailsfromJSON(jsonObject);
         } catch (Exception e) {
-            Timber.e(e);;
+            Timber.e(e);
             return null;
         }
 

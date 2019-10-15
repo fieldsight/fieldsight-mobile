@@ -28,6 +28,7 @@ import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.fieldsight.naxa.common.AnimationUtils.getRotationAnimation;
 
@@ -80,7 +81,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         String relativeDateTime = DateTimeUtils.getRelativeTime(generalForm.getDateCreated(), true);
         viewHolder.tvDesc.setText(viewHolder.tvFormName.getContext().getString(R.string.form_created_on, relativeDateTime));
         if (generalForm.getName() != null) {
-            viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1).toUpperCase());
+            viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1).toUpperCase(Locale.getDefault()));
         }
         setSubmissionText(viewHolder, submissionDetail, generalForm);
     }

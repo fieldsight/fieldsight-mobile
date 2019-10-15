@@ -26,6 +26,7 @@ import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.fieldsight.naxa.common.AnimationUtils.getRotationAnimation;
 
@@ -63,7 +64,7 @@ public class ScheduledFormsAdapter extends
         viewHolder.tvFormName.setText(scheduleForm.getFormName());
         viewHolder.tvDesc.setText(scheduleForm.getScheduleName());
         if(!TextUtils.isEmpty(scheduleForm.getScheduleName())){
-            viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1).toUpperCase());
+            viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1).toUpperCase(Locale.getDefault()));
         }
 
         setSubmissionText(viewHolder, submissionDetail, scheduleForm);

@@ -262,7 +262,7 @@ public class DateTimeUtils {
         try {
             Date date = new Date();
             date.setTime(time);
-            return new SimpleDateFormat(format).format(date);
+            return new SimpleDateFormat(format,Locale.getDefault()).format(date);
         } catch (Exception e) {
             Timber.e(e);
             return String.valueOf(time);

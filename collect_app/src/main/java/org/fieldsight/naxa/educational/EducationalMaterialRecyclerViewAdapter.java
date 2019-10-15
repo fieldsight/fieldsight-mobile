@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.Connectivity;
-import org.fieldsight.naxa.common.GlideApp;
 
 import java.io.File;
 import java.util.List;
@@ -35,8 +30,6 @@ import timber.log.Timber;
 
 public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = "Education Material";
-    // The items to display in your RecyclerView
     private final List<Object> items;
 
     private static final int TEXT_VIEW = 0, IMAGE = 1, VIDEO = 2, PDF = 3;
@@ -197,20 +190,10 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
         final Edu_Image_Model edu_image_model = (Edu_Image_Model) items.get(position);
         if (edu_image_model != null) {
 
-            Log.d(TAG, "configureViewHolderImage: " + edu_image_model.getThumbImageOn());
 
-            if (edu_image_model.getThumbImageOff() != null || !edu_image_model.getThumbImageOff().equals("")) {
-                Log.d(TAG, "configureViewHolderImage: " + edu_image_model.getThumbImageOff());
-                File f = new File(edu_image_model.getThumbImageOff());
-                ViewHolderImage.imageView.setImageURI(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", f));
-            } else {
-                if (Connectivity.isConnected(context)) {
-                    GlideApp.with(context.getApplicationContext())
-                            .load(edu_image_model.getThumbImageOn())
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(ViewHolderImage.imageView);
-                }
-            }
+            Timber.d("configureViewHolderImage: %s", edu_image_model.getThumbImageOff());
+            File f = new File(edu_image_model.getThumbImageOff());
+            ViewHolderImage.imageView.setImageURI(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", f));
 
 
             try {
@@ -321,7 +304,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                     target.setDataAndType(path, "application/pdf");
                     target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-//                    Uri fileUri = FileProvider.getUriForFile(context, Collect.getInstance().getString(R.string.android_file_provider_fieldsight), file);
+//                    Uri fileUri = FileProvider.getUriForFile(context, Collect.newInstance().getString(R.string.android_file_provider_fieldsight), file);
 //                    Log.d(TAG, "PDF_URI: " + fileUri);
 //                    target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //                    target.setDataAndType(fileUri, "application/pdf");
@@ -367,7 +350,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                     target.setDataAndType(path, "application/pdf");
                     target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-//                    Uri fileUri = FileProvider.getUriForFile(context, Collect.getInstance().getString(R.string.android_file_provider_fieldsight), file);
+//                    Uri fileUri = FileProvider.getUriForFile(context, Collect.newInstance().getString(R.string.android_file_provider_fieldsight), file);
 //                    Log.d(TAG, "PDF_URI: " + fileUri);
 //                    target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //                    target.setDataAndType(fileUri, "application/pdf");
