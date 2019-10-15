@@ -3,12 +3,9 @@ package org.fieldsight.naxa.common;
 import android.annotation.SuppressLint;
 import android.app.Application;
 
-
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.fieldsight.naxa.contact.ContactLocalSource;
 import org.fieldsight.naxa.contact.ContactRemoteSource;

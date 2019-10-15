@@ -1038,8 +1038,9 @@ public class TouchImageView extends AppCompatImageView {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         last.set(curr);
-                        if (fling != null)
+                        if (fling != null) {
                             fling.cancelFling();
+                        }
                         setState(State.DRAG);
                         break;
 
@@ -1165,11 +1166,11 @@ public class TouchImageView extends AppCompatImageView {
      */
     private class DoubleTapZoom implements Runnable {
 
-        private long startTime;
+        private final long startTime;
         private static final float ZOOM_TIME = 500;
-        private float startZoom, targetZoom;
-        private float bitmapX, bitmapY;
-        private boolean stretchImageToSuper;
+        private final float startZoom, targetZoom;
+        private final float bitmapX, bitmapY;
+        private final boolean stretchImageToSuper;
         private AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
         private PointF startTouch;
         private PointF endTouch;

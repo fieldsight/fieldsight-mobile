@@ -692,12 +692,16 @@ public class FileUtils {
                                          final File destDir,
                                          final OnReplaceListener listener,
                                          final boolean isMove) {
-        if (srcDir == null || destDir == null) return false;
+        if (srcDir == null || destDir == null) {
+            return false;
+        }
         // destDir's path locate in srcDir's path then return false
         String srcPath = srcDir.getPath() + File.separator;
         String destPath = destDir.getPath() + File.separator;
         if (destPath.contains(srcPath)) return false;
-        if (!srcDir.exists() || !srcDir.isDirectory()) return false;
+        if (!srcDir.exists() || !srcDir.isDirectory()) {
+            return false;
+        }
         if (destDir.exists()) {
             if (listener == null || listener.onReplace()) {// require delete the old directory
                 if (!deleteAllInDir(destDir)) {// unsuccessfully delete then return false
@@ -707,16 +711,22 @@ public class FileUtils {
                 return true;
             }
         }
-        if (!createOrExistsDir(destDir)) return false;
+        if (!createOrExistsDir(destDir)){
+            return false;
+        }
         File[] files = srcDir.listFiles();
 
         for (File file : files) {
 
             File oneDestFile = new File(destPath + file.getName());
             if (file.isFile()) {
-                if (!copyOrMoveFile(file, oneDestFile, listener, isMove)) return false;
+                if (!copyOrMoveFile(file, oneDestFile, listener, isMove)) {
+                    return false;
+                }
             } else if (file.isDirectory()) {
-                if (!copyOrMoveDir(file, oneDestFile, listener, isMove)) return false;
+                if (!copyOrMoveDir(file, oneDestFile, listener, isMove)){
+                    return false;
+                }
             }
         }
         return !isMove || deleteDir(srcDir);
@@ -730,7 +740,7 @@ public class FileUtils {
                                           final File destFile,
                                           final OnReplaceListener listener,
                                           final boolean isMove) {
-        if (srcFile == null || destFile == null){
+        if (srcFile == null || destFile == null) {
             return false;
         }
         // srcFile equals destFile then return false
@@ -738,7 +748,7 @@ public class FileUtils {
             return false;
         }
         // srcFile doesn't exist or isn't a file then return false
-        if (!srcFile.exists() || !srcFile.isFile()){
+        if (!srcFile.exists() || !srcFile.isFile()) {
             return false;
         }
         if (destFile.exists()) {
@@ -836,19 +846,29 @@ public class FileUtils {
      * @return {@code true}: success<br>{@code false}: fail
      */
     public static boolean deleteFilesInDirWithFilter(final File dir, final FileFilter filter) {
-        if (dir == null) return false;
+        if (dir == null) {
+            return false;
+        }
         // dir doesn't exist then return true
-        if (!dir.exists()) return true;
+        if (!dir.exists()) {
+            return true;
+        }
         // dir isn't a directory then return false
-        if (!dir.isDirectory()) return false;
+        if (!dir.isDirectory()){
+            return false;
+        }
         File[] files = dir.listFiles();
         if (files != null && files.length != 0) {
             for (File file : files) {
                 if (filter.accept(file)) {
                     if (file.isFile()) {
-                        if (!file.delete()) return false;
+                        if (!file.delete()){
+                            return false;
+                        }
                     } else if (file.isDirectory()) {
-                        if (!deleteDir(file)) return false;
+                        if (!deleteDir(file)) {
+                            return false;
+                        }
                     }
                 }
             }
