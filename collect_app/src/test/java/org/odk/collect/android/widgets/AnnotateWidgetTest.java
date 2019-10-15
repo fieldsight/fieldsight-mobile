@@ -9,7 +9,7 @@ import net.bytebuddy.utility.RandomString;
 import org.javarosa.core.model.data.StringData;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.odk.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.odk.collect.android.activities.DrawActivity;
 import org.odk.collect.android.widgets.base.FileWidgetTest;
 

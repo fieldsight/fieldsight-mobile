@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.odk.collect.android.espressoutils.FormEntry;
 import org.odk.collect.android.espressoutils.MainMenu;
 import org.odk.collect.android.espressoutils.Settings;

@@ -7,7 +7,7 @@ import org.javarosa.core.model.data.GeoPointData;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.odk.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.odk.collect.android.ShadowPlayServicesUtil;
 import org.odk.collect.android.activities.GeoPointActivity;
 import org.odk.collect.android.widgets.base.BinaryWidgetTest;

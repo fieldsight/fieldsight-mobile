@@ -27,7 +27,7 @@ import androidx.test.rule.GrantPermissionRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
-import org.odk.collect.android.R;
+import org.fieldsight.collect.android.R;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.support.CopyFormRule;
 import org.odk.collect.android.support.ResetStateRule;
