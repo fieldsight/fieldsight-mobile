@@ -53,6 +53,7 @@ import static org.fieldsight.naxa.network.APIEndpoint.GET_STAGE_SUB_STAGE;
 import static org.fieldsight.naxa.network.APIEndpoint.GET_USER_PROFILE;
 import static org.fieldsight.naxa.network.APIEndpoint.REMOVE_FCM;
 
+@SuppressWarnings("PMD.ExcessiveParameterList")
 public interface ApiInterface {
 
     @Deprecated

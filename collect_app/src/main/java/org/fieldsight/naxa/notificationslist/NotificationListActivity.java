@@ -83,8 +83,8 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     private NotificationListViewModel viewModel;
     private NotificationsAdapter adapter;
 
-    final String latest_notification = "2"; // notification type when the user scroll down
-    final String older_notification = "1"; // notification type when the user scrolls up
+    final static String LATEST_NOTIFICATION = "2"; // notification type when the user scroll down
+    final static String OLDER_NOTIFICATION = "1"; // notification type when the user scrolls up
     List<FieldSightNotification> mNotificationList = new ArrayList<>();
 
     public static void start(Context context) {
@@ -138,7 +138,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                     return;
                 }
                 Timber.i("NotificationListActivity is loading");
-                pullNotificationByDate(latest_notification);
+                pullNotificationByDate(LATEST_NOTIFICATION);
                 isNewerLoading = true;
                 swipeLayout.setRefreshing(false);
 
@@ -162,7 +162,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                 int lastVisibleItem = ((LinearLayoutManager) rvNotificationList.getLayoutManager()).findLastVisibleItemPosition();
                 Timber.i("NotificationList, lastVisible item = %d", lastVisibleItem);
                 if (NetworkUtils.isNetworkConnected() && !isOlderLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
-                    pullNotificationByDate(older_notification);
+                    pullNotificationByDate(OLDER_NOTIFICATION);
                     mNotificationList.add(null);
                     adapter.notifyDataSetChanged();
                     isOlderLoading = true;
@@ -172,21 +172,21 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         });
 
         if (adapter.getItemCount() == 0) {
-            getDataFromServer(String.valueOf((System.currentTimeMillis() / 1000)), older_notification);
+            getDataFromServer(String.valueOf((System.currentTimeMillis() / 1000)), OLDER_NOTIFICATION);
             emptyLayout.setVisibility(View.VISIBLE);
             tvMessageNodata.setVisibility(View.VISIBLE);
             tvMessageNodata.setText("Loading notification please wait");
             prgbar.setVisibility(View.VISIBLE);
         } else {
             emptyLayout.setVisibility(View.GONE);
-            pullNotificationByDate(older_notification);
+            pullNotificationByDate(OLDER_NOTIFICATION);
         }
         isOlderLoading = true;
     }
 
     private void pullNotificationByDate(String type) {
         FieldSightNotification lastUpdatedDate;
-        if (type.equals(older_notification)) {
+        if (type.equals(OLDER_NOTIFICATION)) {
             lastUpdatedDate = adapter.getLastNotification();
         } else {
             lastUpdatedDate = adapter.getMostRecentNotification();
@@ -233,10 +233,10 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                     @Override
                     public void onSuccess(List<FieldSightNotification> list) {
                         viewModel.saveData(list);
-                        if (mType.equals(older_notification)) {
+                        if (mType.equals(OLDER_NOTIFICATION)) {
                             isOlderLoading = false;
                             adapter.removeLoader();
-                        } else if (mType.equals(latest_notification)) {
+                        } else if (mType.equals(LATEST_NOTIFICATION)) {
                             isNewerLoading = false;
                             swipeLayout.setRefreshing(false);
                         }
@@ -246,10 +246,10 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
-                        if (mType.equals(older_notification)) {
+                        if (mType.equals(OLDER_NOTIFICATION)) {
                             isOlderLoading = false;
                             adapter.removeLoader();
-                        } else if (mType.equals(latest_notification)) {
+                        } else if (mType.equals(LATEST_NOTIFICATION)) {
                             isNewerLoading = false;
                             swipeLayout.setRefreshing(false);
                         }

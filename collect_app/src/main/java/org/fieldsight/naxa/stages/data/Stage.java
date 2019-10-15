@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @Entity(tableName = "stages",
         primaryKeys = {"id", "formDeployedFrom"})
 public class Stage {

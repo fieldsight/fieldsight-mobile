@@ -12,6 +12,7 @@ import org.odk.collect.android.logic.FormDetails;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @Entity(tableName = "fieldsight_forms")
 public class FieldSightFormDetails extends FormDetails {
 

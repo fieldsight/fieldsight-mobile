@@ -89,7 +89,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     private DownloadFormsTask downloadFormsTask;
     private ProgressDialog dialog;
 
-    private Dialog errorDialog;
+
     private FormsDao formsDao;
     private FSInstancesDao instancesDao;
     private TextView tvSiteIdentifier;
@@ -586,7 +586,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                errorDialog = DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_download_task_failed), errorMessage);
+                Dialog errorDialog = DialogFactory.createMessageDialog(FlaggedInstanceActivity.this, getString(R.string.msg_download_task_failed), errorMessage);
                 errorDialog.show();
             }
         });

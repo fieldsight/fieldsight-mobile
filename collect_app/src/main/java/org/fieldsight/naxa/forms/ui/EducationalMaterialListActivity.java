@@ -52,13 +52,11 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
     List<Fragment> fragments = new ArrayList<>();
 
 
-    private final int defaultPagerPosition = 0;
+    private static final int defaultPagerPosition = 0;
     private PagerAdapter mPagerAdapter;
     public ViewPager viewPager;
     public TabLayout tabLayout;
-    private String fsFormId;
     private String formName;
-    private TextView title;
 
     public static void start(Context context, String formName, Em em) {
         Intent intent = new Intent(context, EducationalMaterialListActivity.class);
@@ -83,7 +81,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
         ButterKnife.bind(this);
 
         em = getIntent().getParcelableExtra(EXTRA_OBJECT);
-        fsFormId = getIntent().getStringExtra(EXTRA_ID);
+        String fsFormId = getIntent().getStringExtra(EXTRA_ID);
         formName = getIntent().getStringExtra(EXTRA_MESSAGE);
 
         if (fsFormId != null && em == null) {
@@ -107,7 +105,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
     private void bindUI() {
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
-        title = findViewById(R.id.title);
+        TextView title = findViewById(R.id.title);
 
         title.setText(formName);
     }

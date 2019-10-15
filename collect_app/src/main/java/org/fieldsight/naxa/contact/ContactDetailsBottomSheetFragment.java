@@ -23,7 +23,6 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
     private View rootView;
     private FieldSightContactModel contactDetail;
-    private ImageView profilePicture;
     private TextView fullname, username, role, address, gender, email, skype, twitter, tango, hike, qq, googletalk, viber, whatsapp, wechat;
 
     public static ContactDetailsBottomSheetFragment newInstance() {
@@ -45,7 +44,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
     }
 
     private void ContactDetailToViews() {
-        profilePicture = rootView.findViewById(R.id.iv_contactdetail_image);
+        ImageView profilePicture = rootView.findViewById(R.id.iv_contactdetail_image);
         if (contactDetail.getProfilePicture() != null) {
             GlideApp.with(this)
                     .load(contactDetail.getProfilePicture())

@@ -32,8 +32,6 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
 
     private ContactAdapter contactAdapter;
 
-    private ProjectContactViewModel viewModel;
-
 
     @BindView(R.id.root_layout_empty_layout)
     LinearLayout emptyLayout;
@@ -55,7 +53,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
 
         ContactRemoteSource.getInstance().getAll();
         ViewModelFactory factory = ViewModelFactory.getInstance();
-        viewModel = ViewModelProviders.of(getActivity(), factory).get(ProjectContactViewModel.class);
+        ProjectContactViewModel viewModel = ViewModelProviders.of(getActivity(), factory).get(ProjectContactViewModel.class);
         viewModel.getContacts()
                 .observe(this, new Observer<List<FieldSightContactModel>>() {
                     @Override

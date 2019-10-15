@@ -49,7 +49,6 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
     private LoginPresenter loginPresenter;
     private Button mEmailSignInButton;
 
-    private ImageButton btnChangeUrl;
     private SignInButton btnGmailLogin;
     private boolean isFromGooleSignin;
 
@@ -62,7 +61,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
 
         mPasswordView = findViewById(R.id.password);
 
-        btnChangeUrl = findViewById(R.id.btn_change_server_url);
+        ImageButton btnChangeUrl = findViewById(R.id.btn_change_server_url);
         mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override

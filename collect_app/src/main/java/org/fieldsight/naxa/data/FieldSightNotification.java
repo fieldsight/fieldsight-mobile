@@ -10,7 +10,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @Entity(indices = {@Index(value = "receivedDateTimeInMillis", unique = true)})
 public class FieldSightNotification implements Parcelable {
 

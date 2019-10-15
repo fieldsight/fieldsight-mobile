@@ -55,8 +55,6 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     @BindView(R.id.recycler_survey_form_list)
     RecyclerViewEmptySupport recyclerSurveyFormList;
 
-    private ActionBar actionBar;
-
     private Project loadedProject;
     private TitleDescAdapter adapter;
     private SurveyFormViewModel surveyFormViewModel;
@@ -105,7 +103,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     private void setupToolbar() {
 
         setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

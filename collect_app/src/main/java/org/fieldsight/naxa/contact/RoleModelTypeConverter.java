@@ -11,6 +11,10 @@ import java.util.ArrayList;
 
 public class RoleModelTypeConverter {
 
+    private RoleModelTypeConverter() {
+
+    }
+
     @TypeConverter
     public static String roleModelToString(RoleModel roleModel) {
         return GSONInstance.getInstance().toJson(roleModel);
@@ -18,7 +22,8 @@ public class RoleModelTypeConverter {
 
     @TypeConverter
     public static ArrayList<RoleModel> stringToRoleModel(String roleModel) {
-        Type type = new TypeToken<ArrayList<RoleModel>>() {}.getType();
-        return GSONInstance.getInstance().fromJson(roleModel,type);
+        Type type = new TypeToken<ArrayList<RoleModel>>() {
+        }.getType();
+        return GSONInstance.getInstance().fromJson(roleModel, type);
     }
 }

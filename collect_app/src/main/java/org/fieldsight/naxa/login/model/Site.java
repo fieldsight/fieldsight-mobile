@@ -20,6 +20,7 @@ import org.fieldsight.naxa.stages.StringListTypeConvertor;
 
 import java.util.List;
 
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @Entity(tableName = "sites")
 public class Site implements Parcelable {
     @PrimaryKey

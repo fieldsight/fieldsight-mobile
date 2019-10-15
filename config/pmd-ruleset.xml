@@ -57,31 +57,31 @@
 <!--        <exclude name="UselessParentheses" />               &lt;!&ndash; Decided not to use in #1519 &ndash;&gt;-->
 <!--    </rule>-->
 
-<!--    <rule ref="category/java/design.xml">-->
-<!--        <exclude name="AvoidCatchingGenericException" />-->
-<!--        <exclude name="AvoidDeeplyNestedIfStmts" />-->
-<!--        <exclude name="AvoidThrowingRawExceptionTypes" />-->
-<!--        <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal" />-->
-<!--        <exclude name="CollapsibleIfStatements" />-->
-<!--        <exclude name="CyclomaticComplexity" />-->
-<!--        <exclude name="DataClass" />-->
-<!--        <exclude name="ExceptionAsFlowControl" />-->
-<!--        <exclude name="ExcessiveImports" />-->
-<!--        <exclude name="ExcessiveMethodLength" />-->
-<!--        <exclude name="ExcessivePublicCount" />-->
-<!--        <exclude name="ExcessiveClassLength" />-->
-<!--        <exclude name="GodClass" />-->
-<!--        <exclude name="LawOfDemeter" />-->
-<!--        <exclude name="LoosePackageCoupling" />-->
-<!--        <exclude name="NcssCount" />-->
-<!--        <exclude name="NPathComplexity" />-->
-<!--        <exclude name="SignatureDeclareThrowsException" />-->
-<!--        <exclude name="SimplifyConditional" />-->
-<!--        <exclude name="SwitchDensity" />-->
-<!--        <exclude name="TooManyFields" />-->
-<!--        <exclude name="TooManyMethods" />-->
-<!--        <exclude name="UseObjectForClearerAPI" />-->
-<!--    </rule>-->
+    <rule ref="category/java/design.xml">
+        <exclude name="AvoidCatchingGenericException" />
+        <exclude name="AvoidDeeplyNestedIfStmts" />
+        <exclude name="AvoidThrowingRawExceptionTypes" />
+        <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal" />
+        <exclude name="CollapsibleIfStatements" />
+        <exclude name="CyclomaticComplexity" />
+        <exclude name="DataClass" />
+        <exclude name="ExceptionAsFlowControl" />
+        <exclude name="ExcessiveImports" />
+        <exclude name="ExcessiveMethodLength" />
+        <exclude name="ExcessivePublicCount" />
+        <exclude name="ExcessiveClassLength" />
+        <exclude name="GodClass" />
+        <exclude name="LawOfDemeter" />
+        <exclude name="LoosePackageCoupling" />
+        <exclude name="NcssCount" />
+        <exclude name="NPathComplexity" />
+        <exclude name="SignatureDeclareThrowsException" />
+        <exclude name="SimplifyConditional" />
+        <exclude name="SwitchDensity" />
+        <exclude name="TooManyFields" />
+        <exclude name="TooManyMethods" />
+        <exclude name="UseObjectForClearerAPI" />
+    </rule>
 
 <!--    <rule ref="category/java/documentation.xml">-->
 <!--        <exclude name="CommentSize" />-->

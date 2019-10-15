@@ -38,7 +38,8 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 public class PreviousSubmissionListActivity extends CollectAbstractActivity implements PaginationAdapter.OnCardClickListener {
 
     ActionBar actionBar;
-    private String fsFormId, fsFormName, siteId;
+    private String fsFormId;
+    private String fsFormName;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView listFormHistory;
     private PaginationAdapter adapter;
@@ -52,7 +53,6 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     private String urlFirstPage;
     private String urlNextPage;
     private Toolbar toolbar;
-    private String count;
     private CardView cardSubmissionInfo;
     private TextView tvTotalSubmissionMessage;
     private TextView tvListTitle;
@@ -82,13 +82,13 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         fsFormId = bundle.getString(Constant.BundleKey.KEY_FS_FORM_ID);
         fsFormName = bundle.getString(Constant.BundleKey.KEY_FS_FORM_NAME);
 
-        siteId = bundle.getString(Constant.BundleKey.KEY_SITE_ID);
+        String siteId = bundle.getString(Constant.BundleKey.KEY_SITE_ID);
         tableName = bundle.getString(Constant.BundleKey.KEY_TABLE_NAME);
 
         offlineLatestResponse = null;
         urlFirstPage = FieldSightUserSession.getServerUrl(this) + "/forms/api/responses/" + fsFormId + "/" + siteId;
         Timber.i(urlFirstPage);
-        count = bundle.getString("count");
+        String count = bundle.getString("count");
 
         bindUI();
         setupRecyclerView();
@@ -154,15 +154,13 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
                         tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
 
                         if (response == null) {
-
-                            showNoDataLayout();
                             tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
                             return;
 
                         }
 
                         if (response.getResults().size() <= 0) {
-                            showNoDataLayout();
+
                             tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
                             return;
                         }
@@ -301,7 +299,6 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         toolbar = findViewById(R.id.toolbar);
         listFormHistory = findViewById(R.id.recycler_form_history_list);
         progressBar = findViewById(R.id.main_progress);
-        tvNoData = findViewById(R.id.no_message);
         cardSubmissionInfo = findViewById(R.id.card_info);
         tvTotalSubmissionMessage = findViewById(R.id.tv_total_submission_message);
         tvListTitle = findViewById(R.id.tv_list_title);
@@ -314,17 +311,9 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         toFormDetail.putExtra(EXTRA_OBJECT, form);
         startActivity(toFormDetail);
 
-//        String transitionName = getString(R.string.transition_previous_submission);
-//        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, transitionName);
-//        ActivityCompat.startActivity(this, toFormDetail, options.toBundle());
+
     }
 
 
-    @Deprecated
-    private void showNoDataLayout() {
-
-//        tvNoData.setVisibility(View.GONE);
-//        listFormHistory.setVisibility(View.GONE);
-    }
 
 }

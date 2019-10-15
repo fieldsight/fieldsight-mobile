@@ -15,6 +15,7 @@ import org.fieldsight.naxa.generalforms.data.FormResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @Entity(tableName = "scheduled_form",
         primaryKeys = {"scheduleId", "formDeployedFrom"})
 public class ScheduleForm {
