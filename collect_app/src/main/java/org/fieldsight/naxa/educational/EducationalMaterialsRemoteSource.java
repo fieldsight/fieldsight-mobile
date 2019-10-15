@@ -203,7 +203,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                         @Override
                         public List<Project> apply(List<Project> projects) throws Exception {
                             if (projects.isEmpty()) {
-                                throw new RuntimeException("Download project(s) site(s) first");
+                                throw new RuntimeException("Download PROJECT(s) site(s) first");
                             }
                             return projects;
                         }

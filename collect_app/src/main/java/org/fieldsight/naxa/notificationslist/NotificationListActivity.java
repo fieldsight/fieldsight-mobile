@@ -193,20 +193,20 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         if (lastUpdatedDate != null) {
             String date = lastUpdatedDate.getReceivedDateTime();
 
-            String epochTime = DateTimeUtils.tsToSec8601(date)+"";
+            String epochTime = DateTimeUtils.tsToSec8601(date) + "";
             Timber.i("NotificationListActivity, date = %s, epochTime = %s", date, epochTime);
             if (epochTime != null) {
                 getDataFromServer(epochTime, type);
             } else {
-                if (swipeLayout.isRefreshing())
+                if (swipeLayout.isRefreshing()) {
                     swipeLayout.setRefreshing(false);
+                }
                 Toast.makeText(getApplicationContext(), "Invalid date format", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(getApplicationContext(), "Failed to get latest notification", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     void getDataFromServer(String mEpcoh, String mType) {

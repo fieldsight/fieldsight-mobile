@@ -130,8 +130,12 @@ public class SyncableItem {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SyncableItem that = (SyncableItem) o;
         return uid == that.uid &&
                 downloadingStatus == that.downloadingStatus &&

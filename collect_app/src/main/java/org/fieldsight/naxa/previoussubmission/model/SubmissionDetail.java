@@ -2,7 +2,6 @@
 package org.fieldsight.naxa.previoussubmission.model;
 
 
-
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -25,7 +24,7 @@ public class SubmissionDetail {
     @Expose
     private String site;
 
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     @Expose
     private String project;
 
@@ -124,18 +123,22 @@ public class SubmissionDetail {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SubmissionDetail that = (SubmissionDetail) o;
         return
                 Objects.equal(site, that.site) &&
-                Objects.equal(project, that.project) &&
-                Objects.equal(siteFsFormId, that.siteFsFormId) &&
-                Objects.equal(projectFsFormId, that.projectFsFormId) &&
-                Objects.equal(submissionDateTime, that.submissionDateTime) &&
-                Objects.equal(submittedBy, that.submittedBy) &&
-                Objects.equal(formType, that.formType) &&
-                Objects.equal(statusDisplay, that.statusDisplay);
+                        Objects.equal(project, that.project) &&
+                        Objects.equal(siteFsFormId, that.siteFsFormId) &&
+                        Objects.equal(projectFsFormId, that.projectFsFormId) &&
+                        Objects.equal(submissionDateTime, that.submissionDateTime) &&
+                        Objects.equal(submittedBy, that.submittedBy) &&
+                        Objects.equal(formType, that.formType) &&
+                        Objects.equal(statusDisplay, that.statusDisplay);
     }
 
     @Override

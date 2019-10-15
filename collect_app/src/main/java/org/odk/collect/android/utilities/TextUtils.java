@@ -129,7 +129,7 @@ public class TextUtils {
     /**
      * Copyright (C) 2006 The Android Open Source Project
      *
-     * Copied from Android project for testing.
+     * Copied from Android PROJECT for testing.
      * TODO: replace with String.join when minSdk goes to 26
      *
      * Returns a string containing the tokens joined by delimiters.

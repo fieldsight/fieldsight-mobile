@@ -366,8 +366,8 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
             }
         }
-        if (notificationData.has("project")) {
-            String site = notificationData.optString("project");
+        if (notificationData.has("PROJECT")) {
+            String site = notificationData.optString("PROJECT");
             try {
                 JSONObject siteData = new JSONObject(site);
                 if (siteData.has("name")) {

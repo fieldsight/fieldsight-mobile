@@ -32,8 +32,12 @@ public class GeneralFormAndSubmission {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
         GeneralFormAndSubmission that = (GeneralFormAndSubmission) o;
         return Objects.equal(generalForm, that.generalForm) &&
                 Objects.equal(submissionDetail, that.submissionDetail);

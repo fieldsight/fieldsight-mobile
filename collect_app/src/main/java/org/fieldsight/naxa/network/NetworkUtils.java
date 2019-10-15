@@ -13,7 +13,9 @@ public class NetworkUtils {
         ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm != null)
             return cm.getActiveNetworkInfo();
-        else return null;
+        else {
+            return null;
+        }
     }
 
     public static boolean isMopbileType() {

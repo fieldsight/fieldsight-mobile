@@ -123,7 +123,7 @@ public class SyncServiceV3 extends IntentService {
                                         @Override
                                         public ArrayList<Integer> apply(List<Pair<FieldsightFormDetailsv3, String>> pairs) throws Exception {
                                             HashSet<Integer> failedProjectId = new HashSet<>();
-                                            //collect project ids with failed forms
+                                            //collect PROJECT ids with failed forms
                                             for (Pair<FieldsightFormDetailsv3, String> pair : pairs) {
                                                 String message = pair.second;
                                                 FieldsightFormDetailsv3 fd = pair.first;
@@ -381,7 +381,7 @@ public class SyncServiceV3 extends IntentService {
 
     private void markAsFailed(String projectId, int type, String failedUrl, boolean shouldRetry) {
         saveState(projectId, type, failedUrl, false, Constant.DownloadStatus.FAILED);
-        Timber.e("Download stopped %s for project %s", failedUrl, projectId);
+        Timber.e("Download stopped %s for PROJECT %s", failedUrl, projectId);
     }
 
     private void markAsFailed(String projectId, int type, String failedUrl) {
@@ -396,7 +396,7 @@ public class SyncServiceV3 extends IntentService {
 
     private void markAsCompleted(String projectId, int type) {
         saveState(projectId, type, "", false, Constant.DownloadStatus.COMPLETED);
-        Timber.i("Download completed for project %s", projectId);
+        Timber.i("Download completed for PROJECT %s", projectId);
     }
 
     private void saveState(String projectId, int type, String failedUrl, boolean started, int status) {

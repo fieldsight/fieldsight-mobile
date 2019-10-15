@@ -48,34 +48,34 @@ import timber.log.Timber;
 
 public class ReportActivity extends CollectAbstractActivity {
     @BindView(R.id.tv_device_id)
-    TextView tv_device_id;
+    TextView tvDeviceId;
 
     @BindView(R.id.tv_fcm_token)
-    TextView tv_fcm_token;
+    TextView tvFcmToken;
 
     @BindView(R.id.tv_app_version)
-    TextView tv_app_version;
+    TextView tvAppVersion;
 
     @BindView(R.id.tv_os_version)
-    TextView tv_os_version;
+    TextView tvOsVersion;
 
     @BindView(R.id.tv_lat)
-    TextView tv_lat;
+    TextView tvLat;
 
     @BindView(R.id.tv_lng)
-    TextView tv_lng;
+    TextView tvLng;
 
     @BindView(R.id.spnr_type)
-    Spinner spnr_type;
+    Spinner spnrType;
 
     @BindView(R.id.tv_device_name)
-    TextView tv_device_name;
+    TextView tvDeviceName;
 
     @BindView(R.id.edt_message)
-    EditText edt_message;
+    EditText edtMessage;
 
     @BindView(R.id.chkbx_agree)
-    CheckBox chkbx_agree;
+    CheckBox chkbxAgree;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -93,11 +93,11 @@ public class ReportActivity extends CollectAbstractActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         hideKeyboardInActivity();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        tv_device_id.setText(new PropertyManager(this).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID));
-        tv_fcm_token.setText(SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, ""));
-        tv_app_version.setText(BuildConfig.VERSION_NAME);
-        tv_os_version.setText(Build.VERSION.RELEASE);
-        tv_device_name.setText(Build.MANUFACTURER);
+        tvDeviceId.setText(new PropertyManager(this).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID));
+        tvFcmToken.setText(SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, ""));
+        tvAppVersion.setText(BuildConfig.VERSION_NAME);
+        tvOsVersion.setText(Build.VERSION.RELEASE);
+        tvDeviceName.setText(Build.MANUFACTURER);
        new PermissionUtils().requestLocationPermissions(this, new PermissionListener() {
             @SuppressLint("MissingPermission")
             @Override
@@ -108,8 +108,8 @@ public class ReportActivity extends CollectAbstractActivity {
                             public void onSuccess(Location location) {
                                 // Got last known location. In some rare situations this can be null.
                                 if (location != null) {
-                                    tv_lat.setText(location.getLatitude() + "");
-                                    tv_lng.setText(location.getLongitude() + "");
+                                    tvLat.setText(location.getLatitude() + "");
+                                    tvLng.setText(location.getLongitude() + "");
                                 }
                             }
                         });
@@ -143,17 +143,17 @@ public class ReportActivity extends CollectAbstractActivity {
             Toast.makeText(getApplicationContext(), "Report form is submitting please wait", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(chkbx_agree.isChecked()) {
+        if(chkbxAgree.isChecked()) {
             isSubmitting = true;
-            String deviceId = checkEmptyWithFallback(tv_device_id, "0");
-            String deviceName = checkEmptyWithFallback(tv_device_name, "");
-            String fcmToken = checkEmptyWithFallback(tv_fcm_token, "");
-            String app_os_version = checkEmptyWithFallback(tv_os_version, "");
-            String lat = checkEmptyWithFallback(tv_lat, "0");
-            String lng = checkEmptyWithFallback(tv_lng, "0");
-            String message_type = checkEmptyWithFallback(spnr_type, "");
-            String app_version = checkEmptyWithFallback(tv_app_version, "");
-            String message = checkEmptyWithFallback(edt_message, "I have an issues using the app");
+            String deviceId = checkEmptyWithFallback(tvDeviceId, "0");
+            String deviceName = checkEmptyWithFallback(tvDeviceName, "");
+            String fcmToken = checkEmptyWithFallback(tvFcmToken, "");
+            String app_os_version = checkEmptyWithFallback(tvOsVersion, "");
+            String lat = checkEmptyWithFallback(tvLat, "0");
+            String lng = checkEmptyWithFallback(tvLng, "0");
+            String message_type = checkEmptyWithFallback(spnrType, "");
+            String app_version = checkEmptyWithFallback(tvAppVersion, "");
+            String message = checkEmptyWithFallback(edtMessage, "I have an issues using the app");
             observer = ServiceGenerator.getRxClient().create(ApiInterface.class)
                     .submitReport(deviceId, fcmToken, app_version, app_os_version, message_type, message, deviceName, lat, lng)
                     .subscribeOn(Schedulers.io())

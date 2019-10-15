@@ -110,11 +110,11 @@ public class SharedPreferenceUtils {
     }
 
     public static String keySelectedRegionId(String projectId) {
-        return String.format("project-id-%s", projectId);
+        return String.format("PROJECT-id-%s", projectId);
     }
 
     public static String keySelectedRegionLabel(String label) {
-        return String.format("project-label-%s", label);
+        return String.format("PROJECT-label-%s", label);
     }
 
     public static String getSiteLisTitle(Context context, String projectId) {

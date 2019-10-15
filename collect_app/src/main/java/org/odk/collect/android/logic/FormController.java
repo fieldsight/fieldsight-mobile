@@ -17,13 +17,6 @@ package org.odk.collect.android.logic;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.odk.collect.android.exception.JavaRosaException;
-import org.odk.collect.android.external.ExternalDataUtil;
-import org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointActionHandler;
-import org.odk.collect.android.views.ODKView;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.javarosa.core.model.CoreModelModule;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
@@ -61,6 +54,7 @@ import org.odk.collect.android.logic.actions.setgeopoint.CollectSetGeopointActio
 import org.odk.collect.android.utilities.AuditEventLogger;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.RegexUtils;
+import org.odk.collect.android.views.ODKView;
 
 import java.io.File;
 import java.io.IOException;

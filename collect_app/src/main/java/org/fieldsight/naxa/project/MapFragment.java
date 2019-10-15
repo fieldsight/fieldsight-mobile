@@ -1,4 +1,4 @@
-//package org.fieldsight.naxa.project;
+//package org.fieldsight.naxa.PROJECT;
 //
 //import android.annotation.SuppressLint;
 //import android.content.BroadcastReceiver;

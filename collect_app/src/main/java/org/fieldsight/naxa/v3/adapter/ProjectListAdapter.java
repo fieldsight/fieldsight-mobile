@@ -66,7 +66,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
                 if (projectList.get(i).getId().equals(projecttuple.get(j).projectId)) {
                     int status = projecttuple.get(j).status;
                     if(status == Constant.DownloadStatus.RUNNING) {
-                        projectList.get(i).setStatusMessage("Syncing project");
+                        projectList.get(i).setStatusMessage("Syncing PROJECT");
                     } else if(status == Constant.DownloadStatus.COMPLETED) {
                         projectList.get(i).setSynced(true);
                         projectList.get(i).setSyncedDate(projecttuple.get(j).created_date);

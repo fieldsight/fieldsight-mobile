@@ -54,7 +54,7 @@ public class Stage {
     @Expose
     private Integer site;
 
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     @Expose
     private Integer project;
 

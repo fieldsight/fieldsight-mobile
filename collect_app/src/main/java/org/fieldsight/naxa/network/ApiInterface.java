@@ -104,7 +104,7 @@ public interface ApiInterface {
                                 @Part("phone") RequestBody phone,
                                 @Part("address") RequestBody address,
                                 @Part("public_desc") RequestBody public_desc,
-                                @Part("project") RequestBody project,
+                                @Part("PROJECT") RequestBody project,
                                 @Part("type") RequestBody type,
                                 @Part("region") RequestBody regionID,
                                 @Part("site_meta_attributes_ans") RequestBody metaAttrs);
@@ -227,7 +227,7 @@ public interface ApiInterface {
                                 @Part("phone") RequestBody phone,
                                 @Part("address") RequestBody address,
                                 @Part("public_desc") RequestBody public_desc,
-                                @Part("project") RequestBody project,
+                                @Part("PROJECT") RequestBody project,
                                 @Part("type") RequestBody type,
                                 @Part("region") RequestBody regionID,
                                 @Part("site_meta_attributes_ans") RequestBody metaAttrs);

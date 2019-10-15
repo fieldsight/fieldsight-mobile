@@ -71,8 +71,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public FieldSightNotification getMostRecentNotification() {
-        if (fieldSightNotifications.size() > 0) return fieldSightNotifications.get(0);
-        else return null;
+        if (fieldSightNotifications.size() > 0) {
+            return fieldSightNotifications.get(0);
+        } else {
+            NotificationsAdapter
+        }
     }
 
     @Override

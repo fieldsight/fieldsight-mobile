@@ -24,14 +24,14 @@ public class APIEndpoint {
     public static final String GET_GENERAL_EM = "/forms/api/general/0/{site_id}";
     public static final String GET_SCHEDULE_EM = "/forms/api/schedules/0/{site_id}";
 
-    public static final String GET_LOCATION_URL = "/fieldsight/api/project-sites/";
+    public static final String GET_LOCATION_URL = "/fieldsight/api/PROJECT-sites/";
     public static final String GET_FORM_SCHEDULE = "/forms/api/schedules/{is_project}/{id}";
     public static final String GET_GENERAL_FORM = "/forms/api/general/{is_project}/{id}";
     public static final String GET_PROJECT_SITES = "/users/metwo/";
 
 
     public static final String GET_FS_FORM_DETAIL = "/forms/api/form-detail/{fs_form_id}";
-    public static final String ASSIGNED_FORM_LIST_PROJECT = "/forms/assignedFormList/project/";
+    public static final String ASSIGNED_FORM_LIST_PROJECT = "/forms/assignedFormList/PROJECT/";
     public static final String ASSIGNED_FORM_LIST_SITE = "/forms/assignedFormList/siteLevel/";
 
     public static final String ADD_FCM = "/fieldsight/fcm/add/";
@@ -40,7 +40,7 @@ public class APIEndpoint {
     public static final String SITE_UPDATE_URL = "/fieldsight/api/update-site/";
     public static final String PROJECT_UPDATE_URL = "/fieldsight/api/async_save_project/";
 
-    public static final String GET_CLUSTER_LIST = "/fieldsight/project/region-list/{project_id}/";
+    public static final String GET_CLUSTER_LIST = "/fieldsight/PROJECT/region-list/{project_id}/";
     public static final String GET_ALL_SUBMISSION = "/forms/last-submissions/";
     public static final String GET_MY_SITES = "/users/mysites";
     public static final String GET_MY_SITES_v2 = "users/api/v2/mysites/";

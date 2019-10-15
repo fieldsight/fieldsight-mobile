@@ -70,7 +70,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        /// getting the selected project list from the projectlist activity
+        /// getting the selected PROJECT list from the projectlist activity
         Timber.i("SyncActivity, alreadySyncing:: " + (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0));
         if (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0) {
             syncing = true;

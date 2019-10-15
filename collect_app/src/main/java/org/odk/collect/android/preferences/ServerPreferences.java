@@ -19,8 +19,9 @@ package org.odk.collect.android.preferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import androidx.annotation.Nullable;
 import android.view.View;
+
+import androidx.annotation.Nullable;
 
 import org.fieldsight.collect.android.R;
 

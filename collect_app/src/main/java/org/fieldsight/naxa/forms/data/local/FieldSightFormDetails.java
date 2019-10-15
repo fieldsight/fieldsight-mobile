@@ -26,7 +26,7 @@ public class FieldSightFormDetails extends FormDetails {
     @SerializedName("site")
     private String formDeployedSiteId;
 
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     private String formDeployedProjectId;
 
     @SerializedName("site_project_id")

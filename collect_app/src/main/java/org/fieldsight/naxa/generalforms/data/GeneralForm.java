@@ -70,7 +70,7 @@ public class GeneralForm {
     @SerializedName("site")
     @Expose
     private String siteId;
-    @SerializedName(value = "project")
+    @SerializedName(value = "PROJECT")
     @Expose
     private String projectId;
 

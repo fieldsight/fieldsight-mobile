@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 public class MySites {
 
 
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     @Expose(serialize = false,deserialize = false)
     private Project project;
     @SerializedName("site")
@@ -17,7 +17,7 @@ public class MySites {
     /**
      *
      * @return
-     *     The project
+     *     The PROJECT
      */
     public Project getProject() {
         return project;
@@ -26,7 +26,7 @@ public class MySites {
     /**
      *
      * @param project
-     *     The project
+     *     The PROJECT
      */
     public void setProject(Project project) {
         this.project = project;

@@ -127,7 +127,7 @@ public class MigrationHelper {
 
 
     public static class Table {
-        public static final String project = "table_project";
+        public static final String PROJECT = "table_project";
         static final String my_site = "table_my_site_detail";
         public static final String notifications = "table_notify";
         public static final String all_contacts = "table_contact";

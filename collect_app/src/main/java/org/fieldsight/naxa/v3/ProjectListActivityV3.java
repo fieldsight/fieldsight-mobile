@@ -94,7 +94,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                         selected++;
                     }
                 }
-                Timber.d("project list counter is %d", selected);
+                Timber.d("PROJECT list counter is %d", selected);
                 if (selected > 0) {
                     tvSyncProject.setVisibility(View.VISIBLE);
                     tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
@@ -161,7 +161,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             llNodata.setVisibility(View.GONE);
         }
         prgbar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        tvNodata.setText(loading ? "Loading data ... " : "Error in syncing the project");
+        tvNodata.setText(loading ? "Loading data ... " : "Error in syncing the PROJECT");
     }
 
     void getDataFromServer() {
@@ -185,7 +185,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
     }
 
-    //    Clear the sync project list and add the selected projects
+    //    Clear the sync PROJECT list and add the selected projects
     ArrayList<Project> manageSyncList() {
         ArrayList<Project> syncProjectList = new ArrayList<>();
         for (Project project : projectList) {
@@ -237,13 +237,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 startActivity(new Intent(this, BackupActivity.class));
                 return true;
             case R.id.action_refresh:
-//                check all the project and make auto true
+//                check all the PROJECT and make auto true
                 allSelected = !allSelected;
                 for (Project project : projectList) {
-//                    if (!project.isSynced()) {
+//                    if (!PROJECT.isSynced()) {
                     project.setChecked(allSelected);
 //                    } else {
-//                        project.setChecked(false);
+//                        PROJECT.setChecked(false);
 //                    }
                 }
                 adapter.toggleAllSelected(allSelected);

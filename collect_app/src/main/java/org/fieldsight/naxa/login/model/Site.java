@@ -81,7 +81,7 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "dateCreated")
     private String dateCreated;
 
-    @ColumnInfo(name = "project")
+    @ColumnInfo(name = "PROJECT")
     private String project;
 
     @ColumnInfo(name = "isSiteVerified")
@@ -434,8 +434,12 @@ public class Site implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Site site = (Site) o;
         return isSiteVerified == site.isSiteVerified &&
                 Objects.equal(id, site.id) &&

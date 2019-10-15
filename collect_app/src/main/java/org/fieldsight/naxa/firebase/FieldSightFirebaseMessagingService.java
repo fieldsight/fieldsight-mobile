@@ -200,8 +200,8 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
             }
         }
-        if (notificationData.containsKey("project")) {
-            String site = notificationData.get("project");
+        if (notificationData.containsKey("PROJECT")) {
+            String site = notificationData.get("PROJECT");
             try {
                 JSONObject siteData = new JSONObject(site);
                 if (siteData.has("name")) {

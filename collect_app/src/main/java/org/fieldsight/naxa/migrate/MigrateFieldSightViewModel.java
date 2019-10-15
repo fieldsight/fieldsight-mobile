@@ -40,7 +40,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
     private void copyProjects() {
         SQLiteDatabase db = getProjSiteDB();
         Cursor cursor = null;
-        cursor = selectAll(db, MigrationHelper.Table.project);
+        cursor = selectAll(db, MigrationHelper.Table.PROJECT);
         ArrayList<Project> projects = new ArrayList<>();
 
         while (cursor.moveToNext()) {
@@ -241,8 +241,9 @@ public class MigrateFieldSightViewModel extends ViewModel {
                 File.separator + MigrationHelper.Folder.DB_FOLDER +
                 File.separator + MigrationHelper.Database.PROJ_SITES);
 
-        if (!dbfile.exists())
+        if (!dbfile.exists()) {
             throw new RuntimeException("Database file does not exist for " + usernameOrEmail);
+        }
 
         return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
     }
@@ -251,8 +252,9 @@ public class MigrateFieldSightViewModel extends ViewModel {
         String dbPath = migrationHelper.getOldRootPath() + File.separator + MigrationHelper.Folder.METADATA + File.separator + MigrationHelper.Database.INSTANCES;
         File dbfile = new File(dbPath);
 
-        if (!dbfile.exists())
+        if (!dbfile.exists()) {
             throw new RuntimeException("Instance Database does not exist for " + usernameOrEmail);
+        }
 
         return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
     }

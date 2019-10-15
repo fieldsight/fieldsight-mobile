@@ -148,7 +148,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         try {
             project = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
         } catch (Exception e) {
-            Timber.e("Can't start activity without project extra_object");
+            Timber.e("Can't start activity without PROJECT extra_object");
             ToastUtils.showLongToast(getString(R.string.msg_failed_to_load));
             finish();
             return;

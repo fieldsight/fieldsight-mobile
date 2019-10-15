@@ -106,7 +106,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                 .getStatusById(Constant.DownloadUID.PROJECT_SITES)
                 .map(syncableItem -> {
                     if (syncableItem.getDownloadingStatus() == Constant.DownloadStatus.RUNNING) {
-                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
+                        throw new DownloadRunningException("Waiting until PROJECT and sites are downloaded");
 
                     }
                     return syncableItem;
@@ -119,7 +119,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                             @Override
                             public ObservableSource<?> apply(Throwable throwable) {
                                 if (throwable instanceof DownloadRunningException) {
-                                    Timber.i("Polling for project sites");
+                                    Timber.i("Polling for PROJECT sites");
                                     return Observable.timer(3, TimeUnit.SECONDS);
                                 }
 
@@ -140,7 +140,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                     @Override
                     public List<Project> apply(List<Project> projects) throws Exception {
                         if (projects.isEmpty()) {
-                            throw new RuntimeException("Download project(s) site(s) first");
+                            throw new RuntimeException("Download PROJECT(s) site(s) first");
                         }
                         return projects;
                     }
@@ -185,7 +185,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                         }
 
                         if (formsToDownlaod == null || formsToDownlaod.isEmpty()) {
-                            broadcastDownloadError("No project id provided to download forms");
+                            broadcastDownloadError("No PROJECT id provided to download forms");
                         } else {
                             downloadFormList(getApplicationContext(), XMLFormDownloadService.this, XMLFormDownloadService.this, formsToDownlaod.get(0));
                             broadcastDownloadStarted();
@@ -249,7 +249,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
             return;
         }
 
-        Log.d(TAG, "Forms Downloading Complete for project " + formsToDownlaod.get(0).getFormCreatorsId());
+        Log.d(TAG, "Forms Downloading Complete for PROJECT " + formsToDownlaod.get(0).getFormCreatorsId());
 
 
         //remove the site that has completed download

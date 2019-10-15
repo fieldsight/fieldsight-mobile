@@ -78,7 +78,7 @@ public class Constant {
     }
 
     public final static class FormDeploymentFrom {
-        public final static String PROJECT = "project";
+        public final static String PROJECT = "PROJECT";
         public final static String SITE = "site";
     }
 

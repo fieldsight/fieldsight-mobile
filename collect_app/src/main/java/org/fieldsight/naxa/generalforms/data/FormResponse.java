@@ -35,7 +35,7 @@ public class FormResponse implements Parcelable {
     @SerializedName("site")
     @Expose
     private Integer site;
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     @Expose
     private Integer project;
     @SerializedName("site_fxf")

@@ -1,4 +1,4 @@
-//package org.fieldsight.naxa.project;/*
+//package org.fieldsight.naxa.PROJECT;/*
 // * Copyright (C) 2016 GeoODK
 // *
 // * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except

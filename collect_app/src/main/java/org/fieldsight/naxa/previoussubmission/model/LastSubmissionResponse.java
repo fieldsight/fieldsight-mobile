@@ -20,7 +20,7 @@ public class LastSubmissionResponse {
 
     @SerializedName("results")
     @Expose
-    private List<SubmissionDetail> submissionDetails = null;
+    private List<SubmissionDetail> submissionDetails;
 
     public Integer getCount() {
         return count;

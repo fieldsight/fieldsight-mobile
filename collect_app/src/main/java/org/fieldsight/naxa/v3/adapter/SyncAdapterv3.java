@@ -23,7 +23,7 @@ import timber.log.Timber;
  * @author: yubaraj poudel
  * @Since 2019/05/10
  * <p>
- * Manages the sync of all the project related contents. It is the controller that allows the user to select
+ * Manages the sync of all the PROJECT related contents. It is the controller that allows the user to select
  * which content of the projects to download
  **/
 
@@ -138,7 +138,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         return new SyncViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_sync_all, viewGroup, false)) {
             @Override
             public void downloadListItemClicked(int parentPos, int pos) {
-                Timber.i("Syncadapterv3, project details clicked");
+                Timber.i("Syncadapterv3, PROJECT details clicked");
                 if (callback != null) {
                     Project p = selectedProjectList.get(parentPos);
                     syncableMap.get(p.getId()).get(pos).toggleSync();

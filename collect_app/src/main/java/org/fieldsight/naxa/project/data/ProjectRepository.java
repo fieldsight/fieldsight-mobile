@@ -148,7 +148,9 @@ public class ProjectRepository implements BaseRepository<Project> {
                     }
 
                     private ArrayList<SiteType> mapJSONtoSiteTypes(String types) {
-                        if (TextUtils.isEmpty(types)) return new ArrayList<>();
+                        if (TextUtils.isEmpty(types)) {
+                            return new ArrayList<>();
+                        }
                         Type siteTypeToken = new TypeToken<ArrayList<SiteType>>() {
                         }.getType();
                         return new Gson().fromJson(types, siteTypeToken);

@@ -29,7 +29,7 @@ public class FieldsightFormDetailsv3 {
     @ColumnInfo(name = "site")
     String site;
 
-    @ColumnInfo(name = "project")
+    @ColumnInfo(name = "PROJECT")
     String project;
 
     @ColumnInfo(name = "site_project_id")
@@ -154,7 +154,7 @@ public class FieldsightFormDetailsv3 {
         FieldsightFormDetailsv3 fieldsightFormDetailsv3 = new FieldsightFormDetailsv3();
         FormDetails formDetails = formDetailsfromJSON(jsonObject);
         fieldsightFormDetailsv3.setId(jsonObject.optString("id"));
-        fieldsightFormDetailsv3.setProject(jsonObject.optString("project"));
+        fieldsightFormDetailsv3.setProject(jsonObject.optString("PROJECT"));
         fieldsightFormDetailsv3.setSite_project_id(jsonObject.optString("site_project_id"));
         fieldsightFormDetailsv3.setSite(jsonObject.optString("site"));
         fieldsightFormDetailsv3.setFormDetails(formDetailsfromJSON(jsonObject));
@@ -218,7 +218,7 @@ public class FieldsightFormDetailsv3 {
 
                     JSONObject subStageFormDetailJSON = subStageFormJSON.optJSONObject("stage_forms");
                     fieldsightFormDetails.setId(subStageFormDetailJSON.optString("id"));
-                    fieldsightFormDetails.setProject(subStageFormDetailJSON.optString("project"));
+                    fieldsightFormDetails.setProject(subStageFormDetailJSON.optString("PROJECT"));
                     fieldsightFormDetails.setSite_project_id(subStageFormDetailJSON.optString("site_project_id"));
                     fieldsightFormDetails.setSite(subStageFormDetailJSON.optString("site"));
 
