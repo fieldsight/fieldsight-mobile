@@ -8,7 +8,6 @@ import android.util.Pair;
 import androidx.lifecycle.LiveData;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightDatabase;
@@ -17,6 +16,7 @@ import org.fieldsight.naxa.data.FieldSightNotificationBuilder;
 import org.fieldsight.naxa.notificationslist.FieldSightNotificationDAO;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,6 @@ import static org.fieldsight.naxa.common.Constant.NotificationType.PROJECT_FORM;
 import static org.fieldsight.naxa.common.Constant.NotificationType.SITE_FORM;
 import static org.fieldsight.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
 import static org.fieldsight.naxa.common.Constant.NotificationType.WEEKLY_REMINDER;
-import static org.fieldsight.naxa.firebase.FieldSightFirebaseMessagingService.NEW_FORM;
 
 
 public class FieldSightNotificationLocalSource implements BaseLocalDataSource<FieldSightNotification> {
@@ -235,7 +234,6 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 break;
             case SITE_FORM:
 
-                boolean isNewForm = NEW_FORM.equalsIgnoreCase(notification.getFormStatus());
                 String siteOrProjectName = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
                 title = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
                 message = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName);

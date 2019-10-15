@@ -86,7 +86,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private ActionMode actionMode;
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
     private MenuItem sortActionFilter;
-    TermsLabels tl ;
+    TermsLabels tl;
 
 
     public static SiteListFragment getInstance(Project project) {
@@ -265,7 +265,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         filterOptions.observe(this, new Observer<ArrayList<FilterOption>>() {
             @Override
             public void onChanged(@Nullable ArrayList<FilterOption> filterOptions) {
-                final FilterDialogAdapter adapter = new FilterDialogAdapter(getActivity(), recyclerView, filterOptions, getSelectedFilter(), new FilterDialogAdapter.RecyclerViewClickListener() {
+                final FilterDialogAdapter adapter = new FilterDialogAdapter(getActivity(), recyclerView, filterOptions, new FilterDialogAdapter.RecyclerViewClickListener() {
                     @Override
                     public void onFilterButtonClicked(ArrayList<FilterOption> sortList) {
                         bottomSheetDialog.dismiss();

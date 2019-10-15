@@ -11,6 +11,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class StringListTypeConvertor {
+    private StringListTypeConvertor(){
+
+    }
+
     @TypeConverter
     public static List<String> stringToList(String data) {
         if (data == null) {

@@ -29,11 +29,11 @@ public class SyncRepository {
 
     private final SyncOLD syncOLD;
     public static SyncRepository instance;
-    private final String CHECKED = "checked";
-    public final String PROGRESS = "progress";
-    private final String DATE = "date";
-    private final String STATUS = "status";
-    private final String STATUS_ALL = "status_all";
+    private final static String CHECKED = "checked";
+    public final static String PROGRESS = "progress";
+    private final static String DATE = "date";
+    private final static String STATUS = "status";
+    private final static String STATUS_ALL = "status_all";
 
     public SyncRepository(Application application) {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(application);

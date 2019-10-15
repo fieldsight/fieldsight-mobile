@@ -183,6 +183,6 @@ public class SiteBuilder {
         return new Site(id, latitude, longitude, identifier, name, typeId, typeLabel,
                 phone, address, publicDesc, additionalDesc, logo, isActive, location,
                 isSurvey, dateCreated, project, isSiteVerified, siteTypeError, metaAttributes,
-                region, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm, siteDocuments, enable_subsites, site);
+                region, generalFormDeployedFrom, stagedFormDeployedFrom, scheduleFormDeployedForm, siteDocuments, site);
     }
 }

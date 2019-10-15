@@ -122,7 +122,6 @@ public class ZipUtils {
                 String relativePath = unmodifiedFilePath
                         .substring(basePathLength);
                 FileInputStream fi = new FileInputStream(unmodifiedFilePath);
-                int total = fi.available();
                 origin = new BufferedInputStream(fi, BUFFER);
                 ZipEntry entry = new ZipEntry(relativePath);
                 entry.setTime(file.lastModified()); // to keep modification time after unzipping

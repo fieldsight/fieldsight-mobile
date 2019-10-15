@@ -152,7 +152,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     }
 
     private void setupViewModel() {
-        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         surveyFormViewModel = ViewModelProviders.of(this, factory).get(SurveyFormViewModel.class);
     }
 

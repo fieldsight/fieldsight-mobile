@@ -29,6 +29,10 @@ public class ServiceGenerator {
     private static OkHttpClient okHttp;
 
 
+    private ServiceGenerator(){
+
+    }
+
     public static void clearInstance() {
         retrofit = null;
         cacheablesRetrofit = null;

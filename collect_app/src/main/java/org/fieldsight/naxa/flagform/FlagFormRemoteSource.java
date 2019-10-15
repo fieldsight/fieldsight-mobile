@@ -12,7 +12,7 @@ import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.fieldsight.naxa.common.FieldSightUserSession;
-import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
+import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.data.FieldSightNotification;
 import org.odk.collect.android.dao.FormsDao;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
@@ -35,15 +35,15 @@ import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_RE
 import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
 
 public class FlagFormRemoteSource {
-    private static FlagFormRemoteSource INSTANCE;
+    private static FlagFormRemoteSource flagFormRemoteSource;
     private final FSInstancesDao instancesDao;
 
 
-    public static FlagFormRemoteSource getINSTANCE() {
-        if (INSTANCE == null) {
-            INSTANCE = new FlagFormRemoteSource();
+    public static FlagFormRemoteSource getFlagFormRemoteSource() {
+        if (flagFormRemoteSource == null) {
+            flagFormRemoteSource = new FlagFormRemoteSource();
         }
-        return INSTANCE;
+        return flagFormRemoteSource;
     }
 
     private FlagFormRemoteSource() {

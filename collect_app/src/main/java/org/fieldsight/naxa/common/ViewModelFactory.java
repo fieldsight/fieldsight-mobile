@@ -1,14 +1,12 @@
 package org.fieldsight.naxa.common;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.fieldsight.naxa.contact.ContactLocalSource;
-import org.fieldsight.naxa.contact.ContactRemoteSource;
 import org.fieldsight.naxa.contact.ContactRepository;
 import org.fieldsight.naxa.contact.ProjectContactViewModel;
 import org.fieldsight.naxa.data.source.local.FieldSightNotificationLocalSource;
@@ -31,7 +29,6 @@ import org.fieldsight.naxa.scheduled.data.ScheduledFormsRemoteSource;
 import org.fieldsight.naxa.site.CreateSiteViewModel;
 import org.fieldsight.naxa.site.FragmentHostViewModel;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
-import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.site.db.SiteRepository;
 import org.fieldsight.naxa.stages.StageFormRepository;
 import org.fieldsight.naxa.stages.StageViewModel;
@@ -48,7 +45,7 @@ import org.fieldsight.naxa.sync.DownloadViewModel;
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     @SuppressLint("StaticFieldLeak")
-    private static volatile ViewModelFactory INSTANCE;
+    private static volatile ViewModelFactory viewModelFactory;
 
     private final GeneralFormRepository generalFormRepository;
     private final ScheduledFormRepository scheduledFormRepository;
@@ -61,7 +58,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final ContactRepository contactRepository;
 
 
-    public ViewModelFactory(Application application,
+    public ViewModelFactory(
                             GeneralFormRepository repository,
                             ScheduledFormRepository scheduledFormRepository,
                             StageFormRepository stageFormRepository,
@@ -84,11 +81,11 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         this.contactRepository = contactRepository;
     }
 
-    public static ViewModelFactory getInstance(Application application) {
+    public static ViewModelFactory getInstance() {
 
-        if (INSTANCE == null) {
+        if (viewModelFactory == null) {
             synchronized (ViewModelFactory.class) {
-                if (INSTANCE == null) {
+                if (viewModelFactory == null) {
                     GeneralFormRepository generalFormRepository = GeneralFormRepository.getInstance(
                             GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
                     ScheduledFormRepository scheduledFormRepository = ScheduledFormRepository.getInstance(
@@ -97,19 +94,19 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
                     StageFormRepository stageFormRepository = StageFormRepository.getInstance(StageLocalSource.getInstance(), StageRemoteSource.getInstance());
                     SubStageRepository subStageRepository = SubStageRepository.getInstance(SubStageLocalSource.getInstance());
                     ProjectRepository projectRepository = ProjectRepository.getInstance(ProjectLocalSource.getInstance(), ProjectSitesRemoteSource.getInstance());
-                    SiteRepository siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
+                    SiteRepository siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance());
                     SurveyFormRepository surveyFormRepository = SurveyFormRepository.getInstance(SurveyFormLocalSource.getInstance());
                     FieldSightNotificationRepository notificationRepository = FieldSightNotificationRepository.getInstance(FieldSightNotificationLocalSource.getInstance());
-                    ContactRepository contactRepository = ContactRepository.getInstance(ContactLocalSource.getInstance(), ContactRemoteSource.getInstance());
+                    ContactRepository contactRepository = ContactRepository.getInstance(ContactLocalSource.getInstance());
 
 
-                    INSTANCE = new ViewModelFactory(application, generalFormRepository, scheduledFormRepository,
+                    viewModelFactory = new ViewModelFactory(generalFormRepository, scheduledFormRepository,
                             stageFormRepository, subStageRepository, projectRepository, siteRepository,
                             surveyFormRepository, notificationRepository, contactRepository);
                 }
             }
         }
-        return INSTANCE;
+        return viewModelFactory;
     }
 
 

@@ -1,7 +1,6 @@
 package org.fieldsight.naxa.project.data;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -14,7 +13,6 @@ import org.fieldsight.naxa.generalforms.data.GeneralFormRepository;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.SiteMetaAttribute;
 import org.fieldsight.naxa.network.NetworkUtils;
-import org.fieldsight.naxa.scheduled.data.ScheduleForm;
 import org.fieldsight.naxa.site.SiteType;
 import org.fieldsight.naxa.site.SiteTypeLocalSource;
 import org.fieldsight.naxa.v3.network.LoadProjectCallback;
@@ -39,7 +37,7 @@ import timber.log.Timber;
 
 public class ProjectRepository implements BaseRepository<Project> {
 
-    private static ProjectRepository INSTANCE;
+    private static ProjectRepository projectRepository;
     private final ProjectLocalSource localSource;
     private final ProjectSitesRemoteSource remoteSource;
 
@@ -49,14 +47,14 @@ public class ProjectRepository implements BaseRepository<Project> {
     }
 
     public static ProjectRepository getInstance(ProjectLocalSource localSource, ProjectSitesRemoteSource remoteSource) {
-        if (INSTANCE == null) {
+        if (projectRepository == null) {
             synchronized (GeneralFormRepository.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new ProjectRepository(localSource, remoteSource);
+                if (projectRepository == null) {
+                    projectRepository = new ProjectRepository(localSource, remoteSource);
                 }
             }
         }
-        return INSTANCE;
+        return projectRepository;
     }
 
 

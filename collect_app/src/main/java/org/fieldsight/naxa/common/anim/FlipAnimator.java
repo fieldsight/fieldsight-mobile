@@ -9,6 +9,10 @@ import org.fieldsight.collect.android.R;
 
 
 public class FlipAnimator {
+    private FlipAnimator() {
+
+    }
+
     private static AnimatorSet leftIn, rightOut, leftOut, rightIn;
 
     /**

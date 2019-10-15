@@ -1,4 +1,4 @@
-package org.fieldsight.naxa.common.RxDownloader;
+package org.fieldsight.naxa.common.downloader;
 
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -9,7 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
-import org.fieldsight.naxa.common.RxDownloader.utils.LongSparseArray;
+import org.fieldsight.naxa.common.downloader.utils.LongSparseArray;
 import org.fieldsight.naxa.common.exception.InstanceAttachmentDownloadFailedException;
 import org.fieldsight.naxa.common.exception.InstanceDownloadFailedException;
 import org.fieldsight.naxa.network.APIEndpoint;

@@ -28,15 +28,15 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<DownloadableItem> {
 
-    private static DownloadableItemLocalSource INSTANCE;
+    private static DownloadableItemLocalSource downloadableItemLocalSource;
     private final DownloadableItemDAO syncDAO;
 
-    public static DownloadableItemLocalSource getINSTANCE() {
-        if (INSTANCE == null) {
-            INSTANCE = new DownloadableItemLocalSource();
+    public static DownloadableItemLocalSource getDownloadableItemLocalSource() {
+        if (downloadableItemLocalSource == null) {
+            downloadableItemLocalSource = new DownloadableItemLocalSource();
         }
 
-        return INSTANCE;
+        return downloadableItemLocalSource;
     }
 
 

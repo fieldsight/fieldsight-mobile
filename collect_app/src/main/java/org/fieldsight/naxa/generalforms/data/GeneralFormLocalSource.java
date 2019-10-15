@@ -35,7 +35,7 @@ import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> {
 
-    private static GeneralFormLocalSource INSTANCE;
+    private static GeneralFormLocalSource generalFormLocalSource;
     private final GeneralFormDAO dao;
 
 
@@ -46,10 +46,10 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
 
     public static GeneralFormLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new GeneralFormLocalSource();
+        if (generalFormLocalSource == null) {
+            generalFormLocalSource = new GeneralFormLocalSource();
         }
-        return INSTANCE;
+        return generalFormLocalSource;
     }
 
 

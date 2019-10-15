@@ -125,7 +125,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
 
 
     private void setupViewModel(String userNameOrEmail) {
-        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         viewModel = ViewModelProviders.of(this, factory).get(MigrateFieldSightViewModel.class);
         viewModel.setUserNameEmail(userNameOrEmail);
     }

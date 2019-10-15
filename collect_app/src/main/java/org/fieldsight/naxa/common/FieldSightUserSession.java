@@ -52,6 +52,10 @@ import timber.log.Timber;
 
 public class FieldSightUserSession {
 
+    private FieldSightUserSession(){
+
+    }
+
     public static void login() {
 
     }

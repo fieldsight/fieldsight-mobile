@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SurveyFormRepository implements BaseRepository<SurveyForm> {
 
-    private static SurveyFormRepository INSTANCE = null;
+    private static SurveyFormRepository surveyFormRepository;
     private final SurveyFormLocalSource localSource;
 
     public SurveyFormRepository(SurveyFormLocalSource localSource) {
@@ -19,14 +19,14 @@ public class SurveyFormRepository implements BaseRepository<SurveyForm> {
 
 
     public static SurveyFormRepository getInstance(SurveyFormLocalSource localSource) {
-        if (INSTANCE == null) {
+        if (surveyFormRepository == null) {
             synchronized (SiteRepository.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new SurveyFormRepository(localSource);
+                if (surveyFormRepository == null) {
+                    surveyFormRepository = new SurveyFormRepository(localSource);
                 }
             }
         }
-        return INSTANCE;
+        return surveyFormRepository;
     }
 
 

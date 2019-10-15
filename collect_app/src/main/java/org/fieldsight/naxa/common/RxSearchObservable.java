@@ -8,6 +8,12 @@ import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
 public class RxSearchObservable {
+
+    private RxSearchObservable(){
+
+    }
+
+
     public static Observable<String> fromView(EditText editText) {
         final PublishSubject<String> subject = PublishSubject.create();
         editText.addTextChangedListener(new TextWatcher() {

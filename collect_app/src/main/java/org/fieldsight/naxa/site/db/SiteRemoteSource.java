@@ -66,10 +66,10 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     public void updateAllEditedSite() {
         DisposableSingleObserver<List<Site>> dis = SiteLocalSource.getInstance()
                 .getAllByStatus(IS_EDITED)
-                .doOnDispose(() -> DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDITED_SITES))
+                .doOnDispose(() -> DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(EDITED_SITES))
                 .doOnSubscribe(disposable -> {
                     SyncRepository.getInstance().showProgress(EDITED_SITES);
-                    DownloadableItemLocalSource.getINSTANCE().markAsRunning(EDITED_SITES);
+                    DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(EDITED_SITES);
                 })
                 .flattenAsObservable((Function<List<Site>, Iterable<Site>>) sites -> sites)
                 .flatMap((Function<Site, ObservableSource<Site>>) this::updateSite)
@@ -93,9 +93,9 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                                 msg = Collect.getInstance().getString(R.string.msg_single_site_upload, sites.get(0).getName());
                             }
                             FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, msg);
-                            DownloadableItemLocalSource.getINSTANCE().markAsCompleted(EDITED_SITES);
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(EDITED_SITES);
                         } else {
-                            DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDITED_SITES);
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(EDITED_SITES);
                         }
                     }
 
@@ -109,7 +109,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDITED_SITES, message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(EDITED_SITES, message);
                     }
                 });
 
@@ -120,10 +120,10 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     public void uploadAllOfflineSite() {
         DisposableSingleObserver<List<Site>> dis = SiteLocalSource.getInstance()
                 .getAllByStatus(Constant.SiteStatus.IS_OFFLINE)
-                .doOnDispose(() -> DownloadableItemLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES))
+                .doOnDispose(() -> DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(OFFLINE_SITES))
                 .doOnSubscribe(disposable -> {
                     SyncRepository.getInstance().showProgress(OFFLINE_SITES);
-                    DownloadableItemLocalSource.getINSTANCE().markAsRunning(OFFLINE_SITES);
+                    DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(OFFLINE_SITES);
                 })
                 .toObservable()
                 .flatMap((Function<List<Site>, ObservableSource<Site>>) this::uploadMultipleSites)
@@ -133,7 +133,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 .subscribeWith(new DisposableSingleObserver<List<Site>>() {
                     @Override
                     public void onSuccess(List<Site> sites) {
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(OFFLINE_SITES);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(OFFLINE_SITES);
                     }
 
                     @Override
@@ -145,7 +145,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                         } else {
                             message = e.getMessage();
                         }
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES, message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(OFFLINE_SITES, message);
                     }
                 });
 

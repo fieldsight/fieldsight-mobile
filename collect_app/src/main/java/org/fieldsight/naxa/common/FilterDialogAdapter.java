@@ -30,7 +30,6 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.FilterOption.FilterType;
 import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final ArrayList<FilterOption> sortList;
 
 
-    public FilterDialogAdapter(Context context, RecyclerView recyclerView, ArrayList<FilterOption> sortList, FilterType selectedSortingOrder, RecyclerViewClickListener recyclerViewClickListener) {
+    public FilterDialogAdapter(Context context, RecyclerView recyclerView, ArrayList<FilterOption> sortList, RecyclerViewClickListener recyclerViewClickListener) {
         themeUtils = new ThemeUtils(context);
         this.recyclerView = recyclerView;
         this.sortList = sortList;

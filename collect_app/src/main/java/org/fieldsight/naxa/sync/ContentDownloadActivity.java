@@ -101,7 +101,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
 //            viewModel.setAllRunningTaskAsFailed();
 //        }
 
-        DownloadableItemLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                 .init()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
@@ -127,9 +127,9 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
 
                         if (sites.size() > 0) {
                             String msg = String.format("Upload %s Edited Site(s)", sites.size());
-                            DownloadableItemLocalSource.getINSTANCE().markAsPending(EDITED_SITES, msg);
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsPending(EDITED_SITES, msg);
                         } else {
-                            DownloadableItemLocalSource.getINSTANCE().markAsDisabled(EDITED_SITES, "No, edited sites present");
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsDisabled(EDITED_SITES, "No, edited sites present");
                         }
                     }
 
@@ -148,9 +148,9 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                     public void onSuccess(List<Site> sites) {
                         if (sites.size() > 0) {
                             String msg = String.format("Upload %s Offline Site(s)", sites.size());
-                            DownloadableItemLocalSource.getINSTANCE().markAsPending(OFFLINE_SITES, msg);
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsPending(OFFLINE_SITES, msg);
                         } else {
-                            DownloadableItemLocalSource.getINSTANCE().markAsDisabled(OFFLINE_SITES, "No, offline sites present");
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsDisabled(OFFLINE_SITES, "No, offline sites present");
                         }
                     }
 
@@ -161,7 +161,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                 });
 
 
-        DownloadableItemLocalSource.getINSTANCE().getAll()
+        DownloadableItemLocalSource.getDownloadableItemLocalSource().getAll()
                 .observe(this, new Observer<List<DownloadableItem>>() {
                     @Override
                     public void onChanged(@Nullable List<DownloadableItem> downloadableItems) {
@@ -171,7 +171,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                 });
 
 
-        DownloadableItemLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                 .selectedItemCountLive()
                 .observe(this, integer -> {
                     if (integer == null) {
@@ -188,7 +188,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                     }
                 });
 
-        DownloadableItemLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                 .runningItemCountLive()
                 .observe(this, integer -> {
                     if (integer == null) {
@@ -318,7 +318,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.toggle_button:
-                DownloadableItemLocalSource.getINSTANCE()
+                DownloadableItemLocalSource.getDownloadableItemLocalSource()
                         .toggleAllChecked()
                         .subscribeOn(Schedulers.io())
                         .subscribe(new DisposableCompletableObserver() {
@@ -357,14 +357,14 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
     }
 
     private void runDownload() {
-        DownloadableItemLocalSource.getINSTANCE().getAllChecked()
+        DownloadableItemLocalSource.getDownloadableItemLocalSource().getAllChecked()
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableSingleObserver<List<DownloadableItem>>() {
                     @Override
                     public void onSuccess(List<DownloadableItem> downloadableItems) {
                         viewModel.queueSyncTask(downloadableItems);
                         Timber.i("Select completed on sync table");
-                        DownloadableItemLocalSource.getINSTANCE().markAllCheckedAsUnchecked();
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAllCheckedAsUnchecked();
                     }
 
                     @Override
@@ -442,7 +442,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
 //    this is triggered when itemview in recycler is clicked
     @Override
     public void onClickPrimaryAction(DownloadableItem downloadableItem) {
-        DownloadableItemLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                 .toggleSingleItem(downloadableItem)
                 .subscribeOn(Schedulers.io())
                 .subscribe(new DisposableCompletableObserver() {
@@ -464,7 +464,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
 //cancel button if clicked trigger this callback
     @Override
     public void onClickSecondaryAction(DownloadableItem downloadableItem) {
-//        DownloadableItemLocalSource.getINSTANCE().toggleSingleItem(downloadableItem);
-        DownloadableItemLocalSource.getINSTANCE().markAsPending(downloadableItem.getUid());
+//        DownloadableItemLocalSource.getFlagFormRemoteSource().toggleSingleItem(downloadableItem);
+        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsPending(downloadableItem.getUid());
     }
 }

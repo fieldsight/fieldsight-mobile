@@ -97,7 +97,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         setContentView(R.layout.activity_notificaiton_list);
         ButterKnife.bind(this);
 
-        ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         viewModel = ViewModelProviders.of(this, factory).get(NotificationListViewModel.class);
 
         setupToolbar();

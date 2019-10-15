@@ -3,7 +3,6 @@ package org.fieldsight.naxa.v3.network;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
@@ -18,7 +17,7 @@ import io.reactivex.Single;
 public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
 
-    private static SyncLocalSource3 INSTANCE;
+    private static SyncLocalSource3 syncLocalSource3;
     private final SyncDaoV3 dao;
 
 
@@ -29,10 +28,10 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
 
     public static SyncLocalSource3 getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SyncLocalSource3();
+        if (syncLocalSource3 == null) {
+            syncLocalSource3 = new SyncLocalSource3();
         }
-        return INSTANCE;
+        return syncLocalSource3;
     }
 
 

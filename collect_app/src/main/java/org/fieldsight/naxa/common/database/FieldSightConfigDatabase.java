@@ -23,7 +23,7 @@ import java.io.File;
 
 public abstract class FieldSightConfigDatabase extends RoomDatabase {
 
-    private static FieldSightConfigDatabase INSTANCE;
+    private static FieldSightConfigDatabase fieldSightConfigDatabase;
 
     public abstract SiteOverideDAO getSiteOverideDAO();
 
@@ -36,10 +36,10 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_cofig";
 
     public static FieldSightConfigDatabase getDatabase(final Context context) {
-        if (INSTANCE == null) {
+        if (fieldSightConfigDatabase == null) {
             synchronized (FieldSightConfigDatabase.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                if (fieldSightConfigDatabase == null) {
+                    fieldSightConfigDatabase = Room.databaseBuilder(context.getApplicationContext(),
                             FieldSightConfigDatabase.class, DB_PATH)
                             .fallbackToDestructiveMigration()
                             .allowMainThreadQueries()
@@ -47,7 +47,7 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
                 }
             }
         }
-        return INSTANCE;
+        return fieldSightConfigDatabase;
     }
 
 

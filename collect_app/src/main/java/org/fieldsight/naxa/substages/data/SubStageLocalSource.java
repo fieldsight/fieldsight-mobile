@@ -33,7 +33,7 @@ import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
 
-    private static SubStageLocalSource INSTANCE;
+    private static SubStageLocalSource subStageLocalSource;
     private final SubStageDAO dao;
 
 
@@ -43,10 +43,10 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
     }
 
     public static SubStageLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SubStageLocalSource();
+        if (subStageLocalSource == null) {
+            subStageLocalSource = new SubStageLocalSource();
         }
-        return INSTANCE;
+        return subStageLocalSource;
     }
 
     @Override

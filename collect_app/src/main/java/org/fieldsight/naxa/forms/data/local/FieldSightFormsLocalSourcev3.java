@@ -31,7 +31,7 @@ import timber.log.Timber;
 
 public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<FieldsightFormDetailsv3> {
 
-    private static FieldSightFormsLocalSourcev3 INSTANCE;
+    private static FieldSightFormsLocalSourcev3 localSourcev3;
     private final FieldSightFormDetailDAOV3 dao;
 
     private FieldSightFormsLocalSourcev3() {
@@ -40,10 +40,10 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
     }
 
     public static FieldSightFormsLocalSourcev3 getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new FieldSightFormsLocalSourcev3();
+        if (localSourcev3 == null) {
+            localSourcev3 = new FieldSightFormsLocalSourcev3();
         }
-        return INSTANCE;
+        return localSourcev3;
     }
 
     public LiveData<List<FieldsightFormDetailsv3>> getFormByType(String formType, String projectId, String siteId, String siteTypeId) {

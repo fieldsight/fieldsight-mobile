@@ -764,7 +764,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     }
 
     private void setupViewModel() {
-        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         createSiteViewModel = ViewModelProviders.of(this, factory).get(CreateSiteViewModel.class);
     }
 

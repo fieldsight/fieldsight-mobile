@@ -11,13 +11,13 @@ import okhttp3.ResponseBody;
 
 public class NotificationRemoteSource {
 
-    private static NotificationRemoteSource INSTANCE;
+    private static NotificationRemoteSource notificationRemoteSource;
 
     public static NotificationRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new NotificationRemoteSource();
+        if (notificationRemoteSource == null) {
+            notificationRemoteSource = new NotificationRemoteSource();
         }
-        return INSTANCE;
+        return notificationRemoteSource;
     }
 
     public Single<ResponseBody> getNotifications(String epochTime, String type) {

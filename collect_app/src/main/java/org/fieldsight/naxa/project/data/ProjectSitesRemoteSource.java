@@ -15,7 +15,6 @@ import org.fieldsight.naxa.network.ApiInterface;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.site.data.SiteRegion;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
-import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.site.db.SiteRepository;
 import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.sync.DownloadableItemLocalSource;
@@ -41,19 +40,19 @@ import timber.log.Timber;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
-    private static ProjectSitesRemoteSource INSTANCE;
+    private static ProjectSitesRemoteSource projectSitesRemoteSource;
     private final SiteRepository siteRepository;
     private final ProjectLocalSource projectLocalSource;
 
     public static ProjectSitesRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ProjectSitesRemoteSource();
+        if (projectSitesRemoteSource == null) {
+            projectSitesRemoteSource = new ProjectSitesRemoteSource();
         }
-        return INSTANCE;
+        return projectSitesRemoteSource;
     }
 
     public ProjectSitesRemoteSource() {
-        siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
+        siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance());
         projectLocalSource = ProjectLocalSource.getInstance();
 
     }
@@ -250,7 +249,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .doOnDispose(new Action() {
                     @Override
                     public void run() {
-                        DownloadableItemLocalSource.getINSTANCE()
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                                 .markAsFailed(PROJECT_SITES);
                     }
                 })
@@ -261,7 +260,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         ProjectLocalSource.getInstance().deleteAll();
                         SiteLocalSource.getInstance().deleteSyncedSitesAsync();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
-                        DownloadableItemLocalSource.getINSTANCE()
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                                 .markAsRunning(PROJECT_SITES);
                     }
                 })
@@ -269,7 +268,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public void onNext(List<Object> objects) {
                         FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
-                        DownloadableItemLocalSource.getINSTANCE()
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                                 .markAsCompleted(PROJECT_SITES);
                     }
 
@@ -282,7 +281,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         } else {
                             message = e.getMessage();
                         }
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(PROJECT_SITES, message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(PROJECT_SITES, message);
                     }
 
                     @Override

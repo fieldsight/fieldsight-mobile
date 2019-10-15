@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 
 public class GSONInstance {
 
+    private GSONInstance(){
+
+    }
+
     private final static Gson gson = new Gson();
 
 

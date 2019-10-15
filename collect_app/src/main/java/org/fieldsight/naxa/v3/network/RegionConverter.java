@@ -12,6 +12,10 @@ import java.util.List;
 
 public class RegionConverter {
 
+    private RegionConverter(){
+
+    }
+
     @TypeConverter
     public static List<Region> stringToSomeObjectList(String data) {
         if (data == null) {

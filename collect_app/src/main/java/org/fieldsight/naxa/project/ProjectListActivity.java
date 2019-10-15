@@ -89,7 +89,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
         ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
 
-        ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         viewModel = ViewModelProviders.of(this, factory).get(ProjectViewModel.class);
         viewModel
                 .getAll(false)

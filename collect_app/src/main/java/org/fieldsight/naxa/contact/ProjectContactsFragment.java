@@ -54,7 +54,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
         setupRecycleView();
 
         ContactRemoteSource.getInstance().getAll();
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         viewModel = ViewModelProviders.of(getActivity(), factory).get(ProjectContactViewModel.class);
         viewModel.getContacts()
                 .observe(this, new Observer<List<FieldSightContactModel>>() {

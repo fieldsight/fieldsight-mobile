@@ -8,6 +8,9 @@ import org.odk.collect.android.utilities.ToastUtils;
 
 public class SnackBarUtils {
 
+    private SnackBarUtils(){
+
+    }
 
     public static void showErrorFlashbar(@NonNull Activity context, @NonNull String message) {
         showFlashbar(context, message, false);

@@ -20,6 +20,10 @@ import android.provider.MediaStore;
 
 public class ImageFileUtils {
 
+    private ImageFileUtils(){
+
+    }
+
     /**
      * Method for return file path of Gallery image
      *

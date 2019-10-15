@@ -13,7 +13,7 @@ import java.util.List;
 
 public class SurveyFormLocalSource implements BaseLocalDataSource<SurveyForm> {
 
-    private static SurveyFormLocalSource INSTANCE;
+    private static SurveyFormLocalSource surveyFormLocalSource;
     private final SurveyFormDAO dao;
 
 
@@ -23,10 +23,10 @@ public class SurveyFormLocalSource implements BaseLocalDataSource<SurveyForm> {
     }
 
     public static SurveyFormLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SurveyFormLocalSource();
+        if (surveyFormLocalSource == null) {
+            surveyFormLocalSource = new SurveyFormLocalSource();
         }
-        return INSTANCE;
+        return surveyFormLocalSource;
     }
 
     @Override

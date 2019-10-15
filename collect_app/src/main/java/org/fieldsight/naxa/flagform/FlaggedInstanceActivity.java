@@ -36,7 +36,7 @@ import org.fieldsight.naxa.BaseActivity;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightUserSession;
-import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
+import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.common.exception.InstanceAttachmentDownloadFailedException;
 import org.fieldsight.naxa.common.exception.InstanceDownloadFailedException;
 import org.fieldsight.naxa.common.rx.RetrofitException;
@@ -51,7 +51,6 @@ import org.fieldsight.naxa.site.FragmentHostActivity;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.dao.FormsDao;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
-import org.odk.collect.android.tasks.DownloadFormListTask;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -553,11 +552,11 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private void downloadInstance(FieldSightNotification notification) {
 
-        String[] nameAndPath = InstanceRemoteSource.getINSTANCE().getNameAndPath(notification.getFormName());
+        String[] nameAndPath = InstanceRemoteSource.getInstanceRemoteSource().getNameAndPath(notification.getFormName());
         String pathToDownload = nameAndPath[1];
 
 
-        Observable<String> attachedMediaObservable = InstanceRemoteSource.getINSTANCE()
+        Observable<String> attachedMediaObservable = InstanceRemoteSource.getInstanceRemoteSource()
                 .downloadAttachedMedia(notification.getFormSubmissionId())
                 .map(HashMap::entrySet)
                 .flatMapIterable(entries -> entries)
@@ -579,7 +578,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                 });
 
 
-        Observable<Uri> instanceObservable = InstanceRemoteSource.getINSTANCE()
+        Observable<Uri> instanceObservable = InstanceRemoteSource.getInstanceRemoteSource()
                 .downloadInstances(notification, nameAndPath);
 
         Observable.concat(attachedMediaObservable, instanceObservable)

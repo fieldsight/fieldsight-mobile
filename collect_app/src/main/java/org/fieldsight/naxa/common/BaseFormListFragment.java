@@ -185,7 +185,7 @@ public class BaseFormListFragment extends Fragment {
 
 
     private FieldSightFormViewModel obtainViewModel(FragmentActivity activity) {
-        ViewModelFactory factory = ViewModelFactory.getInstance(activity.getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         return ViewModelProviders.of(activity, factory).get(FieldSightFormViewModel.class);
     }
 

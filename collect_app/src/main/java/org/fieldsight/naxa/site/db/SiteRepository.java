@@ -26,11 +26,11 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
 
 
 
-    public static SiteRepository getInstance(SiteLocalSource localSource, SiteRemoteSource remoteSource) {
+    public static SiteRepository getInstance(SiteLocalSource localSource) {
         if (instance == null) {
             synchronized (SiteRepository.class) {
                 if (instance == null) {
-                    instance = new SiteRepository(localSource, remoteSource);
+                    instance = new SiteRepository(localSource);
                 }
             }
         }
@@ -38,7 +38,7 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
     }
 
 
-    private SiteRepository(@NonNull SiteLocalSource localSource, @NonNull SiteRemoteSource remoteSource) {
+    private SiteRepository(@NonNull SiteLocalSource localSource) {
         this.localSource = localSource;
 
     }

@@ -12,19 +12,19 @@ import java.util.List;
 
 public class GeneralFormRepository implements BaseRepository<GeneralForm> {
 
-    private static GeneralFormRepository INSTANCE;
+    private static GeneralFormRepository generalFormRepository;
     private final GeneralFormLocalSource localSource;
     private final GeneralFormRemoteSource remoteSource;
 
     public static GeneralFormRepository getInstance(GeneralFormLocalSource localSource, GeneralFormRemoteSource remoteSource) {
-        if (INSTANCE == null) {
+        if (generalFormRepository == null) {
             synchronized (GeneralFormRepository.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new GeneralFormRepository(localSource, remoteSource);
+                if (generalFormRepository == null) {
+                    generalFormRepository = new GeneralFormRepository(localSource, remoteSource);
                 }
             }
         }
-        return INSTANCE;
+        return generalFormRepository;
     }
 
 

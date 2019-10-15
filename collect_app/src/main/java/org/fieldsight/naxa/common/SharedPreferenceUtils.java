@@ -10,6 +10,10 @@ import timber.log.Timber;
 
 public class SharedPreferenceUtils {
 
+    private SharedPreferenceUtils(){
+
+    }
+
     public static class PREF_KEY {
 
         public static final String USER = "user";

@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import org.fieldsight.collect.android.R;
@@ -114,7 +113,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                 ContactRemoteSource.getInstance().getAll();
                 break;
             case SITE_TYPES:
-                SiteTypeRemoteSource.getINSTANCE().getAll();
+                SiteTypeRemoteSource.getSiteTypeRemoteSource().getAll();
                 break;
             case ALL_FORMS:
                 downloadModel.fetchAllForms();

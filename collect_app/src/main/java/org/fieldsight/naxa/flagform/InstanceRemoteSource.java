@@ -9,7 +9,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.fieldsight.naxa.common.FieldSightUserSession;
-import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
+import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.data.FieldSightNotification;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ApiInterface;
@@ -33,14 +33,14 @@ import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class InstanceRemoteSource {
-    private static InstanceRemoteSource INSTANCE;
+    private static InstanceRemoteSource instanceRemoteSource;
 
 
-    public static InstanceRemoteSource getINSTANCE() {
-        if (INSTANCE == null) {
-            INSTANCE = new InstanceRemoteSource();
+    public static InstanceRemoteSource getInstanceRemoteSource() {
+        if (instanceRemoteSource == null) {
+            instanceRemoteSource = new InstanceRemoteSource();
         }
-        return INSTANCE;
+        return instanceRemoteSource;
     }
 
 

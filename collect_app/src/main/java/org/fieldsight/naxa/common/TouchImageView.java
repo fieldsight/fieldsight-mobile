@@ -99,7 +99,7 @@ public class TouchImageView extends AppCompatImageView {
     private ScaleGestureDetector mScaleDetector;
     private GestureDetector mGestureDetector;
     private GestureDetector.OnDoubleTapListener doubleTapListener;
-    private OnTouchListener userTouchListener = null;
+    private OnTouchListener userTouchListener;
     private OnTouchImageViewListener touchImageViewListener;
 
     public TouchImageView(Context context) {
@@ -112,10 +112,10 @@ public class TouchImageView extends AppCompatImageView {
 
     public TouchImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        configureImageView(context, attrs, defStyle);
+        configureImageView(context);
     }
 
-    private void configureImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    private void configureImageView(Context context) {
         this.context = context;
 
         super.setClickable(true);

@@ -628,7 +628,7 @@ public class ProjectDashboardActivity extends BaseActivity {
         toolbarSearchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         //sitesStored = (sitesStored != null && sitesStored.size() > 0) ? sitesStored : new ArrayList<String>();
-        final SearchAdapter searchAdapter = new SearchAdapter(this, sitesStored, false);
+        final SearchAdapter searchAdapter = new SearchAdapter(this, sitesStored);
 
         listSearch.setVisibility(View.VISIBLE);
         listSearch.setAdapter(searchAdapter);

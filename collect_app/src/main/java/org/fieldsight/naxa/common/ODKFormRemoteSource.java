@@ -125,7 +125,6 @@ public class ODKFormRemoteSource {
 
     @Deprecated
     public Observable<DownloadProgress> fetchODKForms() {
-        int uid = Constant.DownloadUID.ODK_FORMS;
         return Observable.create(emitter -> {
             XMLFormDownloadReceiver xmlFormDownloadReceiver = new XMLFormDownloadReceiver(new Handler());
 
@@ -136,7 +135,7 @@ public class ODKFormRemoteSource {
                     case DownloadProgress.STATUS_PROGRESS_UPDATE:
                         DownloadProgress progress = (DownloadProgress) resultData.getSerializable(EXTRA_OBJECT);
                         emitter.onNext(progress);
-                        DownloadableItemLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
                         break;
                     case DownloadProgress.STATUS_ERROR:
                         emitter.onError(new RuntimeException(resultData.getString(Constant.EXTRA_MESSAGE)));

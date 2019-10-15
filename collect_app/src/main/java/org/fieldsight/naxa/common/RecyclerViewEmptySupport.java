@@ -19,7 +19,6 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 ////https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview
 public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
-    private View progressView;
 
 
     private final AdapterDataObserver emptyObserver = new AdapterDataObserver() {
@@ -127,7 +126,6 @@ public class RecyclerViewEmptySupport extends RecyclerView {
 
 
     public void setProgressView(View progressView) {
-        this.progressView = progressView;
         progressView.setVisibility(GONE);
     }
 

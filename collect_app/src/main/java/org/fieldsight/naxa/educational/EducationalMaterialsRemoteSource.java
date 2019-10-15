@@ -9,8 +9,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseRemoteDataSource;
 import org.fieldsight.naxa.common.DisposableManager;
-import org.fieldsight.naxa.common.FieldSightDatabase;
-import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
+import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.generalforms.data.Em;
 import org.fieldsight.naxa.generalforms.data.EmImage;
@@ -57,7 +56,6 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     }
 
     private EducationalMaterialsRemoteSource() {
-        FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
 
     }
 
@@ -144,14 +142,14 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     @Override
                     public void accept(Disposable disposable) throws Exception {
                         DisposableManager.add(disposable);
-                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(EDU_MATERIALS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(EDU_MATERIALS);
                     }
                 })
                 .doOnSuccess(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
                         Timber.i("%s has been downloaded", s);
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(EDU_MATERIALS);
                     }
                 })
 
@@ -166,7 +164,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS, message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(EDU_MATERIALS, message);
                     }
                 });
     }

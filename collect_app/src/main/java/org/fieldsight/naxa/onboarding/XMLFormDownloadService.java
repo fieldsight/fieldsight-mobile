@@ -101,7 +101,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         message = new Bundle();
         receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
 
-        DownloadableItemLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                 .getStatusById(Constant.DownloadUID.PROJECT_SITES)
                 .map(syncableItem -> {
                     if (syncableItem.getDownloadingStatus() == Constant.DownloadStatus.RUNNING) {

@@ -27,13 +27,15 @@ import org.fieldsight.naxa.common.GlideApp;
 import java.io.File;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by susan on 7/5/2017.
  */
 
 public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final String TAG = "Education Material";
+    private static final String TAG = "Education Material";
     // The items to display in your RecyclerView
     private final List<Object> items;
 
@@ -242,7 +244,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 });
 
             } catch (Exception e) {
-                e.getLocalizedMessage();
+                Timber.e(e);
             }
 
             vh2.getiTitle().setText(edu_image_model.getTitle());

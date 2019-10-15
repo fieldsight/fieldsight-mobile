@@ -15,19 +15,19 @@ import io.reactivex.Observable;
 
 public class StageFormRepository implements BaseLocalDataSource<Stage> {
 
-    private static StageFormRepository INSTANCE;
+    private static StageFormRepository stageFormRepository;
     private final StageLocalSource localSource;
     private final StageRemoteSource remoteSource;
 
     public static StageFormRepository getInstance(StageLocalSource localSource, StageRemoteSource remoteSource) {
-        if (INSTANCE == null) {
+        if (stageFormRepository == null) {
             synchronized (StageFormRepository.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new StageFormRepository(localSource, remoteSource);
+                if (stageFormRepository == null) {
+                    stageFormRepository = new StageFormRepository(localSource, remoteSource);
                 }
             }
         }
-        return INSTANCE;
+        return stageFormRepository;
     }
 
 

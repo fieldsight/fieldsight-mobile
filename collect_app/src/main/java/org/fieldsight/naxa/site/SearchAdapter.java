@@ -19,7 +19,7 @@ public class SearchAdapter extends BaseAdapter {
     private List<Site> siteList;
     private LayoutInflater mLayoutInflater;
 
-    public SearchAdapter(Context context, List<Site> siteList, boolean isFilterList) {
+    public SearchAdapter(Context context, List<Site> siteList) {
         this.mContext = context;
         this.siteList = siteList;
 

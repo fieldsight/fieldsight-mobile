@@ -31,7 +31,7 @@ import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleForm> {
 
-    private static ScheduledFormsLocalSource INSTANCE;
+    private static ScheduledFormsLocalSource scheduledFormsLocalSource;
     private final ScheduledFormDAO dao;
 
     private ScheduledFormsLocalSource() {
@@ -40,10 +40,10 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
     }
 
     public static ScheduledFormsLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ScheduledFormsLocalSource();
+        if (scheduledFormsLocalSource == null) {
+            scheduledFormsLocalSource = new ScheduledFormsLocalSource();
         }
-        return INSTANCE;
+        return scheduledFormsLocalSource;
 
 
     }

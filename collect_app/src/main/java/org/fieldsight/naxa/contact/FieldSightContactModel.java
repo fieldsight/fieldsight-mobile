@@ -75,8 +75,6 @@ public class FieldSightContactModel {
         this.id = id;
     }
 
-    public FieldSightContactModel() {
-    }
 
     public String getUsername() {
         return username;

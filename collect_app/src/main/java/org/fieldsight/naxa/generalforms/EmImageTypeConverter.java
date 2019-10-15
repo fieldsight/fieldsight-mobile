@@ -12,6 +12,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class EmImageTypeConverter {
+
+    private EmImageTypeConverter(){
+
+    }
+
     @TypeConverter
     public static List<EmImage> stringToEmImage(String data) {
 

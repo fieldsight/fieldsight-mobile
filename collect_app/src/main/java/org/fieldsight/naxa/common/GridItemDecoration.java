@@ -11,7 +11,7 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
     private final  int mSizeGridSpacingPx;
     private final int mGridSize;
 
-    private boolean mNeedLeftSpacing = false;
+    private boolean mNeedLeftSpacing;
 
     public GridItemDecoration(int gridSpacingPx, int gridSize) {
         mSizeGridSpacingPx = gridSpacingPx;

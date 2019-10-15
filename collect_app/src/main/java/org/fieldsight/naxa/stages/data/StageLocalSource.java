@@ -23,7 +23,7 @@ import io.reactivex.functions.Predicate;
 
 public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
-    private static StageLocalSource INSTANCE;
+    private static StageLocalSource stageLocalSource;
     private final StageFormDAO dao;
 
     private StageLocalSource() {
@@ -32,10 +32,10 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
     }
 
     public static StageLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new StageLocalSource();
+        if (stageLocalSource == null) {
+            stageLocalSource = new StageLocalSource();
         }
-        return INSTANCE;
+        return stageLocalSource;
     }
 
     @Override

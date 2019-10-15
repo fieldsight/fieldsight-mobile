@@ -136,7 +136,7 @@ public class Site implements Parcelable {
                 Boolean isSurvey, String dateCreated, String project,
                 int isSiteVerified, String siteTypeError, String metaAttributes,
                 String regionId, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm,
-                List<String> siteDocuments, boolean enable_subsites, String site) {
+                List<String> siteDocuments, String site) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;

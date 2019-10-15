@@ -1,6 +1,11 @@
-package org.fieldsight.naxa.common.RxDownloader.utils;
+package org.fieldsight.naxa.common.downloader.utils;
 
 class ContainerHelpers {
+
+    private ContainerHelpers(){
+
+    }
+
     static final int[] EMPTY_INTS = new int[0];
     static final long[] EMPTY_LONGS = new long[0];
     static final Object[] EMPTY_OBJECTS = new Object[0];

@@ -3,7 +3,6 @@ package org.fieldsight.naxa.educational;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -15,16 +14,15 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.generalforms.data.Em;
 import org.fieldsight.naxa.generalforms.data.EmImage;
-import org.fieldsight.naxa.generalforms.data.GeneralForm;
 import org.fieldsight.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.fieldsight.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.fieldsight.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;

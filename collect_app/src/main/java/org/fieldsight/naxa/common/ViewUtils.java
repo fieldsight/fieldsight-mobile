@@ -27,6 +27,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public final class ViewUtils {
+
+    private ViewUtils(){
+
+    }
+
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
 

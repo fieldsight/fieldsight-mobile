@@ -7,32 +7,31 @@ import org.fieldsight.naxa.network.ServiceGenerator;
 import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightContactModel> {
 
-    private static ContactRemoteSource INSTANCE;
+    private static ContactRemoteSource contactRemoteSource;
 
 
     public static ContactRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ContactRemoteSource();
+        if (contactRemoteSource == null) {
+            contactRemoteSource = new ContactRemoteSource();
         }
-        return INSTANCE;
+        return contactRemoteSource;
     }
 
 
     @Override
     public void getAll() {
-        Disposable d = ServiceGenerator.getRxClient()
+        ServiceGenerator.getRxClient()
                 .create(ApiInterface.class)
                 .getAllContacts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableObserver<ArrayList<FieldSightContactModel>>() {
+                .subscribe(new DisposableObserver<ArrayList<FieldSightContactModel>>() {
                     @Override
                     public void onNext(ArrayList<FieldSightContactModel> fieldSightContactModels) {
                         ContactLocalSource.getInstance().updateAll(fieldSightContactModels);

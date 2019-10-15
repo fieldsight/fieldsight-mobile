@@ -2,7 +2,6 @@ package org.fieldsight.naxa.scheduled.data;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 
 import org.fieldsight.naxa.common.BaseRepository;
 import org.fieldsight.naxa.previoussubmission.model.ScheduledFormAndSubmission;
@@ -13,21 +12,21 @@ import java.util.List;
 public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
 
 
-    private static ScheduledFormRepository INSTANCE;
+    private static ScheduledFormRepository scheduledFormRepository;
     private final ScheduledFormsLocalSource localSource;
     private final ScheduledFormsRemoteSource remoteSource;
 
 
 
     public static ScheduledFormRepository getInstance(ScheduledFormsLocalSource localSource, ScheduledFormsRemoteSource remoteSource) {
-        if (INSTANCE == null) {
+        if (scheduledFormRepository == null) {
             synchronized (ScheduledFormRepository.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new ScheduledFormRepository(localSource, remoteSource);
+                if (scheduledFormRepository == null) {
+                    scheduledFormRepository = new ScheduledFormRepository(localSource, remoteSource);
                 }
             }
         }
-        return INSTANCE;
+        return scheduledFormRepository;
     }
 
     private ScheduledFormRepository(ScheduledFormsLocalSource localSource, ScheduledFormsRemoteSource remoteSource) {

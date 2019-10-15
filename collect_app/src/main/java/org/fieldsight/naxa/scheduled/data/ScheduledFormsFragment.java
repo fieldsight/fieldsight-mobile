@@ -79,7 +79,7 @@ public class ScheduledFormsFragment extends BaseFormListFragment implements OnFo
                 inflater.inflate(R.layout.scheduled_forms_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
 
         viewModel =
                 ViewModelProviders.of(getActivity(), factory).get(ScheduledFormViewModel.class);

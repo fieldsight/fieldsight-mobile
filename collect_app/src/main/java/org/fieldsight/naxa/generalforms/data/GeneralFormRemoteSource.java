@@ -14,7 +14,6 @@ import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.onboarding.XMLForm;
 import org.fieldsight.naxa.onboarding.XMLFormBuilder;
 import org.fieldsight.naxa.project.data.ProjectLocalSource;
-import org.fieldsight.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
 import org.odk.collect.android.application.Collect;
 
@@ -40,14 +39,14 @@ import static org.fieldsight.naxa.common.event.DataSyncEvent.EventStatus.EVENT_S
 
 public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm> {
 
-    private static GeneralFormRemoteSource INSTANCE;
+    private static GeneralFormRemoteSource generalFormRemoteSource;
     private final ProjectLocalSource projectLocalSource;
 
     public static GeneralFormRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new GeneralFormRemoteSource();
+        if (generalFormRemoteSource == null) {
+            generalFormRemoteSource = new GeneralFormRemoteSource();
         }
-        return INSTANCE;
+        return generalFormRemoteSource;
     }
 
 
