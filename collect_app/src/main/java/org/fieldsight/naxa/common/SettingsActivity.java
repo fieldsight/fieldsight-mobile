@@ -53,8 +53,9 @@ public class SettingsActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (textInputLayoutBaseUrl.getEditText().getError() != null)
+                if (textInputLayoutBaseUrl.getEditText().getError() != null) {
                     textInputLayoutBaseUrl.getEditText().setError(null);
+                }
             }
         });
 

@@ -18,7 +18,9 @@ package org.fieldsight.naxa.common.utilities;
 
 import android.database.Cursor;
 import android.net.Uri;
+
 import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 
 import com.google.common.collect.Lists;
@@ -91,7 +93,7 @@ public class FieldSightFormListDownloadUtils {
         return downloadFormList(xmlForm, xmlForm.getDownloadUrl(), null, null, alwaysCheckMediaFiles);
     }
 
-    public void cancelAll(){
+    public void cancelAll() {
 
     }
 
@@ -542,7 +544,9 @@ public class FieldSightFormListDownloadUtils {
                         return true;
                     }
                 }
-            } else return !newMediaFiles.isEmpty();
+            } else {
+                return !newMediaFiles.isEmpty();
+            }
         }
 
         return false;

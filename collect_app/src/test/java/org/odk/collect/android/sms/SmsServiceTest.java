@@ -3,15 +3,13 @@ package org.odk.collect.android.sms;
 import android.content.Context;
 import android.telephony.SmsManager;
 
-import org.odk.collect.android.events.RxEventBus;
-import org.odk.collect.android.injection.DaggerTestComponent;
-import org.odk.collect.android.logic.FormInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.injection.TestComponent;
+import org.odk.collect.android.events.RxEventBus;
+import org.odk.collect.android.logic.FormInfo;
 import org.odk.collect.android.sms.base.BaseSmsTest;
 import org.odk.collect.android.sms.base.SampleData;
 import org.odk.collect.android.tasks.sms.SmsSender;

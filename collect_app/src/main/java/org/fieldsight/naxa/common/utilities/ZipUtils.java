@@ -23,6 +23,7 @@ public class ZipUtils {
 
     public interface ZipProgressListener {
         void onZipping(String message, int progress);
+
         void onComplete();
     }
 
@@ -88,7 +89,7 @@ public class ZipUtils {
                 }
             }
             out.close();
-            if(listener != null) {
+            if (listener != null) {
                 listener.onComplete();
             }
         } catch (Exception e) {
@@ -137,14 +138,14 @@ public class ZipUtils {
 //                    }
                 }
 //                here the progress is measured out of file zipped vs total file
-                totalCount ++;
+                totalCount++;
                 if (listener != null) {
                     listener.onZipping("Zipping " + file.getName(), totalCount * 100 / fileList.length);
                 }
                 origin.close();
             }
         }
-        if(listener != null) {
+        if (listener != null) {
             listener.onComplete();
         }
     }
@@ -157,8 +158,9 @@ public class ZipUtils {
      */
     public String getLastPathComponent(String filePath) {
         String[] segments = filePath.split("/");
-        if (segments.length == 0)
+        if (segments.length == 0) {
             return "";
+        }
         String lastPathComponent = segments[segments.length - 1];
         return lastPathComponent;
     }

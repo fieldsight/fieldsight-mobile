@@ -105,30 +105,6 @@ public class FilterDialogAdapterv2 extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
 
-    public class ViewHolderSpinner extends RecyclerView.ViewHolder {
-
-        TextView txtViewTitle;
-        ImageView imgViewIcon;
-        Spinner spinnerSiteCluster;
-
-        ViewHolderSpinner(final View itemLayoutView) {
-            super(itemLayoutView);
-            txtViewTitle = itemLayoutView.findViewById(R.id.title);
-            imgViewIcon = itemLayoutView.findViewById(R.id.icon);
-            spinnerSiteCluster = itemLayoutView.findViewById(R.id.filter_item_layout_spinner);
-        }
-
-        public void updateItemColor(int selectedSortingOrder) {
-            ViewHolderText previousHolder = (ViewHolderText) recyclerView.findViewHolderForAdapterPosition(selectedSortingOrder);
-            previousHolder.txtViewTitle.setTextColor(themeUtils.getPrimaryTextColor());
-            DrawableCompat.setTintList(previousHolder.imgViewIcon.getDrawable(), null);
-
-            txtViewTitle.setTextColor(themeUtils.getAccentColor());
-            DrawableCompat.setTint(imgViewIcon.getDrawable(), themeUtils.getAccentColor());
-        }
-    }
-
-
     public class ViewHolderText extends RecyclerView.ViewHolder {
 
         TextView txtViewTitle;

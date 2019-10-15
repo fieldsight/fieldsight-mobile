@@ -129,8 +129,10 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
         Drawable drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
 
-        if (status == null) return drawable;
+        if (status == null) {
+            return drawable;
 
+        }
         switch (status) {
             case Constant.FormStatus.APPROVED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);

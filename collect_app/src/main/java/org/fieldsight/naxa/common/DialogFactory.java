@@ -26,8 +26,8 @@ import androidx.annotation.StringRes;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.login.model.Site;
+import org.odk.collect.android.application.Collect;
 
 import java.util.Calendar;
 import java.util.List;
@@ -192,7 +192,7 @@ public final class DialogFactory {
                 TextView tv_sub_site_identifier = convertView.findViewById(R.id.tv_sub_site_identifier);
                 tv_sub_site_identifier.setText(siteAtpos.getIdentifier());
                 tv_subsiteName.setText(siteAtpos.getName());
-                tv_icon_text.setText(siteAtpos.getName().substring(0,1));
+                tv_icon_text.setText(siteAtpos.getName().substring(0, 1));
 
                 return convertView;
             }
@@ -229,9 +229,7 @@ public final class DialogFactory {
 
     public static AlertDialog.Builder createActionConsentDialog(Context context, String title, String message) {
         View viewInflated = LayoutInflater.from(Collect.getInstance()).inflate(R.layout.dialog_site_project_filter, null, false);
-        TextInputLayout textInputLayout = viewInflated.findViewById(R.id.text_input_layout);
         AlertDialog.Builder dialog = showCustomLayoutDialog(context, viewInflated);
-
         return dialog;
     }
 }

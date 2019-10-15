@@ -267,7 +267,7 @@ public class DateTimeUtils {
             return new SimpleDateFormat(format).format(date);
         } catch (Exception e) {
             Timber.e(e);
-            return time + "";
+            return String.valueOf(time);
         }
     }
 

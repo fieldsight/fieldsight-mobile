@@ -33,7 +33,6 @@ import org.odk.collect.android.provider.FormsProviderAPI;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;

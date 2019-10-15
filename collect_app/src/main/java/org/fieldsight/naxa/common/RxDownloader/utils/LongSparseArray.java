@@ -299,9 +299,11 @@ public class LongSparseArray<E> implements Cloneable {
             gc();
         }
 
-        for (int i = 0; i < mSize; i++)
-            if (mValues[i] == value)
+        for (int i = 0; i < mSize; i++) {
+            if (mValues[i] == value) {
                 return i;
+            }
+        }
 
         return -1;
     }
@@ -370,7 +372,7 @@ public class LongSparseArray<E> implements Cloneable {
 
         StringBuilder buffer = new StringBuilder(mSize * 28);
         buffer.append('{');
-        for (int i=0; i<mSize; i++) {
+        for (int i = 0; i < mSize; i++) {
             if (i > 0) {
                 buffer.append(", ");
             }
