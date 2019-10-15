@@ -86,7 +86,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private ActionMode actionMode;
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
     private MenuItem sortActionFilter;
-    TermsLabels tl = null;
+    TermsLabels tl ;
 
 
     public static SiteListFragment getInstance(Project project) {

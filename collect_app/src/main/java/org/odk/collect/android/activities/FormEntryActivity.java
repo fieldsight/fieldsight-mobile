@@ -305,7 +305,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private ActivityAvailability activityAvailability = new ActivityAvailability(this);
 
     private boolean shouldOverrideAnimations;
-    public boolean saveSendAndExit = false;
+    public boolean saveSendAndExit;
 
 
     @Inject

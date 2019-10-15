@@ -16,7 +16,7 @@ public class StageSubStage {
     private String stageDescription;
     @SerializedName("stage_type")
     @Expose
-    private List<Object> stageType = null;
+    private List<Object> stageType ;
     @SerializedName("stage_order")
     @Expose
     private String stageOrder;
@@ -37,10 +37,10 @@ public class StageSubStage {
     private String substageWeight;
     @SerializedName("substage_tags")
     @Expose
-    private List<Object> substageTags = null;
+    private List<Object> substageTags;
     @SerializedName("substage_regions")
     @Expose
-    private List<Object> substageRegions = null;
+    private List<Object> substageRegions;
 
     public String getStageName() {
         return stageName;

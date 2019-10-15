@@ -77,8 +77,8 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     LinearLayout emptyLayout;
 
 
-    boolean isNewerLoading = false;
-    boolean isOlderLoading = false;
+    boolean isNewerLoading;
+    boolean isOlderLoading;
     private NotificationListViewModel viewModel;
     private NotificationsAdapter adapter;
 

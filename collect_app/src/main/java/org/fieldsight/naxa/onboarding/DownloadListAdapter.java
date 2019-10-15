@@ -25,7 +25,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
 
     private final SyncRepository syncRepository;
     private final ArrayList<SyncableItem> syncableItems;
-    private int selectedItemCount = 0;
+    private int selectedItemCount ;
 
     public DownloadListAdapter(ArrayList<SyncableItem> syncableItems) {
         this.syncableItems = syncableItems;

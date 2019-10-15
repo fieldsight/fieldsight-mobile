@@ -85,7 +85,7 @@ public class SubStage implements Parcelable {
     @Ignore
     @SerializedName("latest_submission")
     @Expose
-    private List<FormResponse> latestSubmission = null;
+    private List<FormResponse> latestSubmission ;
 
     private String lastSubmissionBy;
     private String lastSubmissionDateTime;

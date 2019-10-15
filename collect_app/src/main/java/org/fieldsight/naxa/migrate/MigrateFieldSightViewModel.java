@@ -33,7 +33,7 @@ import io.reactivex.Observable;
 public class MigrateFieldSightViewModel extends ViewModel {
 
     private final MutableLiveData<List<File>> oldAccounts = new MutableLiveData<>();
-    private String usernameOrEmail = null;
+    private String usernameOrEmail;
     private MigrationHelper migrationHelper;
 
 

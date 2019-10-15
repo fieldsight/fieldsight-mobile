@@ -80,8 +80,8 @@ public class ReportActivity extends CollectAbstractActivity {
     Toolbar toolbar;
 
     private FusedLocationProviderClient fusedLocationClient;
-    DisposableObserver<ResponseBody> observer = null;
-    boolean isSubmitting = false;
+    DisposableObserver<ResponseBody> observer;
+    boolean isSubmitting;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -204,7 +204,7 @@ public class ReportActivity extends CollectAbstractActivity {
         }
     }
 
-    ProgressDialog pd = null;
+    ProgressDialog pd ;
     void showPrgressDialog() {
        if(pd == null) {
            pd = new ProgressDialog(this);

@@ -39,7 +39,7 @@ import timber.log.Timber;
 
 public class ProjectRepository implements BaseRepository<Project> {
 
-    private static ProjectRepository INSTANCE = null;
+    private static ProjectRepository INSTANCE;
     private final ProjectLocalSource localSource;
     private final ProjectSitesRemoteSource remoteSource;
 

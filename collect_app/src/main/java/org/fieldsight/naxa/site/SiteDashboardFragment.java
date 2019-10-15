@@ -95,7 +95,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private Unbinder unbinder;
     private View rootView;
 
-    boolean isParent = false;
+    boolean isParent ;
 
     public SiteDashboardFragment() {
 
@@ -105,7 +105,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     public static SiteDashboardFragment newInstance(Site site, boolean isParent) {
         SiteDashboardFragment fragment = new SiteDashboardFragment();
         Bundle bundle = new Bundle();
-        bundle.putBoolean("is_parent", isParent);
+        bundle.putBoolean("isParent", isParent);
         bundle.putParcelable(EXTRA_OBJECT, site);
         fragment.setArguments(bundle);
         return fragment;
@@ -126,7 +126,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         //Constants.MY_FRAG = 1;
         unbinder = ButterKnife.bind(this, rootView);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
-        isParent = getArguments().getBoolean("is_parent");
+        isParent = getArguments().getBoolean("isParent");
 
         bindUI(rootView);
 

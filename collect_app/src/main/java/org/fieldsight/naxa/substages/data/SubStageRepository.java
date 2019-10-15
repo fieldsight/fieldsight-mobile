@@ -15,7 +15,7 @@ import java.util.List;
 public class SubStageRepository implements BaseLocalDataSource<SubStage> {
 
 
-    private static SubStageRepository INSTANCE = null;
+    private static SubStageRepository INSTANCE;
     private final SubStageLocalSource localSource;
 
     public static SubStageRepository getInstance(SubStageLocalSource localSource) {

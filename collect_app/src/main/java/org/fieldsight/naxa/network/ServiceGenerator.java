@@ -22,8 +22,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ServiceGenerator {
-    private static Retrofit retrofit = null;
-    private static Retrofit cacheablesRetrofit = null;
+    private static Retrofit retrofit;
+    private static Retrofit cacheablesRetrofit ;
     private static Gson gson = new GsonBuilder().create();
     private static Retrofit rxRetrofit;
     private static OkHttpClient okHttp;

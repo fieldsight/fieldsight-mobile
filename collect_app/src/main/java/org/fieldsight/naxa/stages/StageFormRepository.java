@@ -15,7 +15,7 @@ import io.reactivex.Observable;
 
 public class StageFormRepository implements BaseLocalDataSource<Stage> {
 
-    private static StageFormRepository INSTANCE = null;
+    private static StageFormRepository INSTANCE;
     private final StageLocalSource localSource;
     private final StageRemoteSource remoteSource;
 

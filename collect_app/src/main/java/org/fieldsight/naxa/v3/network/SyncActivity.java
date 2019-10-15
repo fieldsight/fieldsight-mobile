@@ -53,11 +53,11 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     SyncAdapterv3 adapterv3;
     boolean auto = true;
-    HashMap<String, List<Syncable>> syncableMap = null;
+    HashMap<String, List<Syncable>> syncableMap;
 
     LiveData<List<SyncStat>> syncdata;
-    Observer<List<SyncStat>> syncObserver = null;
-    boolean syncing = false;
+    Observer<List<SyncStat>> syncObserver;
+    boolean syncing ;
     ArrayList<Project> projectList;
     LiveData<Integer> runningLiveData;
     Observer<Integer> runningLiveDataObserver;

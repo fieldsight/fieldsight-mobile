@@ -29,7 +29,7 @@ public class UserProfileActivity extends CollectAbstractActivity {
     @BindView(R.id.root)
     ConstraintLayout root;
 
-    boolean set = false;
+    boolean set;
 
 
     @Override

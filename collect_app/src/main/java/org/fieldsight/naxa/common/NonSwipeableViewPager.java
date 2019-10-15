@@ -10,7 +10,7 @@ import android.view.MotionEvent;
  */
 
 public class NonSwipeableViewPager extends ViewPager {
-    private boolean allowSwipe = false;
+    private boolean allowSwipe;
 
 
     public void allowSwipe() {

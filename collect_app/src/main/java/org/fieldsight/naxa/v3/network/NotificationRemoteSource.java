@@ -11,7 +11,7 @@ import okhttp3.ResponseBody;
 
 public class NotificationRemoteSource {
 
-    private static NotificationRemoteSource INSTANCE = null;
+    private static NotificationRemoteSource INSTANCE;
 
     public static NotificationRemoteSource getInstance() {
         if (INSTANCE == null) {

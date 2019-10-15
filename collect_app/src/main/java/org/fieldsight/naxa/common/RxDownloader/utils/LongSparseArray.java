@@ -41,7 +41,7 @@ package org.fieldsight.naxa.common.RxDownloader.utils;/*
  */
 public class LongSparseArray<E> implements Cloneable {
     private static final Object DELETED = new Object();
-    private boolean mGarbage = false;
+    private boolean mGarbage;
 
     private long[] mKeys;
     private Object[] mValues;

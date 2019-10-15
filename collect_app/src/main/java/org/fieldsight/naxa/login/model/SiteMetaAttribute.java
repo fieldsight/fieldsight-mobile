@@ -36,7 +36,7 @@ public class SiteMetaAttribute implements Parcelable {
     private String questionHelp;
     @SerializedName("mcq_options")
     @Expose
-    private List<McqOption> mcqOptions = null;
+    private List<McqOption> mcqOptions ;
 
     public SiteMetaAttribute(String questionName, String questionText, String questionType) {
         this.questionName = questionName;

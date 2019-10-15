@@ -29,7 +29,7 @@ public class Em implements Parcelable {
     @SerializedName("em_images")
     @Expose
     @TypeConverters(EmImageTypeConverter.class)
-    private List<EmImage> emImages = null;
+    private List<EmImage> emImages ;
 
     @SerializedName("is_pdf")
     @Expose

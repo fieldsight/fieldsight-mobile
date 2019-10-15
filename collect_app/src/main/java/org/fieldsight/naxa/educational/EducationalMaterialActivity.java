@@ -51,7 +51,7 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
 
 
     private ArrayList<String> fsFormIds;
-    private int defaultPagerPosition = 0;
+    private int defaultPagerPosition;
 
 
     private PagerAdapter mPagerAdapter;

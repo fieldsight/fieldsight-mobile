@@ -31,8 +31,8 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     List<Project> selectedProjectList;
     HashMap<String, List<Syncable>> syncableMap;
     boolean auto;
-    SyncAdapterCallback callback = null;
-    boolean disableItemClick = false;
+    SyncAdapterCallback callback ;
+    boolean disableItemClick;
     HashMap<String, Integer> progressMap = new HashMap<>();
 
     public SyncAdapterv3(boolean auto, List<Project> selectedProjectList, HashMap<String, List<Syncable>> syncableMap) {
@@ -53,12 +53,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         }
     }
 
-    public void toggleAllSelection(HashMap<String, List<Syncable>> syncableMap) {
-        syncableMap.clear();
-        this.auto = !auto;
-        this.syncableMap = syncableMap;
-        notifyDataSetChanged();
-    }
+
 
     public void setAdapterCallback(SyncAdapterCallback callback) {
         this.callback = callback;

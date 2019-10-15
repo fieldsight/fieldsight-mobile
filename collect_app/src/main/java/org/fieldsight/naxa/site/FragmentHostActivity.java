@@ -40,15 +40,15 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_PROJECT;
 
 public class FragmentHostActivity extends CollectAbstractActivity {
 
-    Site loadedSite = null;
+    Site loadedSite;
     Project project;
     Toolbar toolbar;
-    boolean is_parent = false;
+    boolean isParent;
 
     public static void start(Context context, Site site, boolean isParent) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
         intent.putExtra(EXTRA_OBJECT, site);
-        intent.putExtra("is_parent", isParent);
+        intent.putExtra("isParent", isParent);
         context.startActivity(intent);
     }
 
@@ -78,11 +78,11 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
         loadedSite = extras.getParcelable(EXTRA_OBJECT);
         project = extras.getParcelable(EXTRA_PROJECT);
-        is_parent = extras.getBoolean("is_parent");
+        isParent = extras.getBoolean("isParent");
         bindUI();
         setupToolbar();
 
-        Fragment fragment = project == null ? SiteDashboardFragment.newInstance(loadedSite, is_parent) : FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
+        Fragment fragment = project == null ? SiteDashboardFragment.newInstance(loadedSite, isParent) : FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment, "frag0")

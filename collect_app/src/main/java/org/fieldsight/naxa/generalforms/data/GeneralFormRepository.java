@@ -12,7 +12,7 @@ import java.util.List;
 
 public class GeneralFormRepository implements BaseRepository<GeneralForm> {
 
-    private static GeneralFormRepository INSTANCE = null;
+    private static GeneralFormRepository INSTANCE;
     private final GeneralFormLocalSource localSource;
     private final GeneralFormRemoteSource remoteSource;
 

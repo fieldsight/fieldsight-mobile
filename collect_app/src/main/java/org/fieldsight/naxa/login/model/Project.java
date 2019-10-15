@@ -79,11 +79,11 @@ public class Project implements Parcelable {
 
     @Expose
     @Ignore
-    boolean checked = false;
+    boolean checked;
 
     @Expose
     @Ignore
-    boolean isSynced = false;
+    boolean isSynced ;
 
     public String getStatusMessage() {
         return statusMessage;

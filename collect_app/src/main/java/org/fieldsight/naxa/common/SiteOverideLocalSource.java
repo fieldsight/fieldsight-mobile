@@ -14,7 +14,7 @@ import java.util.List;
 
 public class SiteOverideLocalSource implements BaseLocalDataSource<SiteOveride> {
 
-    private static SiteOverideLocalSource INSTANCE = null;
+    private static SiteOverideLocalSource INSTANCE;
     private final SiteOverideDAO dao;
     private final SiteDao siteDao;
 

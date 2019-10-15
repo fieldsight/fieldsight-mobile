@@ -51,10 +51,10 @@ public class SyncServiceV3 extends IntentService {
      */
 
     ArrayList<Project> selectedProject;
-    HashMap<String, List<Syncable>> selectedMap = null;
+    HashMap<String, List<Syncable>> selectedMap;
     private final List<String> failedSiteUrls = new ArrayList<>();
     private final ArrayList<Disposable> syncDisposable = new ArrayList<>();
-    int currentWorkingProjectIndex = 0;
+    int currentWorkingProjectIndex;
 
     public SyncServiceV3() {
         super("SyncserviceV3");

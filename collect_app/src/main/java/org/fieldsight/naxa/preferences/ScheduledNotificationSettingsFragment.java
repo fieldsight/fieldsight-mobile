@@ -37,7 +37,7 @@ import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_
 public class ScheduledNotificationSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
-    private CustomTimePickerDialog customTimePickerDialog = null;
+    private CustomTimePickerDialog customTimePickerDialog;
     private final String[] weeks = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     private final String[] months = {"Beginning of the month", "Middle of the month", "End of the month"};
 

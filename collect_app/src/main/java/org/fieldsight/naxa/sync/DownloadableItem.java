@@ -28,7 +28,7 @@ public class DownloadableItem {
     private String syncMessage;
 
     @ColumnInfo(name = "is_determinate")
-    private boolean isDeterminate = false;
+    private boolean isDeterminate;
 
     @Ignore
     private boolean isOutOfSync;
@@ -169,7 +169,7 @@ public class DownloadableItem {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()){
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         DownloadableItem that = (DownloadableItem) o;

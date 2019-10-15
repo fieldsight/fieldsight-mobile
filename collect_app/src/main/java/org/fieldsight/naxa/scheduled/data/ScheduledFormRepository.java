@@ -13,7 +13,7 @@ import java.util.List;
 public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
 
 
-    private static ScheduledFormRepository INSTANCE = null;
+    private static ScheduledFormRepository INSTANCE;
     private final ScheduledFormsLocalSource localSource;
     private final ScheduledFormsRemoteSource remoteSource;
 

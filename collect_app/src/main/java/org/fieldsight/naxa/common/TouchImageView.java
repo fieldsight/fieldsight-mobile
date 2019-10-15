@@ -56,7 +56,7 @@ public class TouchImageView extends AppCompatImageView {
 
     private FixedPixel orientationChangeFixedPixel = FixedPixel.CENTER;
     private FixedPixel viewSizeChangeFixedPixel = FixedPixel.CENTER;
-    private boolean orientationJustChanged = false;
+    private boolean orientationJustChanged;
 
     private enum State {NONE, DRAG, ZOOM, FLING, ANIMATE_ZOOM}
 
@@ -68,7 +68,7 @@ public class TouchImageView extends AppCompatImageView {
     public static final float AUTOMATIC_MIN_ZOOM = -1.0f;
     private float userSpecifiedMinScale;
     private float minScale;
-    private boolean maxScaleIsSetByMultiplier = false;
+    private boolean maxScaleIsSetByMultiplier;
     private float maxScaleMultiplier;
     private float maxScale;
     private float superMinScale;
@@ -98,9 +98,9 @@ public class TouchImageView extends AppCompatImageView {
 
     private ScaleGestureDetector mScaleDetector;
     private GestureDetector mGestureDetector;
-    private GestureDetector.OnDoubleTapListener doubleTapListener = null;
+    private GestureDetector.OnDoubleTapListener doubleTapListener;
     private OnTouchListener userTouchListener = null;
-    private OnTouchImageViewListener touchImageViewListener = null;
+    private OnTouchImageViewListener touchImageViewListener;
 
     public TouchImageView(Context context) {
         this(context, null);

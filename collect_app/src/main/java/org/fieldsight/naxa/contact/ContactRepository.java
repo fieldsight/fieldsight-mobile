@@ -12,7 +12,7 @@ public class ContactRepository implements BaseRepository<FieldSightContactModel>
 
     private final ContactLocalSource localSource;
 
-    private static ContactRepository INSTANCE = null;
+    private static ContactRepository INSTANCE;
 
 
     public static ContactRepository getInstance(ContactLocalSource localSource, ContactRemoteSource remoteSource) {
