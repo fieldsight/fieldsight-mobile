@@ -73,7 +73,7 @@ public class Constant {
     public static final class FormType {
         public static final String SCHEDULE = "schedule";
         public static final String STAGED = "stage";
-        public static final String GENERAl = "general";
+        public static final String GENERAL = "general";
         public static final String SURVEY = "survey";
     }
 

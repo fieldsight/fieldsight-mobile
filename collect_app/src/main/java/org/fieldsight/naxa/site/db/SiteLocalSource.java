@@ -127,14 +127,14 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     public void setSiteAsNotFinalized(String siteId) {
         AsyncTask.execute(() -> {
-            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE);
+             dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE);
         });
 
     }
 
     public void setSiteAsFinalized(String siteId) {
         AsyncTask.execute(() -> {
-            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_FINALIZED);
+             dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_FINALIZED);
         });
 
     }

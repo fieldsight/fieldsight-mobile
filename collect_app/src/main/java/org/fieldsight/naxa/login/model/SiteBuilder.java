@@ -32,7 +32,6 @@ public class SiteBuilder {
     private Parcel in;
     private List<String> siteDocuments;
     private String site;
-    private boolean enable_subsites;
 
 
     public SiteBuilder setId(String id) {
@@ -140,10 +139,7 @@ public class SiteBuilder {
         return this;
     }
 
-    public SiteBuilder setEnableStatue(boolean enable_subsites) {
-        this.enable_subsites = enable_subsites;
-        return this;
-    }
+
 
     public SiteBuilder setSites(String site) {
         this.site = site;

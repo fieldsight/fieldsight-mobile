@@ -1,7 +1,5 @@
 package org.fieldsight.naxa.submissions;
 
-import android.content.Context;
-
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,10 +114,9 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NotNull RecyclerView.ViewHolder holder, int position) {
 
         final ViewModel result = listOfItems.get(position);
-        Context context = holder.itemView.getContext();
 
         switch (getItemViewType(position)) {
             case TEXT_DESC:

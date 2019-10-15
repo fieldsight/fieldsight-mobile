@@ -81,7 +81,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_SURVEY_FORM:
-                SurveyViewHolder surveyViewHolder = (SurveyViewHolder) holder;
                 break;
             default:
                 SiteViewHolder siteViewHolder = (SiteViewHolder) holder;
@@ -235,7 +234,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private void applyOffilineSiteTag(SiteViewHolder holder, Site siteLocationPojo) {
         boolean isChecked = selectedItems.get(holder.getAdapterPosition(), false);
         boolean isUnVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
-        boolean isVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_ONLINE;
         boolean isEditedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
         holder.offlinetag.setVisibility(View.GONE);
 

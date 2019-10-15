@@ -98,7 +98,7 @@ public class ReportActivity extends CollectAbstractActivity {
         tvAppVersion.setText(BuildConfig.VERSION_NAME);
         tvOsVersion.setText(Build.VERSION.RELEASE);
         tvDeviceName.setText(Build.MANUFACTURER);
-       new PermissionUtils().requestLocationPermissions(this, new PermissionListener() {
+        new PermissionUtils().requestLocationPermissions(this, new PermissionListener() {
             @SuppressLint("MissingPermission")
             @Override
             public void granted() {
@@ -108,8 +108,8 @@ public class ReportActivity extends CollectAbstractActivity {
                             public void onSuccess(Location location) {
                                 // Got last known location. In some rare situations this can be null.
                                 if (location != null) {
-                                    tvLat.setText(location.getLatitude() + "");
-                                    tvLng.setText(location.getLongitude() + "");
+                                    tvLat.setText(String.valueOf(location.getLatitude()));
+                                    tvLng.setText(String.valueOf(location.getLongitude()));
                                 }
                             }
                         });
@@ -122,28 +122,28 @@ public class ReportActivity extends CollectAbstractActivity {
         });
 
 
-
     }
 
     private String checkEmptyWithFallback(View v, String fallback) {
         CharSequence data = "";
-        if(v instanceof TextView) {
-            data = ((TextView)v).getText();
-        }else if(v instanceof EditText){
-            data = ((EditText)v).getText();
-        }else if(v instanceof Spinner){
-            Spinner spnr = (Spinner)v;
+        if (v instanceof TextView) {
+            data = ((TextView) v).getText();
+        } else if (v instanceof EditText) {
+            data = ((EditText) v).getText();
+        } else if (v instanceof Spinner) {
+            Spinner spnr = (Spinner) v;
             data = spnr.getSelectedItemPosition() == 0 ? fallback : spnr.getSelectedItem().toString();
         }
-        return TextUtils.isEmpty(data)? fallback : data.toString();
+        return TextUtils.isEmpty(data) ? fallback : data.toString();
     }
+
     @OnClick(R.id.btn_report)
     void submitReport() {
-        if(isSubmitting) {
+        if (isSubmitting) {
             Toast.makeText(getApplicationContext(), "Report form is submitting please wait", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(chkbxAgree.isChecked()) {
+        if (chkbxAgree.isChecked()) {
             isSubmitting = true;
             String deviceId = checkEmptyWithFallback(tvDeviceId, "0");
             String deviceName = checkEmptyWithFallback(tvDeviceName, "");
@@ -163,7 +163,7 @@ public class ReportActivity extends CollectAbstractActivity {
                         @Override
                         public void onNext(ResponseBody response) {
                             try {
-                                if(response != null) {
+                                if (response != null) {
                                     String reply = response.string();
                                     JSONObject replyJSON = new JSONObject(reply);
                                     Toast.makeText(getApplicationContext(), replyJSON.optString("message"), Toast.LENGTH_SHORT).show();
@@ -191,7 +191,7 @@ public class ReportActivity extends CollectAbstractActivity {
                         }
                     });
             showPrgressDialog();
-        }else {
+        } else {
             Toast.makeText(this, "Please select I agree", Toast.LENGTH_SHORT).show();
         }
     }
@@ -199,29 +199,30 @@ public class ReportActivity extends CollectAbstractActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(observer != null && !observer.isDisposed()) {
+        if (observer != null && !observer.isDisposed()) {
             observer.dispose();
         }
     }
 
-    ProgressDialog pd ;
+    ProgressDialog pd;
+
     void showPrgressDialog() {
-       if(pd == null) {
-           pd = new ProgressDialog(this);
-       }
-       pd.setMessage("Submitting your report please wait");
-       pd.show();
+        if (pd == null) {
+            pd = new ProgressDialog(this);
+        }
+        pd.setMessage("Submitting your report please wait");
+        pd.show();
     }
 
     void hideProgressDialog() {
-        if(pd != null) {
+        if (pd != null) {
             pd.hide();
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }

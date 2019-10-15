@@ -213,7 +213,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_ERROR));
                     }
                 });

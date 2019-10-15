@@ -23,7 +23,7 @@ import java.io.File;
  * Created by susan on 7/18/2017.
  */
 
-public class EduMat_ViewImageDetailsActivity extends CollectAbstractActivity {
+public class EduMatImageDetailsActivity extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

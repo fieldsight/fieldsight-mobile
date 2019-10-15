@@ -31,6 +31,7 @@ import org.fieldsight.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.fieldsight.naxa.flagform.FlaggedInstanceActivity;
 import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.v3.network.NotificationRemoteSource;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -154,7 +155,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
         rvNotificationList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NotNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int visibleThreshold = 15;
                 int totalItemCount = rvNotificationList.getLayoutManager().getItemCount();
@@ -171,7 +172,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         });
 
         if (adapter.getItemCount() == 0) {
-            getDataFromServer("" + (System.currentTimeMillis() / 1000), older_notification);
+            getDataFromServer(String.valueOf((System.currentTimeMillis() / 1000)), older_notification);
             emptyLayout.setVisibility(View.VISIBLE);
             tvMessageNodata.setVisibility(View.VISIBLE);
             tvMessageNodata.setText("Loading notification please wait");
@@ -193,7 +194,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
         if (lastUpdatedDate != null) {
             String date = lastUpdatedDate.getReceivedDateTime();
 
-            String epochTime = DateTimeUtils.tsToSec8601(date) + "";
+            String epochTime = String.valueOf(DateTimeUtils.tsToSec8601(date));
             Timber.i("NotificationListActivity, date = %s, epochTime = %s", date, epochTime);
             if (epochTime != null) {
                 getDataFromServer(epochTime, type);

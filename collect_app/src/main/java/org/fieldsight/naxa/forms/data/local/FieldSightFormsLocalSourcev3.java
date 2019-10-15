@@ -11,8 +11,6 @@ import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.stages.data.SubStage;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
@@ -81,31 +79,6 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         });
 
         return mediator;
-    }
-
-    private Single<JSONArray> getStageAndSubStagesAsJSON(List<FieldsightFormDetailsv3> forms, String siteTypeId) {
-        return getSortedStages(forms, siteTypeId)
-                .map(new Function<List<FieldsightFormDetailsv3>, JSONArray>() {
-                    @Override
-                    public JSONArray apply(List<FieldsightFormDetailsv3> formDetailsv3s) throws Exception {
-                        JSONArray stages = new JSONArray();
-
-                        JSONObject stage = new JSONObject();
-                        JSONArray subStages = new JSONArray();
-
-
-                        for (FieldsightFormDetailsv3 form : formDetailsv3s) {
-                            StageSubStage stageAndSubStage = FieldsightFormDetailsv3.getStageAndSubstage(form.getMetaAttributes());
-
-
-                        }
-
-                        stages.put(stage);
-                        stages.put(subStages);
-
-                        return stages;
-                    }
-                });
     }
 
 

@@ -219,7 +219,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                     @Override
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
-                        Intent intent = new Intent(context, EduMat_ViewImageDetailsActivity.class);
+                        Intent intent = new Intent(context, EduMatImageDetailsActivity.class);
                         bundle.putSerializable("IMAGE_URL_ON", edu_image_model.getThumbImageOn());
                         bundle.putSerializable("IMAGE_URL_OFF", edu_image_model.getThumbImageOff());
                         bundle.putSerializable("IMAGE_TITLE", edu_image_model.getTitle());
@@ -233,7 +233,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                     @Override
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
-                        Intent intent = new Intent(context, EduMat_ViewImageDetailsActivity.class);
+                        Intent intent = new Intent(context, EduMatImageDetailsActivity.class);
                         bundle.putSerializable("IMAGE_URL_ON", edu_image_model.getThumbImageOn());
                         bundle.putSerializable("IMAGE_URL_OFF", edu_image_model.getThumbImageOff());
                         bundle.putSerializable("IMAGE_TITLE", edu_image_model.getTitle());

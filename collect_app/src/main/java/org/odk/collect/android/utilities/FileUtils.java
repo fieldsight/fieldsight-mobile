@@ -623,7 +623,7 @@ public class FileUtils {
         if (s == null) {
             return true;
         }
-        for (int i = 0, len = s.length(); i < len; ++i) {
+        for (int i = 0; i < s.length(); ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return false;
             }
@@ -721,7 +721,7 @@ public class FileUtils {
                 return true;
             }
         }
-        if (!createOrExistsDir(destDir)){
+        if (!createOrExistsDir(destDir)) {
             return false;
         }
         File[] files = srcDir.listFiles();
@@ -734,7 +734,7 @@ public class FileUtils {
                     return false;
                 }
             } else if (file.isDirectory()) {
-                if (!copyOrMoveDir(file, oneDestFile, listener, isMove)){
+                if (!copyOrMoveDir(file, oneDestFile, listener, isMove)) {
                     return false;
                 }
             }
@@ -864,7 +864,7 @@ public class FileUtils {
             return true;
         }
         // dir isn't a directory then return false
-        if (!dir.isDirectory()){
+        if (!dir.isDirectory()) {
             return false;
         }
         File[] files = dir.listFiles();
@@ -872,7 +872,7 @@ public class FileUtils {
             for (File file : files) {
                 if (filter.accept(file)) {
                     if (file.isFile()) {
-                        if (!file.delete()){
+                        if (!file.delete()) {
                             return false;
                         }
                     } else if (file.isDirectory()) {

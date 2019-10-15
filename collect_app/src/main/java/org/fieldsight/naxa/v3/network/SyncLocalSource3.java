@@ -57,17 +57,17 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
     }
 
     public void markAsQueued(String projectId, int type) {
-        SyncStat syncStat = new SyncStat(projectId, type + "", "", false, Constant.DownloadStatus.QUEUED, System.currentTimeMillis());
+        SyncStat syncStat = new SyncStat(projectId, String.valueOf(type) , "", false, Constant.DownloadStatus.QUEUED, System.currentTimeMillis());
         save(syncStat);
     }
 
     public void markAsFailed(String projectId, int type, String failedUrl) {
-        SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, false, Constant.DownloadStatus.FAILED, System.currentTimeMillis());
+        SyncStat syncStat = new SyncStat(projectId, String.valueOf(type), failedUrl, false, Constant.DownloadStatus.FAILED, System.currentTimeMillis());
         save(syncStat);
     }
 
     public void markAsCompleted(String projectId, int type) {
-        SyncStat syncStat = new SyncStat(projectId, type + "", "", false, Constant.DownloadStatus.COMPLETED, System.currentTimeMillis());
+        SyncStat syncStat = new SyncStat(projectId, String.valueOf(type), "", false, Constant.DownloadStatus.COMPLETED, System.currentTimeMillis());
         save(syncStat);
     }
 
@@ -98,7 +98,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
     }
 
     public void updateDownloadProgress(String projectId, int progress, int totalFormsInProject) {
-        SyncStat syncStat = new SyncStat(projectId, 1 + "", "", false, Constant.DownloadStatus.RUNNING, System.currentTimeMillis());
+        SyncStat syncStat = new SyncStat(projectId, String.valueOf(1) , "", false, Constant.DownloadStatus.RUNNING, System.currentTimeMillis());
         syncStat.setProgress(progress);
         syncStat.setTotal(totalFormsInProject);
         save(syncStat);

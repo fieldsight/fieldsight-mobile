@@ -27,7 +27,7 @@ public class NotificationUtils {
     public static String DOWNLOAD_ACTION = "download.action";
     private static int smallIcon = R.drawable.ic_notification_icon;
 
-    private static final String channelID = "All Notifications";
+    private static final String CHANNEL_ID = "All Notifications";
 
     public NotificationUtils() {
 
@@ -38,14 +38,14 @@ public class NotificationUtils {
     }
 
 
-    public int notifyAction(Context ctx, String title, String content, String actionName) {
+    public int notifyAction(Context ctx, String title, String content) {
         int id = getUniqueMessageId();
         sendNotification(
                 id,
                 ctx,
                 createNotification(ctx.getApplicationContext(), content,
                         title, false,
-                        null, actionName));
+                        null));
         return id;
     }
 
@@ -59,19 +59,19 @@ public class NotificationUtils {
                 ctx,
                 createNotification(ctx.getApplicationContext(), content,
                         title, false,
-                        null, null));
+                        null));
 
         return id;
     }
 
-    public int notifyOnGoing(Context ctx, String title, String content, String actionName) {
+    public int notifyOnGoing(Context ctx, String title, String content) {
         int id = getUniqueMessageId();
         sendNotification(
                 id,
                 ctx,
                 createNotification(ctx.getApplicationContext(), content,
                         title, true,
-                        null, actionName));
+                        null));
 
         return id;
     }
@@ -80,7 +80,7 @@ public class NotificationUtils {
 
 
         mNotifyManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(ctx, channelID);
+        mBuilder = new NotificationCompat.Builder(ctx, CHANNEL_ID);
         mBuilder.setContentTitle(ctx.getString(R.string.app_name))
                 .setContentText(text)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
@@ -98,7 +98,7 @@ public class NotificationUtils {
 
         PendingIntent p = intent != null ? PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT) : null;
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
+        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentIntent(p)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
@@ -157,7 +157,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
+        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setAutoCancel(true)
                 .setContentTitle(title)
@@ -183,7 +183,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
+        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setAutoCancel(true)
                 .setContentTitle("Looking for educational materials")
@@ -205,7 +205,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
+        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setContentText(msg);
 
@@ -227,7 +227,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
+        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentTitle(title)
                 .setTicker(msg)
@@ -250,7 +250,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelID)
+        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setContentText(msg)
                 .setProgress(total, progress, false);
@@ -267,7 +267,7 @@ public class NotificationUtils {
 
 
         mNotifyManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(ctx, channelID);
+        mBuilder = new NotificationCompat.Builder(ctx, CHANNEL_ID);
         mBuilder.setContentTitle(ctx.getString(R.string.app_name))
                 .setContentText("Downloading Forms")
                 .setSmallIcon(android.R.drawable.stat_sys_download).setTicker("Downloading Forms");
@@ -320,7 +320,7 @@ public class NotificationUtils {
      **/
     private static Notification createNotification(Context ctx,
                                                    CharSequence tickerText, CharSequence contentText,
-                                                   boolean isOngoingNotification, String notificationSound, String actionName) {
+                                                   boolean isOngoingNotification, String notificationSound) {
         int icon = R.drawable.ic_notification_icon;
         long when = System.currentTimeMillis();
 
@@ -371,10 +371,10 @@ public class NotificationUtils {
         }
     }
 
-    private final static AtomicInteger c = new AtomicInteger(0);
+    private final static AtomicInteger ATOMIC_INTEGER = new AtomicInteger(0);
 
     public static int getID() {
-        return c.incrementAndGet();
+        return ATOMIC_INTEGER.incrementAndGet();
     }
 
     public static int notifyAPI(String title, String msg) {

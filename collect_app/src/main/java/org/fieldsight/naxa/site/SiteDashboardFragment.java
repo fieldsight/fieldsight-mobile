@@ -22,7 +22,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LiveData;
 
 import com.google.common.primitives.Longs;
 
@@ -568,7 +567,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void toForms() {
-        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.GENERAl, loadedSite);
+        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.GENERAL, loadedSite);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION);

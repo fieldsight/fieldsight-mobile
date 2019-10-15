@@ -36,7 +36,7 @@ import static org.fieldsight.naxa.common.Constant.NotificationType.FORM_FLAG;
 public class FieldSightFirebaseMessagingService extends FirebaseMessagingService {
 
 
-    private final static AtomicInteger notificationId = new AtomicInteger(0);
+    private final static AtomicInteger NOTIFICATION_ID = new AtomicInteger(0);
 
     public static final String NEW_FORM = "New Form";
 
@@ -226,10 +226,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
         if (notificationData.containsKey("form_type")) {
             formType = notificationData.get("form_type");
         }
-        if (notificationData.containsKey("form")) {
-            String form = notificationData.get("form");
-        }
-
         if (notificationData.containsKey("is_deployed")) {
             isDeployed = notificationData.get("is_deployed");
         }
@@ -260,7 +256,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
 
     public static int getID() {
-        return notificationId.incrementAndGet();
+        return NOTIFICATION_ID.incrementAndGet();
     }
 
 

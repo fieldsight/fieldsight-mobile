@@ -8,22 +8,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.fieldsight.naxa.previoussubmission.LastSubmissionLocalSource;
 import org.fieldsight.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.fieldsight.naxa.previoussubmission.model.SubmissionDetail;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.ObservableTransformer;
-
 import io.reactivex.SingleObserver;
-import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
@@ -240,23 +237,8 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
     }
 
-    private <T> ObservableTransformer applySchedulers() {
-        return observable -> observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    private <T> SingleTransformer applySchedulersSingle() {
-        return observable -> observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-
     public LiveData<List<GeneralForm>> getById(String fsFormId) {
         return dao.getById(fsFormId);
-    }
-
-    public void updateLastSubmission(SubmissionDetail formResponse) {
-
     }
 
 

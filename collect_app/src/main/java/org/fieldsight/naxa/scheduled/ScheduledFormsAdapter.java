@@ -76,7 +76,6 @@ public class ScheduledFormsAdapter extends
         String submittedBy = "";
         String submissionStatus = "";
         String scheduleType = "";
-        String formCreatedAt = "";
         Context context = viewHolder.cardView.getContext();
 
 

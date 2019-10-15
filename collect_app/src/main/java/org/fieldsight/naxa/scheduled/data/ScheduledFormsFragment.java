@@ -112,7 +112,6 @@ public class ScheduledFormsFragment extends BaseFormListFragment implements OnFo
 
     private void setupListAdapter() {
 
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         scheduledFormsAdapter = new ScheduledFormsAdapter(new ArrayList<>(0), this);

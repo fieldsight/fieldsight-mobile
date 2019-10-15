@@ -1,7 +1,6 @@
 package org.fieldsight.naxa.site;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -66,7 +65,6 @@ import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.login.model.User;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.profile.UserActivity;
-
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.v3.network.SyncActivity;
@@ -122,7 +120,6 @@ public class ProjectDashboardActivity extends BaseActivity {
 
     @SafeVarargs
     public static void start(Activity context, Project project, Pair<View, String>... pairs) {
-        ActivityOptions activityOptions = null;
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
         context.startActivity(intent);

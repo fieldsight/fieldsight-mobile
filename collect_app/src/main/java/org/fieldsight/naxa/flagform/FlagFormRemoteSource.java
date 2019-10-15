@@ -74,12 +74,10 @@ public class FlagFormRemoteSource {
 
     private Single<String> getKOBOForm(FieldSightNotification notificationFormDetail) {
 
-        String fsFormId = notificationFormDetail.getFsFormId();
-        String siteId = notificationFormDetail.getSiteId();
         String formName = notificationFormDetail.getFormName();
         String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
         String jrFormId = "";
-        return getODKForm(fsFormId, siteId, formName, fsFormSubmissionId, jrFormId);
+        return getODKForm( formName, fsFormSubmissionId, jrFormId);
     }
 
 
@@ -103,7 +101,7 @@ public class FlagFormRemoteSource {
 
     }
 
-    private Single<String> getODKForm(String fsFormId, String siteId, String formName, String fsFormSubmissionId, String jrFormId) {
+    private Single<String> getODKForm(String formName, String fsFormSubmissionId, String jrFormId) {
 
 
         return Single.create(emitter -> {

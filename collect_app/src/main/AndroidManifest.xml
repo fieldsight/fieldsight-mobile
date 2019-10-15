@@ -121,7 +121,7 @@
         <activity android:name="org.fieldsight.naxa.educational.EducationalMaterialActivity" />
         <activity android:name="org.fieldsight.naxa.project.AppUpdateActivity" />
         <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewTextTitleDetailsActivity" />
-        <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewImageDetailsActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EduMatImageDetailsActivity" />
         <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewVideoDetailsActivity" />
         <activity android:name="org.fieldsight.naxa.FSInstanceUploaderListActivity" />
         <activity android:name="org.fieldsight.naxa.FSInstanceChooserList" />

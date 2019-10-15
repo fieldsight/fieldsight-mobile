@@ -300,7 +300,6 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
                 emitter.onComplete();
             } catch (Exception ex) {
-                ex.printStackTrace();
                 emitter.onError(ex);
             }
 

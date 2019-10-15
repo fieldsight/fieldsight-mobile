@@ -42,13 +42,12 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView listFormHistory;
     private PaginationAdapter adapter;
-    private TextView tvNoData;
 
     ProgressBar progressBar;
 
-    private boolean isLoading = false;
+    private boolean isLoading ;
 
-    private boolean isLastPage = false;
+    private boolean isLastPage ;
 
     private String urlFirstPage;
     private String urlNextPage;

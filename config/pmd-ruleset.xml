@@ -28,97 +28,99 @@
         <exclude name="PreserveStackTrace" />
         <exclude name="SwitchStmtsShouldHaveDefault" />
         <exclude name="UseVarargs" />
+        <exclude name="UseCollectionIsEmpty" />
+        <exclude name="OneDeclarationPerLine" />
     </rule>
 
-    <rule ref="category/java/codestyle.xml">
-        <exclude name="AtLeastOneConstructor" />
-        <exclude name="AvoidFinalLocalVariable" />
-        <exclude name="AvoidPrefixingMethodParameters" />
-        <exclude name="AvoidProtectedMethodInFinalClassNotExtending" />
-        <exclude name="CallSuperInConstructor" />
-        <exclude name="ClassNamingConventions" />
-        <exclude name="CommentDefaultAccessModifier" />
-        <exclude name="ConfusingTernary" />
-        <exclude name="DefaultPackage" />
-        <exclude name="FieldDeclarationsShouldBeAtStartOfClass" />
-        <exclude name="LongVariable" />
-        <exclude name="LocalVariableCouldBeFinal" />
-        <exclude name="MIsLeadingVariableName" />
-        <exclude name="MethodArgumentCouldBeFinal" />
-        <exclude name="MethodNamingConventions" />
-        <exclude name="OnlyOneReturn" />
-        <exclude name="PrematureDeclaration" />
-        <exclude name="ShortClassName" />
-        <exclude name="ShortMethodName" />
-        <exclude name="ShortVariable" />
-        <exclude name="TooManyStaticImports" />
-        <exclude name="UselessParentheses" />               <!-- Decided not to use in #1519 -->
-    </rule>
+<!--    <rule ref="category/java/codestyle.xml">-->
+<!--        <exclude name="AtLeastOneConstructor" />-->
+<!--        <exclude name="AvoidFinalLocalVariable" />-->
+<!--        <exclude name="AvoidPrefixingMethodParameters" />-->
+<!--        <exclude name="AvoidProtectedMethodInFinalClassNotExtending" />-->
+<!--        <exclude name="CallSuperInConstructor" />-->
+<!--        <exclude name="ClassNamingConventions" />-->
+<!--        <exclude name="CommentDefaultAccessModifier" />-->
+<!--        <exclude name="ConfusingTernary" />-->
+<!--        <exclude name="DefaultPackage" />-->
+<!--        <exclude name="FieldDeclarationsShouldBeAtStartOfClass" />-->
+<!--        <exclude name="LongVariable" />-->
+<!--        <exclude name="LocalVariableCouldBeFinal" />-->
+<!--        <exclude name="MIsLeadingVariableName" />-->
+<!--        <exclude name="MethodArgumentCouldBeFinal" />-->
+<!--        <exclude name="MethodNamingConventions" />-->
+<!--        <exclude name="OnlyOneReturn" />-->
+<!--        <exclude name="PrematureDeclaration" />-->
+<!--        <exclude name="ShortClassName" />-->
+<!--        <exclude name="ShortMethodName" />-->
+<!--        <exclude name="ShortVariable" />-->
+<!--        <exclude name="TooManyStaticImports" />-->
+<!--        <exclude name="UselessParentheses" />               &lt;!&ndash; Decided not to use in #1519 &ndash;&gt;-->
+<!--    </rule>-->
 
-    <rule ref="category/java/design.xml">
-        <exclude name="AvoidCatchingGenericException" />
-        <exclude name="AvoidDeeplyNestedIfStmts" />
-        <exclude name="AvoidThrowingRawExceptionTypes" />
-        <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal" />
-        <exclude name="CollapsibleIfStatements" />
-        <exclude name="CyclomaticComplexity" />
-        <exclude name="DataClass" />
-        <exclude name="ExceptionAsFlowControl" />
-        <exclude name="ExcessiveImports" />
-        <exclude name="ExcessiveMethodLength" />
-        <exclude name="ExcessivePublicCount" />
-        <exclude name="ExcessiveClassLength" />
-        <exclude name="GodClass" />
-        <exclude name="LawOfDemeter" />
-        <exclude name="LoosePackageCoupling" />
-        <exclude name="NcssCount" />
-        <exclude name="NPathComplexity" />
-        <exclude name="SignatureDeclareThrowsException" />
-        <exclude name="SimplifyConditional" />
-        <exclude name="SwitchDensity" />
-        <exclude name="TooManyFields" />
-        <exclude name="TooManyMethods" />
-        <exclude name="UseObjectForClearerAPI" />
-    </rule>
+<!--    <rule ref="category/java/design.xml">-->
+<!--        <exclude name="AvoidCatchingGenericException" />-->
+<!--        <exclude name="AvoidDeeplyNestedIfStmts" />-->
+<!--        <exclude name="AvoidThrowingRawExceptionTypes" />-->
+<!--        <exclude name="ClassWithOnlyPrivateConstructorsShouldBeFinal" />-->
+<!--        <exclude name="CollapsibleIfStatements" />-->
+<!--        <exclude name="CyclomaticComplexity" />-->
+<!--        <exclude name="DataClass" />-->
+<!--        <exclude name="ExceptionAsFlowControl" />-->
+<!--        <exclude name="ExcessiveImports" />-->
+<!--        <exclude name="ExcessiveMethodLength" />-->
+<!--        <exclude name="ExcessivePublicCount" />-->
+<!--        <exclude name="ExcessiveClassLength" />-->
+<!--        <exclude name="GodClass" />-->
+<!--        <exclude name="LawOfDemeter" />-->
+<!--        <exclude name="LoosePackageCoupling" />-->
+<!--        <exclude name="NcssCount" />-->
+<!--        <exclude name="NPathComplexity" />-->
+<!--        <exclude name="SignatureDeclareThrowsException" />-->
+<!--        <exclude name="SimplifyConditional" />-->
+<!--        <exclude name="SwitchDensity" />-->
+<!--        <exclude name="TooManyFields" />-->
+<!--        <exclude name="TooManyMethods" />-->
+<!--        <exclude name="UseObjectForClearerAPI" />-->
+<!--    </rule>-->
 
-    <rule ref="category/java/documentation.xml">
-        <exclude name="CommentSize" />
-        <exclude name="CommentRequired" />
-        <exclude name="UncommentedEmptyConstructor" />
-        <exclude name="UncommentedEmptyMethodBody" />
-    </rule>
+<!--    <rule ref="category/java/documentation.xml">-->
+<!--        <exclude name="CommentSize" />-->
+<!--        <exclude name="CommentRequired" />-->
+<!--        <exclude name="UncommentedEmptyConstructor" />-->
+<!--        <exclude name="UncommentedEmptyMethodBody" />-->
+<!--    </rule>-->
 
-    <rule ref="category/java/errorprone.xml">
-        <exclude name="AssignmentInOperand" />
-        <exclude name="AssignmentToNonFinalStatic" />
-        <exclude name="AvoidBranchingStatementAsLastInLoop" />
-        <exclude name="AvoidCatchingNPE" />
-        <exclude name="AvoidCatchingThrowable" />
-        <exclude name="AvoidDuplicateLiterals" />
-        <exclude name="AvoidFieldNameMatchingMethodName" />
-        <exclude name="AvoidFieldNameMatchingTypeName" />
-        <exclude name="AvoidInstanceofChecksInCatchClause" />
-        <exclude name="AvoidLiteralsInIfCondition" />
-        <exclude name="BeanMembersShouldSerialize" />
-        <exclude name="CompareObjectsWithEquals" />
-        <exclude name="ConstructorCallsOverridableMethod" />
-        <exclude name="DataflowAnomalyAnalysis" />
-        <exclude name="EmptyCatchBlock" />
-        <exclude name="EmptyIfStmt" />
-        <exclude name="EmptyWhileStmt" />
-        <exclude name="JUnitSpelling" />
-        <exclude name="MissingBreakInSwitch" />
-        <exclude name="MissingSerialVersionUID" />
-        <exclude name="NullAssignment" />
-        <exclude name="TestClassWithoutTestCases" />
-        <exclude name="UnnecessaryBooleanAssertion" />
-    </rule>
+<!--    <rule ref="category/java/errorprone.xml">-->
+<!--        <exclude name="AssignmentInOperand" />-->
+<!--        <exclude name="AssignmentToNonFinalStatic" />-->
+<!--        <exclude name="AvoidBranchingStatementAsLastInLoop" />-->
+<!--        <exclude name="AvoidCatchingNPE" />-->
+<!--        <exclude name="AvoidCatchingThrowable" />-->
+<!--        <exclude name="AvoidDuplicateLiterals" />-->
+<!--        <exclude name="AvoidFieldNameMatchingMethodName" />-->
+<!--        <exclude name="AvoidFieldNameMatchingTypeName" />-->
+<!--        <exclude name="AvoidInstanceofChecksInCatchClause" />-->
+<!--        <exclude name="AvoidLiteralsInIfCondition" />-->
+<!--        <exclude name="BeanMembersShouldSerialize" />-->
+<!--        <exclude name="CompareObjectsWithEquals" />-->
+<!--        <exclude name="ConstructorCallsOverridableMethod" />-->
+<!--        <exclude name="DataflowAnomalyAnalysis" />-->
+<!--        <exclude name="EmptyCatchBlock" />-->
+<!--        <exclude name="EmptyIfStmt" />-->
+<!--        <exclude name="EmptyWhileStmt" />-->
+<!--        <exclude name="JUnitSpelling" />-->
+<!--        <exclude name="MissingBreakInSwitch" />-->
+<!--        <exclude name="MissingSerialVersionUID" />-->
+<!--        <exclude name="NullAssignment" />-->
+<!--        <exclude name="TestClassWithoutTestCases" />-->
+<!--        <exclude name="UnnecessaryBooleanAssertion" />-->
+<!--    </rule>-->
 
-    <rule ref="category/java/multithreading.xml">
-        <exclude name="AvoidSynchronizedAtMethodLevel" />
-        <exclude name="DoNotUseThreads" />
-        <exclude name="UseConcurrentHashMap" />
-    </rule>
+<!--    <rule ref="category/java/multithreading.xml">-->
+<!--        <exclude name="AvoidSynchronizedAtMethodLevel" />-->
+<!--        <exclude name="DoNotUseThreads" />-->
+<!--        <exclude name="UseConcurrentHashMap" />-->
+<!--    </rule>-->
 
     <rule ref="category/java/performance.xml">
         <exclude name="AvoidFileStream" />

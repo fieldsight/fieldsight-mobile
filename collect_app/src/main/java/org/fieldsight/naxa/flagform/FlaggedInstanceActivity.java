@@ -11,11 +11,6 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,13 +20,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.commons.io.FilenameUtils;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.listeners.DownloadFormsTaskListener;
-import org.odk.collect.android.logic.FormDetails;
-import org.odk.collect.android.provider.FormsProviderAPI;
-import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.fieldsight.naxa.BaseActivity;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
@@ -41,6 +35,7 @@ import org.fieldsight.naxa.common.exception.InstanceAttachmentDownloadFailedExce
 import org.fieldsight.naxa.common.exception.InstanceDownloadFailedException;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.data.FieldSightNotification;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ApiInterface;
 import org.fieldsight.naxa.network.ServiceGenerator;
@@ -49,8 +44,12 @@ import org.fieldsight.naxa.notificationslist.NotificationImage;
 import org.fieldsight.naxa.notificationslist.NotificationImageAdapter;
 import org.fieldsight.naxa.site.FragmentHostActivity;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
-import org.fieldsight.naxa.helpers.FSInstancesDao;
+import org.odk.collect.android.listeners.DownloadFormsTaskListener;
+import org.odk.collect.android.logic.FormDetails;
+import org.odk.collect.android.provider.FormsProviderAPI;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -136,9 +135,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     }
 
     private void setupSiteCard(FieldSightNotification loadedFieldSightNotification) {
-        String siteName = loadedFieldSightNotification.getSiteName();
-        String siteIdentifier = loadedFieldSightNotification.getSiteIdentifier();
-
         SiteLocalSource.getInstance().getBySiteId(loadedFieldSightNotification.getSiteId())
                 .observe(this, site -> {
                     if (site == null) {
@@ -248,7 +244,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         String[] projection = new String[]{FormsProviderAPI.FormsColumns._ID, FormsProviderAPI.FormsColumns.FORM_FILE_PATH};
         String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
         String[] selectionArgs = new String[]{jrFormId};
-        String sortOrder = FormsProviderAPI.FormsColumns.JR_VERSION + " DESC LIMIT 1";
 
         Cursor cursor = getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI,
                 projection,
@@ -262,42 +257,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         return formId;
     }
 
-    private void openNewForm(String jsFormId) {
-        toast("No, saved form found.");
-        Cursor cursorForm = context.getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI, null,
-                FormsProviderAPI.FormsColumns.JR_FORM_ID + " =?",
-                new String[]{jsFormId}, null);
-
-
-        if (cursorForm != null && cursorForm.getCount() != 1) {
-            //bad data
-            //fix the error later
-            Toast.makeText(context, R.string.msg_form_not_present, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        cursorForm.moveToFirst();
-        long idFormsTable = Long.parseLong(cursorForm.getString(cursorForm.getColumnIndex(FormsProviderAPI.FormsColumns._ID)));
-        Timber.d("Opening new form with _ID%s", idFormsTable);
-
-        Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, idFormsTable);
-
-        String action = getIntent().getAction();
-
-        if (Intent.ACTION_PICK.equals(action)) {
-            // caller is waiting on a picked form
-            setResult(RESULT_OK, new Intent().setData(formUri));
-        } else {
-            // caller wants to view/edit a form, so launch formentryactivity
-
-            Intent toFormEntry = new Intent(Intent.ACTION_EDIT, formUri);
-            toFormEntry.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivity(toFormEntry);
-
-        }
-
-        cursorForm.close();
-    }
 
     protected void fillODKForm(String idString) {
         try {
@@ -623,46 +582,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     }
 
-    private String createInstanceFolder(FieldSightNotification notification) {
-        return null;
-    }
-
-    @Nullable
-    private String getFilePathFromUri(Uri instanceUri) {
-
-        String instanceFolderPath = null;
-        String uriMimeType = null;
-
-        if (instanceUri != null) {
-            uriMimeType = getContentResolver().getType(instanceUri);
-        }
-
-        if (uriMimeType != null
-                && uriMimeType.equals(InstanceProviderAPI.InstanceColumns.CONTENT_ITEM_TYPE)) {
-            Cursor instance = null;
-            try {
-                instance = getContentResolver().query(instanceUri,
-                        null, null, null, null);
-                if (instance != null && instance.getCount() == 1) {
-                    instance.moveToFirst();
-                    instanceFolderPath = instance
-                            .getString(instance
-                                    .getColumnIndex(InstanceProviderAPI.InstanceColumns.INSTANCE_FILE_PATH));
-                    String fileName = FilenameUtils.getName(instanceFolderPath);
-                    instanceFolderPath = instanceFolderPath.replace(fileName, "");
-                }
-            } finally {
-                if (instance != null) {
-                    instance.close();
-                }
-            }
-        }
-
-
-        return instanceFolderPath;
-    }
-
-
     private void showErrorDialog(String errorMessage) {
         runOnUiThread(new Runnable() {
             @Override
@@ -760,43 +679,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
             }
         }
     }
-
-    /**
-     * find the form primary key then open the saved instance of that form (if present)
-     * other wise open the form blank
-     */
-    private void handleFlagForm(String fsFormId, String jrFormId, String siteId) {
-
-        Uri uri = InstanceProviderAPI.InstanceColumns.CONTENT_URI;
-        String selection = InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + " LIKE ?"
-                + " AND " + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " =? ";
-        String[] selectionArgs = new String[]{"%/" + fsFormId + "/%", siteId};
-
-        Cursor cursorInstanceForm = null;
-        try {
-            cursorInstanceForm = context.getContentResolver()
-                    .query(uri, null,
-                            selection,
-                            selectionArgs, null);
-
-            Timber.i("Found %s INSTANCES", cursorInstanceForm.getCount());
-            int count = cursorInstanceForm.getCount();
-            if (count >= 1) {
-                //todo atm opens the latest saved need to compare timestamp with server submission to open exact instance
-                openSavedForm(cursorInstanceForm);
-            } else {
-                fillODKForm(jrFormId);
-            }
-        } catch (NullPointerException | CursorIndexOutOfBoundsException e) {
-            ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
-        } finally {
-            if (cursorInstanceForm != null) {
-                cursorInstanceForm.close();
-            }
-        }
-
-    }
-
 
     private void openSavedForm(Cursor cursorInstanceForm) {
 

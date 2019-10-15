@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.primitives.Longs;
-import com.google.gson.reflect.TypeToken;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
@@ -41,7 +40,6 @@ import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.project.TermsLabels;
-import org.fieldsight.naxa.site.data.SiteRegion;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.v3.network.Region;
@@ -53,7 +51,6 @@ import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ThemeUtils;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +77,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private Unbinder unbinder;
     private SiteListAdapter siteListAdapter;
     private LiveData<List<Site>> allSitesLiveData;
-    private LiveData<List<Site>> offlineSitesLiveData;
     private BottomSheetDialog bottomSheetDialog;
 
     private ActionMode actionMode;
@@ -181,36 +177,15 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
 
-    private void assignFilterToList(FilterOption.FilterType type) {
-        LiveData<List<Site>> source;
-
-        switch (type) {
-            case OFFLINE_SITES:
-                source = offlineSitesLiveData;
-                break;
-            case ALL_SITES:
-            default:
-                source = allSitesLiveData;
-                break;
-        }
-        source.observe(this, sites -> {
-            siteListAdapter.updateList(sites);
-        });
-
-    }
-
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
-        String site = "", selectedRegion = "0", regionLabel = "";
+        String selectedRegion = "0";
 
         for (FilterOption filterOption : sortList) {
             switch (filterOption.getType()) {
-                case SITE:
-                    site = filterOption.getSelectionId();
-                    break;
                 case SELECTED_REGION:
                     selectedRegion = filterOption.getSelectionId();
-                    regionLabel = filterOption.getSelectionLabel();
+
                     break;
             }
         }
@@ -292,8 +267,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     public MutableLiveData<ArrayList<FilterOption>> getFilterOptionForSites() {
 
 
-        Type type = new TypeToken<ArrayList<SiteRegion>>() {
-        }.getType();
 
         List<Region> siteRegions;
         siteRegions = loadedProject.getRegionList();
@@ -347,11 +320,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     }
 
-    private FilterOption.FilterType getSelectedFilter() {
-
-        return FilterOption.FilterType.ALL_SITES;
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

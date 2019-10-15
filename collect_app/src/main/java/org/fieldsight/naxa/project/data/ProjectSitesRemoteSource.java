@@ -1,7 +1,7 @@
 package org.fieldsight.naxa.project.data;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseRemoteDataSource;
+import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.GSONInstance;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.common.event.DataSyncEvent;
@@ -16,11 +16,10 @@ import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.site.data.SiteRegion;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRepository;
-import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.sync.DownloadableItemLocalSource;
 import org.greenrobot.eventbus.EventBus;
+import org.odk.collect.android.application.Collect;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,65 +57,6 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     }
 
 
-    private Single<List<Object>> fetchProjectSites() {
-        return ServiceGenerator.getRxClient()
-                .create(ApiInterface.class)
-                .getUser()
-                .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> {
-                    if (meResponse.getData() == null || !meResponse.getData().getIsSupervisor()) {
-                        throw new BadUserException("You have not been assigned as a site supervisor.");
-                    }
-                    String user = GSONInstance.getInstance().toJson(meResponse.getData());
-                    SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
-
-                    return ServiceGenerator.getRxClient().create(ApiInterface.class).getAssignedSites();
-                }).flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
-                .map(mySites -> {
-                    siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
-                    return mySites.getProject();
-                })
-                .toList()
-                .map((Function<List<Project>, Set<Project>>) projects -> {
-                    ArrayList<Project> uniqueList = new ArrayList<>();
-                    ArrayList<String> projectIds = new ArrayList<>();
-                    for (Project project : projects) {
-                        if (!projectIds.contains(project.getId())) {
-                            projectIds.add(project.getId());
-                            uniqueList.add(project);
-                        }
-                    }
-
-                    return new HashSet<>(uniqueList);
-                })
-                .flattenAsObservable(new Function<Set<Project>, Iterable<Project>>() {
-                    @Override
-                    public Iterable<Project> apply(Set<Project> projects) throws Exception {
-                        return projects;
-                    }
-                })
-                .flatMap(new Function<Project, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(Project project) throws Exception {
-                        ProjectLocalSource.getInstance().save(project);
-                        Observable<Project> siteRegionObservable = ServiceGenerator.getRxClient().create(ApiInterface.class)
-                                .getRegionsByProjectId(project.getId())
-                                .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
-                                    @Override
-                                    public ObservableSource<Project> apply(List<SiteRegion> siteRegions) {
-                                        siteRegions.add(new SiteRegion("", "Unassigned ", ""));
-                                        String value = GSONInstance.getInstance().toJson(siteRegions);
-                                        ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
-                                        return Observable.just(project);
-                                    }
-                                });
-
-                        return Observable.concat(siteRegionObservable, Observable.just("demo"));
-                    }
-                })
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
 
 
     private Single<List<Object>> fetchProjectAndSites() {

@@ -95,10 +95,6 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
     }
 
 
-    private boolean isPasswordValid(String password) {
-        return password.length() > 4;
-    }
-
     @Override
     public void onError(String message) {
         loginView.showProgress(false);
