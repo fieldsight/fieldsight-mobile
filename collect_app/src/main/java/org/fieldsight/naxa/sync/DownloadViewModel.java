@@ -119,7 +119,7 @@ public class DownloadViewModel extends ViewModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         DownloadableItemLocalSource.getINSTANCE().markAsFailed(GENERAL_FORMS);
                         if (e instanceof RetrofitException) {
                             String message = e.getMessage();

@@ -173,7 +173,7 @@ public class FieldsightFormDetailsv3 {
             }
             fieldsightFormDetailsv3.setMetaAttributes(metaJSON.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
         return fieldsightFormDetailsv3;
     }
@@ -193,7 +193,7 @@ public class FieldsightFormDetailsv3 {
                 atJSON.put(prefix + "_regions", fromJSON.optJSONArray("regions"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 
@@ -233,7 +233,7 @@ public class FieldsightFormDetailsv3 {
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Timber.e(e);
             }
         }
         return fieldsightFormDetailsNewArrayList;

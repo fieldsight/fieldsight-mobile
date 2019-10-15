@@ -79,7 +79,7 @@ public class FieldSightFormDownloader extends FormDownloader {
             pair = Pair.create(fieldsightFormDetailsv3, message);
             Timber.d("form downloading starts for project = " + fieldsightFormDetailsv3.getSite_project_id() + " or " + fieldsightFormDetailsv3.getProject() + " for = " + fd.getFormName());
         } catch (TaskCancelledException e) {
-            e.printStackTrace();
+            Timber.e(e);
             pair = Pair.create(fieldsightFormDetailsv3, "Failed to create form download request");
         }
         return pair;
@@ -104,7 +104,7 @@ public class FieldSightFormDownloader extends FormDownloader {
             pair = Pair.create(fd, message.isEmpty() ?
                     Collect.getInstance().getString(R.string.success) : message);
         } catch (TaskCancelledException e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
 
         return pair;

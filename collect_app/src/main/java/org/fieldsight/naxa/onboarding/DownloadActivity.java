@@ -241,7 +241,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
                 });
 

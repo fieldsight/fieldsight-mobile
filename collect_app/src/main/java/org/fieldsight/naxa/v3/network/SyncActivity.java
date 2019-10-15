@@ -49,7 +49,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     Button downloadButton;
 
     @BindView(R.id.toolbar_message)
-    TextView toolbar_message;
+    TextView toolbarMessage;
 
     SyncAdapterv3 adapterv3;
     boolean auto = true;
@@ -88,14 +88,15 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
         Timber.i("SyncActivity, isSyncing = " + syncing);
         // clear the sync stat table if it is not syncing when opened
-        if(!syncing) {
+        if (!syncing) {
             SyncLocalSource3.getInstance().delete();
         }
 
         setTitle(String.format(Locale.getDefault(), "Projects (%d)", projectList.size()));
         /// create the map of the syncing
-        if (syncableMap == null)
+        if (syncableMap == null) {
             createSyncableList(projectList);
+        }
 
         adapterv3 = new SyncAdapterv3(auto, projectList, syncableMap);
         adapterv3.setAdapterCallback(this);
@@ -185,10 +186,11 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
                 .setPositiveButton("Yes", (dialog, which) -> {
                     syncableMap.remove(project.getId());
                     adapterv3.removeAndNotify(pos);
-                    if (adapterv3.getItemCount() > 0)
+                    if (adapterv3.getItemCount() > 0) {
                         setTitle("Projects (" + adapterv3.getItemCount() + ")");
-                    else
+                    } else {
                         setTitle("Projects");
+                    }
                 })
                 .setNegativeButton("Cancel", null)
                 .create()

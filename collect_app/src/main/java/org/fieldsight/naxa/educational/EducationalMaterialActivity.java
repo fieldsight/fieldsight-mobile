@@ -41,6 +41,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
@@ -270,7 +271,7 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         if (e instanceof EmptyResultSetException) {
                             ToastUtils.showLongToast("No education materials present for this form");
                         } else {

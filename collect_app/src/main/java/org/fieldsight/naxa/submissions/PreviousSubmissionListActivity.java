@@ -203,7 +203,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
                         ToastUtils.showLongToast(e.getMessage());
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
 
                     @Override
@@ -321,7 +321,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
                         ToastUtils.showLongToast(e.getMessage());
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
 
                     @Override

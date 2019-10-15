@@ -84,7 +84,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
                 handleSignInResult(task);
             } catch (Exception e) {
 
-                e.printStackTrace();
+                Timber.e(e);
             }
         }
 
@@ -98,7 +98,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
             Timber.d("handleSignInResult: suthCode " + authCode);
             updateUI(account);
         } catch (ApiException e) {
-            e.printStackTrace();
+            Timber.e(e);
             gmailLoginFailed(e.getMessage());
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             updateUI(null);

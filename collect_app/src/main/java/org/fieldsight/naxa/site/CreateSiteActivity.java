@@ -908,7 +908,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 }
             } catch (JSONException e) {
                 Timber.e(e);
-                e.printStackTrace();
+                Timber.e(e);
             }
         }
 

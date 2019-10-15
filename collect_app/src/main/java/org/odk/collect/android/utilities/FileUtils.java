@@ -78,19 +78,29 @@ public class FileUtils {
     public static final String AUTO_DELETE = "autoDelete";
     public static final String AUTO_SEND = "autoSend";
 
-    /** Suffix for the form media directory. */
+    /**
+     * Suffix for the form media directory.
+     */
     public static final String MEDIA_SUFFIX = "-media";
 
-    /** Filename of the last-saved instance data. */
+    /**
+     * Filename of the last-saved instance data.
+     */
     public static final String LAST_SAVED_FILENAME = "last-saved.xml";
 
-    /** Valid XML stub that can be parsed without error. */
+    /**
+     * Valid XML stub that can be parsed without error.
+     */
     private static final String STUB_XML = "<?xml version='1.0' ?><stub />";
 
-    /** True if we have checked whether /sdcard points to getExternalStorageDirectory(). */
+    /**
+     * True if we have checked whether /sdcard points to getExternalStorageDirectory().
+     */
     private static boolean isSdcardSymlinkChecked;
 
-    /** The result of checking whether /sdcard points to getExternalStorageDirectory(). */
+    /**
+     * The result of checking whether /sdcard points to getExternalStorageDirectory().
+     */
     private static boolean isSdcardSymlinkSameAsExternalStorageDirectory;
 
     static int bufSize = 16 * 1024; // May be set by unit test
@@ -547,11 +557,11 @@ public class FileUtils {
 
     /**
      * Grants read and write permissions to a content URI added to the specified intent.
-     *
+     * <p>
      * For Android > 4.4, the permissions expire when the receiving app's stack is finished. For
      * Android <= 4.4, the permissions are granted to all applications that can respond to the
      * intent.
-     *
+     * <p>
      * For true security, the permissions for Android <= 4.4 should be revoked manually but we don't
      * revoke them because we don't have many users on lower API levels and prior to targeting API
      * 24+, all apps always had access to the files anyway.
@@ -577,7 +587,7 @@ public class FileUtils {
 
     /**
      * Grants read permissions to a content URI added to the specified Intent.
-     *
+     * <p>
      * See {@link #grantFileReadPermissions(Intent, Uri, Context)} for details.
      */
     public static void grantFileReadPermissions(Intent intent, Uri uri, Context context) {
@@ -610,7 +620,9 @@ public class FileUtils {
     }
 
     private static boolean isSpace(String s) {
-        if (s == null) return true;
+        if (s == null) {
+            return true;
+        }
         for (int i = 0, len = s.length(); i < len; ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return false;
@@ -643,7 +655,6 @@ public class FileUtils {
         }
         return dir.delete();
     }
-
 
 
     /**
@@ -719,11 +730,17 @@ public class FileUtils {
                                           final File destFile,
                                           final OnReplaceListener listener,
                                           final boolean isMove) {
-        if (srcFile == null || destFile == null) return false;
+        if (srcFile == null || destFile == null){
+            return false;
+        }
         // srcFile equals destFile then return false
-        if (srcFile.equals(destFile)) return false;
+        if (srcFile.equals(destFile)) {
+            return false;
+        }
         // srcFile doesn't exist or isn't a file then return false
-        if (!srcFile.exists() || !srcFile.isFile()) return false;
+        if (!srcFile.exists() || !srcFile.isFile()){
+            return false;
+        }
         if (destFile.exists()) {
             if (listener == null || listener.onReplace()) {// require delete the old file
                 if (!destFile.delete()) {// unsuccessfully delete then return false
@@ -733,12 +750,14 @@ public class FileUtils {
                 return true;
             }
         }
-        if (!createOrExistsDir(destFile.getParentFile())) return false;
+        if (!createOrExistsDir(destFile.getParentFile())) {
+            return false;
+        }
         try {
             return writeFileFromIS(destFile, new FileInputStream(srcFile))
                     && !(isMove && !deleteFile(srcFile));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Timber.e(e);
             return false;
         }
     }
@@ -775,20 +794,20 @@ public class FileUtils {
             }
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
+            Timber.e(e);
             return false;
         } finally {
             try {
                 is.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Timber.e(e);
             }
             try {
                 if (os != null) {
                     os.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Timber.e(e);
             }
         }
     }
@@ -837,7 +856,9 @@ public class FileUtils {
         return true;
     }
 
-    /** Uses the /sdcard symlink to shorten a path, if it's valid to do so. */
+    /**
+     * Uses the /sdcard symlink to shorten a path, if it's valid to do so.
+     */
     @SuppressWarnings("PMD.DoNotHardCodeSDCard")
     public static File simplifyPath(File file) {
         // The symlink at /sdcard points to the same location as the storage
@@ -861,7 +882,9 @@ public class FileUtils {
     }
 
 
-    /** Checks whether /sdcard points to the same place as getExternalStorageDirectory(). */
+    /**
+     * Checks whether /sdcard points to the same place as getExternalStorageDirectory().
+     */
     @SuppressWarnings("PMD.DoNotHardCodeSDCard")
     @SuppressFBWarnings(
             value = "DMI_HARDCODED_ABSOLUTE_FILENAME",
@@ -892,12 +915,16 @@ public class FileUtils {
     }
 
 
-    /** Iterates over all directories and files under a root path. */
+    /**
+     * Iterates over all directories and files under a root path.
+     */
     public static Iterable<File> walk(File root) {
         return () -> new Walker(root, true);
     }
 
-    /** An iterator that walks over all the directories and files under a given path. */
+    /**
+     * An iterator that walks over all the directories and files under a given path.
+     */
     private static class Walker implements Iterator<File> {
         private final List<File> queue = new ArrayList<>();
         private final boolean depthFirst;
@@ -907,11 +934,13 @@ public class FileUtils {
             this.depthFirst = depthFirst;
         }
 
-        @Override public boolean hasNext() {
+        @Override
+        public boolean hasNext() {
             return !queue.isEmpty();
         }
 
-        @Override public File next() {
+        @Override
+        public File next() {
             if (queue.isEmpty()) {
                 throw new NoSuchElementException();
             }

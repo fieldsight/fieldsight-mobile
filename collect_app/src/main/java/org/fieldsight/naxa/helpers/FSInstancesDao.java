@@ -218,7 +218,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
                 url = generateSubmissionUrl(deployedFrom, siteId, fsFormId);
             }
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Timber.e(e);
             Timber.e("Failed to fix url");
         }
         return url;

@@ -139,7 +139,7 @@ public class FieldSightUserSession {
             try {
                 FirebaseInstanceId.getInstance().deleteInstanceId();
             } catch (Exception e) {
-                e.printStackTrace();
+                Timber.e(e);
             }
             return null;
         }
@@ -361,7 +361,7 @@ public class FieldSightUserSession {
                 }
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();//should never happen
+            Timber.e(e);//should never happen
         } finally {
             if (results != null) {
                 results.close();
@@ -387,7 +387,7 @@ public class FieldSightUserSession {
                 }
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();//should never happen
+            Timber.e(e);//should never happen
         } finally {
             if (results != null) {
                 results.close();

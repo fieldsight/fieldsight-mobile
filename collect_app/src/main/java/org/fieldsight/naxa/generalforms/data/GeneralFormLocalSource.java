@@ -116,7 +116,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
                                         @Override
                                         public void onError(Throwable e) {
-                                            e.printStackTrace();
+                                            Timber.e(e);
                                             generalFormMediator.removeSource(source);
                                         }
                                     });

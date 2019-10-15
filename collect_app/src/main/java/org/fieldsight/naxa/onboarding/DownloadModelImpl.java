@@ -92,7 +92,7 @@ public class DownloadModelImpl implements DownloadModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         SyncRepository.getInstance().setError(Constant.DownloadUID.GENERAL_FORMS);
                     }
                 });

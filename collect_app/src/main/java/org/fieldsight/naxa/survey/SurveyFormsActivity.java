@@ -173,7 +173,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
 
             }
         } catch (NullPointerException | NumberFormatException e) {
-            e.printStackTrace();
+            Timber.e(e);
             DialogFactory.createGenericErrorDialog(this, e.getMessage()).show();
             Timber.e("Failed to load xml form %s", e.getMessage());
         } catch (CursorIndexOutOfBoundsException e) {

@@ -190,7 +190,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         if (e instanceof EmptyResultSetException) {
                             ToastUtils.showLongToast("No education materials present for this form");
                         } else {

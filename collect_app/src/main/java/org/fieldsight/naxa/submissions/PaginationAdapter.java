@@ -18,6 +18,8 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 
 public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -114,7 +116,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             msg = "Cannot load date time";
         }
 

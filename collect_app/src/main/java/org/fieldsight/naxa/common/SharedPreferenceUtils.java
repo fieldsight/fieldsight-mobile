@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 
 import org.odk.collect.android.application.Collect;
 
+import timber.log.Timber;
+
 public class SharedPreferenceUtils {
 
     public static class PREF_KEY {
@@ -80,7 +82,7 @@ public class SharedPreferenceUtils {
         try {
             return sharedPrefs.getString(key, defaultValue);
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             return defaultValue;
         }
     }
@@ -91,7 +93,7 @@ public class SharedPreferenceUtils {
         try {
             return sharedPrefs.getBoolean(key, defaultValue);
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             return defaultValue;
         }
     }

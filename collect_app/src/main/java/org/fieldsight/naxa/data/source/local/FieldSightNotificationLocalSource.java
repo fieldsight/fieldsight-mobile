@@ -362,7 +362,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                     siteIdentifier = siteData.getString("identifier");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Timber.e(e);
 
             }
         }
@@ -377,7 +377,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                     projectId = siteData.getString("id");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Timber.e(e);
 
             }
         }

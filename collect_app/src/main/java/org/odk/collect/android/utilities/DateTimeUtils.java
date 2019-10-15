@@ -209,13 +209,15 @@ public class DateTimeUtils {
     }
 
     public static long tsToSec8601(String timestamp) {
-        if (timestamp == null) return 0;
+        if (timestamp == null) {
+            return 0;
+        }
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-            long epoch =  sdf.parse(timestamp).getTime();
+            long epoch = sdf.parse(timestamp).getTime();
             return ((epoch / 1000));
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             return 0;
         }
     }
@@ -225,7 +227,9 @@ public class DateTimeUtils {
 
         String relativeTime;
 
-        if(dateTime == null)return "";
+        if (dateTime == null) {
+            return "";
+        }
 
         try {
             SimpleDateFormat sdf;
@@ -244,12 +248,12 @@ public class DateTimeUtils {
             CharSequence ago =
                     DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
             relativeTime = ago.toString();
-            if("0 minutes ago".equals(relativeTime)){
+            if ("0 minutes ago".equals(relativeTime)) {
                 relativeTime = "just now";
             }
 
         } catch (ParseException e) {
-            e.printStackTrace();
+            Timber.e(e);
             relativeTime = dateTime;
         }
 
@@ -261,8 +265,9 @@ public class DateTimeUtils {
             Date date = new Date();
             date.setTime(time);
             return new SimpleDateFormat(format).format(date);
-        }catch (Exception e) {e.printStackTrace();
-            return time+"";
+        } catch (Exception e) {
+            Timber.e(e);
+            return time + "";
         }
     }
 

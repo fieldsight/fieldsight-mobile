@@ -37,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.observers.DisposableObserver;
+import timber.log.Timber;
 
 public class UserActivity extends CollectAbstractActivity {
 
@@ -315,7 +316,7 @@ public class UserActivity extends CollectAbstractActivity {
 
                             @Override
                             public void onError(Throwable e) {
-                                e.printStackTrace();
+                                Timber.e(e);
                                 userProfileViewModel.setProgressBar(false);
                                 userProfileViewModel.setSyncLiveData(false);
                                 mUser.setSync(false);

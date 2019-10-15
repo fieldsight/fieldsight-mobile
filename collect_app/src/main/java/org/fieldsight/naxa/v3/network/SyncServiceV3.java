@@ -162,8 +162,9 @@ public class SyncServiceV3 extends IntentService {
                             for (FieldsightFormDetailsv3 fieldsightFormDetailsv3 : educationMaterial) {
                                 String em = fieldsightFormDetailsv3.getEm();
                                 Timber.i("SyncServicev3, em = %s", em);
-                                if (TextUtils.isEmpty(em) || TextUtils.equals(em, "null"))
+                                if (TextUtils.isEmpty(em) || TextUtils.equals(em, "null")) {
                                     continue;
+                                }
 
                                 JSONObject jsonObject = new JSONObject(em);
                                 // add image
@@ -193,7 +194,7 @@ public class SyncServiceV3 extends IntentService {
                                     }
                                 }
                             }
-                            if(educationMaterialUrls.size() == 0) {
+                            if (educationMaterialUrls.size() == 0) {
                                 markAsCompleted(project.getId(), 2);
                             } else {
                                 markAsRunning(project.getId(), 2);
@@ -215,7 +216,7 @@ public class SyncServiceV3 extends IntentService {
                         public void accept(Object o) throws Exception {
                             Timber.i("SyncService: educationMaterials finalized = %s, currentWorkingIndex = %s, currentWorkingProject = %s", o.toString(), currentWorkingProjectIndex, projectidList.get(currentWorkingProjectIndex));
                             String projectId = projectidList.get(currentWorkingProjectIndex);
-                            if(eduMaterialsMap.containsKey(projectId)) {
+                            if (eduMaterialsMap.containsKey(projectId)) {
                                 eduMaterialsMap.put(projectId, eduMaterialsMap.get(projectId) - 1);
                                 if (eduMaterialsMap.get(projectId) <= 0) {
                                     markAsCompleted(projectId, 2);

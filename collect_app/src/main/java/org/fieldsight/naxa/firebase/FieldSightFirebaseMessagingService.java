@@ -196,7 +196,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     siteIdentifier = siteData.getString("identifier");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Timber.e(e);
 
             }
         }
@@ -211,7 +211,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     projectId = siteData.getString("id");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Timber.e(e);
 
             }
         }

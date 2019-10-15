@@ -159,7 +159,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
                 return TermsLabels.fromJSON(tlJson);
             } catch (Exception e) {
-                e.printStackTrace();
+                Timber.e(e);
                 return null;
             }
         } else {
@@ -511,7 +511,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         Timber.e(e);
                         String message;
                         if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {

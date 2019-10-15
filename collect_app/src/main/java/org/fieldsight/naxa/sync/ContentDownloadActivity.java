@@ -113,7 +113,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                     @Override
                     public void onError(Throwable e) {
                         Timber.e("Insert failed on sync table reason: %s", e.getMessage());
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
                 });
 
@@ -202,7 +202,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
             viewModel.downloadOneItem(outOfSyncId);
 
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
         adapter.setOnItemClickListener(this);
     }
@@ -326,7 +326,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                             @Override
                             public void onError(Throwable e) {
                                 Timber.e("Update failed on sync table reason: %s", e.getMessage());
-                                e.printStackTrace();
+                                Timber.e(e);
                             }
                         });
                 break;
@@ -366,7 +366,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                     @Override
                     public void onError(Throwable e) {
                         Timber.e("Select failed on sync table reason: %s", e.getMessage());
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
                 });
     }
@@ -451,7 +451,7 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
                     @Override
                     public void onError(Throwable e) {
                         Timber.e("Update failed on sync table reason: %s", e.getMessage());
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
                 })
         ;

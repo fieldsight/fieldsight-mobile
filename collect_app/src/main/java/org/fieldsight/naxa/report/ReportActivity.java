@@ -44,6 +44,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import timber.log.Timber;
 
 public class ReportActivity extends CollectAbstractActivity {
     @BindView(R.id.tv_device_id)
@@ -170,7 +171,7 @@ public class ReportActivity extends CollectAbstractActivity {
                                     hideProgressDialog();
                                 }
                             } catch (IOException | JSONException e) {
-                                e.printStackTrace();
+                                Timber.e(e);
                                 isSubmitting = false;
                                 hideProgressDialog();
                                 Toast.makeText(getApplicationContext(), "Unknown error in sending report, Please try again", Toast.LENGTH_SHORT).show();

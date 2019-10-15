@@ -81,9 +81,9 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
                 if (syncableMap.containsKey(syncStat.getProjectId())) {
                     List<Syncable> list = syncableMap.get(syncStat.getProjectId());
                     int syncType = Integer.parseInt(syncStat.getType());
-                    boolean isValidList = syncStat.getFailedUrl().contains("[") ;
+                    boolean isValidList = syncStat.getFailedUrl().contains("[");
 
-                    if(syncStat.isProgressBarEnabled()){
+                    if (syncStat.isProgressBarEnabled()) {
                         Syncable syncable = list.get(syncType);
                         syncable.setProgress(syncStat.getProgress());
                         syncable.setTotal(syncStat.getTotal());
@@ -117,15 +117,16 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
             int totalSynced = 0;
             int totalSize = 0;
             for (Syncable syncable : syncableList) {
-                if (!syncable.getSync())
+                if (!syncable.getSync()) {
                     continue;
+                }
                 if (syncable.getStatus() == Constant.DownloadStatus.COMPLETED) {
                     totalSynced++;
                 }
                 totalSize++;
             }
 
-            if(totalSize > 0) {
+            if (totalSize > 0) {
                 progressMap.put(key, totalSynced * 100 / totalSize);
             }
         }
@@ -148,8 +149,8 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
 
             @Override
             public void retryButtonClicked(Project project, String[] failedUrls) {
-                if(callback != null){
-                    callback.onRetryButtonClicked(project,failedUrls);
+                if (callback != null) {
+                    callback.onRetryButtonClicked(project, failedUrls);
                 }
             }
         };

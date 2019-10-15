@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import timber.log.Timber;
+
 public class ZipUtils {
     /*
      *
@@ -90,7 +92,7 @@ public class ZipUtils {
                 listener.onComplete();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             return false;
         }
         return true;

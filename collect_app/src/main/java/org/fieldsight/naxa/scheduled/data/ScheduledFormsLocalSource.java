@@ -25,6 +25,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
@@ -148,7 +149,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
 
                                         @Override
                                         public void onError(Throwable e) {
-                                            e.printStackTrace();
+                                            Timber.e(e);
                                             generalFormMediator.removeSource(source);
                                         }
                                     });
@@ -213,7 +214,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
 
                                         @Override
                                         public void onError(Throwable e) {
-                                            e.printStackTrace();
+                                            Timber.e(e);
                                             generalFormMediator.removeSource(source);
                                         }
                                     });
