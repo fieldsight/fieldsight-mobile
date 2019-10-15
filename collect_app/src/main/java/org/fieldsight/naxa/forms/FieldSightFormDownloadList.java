@@ -83,15 +83,15 @@ import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_M
 
 
 /**
- * Responsible for displaying, adding and deleting all the valid forms in the forms directory. One
+ * Responsible for displaying, adding and deleting all the valid FORMS in the FORMS directory. One
  * caveat. If the server requires authentication, a dialog will pop up asking when you request the
- * form list. If somehow you manage to wait long enough and then try to download selected forms and
+ * form list. If somehow you manage to wait long enough and then try to download selected FORMS and
  * your authorization has timed out, it won't again ask for authentication, it will just throw a
  * 401
  * and you'll have to hit 'refresh' where it will ask for credentials again. Technically a server
- * could point at other servers requiring authentication to download the forms, but the current
+ * could point at other servers requiring authentication to download the FORMS, but the current
  * implementation in Collect doesn't allow for that. Mostly this is just because it's a pain in the
- * butt to keep track of which forms we've downloaded and where we're needing to authenticate. I
+ * butt to keep track of which FORMS we've downloaded and where we're needing to authenticate. I
  * think we do something similar in the instanceuploader task/activity, so should change the
  * implementation eventually.
  *
@@ -602,7 +602,7 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
     }
 
     /**
-     * starts the task to download the selected forms, also shows progress dialog
+     * starts the task to download the selected FORMS, also shows progress dialog
      */
     private void downloadSelectedFiles() {
         ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
@@ -705,9 +705,9 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
     }
 
     /**
-     * Causes any local forms that have been updated on the server to become checked in the list.
+     * Causes any local FORMS that have been updated on the server to become checked in the list.
      * This is a prompt and a
-     * convenience to users to download the latest version of those forms from the server.
+     * convenience to users to download the latest version of those FORMS from the server.
      */
     private void selectSupersededForms() {
 
@@ -803,7 +803,7 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
             toggleButtonLabel(toggleButton, listView);
 
             if (isDownloadOnlyMode) {
-                //1. First check if all form IDS could be found on the server - Register forms that could not be found
+                //1. First check if all form IDS could be found on the server - Register FORMS that could not be found
 
                 for (String formId : formIdsToDownload) {
                     formResult.put(formId.trim(), false);
@@ -822,11 +822,11 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
                     }
                 }
 
-                //2. Select forms and start downloading
+                //2. Select FORMS and start downloading
                 if (!filesToDownload.isEmpty()) {
                     startFormsDownload(filesToDownload);
                 } else {
-                    // None of the forms was found
+                    // None of the FORMS was found
                     setReturnResult(false, "Forms not found on server", formResult);
                     finish();
                 }
@@ -890,7 +890,7 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
 
         createAlertDialog(getString(R.string.download_forms_result), getDownloadResultMessage(result), EXIT);
 
-        // Set result to true for forms which were downloaded
+        // Set result to true for FORMS which were downloaded
         if (isDownloadOnlyMode) {
             for (FormDetails formDetails : result.keySet()) {
                 String successKey = result.get(formDetails);

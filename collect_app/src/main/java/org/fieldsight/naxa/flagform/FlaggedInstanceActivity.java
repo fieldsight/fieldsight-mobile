@@ -780,7 +780,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                             selection,
                             selectionArgs, null);
 
-            Timber.i("Found %s instances", cursorInstanceForm.getCount());
+            Timber.i("Found %s INSTANCES", cursorInstanceForm.getCount());
             int count = cursorInstanceForm.getCount();
             if (count >= 1) {
                 //todo atm opens the latest saved need to compare timestamp with server submission to open exact instance

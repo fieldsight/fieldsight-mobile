@@ -184,7 +184,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                         }
 
                         if (formsToDownlaod == null || formsToDownlaod.isEmpty()) {
-                            broadcastDownloadError("No PROJECT id provided to download forms");
+                            broadcastDownloadError("No PROJECT id provided to download FORMS");
                         } else {
                             downloadFormList(getApplicationContext(), XMLFormDownloadService.this, XMLFormDownloadService.this, formsToDownlaod.get(0));
                             broadcastDownloadStarted();
@@ -257,7 +257,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
             downloadFormList(getApplicationContext(), this, this, formsToDownlaod.get(0));
             Log.d(TAG, " Forms downloading for site " + formsToDownlaod.get(0));
         } else {
-            Log.d(TAG, " All forms downloading complete ");
+            Log.d(TAG, " All FORMS downloading complete ");
             broadcastCompletedDownload();
         }
     }
@@ -362,7 +362,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
         totalCount = filesToDownload.size();
 
-        Log.d(TAG, "Total number of forms being downloaded: " + totalCount);
+        Log.d(TAG, "Total number of FORMS being downloaded: " + totalCount);
 
 
         if (totalCount > 0) {
@@ -376,10 +376,10 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
             //nullify the asyc task
             mDownloadFormListTask = null;
-            Log.e(TAG, " There are no forms to be downloaded ");
+            Log.e(TAG, " There are no FORMS to be downloaded ");
 
             //report an error to formsDownloadingComplete
-            FormDetails dummyForm = new FormDetails("There are no forms to be downloaded");
+            FormDetails dummyForm = new FormDetails("There are no FORMS to be downloaded");
             HashMap<FormDetails, String> dummyHash = new HashMap<>();
             dummyHash.put(dummyForm, "dlerrormessage");
             formsDownloadingComplete(dummyHash);

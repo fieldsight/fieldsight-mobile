@@ -285,10 +285,10 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         btnToggleFinalized = rootView.findViewById(R.id.site_option_btn_finalize_site);
         btnShowInfo = rootView.findViewById(R.id.site_option_frag_btn_info);
         btnShowInfo.setOnClickListener(this);
-        CardView cv_stageform = rootView.findViewById(R.id.cv_stageform);
+        CardView cvStageform = rootView.findViewById(R.id.cv_stageform);
 
         Timber.d("SitesdashboardFragment, isParentsite = %s", isParent);
-        cv_stageform.setVisibility(isParent ? View.GONE : View.VISIBLE);
+        cvStageform.setVisibility(isParent ? View.GONE : View.VISIBLE);
 
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);
@@ -487,7 +487,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                                 startActivityForResult(i, FSInstanceUploaderListActivity.INSTANCE_UPLOADER);
                             } else {
 
-                                SnackBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                                SnackBarUtils.showFlashbar(requireActivity(), "There are no FORMS to upload");
                                 SnackBarUtils.showFlashbar(requireActivity(), requireActivity().getString(R.string.msg_site_upload_sucess));
 
                                 requireActivity().onBackPressed();

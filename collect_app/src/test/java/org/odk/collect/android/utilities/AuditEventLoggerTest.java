@@ -63,7 +63,7 @@ import static org.odk.collect.android.logic.AuditEvent.AuditEventType.UNKNOWN_EV
 @RunWith(PowerMockRunner.class)
 public class AuditEventLoggerTest {
 
-    private final File testInstanceFile = new File("/storage/emulated/0/odk/instances/testForm/testForm.xml");
+    private final File testInstanceFile = new File("/storage/emulated/0/odk/INSTANCES/testForm/testForm.xml");
     // All values are set so location coordinates should be collected
     private final AuditConfig testAuditConfig = new AuditConfig("high-priority", "10", "60", false);
     // At least one value is not set so location coordinates shouldn't be collected

@@ -69,7 +69,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
                         projectList.get(i).setStatusMessage("Syncing PROJECT");
                     } else if(status == Constant.DownloadStatus.COMPLETED) {
                         projectList.get(i).setSynced(true);
-                        projectList.get(i).setSyncedDate(projecttuple.get(j).created_date);
+                        projectList.get(i).setSyncedDate(projecttuple.get(j).createdDate);
                         projectList.get(i).setStatusMessage("Synced On " + DateTimeUtils.getFormattedDate("yyyy-MM-dd, HH:mm", projectList.get(i).getSyncedDate()));
                     } else if(status == Constant.DownloadStatus.FAILED) {
                         projectList.get(i).setSynced(false);

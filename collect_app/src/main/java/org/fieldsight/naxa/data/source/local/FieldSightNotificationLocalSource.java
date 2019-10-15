@@ -77,7 +77,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     String deleteForm;
     String isDeployed, webDeployedId;
     String notificationDetailsUrl = "";
-    String isDeployedFromProject;//todo: this needs to be checked and removed coz we are using isDeployedFromSite in flag forms
+    String isDeployedFromProject;//todo: this needs to be checked and removed coz we are using isDeployedFromSite in flag FORMS
     boolean isDeployedFromSite;
     String siteIdentifier = null;
 

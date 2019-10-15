@@ -53,7 +53,7 @@ import timber.log.Timber;
 import static org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 
 /**
- * Background task for syncing form instances from the instances folder to the instances table.
+ * Background task for syncing form INSTANCES from the INSTANCES folder to the INSTANCES table.
  * Returns immediately if it detects an error.
  */
 public class InstanceSyncTask extends AsyncTask<Void, String, String> {

@@ -330,7 +330,7 @@ public class InstancesDao {
     }
 
     /**
-     * Returns all instances available through the cursor and closes the cursor.
+     * Returns all INSTANCES available through the cursor and closes the cursor.
      */
     public List<Instance> getInstancesFromCursor(Cursor cursor) {
         List<Instance> instances = new ArrayList<>();

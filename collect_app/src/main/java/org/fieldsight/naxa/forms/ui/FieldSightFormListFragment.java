@@ -27,7 +27,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         FieldSightFormListFragment fragment = new FieldSightFormListFragment();
         Bundle bundle = new Bundle();
 
-        //hacking way to load survey forms - Nishon
+        //hacking way to load survey FORMS - Nishon
         if (site == null) {
             site = new Site();
             site.setName(project.getName());

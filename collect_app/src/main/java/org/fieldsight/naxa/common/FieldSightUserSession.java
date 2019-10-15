@@ -230,7 +230,7 @@ public class FieldSightUserSession {
 
             @Override
             public void progressUpdate(int progress, int total) {
-                Timber.i("Deleting %s out of %s instances", progress, total);
+                Timber.i("Deleting %s out of %s INSTANCES", progress, total);
             }
         });
 

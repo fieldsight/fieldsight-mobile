@@ -98,7 +98,7 @@ public class SubStageListAdapter extends
         String submittedBy = "";
         String submissionStatus = "";
         String subStageDesc = "";
-        String formCreatedAt = "";
+
         Context context = viewHolder.cardView.getContext();
 
 

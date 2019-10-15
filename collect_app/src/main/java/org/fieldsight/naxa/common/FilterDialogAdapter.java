@@ -105,7 +105,9 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     ((ViewHolderSpinner) holder).spinnerSiteCluster.setSelection(filterOption.getOptions().size() - 1);
                     Pair intialIdLabelPair = (Pair) ((ViewHolderSpinner) holder).spinnerSiteCluster.getSelectedItem();
-                    if (intialIdLabelPair != null) filterOption.setSelection(intialIdLabelPair);
+                    if (intialIdLabelPair != null) {
+                        filterOption.setSelection(intialIdLabelPair);
+                    }
 
 
                     viewHolderSpinner.spinnerSiteCluster.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

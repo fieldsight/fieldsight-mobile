@@ -20,13 +20,13 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public final class InstanceProviderAPI {
-    public static final String AUTHORITY = "org.odk.collect.android.provider.instances";
+    public static final String AUTHORITY = "org.odk.collect.android.provider.INSTANCES";
 
     // This class cannot be instantiated
     private InstanceProviderAPI() {
     }
 
-    // status for instances
+    // status for INSTANCES
     public static final String STATUS_INCOMPLETE = "incomplete";
     public static final String STATUS_COMPLETE = "complete";
     public static final String STATUS_SUBMITTED = "submitted";
@@ -38,7 +38,7 @@ public final class InstanceProviderAPI {
         private InstanceColumns() {
         }
 
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/instances");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/INSTANCES");
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.bcss.instance";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.bcss.instance";
 

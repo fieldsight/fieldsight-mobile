@@ -340,8 +340,12 @@ public class ScheduleForm {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ScheduleForm that = (ScheduleForm) o;
         return Objects.equal(formResponse, that.formResponse) &&
                 Objects.equal(em, that.em) &&

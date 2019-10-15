@@ -42,7 +42,7 @@ public class InstancesDaoTest {
 
     private InstancesDao instancesDao;
 
-    // sample instances
+    // sample INSTANCES
     private Instance hypertensionScreeningInstance;
     private Instance cascadingSelectInstance;
     private Instance biggestNOfSetInstance;

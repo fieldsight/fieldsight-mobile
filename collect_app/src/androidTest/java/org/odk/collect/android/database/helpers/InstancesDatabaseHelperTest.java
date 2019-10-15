@@ -84,7 +84,7 @@ public class InstancesDatabaseHelperTest {
     }
 
     /**
-     * Gets a read-only reference to the instances database and then immediately releases it.
+     * Gets a read-only reference to the INSTANCES database and then immediately releases it.
      *
      * Without this, it appears that the migrations only get partially applied. It's not clear how
      * this is possible since calls to onDowngrade and onUpgrade are wrapped in transactions. See

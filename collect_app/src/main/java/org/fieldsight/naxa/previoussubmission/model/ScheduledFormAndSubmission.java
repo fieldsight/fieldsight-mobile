@@ -33,8 +33,12 @@ public class ScheduledFormAndSubmission {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return true;
+        }
         ScheduledFormAndSubmission that = (ScheduledFormAndSubmission) o;
         return Objects.equal(scheduleForm, that.scheduleForm) &&
                 Objects.equal(submissionDetail, that.submissionDetail);

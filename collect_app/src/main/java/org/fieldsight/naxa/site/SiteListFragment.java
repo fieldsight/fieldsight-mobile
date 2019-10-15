@@ -299,7 +299,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         siteRegions = loadedProject.getRegionList();
         MutableLiveData<ArrayList<FilterOption>> sortingOptionsMutableLive = new MutableLiveData<>();
 
-        if (siteRegions == null) siteRegions = new ArrayList<>(0);
+        if (siteRegions == null) {
+            siteRegions = new ArrayList<>(0);
+        }
         Observable.just(siteRegions)
                 .flatMapIterable(new Function<List<Region>, Iterable<Region>>() {
                     @Override
@@ -502,7 +504,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         }
 
                         if (uploadForms && instanceIDs.size() == 0) {
-                            SnackBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                            SnackBarUtils.showFlashbar(requireActivity(), "There are no FORMS to upload");
                         }
                     }
 

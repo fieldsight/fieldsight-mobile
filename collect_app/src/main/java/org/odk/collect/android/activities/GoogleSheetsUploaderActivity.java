@@ -13,7 +13,7 @@
  */
 
 /**
- * Activity to upload completed forms to gme.
+ * Activity to upload completed FORMS to gme.
  *
  * @author Carl Hartung (chartung@nafundi.com)
  */
@@ -116,11 +116,11 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
 
         // at this point, we don't expect this to be empty...
         if (instancesToSend.length == 0) {
-            Timber.e("onCreate: No instances to upload!");
+            Timber.e("onCreate: No INSTANCES to upload!");
             // drop through --
             // everything will process through OK
         } else {
-            Timber.i("onCreate: Beginning upload of %d instances!", instancesToSend.length);
+            Timber.i("onCreate: Beginning upload of %d INSTANCES!", instancesToSend.length);
         }
 
         getResultsFromApi();
@@ -283,7 +283,7 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
             // probably got an auth request, so ignore
             return;
         }
-        Timber.i("uploadingComplete: Processing results ( %d ) from upload of %d instances!",
+        Timber.i("uploadingComplete: Processing results ( %d ) from upload of %d INSTANCES!",
                 result.size(), instancesToSend.length);
 
         StringBuilder selection = new StringBuilder();

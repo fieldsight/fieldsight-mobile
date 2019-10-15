@@ -47,7 +47,7 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class FormNavigationTestCase {
 
-    private static final String FORMS_DIRECTORY = "/odk/forms/";
+    private static final String FORMS_DIRECTORY = "/odk/FORMS/";
 
     @Parameters(name = "{0}")
     public static Iterable<Object[]> data() {
@@ -135,7 +135,7 @@ public class FormNavigationTestCase {
     }
 
     /**
-     * FormLoaderTask loads forms from SD card so we need to put each form there
+     * FormLoaderTask loads FORMS from SD card so we need to put each form there
      */
     private void copyToSdCard(String formName) throws IOException {
         FormLoadingUtils.copyFormToSdCard(formName);

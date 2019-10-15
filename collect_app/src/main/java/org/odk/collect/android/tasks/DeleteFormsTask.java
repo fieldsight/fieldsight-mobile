@@ -24,7 +24,7 @@ import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import timber.log.Timber;
 
 /**
- * Task responsible for deleting selected forms.
+ * Task responsible for deleting selected FORMS.
  *
  * @author norman86@gmail.com
  * @author mitchellsundt@gmail.com

@@ -24,7 +24,7 @@ import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import timber.log.Timber;
 
 /**
- * Task responsible for deleting selected instances.
+ * Task responsible for deleting selected INSTANCES.
  *
  * @author norman86@gmail.com
  * @author mitchellsundt@gmail.com

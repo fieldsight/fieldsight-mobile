@@ -63,7 +63,7 @@ public class FormsDao {
                     + FormsProviderAPI.FormsColumns.JR_VERSION + "=?";
         }
 
-        // As long as we allow storing multiple forms with the same id and version number, choose
+        // As long as we allow storing multiple FORMS with the same id and version number, choose
         // the newest one
         String order = FormsProviderAPI.FormsColumns.DATE + " DESC";
 
@@ -191,7 +191,7 @@ public class FormsDao {
         }
         selection.append("? )");
 
-        //This will break if the number of forms to delete > SQLITE_MAX_VARIABLE_NUMBER (999)
+        //This will break if the number of FORMS to delete > SQLITE_MAX_VARIABLE_NUMBER (999)
         Collect.getInstance().getContentResolver().delete(FormsProviderAPI.FormsColumns.CONTENT_URI, selection.toString(), idsToDelete);
     }
 
@@ -229,7 +229,7 @@ public class FormsDao {
     }
 
     /**
-     * Returns all forms available through the cursor and closes the cursor.
+     * Returns all FORMS available through the cursor and closes the cursor.
      */
     public List<Form> getFormsFromCursor(Cursor cursor) {
         List<Form> forms = new ArrayList<>();
@@ -290,7 +290,7 @@ public class FormsDao {
         selectionArgs = new String[]{formId};
         selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
 
-        // As long as we allow storing multiple forms with the same id and version number, choose
+        // As long as we allow storing multiple FORMS with the same id and version number, choose
         // the newest one
         String order = FormsProviderAPI.FormsColumns.DATE + " DESC";
 

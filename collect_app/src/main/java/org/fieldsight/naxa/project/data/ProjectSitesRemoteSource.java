@@ -19,7 +19,6 @@ import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.site.db.SiteRepository;
 import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.sync.DownloadableItemLocalSource;
-import org.fieldsight.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
@@ -135,7 +134,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         String user = GSONInstance.getInstance().toJson(meResponse.getData());
                         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
 
-                        return getPageAndNext(APIEndpoint.GET_MY_SITES_v2);
+                        return getPageAndNext(APIEndpoint.GET_MY_SITES_V2);
 
                     }
                 })

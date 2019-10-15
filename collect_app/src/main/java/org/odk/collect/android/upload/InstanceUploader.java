@@ -113,7 +113,7 @@ public abstract class InstanceUploader {
     }
 
     /**
-     * Returns whether instances of the form specified should be auto-deleted after successful
+     * Returns whether INSTANCES of the form specified should be auto-deleted after successful
      * update.
      * <p>
      * If the form explicitly sets the auto-delete property, then it overrides the preference.

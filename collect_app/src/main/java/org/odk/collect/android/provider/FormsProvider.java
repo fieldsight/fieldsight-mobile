@@ -235,7 +235,7 @@ public class FormsProvider extends ContentProvider {
             }
         }
 
-        throw new SQLException("Failed to insert into the forms database.");
+        throw new SQLException("Failed to insert into the FORMS database.");
     }
 
     private void deleteFileOrDir(String fileName) {

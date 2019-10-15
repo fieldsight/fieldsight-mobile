@@ -67,7 +67,9 @@ public class UserProfileRepository {
 
     private RequestBody checkAndReturnStringBody(String value) {
         String tempValue = value;
-        if (tempValue == null) tempValue = "";
+        if (tempValue == null) {
+            tempValue = "";
+        }
         return RequestBody.create(MediaType.parse("text/plain"), tempValue);
     }
 

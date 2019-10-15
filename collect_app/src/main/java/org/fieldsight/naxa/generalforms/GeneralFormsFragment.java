@@ -143,7 +143,7 @@ public class GeneralFormsFragment extends BaseFormListFragment implements OnForm
         generalFormsAdapter = new GeneralFormsAdapter(new ArrayList<>(0), this);
 
         recyclerView.setEmptyView(emptyLayout,
-                getString(R.string.empty_message, "general forms"),
+                getString(R.string.empty_message, "general FORMS"),
                 () -> {
 
                 });

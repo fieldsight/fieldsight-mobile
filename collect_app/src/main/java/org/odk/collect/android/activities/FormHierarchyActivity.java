@@ -56,8 +56,8 @@ import timber.log.Timber;
  * - Questions each take up a row with their full label shown and their answers below
  * - Non-repeat groups are not represented at all
  * - Repeat groups are initially shown as a "header" which takes you to a "picker" when tapped,
- *   revealing instances of that repeat
- * - Repeat instances are displayed with their label and index (e.g. `My group (1)`)
+ *   revealing INSTANCES of that repeat
+ * - Repeat INSTANCES are displayed with their label and index (e.g. `My group (1)`)
  *
  * Tapping on a repeat instance shows all the questions in that repeat instance using the display
  * rules above.
@@ -91,7 +91,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 
     /**
      * If this index is non-null, we will render an intermediary "picker" view
-     * showing the instances of the given repeat group.
+     * showing the INSTANCES of the given repeat group.
      */
     private FormIndex repeatGroupPickerIndex;
     private static final String REPEAT_GROUP_PICKER_INDEX_KEY = "REPEAT_GROUP_PICKER_INDEX_KEY";
@@ -352,7 +352,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
         FormController formController = Collect.getInstance().getFormController();
 
         // If `repeatGroupPickerIndex` is set it means we're currently displaying
-        // a list of repeat instances. If we unset `repeatGroupPickerIndex`,
+        // a list of repeat INSTANCES. If we unset `repeatGroupPickerIndex`,
         // we will go back up to the previous screen.
         if (shouldShowRepeatGroupPicker()) {
             // Exit the picker.
@@ -581,7 +581,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 
                 switch (event) {
                     case FormEntryController.EVENT_QUESTION: {
-                        // Nothing but repeat group instances should show up in the picker.
+                        // Nothing but repeat group INSTANCES should show up in the picker.
                         if (shouldShowRepeatGroupPicker()) {
                             break;
                         }
@@ -598,7 +598,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                         if (!formController.isGroupRelevant()) {
                             break;
                         }
-                        // Nothing but repeat group instances should show up in the picker.
+                        // Nothing but repeat group INSTANCES should show up in the picker.
                         if (shouldShowRepeatGroupPicker()) {
                             break;
                         }
@@ -648,7 +648,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
                         }
 
                         if (shouldShowRepeatGroupPicker()) {
-                            // Don't render other groups' instances.
+                            // Don't render other groups' INSTANCES.
                             String repeatGroupPickerRef = getGroupRef(repeatGroupPickerIndex).toString(false);
                             if (!currentRef.toString(false).equals(repeatGroupPickerRef)) {
                                 break;
@@ -693,7 +693,7 @@ public class FormHierarchyActivity extends CollectAbstractActivity {
 
             formController.jumpToIndex(currentIndex);
 
-            // Prevent a redundant middle screen (common on many forms
+            // Prevent a redundant middle screen (common on many FORMS
             // that use presentation groups to display labels).
             if (isDisplayingSingleGroup() && !screenIndex.isBeginningOfFormIndex()) {
                 if (isGoingUp) {

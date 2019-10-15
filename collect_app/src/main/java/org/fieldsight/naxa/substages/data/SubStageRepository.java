@@ -18,11 +18,11 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
     private static SubStageRepository INSTANCE = null;
     private final SubStageLocalSource localSource;
 
-    public static SubStageRepository getInstance(SubStageLocalSource localSource, StageRemoteSource remoteSource) {
+    public static SubStageRepository getInstance(SubStageLocalSource localSource) {
         if (INSTANCE == null) {
             synchronized (SubStageRepository.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new SubStageRepository(localSource, remoteSource);
+                    INSTANCE = new SubStageRepository(localSource);
                 }
             }
         }
@@ -30,7 +30,7 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
     }
 
 
-    private SubStageRepository(@NonNull SubStageLocalSource localSource, @NonNull StageRemoteSource remoteSource) {
+    private SubStageRepository(@NonNull SubStageLocalSource localSource) {
         this.localSource = localSource;
 
     }

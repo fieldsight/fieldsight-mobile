@@ -65,7 +65,7 @@ public class ODKFormRemoteSource {
                             }
                         }
 
-                        Timber.i("%d forms failed to download",failedForms.size());
+                        Timber.i("%d FORMS failed to download",failedForms.size());
                         return failedForms;
                     }
                 });
@@ -117,7 +117,7 @@ public class ODKFormRemoteSource {
             FormDownloader formDownloader = new FormDownloader(false);
             HashMap<FormDetails, String> forms = formDownloader.downloadForms(formDetailsArrayList);
 
-            Timber.i("Downloaded %s forms from %s and %s",forms.size(),xmlForms.get(0).getDownloadUrl(),xmlForms.get(1).getDownloadUrl());
+            Timber.i("Downloaded %s FORMS from %s and %s",forms.size(),xmlForms.get(0).getDownloadUrl(),xmlForms.get(1).getDownloadUrl());
             return forms;
         });
     }

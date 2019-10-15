@@ -47,7 +47,7 @@ import timber.log.Timber;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
 /**
- * Responsible for displaying all the valid forms in the forms directory. Stores the path to
+ * Responsible for displaying all the valid FORMS in the FORMS directory. Stores the path to
  * selected form for use by {@link MainMenuActivity}.
  *
  * @author Yaw Anokwa (yanokwa@gmail.com)
@@ -91,7 +91,7 @@ public class FormChooserList extends FormListActivity implements
     private void init() {
         setupAdapter();
 
-        // DiskSyncTask checks the disk for any forms not already in the content provider
+        // DiskSyncTask checks the disk for any FORMS not already in the content provider
         // that is, put here by dragging and dropping onto the SDCard
         diskSyncTask = (DiskSyncTask) getLastCustomNonConfigurationInstance();
         if (diskSyncTask == null) {

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Background task for downloading a given list of forms. We assume right now that the forms are
+ * Background task for downloading a given list of FORMS. We assume right now that the FORMS are
  * coming from the same server that presented the form list, but theoretically that won't always be
  * true.
  *

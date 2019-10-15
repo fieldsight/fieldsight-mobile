@@ -25,12 +25,12 @@ public class StubOpenRosaHttpInterface implements OpenRosaHttpInterface {
     public HttpGetResult executeGetRequest(@NonNull URI uri, @Nullable String contentType, @Nullable HttpCredentialsInterface credentials) throws Exception {
 
         String xml =
-                "<forms>" +
+                "<FORMS>" +
                         "<form url=\"https://opendatakit.appspot.com/formXml?formId=CascadingSelect\">Cascading Select Form</form>" +
                         "<form url=\"https://opendatakit.appspot.com/formXml?formId=widgets\">Widgets</form>" +
                         "<form url=\"https://opendatakit.appspot.com/formXml?formId=NewWidgets\">New Widgets</form>" +
                         "<form url=\"https://opendatakit.appspot.com/formXml?formId=sample\">sample</form>" +
-                        "</forms>";
+                        "</FORMS>";
 
         InputStream is = new ByteArrayInputStream(xml.getBytes());
 

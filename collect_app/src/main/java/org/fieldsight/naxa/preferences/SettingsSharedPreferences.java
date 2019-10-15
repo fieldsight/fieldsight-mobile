@@ -68,7 +68,7 @@ public class SettingsSharedPreferences {
         Object value = null;
 
         try {
-            defaultValue = SettingsKeys.defaultvalues.get(key);
+            defaultValue = SettingsKeys.DEFAULTVALUES.get(key);
         } catch (Exception e) {
             Timber.e("Default for %s not found", key);
         }

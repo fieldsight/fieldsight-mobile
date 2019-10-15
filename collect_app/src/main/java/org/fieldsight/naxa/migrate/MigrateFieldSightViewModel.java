@@ -99,7 +99,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
         SQLiteDatabase db = getProjSiteDB();
 
         Cursor cursor = null;
-        cursor = selectAll(db, MigrationHelper.Table.my_site);
+        cursor = selectAll(db, MigrationHelper.Table.TABLE_MY_SITE_DETAIL);
 
         while (cursor.moveToNext()) {
 
@@ -154,7 +154,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
         SQLiteDatabase db = getInstancesDB();
         FSInstancesDao dao = new FSInstancesDao();
         Cursor cursor;
-        cursor = selectAll(db, MigrationHelper.Table.instances);
+        cursor = selectAll(db, MigrationHelper.Table.INSTANCES);
         while (cursor.moveToNext()) {
 
             String formDeployedFrom = getString(cursor, MigrationHelper.InstanceColumns.FS_FORM_DEPLOYED_FROM);
@@ -191,7 +191,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
         SQLiteDatabase db = getFormsDB();
         FormsDao dao = new FormsDao();
         Cursor cursor;
-        cursor = selectAll(db, MigrationHelper.Table.forms);
+        cursor = selectAll(db, MigrationHelper.Table.FORMS);
         while (cursor.moveToNext()) {
 
             String fixedFormFilePath = migrationHelper.fixFormAndInstancesPath(getString(cursor, MigrationHelper.FormColumns.FORM_FILE_PATH), usernameOrEmail);

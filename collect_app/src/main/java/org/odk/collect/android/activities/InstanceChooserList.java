@@ -48,7 +48,7 @@ import timber.log.Timber;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
 /**
- * Responsible for displaying all the valid instances in the instance directory.
+ * Responsible for displaying all the valid INSTANCES in the instance directory.
  *
  * @author Yaw Anokwa (yanokwa@gmail.com)
  * @author Carl Hartung (carlhartung@gmail.com)

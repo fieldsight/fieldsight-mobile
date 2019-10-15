@@ -260,7 +260,7 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
     }
 
     /**
-     * Write's the data to the sdcard, and updates the instances content provider.
+     * Write's the data to the sdcard, and updates the INSTANCES content provider.
      * In theory we don't have to write to disk, and this is where you'd add
      * other methods.
      */

@@ -121,7 +121,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged forms")
+        recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged FORMS")
                 , new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {

@@ -181,15 +181,15 @@ public class SyncRepository {
     public void init() {
         SyncableItem[] syncableItems = new SyncableItem[]{
                 new SyncableItem(Constant.DownloadUID.PROJECT_SITES, PENDING, null, "Project and sites", "Downloads your assigned PROJECT and sites"),
-                new SyncableItem(Constant.DownloadUID.ALL_FORMS, PENDING, null, "Forms", "Downloads all forms for assigned sites"),
-//                new SyncableItem(Constant.DownloadUID.ODK_FORMS, PENDING, null, "ODK forms", "Downloads odk forms for your sites"),
-//                new SyncableItem(Constant.DownloadUID.GENERAL_FORMS, PENDING, null, "General forms", "Downloads general forms for your sites"),
-//                new SyncableItem(Constant.DownloadUID.STAGED_FORMS, PENDING, null, "Staged forms", "Downloads scheduled forms for your sites"),
-//                new SyncableItem(Constant.DownloadUID.SCHEDULED_FORMS, PENDING, null, "Scheduled forms", "Download scheduled forms for your sites"),
-                new SyncableItem(Constant.DownloadUID.SITE_TYPES, PENDING, null, "Site type(s)", "Download site types to filter staged forms"),
+                new SyncableItem(Constant.DownloadUID.ALL_FORMS, PENDING, null, "Forms", "Downloads all FORMS for assigned sites"),
+//                new SyncableItem(Constant.DownloadUID.ODK_FORMS, PENDING, null, "ODK FORMS", "Downloads odk FORMS for your sites"),
+//                new SyncableItem(Constant.DownloadUID.GENERAL_FORMS, PENDING, null, "General FORMS", "Downloads general FORMS for your sites"),
+//                new SyncableItem(Constant.DownloadUID.STAGED_FORMS, PENDING, null, "Staged FORMS", "Downloads scheduled FORMS for your sites"),
+//                new SyncableItem(Constant.DownloadUID.SCHEDULED_FORMS, PENDING, null, "Scheduled FORMS", "Download scheduled FORMS for your sites"),
+                new SyncableItem(Constant.DownloadUID.SITE_TYPES, PENDING, null, "Site type(s)", "Download site types to filter staged FORMS"),
                 new SyncableItem(Constant.DownloadUID.EDU_MATERIALS, PENDING, null, "Educational Materials", "Download educational attached for form(s)"),
                 new SyncableItem(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, null, "Project Contact(s)", "Download contact information for people associated with your PROJECT"),
-                new SyncableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, null, "Previous Submissions", "Download previous submission(s) for forms"),
+                new SyncableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, null, "Previous Submissions", "Download previous submission(s) for FORMS"),
         };
 
 

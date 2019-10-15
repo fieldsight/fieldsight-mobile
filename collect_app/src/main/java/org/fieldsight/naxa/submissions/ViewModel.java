@@ -60,8 +60,12 @@ public class ViewModel implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ViewModel viewModel = (ViewModel) o;
         return Objects.equal(name, viewModel.name) &&
                 Objects.equal(desc, viewModel.desc) &&

@@ -63,15 +63,15 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
     @Deprecated
     public LiveData<List<ScheduleForm>> getBySiteId(boolean forceUpdate, String siteId, String projectId) {
 //        MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
-//        LiveData<List<ScheduleForm>> forms = localSource.getById(forceUpdate, id);
+//        LiveData<List<ScheduleForm>> FORMS = localSource.getById(forceUpdate, id);
 //
-//        mediatorLiveData.addSource(forms, new Observer<List<ScheduleForm>>() {
+//        mediatorLiveData.addSource(FORMS, new Observer<List<ScheduleForm>>() {
 //            @Override
 //            public void onChanged(@Nullable List<ScheduleForm> scheduleForms) {
 //                if (scheduleForms == null || scheduleForms.isEmpty()) {
 //                    remoteSource.getAll();
 //                } else {
-//                    mediatorLiveData.removeSource(forms);
+//                    mediatorLiveData.removeSource(FORMS);
 //                    mediatorLiveData.setValue(scheduleForms);
 //                }
 //            }

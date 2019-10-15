@@ -209,19 +209,6 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     }
 
 
-    private void sortByDate(List<FormResponse> formResponses) {
-        Collections.sort(formResponses, new Comparator<FormResponse>() {
-            @Override
-            public int compare(FormResponse lhs, FormResponse rhs) {
-                return lhs.getDate().compareTo(rhs.getDate());
-            }
-        });
-
-        adapter.clear();
-        adapter.addAll(formResponses);
-
-    }
-
     private void setupToolbar() {
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
@@ -253,16 +240,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         listFormHistory.setNestedScrollingEnabled(false);
     }
 
-    private void runLayoutAnimation(final RecyclerView recyclerView) {
 
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
-
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }
 
     private void setupPagination(final RecyclerView rv) {
 
@@ -348,10 +326,6 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
 //        ActivityCompat.startActivity(this, toFormDetail, options.toBundle());
     }
 
-    private void hideNoDataLayout() {
-        tvNoData.setVisibility(View.GONE);
-        listFormHistory.setVisibility(View.VISIBLE);
-    }
 
     @Deprecated
     private void showNoDataLayout() {

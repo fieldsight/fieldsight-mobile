@@ -99,11 +99,11 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                     Timber.i("SyncViewHolder clicked");
                     downloadListItemClicked(getLayoutPosition(), position);
                 });
-                TextView tv_stat = convertView.findViewById(R.id.tv_secondary);
+                TextView tvStat = convertView.findViewById(R.id.tv_secondary);
                 if (syncable.getStatus() != Constant.DownloadStatus.COMPLETED) {
                     Timber.i("syncable item name = %s and status = %s", syncable.getTitle(), syncable.getStatus());
                 }
-                tv_stat.setTextColor(syncable.status == Constant.DownloadStatus.FAILED ?
+                tvStat.setTextColor(syncable.status == Constant.DownloadStatus.FAILED ?
                         getContext().getResources().getColor(R.color.red_500) :
                         getContext().getResources().getColor(R.color.green));
 
@@ -114,15 +114,16 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                         messageWithProgress = "(" + syncable.getProgress() + "/" + syncable.getTotal() + ")";
                     }
 
-                    tv_stat.setText(String.format(Objects.requireNonNull(Constant.DOWNLOADMAP.get(syncable.getStatus())), messageWithProgress));
+                    tvStat.setText(String.format(Objects.requireNonNull(Constant.DOWNLOADMAP.get(syncable.getStatus())), messageWithProgress));
                 } else {
-                    tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
+                    tvStat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
                 }
 
                 chkbx.setEnabled(!disable);
                 chkbx.setOnClickListener(v -> {
-                    if (!disable)
+                    if (!disable) {
                         downloadListItemClicked(getLayoutPosition(), position);
+                    }
                 });
 
                 TextView btnRetry = convertView.findViewById(R.id.btn_retry);

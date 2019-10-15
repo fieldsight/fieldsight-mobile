@@ -25,10 +25,10 @@ import org.odk.collect.android.utilities.DownloadFormListUtils;
 import java.util.HashMap;
 
 /**
- * Background task for downloading forms from urls or a formlist from a url. We overload this task
+ * Background task for downloading FORMS from urls or a formlist from a url. We overload this task
  * a bit so that we don't have to keep track of two separate downloading tasks and it simplifies
  * interfaces. If LIST_URL is passed to doInBackground(), we fetch a form list. If a hashmap
- * containing form/url pairs is passed, we download those forms.
+ * containing form/url pairs is passed, we download those FORMS.
  *
  * @author carlhartung
  */

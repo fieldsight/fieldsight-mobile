@@ -71,10 +71,10 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     ProgressBar prgbar;
 
     @BindView(R.id.msg)
-    TextView tv_message_nodata;
+    TextView tvMessageNodata;
 
     @BindView(R.id.root_layout_empty_layout)
-    LinearLayout empty_layout;
+    LinearLayout emptyLayout;
 
 
     boolean isNewerLoading = false;
@@ -112,11 +112,11 @@ public class NotificationListActivity extends CollectAbstractActivity implements
                                 adapter.updateList(fieldSightNotifications);
                             }
                             if (adapter.getItemCount() == 0 && fieldSightNotifications.size() == 0) {
-                                empty_layout.setVisibility(View.VISIBLE);
-                                tv_message_nodata.setText("No notification found");
-                                tv_message_nodata.setVisibility(View.VISIBLE);
+                                emptyLayout.setVisibility(View.VISIBLE);
+                                tvMessageNodata.setText("No notification found");
+                                tvMessageNodata.setVisibility(View.VISIBLE);
                             } else {
-                                empty_layout.setVisibility(View.GONE);
+                                emptyLayout.setVisibility(View.GONE);
                             }
                         }
                     });
@@ -172,12 +172,12 @@ public class NotificationListActivity extends CollectAbstractActivity implements
 
         if (adapter.getItemCount() == 0) {
             getDataFromServer("" + (System.currentTimeMillis() / 1000), older_notification);
-            empty_layout.setVisibility(View.VISIBLE);
-            tv_message_nodata.setVisibility(View.VISIBLE);
-            tv_message_nodata.setText("Loading notification please wait");
+            emptyLayout.setVisibility(View.VISIBLE);
+            tvMessageNodata.setVisibility(View.VISIBLE);
+            tvMessageNodata.setText("Loading notification please wait");
             prgbar.setVisibility(View.VISIBLE);
         } else {
-            empty_layout.setVisibility(View.GONE);
+            emptyLayout.setVisibility(View.GONE);
             pullNotificationByDate(older_notification);
         }
         isOlderLoading = true;

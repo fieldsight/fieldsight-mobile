@@ -42,7 +42,7 @@ public class CollectServerClientTest extends MockedServerTest {
     @Test
     public void getXmlDocument_request_shouldSupplyHeader_UserAgent() throws Exception {
         // when
-        collectServerClient.getXmlDocument(url("/list-forms"));
+        collectServerClient.getXmlDocument(url("/list-FORMS"));
 
         // then
         String header = nextRequest().getHeader("User-Agent");
@@ -53,7 +53,7 @@ public class CollectServerClientTest extends MockedServerTest {
     @Test
     public void getXmlDocument_request_shouldSupplyHeader_X_OpenRosa_Version() throws Exception {
         // when
-        collectServerClient.getXmlDocument(url("/list-forms"));
+        collectServerClient.getXmlDocument(url("/list-FORMS"));
 
         // then
         assertEquals("1.0",
@@ -63,7 +63,7 @@ public class CollectServerClientTest extends MockedServerTest {
     @Test
     public void getXmlDocument_request_shouldSupplyHeader_AcceptEncoding_gzip() throws Exception {
         // when
-        collectServerClient.getXmlDocument(url("/list-forms"));
+        collectServerClient.getXmlDocument(url("/list-FORMS"));
 
         // then
         assertEquals("gzip",
@@ -73,7 +73,7 @@ public class CollectServerClientTest extends MockedServerTest {
     @Test
     public void getXmlDocument_request_shouldNotSupplyHeader_Authorization_forHttpRequest() throws Exception {
         // when
-        collectServerClient.getXmlDocument(url("/list-forms"));
+        collectServerClient.getXmlDocument(url("/list-FORMS"));
 
         // then
         assertNull(nextRequest().getHeader("Authorization"));

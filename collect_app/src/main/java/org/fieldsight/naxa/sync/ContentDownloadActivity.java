@@ -174,7 +174,9 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
         DownloadableItemLocalSource.getINSTANCE()
                 .selectedItemCountLive()
                 .observe(this, integer -> {
-                    if (integer == null) return;
+                    if (integer == null) {
+                        return;
+                    }
                     if (integer > 0) {
                         toolbar.setTitle(String.format(Locale.US, "Sync (%d)", integer));
                         toggleButton.setText(getString(R.string.clear_all));
@@ -189,7 +191,9 @@ public class ContentDownloadActivity extends CollectAbstractActivity implements 
         DownloadableItemLocalSource.getINSTANCE()
                 .runningItemCountLive()
                 .observe(this, integer -> {
-                    if (integer == null) return;
+                    if (integer == null) {
+                        return;
+                    }
                     if (integer > 0) {
                         downloadButton.setText(R.string.stop_download);
                     } else {

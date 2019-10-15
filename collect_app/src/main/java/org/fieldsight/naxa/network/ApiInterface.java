@@ -46,7 +46,7 @@ import static org.fieldsight.naxa.network.APIEndpoint.GET_CLUSTER_LIST;
 import static org.fieldsight.naxa.network.APIEndpoint.GET_EXCHANGE_TOKEN;
 import static org.fieldsight.naxa.network.APIEndpoint.GET_FORM_SCHEDULE;
 import static org.fieldsight.naxa.network.APIEndpoint.GET_GENERAL_FORM;
-import static org.fieldsight.naxa.network.APIEndpoint.GET_MY_SITES_v2;
+import static org.fieldsight.naxa.network.APIEndpoint.GET_MY_SITES_V2;
 import static org.fieldsight.naxa.network.APIEndpoint.GET_PROJECT_SITES;
 import static org.fieldsight.naxa.network.APIEndpoint.GET_SITE_TYPES;
 import static org.fieldsight.naxa.network.APIEndpoint.GET_STAGE_SUB_STAGE;
@@ -66,7 +66,7 @@ public interface ApiInterface {
     @GET
     Observable<MySiteResponse> getAssignedSites(@Url String url);
 
-    @GET(GET_MY_SITES_v2)
+    @GET(GET_MY_SITES_V2)
     Observable<List<MySites>> getAssignedSites();
 
     @FormUrlEncoded
@@ -83,10 +83,10 @@ public interface ApiInterface {
     );
 
     @GET(GET_GENERAL_FORM)
-    Observable<ArrayList<GeneralForm>> getGeneralFormsObservable(@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
+    Observable<ArrayList<GeneralForm>> getGeneralFormsObservable(@Path(value = "is_project", encoded = true) String isProject, @Path("id") String id);
 
     @GET(GET_FORM_SCHEDULE)
-    Observable<ArrayList<ScheduleForm>> getScheduleForms(@Path(value = "is_project", encoded = true) String is_project, @Path("id") String id);
+    Observable<ArrayList<ScheduleForm>> getScheduleForms(@Path(value = "is_project", encoded = true) String isProject, @Path("id") String id);
 
 
     @GET(GET_STAGE_SUB_STAGE)
@@ -103,7 +103,7 @@ public interface ApiInterface {
                                 @Part("identifier") RequestBody identifier,
                                 @Part("phone") RequestBody phone,
                                 @Part("address") RequestBody address,
-                                @Part("public_desc") RequestBody public_desc,
+                                @Part("public_desc") RequestBody publicDesc,
                                 @Part("PROJECT") RequestBody project,
                                 @Part("type") RequestBody type,
                                 @Part("region") RequestBody regionID,
@@ -121,9 +121,9 @@ public interface ApiInterface {
                                               @Part("gender") RequestBody gender,
                                               @Part("phone") RequestBody phone,
                                               @Part("skype") RequestBody skype,
-                                              @Part("primary_number") RequestBody primary_number,
-                                              @Part("secondary_number") RequestBody secondary_number,
-                                              @Part("office_number") RequestBody office_number,
+                                              @Part("primary_number") RequestBody primaryNumber,
+                                              @Part("secondary_number") RequestBody secondaryNumber,
+                                              @Part("office_number") RequestBody officeNumber,
                                               @Part("viber") RequestBody viber,
                                               @Part("whatsapp") RequestBody whatsapp,
                                               @Part("wechat") RequestBody wechat,
@@ -131,22 +131,22 @@ public interface ApiInterface {
                                               @Part("tango") RequestBody tango,
                                               @Part("hike") RequestBody hike,
                                               @Part("qq") RequestBody qq,
-                                              @Part("google_talk") RequestBody google_talk,
+                                              @Part("google_talk") RequestBody googleTalk,
                                               @Part("twitter") RequestBody twitter,
                                               @Part("organization") RequestBody organization);
 
     @Multipart
     @POST
     Observable<User> updateUserProfile(@Url String url,
-                                       @Part("first_name") RequestBody first_name,
-                                       @Part("last_name") RequestBody last_name,
+                                       @Part("first_name") RequestBody firstName,
+                                       @Part("last_name") RequestBody lastName,
                                        @Part("address") RequestBody address,
                                        @Part("gender") RequestBody gender,
                                        @Part("phone") RequestBody phone,
                                        @Part("skype") RequestBody skype,
-                                       @Part("primary_number") RequestBody primary_number,
-                                       @Part("secondary_number") RequestBody secondary_number,
-                                       @Part("office_number") RequestBody office_number,
+                                       @Part("primary_number") RequestBody primaryNumber,
+                                       @Part("secondary_number") RequestBody secondaryNumber,
+                                       @Part("office_number") RequestBody officeNumber,
                                        @Part("viber") RequestBody viber,
                                        @Part("whatsapp") RequestBody whatsapp,
                                        @Part("wechat") RequestBody wechat,
@@ -154,7 +154,7 @@ public interface ApiInterface {
                                        @Part("tango") RequestBody tango,
                                        @Part("hike") RequestBody hike,
                                        @Part("qq") RequestBody qq,
-                                       @Part("google_talk") RequestBody google_talk,
+                                       @Part("google_talk") RequestBody googleTalk,
                                        @Part("twitter") RequestBody twitter,
                                        @Part("organization") RequestBody organization,
                                        @Part MultipartBody.Part file);
@@ -162,12 +162,12 @@ public interface ApiInterface {
     @POST(APIEndpoint.POST_REPORT)
     @FormUrlEncoded
     Observable<ResponseBody> submitReport(@Field("device") String device,
-                                          @Field("fcm_reg_id") String fcm_reg_id,
-                                          @Field("app_version") String app_version,
-                                          @Field("app_os_version") String app_os_version,
-                                          @Field("message_type") String message_type,
+                                          @Field("fcm_reg_id") String fcmRegId,
+                                          @Field("app_version") String appVersion,
+                                          @Field("app_os_version") String appOSVersion,
+                                          @Field("message_type") String messageType,
                                           @Field("message") String message,
-                                          @Field("device_name") String device_name,
+                                          @Field("device_name") String deviceName,
                                           @Field("lat") String lat,
                                           @Field("lng") String lng);
 
@@ -207,8 +207,8 @@ public interface ApiInterface {
                               @Part("identifier") RequestBody identifier,
                               @Part("address") RequestBody address,
                               @Part("phone") RequestBody phone,
-                              @Part("public_desc") RequestBody public_desc,
-                              @Part("additional_desc") RequestBody add_desc,
+                              @Part("public_desc") RequestBody publicDesc,
+                              @Part("additional_desc") RequestBody addDesc,
 //                              @Part("type") RequestBody type,
                               @Part MultipartBody.Part logoFile,
                               @Part("site_meta_attributes_ans") RequestBody meta_ans,
@@ -226,7 +226,7 @@ public interface ApiInterface {
                                 @Part("identifier") RequestBody identifier,
                                 @Part("phone") RequestBody phone,
                                 @Part("address") RequestBody address,
-                                @Part("public_desc") RequestBody public_desc,
+                                @Part("public_desc") RequestBody publicDesc,
                                 @Part("PROJECT") RequestBody project,
                                 @Part("type") RequestBody type,
                                 @Part("region") RequestBody regionID,
@@ -240,8 +240,8 @@ public interface ApiInterface {
                                          @Part("identifier") RequestBody identifier,
                                          @Part("address") RequestBody address,
                                          @Part("phone") RequestBody phone,
-                                         @Part("public_desc") RequestBody public_desc,
-                                         @Part("additional_desc") RequestBody add_desc,
+                                         @Part("public_desc") RequestBody publicDesc,
+                                         @Part("additional_desc") RequestBody addDesc,
 //                                         @Part("type") RequestBody type,
                                          @Part("site_meta_attributes_ans") RequestBody meta_ans,
                                          @Part("latitude") RequestBody lat,

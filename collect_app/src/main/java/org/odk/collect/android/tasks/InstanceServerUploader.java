@@ -69,7 +69,7 @@
 //import timber.log.Timber;
 //
 ///**
-// * Background task for uploading completed forms.
+// * Background task for uploading completed FORMS.
 // *
 // * @author Carl Hartung (carlhartung@gmail.com)
 // */

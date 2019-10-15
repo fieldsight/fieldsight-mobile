@@ -30,7 +30,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * Background task for uploading completed forms.
+ * Background task for uploading completed FORMS.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
  */

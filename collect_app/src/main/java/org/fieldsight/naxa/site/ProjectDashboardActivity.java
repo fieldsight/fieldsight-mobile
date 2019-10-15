@@ -235,9 +235,9 @@ public class ProjectDashboardActivity extends BaseActivity {
             User user = FieldSightUserSession.getUser();
             ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFullName());
             ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
-             if(tl != null && !TextUtils.isEmpty(tl.site_supervisor)) {
-                 Timber.i("ProjectDashboardActivity, data:: sitesv = %s", tl.site_supervisor);
-                 ((TextView)navigationHeader.findViewById(R.id.tv_user_post)).setText(tl.site_supervisor);
+             if(tl != null && !TextUtils.isEmpty(tl.siteSupervisor)) {
+                 Timber.i("ProjectDashboardActivity, data:: sitesv = %s", tl.siteSupervisor);
+                 ((TextView)navigationHeader.findViewById(R.id.tv_user_post)).setText(tl.siteSupervisor);
              }
 
             ImageView ivProfilePicture = navigationHeader.findViewById(R.id.image_profile);
@@ -515,8 +515,12 @@ public class ProjectDashboardActivity extends BaseActivity {
         } else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if (isHome) toggleNavDrawer();
-            else finish();
+            if (isHome) {
+                toggleNavDrawer();
+            }
+            else{
+                finish();
+            }
         }
     }
 

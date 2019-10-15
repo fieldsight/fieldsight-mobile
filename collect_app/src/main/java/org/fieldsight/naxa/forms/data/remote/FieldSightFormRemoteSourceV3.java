@@ -36,7 +36,7 @@ public class FieldSightFormRemoteSourceV3 {
     private static FieldSightFormRemoteSourceV3 INSTANCE;
     private final FormsDao formsDao;
     FieldSightFormDownloader fieldSightFormDownloader = new FieldSightFormDownloader(false);
-    // holds the projectid and total number of forms
+    // holds the projectid and total number of FORMS
     SparseIntArray projectIdUrlMap;
     SparseIntArray downloadProjectFormProgressUrlMap;
 

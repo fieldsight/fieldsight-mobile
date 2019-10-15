@@ -123,7 +123,7 @@ public class SyncServiceV3 extends IntentService {
                                         @Override
                                         public ArrayList<Integer> apply(List<Pair<FieldsightFormDetailsv3, String>> pairs) throws Exception {
                                             HashSet<Integer> failedProjectId = new HashSet<>();
-                                            //collect PROJECT ids with failed forms
+                                            //collect PROJECT ids with failed FORMS
                                             for (Pair<FieldsightFormDetailsv3, String> pair : pairs) {
                                                 String message = pair.second;
                                                 FieldsightFormDetailsv3 fd = pair.first;
@@ -337,7 +337,9 @@ public class SyncServiceV3 extends IntentService {
                                 boolean hasErrorBeenThrown = false;
                                 for (Object o : objects) {
                                     hasErrorBeenThrown = o instanceof String;
-                                    if (hasErrorBeenThrown) break;
+                                    if (hasErrorBeenThrown) {
+                                        break;
+                                    }
                                 }
 
                                 if (!hasErrorBeenThrown) {//error has been thrown
@@ -370,7 +372,6 @@ public class SyncServiceV3 extends IntentService {
         String projectId = "";
         if (throwable instanceof RetrofitException) {
             RetrofitException retrofitException = (RetrofitException) throwable;
-            String msg = retrofitException.getMessage();
             failedUrl = retrofitException.getUrl();
             projectId = retrofitException.getProjectId();
 
@@ -379,14 +380,11 @@ public class SyncServiceV3 extends IntentService {
         return new String[]{failedUrl, projectId};
     }
 
-    private void markAsFailed(String projectId, int type, String failedUrl, boolean shouldRetry) {
+    private void markAsFailed(String projectId, int type, String failedUrl) {
         saveState(projectId, type, failedUrl, false, Constant.DownloadStatus.FAILED);
         Timber.e("Download stopped %s for PROJECT %s", failedUrl, projectId);
     }
 
-    private void markAsFailed(String projectId, int type, String failedUrl) {
-        markAsFailed(projectId, type, failedUrl, false);
-    }
 
 
     private void markAsRunning(String projectId, int type) {

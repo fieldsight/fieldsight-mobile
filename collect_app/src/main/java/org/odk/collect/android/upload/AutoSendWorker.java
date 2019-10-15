@@ -70,9 +70,9 @@ public class AutoSendWorker extends Worker {
     }
 
     /**
-     * If the app-level auto-send setting is enabled, send all finalized forms that don't specify not
+     * If the app-level auto-send setting is enabled, send all finalized FORMS that don't specify not
      * to auto-send at the form level. If the app-level auto-send setting is disabled, send all
-     * finalized forms that specify to send at the form level.
+     * finalized FORMS that specify to send at the form level.
      *
      * Fails immediately if:
      *   - storage isn't ready
@@ -201,7 +201,7 @@ public class AutoSendWorker extends Worker {
     }
 
     /**
-     * Returns instances that need to be auto-sent.
+     * Returns INSTANCES that need to be auto-sent.
      */
     @NonNull
     private List<Instance> getInstancesToAutoSend(boolean isAutoSendAppSettingEnabled) {
@@ -246,7 +246,7 @@ public class AutoSendWorker extends Worker {
 
     /**
      * Returns true if at least one form currently on the device specifies that all of its filled
-     * forms should auto-send no matter the connection type.
+     * FORMS should auto-send no matter the connection type.
      *
      * TODO: figure out where this should live
      */

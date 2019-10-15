@@ -117,7 +117,7 @@ public class ScheduledFormsFragment extends BaseFormListFragment implements OnFo
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         scheduledFormsAdapter = new ScheduledFormsAdapter(new ArrayList<>(0), this);
         recyclerView.setEmptyView(emptyLayout,
-                getString(R.string.empty_message, "scheduled forms"),
+                getString(R.string.empty_message, "scheduled FORMS"),
                 new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {

@@ -212,7 +212,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     public static final String GEOSHAPE_RESULTS = "GEOSHAPE_RESULTS";
     public static final String ANSWER_KEY = "ANSWER_KEY";
 
-    public static final String KEY_INSTANCES = "instances";
+    public static final String KEY_INSTANCES = "INSTANCES";
     public static final String KEY_SUCCESS = "success";
     public static final String KEY_ERROR = "error";
     private static final String KEY_SAVE_NAME = "saveName";
@@ -551,7 +551,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 /**
                  * This is the fill-blank-form code path.See if there is a savepoint for this form
                  * that has never been explicitly saved by the user. If there is, open this savepoint(resume this filled-in form).
-                 * Savepoints for forms that were explicitly saved will be recovered when that
+                 * Savepoints for FORMS that were explicitly saved will be recovered when that
                  * explicitly saved instance is edited via edit-saved-form.
                  */
                 final String filePrefix = formPath.substring(
@@ -613,7 +613,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     /**
-     * Creates save-points asynchronously in order to not affect swiping performance on larger forms.
+     * Creates save-points asynchronously in order to not affect swiping performance on larger FORMS.
      * If moving backwards through a form is disabled, also saves the index of the form element that
      * was last shown to the user so that no matter how the app exits and relaunches, the user can't
      * see previous questions.
@@ -777,7 +777,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.IMAGE_CAPTURE:
                 /*
                  * We saved the image to the tempfile_path, but we really want it to
-                 * be in: /sdcard/odk/instances/[current instnace]/something.jpg so
+                 * be in: /sdcard/odk/INSTANCES/[current instnace]/something.jpg so
                  * we move it there before inserting it into the content provider.
                  * Once the android image capture bug gets fixed, (read, we move on
                  * from Android 1.6) we want to handle images the audio and video
@@ -831,7 +831,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.IMAGE_CHOOSER:
                 /*
                  * We have a saved image somewhere, but we really want it to be in:
-                 * /sdcard/odk/instances/[current instnace]/something.jpg so we move
+                 * /sdcard/odk/INSTANCES/[current instnace]/something.jpg so we move
                  * it there before inserting it into the content provider. Once the
                  * android image capture bug gets fixed, (read, we move on from
                  * Android 1.6) we want to handle images the audio and video
@@ -1848,7 +1848,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     /**
      * Saves data and writes it to disk. If exit is set, program will exit after
      * save completes. Complete indicates whether the user has marked the
-     * isntancs as complete. If updatedSaveName is non-null, the instances
+     * isntancs as complete. If updatedSaveName is non-null, the INSTANCES
      * content provider is updated with the new name
      */
     // by default, save the current screen
@@ -2632,7 +2632,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     /**
-     * Requests that unsent finalized forms be auto-sent. If no network connection is available,
+     * Requests that unsent finalized FORMS be auto-sent. If no network connection is available,
      * the work will be performed when a connection becomes available.
      *
      * TODO: if the user changes auto-send settings, should an auto-send job immediately be enqueued?

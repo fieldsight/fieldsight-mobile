@@ -36,7 +36,7 @@ import org.odk.collect.android.adapters.VersionHidingCursorAdapter;
 import timber.log.Timber;
 
 /**
- * Responsible for displaying and deleting all the valid forms in the forms
+ * Responsible for displaying and deleting all the valid FORMS in the FORMS
  * directory.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -183,7 +183,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
 
     @Override
     public void deleteComplete(int deletedForms) {
-        Timber.i("Delete forms complete");
+        Timber.i("Delete FORMS complete");
         final int toDeleteCount = backgroundTasks.deleteFormsTask.getToDeleteCount();
 
         if (deletedForms == toDeleteCount) {
@@ -191,7 +191,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
             ToastUtils.showShortToast(getString(R.string.file_deleted_ok, String.valueOf(deletedForms)));
         } else {
             // had some failures
-            Timber.e("Failed to delete %d forms", toDeleteCount - deletedForms);
+            Timber.e("Failed to delete %d FORMS", toDeleteCount - deletedForms);
             ToastUtils.showLongToast(getString(R.string.file_deleted_error, String.valueOf(getCheckedCount()
                     - deletedForms), String.valueOf(getCheckedCount())));
         }

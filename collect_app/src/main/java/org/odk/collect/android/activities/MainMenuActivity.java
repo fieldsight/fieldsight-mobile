@@ -159,7 +159,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
         });
 
-        //View sent forms
+        //View sent FORMS
         viewSentFormsButton = findViewById(R.id.view_sent_forms);
         viewSentFormsButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -173,7 +173,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
         });
 
-        // manage forms button. no result expected.
+        // manage FORMS button. no result expected.
         getFormsButton = findViewById(R.id.get_forms);
         getFormsButton.setText(getString(R.string.get_forms));
         getFormsButton.setOnClickListener(new OnClickListener() {
@@ -202,7 +202,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
             }
         });
 
-        // manage forms button. no result expected.
+        // manage FORMS button. no result expected.
         manageFilesButton = findViewById(R.id.manage_forms);
         manageFilesButton.setText(getString(R.string.manage_files));
         manageFilesButton.setOnClickListener(new OnClickListener() {
@@ -266,7 +266,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
 
         InstancesDao instancesDao = new InstancesDao();
 
-        // count for finalized instances
+        // count for finalized INSTANCES
         try {
             finalizedCursor = instancesDao.getFinalizedInstancesCursor();
         } catch (Exception e) {
@@ -282,7 +282,7 @@ public class MainMenuActivity extends CollectAbstractActivity {
                 contentObserver);
         // finalizedCursor.registerContentObserver(contentObserver);
 
-        // count for saved instances
+        // count for saved INSTANCES
         try {
             savedCursor = instancesDao.getUnsentInstancesCursor();
         } catch (Exception e) {

@@ -124,14 +124,14 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private boolean isUpdate;
 
 
-    public static void start(Context context, @NonNull Project project, @Nullable Site site, String site_label, String region_label) {
+    public static void start(Context context, @NonNull Project project, @Nullable Site site, String siteLabel, String regionLabel) {
         Intent intent = new Intent(context, CreateSiteActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
         if (site != null) {
             intent.putExtra("site", site);
         }
-        intent.putExtra("site_label", site_label);
-        intent.putExtra("region_label", region_label);
+        intent.putExtra("site_label", siteLabel);
+        intent.putExtra("region_label", regionLabel);
         context.startActivity(intent);
     }
 

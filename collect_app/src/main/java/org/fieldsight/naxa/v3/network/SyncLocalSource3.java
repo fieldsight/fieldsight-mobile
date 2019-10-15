@@ -43,7 +43,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
 
     public void delete(SyncStat stat) {
-        MutableLiveData<Integer> affectedRowsMutData = new MutableLiveData<>();
+
         AsyncTask.execute(() -> dao.delete(stat));
     }
 

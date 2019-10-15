@@ -342,7 +342,9 @@ public class UserActivity extends CollectAbstractActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) return;
+        if (resultCode != RESULT_OK) {
+            return;
+        }
         switch (requestCode) {
             case Constant.RequestCode.RC_CAMERA:
                 userProfileViewModel.getUser().getValue().setProfilepic(photoToUpload.getAbsolutePath());

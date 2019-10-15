@@ -31,7 +31,7 @@ public class SyncStat {
     int status;
 
     @ColumnInfo(name = "created_date")
-    long created_date;
+    long createdDate;
 
     private int total;
     private int progress;
@@ -52,7 +52,7 @@ public class SyncStat {
         this.failedUrl = failedUrl;
         this.started = started;
         this.status = status;
-        this.created_date = created_date;
+        this.createdDate = created_date;
     }
 
     public void setProgress(int progress) {
@@ -71,12 +71,12 @@ public class SyncStat {
         this.total = total;
     }
 
-    public long getCreated_date() {
-        return created_date;
+    public long getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreated_date(long created_date) {
-        this.created_date = created_date;
+    public void setCreatedDate(long createdDate) {
+        this.createdDate = createdDate;
     }
 
     public int getStatus() {

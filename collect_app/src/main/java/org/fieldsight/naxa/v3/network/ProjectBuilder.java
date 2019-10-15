@@ -24,7 +24,7 @@ public class ProjectBuilder {
     private boolean isSyncedWithRemote;
     public String url;
     private List<SiteMetaAttribute> metaAttributes;
-    private String terms_and_labels;
+    private String termsAndLabels;
 
     private Parcel in;
 
@@ -117,11 +117,11 @@ public class ProjectBuilder {
         return this;
     }
     public ProjectBuilder setTermsAndLabels(String terms_and_labels) {
-        this.terms_and_labels = terms_and_labels;
+        this.termsAndLabels = terms_and_labels;
         return this;
     }
 
      public Project createProject() {
-        return new Project(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, metaAttributes, url, terms_and_labels);
+        return new Project(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, metaAttributes, url, termsAndLabels);
     }
 } 

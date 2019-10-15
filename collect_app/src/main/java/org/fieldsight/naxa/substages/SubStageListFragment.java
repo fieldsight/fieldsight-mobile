@@ -189,7 +189,7 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
     private void setupListAdapter() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged forms"), () -> {
+        recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged FORMS"), () -> {
 
         });
         listAdapter = new SubStageListAdapter(new ArrayList<>(0), stagePosition, this);

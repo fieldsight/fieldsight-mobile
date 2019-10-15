@@ -45,7 +45,7 @@ public class FormsDaoTest {
 
     private FormsDao formsDao;
 
-    // sample forms
+    // sample FORMS
     private Form biggestNOfSetForm;
     private Form birdsForm;
     private Form miramareForm;

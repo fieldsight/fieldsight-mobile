@@ -43,7 +43,7 @@ public class APIEndpoint {
     public static final String GET_CLUSTER_LIST = "/fieldsight/PROJECT/region-list/{project_id}/";
     public static final String GET_ALL_SUBMISSION = "/forms/last-submissions/";
     public static final String GET_MY_SITES = "/users/mysites";
-    public static final String GET_MY_SITES_v2 = "users/api/v2/mysites/";
+    public static final String GET_MY_SITES_V2 = "users/api/v2/mysites/";
 
     public static final String GET_USER_PROFILE = "/users/api/profile/";
     public static final String GET_INSTANCE_SUBMISSION_ATTACHMENTS = "/forms/api/instance/get_attachments_of_finstance/{instance_submission_id}";
@@ -60,7 +60,7 @@ public class APIEndpoint {
         public static final String GET_SITES = "/fv3/api/sites/";
         public static final String GET_NOTIFICATION = "/fv3/api/user/logs/";
         public static final String GET_SITE_DOCUMENTS = "/fv3/api/site/blueprint/";
-        public static final String GET_FORMS = "/fv3/api/forms";
+        public static final String GET_FORMS = "/fv3/api/FORMS";
     }
 
     public class PARAMS {

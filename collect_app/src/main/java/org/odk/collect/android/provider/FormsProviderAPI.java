@@ -20,14 +20,14 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Contract between the forms provider and applications. Contains definitions for the supported URIs
+ * Contract between the FORMS provider and applications. Contains definitions for the supported URIs
  * and data columns.
  *
- * This defines the data model for blank forms. Blank forms are unique by
+ * This defines the data model for blank FORMS. Blank FORMS are unique by
  * {@link FormsColumns#JR_FORM_ID} unless multiple {@link FormsColumns#JR_VERSION}s are defined.
  */
 public final class FormsProviderAPI {
-    public static final String AUTHORITY = "org.odk.collect.android.provider.forms";
+    public static final String AUTHORITY = "org.odk.collect.android.provider.FORMS";
 
     private FormsProviderAPI() {
     }
@@ -69,7 +69,7 @@ public final class FormsProviderAPI {
         public static final String DISPLAY_SUBTEXT = "displaySubtext"; // not used in the newest database version
         public static final String MD5_HASH = "md5Hash";
         public static final String DATE = "date";
-        public static final String MAX_DATE = "MAX(date)"; // used only to get latest forms for each form_id
+        public static final String MAX_DATE = "MAX(date)"; // used only to get latest FORMS for each form_id
         public static final String JRCACHE_FILE_PATH = "jrcacheFilePath";
         public static final String FORM_MEDIA_PATH = "formMediaPath";
         public static final String IS_TEMP_DOWNLOAD = "isTmpDownload";

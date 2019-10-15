@@ -60,7 +60,7 @@ public class AuditEventSaveTaskTest {
 
     @Before
     public void prepareTestFile() {
-        testFile = new File(Environment.getExternalStorageDirectory().getPath() + "/odk/instances/audit.csv");
+        testFile = new File(Environment.getExternalStorageDirectory().getPath() + "/odk/INSTANCES/audit.csv");
         testFile.delete();
     }
 

@@ -4,7 +4,6 @@ import android.os.Handler;
 
 import androidx.lifecycle.ViewModel;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.ODKFormRemoteSource;
@@ -29,6 +28,7 @@ import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.stages.data.StageRemoteSource;
 import org.greenrobot.eventbus.EventBus;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,6 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -88,7 +87,7 @@ public class DownloadViewModel extends ViewModel {
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist() to wait to complete all odk forms download
+                     *2. used tolist() to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -141,7 +140,7 @@ public class DownloadViewModel extends ViewModel {
                 .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -194,7 +193,7 @@ public class DownloadViewModel extends ViewModel {
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -282,7 +281,7 @@ public class DownloadViewModel extends ViewModel {
                 .flatMap((Function<List<Project>, SingleSource<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()

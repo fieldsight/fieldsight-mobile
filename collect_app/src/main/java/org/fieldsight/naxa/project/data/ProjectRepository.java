@@ -67,7 +67,9 @@ public class ProjectRepository implements BaseRepository<Project> {
 
     @Override
     public LiveData<List<Project>> getAll(boolean forceUpdate) {
-        if (forceUpdate) remoteSource.getAll();
+        if (forceUpdate) {
+            remoteSource.getAll();
+        }
         return localSource.getAll();
     }
 
@@ -156,7 +158,9 @@ public class ProjectRepository implements BaseRepository<Project> {
                     }
 
                     private List<SiteMetaAttribute> mapJSONtoMetaArributes(String jsonArray) {
-                        if (TextUtils.isEmpty(jsonArray)) return new ArrayList<>();
+                        if (TextUtils.isEmpty(jsonArray)) {
+                            return new ArrayList<>();
+                        }
                         Type siteMetaAttrsList = new TypeToken<List<SiteMetaAttribute>>() {
                         }.getType();
                         return new Gson().fromJson(jsonArray, siteMetaAttrsList);

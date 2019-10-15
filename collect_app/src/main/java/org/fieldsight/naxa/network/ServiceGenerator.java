@@ -125,13 +125,17 @@ public class ServiceGenerator {
 
 
     public static int getRunningAPICount() {
-        if (okHttp == null) return 0;
+        if (okHttp == null) {
+            return 0;
+        }
 
         return okHttp.dispatcher().runningCallsCount();
     }
 
     public static int getQueuedAPICount() {
-        if (okHttp == null) return 0;
+        if (okHttp == null) {
+            return 0;
+        }
 
         return okHttp.dispatcher().queuedCallsCount();
     }

@@ -28,7 +28,6 @@ import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.fragments.FSDataManagerList;
 import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.adapters.ViewPagerAdapter;
-import org.odk.collect.android.fragments.FormManagerList;
 import org.odk.collect.android.views.SlidingTabLayout;
 
 import java.util.ArrayList;
@@ -61,7 +60,7 @@ public class FileManagerTabs extends CollectAbstractActivity {
         }
 
 
-//        String[] tabNames = {getString(R.string.data), getString(R.string.forms)};
+//        String[] tabNames = {getString(R.string.data), getString(R.string.FORMS)};
         String[] tabNames = {getString(R.string.data)};
         // Get the ViewPager and set its PagerAdapter so that it can display items
         ViewPager viewPager = findViewById(R.id.pager);

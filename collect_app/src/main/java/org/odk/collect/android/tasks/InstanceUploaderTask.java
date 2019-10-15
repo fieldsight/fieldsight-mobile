@@ -52,7 +52,7 @@ public abstract class InstanceUploaderTask extends AsyncTask<Long, Integer, Inst
                 } else {
                     stateListener.uploadingComplete(outcome.messagesByInstanceId);
 
-                    // Delete instances that were successfully sent and that need to be deleted
+                    // Delete INSTANCES that were successfully sent and that need to be deleted
                     // either because app-level auto-delete is enabled or because the form
                     // specifies it.
                     Set<String> keys = outcome.messagesByInstanceId.keySet();
@@ -142,7 +142,7 @@ public abstract class InstanceUploaderTask extends AsyncTask<Long, Integer, Inst
 
     /**
      * Represents the results of a submission attempt triggered by explicit user action (as opposed
-     * to auto-send). A submission attempt can include finalized forms going to several different
+     * to auto-send). A submission attempt can include finalized FORMS going to several different
      * servers because the app-level server configuration can be overridden by the blank form.
      *
      * The user-facing message that describes the result of a submission attempt for each specific
@@ -163,12 +163,12 @@ public abstract class InstanceUploaderTask extends AsyncTask<Long, Integer, Inst
 
 
         /**
-         * Map of database IDs for finalized forms to the user-facing status message for the latest
+         * Map of database IDs for finalized FORMS to the user-facing status message for the latest
          * submission attempt. Currently this can be either a localized message in the case of a
          * common status or an English message in the case of a rare status that is needed for
          * developer troubleshooting.
          *
-         * The keys in the map are also used to identify filled forms that were part of the ongoing
+         * The keys in the map are also used to identify filled FORMS that were part of the ongoing
          * submission attempt and don't need to be retried in the case of an authentication request.
          * See {@link #authRequestingServer}.
          *

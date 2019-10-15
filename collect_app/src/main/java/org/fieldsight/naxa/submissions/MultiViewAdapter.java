@@ -31,7 +31,6 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final ArrayList<ViewModel> listOfItems;
 
 
-
     public MultiViewAdapter() {
         listOfItems = new ArrayList<>();
     }
@@ -144,8 +143,11 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ViewModel viewModel = listOfItems.get(position);
         boolean isURL = isValidURL(viewModel.getDesc());
 
-        if (isURL) itemType = HTTP_URL;
-        else itemType = TEXT_DESC;
+        if (isURL) {
+            itemType = HTTP_URL;
+        } else {
+            itemType = TEXT_DESC;
+        }
 
 
         return itemType;

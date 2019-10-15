@@ -34,7 +34,7 @@ public final class FormsDaoHelper {
             }
         }
 
-        throw new RuntimeException("Unable to get the forms count");
+        throw new RuntimeException("Unable to get the FORMS count");
     }
 
     public static String getFormPath(String selection, String[] selectionArgs) {

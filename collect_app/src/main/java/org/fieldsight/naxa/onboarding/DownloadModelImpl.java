@@ -62,7 +62,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist() to wait to complete all odk forms download
+                     *2. used tolist() to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -111,7 +111,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -159,7 +159,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -246,7 +246,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .flatMap((Function<List<Project>, SingleSource<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()

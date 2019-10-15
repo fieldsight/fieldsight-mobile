@@ -48,7 +48,7 @@ import static org.odk.collect.android.provider.InstanceProviderAPI.InstanceColum
  * This class helps open, create, and upgrade the database file.
  */
 public class InstancesDatabaseHelper extends SQLiteOpenHelper {
-    static final String DATABASE_NAME = "instances.db";
+    static final String DATABASE_NAME = "INSTANCES.db";
     public static final String INSTANCES_TABLE_NAME = "instances";
 
     static final int DATABASE_VERSION = 6;
@@ -149,10 +149,10 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Upgrade to version 5 by creating the new table with a temporary name, moving the contents of
-     * the existing instances table to that new table, dropping the old table and then renaming the
+     * the existing INSTANCES table to that new table, dropping the old table and then renaming the
      * new table to the permanent name.
      * <p>
-     * Prior versions of the instances table included a {@code displaySubtext} column which was
+     * Prior versions of the INSTANCES table included a {@code displaySubtext} column which was
      * redundant with the {@link InstanceProviderAPI.InstanceColumns#STATUS} and
      * {@link InstanceProviderAPI.InstanceColumns#LAST_STATUS_CHANGE_DATE} columns and included
      * unlocalized text. Version 5 removes this column.

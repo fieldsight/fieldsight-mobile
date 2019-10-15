@@ -45,7 +45,7 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 /**
- * Responsible for displaying and deleting all the saved form instances
+ * Responsible for displaying and deleting all the saved form INSTANCES
  * directory.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -222,7 +222,7 @@ public class DataManagerList extends InstanceListFragment
 
     @Override
     public void deleteComplete(int deletedInstances) {
-        Timber.i("Delete instances complete");
+        Timber.i("Delete INSTANCES complete");
         final int toDeleteCount = deleteInstancesTask.getToDeleteCount();
 
         if (deletedInstances == toDeleteCount) {
@@ -230,7 +230,7 @@ public class DataManagerList extends InstanceListFragment
             ToastUtils.showShortToast(getString(R.string.file_deleted_ok, String.valueOf(deletedInstances)));
         } else {
             // had some failures
-            Timber.e("Failed to delete %d instances", toDeleteCount - deletedInstances);
+            Timber.e("Failed to delete %d INSTANCES", toDeleteCount - deletedInstances);
             ToastUtils.showLongToast(getString(R.string.file_deleted_error,
                     String.valueOf(toDeleteCount - deletedInstances),
                     String.valueOf(toDeleteCount)));

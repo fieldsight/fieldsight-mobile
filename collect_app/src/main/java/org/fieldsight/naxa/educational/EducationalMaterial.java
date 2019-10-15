@@ -20,7 +20,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 /**
- * This class represents a single row from the forms table which is located in
+ * This class represents a single row from the FORMS table which is located in
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_transfer_object
  * Objects of this class are created using builder pattern: https://en.wikipedia.org/wiki/Builder_pattern
  */

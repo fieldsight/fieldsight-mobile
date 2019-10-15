@@ -209,7 +209,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     @Override
                     public void onSuccess(ArrayList<GeneralForm> generalForms) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
-                        Timber.i("%s general forms downloaded successfully ", generalForms.size());
+                        Timber.i("%s general FORMS downloaded successfully ", generalForms.size());
                     }
 
                     @Override

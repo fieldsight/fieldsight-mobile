@@ -17,7 +17,7 @@
 package org.odk.collect.android.dto;
 
 /**
- * This class represents a single row from the forms table which is located in
+ * This class represents a single row from the FORMS table which is located in
  * {@link org.odk.collect.android.database.helpers.FormsDatabaseHelper#DATABASE_NAME}
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_transfer_object
  * Objects of this class are created using builder pattern: https://en.wikipedia.org/wiki/Builder_pattern

@@ -95,7 +95,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
                             ScheduledFormsLocalSource.getInstance(), ScheduledFormsRemoteSource.getInstance());
 
                     StageFormRepository stageFormRepository = StageFormRepository.getInstance(StageLocalSource.getInstance(), StageRemoteSource.getInstance());
-                    SubStageRepository subStageRepository = SubStageRepository.getInstance(SubStageLocalSource.getInstance(), StageRemoteSource.getInstance());
+                    SubStageRepository subStageRepository = SubStageRepository.getInstance(SubStageLocalSource.getInstance());
                     ProjectRepository projectRepository = ProjectRepository.getInstance(ProjectLocalSource.getInstance(), ProjectSitesRemoteSource.getInstance());
                     SiteRepository siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
                     SurveyFormRepository surveyFormRepository = SurveyFormRepository.getInstance(SurveyFormLocalSource.getInstance());
