@@ -19,7 +19,7 @@ import io.reactivex.functions.Action;
 
 public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUploadHistory> {
     public static SiteUploadHistoryLocalSource INSTANCE;
-    private SiteUploadHistoryDAO dao;
+    private final SiteUploadHistoryDAO dao;
 
     public static SiteUploadHistoryLocalSource getInstance() {
         if (INSTANCE == null) {

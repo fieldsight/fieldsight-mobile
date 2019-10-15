@@ -36,7 +36,7 @@ public class DownloadFormsTask extends
         AsyncTask<ArrayList<FormDetails>, String, HashMap<FormDetails, String>> implements FormDownloaderListener {
 
     private DownloadFormsTaskListener stateListener;
-    private boolean isTempDownload;
+    private final boolean isTempDownload;
 
     public DownloadFormsTask(boolean isTempDownload) {
         this.isTempDownload = isTempDownload;

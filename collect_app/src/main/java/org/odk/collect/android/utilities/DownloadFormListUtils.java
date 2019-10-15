@@ -27,7 +27,6 @@ import androidx.annotation.Nullable;
 import org.fieldsight.collect.android.R;
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Element;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.http.CollectServerClient;
 import org.odk.collect.android.logic.FormDetails;

@@ -21,8 +21,8 @@ import java.util.List;
 import timber.log.Timber;
 
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
-    private List<Project> projectList;
-    boolean allTrue = false;
+    private final List<Project> projectList;
+    boolean allTrue;
 
     public ProjectListAdapter(List<Project> projectList, boolean allTrue) {
         this.projectList = projectList;

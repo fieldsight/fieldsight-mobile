@@ -15,7 +15,7 @@ import java.util.List;
 public class SiteTypeLocalSource implements BaseLocalDataSource<SiteType> {
 
     private static SiteTypeLocalSource INSTANCE;
-    private SiteTypeDAO dao;
+    private final SiteTypeDAO dao;
 
 
     private SiteTypeLocalSource() {

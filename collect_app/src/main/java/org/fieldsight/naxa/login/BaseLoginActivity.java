@@ -4,8 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -16,13 +17,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.File;
 
 import org.fieldsight.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -120,7 +117,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
 
 
     private class GetAccessTokenTask extends AsyncTask<String, Void, GoogleTokenResponse> {
-        private ProgressDialog pd;
+
 
         @Override
         protected GoogleTokenResponse doInBackground(String... urls) {
@@ -157,7 +154,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
                 gmailLoginFailed("Unable to get Gmail auth TOKEN");
             }else {
                 gmailLoginSuccess(tokenResponse.getAccessToken(), username);
-                Log.d(TAG, "onPostExecute: accessToken " + tokenResponse.getAccessToken());
+                Timber.d("onPostExecute: accessToken " + tokenResponse.getAccessToken());
 
             }
 

@@ -61,8 +61,6 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final ContactRepository contactRepository;
 
 
-    private final Application application;
-
     public ViewModelFactory(Application application,
                             GeneralFormRepository repository,
                             ScheduledFormRepository scheduledFormRepository,
@@ -74,7 +72,7 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
                             FieldSightNotificationRepository notificationRepository,
                             ContactRepository contactRepository
     ) {
-        this.application = application;
+
         this.generalFormRepository = repository;
         this.scheduledFormRepository = scheduledFormRepository;
         this.stageFormRepository = stageFormRepository;

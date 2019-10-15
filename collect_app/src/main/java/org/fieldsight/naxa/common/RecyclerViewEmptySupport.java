@@ -21,10 +21,8 @@ public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
     private View progressView;
 
-    private long lastDispatch;
 
-
-    private AdapterDataObserver emptyObserver = new AdapterDataObserver() {
+    private final AdapterDataObserver emptyObserver = new AdapterDataObserver() {
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
@@ -119,7 +117,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                     .setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent =  new Intent(Collect.getInstance(), ContentDownloadActivity.class);
+                            Intent intent = new Intent(Collect.getInstance(), ContentDownloadActivity.class);
                             intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                             Collect.getInstance().startActivity(intent);
                         }

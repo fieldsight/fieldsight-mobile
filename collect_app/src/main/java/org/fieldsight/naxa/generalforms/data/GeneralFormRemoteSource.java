@@ -3,7 +3,6 @@ package org.fieldsight.naxa.generalforms.data;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseRemoteDataSource;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.database.FieldSightConfigDatabase;
@@ -17,6 +16,7 @@ import org.fieldsight.naxa.onboarding.XMLFormBuilder;
 import org.fieldsight.naxa.project.data.ProjectLocalSource;
 import org.fieldsight.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
+import org.odk.collect.android.application.Collect;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -41,8 +41,7 @@ import static org.fieldsight.naxa.common.event.DataSyncEvent.EventStatus.EVENT_S
 public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm> {
 
     private static GeneralFormRemoteSource INSTANCE;
-    private ProjectLocalSource projectLocalSource;
-    private SyncRepository syncRepository;
+    private final ProjectLocalSource projectLocalSource;
 
     public static GeneralFormRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -54,7 +53,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
 
     public GeneralFormRemoteSource() {
         this.projectLocalSource = ProjectLocalSource.getInstance();
-        this.syncRepository = SyncRepository.getInstance();
+
     }
 
 

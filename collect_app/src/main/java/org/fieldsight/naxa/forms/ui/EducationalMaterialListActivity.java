@@ -20,7 +20,6 @@ import org.fieldsight.naxa.educational.Edu_Image_Model;
 import org.fieldsight.naxa.educational.Edu_PDF_Model;
 import org.fieldsight.naxa.educational.Edu_Title_Desc_Model;
 import org.fieldsight.naxa.educational.PagerAdapter;
-import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSource;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.generalforms.data.Em;
@@ -53,7 +52,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
     List<Fragment> fragments = new Vector<>();
 
 
-    private int defaultPagerPosition = 0;
+    private final int defaultPagerPosition = 0;
     private PagerAdapter mPagerAdapter;
     public ViewPager viewPager;
     public TabLayout tabLayout;

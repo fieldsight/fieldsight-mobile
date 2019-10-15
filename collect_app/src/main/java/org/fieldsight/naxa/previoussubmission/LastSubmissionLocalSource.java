@@ -16,7 +16,7 @@ import io.reactivex.Maybe;
 public class LastSubmissionLocalSource implements BaseLocalDataSource<SubmissionDetail> {
 
     private static LastSubmissionLocalSource INSTANCE;
-    private SubmissionDetailDAO dao;
+    private final SubmissionDetailDAO dao;
 
 
     private LastSubmissionLocalSource() {

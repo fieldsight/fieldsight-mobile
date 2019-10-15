@@ -38,7 +38,6 @@ import java.util.ArrayList;
 public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_SPINNER = 1, VIEW_TYPE_BUTTON = 2, VIEW_TYPE_LIST = 3;
     private final FilterDialogAdapter.RecyclerViewClickListener listener;
-    private final FilterType selectedSortingOrder;
     private final RecyclerView recyclerView;
     private final ThemeUtils themeUtils;
     private final ArrayList<FilterOption> sortList;
@@ -48,7 +47,6 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         themeUtils = new ThemeUtils(context);
         this.recyclerView = recyclerView;
         this.sortList = sortList;
-        this.selectedSortingOrder = selectedSortingOrder;
         listener = recyclerViewClickListener;
     }
 

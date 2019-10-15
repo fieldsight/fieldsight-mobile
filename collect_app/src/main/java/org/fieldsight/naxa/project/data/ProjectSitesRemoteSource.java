@@ -43,9 +43,8 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
     private static ProjectSitesRemoteSource INSTANCE;
-    private SiteRepository siteRepository;
-    private ProjectLocalSource projectLocalSource;
-    private SyncRepository syncRepository;
+    private final SiteRepository siteRepository;
+    private final ProjectLocalSource projectLocalSource;
 
     public static ProjectSitesRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -57,7 +56,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     public ProjectSitesRemoteSource() {
         siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
         projectLocalSource = ProjectLocalSource.getInstance();
-        syncRepository = SyncRepository.getInstance();
+
     }
 
 

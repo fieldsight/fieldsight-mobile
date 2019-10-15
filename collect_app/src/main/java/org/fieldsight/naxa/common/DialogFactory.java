@@ -23,8 +23,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
-import com.google.android.material.textfield.TextInputLayout;
-
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.application.Collect;

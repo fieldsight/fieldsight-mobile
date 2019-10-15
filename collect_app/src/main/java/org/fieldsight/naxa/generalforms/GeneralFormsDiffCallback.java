@@ -10,8 +10,8 @@ import java.util.List;
 
 public class GeneralFormsDiffCallback extends DiffUtil.Callback {
 
-    private List<GeneralFormAndSubmission> oldGeneralForms;
-    private List<GeneralFormAndSubmission> newGeneralForms;
+    private final List<GeneralFormAndSubmission> oldGeneralForms;
+    private final List<GeneralFormAndSubmission> newGeneralForms;
 
     public GeneralFormsDiffCallback(List<GeneralFormAndSubmission> newGeneralForms, List<GeneralFormAndSubmission> oldGeneralForms) {
         this.newGeneralForms = newGeneralForms;

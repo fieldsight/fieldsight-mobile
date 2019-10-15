@@ -29,13 +29,14 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> {
 
     private static GeneralFormLocalSource INSTANCE;
-    private GeneralFormDAO dao;
+    private final GeneralFormDAO dao;
 
 
     private GeneralFormLocalSource() {

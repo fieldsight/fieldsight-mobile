@@ -24,7 +24,7 @@ import static org.fieldsight.naxa.common.Constant.DownloadStatus.RUNNING;
 public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapter.ViewHolder> {
 
     private final SyncRepository syncRepository;
-    private ArrayList<SyncableItem> syncableItems;
+    private final ArrayList<SyncableItem> syncableItems;
     private int selectedItemCount = 0;
 
     public DownloadListAdapter(ArrayList<SyncableItem> syncableItems) {

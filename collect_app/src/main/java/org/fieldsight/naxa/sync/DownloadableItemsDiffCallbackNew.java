@@ -9,8 +9,8 @@ import java.util.List;
 
 public class DownloadableItemsDiffCallbackNew extends DiffUtil.Callback {
 
-    private List<DownloadableItem> oldItems;
-    private List<DownloadableItem> newItems;
+    private final List<DownloadableItem> oldItems;
+    private final List<DownloadableItem> newItems;
 
 
     public DownloadableItemsDiffCallbackNew(List<DownloadableItem> newItems, List<DownloadableItem> oldItems) {

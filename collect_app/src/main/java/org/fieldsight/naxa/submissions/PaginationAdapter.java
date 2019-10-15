@@ -27,12 +27,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int LOADING = 1;
     private static final int END = -1;
 
-    private List<FormResponse> movies;
-    private Context context;
+    private  List<FormResponse> movies;
+    private final Context context;
 
     private boolean isLoadingAdded = false;
     public OnCardClickListener listener;
-    private boolean isLastPageFooterAdded = false;
+
 
     public PaginationAdapter(Context context) {
         this.context = context;
@@ -196,19 +196,15 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return movies.get(position);
     }
 
-    public void addLastPageFooter() {
-        isLastPageFooterAdded = true;
-        add(new FormResponse());
-    }
+
 
 
     protected class FormVH extends RecyclerView.ViewHolder {
-        private final CardView rootLayout;
-        private TextView tvTitle, tvSubmissionDateTime;
+        private final TextView tvTitle, tvSubmissionDateTime;
 
         public FormVH(View itemView) {
             super(itemView);
-            rootLayout = itemView.findViewById(R.id.card_view_item_recycler_view);
+            CardView rootLayout = itemView.findViewById(R.id.card_view_item_recycler_view);
             tvTitle = itemView.findViewById(R.id.item_text);
             tvSubmissionDateTime = itemView.findViewById(R.id.tv_item_submitted_by);
         }

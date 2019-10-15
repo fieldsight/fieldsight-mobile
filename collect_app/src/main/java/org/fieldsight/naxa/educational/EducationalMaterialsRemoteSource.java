@@ -47,7 +47,7 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em> {
 
     private static EducationalMaterialsRemoteSource INSTANCE;
-    private final EducationalMaterialsDao dao;
+
 
     public static EducationalMaterialsRemoteSource getInstance() {
         if (INSTANCE == null) {
@@ -58,7 +58,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
     private EducationalMaterialsRemoteSource() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
-        this.dao = database.getEducationalMaterialDAO();
+
     }
 
 

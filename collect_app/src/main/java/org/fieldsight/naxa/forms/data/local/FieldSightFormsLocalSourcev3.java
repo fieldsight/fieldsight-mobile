@@ -32,7 +32,7 @@ import timber.log.Timber;
 public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<FieldsightFormDetailsv3> {
 
     private static FieldSightFormsLocalSourcev3 INSTANCE;
-    private FieldSightFormDetailDAOV3 dao;
+    private final FieldSightFormDetailDAOV3 dao;
 
     private FieldSightFormsLocalSourcev3() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context

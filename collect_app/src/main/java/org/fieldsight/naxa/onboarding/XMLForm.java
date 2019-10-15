@@ -6,10 +6,10 @@ package org.fieldsight.naxa.onboarding;
  */
 
 public class XMLForm {
-    private String formCreatorsId;
-    private boolean isCreatedFromProject;
-    private String downloadUrl;
-    private String title;
+    private final String formCreatorsId;
+    private final boolean isCreatedFromProject;
+    private final String downloadUrl;
+    private final String title;
 
     public String getTitle() {
         return title;

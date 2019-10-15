@@ -50,8 +50,6 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
     @BindView(R.id.fieldsight_migrate_act_error_card)
     CardView cardViewError;
 
-    final Integer errorOccured = -1;
-    private final Integer max = 3;
     private Observable<Integer> migration;
 
     private final int MAX_PROGRESS = 8;

@@ -37,9 +37,9 @@ public class SubStageListAdapter extends
         RecyclerView.Adapter<SubStageListAdapter.ViewHolder> {
 
 
-    private List<SubStageAndSubmission> subStages;
-    private OnFormItemClickListener<SubStage> listener;
-    private String stageOrder;
+    private final List<SubStageAndSubmission> subStages;
+    private final OnFormItemClickListener<SubStage> listener;
+    private final String stageOrder;
 
 
     public SubStageListAdapter(List<SubStageAndSubmission> subStages, String stageOrder, OnFormItemClickListener<SubStage> listener) {
@@ -170,11 +170,11 @@ public class SubStageListAdapter extends
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvFormName, tvDesc, tvIconText, tvSubtext;
-        private Button btnOpenEdu, btnOpenHistory;
-        private ImageView ivCardCircle;
-        private CardView cardView;
-        private ImageButton btnExpandCard;
+        private final TextView tvFormName, tvDesc, tvIconText, tvSubtext;
+        private final Button btnOpenEdu, btnOpenHistory;
+        private final ImageView ivCardCircle;
+        private final CardView cardView;
+        private final ImageButton btnExpandCard;
 
 
         public ViewHolder(View view) {

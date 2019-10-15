@@ -16,7 +16,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -29,7 +28,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 public class TouchImageView extends AppCompatImageView {
 
-    private static final String DEBUG = "DEBUG";
+
 
     //
     // SuperMin and SuperMax multipliers. Determine how much the image can be
@@ -1022,7 +1021,7 @@ public class TouchImageView extends AppCompatImageView {
         //
         // Remember last point position for dragging
         //
-        private PointF last = new PointF();
+        private final PointF last = new PointF();
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -1171,9 +1170,9 @@ public class TouchImageView extends AppCompatImageView {
         private final float startZoom, targetZoom;
         private final float bitmapX, bitmapY;
         private final boolean stretchImageToSuper;
-        private AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
-        private PointF startTouch;
-        private PointF endTouch;
+        private final AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
+        private final PointF startTouch;
+        private final PointF endTouch;
 
         DoubleTapZoom(float targetZoom, float focusX, float focusY, boolean stretchImageToSuper) {
             setState(State.ANIMATE_ZOOM);

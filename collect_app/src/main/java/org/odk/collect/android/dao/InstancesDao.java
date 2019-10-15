@@ -25,21 +25,10 @@ import androidx.loader.content.CursorLoader;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.provider.InstanceProviderAPI;
-import org.fieldsight.naxa.common.Constant;
-import org.fieldsight.naxa.common.FieldSightUserSession;
-import org.fieldsight.naxa.network.APIEndpoint;
-import org.fieldsight.naxa.site.db.SiteUploadHistoryLocalSource;
 import org.odk.collect.android.utilities.ApplicationConstants;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.functions.Function;
-import timber.log.Timber;
-
-import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
-import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 /**
  * This class is used to encapsulate all access to the {@link org.odk.collect.android.provider.InstanceProvider#DATABASE_NAME}

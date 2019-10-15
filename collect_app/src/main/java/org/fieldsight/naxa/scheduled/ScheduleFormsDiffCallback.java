@@ -13,8 +13,8 @@ import java.util.List;
 
 public class ScheduleFormsDiffCallback extends DiffUtil.Callback {
 
-    private List<ScheduledFormAndSubmission> oldScheduleForm;
-    private List<ScheduledFormAndSubmission> newScheduleForm;
+    private final List<ScheduledFormAndSubmission> oldScheduleForm;
+    private final List<ScheduledFormAndSubmission> newScheduleForm;
 
     public ScheduleFormsDiffCallback(List<ScheduledFormAndSubmission> oldScheduleForm, List<ScheduledFormAndSubmission> newScheduleForm) {
         this.oldScheduleForm = oldScheduleForm;

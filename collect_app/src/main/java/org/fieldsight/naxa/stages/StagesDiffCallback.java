@@ -13,8 +13,8 @@ import java.util.List;
 
 public class StagesDiffCallback extends DiffUtil.Callback {
 
-    private List<Stage> oldStages;
-    private List<Stage> newStages;
+    private final List<Stage> oldStages;
+    private final List<Stage> newStages;
 
 
     public StagesDiffCallback(List<Stage> newStages, List<Stage> oldStages) {

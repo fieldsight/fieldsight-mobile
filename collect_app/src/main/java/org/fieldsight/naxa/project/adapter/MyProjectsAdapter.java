@@ -23,16 +23,14 @@ import static org.fieldsight.naxa.common.ViewUtils.loadRemoteImage;
 
 public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.MyViewHolder> {
 
-    private List<Project> myProjectList;
+    private final List<Project> myProjectList;
 
-    private OnItemClickListener onItemClickListener;
+    private final OnItemClickListener onItemClickListener;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView title, organizationName;
-        private ImageView ivLogo;
-
-        private RelativeLayout rootLayout;
+        private final TextView title, organizationName;
+        private final ImageView ivLogo;
 
 
         private MyViewHolder(View view) {
@@ -40,15 +38,10 @@ public class MyProjectsAdapter extends RecyclerView.Adapter<MyProjectsAdapter.My
             title = view.findViewById(R.id.tv_project_list_name);
             organizationName = view.findViewById(R.id.tv_organization_name);
             ivLogo = view.findViewById(R.id.iv_org_logo);
-            rootLayout = view.findViewById(R.id.project_list_item_root_layout);
+            RelativeLayout rootLayout = view.findViewById(R.id.project_list_item_root_layout);
 
 
-            rootLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.onItemClick(myProjectList.get(getAdapterPosition()));
-                }
-            });
+            rootLayout.setOnClickListener(v -> onItemClickListener.onItemClick(myProjectList.get(getAdapterPosition())));
         }
     }
 

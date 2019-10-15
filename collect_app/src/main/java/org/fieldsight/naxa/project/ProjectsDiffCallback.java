@@ -9,8 +9,8 @@ import java.util.List;
 
 public class ProjectsDiffCallback extends DiffUtil.Callback {
 
-    private List<Project> oldProjects;
-    private List<Project> newProjects;
+    private final List<Project> oldProjects;
+    private final List<Project> newProjects;
 
     public ProjectsDiffCallback(List<Project> newProjects, List<Project> oldProjects) {
         this.newProjects = newProjects;

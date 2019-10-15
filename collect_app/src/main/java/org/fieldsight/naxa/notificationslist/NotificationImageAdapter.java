@@ -17,7 +17,7 @@ import java.util.List;
 public class NotificationImageAdapter extends RecyclerView.Adapter<NotificationImageAdapter.ViewHolder> implements View.OnClickListener {
 
 
-    private List<NotificationImage> items;
+    private final List<NotificationImage> items;
 
     private OnItemClickListener onItemClickListener;
 

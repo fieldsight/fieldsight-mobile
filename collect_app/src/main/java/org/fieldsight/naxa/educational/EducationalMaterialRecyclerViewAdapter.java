@@ -33,12 +33,12 @@ import java.util.List;
 
 public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private String TAG = "Education Material";
+    private final String TAG = "Education Material";
     // The items to display in your RecyclerView
-    private List<Object> items;
+    private final List<Object> items;
 
     private static final int TEXT_VIEW = 0, IMAGE = 1, VIDEO = 2, PDF = 3;
-    private Context context;
+    private final Context context;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public EducationalMaterialRecyclerViewAdapter(Context context, List<Object> items) {

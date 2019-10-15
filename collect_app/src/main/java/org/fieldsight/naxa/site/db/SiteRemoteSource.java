@@ -46,7 +46,6 @@ import static org.fieldsight.naxa.network.ServiceGenerator.getRxClient;
 public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
     private static SiteRemoteSource INSTANCE;
-    private SiteDao dao;
 
 
     public static SiteRemoteSource getInstance() {

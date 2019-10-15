@@ -8,15 +8,11 @@ import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.InternetUtils;
-import org.fieldsight.naxa.common.ViewModelFactory;
-import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;

@@ -15,8 +15,8 @@ import java.util.List;
 public class SiteOverideLocalSource implements BaseLocalDataSource<SiteOveride> {
 
     private static SiteOverideLocalSource INSTANCE = null;
-    private SiteOverideDAO dao;
-    private SiteDao siteDao;
+    private final SiteOverideDAO dao;
+    private final SiteDao siteDao;
 
     private SiteOverideLocalSource() {
         FieldSightConfigDatabase database = FieldSightConfigDatabase.getDatabase(Collect.getInstance());//todo inject context

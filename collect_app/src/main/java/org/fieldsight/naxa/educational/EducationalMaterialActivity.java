@@ -65,8 +65,6 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
     public TextView subStageTitle;
 
     List<Fragment> fragments = new Vector<>();
-    private ArrayList<GeneralForm> generalFormList;
-    private String fsFormId, id, deployedFrom, formType;
 
 
     private static Single<List<String>> getFsFormIdsFromGeneral(ArrayList<GeneralFormAndSubmission> list) {

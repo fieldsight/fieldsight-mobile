@@ -14,9 +14,9 @@ public class FilterOption {
         CONFIRM_BUTTON,
     }
 
-    private FilterType type;
-    private String label;
-    private List<Pair> options;
+    private final FilterType type;
+    private final String label;
+    private final List<Pair> options;
     private Pair selection;
 
     public FilterOption(FilterType type, String label,List<Pair> site) {

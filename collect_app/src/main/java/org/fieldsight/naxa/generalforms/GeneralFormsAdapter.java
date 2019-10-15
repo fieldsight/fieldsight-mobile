@@ -33,8 +33,8 @@ import static org.fieldsight.naxa.common.AnimationUtils.getRotationAnimation;
 
 public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapter.ViewHolder> {
 
-    private ArrayList<GeneralFormAndSubmission> generalForms;
-    private OnFormItemClickListener<GeneralForm> listener;
+    private final ArrayList<GeneralFormAndSubmission> generalForms;
+    private final OnFormItemClickListener<GeneralForm> listener;
 
     GeneralFormsAdapter(ArrayList<GeneralFormAndSubmission> totalList, OnFormItemClickListener<GeneralForm> listener) {
         this.generalForms = totalList;
@@ -164,11 +164,11 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvFormName, tvDesc, tvIconText, tvSubtext;
-        private Button btnOpenEdu, btnOpenHistory;
-        private ImageView ivCardCircle;
-        private CardView cardView;
-        private ImageButton btnExpandCard;
+        private final TextView tvFormName, tvDesc, tvIconText, tvSubtext;
+        private final Button btnOpenEdu, btnOpenHistory;
+        private final ImageView ivCardCircle;
+        private final CardView cardView;
+        private final ImageButton btnExpandCard;
 
 
         public ViewHolder(View view) {

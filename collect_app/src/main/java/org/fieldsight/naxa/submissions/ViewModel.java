@@ -14,10 +14,10 @@ import java.util.ArrayList;
 
 public class ViewModel implements Parcelable {
 
-    private String name;
-    private String desc;
-    private String id;
-    private String secondaryId;
+    private final String name;
+    private final String desc;
+    private final String id;
+    private final String secondaryId;
     private String pictureUrl;
 
     public String getPictureUrl() {

@@ -127,7 +127,7 @@ public class FieldSightFormDownloadList extends FormListActivity implements Form
 
     public static final String FORM_ID_KEY = "formid";
     public static final String FORM_VERSION_KEY = "formversion";
-    private final int totalTimesAsyncTaskHasToRun = 2;
+
 
     private String alertMsg;
     private boolean alertShowing;

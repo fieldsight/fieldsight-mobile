@@ -17,7 +17,6 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
     private final ScheduledFormsLocalSource localSource;
     private final ScheduledFormsRemoteSource remoteSource;
 
-    private MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
 
 
     public static ScheduledFormRepository getInstance(ScheduledFormsLocalSource localSource, ScheduledFormsRemoteSource remoteSource) {

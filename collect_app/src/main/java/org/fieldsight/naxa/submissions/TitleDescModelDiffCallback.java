@@ -12,8 +12,8 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 
 public class TitleDescModelDiffCallback extends DiffUtil.Callback {
 
-    private List<ViewModel> oldItems;
-    private List<ViewModel> newItems;
+    private final List<ViewModel> oldItems;
+    private final List<ViewModel> newItems;
 
     public TitleDescModelDiffCallback(List<ViewModel> newItems, List<ViewModel> oldItems) {
         this.newItems = newItems;

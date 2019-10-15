@@ -18,8 +18,8 @@ import timber.log.Timber;
 
 public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFinishedListener {
 
-    private LoginView loginView;
-    private LoginModel loginModel;
+    private final LoginView loginView;
+    private final LoginModel loginModel;
 
     public LoginPresenterImpl(LoginView loginView) {
         this.loginView = loginView;

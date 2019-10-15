@@ -11,7 +11,7 @@ public class ContactRepository implements BaseRepository<FieldSightContactModel>
 
 
     private final ContactLocalSource localSource;
-    private final ContactRemoteSource remoteSource;
+
     private static ContactRepository INSTANCE = null;
 
 
@@ -29,7 +29,7 @@ public class ContactRepository implements BaseRepository<FieldSightContactModel>
 
     public ContactRepository(ContactLocalSource localSource, ContactRemoteSource remoteSource) {
         this.localSource = localSource;
-        this.remoteSource = remoteSource;
+
     }
 
     @Override

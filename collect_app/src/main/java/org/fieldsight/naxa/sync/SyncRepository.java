@@ -27,7 +27,7 @@ import static org.fieldsight.naxa.common.Constant.DownloadStatus.PENDING;
 @Deprecated
 public class SyncRepository {
 
-    private SyncOLD syncOLD;
+    private final SyncOLD syncOLD;
     public static SyncRepository instance;
     private final String CHECKED = "checked";
     public final String PROGRESS = "progress";
@@ -165,7 +165,7 @@ public class SyncRepository {
 
     private static class insertAsyncTask extends AsyncTask<SyncableItem, Void, Void> {
 
-        private SyncOLD syncOLD;
+        private final SyncOLD syncOLD;
 
         insertAsyncTask(SyncOLD dao) {
             syncOLD = dao;

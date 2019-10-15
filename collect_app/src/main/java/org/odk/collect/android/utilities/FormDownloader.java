@@ -54,7 +54,7 @@ public class FormDownloader {
 
     protected FormsDao formsDao;
 
-    private boolean isTempDownload;
+    private final boolean isTempDownload;
 
     @Inject CollectServerClient collectServerClient;
 

@@ -28,16 +28,14 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
-
+@Deprecated
 public class DownloadPresenterImpl implements DownloadPresenter {
 
-    private DownloadView downloadView;
-    private DownloadModel downloadModel;
-    private SyncRepository syncRepository;
-    private MutableLiveData<Boolean> isDownloading = new MutableLiveData<>();
+    private final DownloadModel downloadModel;
+    private final SyncRepository syncRepository;
 
     public DownloadPresenterImpl(DownloadView downloadView) {
-        this.downloadView = downloadView;
+
         this.downloadModel = new DownloadModelImpl();
         syncRepository = SyncRepository.getInstance();
 

@@ -36,8 +36,7 @@ import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_M
 
 public class FlagFormRemoteSource {
     private static FlagFormRemoteSource INSTANCE;
-    String INSTANCES_PATH = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
-    private FSInstancesDao instancesDao;
+    private final FSInstancesDao instancesDao;
 
 
     public static FlagFormRemoteSource getINSTANCE() {

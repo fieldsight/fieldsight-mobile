@@ -15,21 +15,20 @@ import java.util.List;
 
 public class SearchAdapter extends BaseAdapter {
 
-    private Context mContext;
+    private final Context mContext;
     private List<Site> siteList;
     private LayoutInflater mLayoutInflater;
-    private boolean mIsFilterList;
 
     public SearchAdapter(Context context, List<Site> siteList, boolean isFilterList) {
         this.mContext = context;
         this.siteList = siteList;
-        this.mIsFilterList = isFilterList;
+
     }
 
 
     public void updateList(List<Site> filterList, boolean isFilterList) {
         this.siteList = filterList;
-        this.mIsFilterList = isFilterList;
+
         notifyDataSetChanged();
     }
 

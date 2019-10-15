@@ -32,7 +32,7 @@ import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleForm> {
 
     private static ScheduledFormsLocalSource INSTANCE;
-    private ScheduledFormDAO dao;
+    private final ScheduledFormDAO dao;
 
     private ScheduledFormsLocalSource() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context

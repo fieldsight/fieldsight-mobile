@@ -9,11 +9,11 @@ public class DownloadProgress implements Serializable {
     public static final int STATUS_PROGRESS_UPDATE = 2;
     public static final int STATUS_FINISHED_FORM = 3;
 
-    private String currentFile;
-    private int progress;
+    private final String currentFile;
+    private final int progress;
     private int total;
     private String message;
-    private boolean isIndeterminate;
+    private final boolean isIndeterminate;
 
     public DownloadProgress(String currentFile, int progress, int total, String message, boolean isIndeterminate) {
         this.currentFile = currentFile;

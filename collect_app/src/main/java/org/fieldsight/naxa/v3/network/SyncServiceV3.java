@@ -52,8 +52,8 @@ public class SyncServiceV3 extends IntentService {
 
     ArrayList<Project> selectedProject;
     HashMap<String, List<Syncable>> selectedMap = null;
-    private List<String> failedSiteUrls = new ArrayList<>();
-    private ArrayList<Disposable> syncDisposable = new ArrayList<>();
+    private final List<String> failedSiteUrls = new ArrayList<>();
+    private final ArrayList<Disposable> syncDisposable = new ArrayList<>();
     int currentWorkingProjectIndex = 0;
 
     public SyncServiceV3() {

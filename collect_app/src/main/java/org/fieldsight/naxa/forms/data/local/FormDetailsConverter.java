@@ -7,6 +7,8 @@ import org.odk.collect.android.logic.FormDetails;
 
 import java.io.Serializable;
 
+import timber.log.Timber;
+
 public class FormDetailsConverter implements Serializable {
 
     @TypeConverter
@@ -19,7 +21,8 @@ public class FormDetailsConverter implements Serializable {
                    "            \"formID\": \""+formDetails.getFormID()+"\",\n" +
                    "            \"version\": \""+formDetails.getFormVersion()+"\",\n" +
                    "            \"hash\": \""+formDetails.getHash()+"\"";
-        }catch (Exception e){e.printStackTrace();}
+        }catch (Exception e){
+            Timber.e(e);;}
         return jsonData += "}";
     }
 
@@ -29,7 +32,7 @@ public class FormDetailsConverter implements Serializable {
             JSONObject jsonObject = new JSONObject(value);
             return FieldsightFormDetailsv3.formDetailsfromJSON(jsonObject);
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);;
             return null;
         }
 

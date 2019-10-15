@@ -36,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
 
     private static StageRemoteSource INSTANCE;
-    private SyncRepository syncRepository;
+    private final SyncRepository syncRepository;
 
 
     public static StageRemoteSource getInstance() {

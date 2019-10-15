@@ -81,7 +81,7 @@ public class NotificationListActivity extends CollectAbstractActivity implements
     boolean isOlderLoading = false;
     private NotificationListViewModel viewModel;
     private NotificationsAdapter adapter;
-    private int count;
+
     final String latest_notification = "2"; // notification type when the user scroll down
     final String older_notification = "1"; // notification type when the user scrolls up
     List<FieldSightNotification> mNotificationList = new ArrayList<>();

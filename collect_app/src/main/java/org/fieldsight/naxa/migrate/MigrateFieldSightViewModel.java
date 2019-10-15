@@ -32,14 +32,14 @@ import io.reactivex.Observable;
 
 public class MigrateFieldSightViewModel extends ViewModel {
 
-    private MutableLiveData<List<File>> oldAccounts = new MutableLiveData<>();
+    private final MutableLiveData<List<File>> oldAccounts = new MutableLiveData<>();
     private String usernameOrEmail = null;
     private MigrationHelper migrationHelper;
 
 
     private void copyProjects() {
         SQLiteDatabase db = getProjSiteDB();
-        Cursor cursor = null;
+        Cursor cursor;
         cursor = selectAll(db, MigrationHelper.Table.PROJECT);
         ArrayList<Project> projects = new ArrayList<>();
 

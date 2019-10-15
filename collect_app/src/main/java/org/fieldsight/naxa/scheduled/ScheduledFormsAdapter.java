@@ -36,9 +36,9 @@ import static org.fieldsight.naxa.common.AnimationUtils.getRotationAnimation;
 public class ScheduledFormsAdapter extends
         RecyclerView.Adapter<ScheduledFormsAdapter.ViewHolder> {
 
-    private ArrayList<ScheduledFormAndSubmission> totalList;
+    private final ArrayList<ScheduledFormAndSubmission> totalList;
 
-    private OnFormItemClickListener<ScheduleForm> listener;
+    private final OnFormItemClickListener<ScheduleForm> listener;
 
     public ScheduledFormsAdapter(ArrayList<ScheduledFormAndSubmission> totalList, OnFormItemClickListener<ScheduleForm> listener) {
         this.totalList = totalList;
@@ -161,11 +161,11 @@ public class ScheduledFormsAdapter extends
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvFormName, tvDesc, tvIconText, tvSubtext;
-        private Button btnOpenEdu, btnOpenHistory;
-        private ImageView ivCardCircle;
-        private View cardView;
-        private ImageButton btnExpandCard;
+        private final TextView tvFormName, tvDesc, tvIconText, tvSubtext;
+        private final Button btnOpenEdu, btnOpenHistory;
+        private final ImageView ivCardCircle;
+        private final View cardView;
+        private final ImageButton btnExpandCard;
 
         public ViewHolder(View view) {
             super(view);

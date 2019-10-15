@@ -8,13 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.odk.collect.android.logic.FormDetails;
 
 public class FieldSightFormVH extends RecyclerView.ViewHolder {
-    private TextView tvTitle, tvSubtitle, tvIconText;
-    private Button btnViewSubmission, btnViewEduMaterial;
+    private final TextView tvTitle, tvSubtitle, tvIconText;
+    private final Button btnViewSubmission, btnViewEduMaterial;
 
     protected FieldSightFormVH(@NonNull View itemView) {
         super(itemView);

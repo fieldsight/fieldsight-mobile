@@ -12,9 +12,9 @@ import java.util.List;
 public class PairSpinnerAdapter extends ArrayAdapter<Pair> {
 
 
-    private Context context;
+    private final Context context;
 
-    private List<Pair> values;
+    private final List<Pair> values;
 
     public PairSpinnerAdapter(Context context, int textViewResourceId, List<Pair> values) {
         super(context, textViewResourceId, values);

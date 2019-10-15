@@ -7,16 +7,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.odk.collect.android.application.Collect;
-
 import java.util.List;
 
 import timber.log.Timber;
 
 
 public abstract class BaseRecyclerViewAdapter<L, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-    private List<L> l;
-    private int layout;
+    private final List<L> l;
+    private final int layout;
 
     protected BaseRecyclerViewAdapter(List<L> l, int layout) {
         this.l = l;

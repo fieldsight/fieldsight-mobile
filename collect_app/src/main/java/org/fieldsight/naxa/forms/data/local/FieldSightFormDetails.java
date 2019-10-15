@@ -5,12 +5,9 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-
 import com.google.gson.annotations.SerializedName;
 
-import org.fieldsight.naxa.forms.data.local.FormSchedule;
 import org.fieldsight.naxa.stages.data.SubStage;
-import org.json.JSONObject;
 import org.odk.collect.android.logic.FormDetails;
 
 import java.util.ArrayList;

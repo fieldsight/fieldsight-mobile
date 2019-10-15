@@ -3,9 +3,8 @@ package org.fieldsight.naxa.login;
 import android.text.TextUtils;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.SharedPreferenceUtils;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.common.exception.FirebaseTokenException;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.firebase.FCMParameter;
@@ -13,6 +12,7 @@ import org.fieldsight.naxa.login.model.AuthResponse;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ApiInterface;
 import org.fieldsight.naxa.network.ServiceGenerator;
+import org.odk.collect.android.application.Collect;
 
 import javax.net.ssl.SSLException;
 
@@ -22,8 +22,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.internal.Util;
-import retrofit2.Retrofit;
 import timber.log.Timber;
 
 public class LoginModelImpl implements LoginModel {

@@ -3,7 +3,6 @@ package org.fieldsight.naxa.forms.data.local;
 import androidx.lifecycle.LiveData;
 
 import org.fieldsight.naxa.common.BaseLocalDataSourceRX;
-import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.odk.collect.android.application.Collect;
 
@@ -15,7 +14,7 @@ import io.reactivex.Completable;
 public class FieldSightFormsLocalSource implements BaseLocalDataSourceRX<FieldSightFormDetails> {
 
     private static FieldSightFormsLocalSource INSTANCE;
-    private FieldSightFormDetailDAO dao;
+    private final FieldSightFormDetailDAO dao;
 
     private FieldSightFormsLocalSource() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context

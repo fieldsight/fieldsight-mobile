@@ -2,16 +2,11 @@ package org.fieldsight.naxa.common.rx;
 
 import android.net.Uri;
 
-import com.google.gson.reflect.TypeToken;
-
-import org.fieldsight.naxa.common.GSONInstance;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

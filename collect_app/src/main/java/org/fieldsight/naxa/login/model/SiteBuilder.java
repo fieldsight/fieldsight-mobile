@@ -175,6 +175,10 @@ public class SiteBuilder {
         return this;
     }
 
+    public Parcel getIn() {
+        return in;
+    }
+
     public Site createSite() {
         return new Site(id, latitude, longitude, identifier, name, typeId, typeLabel,
                 phone, address, publicDesc, additionalDesc, logo, isActive, location,

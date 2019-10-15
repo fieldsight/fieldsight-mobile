@@ -14,11 +14,11 @@ import io.reactivex.Observable;
 
 public class UserProfileViewModel extends ViewModel {
 
-    private UserProfileRepository userProfileRepository;
-    private MutableLiveData<User> user = new MutableLiveData<>();
-    private MutableLiveData<Boolean> syncLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> editProfile = new MutableLiveData<>();
-    private MutableLiveData<Boolean> progressBar = new MutableLiveData<>();
+    private final UserProfileRepository userProfileRepository;
+    private final MutableLiveData<User> user = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> syncLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> editProfile = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> progressBar = new MutableLiveData<>();
 
     public UserProfileViewModel() {
         this.userProfileRepository = new UserProfileRepository();

@@ -94,7 +94,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private TextView tvSiteType;
     private Unbinder unbinder;
     private View rootView;
-    private LiveData<Site> siteLiveData;
+
     boolean isParent = false;
 
     public SiteDashboardFragment() {

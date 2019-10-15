@@ -17,7 +17,6 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
 
     private static SubStageRepository INSTANCE = null;
     private final SubStageLocalSource localSource;
-    private final StageRemoteSource remoteSource;
 
     public static SubStageRepository getInstance(SubStageLocalSource localSource, StageRemoteSource remoteSource) {
         if (INSTANCE == null) {
@@ -33,7 +32,7 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
 
     private SubStageRepository(@NonNull SubStageLocalSource localSource, @NonNull StageRemoteSource remoteSource) {
         this.localSource = localSource;
-        this.remoteSource = remoteSource;
+
     }
 
 

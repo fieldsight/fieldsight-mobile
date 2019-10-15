@@ -2,14 +2,10 @@ package org.fieldsight.naxa.v3.forms;
 
 import android.util.Pair;
 
-import androidx.room.ColumnInfo;
-
-import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
-import org.fieldsight.naxa.network.APIEndpoint;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.logic.FormDetails;
@@ -25,7 +21,7 @@ public class FieldSightFormDownloader extends FormDownloader {
         super(isTempDownload);
     }
 
-    private String urlPrefix = FieldSightUserSession.getServerUrl(Collect.getInstance());
+    private final String urlPrefix = FieldSightUserSession.getServerUrl(Collect.getInstance());
 
     HashMap<FieldSightFormDetails, String> downloadFieldSightForms(List<FieldSightFormDetails> toDownload) {
 

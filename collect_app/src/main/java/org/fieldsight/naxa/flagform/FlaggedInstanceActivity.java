@@ -74,12 +74,9 @@ import timber.log.Timber;
 
 public class FlaggedInstanceActivity extends BaseActivity implements View.OnClickListener, NotificationImageAdapter.OnItemClickListener {
 
-    private static String TAG = "Comment Activity";
+    private static final String TAG = "Comment Activity";
     //constants for form status
-    private final String FLAGGED_FORM = "FLAGGED";
-    private final String OUTSTANDING_FORM = "Outstanding";
-    private final String REJECTED_FORM = "REJECTED";
-    private final String APPROVED_FORM = "APPROVED";
+
 
     Context context = this;
 
@@ -91,11 +88,9 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     private FieldSightNotification loadedFieldSightNotification;
     private Toolbar toolbar;
 
-
-    private DownloadFormListTask downloadFormListTask;
     private DownloadFormsTask downloadFormsTask;
     private ProgressDialog dialog;
-    private HashMap<String, Boolean> formResult;
+
     private Dialog errorDialog;
     private FormsDao formsDao;
     private FSInstancesDao instancesDao;
@@ -135,7 +130,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
         loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
 
-        formResult = new HashMap<>();
+
         setupData(loadedFieldSightNotification);
         setupSiteCard(loadedFieldSightNotification);
 

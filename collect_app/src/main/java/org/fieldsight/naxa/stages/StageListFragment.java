@@ -55,7 +55,6 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
     private Site loadedSite;
     Unbinder unbinder;
 
-    private StageViewModel viewModel;
 
     @BindView(R.id.root_layout_empty_layout)
     public LinearLayout emptyLayout;
@@ -86,9 +85,6 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
                 inflater.inflate(R.layout.general_forms_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
-
-        viewModel = ViewModelProviders.of(getActivity(), factory).get(StageViewModel.class);
 
         setToolbarText();
         return rootView;

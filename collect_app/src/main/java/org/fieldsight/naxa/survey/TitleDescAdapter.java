@@ -21,16 +21,14 @@ import java.util.List;
 
 public class TitleDescAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<SurveyForm> listOfItems;
+    private final ArrayList<SurveyForm> listOfItems;
     private OnCardClickListener onCardClickListener;
 
     public TitleDescAdapter() {
         listOfItems = new ArrayList<>();
     }
 
-    public List<SurveyForm> getListOfItems() {
-        return listOfItems;
-    }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

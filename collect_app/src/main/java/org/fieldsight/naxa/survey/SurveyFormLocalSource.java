@@ -14,7 +14,7 @@ import java.util.List;
 public class SurveyFormLocalSource implements BaseLocalDataSource<SurveyForm> {
 
     private static SurveyFormLocalSource INSTANCE;
-    private SurveyFormDAO dao;
+    private final SurveyFormDAO dao;
 
 
     private SurveyFormLocalSource() {

@@ -20,17 +20,16 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.widget.Toolbar;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.fragments.FSDataManagerList;
+import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.adapters.ViewPagerAdapter;
-import org.odk.collect.android.fragments.DataManagerList;
 import org.odk.collect.android.fragments.FormManagerList;
 import org.odk.collect.android.views.SlidingTabLayout;
-import org.fieldsight.naxa.login.model.Site;
 
 import java.util.ArrayList;
 
@@ -39,7 +38,6 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 public class FileManagerTabs extends CollectAbstractActivity {
 
 //    private final DataManagerList dataManagerList = DataManagerList.newInstance();
-    private final FormManagerList formManagerList = FormManagerList.newInstance();
 
     private Site loadedSite;
 

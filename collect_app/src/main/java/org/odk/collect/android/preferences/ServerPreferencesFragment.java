@@ -35,17 +35,15 @@ import android.widget.ListPopupWindow;
 
 import androidx.appcompat.content.res.AppCompatResources;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.fieldsight.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.injection.DaggerUtils;
-
 import org.odk.collect.android.preferences.filters.ControlCharacterFilter;
 import org.odk.collect.android.preferences.filters.WhitespaceFilter;
 import org.odk.collect.android.utilities.FileUtils;

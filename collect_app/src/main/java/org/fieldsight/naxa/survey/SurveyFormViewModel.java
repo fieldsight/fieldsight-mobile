@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 public class SurveyFormViewModel extends ViewModel {
-    private SurveyFormRepository repository;
+    private final SurveyFormRepository repository;
 
 
     public SurveyFormViewModel(SurveyFormRepository repository) {

@@ -2,7 +2,6 @@ package org.fieldsight.naxa.fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.loader.content.CursorLoader;
 
 import org.fieldsight.naxa.helpers.FSInstancesDao;

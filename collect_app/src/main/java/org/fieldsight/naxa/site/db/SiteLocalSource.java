@@ -26,7 +26,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
 
     private static SiteLocalSource INSTANCE;
-    private SiteDao dao;
+    private final SiteDao dao;
 
 
     private SiteLocalSource() {

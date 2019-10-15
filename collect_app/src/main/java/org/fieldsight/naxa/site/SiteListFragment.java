@@ -82,11 +82,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private LiveData<List<Site>> allSitesLiveData;
     private LiveData<List<Site>> offlineSitesLiveData;
     private BottomSheetDialog bottomSheetDialog;
-    private FilterOption.FilterType selectedFilter;
 
     private ActionMode actionMode;
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
-    private LiveData<List<Site>> filteredSiteLiveData;
     private MenuItem sortActionFilter;
     TermsLabels tl = null;
 
@@ -347,11 +345,10 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     }
 
-    protected FilterOption.FilterType getSelectedFilter() {
-        if (selectedFilter == null) {
-            return FilterOption.FilterType.ALL_SITES;
-        }
-        return selectedFilter;
+    private FilterOption.FilterType getSelectedFilter() {
+
+        return FilterOption.FilterType.ALL_SITES;
+
     }
 
     @Override
@@ -401,7 +398,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void onSurveyFormClicked() {
-        FragmentHostActivity.startWithSurveyForm(requireActivity(),loadedProject);
+        FragmentHostActivity.startWithSurveyForm(requireActivity(), loadedProject);
     }
 
 

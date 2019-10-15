@@ -23,7 +23,7 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
 
     private static SiteRepository INSTANCE = null;
     private final SiteLocalSource localSource;
-    private final SiteRemoteSource remoteSource;
+
 
 
     public static SiteRepository getInstance(SiteLocalSource localSource, SiteRemoteSource remoteSource) {
@@ -40,7 +40,7 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
 
     private SiteRepository(@NonNull SiteLocalSource localSource, @NonNull SiteRemoteSource remoteSource) {
         this.localSource = localSource;
-        this.remoteSource = remoteSource;
+
     }
 
     public List<Site> searchSites(String searchQuery,String projectId) {

@@ -10,8 +10,8 @@ import java.util.List;
 
 public class SubStageDiffCallback extends DiffUtil.Callback {
 
-    private List<SubStageAndSubmission> oldSubStages;
-    private List<SubStageAndSubmission> newSubStages;
+    private final List<SubStageAndSubmission> oldSubStages;
+    private final List<SubStageAndSubmission> newSubStages;
 
 
     public SubStageDiffCallback(List<SubStageAndSubmission> newSubStages, List<SubStageAndSubmission> oldSubStages) {

@@ -43,7 +43,6 @@ public class ProjectRepository implements BaseRepository<Project> {
     private final ProjectLocalSource localSource;
     private final ProjectSitesRemoteSource remoteSource;
 
-    private MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
 
     public static ProjectRepository getInstance() {
         return getInstance(ProjectLocalSource.getInstance(), ProjectSitesRemoteSource.getInstance());

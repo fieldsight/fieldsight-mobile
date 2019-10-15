@@ -40,8 +40,8 @@ import static org.fieldsight.naxa.common.event.DataSyncEvent.EventStatus.EVENT_S
 public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<ScheduleForm> {
 
     private static ScheduledFormsRemoteSource INSTANCE;
-    private ProjectLocalSource projectLocalSource;
-    private SyncRepository syncRepository;
+    private final ProjectLocalSource projectLocalSource;
+    private final SyncRepository syncRepository;
 
 
     public static ScheduledFormsRemoteSource getInstance() {

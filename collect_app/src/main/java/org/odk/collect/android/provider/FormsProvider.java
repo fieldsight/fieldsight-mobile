@@ -25,7 +25,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import org.fieldsight.collect.android.R;
 import androidx.annotation.NonNull;
 
 import org.odk.collect.android.application.Collect;

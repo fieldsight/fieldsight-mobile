@@ -9,7 +9,6 @@ import org.fieldsight.collect.android.R;
 
 
 public class FlipAnimator {
-    private static String TAG = FlipAnimator.class.getSimpleName();
     private static AnimatorSet leftIn, rightOut, leftOut, rightIn;
 
     /**

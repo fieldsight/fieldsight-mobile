@@ -17,7 +17,7 @@ import io.reactivex.Single;
 public class ProjectLocalSource implements BaseLocalDataSource<Project> {
 
     private static ProjectLocalSource INSTANCE;
-    private ProjectDao dao;
+    private final ProjectDao dao;
 
 
     private ProjectLocalSource() {

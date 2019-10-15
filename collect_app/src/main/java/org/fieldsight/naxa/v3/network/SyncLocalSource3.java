@@ -19,7 +19,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
 
     private static SyncLocalSource3 INSTANCE;
-    private SyncDaoV3 dao;
+    private final SyncDaoV3 dao;
 
 
     private SyncLocalSource3() {

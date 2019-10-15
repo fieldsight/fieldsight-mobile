@@ -34,7 +34,7 @@ import timber.log.Timber;
 public class FieldSightFormRemoteSourceV3 {
 
     private static FieldSightFormRemoteSourceV3 INSTANCE;
-    private FormsDao formsDao;
+    private final FormsDao formsDao;
     FieldSightFormDownloader fieldSightFormDownloader = new FieldSightFormDownloader(false);
     // holds the projectid and total number of forms
     SparseIntArray projectIdUrlMap;

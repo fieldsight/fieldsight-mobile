@@ -17,9 +17,9 @@ import java.util.List;
 
 public class SiteTypeSpinnerAdapter extends ArrayAdapter<SiteType> {
 
-    private Context context;
+    private final Context context;
 
-    private List<SiteType> values;
+    private final List<SiteType> values;
 
     public SiteTypeSpinnerAdapter(Context context, int textViewResourceId, String hint, List<SiteType> values) {
         super(context, textViewResourceId, values);

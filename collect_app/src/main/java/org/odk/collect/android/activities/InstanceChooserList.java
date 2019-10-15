@@ -32,21 +32,19 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
 import org.fieldsight.collect.android.R;
+import org.odk.collect.android.adapters.InstanceListCursorAdapter;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.fieldsight.naxa.login.model.Site;
-import org.odk.collect.android.adapters.InstanceListCursorAdapter;
-import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
 
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
 /**

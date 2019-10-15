@@ -35,9 +35,9 @@ import static org.fieldsight.naxa.common.Constant.NotificationType.FORM_FLAG;
 
 public class FieldSightFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "FirebaseService";
+
     private final static AtomicInteger notificationId = new AtomicInteger(0);
-    private static final String NOTIFY_STATUS = "status";
+
     public static final String NEW_FORM = "New Form";
 
 
@@ -56,7 +56,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
     String date_str;
     String localTime;
-    public static Boolean notificationStatus = false;
+
 
     DateFormat dateFormat, date1;
     Date date, currentLocalTime;
@@ -64,21 +64,20 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
     Uri notificationSound;
     Ringtone ringtonePlayer;
-    private String comment;
+
     private String fsFormId;
     private String fsFormIdProject;
     private String fsFormSubmissionId;
     private String formType;
     private String formName;
     private String formComment;
-    private String form;
+ 
     private String formVerion;
 
-    private String deleteForm;
+
     private String isDeployed, webDeployedId;
     private String notificationDetailsUrl = "";
 
-    private String isDeployedFromProject;//todo: this needs to be checked and removed coz we are using isDeployedFromSite in flag forms
     private boolean isDeployedFromSite;
     private String siteIdentifier;
 
@@ -230,9 +229,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
         if (notificationData.containsKey("form")) {
             String form = notificationData.get("form");
         }
-        if (notificationData.containsKey("is_delete")) {
-            deleteForm = notificationData.get("is_delete");
-        }
+
         if (notificationData.containsKey("is_deployed")) {
             isDeployed = notificationData.get("is_deployed");
         }
@@ -244,11 +241,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
             webDeployedId = notificationData.get("deploy_id");
             Timber.i("deploy_id %s", webDeployedId);
         }
-
-        if (notificationData.containsKey("is_project")) {
-            isDeployedFromProject = notificationData.get("is_project");
-        }
-
         if (notificationData.containsKey("project_form_id")) {
             fsFormIdProject = notificationData.get("project_form_id");
         }

@@ -89,7 +89,6 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
 public class InstanceUploaderListActivity extends InstanceListActivity implements
         OnLongClickListener, DiskSyncListener, AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final String SHOW_ALL_MODE = "showAllMode";
-    private static final String FILTER_BY_SITE_MODE = "filterBySiteMode";
     private static final String INSTANCE_UPLOADER_LIST_SORTING_ORDER = "instanceUploaderListSortingOrder";
 
     public static final int INSTANCE_UPLOADER = 0;

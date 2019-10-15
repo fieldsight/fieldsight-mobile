@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.view.Menu;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -16,8 +14,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,9 +43,8 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 
 public class PreviousSubmissionListActivity extends CollectAbstractActivity implements PaginationAdapter.OnCardClickListener {
 
-    private static final String EXTRA_FORM_HISTORY = "org.bcss.collect.android.fieldsight.model.FormHistoryResponse";
     ActionBar actionBar;
-    private String fsFormId, fsFormName, fsFormRecordName, siteId;
+    private String fsFormId, fsFormName, siteId;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView listFormHistory;
     private PaginationAdapter adapter;
@@ -68,7 +63,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     private CardView cardSubmissionInfo;
     private TextView tvTotalSubmissionMessage;
     private TextView tvListTitle;
-    private Button btnLoadLatestSubmission;
+
     private String tableName;
 
     FormResponse offlineLatestResponse;
@@ -93,7 +88,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         Bundle bundle = getIntent().getExtras();
         fsFormId = bundle.getString(Constant.BundleKey.KEY_FS_FORM_ID);
         fsFormName = bundle.getString(Constant.BundleKey.KEY_FS_FORM_NAME);
-        fsFormRecordName = bundle.getString(Constant.BundleKey.KEY_FS_FORM_RECORD_NAME);
+
         siteId = bundle.getString(Constant.BundleKey.KEY_SITE_ID);
         tableName = bundle.getString(Constant.BundleKey.KEY_TABLE_NAME);
 
@@ -339,7 +334,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         cardSubmissionInfo = findViewById(R.id.card_info);
         tvTotalSubmissionMessage = findViewById(R.id.tv_total_submission_message);
         tvListTitle = findViewById(R.id.tv_list_title);
-        btnLoadLatestSubmission = findViewById(R.id.btn_load_prev_submissions);
+
     }
 
     @Override

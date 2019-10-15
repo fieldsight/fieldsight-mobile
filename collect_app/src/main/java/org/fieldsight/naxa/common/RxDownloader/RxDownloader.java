@@ -28,8 +28,8 @@ public class RxDownloader {
 
     private static final String DEFAULT_MIME_TYPE = "*/*";
 
-    private Context context;
-    private LongSparseArray<PublishSubject<String>> subjectMap = new LongSparseArray<>();
+    private final Context context;
+    private final LongSparseArray<PublishSubject<String>> subjectMap = new LongSparseArray<>();
     private DownloadManager downloadManager;
 
     public RxDownloader(@NonNull Context context) {

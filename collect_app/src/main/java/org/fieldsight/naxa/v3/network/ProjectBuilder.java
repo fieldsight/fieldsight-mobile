@@ -28,7 +28,9 @@ public class ProjectBuilder {
 
     private Parcel in;
 
-
+    public Parcel getIn() {
+        return in;
+    }
 
     public ProjectBuilder setId(String id) {
         this.id = id;

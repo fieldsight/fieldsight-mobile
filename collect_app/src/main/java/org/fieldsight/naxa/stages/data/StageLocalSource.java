@@ -24,7 +24,7 @@ import io.reactivex.functions.Predicate;
 public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
     private static StageLocalSource INSTANCE;
-    private StageFormDAO dao;
+    private final StageFormDAO dao;
 
     private StageLocalSource() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context

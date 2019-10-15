@@ -27,7 +27,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_SURVEY_FORM = 0, VIEW_TYPE_SITE = 1;
 
     private final List<Site> siteList;
-    private final List<Site> filetredsitelist;
+
     private final SparseBooleanArray selectedItems;
     private final SparseBooleanArray animationItemsIndex;
     private final SiteListAdapter.SiteListAdapterListener listener;
@@ -48,7 +48,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         surveyFormAndSites.addAll(sitelist);
 
         this.siteList = surveyFormAndSites;
-        this.filetredsitelist = surveyFormAndSites;
+
 
 
     }
@@ -171,7 +171,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class SurveyViewHolder extends RecyclerView.ViewHolder {
 
-        private RelativeLayout rootLayout;
+        private final RelativeLayout rootLayout;
 
         SurveyViewHolder(View itemView) {
             super(itemView);
@@ -187,10 +187,10 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class SiteViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
-        private TextView siteName, identifier, message, iconText, offlinetag;
-        private ImageView imgProfile;
-        private RelativeLayout iconContainer, iconBack, iconFront;
-        private View rootLayout;
+        private final TextView siteName, identifier, message, iconText, offlinetag;
+        private final ImageView imgProfile;
+        private final RelativeLayout iconContainer, iconBack, iconFront;
+        private final View rootLayout;
 
         SiteViewHolder(View view) {
             super(view);

@@ -77,7 +77,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
     private Bundle message;
 
     private ResultReceiver receiver;
-    private DownloadProgress downloadProgress;
 
 
     public static void start(Context context, @NonNull XMLFormDownloadReceiver receiver) {

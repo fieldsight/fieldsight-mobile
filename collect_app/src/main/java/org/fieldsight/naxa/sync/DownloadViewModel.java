@@ -62,7 +62,6 @@ import static org.fieldsight.naxa.common.event.DataSyncEvent.EventStatus.EVENT_S
 
 public class DownloadViewModel extends ViewModel {
 
-    private final CompositeDisposable disposables = new CompositeDisposable();
 
     public void queueSyncTask(List<DownloadableItem> downloadableItems) {
         for (DownloadableItem downloadableItem : downloadableItems) {
