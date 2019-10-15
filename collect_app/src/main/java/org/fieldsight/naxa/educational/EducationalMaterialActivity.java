@@ -62,7 +62,7 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
     @BindView(R.id.title)
     public TextView subStageTitle;
 
-    List<Fragment> fragments = new Vector<>();
+    List<Fragment> fragments = new ArrayList<>();
 
 
     private static Single<List<String>> getFsFormIdsFromGeneral(ArrayList<GeneralFormAndSubmission> list) {

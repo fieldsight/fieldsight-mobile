@@ -13,7 +13,7 @@ public class FieldSightNotificationRepository implements BaseRepository<FieldSig
 
 
     private final FieldSightNotificationLocalSource localSource;
-    private static FieldSightNotificationRepository fieldSightNotificationRepository = null;
+    private static FieldSightNotificationRepository fieldSightNotificationRepository ;
 
 
     public static FieldSightNotificationRepository getInstance(FieldSightNotificationLocalSource localSource) {

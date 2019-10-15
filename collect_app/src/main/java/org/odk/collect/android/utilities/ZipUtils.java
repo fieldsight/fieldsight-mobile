@@ -36,9 +36,7 @@ import timber.log.Timber;
  */
 public final class ZipUtils {
 
-    private ZipUtils() {
-
-    }
+    private ZipUtils() {}
 
     public static void unzip(File[] zipFiles) {
         for (File zipFile : zipFiles) {

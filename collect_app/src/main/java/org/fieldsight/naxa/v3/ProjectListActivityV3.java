@@ -67,13 +67,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @BindView(R.id.cv_resync)
     CardView cvResync;
 
-    ProjectListAdapter adapter = null;
+    ProjectListAdapter adapter;
     List<Project> projectList = new ArrayList<>();
-    boolean auto = false;
+
     RecyclerView.AdapterDataObserver observer;
-    boolean allSelected = false;
+    boolean allSelected ;
     LiveData<List<ProjectNameTuple>> projectIds;
-    Observer<List<ProjectNameTuple>> projectObserver = null;
+    Observer<List<ProjectNameTuple>> projectObserver ;
     boolean showSyncMenu = true;
 
     @Override

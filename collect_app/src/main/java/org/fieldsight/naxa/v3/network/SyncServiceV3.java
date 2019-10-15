@@ -401,7 +401,7 @@ public class SyncServiceV3 extends IntentService {
         Timber.d("saving for for %d stopped at %s for %s", type, failedUrl, projectId);
         if (selectedMap != null && selectedMap.containsKey(projectId)) {
 //            selectedMap.get(projectId).get(type).completed = true;
-            SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, started, status, System.currentTimeMillis());
+            SyncStat syncStat = new SyncStat(projectId, String.valueOf(type) , failedUrl, started, status, System.currentTimeMillis());
             SyncLocalSource3.getInstance().save(syncStat);
         }
     }

@@ -31,6 +31,7 @@ import io.reactivex.functions.Predicate;
 import okhttp3.ResponseBody;
 import timber.log.Timber;
 
+@SuppressWarnings("PMD")
 public class FieldSightFormRemoteSourceV3 {
 
     private static FieldSightFormRemoteSourceV3 fieldSightFormRemoteSourceV3;
@@ -51,16 +52,17 @@ public class FieldSightFormRemoteSourceV3 {
         this.formsDao = new FormsDao();
     }
 
+
     private String buildUrlWithParams(List<Project> projects) {
         StringBuilder url = new StringBuilder();
         url.append(APIEndpoint.V3.GET_FORMS);
-        url.append("?");
+        url.append('?');
         for (int i = 0; i < projects.size(); i++) {
             url.append(APIEndpoint.PARAMS.PROJECT_ID);
-            url.append("=");
+            url.append('=');
             url.append(projects.get(i).getId());
             if (i < projects.size() - 1) {
-                url.append("&");
+                url.append('&');
             }
         }
         return url.toString();
@@ -99,7 +101,7 @@ public class FieldSightFormRemoteSourceV3 {
                                         Timber.i("FieldsightformRemotesourcev3, projectIdUrlMapSize = %d", projectIdUrlMap.size());
                                     }
                                     if(projectIdUrlMap.get(getProjectId(fieldsightFormDetailsv3)) == 0) {
-                                        SyncLocalSource3.getInstance().markAsCompleted(getProjectId(fieldsightFormDetailsv3)+"", 1);
+                                        SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(getProjectId(fieldsightFormDetailsv3)), 1);
                                     }
                                     Timber.i("FieldsightFormRemoteSourcev3, downloadFile = " + downloadFile + " skipping download " + fieldsightFormDetailsv3.getFormDetails().getDownloadUrl());
                                     return downloadFile;
@@ -110,7 +112,7 @@ public class FieldSightFormRemoteSourceV3 {
                                 int projectId = getProjectId(fieldSightFormDetailV3);
                                 int progressCount = downloadProjectFormProgressUrlMap.get(projectId, 0) + 1;
                                 downloadProjectFormProgressUrlMap.put(projectId, progressCount);
-                                SyncLocalSource3.getInstance().updateDownloadProgress(projectId+"", progressCount, projectIdUrlMap.get(projectId));
+                                SyncLocalSource3.getInstance().updateDownloadProgress(String.valueOf(projectId), progressCount, projectIdUrlMap.get(projectId));
                                 return downloadSingleForm(fieldSightFormDetailV3);
                             })
                             .doOnNext(new Consumer<Pair<FieldsightFormDetailsv3, String>>() {
@@ -121,7 +123,7 @@ public class FieldSightFormRemoteSourceV3 {
                                     Timber.i("FieldsightformRemotesourcev3, response = %s", message);
                                     Timber.i("FieldsightformRemotesourcev3, downloadCount = %d, projectCunt = %d", downloadProjectFormProgressUrlMap.get(projectId), projectIdUrlMap.get(projectId));
                                     if(downloadProjectFormProgressUrlMap.get(projectId) == projectIdUrlMap.get(projectId)) {
-                                        SyncLocalSource3.getInstance().markAsCompleted(projectId+"", 1);
+                                        SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
                                     }
                                 }
                             });
@@ -155,7 +157,7 @@ public class FieldSightFormRemoteSourceV3 {
         }
 
         for(int i = 0; i < projectIdUrlMap.size(); i ++ ) {
-            SyncLocalSource3.getInstance().markAsQueued(projectIdUrlMap.keyAt(i)+"", 1);
+            SyncLocalSource3.getInstance().markAsQueued(String.valueOf(projectIdUrlMap.keyAt(i)), 1);
         }
 
         return fieldSightFormsv3List;

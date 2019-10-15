@@ -23,7 +23,7 @@ public class FormHistoryResponse {
     private Object previous;
     @SerializedName("results")
     @Expose
-    private List<FormResponse> results = null;
+    private List<FormResponse> results;
 
     public Integer getCount() {
         return count;

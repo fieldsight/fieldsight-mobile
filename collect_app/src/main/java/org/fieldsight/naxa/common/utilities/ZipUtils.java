@@ -37,8 +37,8 @@ public class ZipUtils {
         if (sourceFile.isDirectory()) {
             allinfo.put("type", "Folder");
             File files[] = sourceFile.listFiles();
-            allinfo.put("size", sourceFile.length() + "");
-            allinfo.put("total_file", files.length + "");
+            allinfo.put("size", String.valueOf(sourceFile.length()));
+            allinfo.put("total_file", String.valueOf(files.length));
             StringBuilder fileName = new StringBuilder();
             boolean first = true;
             for (File file : files) {
@@ -53,7 +53,7 @@ public class ZipUtils {
         } else {
             allinfo.put("type", "File");
             allinfo.put("name", sourceFile.getName());
-            allinfo.put("size", sourceFile.length() + "");
+            allinfo.put("size", String.valueOf(sourceFile.length()));
             allinfo.put("total_file", "1");
         }
         return allinfo;

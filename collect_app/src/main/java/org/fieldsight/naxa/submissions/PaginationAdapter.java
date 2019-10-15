@@ -29,7 +29,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private  List<FormResponse> movies;
     private final Context context;
 
-    private boolean isLoadingAdded = false;
+    private boolean isLoadingAdded;
     public OnCardClickListener listener;
 
 

@@ -32,7 +32,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final SparseBooleanArray animationItemsIndex;
     private final SiteListAdapter.SiteListAdapterListener listener;
     private static int currentSelectedIndex = -1;
-    private boolean reverseAllAnimations = false;
+    private boolean reverseAllAnimations;
 
     SiteListAdapter(List<Site> sitelist, SiteListAdapter.SiteListAdapterListener listener) {
 

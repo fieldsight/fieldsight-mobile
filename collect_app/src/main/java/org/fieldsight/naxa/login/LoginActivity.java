@@ -51,7 +51,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     private ImageButton btnChangeUrl;
     private SignInButton btnGmailLogin;
-    private boolean isFromGooleSignin = false;
+    private boolean isFromGooleSignin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

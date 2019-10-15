@@ -28,7 +28,7 @@ public class NotificationRemoteSource {
 
     private Map<String, String> getHasMap(String epochTime, String type) {
         HashMap<String, String> requestParams = new HashMap<>();
-        requestParams.put("last_updated", epochTime+ "");
+        requestParams.put("last_updated", epochTime);
         requestParams.put("type", type);
         return requestParams;
     }

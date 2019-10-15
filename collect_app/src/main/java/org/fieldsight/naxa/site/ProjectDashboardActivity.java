@@ -106,10 +106,10 @@ public class ProjectDashboardActivity extends BaseActivity {
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
 
-    private boolean mapIsVisible = false;
+    private boolean mapIsVisible;
     private FrameLayout navigationHeader;
     private int mapExistReachesPosition;
-    TermsLabels tl = null;
+    TermsLabels tl;
 
     public static void start(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDashboardActivity.class);

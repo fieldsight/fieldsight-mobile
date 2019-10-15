@@ -117,7 +117,7 @@ public class Project implements Parcelable {
 
     @Expose
     @Ignore
-    long syncedDate = 0;
+    long syncedDate;
 
     public void setSynced(boolean isSynced) {
         this.isSynced = isSynced;

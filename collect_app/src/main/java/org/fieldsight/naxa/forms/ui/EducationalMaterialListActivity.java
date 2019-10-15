@@ -32,7 +32,6 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -50,7 +49,7 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 public class EducationalMaterialListActivity extends CollectAbstractActivity {
 
     private Em em;
-    List<Fragment> fragments = new Vector<>();
+    List<Fragment> fragments = new ArrayList<>();
 
 
     private final int defaultPagerPosition = 0;
@@ -62,11 +61,10 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
     private TextView title;
 
     public static void start(Context context, String formName, Em em) {
-        WeakReference<Context> weakReference = new WeakReference<Context>(context);
-        Intent intent = new Intent(weakReference.get(), EducationalMaterialListActivity.class);
+        Intent intent = new Intent(context, EducationalMaterialListActivity.class);
         intent.putExtra(EXTRA_OBJECT, em);
         intent.putExtra(EXTRA_MESSAGE, formName);
-        weakReference.get().startActivity(intent);
+        context.startActivity(intent);
     }
 
 
