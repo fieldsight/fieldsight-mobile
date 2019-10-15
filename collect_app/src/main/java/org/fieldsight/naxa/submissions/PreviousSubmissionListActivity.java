@@ -214,13 +214,6 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // getMenuInflater().inflate(R.menu.menu_sort, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
     private void sortByDate(List<FormResponse> formResponses) {
         Collections.sort(formResponses, new Comparator<FormResponse>() {
             @Override

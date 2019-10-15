@@ -56,17 +56,6 @@ public class FieldSightNotificationUtils {
 
     }
 
-    private Notification generateNotification(int number, String group) {
-        Collect context = Collect.getInstance();
-
-        return new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_city_black)
-                .setContentTitle("Daily reminder")
-                .setContentText("Don't forget to fill your form in Site" + number)
-                .setGroup(group)
-                .build();
-    }
-
     public static void createChannels(Context collect) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

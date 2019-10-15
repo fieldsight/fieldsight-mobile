@@ -19,8 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -40,14 +38,12 @@ import org.fieldsight.naxa.common.FilterDialogAdapter;
 import org.fieldsight.naxa.common.FilterOption;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
-import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.data.SiteRegion;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
-import org.fieldsight.naxa.survey.SurveyFormsActivity;
 import org.fieldsight.naxa.v3.network.Region;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -73,10 +69,6 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentExitAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.InstanceUploaderListActivity.INSTANCE_UPLOADER;
 
@@ -180,12 +172,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         sortActionFilter = menu.findItem(R.id.action_filter);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
     }
 
 

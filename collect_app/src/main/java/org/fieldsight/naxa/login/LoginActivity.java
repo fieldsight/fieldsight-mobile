@@ -241,9 +241,9 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
      */
     public void hideKeyboardInActivity(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
+        //Find the currently focused view, so we can grab the correct window TOKEN from it.
         View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        //If no view currently has focus, create a new one, just so we can grab a window TOKEN from it
         if (view == null) {
             view = new View(activity);
         }

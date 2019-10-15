@@ -22,11 +22,6 @@ public class PairSpinnerAdapter extends ArrayAdapter<Pair> {
         this.values = values;
     }
 
-    @Override
-    public int getCount() {
-        return super.getCount();
-    }
-
 
     public Pair getItem(int position) {
         return values.get(position);

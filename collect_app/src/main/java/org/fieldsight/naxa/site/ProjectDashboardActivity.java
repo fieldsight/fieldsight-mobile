@@ -230,13 +230,6 @@ public class ProjectDashboardActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-    }
-
     private void setupNavigationHeader() {
         try {
             User user = FieldSightUserSession.getUser();

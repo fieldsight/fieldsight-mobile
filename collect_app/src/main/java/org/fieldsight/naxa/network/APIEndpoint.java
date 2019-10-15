@@ -11,7 +11,7 @@ public class APIEndpoint {
 //  public static final String BASE_URL = "http://192.168.1.251:8001";
 
     public static final String PASSWORD_RESET = "/accounts/password/reset/";
-    public static final String USER_LOGIN = "/users/api/get-auth-token/";
+    public static final String USER_LOGIN = "/users/api/get-auth-TOKEN/";
 
     public static final String FORM_SUBMISSION_PAGE = "/forms/submission/";
     public static final String GET_SITE_TYPES = "/fieldsight/api/site-types/";

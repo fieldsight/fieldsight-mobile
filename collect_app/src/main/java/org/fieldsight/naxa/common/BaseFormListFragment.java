@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,37 +19,24 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.common.reflect.TypeToken;
-
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
-import org.fieldsight.naxa.educational.EducationalMaterialActivity;
-import org.fieldsight.naxa.forms.data.local.FieldSightFormDetailDAOV3;
-import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity;
 import org.fieldsight.naxa.forms.ui.FieldSightFormVH;
 import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
-import org.fieldsight.naxa.stages.data.SubStage;
 import org.fieldsight.naxa.submissions.PreviousSubmissionListActivity;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.provider.FormsProviderAPI;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
 import io.reactivex.observers.DisposableObserver;
 import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
-import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
-import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
-import static org.fieldsight.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 
 public class BaseFormListFragment extends Fragment {
 
@@ -188,25 +174,6 @@ public class BaseFormListFragment extends Fragment {
         };
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
-    }
-
-    private DisposableObserver<ArrayList<FieldsightFormDetailsv3>> onSubStateSubscribe() {
-        return new DisposableObserver<ArrayList<FieldsightFormDetailsv3>>() {
-            @Override
-            public void onNext(ArrayList<FieldsightFormDetailsv3> fieldSightForms) {
-                updateList(fieldSightForms, siteId);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        };
     }
 
 

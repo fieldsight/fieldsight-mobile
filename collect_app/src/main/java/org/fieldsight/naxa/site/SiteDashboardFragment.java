@@ -75,10 +75,10 @@ import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentExitAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_ENTER_ANIMATION;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_EXIT_ANIMATION;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_POP_ENTER_ANIMATION;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_POP_EXIT_ANIMATION;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.ViewUtils.showOrHide;
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
@@ -571,7 +571,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.GENERAl, loadedSite);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation);
+        fragmentTransaction.setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack("generalfrag");
         fragmentTransaction.commit();
@@ -586,7 +586,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation)
+                .setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION)
                 .replace(R.id.fragment_container, stageListFragment)
                 .addToBackStack("myfrag2").commit();
 
@@ -600,7 +600,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation)
+                .setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION)
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack("myfrag1").commit();
 

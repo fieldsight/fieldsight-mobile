@@ -288,13 +288,13 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
 
         switch (fieldSightNotification.getFormStatus()) {
-            case Constant.FormStatus.Flagged:
+            case Constant.FormStatus.FLAGGED:
                 formStatus = context.getResources().getString(R.string.notify_form_flagged);
                 break;
-            case Constant.FormStatus.Approved:
+            case Constant.FormStatus.APPROVED:
                 formStatus = context.getResources().getString(R.string.notify_form_approved);
                 break;
-            case Constant.FormStatus.Rejected:
+            case Constant.FormStatus.REJECTED:
                 formStatus = context.getResources().getString(R.string.notify_form_rejected);
                 break;
         }

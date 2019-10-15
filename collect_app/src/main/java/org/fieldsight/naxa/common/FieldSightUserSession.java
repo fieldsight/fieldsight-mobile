@@ -57,11 +57,11 @@ public class FieldSightUserSession {
     }
 
     public static String getAuthToken() {
-        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
+        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.TOKEN, "");
     }
 
     public static void saveAuthToken(String token) {
-        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), Constant.PrefKey.token, "Token " + token);
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), Constant.PrefKey.TOKEN, "Token " + token);
     }
 
     public static FCMParameter getFCMParameter(String username, String token, boolean deviceStatus) {

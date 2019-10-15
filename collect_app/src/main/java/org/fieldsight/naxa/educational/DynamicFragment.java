@@ -68,18 +68,6 @@ public class DynamicFragment extends Fragment {
         recyclerView.setVisibility(View.GONE);
     }
 
-    private void runLayoutAnimation(final RecyclerView recyclerView) {
-
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
-
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }
-
-
 
     private void bindDataToAdapter() {
         recyclerView.setAdapter(new EducationalMaterialRecyclerViewAdapter(getContext(), listArryObjFrom));

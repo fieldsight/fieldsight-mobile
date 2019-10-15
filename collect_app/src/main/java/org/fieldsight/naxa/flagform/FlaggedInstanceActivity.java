@@ -76,10 +76,10 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private static String TAG = "Comment Activity";
     //constants for form status
-    private final String FLAGGED_FORM = "Flagged";
+    private final String FLAGGED_FORM = "FLAGGED";
     private final String OUTSTANDING_FORM = "Outstanding";
-    private final String REJECTED_FORM = "Rejected";
-    private final String APPROVED_FORM = "Approved";
+    private final String REJECTED_FORM = "REJECTED";
+    private final String APPROVED_FORM = "APPROVED";
 
     Context context = this;
 
@@ -117,7 +117,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Form Flagged");
+        getSupportActionBar().setTitle("Form FLAGGED");
         initBack();
     }
 
@@ -225,16 +225,16 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
             imbStatus.setElevation(3);
         }
 
-        if (formStatus != null && formStatus.equals("Approved")) {
+        if (formStatus != null && formStatus.equals("APPROVED")) {
             imbStatus.setBackgroundResource(R.color.green_approved);
             relativeStatus.setBackgroundResource(R.color.green_approved);
         } else if (formStatus != null && formStatus.equals("Outstanding")) {
             imbStatus.setBackgroundResource(R.color.grey_outstanding);
             relativeStatus.setBackgroundResource(R.color.grey_outstanding);
-        } else if (formStatus != null && formStatus.equals("Flagged")) {
+        } else if (formStatus != null && formStatus.equals("FLAGGED")) {
             imbStatus.setBackgroundResource(R.color.yellow_flagged);
             relativeStatus.setBackgroundResource(R.color.yellow_flagged);
-        } else if (formStatus != null && formStatus.equals("Rejected")) {
+        } else if (formStatus != null && formStatus.equals("REJECTED")) {
             imbStatus.setBackgroundResource(R.color.red_rejected);
             relativeStatus.setBackgroundResource(R.color.red_rejected);
         }
@@ -342,7 +342,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                     return;
                 }
 
-                boolean isFormApproved = "Approved".equals(loadedFieldSightNotification.getFormStatus());
+                boolean isFormApproved = "APPROVED".equals(loadedFieldSightNotification.getFormStatus());
                 if (isFormApproved) {
                     showFormIsApprovedDialog();
                     return;

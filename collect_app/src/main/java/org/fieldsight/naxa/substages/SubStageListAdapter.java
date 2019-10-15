@@ -140,16 +140,16 @@ public class SubStageListAdapter extends
 
         if (status == null) return drawable;
         switch (status) {
-            case Constant.FormStatus.Approved:
+            case Constant.FormStatus.APPROVED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
                 break;
-            case Constant.FormStatus.Flagged:
+            case Constant.FormStatus.FLAGGED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_yellow);
                 break;
-            case Constant.FormStatus.Rejected:
+            case Constant.FormStatus.REJECTED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
                 break;
-            case Constant.FormStatus.Pending:
+            case Constant.FormStatus.PENDING:
             default:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
                 break;
@@ -276,16 +276,16 @@ public class SubStageListAdapter extends
 
             Drawable drawable;
             switch (status) {
-                case Constant.FormStatus.Approved:
+                case Constant.FormStatus.APPROVED:
                     drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
                     break;
-                case Constant.FormStatus.Flagged:
+                case Constant.FormStatus.FLAGGED:
                     drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_yellow);
                     break;
-                case Constant.FormStatus.Rejected:
+                case Constant.FormStatus.REJECTED:
                     drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
                     break;
-                case Constant.FormStatus.Pending:
+                case Constant.FormStatus.PENDING:
                 default:
                     drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
                     break;

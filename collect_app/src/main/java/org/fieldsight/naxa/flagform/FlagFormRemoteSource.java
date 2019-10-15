@@ -136,8 +136,8 @@ public class FlagFormRemoteSource {
                         msg = "Forms could not be downloaded ";
                     }
                     if (result.containsKey(DL_AUTH_REQUIRED)) {
-                        Timber.e(" Mismatched token");
-                        msg = "Mismatched token";
+                        Timber.e(" Mismatched TOKEN");
+                        msg = "Mismatched TOKEN";
                     }
 
                     if ("Success".equals(msg)) {
@@ -238,43 +238,5 @@ public class FlagFormRemoteSource {
         return instancePath + File.separator + formName + "_"
                 + time;
     }
-
-    private Observable<Uri> getODKInstance(String fsFormId, String siteId, String formName, String jrFormId, Long date, String downloadUrl) {
-
-        Instance.Builder flaggedInstance = new Instance.Builder()
-                .status(InstanceProviderAPI.STATUS_FLAGGED)
-                .jrFormId(jrFormId)
-                .fieldSightSiteId(siteId == null ? "0" : siteId)//survey form have 0 as siteId
-                .displayName(formName);
-
-
-        return Observable.just(flaggedInstance)
-                .flatMap((Function<Instance.Builder, ObservableSource<Uri>>) instance -> {
-                    String pathToDownload = getInstanceFolderPath(instance.build().getDisplayName());
-
-                    return new RxDownloader(Collect.getInstance())
-                            .download(downloadUrl,
-                                    formName.concat(".xml"),
-                                    pathToDownload,
-                                    "*/*",
-                                    true)
-                            .map(new Function<String, Uri>() {
-                                @Override
-                                public Uri apply(String path) {
-                                    path = path.replace("file:///", "");
-
-                                    instance.instanceFilePath(path);
-                                    instance.lastStatusChangeDate(System.currentTimeMillis());
-                                    ContentValues values = instancesDao.getValuesFromInstanceObject(instance.build());
-                                    Uri instanceUri = instancesDao.saveInstance(values);
-                                    Timber.i("Downloaded and saved instance at %s", path);
-                                    return instanceUri;
-                                }
-                            });
-                });
-
-
-    }
-
 
 }

@@ -244,7 +244,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         }
 
         if (result.containsKey(DL_AUTH_REQUIRED)) {
-            Log.e(TAG, " Mismatched token");
+            Log.e(TAG, " Mismatched TOKEN");
             broadcastDownloadError("Forms could not be downloaded");
             return;
         }

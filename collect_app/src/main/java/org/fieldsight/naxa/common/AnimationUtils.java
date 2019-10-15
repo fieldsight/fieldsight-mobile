@@ -12,6 +12,10 @@ import org.fieldsight.collect.android.R;
 
 public class AnimationUtils {
 
+    private AnimationUtils() {
+
+    }
+
 
     public static RotateAnimation getRotationAnimation(float from, float to) {
         RotateAnimation rotate = new RotateAnimation(from, to, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);

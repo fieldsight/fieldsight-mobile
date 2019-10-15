@@ -25,7 +25,7 @@ public class Constant {
     }
 
     public static class PrefKey {
-        public static final String token = "token";
+        public static final String TOKEN = "TOKEN";
     }
 
     public static class RequestCode {
@@ -35,17 +35,15 @@ public class Constant {
         public static final int GEOPOINT_RESULT_CODE = 1994;
         public static final int SELECT_FILE = 1993;
         public static final int DOWNLOAD_FORMS = 1996;
-
-        public static int LOCATION_CAPTURE = 1995;
     }
 
     public final static class ANIM {
 
 
-        public final static int fragmentEnterAnimation = R.anim.enter_from_right;
-        public final static int fragmentExitAnimation = R.anim.exit_to_left;
-        public final static int fragmentPopEnterAnimation = R.anim.enter_from_left;
-        public final static int fragmentPopExitAnimation = R.anim.exit_to_right;
+        public final static int FRAGMENT_ENTER_ANIMATION = R.anim.enter_from_right;
+        public final static int FRAGMENT_EXIT_ANIMATION = R.anim.exit_to_left;
+        public final static int FRAGMENT_POP_ENTER_ANIMATION = R.anim.enter_from_left;
+        public final static int FRAGMENT_POP_EXIT_ANIMATION = R.anim.exit_to_right;
 
 
     }
@@ -102,11 +100,11 @@ public class Constant {
         public static final String KEY_TABLE_NAME = "table_name";
         public static final String FORM_STATUS_OUTSTANDING = "Outstanding";
         public static final String FORM_STATUS_NOT_SENT = "Not Sent";
-        public static final String FORM_STATUS_PENDING_REVIEW = "Pending Review";
+        public static final String FORM_STATUS_PENDING_REVIEW = "PENDING Review";
         public static final String FORM_STATUS_SENDING_FAILED = "Sending Failed";
-        public static final String FORM_STATUS_FLAGGED = "Flagged";
-        public static final String FORM_STATUS_APPROVED = "Approved";
-        public static final String FORM_STATUS_REJECTED = "Rejected";
+        public static final String FORM_STATUS_FLAGGED = "FLAGGED";
+        public static final String FORM_STATUS_APPROVED = "APPROVED";
+        public static final String FORM_STATUS_REJECTED = "REJECTED";
     }
 
 
@@ -143,18 +141,10 @@ public class Constant {
     }
 
     public final static class FormStatus {
-        public final static String Approved = "Approved";
-        public final static String Flagged = "Flagged";
-        public final static String Rejected = "Rejected";
-        public final static String Pending = "Pending";
-    }
-
-    public final static class SyncStatus {
-        public final static String PENDING = "pending";
-        public final static String RUNNING = "running";
-        public final static String COMPLETED = "completed";
-        public final static String FAILED = "failed";
-        public final static String DISABLED = "disabled";
+        public final static String APPROVED = "Approved";
+        public final static String FLAGGED = "Flagged";
+        public final static String REJECTED = "Rejected";
+        public final static String PENDING = "Pending";
     }
 
     public final static class MetaAttrsType {
@@ -164,7 +154,7 @@ public class Constant {
         public final static String NUMBER = "Number";
     }
 
-    public final static HashMap<Integer, String> DOWNLOADMAP = new HashMap<Integer, String>(){{
+    public final static HashMap<Integer, String> DOWNLOADMAP = new HashMap<Integer, String>() {{
         put(DownloadStatus.FAILED, "Failed");
         put(DownloadStatus.RUNNING, "Syncing data %s");
         put(DownloadStatus.COMPLETED, "Completed");
@@ -174,6 +164,5 @@ public class Constant {
     public static class SERVICE {
         static String SERVICE_AUTHORITY = "org.bcss.naxa.v3.network.SyncServiceV3";
         public static String STOP_SYNC = SERVICE_AUTHORITY + "stop";
-
     }
 }

@@ -64,29 +64,6 @@ public class RetrofitException extends RuntimeException {
         return text.replace("[", "").replace("]", "").replace("\"", "");
     }
 
-    /**
-     * @return non-field error in unordered list
-     */
-    private static String getReadableNonFieldErrorMessage(ResponseBody responseBody, String defaultMessage) {
-        try {
-            JSONObject jsonObject = new JSONObject(responseBody.string());
-            String listOfErrors = jsonObject.getString("non_field_errors");
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            ArrayList<String> list = GSONInstance.getInstance().fromJson(listOfErrors, type);
-            StringBuilder builder = new StringBuilder();
-            for (String error : list) {
-                builder.append(" - ");
-                builder.append(error);
-                builder.append("\n");
-            }
-
-            return builder.toString();
-        } catch (Exception e) {
-            Timber.e(e);
-            return defaultMessage;
-        }
-    }
 
 
     static RetrofitException networkError(IOException exception, HttpUrl url) {

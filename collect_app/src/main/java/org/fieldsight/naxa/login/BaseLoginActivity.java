@@ -122,19 +122,11 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
     private class GetAccessTokenTask extends AsyncTask<String, Void, GoogleTokenResponse> {
         private ProgressDialog pd;
 
-        // onPreExecute called before the doInBackgroud start for display
-        // progress dialog.
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
         @Override
         protected GoogleTokenResponse doInBackground(String... urls) {
 
             try {
-// Exchange auth code for access token
+// Exchange auth code for access TOKEN
                 GoogleClientSecrets clientSecrets =
                         GoogleClientSecrets.load(
                                 JacksonFactory.getDefaultInstance(), new BufferedReader(
@@ -162,7 +154,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         protected void onPostExecute(GoogleTokenResponse tokenResponse) {
    
             if (tokenResponse == null) {
-                gmailLoginFailed("Unable to get Gmail auth token");
+                gmailLoginFailed("Unable to get Gmail auth TOKEN");
             }else {
                 gmailLoginSuccess(tokenResponse.getAccessToken(), username);
                 Log.d(TAG, "onPostExecute: accessToken " + tokenResponse.getAccessToken());
@@ -175,7 +167,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
 
 
     private void useAccessTokenToCallAPI(@NonNull GoogleTokenResponse tokenResponse) throws IOException {
-        // Use access token to call API
+        // Use access TOKEN to call API
         GoogleCredential credential = new GoogleCredential().setAccessToken(tokenResponse.getAccessToken());
         Drive drive =
                 new Drive.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential)
@@ -183,7 +175,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
                         .build();
         File file = drive.files().get("appfolder").execute();
 
-// Get profile info from ID token
+// Get profile info from ID TOKEN
         GoogleIdToken idToken = tokenResponse.parseIdToken();
         GoogleIdToken.Payload payload = idToken.getPayload();
         String userId = payload.getSubject();  // Use this value as a key to identify a user.
