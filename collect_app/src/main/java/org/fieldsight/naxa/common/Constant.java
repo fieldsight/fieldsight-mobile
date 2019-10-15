@@ -162,7 +162,7 @@ public class Constant {
     }};
 
     public static class SERVICE {
-        static String SERVICE_AUTHORITY = "org.bcss.naxa.v3.network.SyncServiceV3";
-        public static String STOP_SYNC = SERVICE_AUTHORITY + "stop";
+        static final String SERVICE_AUTHORITY = "org.bcss.naxa.v3.network.SyncServiceV3";
+        public final static String STOP_SYNC = SERVICE_AUTHORITY + "stop";
     }
 }

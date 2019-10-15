@@ -78,7 +78,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     }
 
     private void setupRecycleView() {
-        contactAdapter = new ContactAdapter(new ArrayList<>(0), ProjectContactsFragment.this, getActivity());
+        contactAdapter = new ContactAdapter(new ArrayList<>(0), this, getActivity());
 
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);

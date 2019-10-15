@@ -251,7 +251,7 @@ public class ProjectDashboardActivity extends BaseActivity {
                 toggleNavDrawer();
                 new Handler()
                         .postDelayed(() -> {
-                            UserActivity.start(ProjectDashboardActivity.this);
+                            UserActivity.start(this);
                         }, 250);
             });
         } catch (IllegalArgumentException e) {
@@ -594,7 +594,7 @@ public class ProjectDashboardActivity extends BaseActivity {
             case R.id.action_app_settings:
                 if (allowClick(getClass().getName())) {
 
-                    startActivity(new Intent(ProjectDashboardActivity.this, SettingsActivity.class));
+                    startActivity(new Intent(this, SettingsActivity.class));
                 }
                 break;
         }

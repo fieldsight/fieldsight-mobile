@@ -88,7 +88,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
         String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
         if (!TextUtils.isEmpty(fcmToken)) {
             Timber.i("TOKEN generated: %s", fcmToken);
-            loginModel.loginViaGoogle(googleAccessToken, username, fcmToken, LoginPresenterImpl.this);
+            loginModel.loginViaGoogle(googleAccessToken, username, fcmToken, this);
         } else {
             loginView.showError("Failed to get TOKEN");
         }

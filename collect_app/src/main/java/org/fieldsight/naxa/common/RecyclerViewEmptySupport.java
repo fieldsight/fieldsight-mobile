@@ -75,10 +75,10 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         if (adapter != null && emptyView != null) {
             if (adapter.getItemCount() == 0) {
                 emptyView.setVisibility(View.VISIBLE);
-                RecyclerViewEmptySupport.this.setVisibility(View.GONE);
+                this.setVisibility(View.GONE);
             } else {
                 emptyView.setVisibility(View.GONE);
-                RecyclerViewEmptySupport.this.setVisibility(View.VISIBLE);
+                this.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -132,17 +132,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
     }
 
 
-    public void showProgressView(boolean show) {
-        if (show) {
-            emptyView.setVisibility(GONE);
-            RecyclerViewEmptySupport.this.setVisibility(GONE);
-            progressView.setVisibility(VISIBLE);
-        } else {
-            emptyView.setVisibility(VISIBLE);
-            RecyclerViewEmptySupport.this.setVisibility(VISIBLE);
-            progressView.setVisibility(GONE);
-        }
-    }
+
 
     public interface OnEmptyLayoutClickListener {
         void onRetryButtonClick();

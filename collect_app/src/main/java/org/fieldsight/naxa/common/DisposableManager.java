@@ -20,7 +20,7 @@ public class DisposableManager {
         return getCompositeDisposable().size();
     }
 
-    private static CompositeDisposable getCompositeDisposable() {
+    private synchronized static CompositeDisposable getCompositeDisposable() {
         if (compositeDisposable == null || compositeDisposable.isDisposed()) {
             compositeDisposable = new CompositeDisposable();
         }

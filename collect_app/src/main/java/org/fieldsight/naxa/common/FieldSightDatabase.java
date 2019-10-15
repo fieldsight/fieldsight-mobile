@@ -78,7 +78,7 @@ import java.io.File;
 
 public abstract class FieldSightDatabase extends RoomDatabase {
 
-    private static FieldSightDatabase INSTANCE;
+    private static FieldSightDatabase fieldSightDatabase;
 
     public abstract SiteDao getSiteDAO();
 
@@ -114,13 +114,13 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_database";
 
     public static FieldSightDatabase getDatabase(final Context context) {
-        if (INSTANCE != null) {
-            return INSTANCE;
+        if (fieldSightDatabase != null) {
+            return fieldSightDatabase;
         }
 
         synchronized (FieldSightDatabase.class) {
-            if (INSTANCE == null) {
-                INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+            if (fieldSightDatabase == null) {
+                fieldSightDatabase = Room.databaseBuilder(context.getApplicationContext(),
                         FieldSightDatabase.class, DB_PATH)
                         .allowMainThreadQueries()//used in org.bcss.naxa.jobs.LocalNotificationJob
                         .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
@@ -131,7 +131,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
             }
         }
 
-        return INSTANCE;
+        return fieldSightDatabase;
     }
 
 

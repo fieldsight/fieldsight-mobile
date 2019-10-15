@@ -60,7 +60,7 @@ public class EduMat_ViewImageDetailsActivity extends CollectAbstractActivity {
                 Bitmap bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
                 imageView.setImageBitmap(bmp);
             } else {
-                GlideApp.with(EduMat_ViewImageDetailsActivity.this)
+                GlideApp.with(this)
                         .load(image_url_on)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);

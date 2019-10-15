@@ -93,7 +93,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
         viewModel = ViewModelProviders.of(this, factory).get(ProjectViewModel.class);
         viewModel
                 .getAll(false)
-                .observe(ProjectListActivity.this, projects -> {
+                .observe(this, projects -> {
                     if (projectlistAdapter.getItemCount() == 0) {
                         projectlistAdapter.updateList(projects);
                         runLayoutAnimation(rvProjects);

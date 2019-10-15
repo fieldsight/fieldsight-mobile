@@ -348,7 +348,7 @@ public class UserActivity extends CollectAbstractActivity {
         switch (requestCode) {
             case Constant.RequestCode.RC_CAMERA:
                 userProfileViewModel.getUser().getValue().setProfilepic(photoToUpload.getAbsolutePath());
-                Glide.with(UserActivity.this)
+                Glide.with(this)
                         .load(photoToUpload)
                         .into(civProfilePic);
                 break;
@@ -356,7 +356,7 @@ public class UserActivity extends CollectAbstractActivity {
                 Uri uri = data.getData();
                 String path = ImageFileUtils.getPath(this, uri);
                 userProfileViewModel.getUser().getValue().setProfilepic(path);
-                Glide.with(UserActivity.this)
+                Glide.with(this)
                         .load(path)
                         .into(civProfilePic);
                 break;

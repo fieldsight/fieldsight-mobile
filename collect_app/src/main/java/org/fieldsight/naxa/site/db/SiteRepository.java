@@ -21,20 +21,20 @@ import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
 public class SiteRepository implements BaseRepository<GeneralForm> {
 
-    private static SiteRepository INSTANCE;
+    private static SiteRepository instance;
     private final SiteLocalSource localSource;
 
 
 
     public static SiteRepository getInstance(SiteLocalSource localSource, SiteRemoteSource remoteSource) {
-        if (INSTANCE == null) {
+        if (instance == null) {
             synchronized (SiteRepository.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new SiteRepository(localSource, remoteSource);
+                if (instance == null) {
+                    instance = new SiteRepository(localSource, remoteSource);
                 }
             }
         }
-        return INSTANCE;
+        return instance;
     }
 
 

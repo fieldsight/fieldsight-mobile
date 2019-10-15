@@ -33,6 +33,10 @@ import java.util.List;
 
 public final class DialogFactory {
 
+    private DialogFactory(){
+
+    }
+
 
     public static Dialog createSimpleOkErrorDialog(Context context, String title, String message) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.RiseUpDialog)
@@ -221,13 +225,11 @@ public final class DialogFactory {
         int curMonth = c.get(Calendar.MONTH);
         int curDay = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(context, listener, curYear, curMonth, curDay);
-        return datePickerDialog;
+        return new DatePickerDialog(context, listener, curYear, curMonth, curDay);
     }
 
     public static AlertDialog.Builder createActionConsentDialog(Context context, String title, String message) {
         View viewInflated = LayoutInflater.from(Collect.getInstance()).inflate(R.layout.dialog_site_project_filter, null, false);
-        AlertDialog.Builder dialog = showCustomLayoutDialog(context, viewInflated);
-        return dialog;
+        return showCustomLayoutDialog(context, viewInflated);
     }
 }
