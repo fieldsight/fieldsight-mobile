@@ -54,7 +54,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     String submissionDateTime;
 
 
-    String date_str;
+    String dateStr;
     String localTime;
 
 
@@ -99,7 +99,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
             Map<String, String> notificationData = remoteMessage.getData();
             parseNotificationData(notificationData);
 
-            builder.setDetails_url(notificationDetailsUrl)
+            builder.setDetailsUrl(notificationDetailsUrl)
                     .setNotificationType(notifyType)
                     .setFsFormId(fsFormId)
                     .setFormName(formName)
@@ -109,7 +109,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setProjectName(projectName)
                     .setFormStatus(formStatus)
                     .setSiteIdentifier(siteIdentifier)
-                    .setNotifiedDate(date_str)
+                    .setNotifiedDate(dateStr)
                     .setNotifiedTime(localTime)
                     .setIdString(jrFormId)
                     .setComment(formComment)
@@ -263,7 +263,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     private void getAndSetDateTime() {
         dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
         date = new Date();
-        date_str = dateFormat.format(date);
+        dateStr = dateFormat.format(date);
         cal = Calendar.getInstance(TimeZone.getTimeZone("GMT-4:00"));
         currentLocalTime = cal.getTime();
         date1 = new SimpleDateFormat("hh:mm a", Locale.US);
@@ -273,7 +273,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     }
 
     @Override
-    public void onNewToken(String fcm_token) {
-        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcm_token);
-        Timber.i("Messaging service, firebase %s",fcm_token);    }
+    public void onNewToken(String fcmToken) {
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcmToken);
+        Timber.i("Messaging service, firebase %s",fcmToken);    }
 }

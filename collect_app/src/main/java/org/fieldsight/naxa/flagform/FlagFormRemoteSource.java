@@ -51,13 +51,13 @@ public class FlagFormRemoteSource {
     }
 
     Observable<String> getXMLInstance(String submissionId) {
-        String INSTANCES_PATH = Collect.FORMS_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
+        String instancePath = Collect.FORMS_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
 
         String url = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_xml_version/%s", submissionId);
 
 
         return new RxDownloader(Collect.getInstance())
-                .download(url, "temp.xml", INSTANCES_PATH, "*/*", true);
+                .download(url, "temp.xml", instancePath, "*/*", true);
     }
 
 

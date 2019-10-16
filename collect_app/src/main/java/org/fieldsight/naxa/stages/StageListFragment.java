@@ -67,9 +67,6 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
 
     }
 
-    public StageListFragment() {
-
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

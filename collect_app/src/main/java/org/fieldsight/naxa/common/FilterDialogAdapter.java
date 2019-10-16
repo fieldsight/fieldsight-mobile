@@ -113,8 +113,9 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             Pair tappedIdLabelPair = filterOption.getOptions().get(position);
-                            if (tappedIdLabelPair != null)
+                            if (tappedIdLabelPair != null){
                                 filterOption.setSelection(tappedIdLabelPair);
+                            }
 
                         }
 

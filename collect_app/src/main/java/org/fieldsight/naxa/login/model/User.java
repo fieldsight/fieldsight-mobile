@@ -17,7 +17,7 @@ public class User {
     @SerializedName("my_sites")
     private List<MySites> mySitesModel = new ArrayList<MySites>();
     @SerializedName("username")
-    private String user_name;
+    private String userName;
     @SerializedName("server_time")
     private String serverTime;
     private String id;
@@ -99,9 +99,6 @@ public class User {
     private boolean sync;
 
 
-    public User() {
-    }
-
     /**
      * @return The mySitesModel
      */
@@ -139,8 +136,8 @@ public class User {
     }
 
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
     public String getFullName() {
@@ -155,8 +152,8 @@ public class User {
         this.mySitesModel = mySitesModel;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getProfilepic() {
@@ -387,7 +384,7 @@ public class User {
         User user = (User) o;
         return sync == user.sync &&
                 Objects.equal(mySitesModel, user.mySitesModel) &&
-                Objects.equal(user_name, user.user_name) &&
+                Objects.equal(userName, user.userName) &&
                 Objects.equal(serverTime, user.serverTime) &&
                 Objects.equal(profilepic, user.profilepic) &&
                 Objects.equal(firstName, user.firstName) &&
@@ -419,6 +416,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(mySitesModel, user_name, serverTime, profilepic, firstName, lastName, email, phone, address, gender, skype, primaryNumber, secondaryNumber, officeNumber, viber, whatsApp, wechat, line, tango, hike, qq, googleTalk, twitter, organization, project, isSupervisor, lastLogin, organizationUrl, additionalProperties, sync);
+        return Objects.hashCode(mySitesModel, userName, serverTime, profilepic, firstName, lastName, email, phone, address, gender, skype, primaryNumber, secondaryNumber, officeNumber, viber, whatsApp, wechat, line, tango, hike, qq, googleTalk, twitter, organization, project, isSupervisor, lastLogin, organizationUrl, additionalProperties, sync);
     }
 }

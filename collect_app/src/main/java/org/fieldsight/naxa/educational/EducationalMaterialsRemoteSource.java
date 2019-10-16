@@ -46,14 +46,14 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 
 public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em> {
 
-    private static EducationalMaterialsRemoteSource INSTANCE;
+    private static EducationalMaterialsRemoteSource educationalMaterialsRemoteSource;
 
 
     public synchronized static EducationalMaterialsRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new EducationalMaterialsRemoteSource();
+        if (educationalMaterialsRemoteSource == null) {
+            educationalMaterialsRemoteSource = new EducationalMaterialsRemoteSource();
         }
-        return INSTANCE;
+        return educationalMaterialsRemoteSource;
     }
 
     private EducationalMaterialsRemoteSource() {

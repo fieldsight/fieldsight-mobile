@@ -124,7 +124,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
         }
 
         private void manipulateCheckedUI(SyncableItem syncableItem) {
-            if (syncableItem.getIsSelected()) {
+            if (syncableItem.isSelected()) {
                 selectedItemCount++;
             } else {
                 selectedItemCount--;

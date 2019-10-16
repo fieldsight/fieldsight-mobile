@@ -52,7 +52,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
     List<Fragment> fragments = new ArrayList<>();
 
 
-    private static final int defaultPagerPosition = 0;
+    private static final int DEFAULT_PAGER_POSITION = 0;
     private PagerAdapter mPagerAdapter;
     public ViewPager viewPager;
     public TabLayout tabLayout;
@@ -115,7 +115,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(mPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(defaultPagerPosition);
+        viewPager.setCurrentItem(DEFAULT_PAGER_POSITION);
         viewPager.setPageMargin(ViewUtils.dp2px(getApplicationContext(), 16));
         viewPager.setClipToPadding(false);
         viewPager.setPadding(16, 16, 16, 0);
@@ -181,7 +181,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
                     public void onSuccess(List<Fragment> dynamicFragments) {
                         fragments.addAll(dynamicFragments);
                         mPagerAdapter.notifyDataSetChanged();
-                        viewPager.setCurrentItem(defaultPagerPosition, false);
+                        viewPager.setCurrentItem(DEFAULT_PAGER_POSITION, false);
                     }
 
                     @Override

@@ -4,19 +4,19 @@ package org.fieldsight.naxa.educational;
  * Created by susan on 7/5/2017.
  */
 
-public class Edu_Video_Model {
+public class EduVideoModel {
 
     private String videoFile;
-    private String thumbnail_url;
+    private String thumbnailUrl;
     private String title;
     private String desc;
 
-    public Edu_Video_Model() {
+    public EduVideoModel() {
     }
 
-    public Edu_Video_Model(String videoFile, String thumbnail_url, String title, String desc) {
+    public EduVideoModel(String videoFile, String thumbnailUrl, String title, String desc) {
         this.videoFile = videoFile;
-        this.thumbnail_url = thumbnail_url;
+        this.thumbnailUrl = thumbnailUrl;
         this.title = title;
         this.desc = desc;
     }
@@ -29,13 +29,13 @@ public class Edu_Video_Model {
         this.videoFile = videoFile;
     }
 
-    public String getThumbnail_url() {
+    public String getThumbnailUrl() {
 
-        return thumbnail_url;
+        return thumbnailUrl;
     }
 
-    public void setThumbnail_url(String thumbnail_url) {
-        this.thumbnail_url = thumbnail_url;
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public String getTitle() {

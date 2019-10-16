@@ -72,7 +72,6 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
     private FieldSightDownloadFormListTask mDownloadFormListTask;
     private HashMap<String, FormDetails> mFormNamesAndURLs = new HashMap<String, FormDetails>();
-    private ArrayList<HashMap<String, String>> mFormList;
     private LinkedList<XMLForm> formsToDownlaod;
     private Bundle message;
 
@@ -163,23 +162,23 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                         }
 
                         for (String projectId : projectIds) {
-                            XMLForm XMLForm;
+                            XMLForm xmlForm;
 
                             String baseurl = FieldSightUserSession.getServerUrl(Collect.getInstance());
-                            XMLForm = new XMLFormBuilder()
+                            xmlForm = new XMLFormBuilder()
                                     .setFormCreatorsId(projectId)
                                     .setIsCreatedFromProject(false)
                                     .setDownloadUrl(baseurl + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(projectId))
                                     .createXMLForm();
 
-                            formsToDownlaod.add(XMLForm);
+                            formsToDownlaod.add(xmlForm);
 
-                            XMLForm = new XMLFormBuilder()
+                            xmlForm = new XMLFormBuilder()
                                     .setFormCreatorsId(projectId)
                                     .setIsCreatedFromProject(true)
                                     .setDownloadUrl(baseurl + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(projectId))
                                     .createXMLForm();
-                            formsToDownlaod.add(XMLForm);
+                            formsToDownlaod.add(xmlForm);
 
                         }
 
@@ -312,7 +311,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
             // Everything worked. Clear the list and add the results.
             mFormNamesAndURLs = result;
             //array list added here siteName on Create
-            mFormList = new ArrayList<HashMap<String, String>>();
+            ArrayList<HashMap<String, String>> mFormList = new ArrayList<HashMap<String, String>>();
 
             mFormList.clear();
 

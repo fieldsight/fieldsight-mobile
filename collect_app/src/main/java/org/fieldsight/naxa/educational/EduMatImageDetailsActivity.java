@@ -47,29 +47,29 @@ public class EduMatImageDetailsActivity extends CollectAbstractActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            String image_url_on = bundle.getString("IMAGE_URL_ON");
-            String image_url_off = bundle.getString("IMAGE_URL_OFF");
-            String image_title = bundle.getString("IMAGE_TITLE");
-            String image_desc = bundle.getString("IMAGE_DESC");
+            String imageUrlOn = bundle.getString("IMAGE_URL_ON");
+            String imageUrlOff = bundle.getString("IMAGE_URL_OFF");
+            String imageTitle1 = bundle.getString("IMAGE_TITLE");
+            String imageDesc1 = bundle.getString("IMAGE_DESC");
 
-            getSupportActionBar().setTitle(image_title);
+            getSupportActionBar().setTitle(imageTitle1);
 
 
-            if (image_url_off != null) {
-                File f = new File(image_url_off);
+            if (imageUrlOff != null) {
+                File f = new File(imageUrlOff);
                 Bitmap bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
                 imageView.setImageBitmap(bmp);
             } else {
                 GlideApp.with(this)
-                        .load(image_url_on)
+                        .load(imageUrlOn)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
             }
 
 //            usingSimpleImage(imageView);
 
-            imageTitle.setText(image_title);
-            imageDesc.setText(image_desc);
+            imageTitle.setText(imageTitle1);
+            imageDesc.setText(imageDesc1);
         }
     }
 

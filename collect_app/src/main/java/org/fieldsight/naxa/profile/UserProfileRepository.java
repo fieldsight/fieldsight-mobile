@@ -56,7 +56,7 @@ public class UserProfileRepository {
 //            MultipartBody.Part imageIn = MultipartBody.Part.createFormData(image.getName(), image.getName(), imageRequestBody);
 //            userObservable = getRxClient()
 //                    .create(ApiInterface.class)
-//                    .updateUserProfile(APIEndpoint.BASE_URL + "/users/api/profile/" + user.getUser_name() + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
+//                    .updateUserProfile(APIEndpoint.BASE_URL + "/users/api/profile/" + user.getUserName() + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
 //                            officeIn, viberIn, whatsAppIn, wechatIn, lineIn, tangoIn, hikeIn, qqIn, googleTalkIn, twitterIn, organizationIn, imageIn);
 //        }
 

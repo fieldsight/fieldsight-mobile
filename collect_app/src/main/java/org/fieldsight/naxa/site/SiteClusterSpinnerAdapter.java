@@ -36,8 +36,7 @@ public class SiteClusterSpinnerAdapter extends ArrayAdapter<Region> {
 
     public int getCount() {
         int count = super.getCount();
-        int newCount = count > 0 ? count - 1 : count;
-        return newCount;
+        return count > 0 ? count - 1 : count;
     }
 
 

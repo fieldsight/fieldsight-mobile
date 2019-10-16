@@ -72,7 +72,7 @@ public class SyncableItem {
         this.progressStatus = progressStatus;
     }
 
-    public boolean getIsSelected() {
+    public boolean isSelected() {
         return isSelected;
     }
 

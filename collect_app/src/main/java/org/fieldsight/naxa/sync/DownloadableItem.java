@@ -91,7 +91,7 @@ public class DownloadableItem {
     }
 
 
-    public boolean getIsSelected() {
+    public boolean isSelected() {
         return isSelected;
     }
 

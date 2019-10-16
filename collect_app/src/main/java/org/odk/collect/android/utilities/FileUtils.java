@@ -708,7 +708,9 @@ public class FileUtils {
         // destDir's path locate in srcDir's path then return false
         String srcPath = srcDir.getPath() + File.separator;
         String destPath = destDir.getPath() + File.separator;
-        if (destPath.contains(srcPath)) return false;
+        if (destPath.contains(srcPath)) {
+            return false;
+        }
         if (!srcDir.exists() || !srcDir.isDirectory()) {
             return false;
         }

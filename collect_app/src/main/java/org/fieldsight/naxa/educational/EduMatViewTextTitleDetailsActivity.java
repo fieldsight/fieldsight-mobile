@@ -15,7 +15,7 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
  * Created by susan on 7/18/2017.
  */
 
-public class EduMat_ViewTextTitleDetailsActivity extends CollectAbstractActivity {
+public class EduMatViewTextTitleDetailsActivity extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,12 +37,12 @@ public class EduMat_ViewTextTitleDetailsActivity extends CollectAbstractActivity
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            String text_title = bundle.getString("TEXT_TITLE");
-            String text_desc = bundle.getString("TEXT_DESC");
-            getSupportActionBar().setTitle(text_title);
+            String textTitle = bundle.getString("TEXT_TITLE");
+            String textDesc = bundle.getString("TEXT_DESC");
+            getSupportActionBar().setTitle(textTitle);
 
-            tvTitle.setText(text_title);
-            tvDesc.setText(text_desc);
+            tvTitle.setText(textTitle);
+            tvDesc.setText(textDesc);
         }
     }
 }

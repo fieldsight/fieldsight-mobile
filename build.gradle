@@ -38,7 +38,7 @@ task checkAll(type: GradleBuild) {
 }
 
 task checkCode(type: GradleBuild) {
-    tasks = ['pmd', 'checkstyle', 'lintDebug', 'spotbugs']
+    tasks = ['pmd', 'lintDebug']
 }
 
 task checkTests(type: GradleBuild) {

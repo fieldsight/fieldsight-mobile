@@ -116,8 +116,8 @@ public interface ApiInterface {
     @Multipart
     @POST
     Observable<User> updateUserProfileNoImage(@Url String url,
-                                              @Part("first_name") RequestBody first_name,
-                                              @Part("last_name") RequestBody last_name,
+                                              @Part("first_name") RequestBody firstName,
+                                              @Part("last_name") RequestBody lastName,
                                               @Part("address") RequestBody address,
                                               @Part("gender") RequestBody gender,
                                               @Part("phone") RequestBody phone,
@@ -212,7 +212,7 @@ public interface ApiInterface {
                               @Part("additional_desc") RequestBody addDesc,
 //                              @Part("type") RequestBody type,
                               @Part MultipartBody.Part logoFile,
-                              @Part("site_meta_attributes_ans") RequestBody meta_ans,
+                              @Part("site_meta_attributes_ans") RequestBody metaAns,
                               @Part("latitude") RequestBody lat,
                               @Part("longitude") RequestBody lon
     );
@@ -244,7 +244,7 @@ public interface ApiInterface {
                                          @Part("public_desc") RequestBody publicDesc,
                                          @Part("additional_desc") RequestBody addDesc,
 //                                         @Part("type") RequestBody type,
-                                         @Part("site_meta_attributes_ans") RequestBody meta_ans,
+                                         @Part("site_meta_attributes_ans") RequestBody metaAns,
                                          @Part("latitude") RequestBody lat,
                                          @Part("longitude") RequestBody lon
     );

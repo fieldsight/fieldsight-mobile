@@ -5,7 +5,6 @@ import android.database.Cursor;
 
 import androidx.loader.content.CursorLoader;
 
-import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.site.db.SiteUploadHistoryLocalSource;
@@ -288,10 +287,10 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
 
     private String getFormDeployedFrom(String url) {
         String[] split = url.split("/");
-        if (Constant.FormDeploymentFrom.PROJECT.equals(split[split.length - 3])) {
-            return Constant.FormDeploymentFrom.PROJECT;
+        if ( PROJECT.equals(split[split.length - 3])) {
+            return  PROJECT;
         } else {
-            return Constant.FormDeploymentFrom.SITE;
+            return  SITE;
         }
     }
 
@@ -311,8 +310,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
         String[] selectionArgs = new String[]{siteId};
 
         cursor = getInstancesCursor(selection, selectionArgs);
-        List<Instance> list = getInstancesFromCursor(cursor);
-        return list;
+        return getInstancesFromCursor(cursor);
     }
 
 

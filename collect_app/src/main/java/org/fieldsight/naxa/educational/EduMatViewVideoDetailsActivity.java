@@ -18,7 +18,7 @@ import org.odk.collect.android.activities.CollectAbstractActivity;
  * Created by susan on 7/18/2017.
  */
 
-public class EduMat_ViewVideoDetailsActivity extends CollectAbstractActivity {
+public class EduMatViewVideoDetailsActivity extends CollectAbstractActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,18 +42,18 @@ public class EduMat_ViewVideoDetailsActivity extends CollectAbstractActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            String video_url = bundle.getString("VIDEO_URL");
-            String video_title = bundle.getString("VIDEO_TITLE");
-            String video_desc = bundle.getString("VIDEO_DESC");
+            String videoUrl = bundle.getString("VIDEO_URL");
+            String videoTitle = bundle.getString("VIDEO_TITLE");
+            String videoDesc = bundle.getString("VIDEO_DESC");
 
 //            myVideoView.setVideoPath(thumbnail_url);
-            myVideoView.setVideoURI(Uri.parse(video_url));
+            myVideoView.setVideoURI(Uri.parse(videoUrl));
             myVideoView.setMediaController(new MediaController(this));
             myVideoView.requestFocus();
             myVideoView.start();
 
-            imageTitle.setText(video_title);
-            imageDesc.setText(video_desc);
+            imageTitle.setText(videoTitle);
+            imageDesc.setText(videoDesc);
         }
     }
 }

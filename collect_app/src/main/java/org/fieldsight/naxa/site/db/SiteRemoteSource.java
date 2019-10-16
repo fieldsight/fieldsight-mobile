@@ -1,22 +1,20 @@
 package org.fieldsight.naxa.site.db;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseRemoteDataSource;
-import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.database.SiteUploadHistory;
 import org.fieldsight.naxa.common.rx.RetrofitException;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ApiInterface;
-import org.fieldsight.naxa.common.DisposableManager;
-import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.sync.DownloadableItemLocalSource;
 import org.fieldsight.naxa.sync.SyncRepository;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
 import org.fieldsight.naxa.v3.network.SiteResponse;
-import org.fieldsight.naxa.helpers.FSInstancesDao;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
@@ -37,7 +35,6 @@ import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
-
 import static org.fieldsight.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.fieldsight.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 import static org.fieldsight.naxa.common.Constant.SiteStatus.IS_ONLINE;
@@ -45,14 +42,14 @@ import static org.fieldsight.naxa.network.ServiceGenerator.getRxClient;
 
 public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
-    private static SiteRemoteSource INSTANCE;
+    private static SiteRemoteSource siteRemoteSource;
 
 
     public synchronized static SiteRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SiteRemoteSource();
+        if (siteRemoteSource == null) {
+            siteRemoteSource = new SiteRemoteSource();
         }
-        return INSTANCE;
+        return siteRemoteSource;
     }
 
 
@@ -119,7 +116,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
     public void uploadAllOfflineSite() {
         DisposableSingleObserver<List<Site>> dis = SiteLocalSource.getInstance()
-                .getAllByStatus(Constant.SiteStatus.IS_OFFLINE)
+                .getAllByStatus(IS_OFFLINE)
                 .doOnDispose(() -> DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(OFFLINE_SITES))
                 .doOnSubscribe(disposable -> {
                     SyncRepository.getInstance().showProgress(OFFLINE_SITES);
@@ -290,14 +287,14 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     }
 
     public Single<SiteResponse> getSitesByURL(String url) {
-        return ServiceGenerator.getRxClient()
+        return getRxClient()
                 .create(ApiV3Interface.class)
                 .getSites(url)
                 .subscribeOn(Schedulers.io());
     }
 
     public Single<SiteResponse> getSites(HashMap<String, String> params) {
-        return ServiceGenerator.getRxClient()
+        return getRxClient()
                 .create(ApiV3Interface.class)
                 .getSites(params)
                 .subscribeOn(Schedulers.io());

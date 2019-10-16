@@ -116,8 +116,8 @@ public class ProjectBuilder {
         this.in = in;
         return this;
     }
-    public ProjectBuilder setTermsAndLabels(String terms_and_labels) {
-        this.termsAndLabels = terms_and_labels;
+    public ProjectBuilder setTermsAndLabels(String termsAndLabels) {
+        this.termsAndLabels = termsAndLabels;
         return this;
     }
 

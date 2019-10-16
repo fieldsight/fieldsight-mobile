@@ -47,7 +47,9 @@ public class MigrationHelper {
     }
 
     private static boolean isSpace(final String s) {
-        if (s == null) return true;
+        if (s == null) {
+            return true;
+        }
         for (int i = 0, len = s.length(); i < len; ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return false;
@@ -92,7 +94,9 @@ public class MigrationHelper {
     public static List<File> listFilesInDirWithFilter(final File dir,
                                                       final FileFilter filter,
                                                       final boolean isRecursive) {
-        if (!isDir(dir)) return null;
+        if (!isDir(dir)) {
+            return null;
+        }
         List<File> list = new ArrayList<>();
         File[] files = dir.listFiles();
         if (files != null && files.length != 0) {

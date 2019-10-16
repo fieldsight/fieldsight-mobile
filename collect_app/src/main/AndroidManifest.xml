@@ -120,9 +120,9 @@
         <activity android:name="org.fieldsight.naxa.migrate.MigrateFieldSightActivity" />
         <activity android:name="org.fieldsight.naxa.educational.EducationalMaterialActivity" />
         <activity android:name="org.fieldsight.naxa.project.AppUpdateActivity" />
-        <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewTextTitleDetailsActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EduMatViewTextTitleDetailsActivity" />
         <activity android:name="org.fieldsight.naxa.educational.EduMatImageDetailsActivity" />
-        <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewVideoDetailsActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EduMatViewVideoDetailsActivity" />
         <activity android:name="org.fieldsight.naxa.FSInstanceUploaderListActivity" />
         <activity android:name="org.fieldsight.naxa.FSInstanceChooserList" />
         <activity android:name="org.fieldsight.naxa.sync.ContentDownloadActivity" />

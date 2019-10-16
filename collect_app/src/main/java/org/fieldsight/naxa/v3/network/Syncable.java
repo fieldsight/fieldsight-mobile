@@ -56,7 +56,7 @@ public class Syncable implements Serializable {
         this.sync = sync;
     }
 
-    public boolean getSync() {
+    public boolean isSync() {
         return this.sync;
     }
 

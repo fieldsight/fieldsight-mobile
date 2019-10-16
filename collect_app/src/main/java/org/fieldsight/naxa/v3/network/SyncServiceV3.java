@@ -445,14 +445,14 @@ public class SyncServiceV3 extends IntentService {
     }
 
     private String getProjectId(FieldsightFormDetailsv3 fd) {
-        return TextUtils.isEmpty(fd.getProject()) || TextUtils.equals(fd.getProject(), "null") ? fd.getSite_project_id() : fd.getProject();
+        return TextUtils.isEmpty(fd.getProject()) || TextUtils.equals(fd.getProject(), "null") ? fd.getSiteProjectId() : fd.getProject();
     }
 
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {
         String logString = "";
         for (Syncable syncable : list) {
-            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.getSync();
+            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.isSync();
         }
         return String.format("%s \n params = %s", projectName, logString);
     }

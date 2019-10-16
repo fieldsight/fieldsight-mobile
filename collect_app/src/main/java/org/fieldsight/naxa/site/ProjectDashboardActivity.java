@@ -70,7 +70,6 @@ import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
@@ -163,10 +162,10 @@ public class ProjectDashboardActivity extends BaseActivity {
     }
 
     private TermsLabels getTermsAndLabels() {
-        if(!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
+        if(!TextUtils.isEmpty(loadedProject.getTermsAndLabels())) {
             try{
-                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
-                JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
+                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTermsAndLabels());
+                JSONObject tlJson = new JSONObject(loadedProject.getTermsAndLabels());
                 return TermsLabels.fromJSON(tlJson);
             }catch (Exception e){
                 Timber.e("Failed to load terms and labels; Reason: %s",e.getMessage());
@@ -220,7 +219,7 @@ public class ProjectDashboardActivity extends BaseActivity {
     private void setupSearchView() {
 
         searchView.setOnClickListener(view -> {
-            if (Collect.allowClick(getClass().getName())) {
+            if (allowClick(getClass().getName())) {
                 loadToolBarSearch();
             }
         });
@@ -361,13 +360,13 @@ public class ProjectDashboardActivity extends BaseActivity {
     private void handleNavDrawerClicks(int id) {
         switch (id) {
             case R.id.nav_create_offline_site:
-                String site_label = "Site";
-                String region_label = "Region";
+                String siteLabel = "Site";
+                String regionLabel = "Region";
                 if(tl != null) {
-                    site_label = tl.site;
-                    region_label = tl.region;
+                    siteLabel = tl.site;
+                    regionLabel = tl.region;
                 }
-                CreateSiteActivity.start(this, loadedProject, null, site_label, region_label);
+                CreateSiteActivity.start(this, loadedProject, null, siteLabel, regionLabel);
                 break;
             case R.id.nav_delete_saved_form:
 

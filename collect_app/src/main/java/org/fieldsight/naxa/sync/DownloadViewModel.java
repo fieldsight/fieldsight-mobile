@@ -245,7 +245,7 @@ public class DownloadViewModel extends ViewModel {
                 case DownloadProgress.STATUS_PROGRESS_UPDATE:
                     DownloadProgress progress = (DownloadProgress) resultData.getSerializable(EXTRA_OBJECT);
                     Timber.i(progress.getMessage());
-                    DownloadableItemLocalSource.getDownloadableItemLocalSource().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
+                    DownloadableItemLocalSource.getDownloadableItemLocalSource().updateProgress(ALL_FORMS, progress.getTotal(), progress.getProgress());
                     break;
                 case DownloadProgress.STATUS_ERROR:
                     EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_ERROR));

@@ -329,7 +329,7 @@ public class Collect extends Application {
     private void setupCrashlytics() {
         try {
             String email = FieldSightUserSession.getUser().getEmail();
-            String username = FieldSightUserSession.getUser().getUser_name();
+            String username = FieldSightUserSession.getUser().getUserName();
             Crashlytics.setString("email", email);
             Crashlytics.setString("username", username);
             Crashlytics.setUserEmail(email);

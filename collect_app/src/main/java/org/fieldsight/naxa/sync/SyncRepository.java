@@ -94,8 +94,7 @@ public class SyncRepository {
     public String formattedDate() {
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa", Locale.US);
-        String formattedDate = df.format(date);
-        return formattedDate;
+        return df.format(date);
     }
 
     public Single<SyncableItem> getStatusById(int uid) {

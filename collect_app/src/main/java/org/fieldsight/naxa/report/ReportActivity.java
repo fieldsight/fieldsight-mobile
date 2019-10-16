@@ -151,11 +151,11 @@ public class ReportActivity extends CollectAbstractActivity {
             String appOsVersion = checkEmptyWithFallback(tvOsVersion, "");
             String lat = checkEmptyWithFallback(tvLat, "0");
             String lng = checkEmptyWithFallback(tvLng, "0");
-            String message_type = checkEmptyWithFallback(spnrType, "");
+            String messageType = checkEmptyWithFallback(spnrType, "");
             String appVersion = checkEmptyWithFallback(tvAppVersion, "");
             String message = checkEmptyWithFallback(edtMessage, "I have an issues using the app");
             observer = ServiceGenerator.getRxClient().create(ApiInterface.class)
-                    .submitReport(deviceId, fcmToken, appVersion, appOsVersion, message_type, message, deviceName, lat, lng)
+                    .submitReport(deviceId, fcmToken, appVersion, appOsVersion, messageType, message, deviceName, lat, lng)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeWith(new DisposableObserver<ResponseBody>() {

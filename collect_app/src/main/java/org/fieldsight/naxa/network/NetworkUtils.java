@@ -8,16 +8,16 @@ import org.odk.collect.android.application.Collect;
 
 public class NetworkUtils {
 
-    private NetworkUtils(){
+    private NetworkUtils() {
 
     }
 
     private static NetworkInfo getNetworkStat() {
         Context ctx = Collect.getInstance().getApplicationContext();
         ConnectivityManager cm = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null)
+        if (cm != null) {
             return cm.getActiveNetworkInfo();
-        else {
+        } else {
             return null;
         }
     }

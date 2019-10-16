@@ -20,6 +20,8 @@ import java.util.Locale;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
+import static org.fieldsight.naxa.common.Constant.DownloadStatus.COMPLETED;
+import static org.fieldsight.naxa.common.Constant.DownloadStatus.DISABLED;
 import static org.fieldsight.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.ODK_FORMS;
@@ -144,7 +146,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
     }
 
     public void markAsDisabled(int uid, String message) {
-        AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.DISABLED, formattedDate(), message));
+        AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, DISABLED, formattedDate(), message));
 
     }
 
@@ -180,7 +182,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.PENDING);
+                syncDAO.markSelectedAsRunning(uid,  PENDING);
             }
         });
 
@@ -190,7 +192,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.PENDING, formattedDate(), message);
+                syncDAO.markSelectedAsDisabled(uid,  PENDING, formattedDate(), message);
             }
         });
 
@@ -199,13 +201,13 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
 
     public void markAllAsPending() {
         AsyncTask.execute(() -> {
-            syncDAO.markAllAsPending(PENDING, Constant.DownloadStatus.DISABLED);
+            syncDAO.markAllAsPending(PENDING,  DISABLED);
         });
     }
 
     public void markAsCompleted(int uid) {
         AsyncTask.execute(() -> {
-            syncDAO.markSelectedAsCompleted(uid, Constant.DownloadStatus.COMPLETED, formattedDate());
+            syncDAO.markSelectedAsCompleted(uid,  COMPLETED, formattedDate());
             clearErrorMessage(uid);
         });
     }
@@ -217,8 +219,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
     private String formattedDate() {
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa", Locale.US);
-        String formattedDate = df.format(date);
-        return formattedDate;
+        return df.format(date);
     }
 
 

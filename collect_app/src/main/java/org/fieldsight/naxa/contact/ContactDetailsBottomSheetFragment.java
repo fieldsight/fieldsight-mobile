@@ -52,7 +52,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
                     .into(profilePicture);
         }
 
-        BindAndSetOrHide(fullname, R.id.tv_contactdetail_fullname, contactDetail.getFull_name());
+        BindAndSetOrHide(fullname, R.id.tv_contactdetail_fullname, contactDetail.getFullName());
 
         BindAndSetOrHide(username, R.id.tv_contactdetail_username, contactDetail.getUsername());
 
@@ -74,7 +74,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
         BindAndSetOrHide(qq, R.id.tv_contactdetail_qq, contactDetail.getQq(), R.id.iv_qq_icon);
 
-        BindAndSetOrHide(googletalk, R.id.tv_contactdetail_googletalk, contactDetail.getGoogle_talk(), R.id.iv_googletalk_icon);
+        BindAndSetOrHide(googletalk, R.id.tv_contactdetail_googletalk, contactDetail.getGoogleTalk(), R.id.iv_googletalk_icon);
 
         BindAndSetOrHide(viber, R.id.tv_contactdetail_viber, contactDetail.getViber(), R.id.iv_viber_icon);
 

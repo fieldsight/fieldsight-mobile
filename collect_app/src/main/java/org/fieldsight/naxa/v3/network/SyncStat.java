@@ -46,13 +46,13 @@ public class SyncStat {
             @params started
      */
     @Ignore
-    public SyncStat(@NotNull String projectId, @NotNull String type, String failedUrl, boolean started, int status, long created_date) {
+    public SyncStat(@NotNull String projectId, @NotNull String type, String failedUrl, boolean started, int status, long createdDate) {
         this.projectId = projectId;
         this.type = type;
         this.failedUrl = failedUrl;
         this.started = started;
         this.status = status;
-        this.createdDate = created_date;
+        this.createdDate = createdDate;
     }
 
     public void setProgress(int progress) {

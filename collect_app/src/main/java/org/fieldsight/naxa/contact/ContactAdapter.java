@@ -73,7 +73,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     @Override
     public void onBindViewHolder( final MyViewHolder holder, int position) {
         final FieldSightContactModel contact = contactList.get(position);
-        holder.tvFullName.setText(contact.getFull_name());
+        holder.tvFullName.setText(contact.getFullName());
         holder.tvUserName.setText(contact.getEmail());
         /*
         //open tvSkype
@@ -137,11 +137,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             }
         });
 */
-        String Img_Thumb_Url = contact.getProfilePicture();
+        String profilePicture = contact.getProfilePicture();
 
-        if (Img_Thumb_Url != null) {
+        if (profilePicture != null) {
             GlideApp.with(context)
-                    .load(Img_Thumb_Url)
+                    .load(profilePicture)
                     .circleCrop()
                     .thumbnail(0.5f)
                     .into(holder.ivProfilePicture);

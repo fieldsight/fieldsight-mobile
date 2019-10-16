@@ -226,7 +226,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     private String readaableSyncParams(String projectName, List<Syncable> list) {
         String logString = "";
         for (Syncable syncable : list) {
-            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.getSync();
+            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.isSync();
         }
         return String.format("%s \n params = %s", projectName, logString);
     }

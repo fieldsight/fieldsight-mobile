@@ -43,10 +43,6 @@ import static org.fieldsight.naxa.common.event.DataSyncEvent.EventStatus.EVENT_S
 public class DownloadModelImpl implements DownloadModel {
 
 
-    public DownloadModelImpl() {
-
-
-    }
 
     @Deprecated
     @Override

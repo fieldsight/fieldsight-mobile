@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
@@ -159,7 +158,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                                     @Override
                                     public SyncableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
-                                            case Constant.DownloadUID.ALL_FORMS:
+                                            case ALL_FORMS:
                                                 syncableItem.setOutOfSync(integer > 0);
                                                 break;
                                         }
@@ -177,7 +176,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                                     @Override
                                     public SyncableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
-                                            case Constant.DownloadUID.PROJECT_SITES:
+                                            case PROJECT_SITES:
                                                 syncableItem.setOutOfSync(integer > 0);
                                                 break;
                                         }
@@ -195,7 +194,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                                     @Override
                                     public SyncableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
-                                            case Constant.DownloadUID.PREV_SUBMISSION:
+                                            case PREV_SUBMISSION:
                                                 syncableItem.setOutOfSync(integer > 0);
                                                 break;
                                         }

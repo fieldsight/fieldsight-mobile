@@ -48,7 +48,7 @@ public class LoginModelImpl implements LoginModel {
                                 .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
                                     @Override
                                     public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
-                                        if ("false".equals(fcmParameter.getIs_active())) {
+                                        if ("false".equals(fcmParameter.getIsActive())) {
                                             throw new FirebaseTokenException("Failed to add TOKEN in server");
                                         }
 
@@ -108,7 +108,7 @@ public class LoginModelImpl implements LoginModel {
                                 .flatMap(new Function<FCMParameter, ObservableSource<FCMParameter>>() {
                                     @Override
                                     public ObservableSource<FCMParameter> apply(FCMParameter fcmParameter) throws Exception {
-                                        if ("false".equals(fcmParameter.getIs_active())) {
+                                        if ("false".equals(fcmParameter.getIsActive())) {
                                             throw new FirebaseTokenException("Failed to add TOKEN in server");
                                         }
                                         FieldSightUserSession.saveAuthToken(authResponse.getToken());

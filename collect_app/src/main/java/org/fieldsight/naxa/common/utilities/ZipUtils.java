@@ -160,7 +160,6 @@ public class ZipUtils {
         if (segments.length == 0) {
             return "";
         }
-        String lastPathComponent = segments[segments.length - 1];
-        return lastPathComponent;
+        return segments[segments.length - 1];
     }
 }

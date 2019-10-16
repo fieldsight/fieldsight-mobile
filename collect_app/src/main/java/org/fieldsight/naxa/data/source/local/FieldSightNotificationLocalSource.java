@@ -42,7 +42,7 @@ import static org.fieldsight.naxa.common.Constant.NotificationType.WEEKLY_REMIND
 
 public class FieldSightNotificationLocalSource implements BaseLocalDataSource<FieldSightNotification> {
 
-    private static FieldSightNotificationLocalSource INSTANCE;
+    private static FieldSightNotificationLocalSource fieldSightNotificationLocalSource;
     private final FieldSightNotificationDAO dao;
 
 
@@ -59,11 +59,8 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     String submissionDateTime;
 
 
-    String date_str;
+    String dateStr;
     String localTime;
-    Boolean notificationStatus = false;
-
-    String comment;
     String fsFormId;
     String fsFormIdProject;
     String fsFormSubmissionId;
@@ -81,10 +78,10 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     String siteIdentifier;
 
     public synchronized static FieldSightNotificationLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new FieldSightNotificationLocalSource();
+        if (fieldSightNotificationLocalSource == null) {
+            fieldSightNotificationLocalSource = new FieldSightNotificationLocalSource();
         }
-        return INSTANCE;
+        return fieldSightNotificationLocalSource;
     }
 
     private FieldSightNotificationLocalSource() {
@@ -137,13 +134,13 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
     public Maybe<Integer> anyFormStatusChangeOutOfSync() {
         return dao.countForNotificationType(false,
-                Constant.NotificationType.FORM_FLAG
+                FORM_FLAG
         );
     }
 
     public void markFormStatusChangeAsRead() {
         AsyncTask.execute(() -> dao.applyReadToNotificationType(true,
-                Constant.NotificationType.FORM_FLAG));
+                FORM_FLAG));
     }
 
     public void markSitesAsRead() {
@@ -431,7 +428,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
 
         FieldSightNotification notification = new FieldSightNotificationBuilder()
-                .setDetails_url(notificationDetailsUrl)
+                .setDetailsUrl(notificationDetailsUrl)
                 .setNotificationType(notifyType)
                 .setFsFormId(fsFormId)
                 .setFormName(formName)
@@ -441,7 +438,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 .setProjectName(projectName)
                 .setFormStatus(formStatus)
                 .setSiteIdentifier(siteIdentifier)
-                .setNotifiedDate(date_str)
+                .setNotifiedDate(dateStr)
                 .setNotifiedTime(localTime)
                 .setIdString(jrFormId)
                 .setComment(formComment)

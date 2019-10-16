@@ -25,7 +25,7 @@ import static org.fieldsight.naxa.common.Constant.SiteStatus.IS_ONLINE;
 public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
 
-    private static SiteLocalSource INSTANCE;
+    private static SiteLocalSource siteLocalSource;
     private final SiteDao dao;
 
 
@@ -36,10 +36,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
 
     public synchronized static SiteLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SiteLocalSource();
+        if (siteLocalSource == null) {
+            siteLocalSource = new SiteLocalSource();
         }
-        return INSTANCE;
+        return siteLocalSource;
     }
 
 

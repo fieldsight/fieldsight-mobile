@@ -7,47 +7,52 @@ import com.google.gson.annotations.SerializedName;
  */
 public class FCMParameter {
     @SerializedName("dev_id")
-    String dev_id;
+    private
+    String devId;
     @SerializedName("reg_id")
-    String reg_id;
+    private
+    String regId;
     @SerializedName("name")
+    private
     String name;
     @SerializedName("is_active")
-    String is_active;
+    private
+    String isActive;
 
     @Override
     public String toString() {
         return "FCMParameter{" +
-                "dev_id='" + dev_id + '\'' +
-                ", reg_id='" + reg_id + '\'' +
+                "devId='" + devId + '\'' +
+                ", regId='" + regId + '\'' +
                 ", name='" + name + '\'' +
-                ", is_active='" + is_active + '\'' +
+                ", isActive='" + isActive + '\'' +
                 '}';
     }
 
-    public FCMParameter() {}
+    public FCMParameter() {
+    }
 
     public FCMParameter(String deviceId, String deviceToken, String deviceName, String deviceStatus) {
-        this.dev_id = deviceId;
-        this.reg_id = deviceToken;
+        this.devId = deviceId;
+        this.regId = deviceToken;
         this.name = deviceName;
-        this.is_active = deviceStatus;
+        this.isActive = deviceStatus;
     }
 
-    public String getDev_id() {
-        return dev_id;
+    public String getDevId() {
+        return devId;
     }
 
-    public void setDev_id(String dev_id) {
-        this.dev_id = dev_id;
+    public void setDevId(String devId) {
+        this.devId = devId;
     }
 
-    public String getReg_id() {
-        return reg_id;
+    public String getRegId() {
+        return regId;
     }
 
-    public void setReg_id(String reg_id) {
-        this.reg_id = reg_id;
+    public void setRegId(String regId) {
+        this.regId = regId;
     }
 
     public String getName() {
@@ -58,11 +63,11 @@ public class FCMParameter {
         this.name = name;
     }
 
-    public String getIs_active() {
-        return is_active;
+    public String getIsActive() {
+        return isActive;
     }
 
-    public void setIs_active(String is_active) {
-        this.is_active = is_active;
+    public void setIsActive(String isActive) {
+        this.isActive = isActive;
     }
 }

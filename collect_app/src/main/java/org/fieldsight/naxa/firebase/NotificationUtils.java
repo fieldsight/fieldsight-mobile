@@ -24,14 +24,10 @@ public class NotificationUtils {
     private static int uniqueMessageId = DEFAULT_DOWNLOAD_NOTIFICATION_ID + 1;
     private static NotificationManager mNotifyManager;
     private static NotificationCompat.Builder mBuilder;
-    public static String DOWNLOAD_ACTION = "download.action";
     private static int smallIcon = R.drawable.ic_notification_icon;
 
     private static final String CHANNEL_ID = "All Notifications";
 
-    public NotificationUtils() {
-
-    }
 
     private static int getUniqueMessageId() {
         return uniqueMessageId++;
@@ -98,7 +94,7 @@ public class NotificationUtils {
 
         PendingIntent p = intent != null ? PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT) : null;
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentIntent(p)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
@@ -123,7 +119,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "upload")
+       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "upload")
                 .setSmallIcon(android.R.drawable.stat_sys_upload)
                 .setAutoCancel(true)
                 .setContentTitle(title)
@@ -157,7 +153,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+       NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setAutoCancel(true)
                 .setContentTitle(title)
@@ -183,7 +179,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setAutoCancel(true)
                 .setContentTitle("Looking for educational materials")
@@ -205,7 +201,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download_done)
                 .setContentText(msg);
 
@@ -227,7 +223,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification_icon)
                 .setContentTitle(title)
                 .setTicker(msg)
@@ -250,7 +246,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setContentText(msg)
                 .setProgress(total, progress, false);
@@ -330,7 +326,7 @@ public class NotificationUtils {
                 PendingIntent.FLAG_ONE_SHOT);
 
 
-        androidx.core.app.NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(ctx)
                 .setSmallIcon(icon).setContentText(tickerText).setWhen(when)
                 .setContentTitle(contentText)
                 .setTicker(tickerText)
@@ -384,7 +380,7 @@ public class NotificationUtils {
         NotificationManager manager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        androidx.core.app.NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setAutoCancel(true)
                 .setContentTitle(title)

@@ -96,10 +96,6 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
     boolean isParent ;
 
-    public SiteDashboardFragment() {
-
-    }
-
 
     public static SiteDashboardFragment newInstance(Site site, boolean isParent) {
         SiteDashboardFragment fragment = new SiteDashboardFragment();

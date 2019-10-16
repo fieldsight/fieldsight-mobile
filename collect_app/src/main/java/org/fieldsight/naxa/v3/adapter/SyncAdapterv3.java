@@ -112,7 +112,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
             int totalSynced = 0;
             int totalSize = 0;
             for (Syncable syncable : syncableList) {
-                if (!syncable.getSync()) {
+                if (!syncable.isSync()) {
                     continue;
                 }
                 if (syncable.getStatus() == Constant.DownloadStatus.COMPLETED) {
@@ -157,7 +157,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         syncViewHolder.bindView(project, progressMap, disableItemClick);
         List<Syncable> syncables = syncableMap.get(project.getId());
         syncViewHolder.manageChildView(syncables, disableItemClick);
-        syncViewHolder.iv_cancel.setOnClickListener(v -> {
+        syncViewHolder.ivCancel.setOnClickListener(v -> {
             if (callback != null) {
                 callback.onRequestInterrupt(i, project);
             }

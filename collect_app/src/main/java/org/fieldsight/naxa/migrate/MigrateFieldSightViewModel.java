@@ -221,8 +221,9 @@ public class MigrateFieldSightViewModel extends ViewModel {
         String dbPath = migrationHelper.getOldRootPath() + File.separator + MigrationHelper.Folder.METADATA + File.separator + MigrationHelper.Database.FORMS;
         File dbfile = new File(dbPath);
 
-        if (!dbfile.exists())
+        if (!dbfile.exists()) {
             throw new RuntimeException("Forms Database does not exist for " + usernameOrEmail);
+        }
 
         return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
     }
@@ -259,9 +260,6 @@ public class MigrateFieldSightViewModel extends ViewModel {
         return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
     }
 
-    public MigrateFieldSightViewModel() {
-
-    }
 
     Observable<Integer> copyFromOldAccount() {
 

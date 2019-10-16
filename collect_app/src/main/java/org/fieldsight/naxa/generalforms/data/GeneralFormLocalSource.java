@@ -198,10 +198,10 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
     @Override
     public void save(GeneralForm... items) {
-        io.reactivex.Observable.just(items)
+         Observable.just(items)
                 .flatMap(generalForms -> {
                     dao.insert(generalForms);
-                    return io.reactivex.Observable.empty();
+                    return  Observable.empty();
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

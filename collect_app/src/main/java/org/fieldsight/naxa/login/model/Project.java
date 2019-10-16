@@ -98,15 +98,15 @@ public class Project implements Parcelable {
     @Ignore
     String statusMessage = "";
 
-    public String getTerms_and_labels() {
-        return terms_and_labels;
+    public String getTermsAndLabels() {
+        return termsAndLabels;
     }
 
-    public void setTerms_and_labels(String terms_and_labels) {
-        this.terms_and_labels = terms_and_labels;
+    public void setTermsAndLabels(String termsAndLabels) {
+        this.termsAndLabels = termsAndLabels;
     }
 
-    private String terms_and_labels = "";
+    private String termsAndLabels = "";
 
     public long getSyncedDate() {
         return syncedDate;
@@ -283,7 +283,7 @@ public class Project implements Parcelable {
 
 
 
-    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, List<SiteMetaAttribute> metaAttributes, String url, String terms_and_labels) {
+    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, List<SiteMetaAttribute> metaAttributes, String url, String termsAndLabels) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -300,7 +300,7 @@ public class Project implements Parcelable {
         this.isSyncedWithRemote = isSyncedWithRemote;
         this.siteMetaAttributes = metaAttributes;
         this.url = url;
-        this.terms_and_labels = terms_and_labels;
+        this.termsAndLabels = termsAndLabels;
 
     }
 
@@ -329,7 +329,7 @@ public class Project implements Parcelable {
         dest.writeByte(this.checked ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isSynced ? (byte) 1 : (byte) 0);
         dest.writeString(this.statusMessage);
-        dest.writeString(this.terms_and_labels);
+        dest.writeString(this.termsAndLabels);
         dest.writeLong(this.syncedDate);
         dest.writeTypedList(this.regionList);
         dest.writeTypedList(this.siteMetaAttributes);
@@ -354,7 +354,7 @@ public class Project implements Parcelable {
         this.checked = in.readByte() != 0;
         this.isSynced = in.readByte() != 0;
         this.statusMessage = in.readString();
-        this.terms_and_labels = in.readString();
+        this.termsAndLabels = in.readString();
         this.syncedDate = in.readLong();
         this.regionList = in.createTypedArrayList(Region.CREATOR);
         this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);

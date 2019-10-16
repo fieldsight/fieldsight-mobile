@@ -110,10 +110,6 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
 
     }
 
-    public SubStageListFragment() {
-
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

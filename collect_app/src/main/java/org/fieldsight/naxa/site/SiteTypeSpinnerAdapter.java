@@ -40,8 +40,7 @@ public class SiteTypeSpinnerAdapter extends ArrayAdapter<SiteType> {
 
     public int getCount() {
         int count = super.getCount();
-        int newCount = count > 0 ? count - 1 : count;
-        return newCount;
+        return count > 0 ? count - 1 : count;
     }
 
 

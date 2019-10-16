@@ -87,7 +87,9 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
                 new Observer<List<SurveyForm>>() {
                     @Override
                     public void onChanged(@Nullable List<SurveyForm> surveyForms) {
-                        if (surveyForms == null) return;
+                        if (surveyForms == null){
+                            return;
+                        }
 
                         adapter.clear();
                         adapter.addAll(surveyForms);

@@ -3,7 +3,7 @@ package org.fieldsight.naxa.project;
 import org.json.JSONObject;
 
 public class TermsLabels {
-    public String region_supervisor,
+    public final String regionSupervisor,
             region,
             site,
             siteSupervisor,
@@ -11,13 +11,13 @@ public class TermsLabels {
             regionReviewer,
             donor;
 
-    private TermsLabels(String region_supervisor, String region, String site, String site_supervisor, String site_reviewer, String region_reviewer, String donor) {
-        this.region_supervisor = region_supervisor;
+    private TermsLabels(String regionSupervisor, String region, String site, String siteSupervisor, String siteReviewer, String regionReviewer, String donor) {
+        this.regionSupervisor = regionSupervisor;
         this.region = region;
         this.site = site;
-        this.siteSupervisor = site_supervisor;
-        this.siteReviewer = site_reviewer;
-        this.regionReviewer = region_reviewer;
+        this.siteSupervisor = siteSupervisor;
+        this.siteReviewer = siteReviewer;
+        this.regionReviewer = regionReviewer;
         this.donor = donor;
     }
 

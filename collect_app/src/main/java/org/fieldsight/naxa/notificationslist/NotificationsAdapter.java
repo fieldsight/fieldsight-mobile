@@ -42,8 +42,8 @@ import static org.fieldsight.naxa.common.Constant.NotificationType.WEEKLY_REMIND
 public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<FieldSightNotification> fieldSightNotifications;
-    private OnItemClickListener<FieldSightNotification> listener;
-    final int TYPE_LOADING = 1, TYPE_ITEM = 2;
+    private final OnItemClickListener<FieldSightNotification> listener;
+    private static final int TYPE_LOADING = 1, TYPE_ITEM = 2;
 
     NotificationsAdapter(List<FieldSightNotification> totalList, OnItemClickListener<FieldSightNotification> listener) {
         this.fieldSightNotifications = totalList;
@@ -70,14 +70,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     }
 
-    public FieldSightNotification getMostRecentNotification() {
-        if (fieldSightNotifications.size() > 0) {
+    FieldSightNotification getMostRecentNotification() {
+        if (fieldSightNotifications.size() > 0){
             return fieldSightNotifications.get(0);
-        } else {
-            NotificationsAdapter
+        }
+        else{
+            return null;
         }
     }
-
     @Override
     public int getItemViewType(int position) {
         if (fieldSightNotifications.get(position) == null) {

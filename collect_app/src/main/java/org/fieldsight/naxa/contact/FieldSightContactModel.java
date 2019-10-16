@@ -39,7 +39,7 @@ public class FieldSightContactModel {
     @SerializedName("qq")
     private String qq;
     @SerializedName("google_talk")
-    private String google_talk;
+    private String googleTalk;
 
     @SerializedName("profile_picture")
     private String profilePicture;
@@ -50,7 +50,7 @@ public class FieldSightContactModel {
     @SerializedName("wechat")
     private String wechat;
     @SerializedName("full_name")
-    private String full_name;
+    private String fullName;
 
     @Ignore
     @TypeConverters(RoleModelTypeConverter.class)
@@ -58,11 +58,11 @@ public class FieldSightContactModel {
     private ArrayList<RoleModel> role;
 
     @SerializedName("primary_number")
-    private String primary_number;
+    private String primaryNumber;
     @SerializedName("secondary_number")
-    private String secondary_number;
+    private String secondaryNumber;
     @SerializedName("office_number")
-    private String office_number;
+    private String officeNumber;
 
     private String roleString;
 
@@ -124,12 +124,12 @@ public class FieldSightContactModel {
         this.skype = skype;
     }
 
-    public String getFull_name() {
-        return full_name;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFull_name(String full_name) {
-        this.full_name = full_name;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getTwitter() {
@@ -164,12 +164,12 @@ public class FieldSightContactModel {
         this.qq = qq;
     }
 
-    public String getGoogle_talk() {
-        return google_talk;
+    public String getGoogleTalk() {
+        return googleTalk;
     }
 
-    public void setGoogle_talk(String google_talk) {
-        this.google_talk = google_talk;
+    public void setGoogleTalk(String googleTalk) {
+        this.googleTalk = googleTalk;
     }
 
     public String getViber() {
@@ -204,28 +204,28 @@ public class FieldSightContactModel {
         this.role = role;
     }
 
-    public String getPrimary_number() {
-        return primary_number;
+    public String getPrimaryNumber() {
+        return primaryNumber;
     }
 
-    public void setPrimary_number(String primary_number) {
-        this.primary_number = primary_number;
+    public void setPrimaryNumber(String primaryNumber) {
+        this.primaryNumber = primaryNumber;
     }
 
-    public String getSecondary_number() {
-        return secondary_number;
+    public String getSecondaryNumber() {
+        return secondaryNumber;
     }
 
-    public void setSecondary_number(String secondary_number) {
-        this.secondary_number = secondary_number;
+    public void setSecondaryNumber(String secondaryNumber) {
+        this.secondaryNumber = secondaryNumber;
     }
 
-    public String getOffice_number() {
-        return office_number;
+    public String getOfficeNumber() {
+        return officeNumber;
     }
 
-    public void setOffice_number(String office_number) {
-        this.office_number = office_number;
+    public void setOfficeNumber(String officeNumber) {
+        this.officeNumber = officeNumber;
     }
 
     public String getProfilePicture() {
