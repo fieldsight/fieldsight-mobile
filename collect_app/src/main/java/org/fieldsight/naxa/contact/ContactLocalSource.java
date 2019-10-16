@@ -23,7 +23,7 @@ public class ContactLocalSource implements BaseLocalDataSource<FieldSightContact
     }
 
 
-    public static ContactLocalSource getInstance() {
+    public synchronized static ContactLocalSource getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new ContactLocalSource();
         }

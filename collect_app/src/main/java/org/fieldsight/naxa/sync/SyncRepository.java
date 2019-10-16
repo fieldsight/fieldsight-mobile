@@ -41,14 +41,9 @@ public class SyncRepository {
         init();
     }
 
-    public static SyncRepository getInstance() {
+    public synchronized static SyncRepository getInstance() {
         if (instance == null) {
-            synchronized (SyncRepository.class) {
-                if (instance == null) {
-                    instance = new SyncRepository(Collect.getInstance());
-                }
-            }
-
+            instance = new SyncRepository(Collect.getInstance());
         }
 
         return instance;

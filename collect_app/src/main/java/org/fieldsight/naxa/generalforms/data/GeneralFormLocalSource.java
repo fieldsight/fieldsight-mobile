@@ -42,7 +42,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
 
-    public static GeneralFormLocalSource getInstance() {
+    public static synchronized GeneralFormLocalSource getInstance() {
         if (generalFormLocalSource == null) {
             generalFormLocalSource = new GeneralFormLocalSource();
         }

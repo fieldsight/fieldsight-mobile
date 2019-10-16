@@ -31,7 +31,7 @@ public class StageLocalSource implements BaseLocalDataSource<Stage> {
         this.dao = database.getStageDAO();
     }
 
-    public static StageLocalSource getInstance() {
+    public synchronized static StageLocalSource getInstance() {
         if (stageLocalSource == null) {
             stageLocalSource = new StageLocalSource();
         }

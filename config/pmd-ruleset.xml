@@ -83,12 +83,12 @@
         <exclude name="UseObjectForClearerAPI" />
     </rule>
 
-<!--    <rule ref="category/java/documentation.xml">-->
-<!--        <exclude name="CommentSize" />-->
-<!--        <exclude name="CommentRequired" />-->
-<!--        <exclude name="UncommentedEmptyConstructor" />-->
-<!--        <exclude name="UncommentedEmptyMethodBody" />-->
-<!--    </rule>-->
+    <rule ref="category/java/documentation.xml">
+        <exclude name="CommentSize" />
+        <exclude name="CommentRequired" />
+        <exclude name="UncommentedEmptyConstructor" />
+        <exclude name="UncommentedEmptyMethodBody" />
+    </rule>
 
     <rule ref="category/java/errorprone.xml">
         <exclude name="AssignmentInOperand" />
@@ -118,11 +118,11 @@
         <exclude name="NonStaticInitializer" />
     </rule>
 
-<!--    <rule ref="category/java/multithreading.xml">-->
-<!--        <exclude name="AvoidSynchronizedAtMethodLevel" />-->
-<!--        <exclude name="DoNotUseThreads" />-->
-<!--        <exclude name="UseConcurrentHashMap" />-->
-<!--    </rule>-->
+    <rule ref="category/java/multithreading.xml">
+        <exclude name="AvoidSynchronizedAtMethodLevel" />
+        <exclude name="DoNotUseThreads" />
+        <exclude name="UseConcurrentHashMap" />
+    </rule>
 
     <rule ref="category/java/performance.xml">
         <exclude name="AvoidFileStream" />

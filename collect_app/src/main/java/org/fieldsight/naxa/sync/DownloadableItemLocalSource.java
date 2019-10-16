@@ -31,7 +31,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
     private static DownloadableItemLocalSource downloadableItemLocalSource;
     private final DownloadableItemDAO syncDAO;
 
-    public static DownloadableItemLocalSource getDownloadableItemLocalSource() {
+    public synchronized static DownloadableItemLocalSource getDownloadableItemLocalSource() {
         if (downloadableItemLocalSource == null) {
             downloadableItemLocalSource = new DownloadableItemLocalSource();
         }

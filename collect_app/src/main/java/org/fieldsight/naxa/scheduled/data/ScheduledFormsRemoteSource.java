@@ -44,7 +44,7 @@ public class ScheduledFormsRemoteSource implements BaseRemoteDataSource<Schedule
     private final SyncRepository syncRepository;
 
 
-    public static ScheduledFormsRemoteSource getInstance() {
+    public synchronized static ScheduledFormsRemoteSource getInstance() {
         if (scheduledFormsRemoteSource == null) {
             scheduledFormsRemoteSource = new ScheduledFormsRemoteSource();
         }

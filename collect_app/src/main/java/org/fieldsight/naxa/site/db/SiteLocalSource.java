@@ -35,7 +35,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
-    public static SiteLocalSource getInstance() {
+    public synchronized static SiteLocalSource getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new SiteLocalSource();
         }

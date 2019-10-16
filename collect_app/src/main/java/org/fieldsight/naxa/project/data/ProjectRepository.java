@@ -1,15 +1,15 @@
 package org.fieldsight.naxa.project.data;
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import org.fieldsight.naxa.common.BaseRepository;
-import org.fieldsight.naxa.generalforms.data.GeneralFormRepository;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.SiteMetaAttribute;
 import org.fieldsight.naxa.network.NetworkUtils;
@@ -47,13 +47,9 @@ public class ProjectRepository implements BaseRepository<Project> {
         return getInstance(ProjectLocalSource.getInstance(), ProjectSitesRemoteSource.getInstance());
     }
 
-    public static ProjectRepository getInstance(ProjectLocalSource localSource, ProjectSitesRemoteSource remoteSource) {
+    public synchronized static ProjectRepository getInstance(ProjectLocalSource localSource, ProjectSitesRemoteSource remoteSource) {
         if (projectRepository == null) {
-            synchronized (GeneralFormRepository.class) {
-                if (projectRepository == null) {
-                    projectRepository = new ProjectRepository(localSource, remoteSource);
-                }
-            }
+            projectRepository = new ProjectRepository(localSource, remoteSource);
         }
         return projectRepository;
     }

@@ -35,7 +35,7 @@ public class InstanceRemoteSource {
     private static InstanceRemoteSource instanceRemoteSource;
 
 
-    public static InstanceRemoteSource getInstanceRemoteSource() {
+    public static synchronized InstanceRemoteSource getInstanceRemoteSource() {
         if (instanceRemoteSource == null) {
             instanceRemoteSource = new InstanceRemoteSource();
         }

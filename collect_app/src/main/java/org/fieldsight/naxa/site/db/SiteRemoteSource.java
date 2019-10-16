@@ -48,7 +48,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     private static SiteRemoteSource INSTANCE;
 
 
-    public static SiteRemoteSource getInstance() {
+    public synchronized static SiteRemoteSource getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new SiteRemoteSource();
         }

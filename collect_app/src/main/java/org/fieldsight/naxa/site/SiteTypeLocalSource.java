@@ -24,7 +24,7 @@ public class SiteTypeLocalSource implements BaseLocalDataSource<SiteType> {
     }
 
 
-    public static SiteTypeLocalSource getInstance() {
+    public synchronized static SiteTypeLocalSource getInstance() {
         if (siteTypeLocalSource == null) {
             siteTypeLocalSource = new SiteTypeLocalSource();
         }

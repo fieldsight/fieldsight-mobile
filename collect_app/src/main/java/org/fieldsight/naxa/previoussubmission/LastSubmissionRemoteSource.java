@@ -32,7 +32,7 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
 
     private static LastSubmissionRemoteSource lastSubmissionRemoteSource;
 
-    public static LastSubmissionRemoteSource getInstance() {
+    public synchronized static LastSubmissionRemoteSource getInstance() {
         if (lastSubmissionRemoteSource == null) {
             lastSubmissionRemoteSource = new LastSubmissionRemoteSource();
         }

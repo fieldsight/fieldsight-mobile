@@ -80,7 +80,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     boolean isDeployedFromSite;
     String siteIdentifier;
 
-    public static FieldSightNotificationLocalSource getInstance() {
+    public synchronized static FieldSightNotificationLocalSource getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new FieldSightNotificationLocalSource();
         }

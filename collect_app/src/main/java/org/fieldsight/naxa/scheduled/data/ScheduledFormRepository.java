@@ -17,14 +17,9 @@ public class ScheduledFormRepository implements BaseRepository<ScheduleForm> {
     private final ScheduledFormsRemoteSource remoteSource;
 
 
-
-    public static ScheduledFormRepository getInstance(ScheduledFormsLocalSource localSource, ScheduledFormsRemoteSource remoteSource) {
+    public synchronized static ScheduledFormRepository getInstance(ScheduledFormsLocalSource localSource, ScheduledFormsRemoteSource remoteSource) {
         if (scheduledFormRepository == null) {
-            synchronized (ScheduledFormRepository.class) {
-                if (scheduledFormRepository == null) {
-                    scheduledFormRepository = new ScheduledFormRepository(localSource, remoteSource);
-                }
-            }
+            scheduledFormRepository = new ScheduledFormRepository(localSource, remoteSource);
         }
         return scheduledFormRepository;
     }

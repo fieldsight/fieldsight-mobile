@@ -43,7 +43,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
     private final SiteRepository siteRepository;
     private final ProjectLocalSource projectLocalSource;
 
-    public static ProjectSitesRemoteSource getInstance() {
+    public synchronized static ProjectSitesRemoteSource getInstance() {
         if (projectSitesRemoteSource == null) {
             projectSitesRemoteSource = new ProjectSitesRemoteSource();
         }

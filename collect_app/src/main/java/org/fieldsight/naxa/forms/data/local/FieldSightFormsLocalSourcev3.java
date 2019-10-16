@@ -37,7 +37,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         this.dao = database.getFieldSightFOrmDAOV3();
     }
 
-    public static FieldSightFormsLocalSourcev3 getInstance() {
+    public static synchronized FieldSightFormsLocalSourcev3 getInstance() {
         if (localSourcev3 == null) {
             localSourcev3 = new FieldSightFormsLocalSourcev3();
         }

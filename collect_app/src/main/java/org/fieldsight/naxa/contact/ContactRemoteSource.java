@@ -16,7 +16,7 @@ public class ContactRemoteSource implements BaseRemoteDataSource<FieldSightConta
     private static ContactRemoteSource contactRemoteSource;
 
 
-    public static ContactRemoteSource getInstance() {
+    public synchronized static ContactRemoteSource getInstance() {
         if (contactRemoteSource == null) {
             contactRemoteSource = new ContactRemoteSource();
         }

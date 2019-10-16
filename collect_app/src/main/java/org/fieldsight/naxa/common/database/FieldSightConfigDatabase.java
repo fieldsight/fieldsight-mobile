@@ -3,6 +3,7 @@ package org.fieldsight.naxa.common.database;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+
 import android.content.Context;
 
 import org.odk.collect.android.application.Collect;
@@ -35,18 +36,17 @@ public abstract class FieldSightConfigDatabase extends RoomDatabase {
 
     private static final String DB_PATH = Collect.METADATA_PATH + File.separator + "fieldsight_cofig";
 
-    public static FieldSightConfigDatabase getDatabase(final Context context) {
+    public synchronized static FieldSightConfigDatabase getDatabase(final Context context) {
+
         if (fieldSightConfigDatabase == null) {
-            synchronized (FieldSightConfigDatabase.class) {
-                if (fieldSightConfigDatabase == null) {
-                    fieldSightConfigDatabase = Room.databaseBuilder(context.getApplicationContext(),
-                            FieldSightConfigDatabase.class, DB_PATH)
-                            .fallbackToDestructiveMigration()
-                            .allowMainThreadQueries()
-                            .build();
-                }
-            }
+            fieldSightConfigDatabase = Room.databaseBuilder(context.getApplicationContext(),
+                    FieldSightConfigDatabase.class, DB_PATH)
+                    .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
+                    .build();
         }
+
+
         return fieldSightConfigDatabase;
     }
 

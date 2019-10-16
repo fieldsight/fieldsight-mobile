@@ -49,7 +49,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
     private static EducationalMaterialsRemoteSource INSTANCE;
 
 
-    public static EducationalMaterialsRemoteSource getInstance() {
+    public synchronized static EducationalMaterialsRemoteSource getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new EducationalMaterialsRemoteSource();
         }

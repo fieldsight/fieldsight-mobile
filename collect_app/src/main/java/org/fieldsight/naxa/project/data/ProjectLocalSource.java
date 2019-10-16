@@ -26,7 +26,7 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
     }
 
 
-    public static ProjectLocalSource getInstance() {
+    public static synchronized ProjectLocalSource getInstance() {
         if (projectLocalSource == null) {
             projectLocalSource = new ProjectLocalSource();
         }

@@ -82,7 +82,7 @@ public class ServiceGenerator {
                 .build();
     }
 
-    public static <T> T createService(Class<T> serviceClass) {
+    public synchronized static <T> T createService(Class<T> serviceClass) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .client(createOkHttpClient(false))
@@ -94,7 +94,7 @@ public class ServiceGenerator {
         return retrofit.create(serviceClass);
     }
 
-    public static <T> T createCacheService(Class<T> serviceClass) {
+    public synchronized static <T> T createCacheService(Class<T> serviceClass) {
         if (cacheablesRetrofit == null) {
             cacheablesRetrofit = new Retrofit.Builder()
                     .client(createOkHttpClient(true))
@@ -107,7 +107,7 @@ public class ServiceGenerator {
         return cacheablesRetrofit.create(serviceClass);
     }
 
-    public static Retrofit getRxClient() {
+    public synchronized static Retrofit getRxClient() {
 
 
         if (okHttp == null) {

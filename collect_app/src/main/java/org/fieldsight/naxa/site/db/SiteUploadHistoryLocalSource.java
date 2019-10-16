@@ -21,7 +21,7 @@ public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUpl
     public static SiteUploadHistoryLocalSource siteUploadHistoryLocalSource;
     private final SiteUploadHistoryDAO dao;
 
-    public static SiteUploadHistoryLocalSource getInstance() {
+    public synchronized static SiteUploadHistoryLocalSource getInstance() {
         if (siteUploadHistoryLocalSource == null) {
             siteUploadHistoryLocalSource = new SiteUploadHistoryLocalSource();
         }

@@ -42,7 +42,7 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
     private static GeneralFormRemoteSource generalFormRemoteSource;
     private final ProjectLocalSource projectLocalSource;
 
-    public static GeneralFormRemoteSource getInstance() {
+    public static synchronized GeneralFormRemoteSource getInstance() {
         if (generalFormRemoteSource == null) {
             generalFormRemoteSource = new GeneralFormRemoteSource();
         }

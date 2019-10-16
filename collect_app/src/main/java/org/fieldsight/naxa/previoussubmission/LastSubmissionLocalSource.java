@@ -25,7 +25,7 @@ public class LastSubmissionLocalSource implements BaseLocalDataSource<Submission
     }
 
 
-    public static LastSubmissionLocalSource getInstance() {
+    public synchronized static LastSubmissionLocalSource getInstance() {
         if (lastSubmissionLocalSource == null) {
             lastSubmissionLocalSource = new LastSubmissionLocalSource();
         }

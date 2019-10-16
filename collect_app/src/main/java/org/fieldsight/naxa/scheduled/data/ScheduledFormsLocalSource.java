@@ -39,7 +39,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
         this.dao = database.getProjectScheduledFormsDAO();
     }
 
-    public static ScheduledFormsLocalSource getInstance() {
+    public synchronized static ScheduledFormsLocalSource getInstance() {
         if (scheduledFormsLocalSource == null) {
             scheduledFormsLocalSource = new ScheduledFormsLocalSource();
         }

@@ -39,7 +39,7 @@ public class FlagFormRemoteSource {
     private final FSInstancesDao instancesDao;
 
 
-    public static FlagFormRemoteSource getFlagFormRemoteSource() {
+    public synchronized static FlagFormRemoteSource getFlagFormRemoteSource() {
         if (flagFormRemoteSource == null) {
             flagFormRemoteSource = new FlagFormRemoteSource();
         }

@@ -13,7 +13,7 @@ public class NotificationRemoteSource {
 
     private static NotificationRemoteSource notificationRemoteSource;
 
-    public static NotificationRemoteSource getInstance() {
+    public synchronized static NotificationRemoteSource getInstance() {
         if (notificationRemoteSource == null) {
             notificationRemoteSource = new NotificationRemoteSource();
         }

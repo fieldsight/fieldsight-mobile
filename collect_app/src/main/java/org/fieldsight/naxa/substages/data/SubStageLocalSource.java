@@ -42,7 +42,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
         this.dao = database.getSubStageDAO();
     }
 
-    public static SubStageLocalSource getInstance() {
+    public synchronized static SubStageLocalSource getInstance() {
         if (subStageLocalSource == null) {
             subStageLocalSource = new SubStageLocalSource();
         }

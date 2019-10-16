@@ -15,13 +15,9 @@ public class ContactRepository implements BaseRepository<FieldSightContactModel>
     private static ContactRepository contactRepository;
 
 
-    public static ContactRepository getInstance(ContactLocalSource localSource) {
+    public static synchronized ContactRepository getInstance(ContactLocalSource localSource) {
         if (contactRepository == null) {
-            synchronized (ContactRepository.class) {
-                if (contactRepository == null) {
-                    contactRepository = new ContactRepository(localSource);
-                }
-            }
+            contactRepository = new ContactRepository(localSource);
         }
         return contactRepository;
     }

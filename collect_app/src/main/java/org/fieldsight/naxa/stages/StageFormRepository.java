@@ -19,13 +19,9 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
     private final StageLocalSource localSource;
     private final StageRemoteSource remoteSource;
 
-    public static StageFormRepository getInstance(StageLocalSource localSource, StageRemoteSource remoteSource) {
+    public synchronized static StageFormRepository getInstance(StageLocalSource localSource, StageRemoteSource remoteSource) {
         if (stageFormRepository == null) {
-            synchronized (StageFormRepository.class) {
-                if (stageFormRepository == null) {
-                    stageFormRepository = new StageFormRepository(localSource, remoteSource);
-                }
-            }
+            stageFormRepository = new StageFormRepository(localSource, remoteSource);
         }
         return stageFormRepository;
     }
@@ -58,12 +54,12 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
         localSource.updateAll(items);
     }
 
-    public LiveData<List<Stage>> getBySiteId(boolean forceUpdate, String siteId, String siteIdType,String projectId) {
+    public LiveData<List<Stage>> getBySiteId(boolean forceUpdate, String siteId, String siteIdType, String projectId) {
         if (forceUpdate) {
             remoteSource.getAll();
         }
 
-        return localSource.getBySiteId(siteId, siteIdType,projectId);
+        return localSource.getBySiteId(siteId, siteIdType, projectId);
     }
 
 
@@ -80,8 +76,8 @@ public class StageFormRepository implements BaseLocalDataSource<Stage> {
     }
 
 
-    public Observable<List<Stage>> getBySiteIdMaybe(String siteId, String siteIdType, String projectId){
-        return localSource.getBySiteIdMaybe(siteId,siteIdType,projectId);
+    public Observable<List<Stage>> getBySiteIdMaybe(String siteId, String siteIdType, String projectId) {
+        return localSource.getBySiteIdMaybe(siteId, siteIdType, projectId);
     }
 
 

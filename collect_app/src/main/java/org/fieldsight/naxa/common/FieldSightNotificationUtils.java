@@ -16,7 +16,7 @@ import org.odk.collect.android.utilities.IconUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-
+@SuppressWarnings("PMD.UseNotifyAllInsteadOfNotify")
 public class FieldSightNotificationUtils {
     private NotificationManager notifManager;
     private static final String CHANNEL_ID = "fieldsight_notification_channel";

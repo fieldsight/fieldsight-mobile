@@ -22,7 +22,7 @@ public class SurveyFormLocalSource implements BaseLocalDataSource<SurveyForm> {
         this.dao = database.getSurveyDAO();
     }
 
-    public static SurveyFormLocalSource getInstance() {
+    public synchronized static SurveyFormLocalSource getInstance() {
         if (surveyFormLocalSource == null) {
             surveyFormLocalSource = new SurveyFormLocalSource();
         }

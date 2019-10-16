@@ -27,7 +27,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
     }
 
 
-    public static SyncLocalSource3 getInstance() {
+    public synchronized static SyncLocalSource3 getInstance() {
         if (syncLocalSource3 == null) {
             syncLocalSource3 = new SyncLocalSource3();
         }

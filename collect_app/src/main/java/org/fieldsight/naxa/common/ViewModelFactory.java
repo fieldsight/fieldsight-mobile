@@ -45,7 +45,7 @@ import org.fieldsight.naxa.sync.DownloadViewModel;
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     @SuppressLint("StaticFieldLeak")
-    private static volatile ViewModelFactory viewModelFactory;
+    private static ViewModelFactory viewModelFactory;
 
     private final GeneralFormRepository generalFormRepository;
     private final ScheduledFormRepository scheduledFormRepository;
@@ -59,15 +59,15 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 
 
     public ViewModelFactory(
-                            GeneralFormRepository repository,
-                            ScheduledFormRepository scheduledFormRepository,
-                            StageFormRepository stageFormRepository,
-                            SubStageRepository subStageRepository,
-                            ProjectRepository projectRepository,
-                            SiteRepository siteRepository,
-                            SurveyFormRepository surveyFormRepository,
-                            FieldSightNotificationRepository notificationRepository,
-                            ContactRepository contactRepository
+            GeneralFormRepository repository,
+            ScheduledFormRepository scheduledFormRepository,
+            StageFormRepository stageFormRepository,
+            SubStageRepository subStageRepository,
+            ProjectRepository projectRepository,
+            SiteRepository siteRepository,
+            SurveyFormRepository surveyFormRepository,
+            FieldSightNotificationRepository notificationRepository,
+            ContactRepository contactRepository
     ) {
 
         this.generalFormRepository = repository;
@@ -81,30 +81,28 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         this.contactRepository = contactRepository;
     }
 
-    public static ViewModelFactory getInstance() {
+    public static synchronized ViewModelFactory getInstance() {
 
         if (viewModelFactory == null) {
-            synchronized (ViewModelFactory.class) {
-                if (viewModelFactory == null) {
-                    GeneralFormRepository generalFormRepository = GeneralFormRepository.getInstance(
-                            GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
-                    ScheduledFormRepository scheduledFormRepository = ScheduledFormRepository.getInstance(
-                            ScheduledFormsLocalSource.getInstance(), ScheduledFormsRemoteSource.getInstance());
 
-                    StageFormRepository stageFormRepository = StageFormRepository.getInstance(StageLocalSource.getInstance(), StageRemoteSource.getInstance());
-                    SubStageRepository subStageRepository = SubStageRepository.getInstance(SubStageLocalSource.getInstance());
-                    ProjectRepository projectRepository = ProjectRepository.getInstance(ProjectLocalSource.getInstance(), ProjectSitesRemoteSource.getInstance());
-                    SiteRepository siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance());
-                    SurveyFormRepository surveyFormRepository = SurveyFormRepository.getInstance(SurveyFormLocalSource.getInstance());
-                    FieldSightNotificationRepository notificationRepository = FieldSightNotificationRepository.getInstance(FieldSightNotificationLocalSource.getInstance());
-                    ContactRepository contactRepository = ContactRepository.getInstance(ContactLocalSource.getInstance());
+            GeneralFormRepository generalFormRepository = GeneralFormRepository.getInstance(
+                    GeneralFormLocalSource.getInstance(), GeneralFormRemoteSource.getInstance());
+            ScheduledFormRepository scheduledFormRepository = ScheduledFormRepository.getInstance(
+                    ScheduledFormsLocalSource.getInstance(), ScheduledFormsRemoteSource.getInstance());
+
+            StageFormRepository stageFormRepository = StageFormRepository.getInstance(StageLocalSource.getInstance(), StageRemoteSource.getInstance());
+            SubStageRepository subStageRepository = SubStageRepository.getInstance(SubStageLocalSource.getInstance());
+            ProjectRepository projectRepository = ProjectRepository.getInstance(ProjectLocalSource.getInstance(), ProjectSitesRemoteSource.getInstance());
+            SiteRepository siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance());
+            SurveyFormRepository surveyFormRepository = SurveyFormRepository.getInstance(SurveyFormLocalSource.getInstance());
+            FieldSightNotificationRepository notificationRepository = FieldSightNotificationRepository.getInstance(FieldSightNotificationLocalSource.getInstance());
+            ContactRepository contactRepository = ContactRepository.getInstance(ContactLocalSource.getInstance());
 
 
-                    viewModelFactory = new ViewModelFactory(generalFormRepository, scheduledFormRepository,
-                            stageFormRepository, subStageRepository, projectRepository, siteRepository,
-                            surveyFormRepository, notificationRepository, contactRepository);
-                }
-            }
+            viewModelFactory = new ViewModelFactory(generalFormRepository, scheduledFormRepository,
+                    stageFormRepository, subStageRepository, projectRepository, siteRepository,
+                    surveyFormRepository, notificationRepository, contactRepository);
+
         }
         return viewModelFactory;
     }
@@ -147,11 +145,10 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(DownloadViewModel.class)) {
             //noinspection unchecked
             return (T) new DownloadViewModel();
-        }else if (modelClass.isAssignableFrom(FragmentHostViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(FragmentHostViewModel.class)) {
             //noinspection unchecked
             return (T) new FragmentHostViewModel();
-        }
-        else if (modelClass.isAssignableFrom(FieldSightFormViewModel.class)) {
+        } else if (modelClass.isAssignableFrom(FieldSightFormViewModel.class)) {
             //noinspection unchecked
             return (T) new FieldSightFormViewModel();
         }

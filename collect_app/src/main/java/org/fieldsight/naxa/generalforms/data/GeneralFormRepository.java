@@ -16,13 +16,9 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
     private final GeneralFormLocalSource localSource;
     private final GeneralFormRemoteSource remoteSource;
 
-    public static GeneralFormRepository getInstance(GeneralFormLocalSource localSource, GeneralFormRemoteSource remoteSource) {
+    public static synchronized GeneralFormRepository getInstance(GeneralFormLocalSource localSource, GeneralFormRemoteSource remoteSource) {
         if (generalFormRepository == null) {
-            synchronized (GeneralFormRepository.class) {
-                if (generalFormRepository == null) {
-                    generalFormRepository = new GeneralFormRepository(localSource, remoteSource);
-                }
-            }
+            generalFormRepository = new GeneralFormRepository(localSource, remoteSource);
         }
         return generalFormRepository;
     }
@@ -52,7 +48,6 @@ public class GeneralFormRepository implements BaseRepository<GeneralForm> {
 
         return localSource.getByProjectId(project);
     }
-
 
 
     public LiveData<List<GeneralFormAndSubmission>> getFormsBySiteId(@NonNull String siteId, @NonNull String projectId) {

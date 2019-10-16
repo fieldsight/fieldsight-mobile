@@ -1,6 +1,7 @@
 package org.fieldsight.naxa.common;
 
 import androidx.lifecycle.LiveData;
+
 import android.os.AsyncTask;
 
 import org.odk.collect.android.application.Collect;
@@ -25,13 +26,11 @@ public class SiteOverideLocalSource implements BaseLocalDataSource<SiteOveride> 
         this.siteDao = fieldSightDatabase.getSiteDAO();
     }
 
-    public static SiteOverideLocalSource getInstance() {
+    public synchronized static SiteOverideLocalSource getInstance() {
+
         if (siteOverideLocalSource == null) {
-            synchronized (SiteOverideLocalSource.class) {
-                if (siteOverideLocalSource == null) {
-                    siteOverideLocalSource = new SiteOverideLocalSource();
-                }
-            }
+            siteOverideLocalSource = new SiteOverideLocalSource();
+
         }
         return siteOverideLocalSource;
     }

@@ -39,7 +39,7 @@ public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
     private final SyncRepository syncRepository;
 
 
-    public static StageRemoteSource getInstance() {
+    public synchronized static StageRemoteSource getInstance() {
         if (stageRemoteSource == null) {
             stageRemoteSource = new StageRemoteSource();
         }

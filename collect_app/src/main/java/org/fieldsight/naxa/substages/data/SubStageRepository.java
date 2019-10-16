@@ -17,13 +17,9 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
     private static SubStageRepository subStageRepository;
     private final SubStageLocalSource localSource;
 
-    public static SubStageRepository getInstance(SubStageLocalSource localSource) {
+    public synchronized static SubStageRepository getInstance(SubStageLocalSource localSource) {
         if (subStageRepository == null) {
-            synchronized (SubStageRepository.class) {
-                if (subStageRepository == null) {
-                    subStageRepository = new SubStageRepository(localSource);
-                }
-            }
+            subStageRepository = new SubStageRepository(localSource);
         }
         return subStageRepository;
     }
@@ -36,7 +32,7 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
 
 
     @Override
-    public LiveData<List<SubStage>> getAll( ) {
+    public LiveData<List<SubStage>> getAll() {
         return localSource.getAll();
     }
 
@@ -56,6 +52,6 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
     }
 
     public MediatorLiveData<List<SubStageAndSubmission>> getByStageId(String stageId, String siteTypeId) {
-        return localSource.getByStageId(stageId,siteTypeId);
+        return localSource.getByStageId(stageId, siteTypeId);
     }
 }
