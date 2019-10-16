@@ -22,7 +22,7 @@ import java.util.List;
  * Created by Susan on 11/24/2016.
  */
 @SuppressWarnings("PMD.ExcessiveParameterList")
-@Entity(tableName = "PROJECT")
+@Entity(tableName = "project")
 public class Project implements Parcelable {
 
     @PrimaryKey

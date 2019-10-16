@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 21,
-    "identityHash": "8d85328bc10a78d4553c187be40e5a83",
+    "identityHash": "ae86f391a2882fe18a66266767ea3221",
     "entities": [
       {
         "tableName": "sites",
@@ -175,7 +175,7 @@
         "foreignKeys": []
       },
       {
-        "tableName": "PROJECT",
+        "tableName": "project",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `description` TEXT, `address` TEXT, `lat` TEXT, `lon` TEXT, `url` TEXT, `siteClusters` TEXT, `organizationName` TEXT, `organizationlogourl` TEXT, `hasClusteredSites` INTEGER, `typeId` INTEGER, `typeLabel` TEXT, `phone` TEXT, `isSyncedWithRemote` INTEGER NOT NULL, `termsAndLabels` TEXT, `regionList` TEXT, `siteMetaAttributes` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
@@ -1603,7 +1603,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8d85328bc10a78d4553c187be40e5a83')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ae86f391a2882fe18a66266767ea3221')"
     ]
   }
 }

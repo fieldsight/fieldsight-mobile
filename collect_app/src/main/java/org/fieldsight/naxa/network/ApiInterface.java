@@ -71,7 +71,7 @@ public interface ApiInterface {
     Observable<List<MySites>> getAssignedSites();
 
     @FormUrlEncoded
-    @POST("/users/api/get-auth-TOKEN/")
+    @POST("/users/api/get-auth-token/")
     Observable<AuthResponse> getAuthToken(
             @Field("email_or_username") String username,
             @Field("password") String password
