@@ -1,9 +1,10 @@
 package org.odk.collect.android.http;
 
+import org.fieldsight.collect.android.BuildConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.odk.collect.android.BuildConfig;
+
 
 import java.io.IOException;
 import java.net.URI;

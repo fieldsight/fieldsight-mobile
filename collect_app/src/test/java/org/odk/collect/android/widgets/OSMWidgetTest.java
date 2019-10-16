@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 
 import net.bytebuddy.utility.RandomString;
 
+import org.javarosa.core.model.osm.OSMTag;
 import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.QuestionDef;
