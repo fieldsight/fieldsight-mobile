@@ -17,6 +17,7 @@ import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.odk.collect.android.utilities.ToastUtils;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,8 +54,9 @@ public class SettingsActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (textInputLayoutBaseUrl.getEditText().getError() != null)
+                if (textInputLayoutBaseUrl.getEditText().getError() != null) {
                     textInputLayoutBaseUrl.getEditText().setError(null);
+                }
             }
         });
 
@@ -92,7 +94,7 @@ public class SettingsActivity extends BaseActivity {
 
     private boolean isValidUrl(String url) {
         Pattern p = Patterns.WEB_URL;
-        Matcher m = p.matcher(url.toLowerCase());
+        Matcher m = p.matcher(url.toLowerCase(Locale.getDefault()));
         return m.matches();
     }
 

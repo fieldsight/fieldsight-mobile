@@ -27,12 +27,12 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_SURVEY_FORM = 0, VIEW_TYPE_SITE = 1;
 
     private final List<Site> siteList;
-    private final List<Site> filetredsitelist;
+
     private final SparseBooleanArray selectedItems;
     private final SparseBooleanArray animationItemsIndex;
     private final SiteListAdapter.SiteListAdapterListener listener;
     private static int currentSelectedIndex = -1;
-    private boolean reverseAllAnimations = false;
+    private boolean reverseAllAnimations;
 
     SiteListAdapter(List<Site> sitelist, SiteListAdapter.SiteListAdapterListener listener) {
 
@@ -48,7 +48,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         surveyFormAndSites.addAll(sitelist);
 
         this.siteList = surveyFormAndSites;
-        this.filetredsitelist = surveyFormAndSites;
+
 
 
     }
@@ -81,7 +81,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_SURVEY_FORM:
-                SurveyViewHolder surveyViewHolder = (SurveyViewHolder) holder;
                 break;
             default:
                 SiteViewHolder siteViewHolder = (SiteViewHolder) holder;
@@ -171,7 +170,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class SurveyViewHolder extends RecyclerView.ViewHolder {
 
-        private RelativeLayout rootLayout;
+        private final RelativeLayout rootLayout;
 
         SurveyViewHolder(View itemView) {
             super(itemView);
@@ -187,10 +186,10 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class SiteViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
-        private TextView siteName, identifier, message, iconText, offlinetag;
-        private ImageView imgProfile;
-        private RelativeLayout iconContainer, iconBack, iconFront;
-        private View rootLayout;
+        private final TextView siteName, identifier, message, iconText, offlinetag;
+        private final ImageView imgProfile;
+        private final RelativeLayout iconContainer, iconBack, iconFront;
+        private final View rootLayout;
 
         SiteViewHolder(View view) {
             super(view);
@@ -235,7 +234,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private void applyOffilineSiteTag(SiteViewHolder holder, Site siteLocationPojo) {
         boolean isChecked = selectedItems.get(holder.getAdapterPosition(), false);
         boolean isUnVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
-        boolean isVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_ONLINE;
         boolean isEditedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
         holder.offlinetag.setVisibility(View.GONE);
 

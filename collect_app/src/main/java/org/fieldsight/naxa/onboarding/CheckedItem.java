@@ -22,7 +22,6 @@ public class CheckedItem extends RelativeLayout implements Checkable {
     private TextView tvSubtitle;
     private ProgressBar progressBar;
     private int sucessColor, failureColor, progressColor;
-    private boolean isIndeterminate = true;
 
 
     public CheckedItem(Context context, AttributeSet attrs, int defStyle) {

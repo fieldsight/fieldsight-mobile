@@ -11,6 +11,10 @@ import java.util.List;
 
 public class SiteMetaAttributesTypeConverter {
 
+    private SiteMetaAttributesTypeConverter(){
+
+    }
+
     @TypeConverter
     public static List<SiteMetaAttribute> toSiteMetaAttribute(String json) {
         Type type = new TypeToken<List<SiteMetaAttribute>>() {

@@ -18,8 +18,8 @@ import timber.log.Timber;
 
 public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFinishedListener {
 
-    private LoginView loginView;
-    private LoginModel loginModel;
+    private final LoginView loginView;
+    private final LoginModel loginModel;
 
     public LoginPresenterImpl(LoginView loginView) {
         this.loginView = loginView;
@@ -51,7 +51,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
                         if (isConnected) {
                             String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
                             if (!TextUtils.isEmpty(fcmToken)) {
-                                Timber.i("token generated: %s", fcmToken);
+                                Timber.i("TOKEN generated: %s", fcmToken);
                                 loginModel.login(username, password, fcmToken, LoginPresenterImpl.this);
                             } else {
 
@@ -65,7 +65,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         Timber.i("Error exception, %s ", e.getMessage());
-                                        loginView.showError("Failed to get token");
+                                        loginView.showError("Failed to get TOKEN");
                                     }
                                 });
                             }
@@ -87,17 +87,13 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.OnLoginFin
         loginView.showProgress(true);
         String fcmToken = SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, "");
         if (!TextUtils.isEmpty(fcmToken)) {
-            Timber.i("token generated: %s", fcmToken);
-            loginModel.loginViaGoogle(googleAccessToken, username, fcmToken, LoginPresenterImpl.this);
+            Timber.i("TOKEN generated: %s", fcmToken);
+            loginModel.loginViaGoogle(googleAccessToken, username, fcmToken, this);
         } else {
-            loginView.showError("Failed to get token");
+            loginView.showError("Failed to get TOKEN");
         }
     }
 
-
-    private boolean isPasswordValid(String password) {
-        return password.length() > 4;
-    }
 
     @Override
     public void onError(String message) {

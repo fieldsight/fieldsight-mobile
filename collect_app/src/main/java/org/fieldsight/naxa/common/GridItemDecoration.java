@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class GridItemDecoration extends RecyclerView.ItemDecoration {
 
-    private int mSizeGridSpacingPx;
-    private int mGridSize;
+    private final  int mSizeGridSpacingPx;
+    private final int mGridSize;
 
-    private boolean mNeedLeftSpacing = false;
+    private boolean mNeedLeftSpacing;
 
     public GridItemDecoration(int gridSpacingPx, int gridSize) {
         mSizeGridSpacingPx = gridSpacingPx;

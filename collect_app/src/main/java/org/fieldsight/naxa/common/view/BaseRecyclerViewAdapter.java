@@ -7,16 +7,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.odk.collect.android.application.Collect;
-
 import java.util.List;
 
 import timber.log.Timber;
 
 
-public abstract class BaseRecyclerViewAdapter<L, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-    private List<L> l;
-    private int layout;
+public abstract class BaseRecyclerViewAdapter<L, H extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<H> {
+    private final List<L> l;
+    private final int layout;
 
     protected BaseRecyclerViewAdapter(List<L> l, int layout) {
         this.l = l;
@@ -26,13 +24,13 @@ public abstract class BaseRecyclerViewAdapter<L, VH extends RecyclerView.ViewHol
 
     @NonNull
     @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public H onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
         return attachViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VH holder, int position) {
+    public void onBindViewHolder(@NonNull H holder, int position) {
         viewBinded(holder, l.get(position));
     }
 
@@ -45,9 +43,9 @@ public abstract class BaseRecyclerViewAdapter<L, VH extends RecyclerView.ViewHol
         return l.size();
     }
 
-    public abstract void viewBinded(VH vh, L l);
+    public abstract void viewBinded(H vh, L l);
 
-    public abstract VH attachViewHolder(View view);
+    public abstract H attachViewHolder(View view);
 
 
 }

@@ -15,6 +15,7 @@
 package org.odk.collect.android.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -25,16 +26,13 @@ import android.widget.TextView;
 import androidx.annotation.VisibleForTesting;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.map.GoogleMapFragment;
-import org.odk.collect.android.map.MapFragment;
-import org.odk.collect.android.map.MapPoint;
-import org.odk.collect.android.map.OsmMapFragment;
-import org.odk.collect.android.spatial.MapHelper;
-import org.odk.collect.android.map.MapboxMapFragment;
-import org.odk.collect.android.utilities.GeoPointUtils;
+import org.odk.collect.android.geo.MapFragment;
+import org.odk.collect.android.geo.MapPoint;
+import org.odk.collect.android.geo.MapProvider;
+import org.odk.collect.android.preferences.MapsPreferences;
+import org.odk.collect.android.utilities.GeoUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
-import org.osmdroid.tileprovider.IRegisterReceiver;
 
 import java.text.DecimalFormat;
 
@@ -47,8 +45,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.areLocationPermi
  * by touching a point on the map or by tapping a button to place the marker
  * at the current location (obtained from GPS or other location sensors).
  */
-public class GeoPointMapActivity extends BaseGeoMapActivity implements IRegisterReceiver {
-
+public class GeoPointMapActivity extends BaseGeoMapActivity {
     public static final String MAP_CENTER_KEY = "map_center";
     public static final String MAP_ZOOM_KEY = "map_zoom";
     public static final String POINT_KEY = "point";
@@ -128,29 +125,9 @@ public class GeoPointMapActivity extends BaseGeoMapActivity implements IRegister
         placeMarkerButton = findViewById(R.id.place_marker);
         zoomButton = findViewById(R.id.zoom);
 
-        createMapFragment().addTo(this, R.id.map_container, this::initMap);
-    }
-
-    @Override protected void onStart() {
-        super.onStart();
-        // initMap() is called asynchronously, so map might not be initialized yet.
-        if (map != null) {
-            map.setGpsLocationEnabled(true);
-        }
-    }
-
-    @Override protected void onStop() {
-        // To avoid a memory leak, we have to shut down GPS when the activity
-        // quits for good. But if it's only a screen rotation, we don't want to
-        // stop/start GPS and make the user wait to get a GPS lock again.
-        if (!isChangingConfigurations()) {
-            // initMap() is called asynchronously, so map can be null if the activity
-            // is stopped (e.g. by screen rotation) before initMap() gets to run.
-            if (map != null) {
-                map.setGpsLocationEnabled(false);
-            }
-        }
-        super.onStop();
+        Context context = getApplicationContext();
+        MapProvider.createMapFragment(context)
+            .addTo(this, R.id.map_container, this::initMap, this::finish);
     }
 
     @Override protected void onSaveInstanceState(Bundle state) {
@@ -186,8 +163,6 @@ public class GeoPointMapActivity extends BaseGeoMapActivity implements IRegister
         state.putInt(LOCATION_INFO_VISIBILITY_KEY, locationInfo.getVisibility());
     }
 
-    @Override public void destroy() { }
-
     public void returnLocation() {
         String result = null;
 
@@ -207,31 +182,9 @@ public class GeoPointMapActivity extends BaseGeoMapActivity implements IRegister
 
     @SuppressLint("MissingPermission") // Permission handled in Constructor
     public void initMap(MapFragment newMapFragment) {
-        if (newMapFragment == null) {  // could not create the map
-            finish();
-            return;
-        }
-        if (newMapFragment.getFragment().getActivity() == null) {
-            // If the screen is rotated just after the activity starts but
-            // before initMap() is called, then when the activity is re-created
-            // in the new orientation, initMap() can sometimes be called on the
-            // old, dead Fragment that used to be attached to the old activity.
-            // Touching the dead Fragment will cause a crash; discard it.
-            return;
-        }
-
         map = newMapFragment;
         map.setDragEndListener(this::onDragEnd);
         map.setLongPressListener(this::onLongPress);
-
-        if (map instanceof GoogleMapFragment) {
-            helper = new MapHelper(this, ((GoogleMapFragment) map).getGoogleMap(), selectedLayer);
-        } else if (map instanceof MapboxMapFragment) {
-            helper = new MapHelper(this);
-        } else if (map instanceof OsmMapFragment) {
-            helper = new MapHelper(this, ((OsmMapFragment) map).getMapView(), this, selectedLayer);
-        }
-        helper.setBasemap();
 
         ImageButton acceptLocation = findViewById(R.id.accept_location);
         acceptLocation.setOnClickListener(v -> returnLocation());
@@ -247,8 +200,9 @@ public class GeoPointMapActivity extends BaseGeoMapActivity implements IRegister
         zoomButton.setOnClickListener(v -> map.zoomToPoint(map.getGpsLocation(), true));
 
         // Menu Layer Toggle
-        ImageButton layers = findViewById(R.id.layer_menu);
-        layers.setOnClickListener(v -> helper.showLayersDialog());
+        findViewById(R.id.layer_menu).setOnClickListener(v -> {
+            MapsPreferences.showReferenceLayerDialog(this);
+        });
 
         clearButton = findViewById(R.id.clear);
         clearButton.setEnabled(false);
@@ -297,8 +251,6 @@ public class GeoPointMapActivity extends BaseGeoMapActivity implements IRegister
                 zoomToMarker(false);
             }
         }
-
-        helper.setBasemap();
 
         map.setGpsLocationListener(this::onLocationChanged);
         map.setGpsLocationEnabled(true);
@@ -360,8 +312,6 @@ public class GeoPointMapActivity extends BaseGeoMapActivity implements IRegister
         this.location = point;
 
         if (point != null) {
-            Timber.i("onLocationChanged: location = %s", point);
-
             if (previousLocation != null) {
                 enableZoomButton(true);
 
@@ -377,9 +327,6 @@ public class GeoPointMapActivity extends BaseGeoMapActivity implements IRegister
 
                 locationStatus.setText(formatLocationStatus(map.getLocationProvider(), point.sd));
             }
-
-        } else {
-            Timber.i("onLocationChanged: null location");
         }
     }
 
@@ -390,7 +337,7 @@ public class GeoPointMapActivity extends BaseGeoMapActivity implements IRegister
     public String formatLocationStatus(String provider, double sd) {
         return getString(
             R.string.location_provider_accuracy,
-            GeoPointUtils.capitalizeGps(provider),
+            GeoUtils.capitalizeGps(provider),
             new DecimalFormat("#.##").format(sd)
         );
     }

@@ -23,19 +23,19 @@ import io.reactivex.functions.Predicate;
 
 public class StageLocalSource implements BaseLocalDataSource<Stage> {
 
-    private static StageLocalSource INSTANCE;
-    private StageFormDAO dao;
+    private static StageLocalSource stageLocalSource;
+    private final StageFormDAO dao;
 
     private StageLocalSource() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
         this.dao = database.getStageDAO();
     }
 
-    public static StageLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new StageLocalSource();
+    public synchronized static StageLocalSource getInstance() {
+        if (stageLocalSource == null) {
+            stageLocalSource = new StageLocalSource();
         }
-        return INSTANCE;
+        return stageLocalSource;
     }
 
     @Override

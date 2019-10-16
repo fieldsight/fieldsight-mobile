@@ -44,43 +44,44 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import timber.log.Timber;
 
 public class ReportActivity extends CollectAbstractActivity {
     @BindView(R.id.tv_device_id)
-    TextView tv_device_id;
+    TextView tvDeviceId;
 
     @BindView(R.id.tv_fcm_token)
-    TextView tv_fcm_token;
+    TextView tvFcmToken;
 
     @BindView(R.id.tv_app_version)
-    TextView tv_app_version;
+    TextView tvAppVersion;
 
     @BindView(R.id.tv_os_version)
-    TextView tv_os_version;
+    TextView tvOsVersion;
 
     @BindView(R.id.tv_lat)
-    TextView tv_lat;
+    TextView tvLat;
 
     @BindView(R.id.tv_lng)
-    TextView tv_lng;
+    TextView tvLng;
 
     @BindView(R.id.spnr_type)
-    Spinner spnr_type;
+    Spinner spnrType;
 
     @BindView(R.id.tv_device_name)
-    TextView tv_device_name;
+    TextView tvDeviceName;
 
     @BindView(R.id.edt_message)
-    EditText edt_message;
+    EditText edtMessage;
 
     @BindView(R.id.chkbx_agree)
-    CheckBox chkbx_agree;
+    CheckBox chkbxAgree;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     private FusedLocationProviderClient fusedLocationClient;
-    DisposableObserver<ResponseBody> observer = null;
-    boolean isSubmitting = false;
+    DisposableObserver<ResponseBody> observer;
+    boolean isSubmitting;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,12 +93,12 @@ public class ReportActivity extends CollectAbstractActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         hideKeyboardInActivity();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        tv_device_id.setText(new PropertyManager(this).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID));
-        tv_fcm_token.setText(SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, ""));
-        tv_app_version.setText(BuildConfig.VERSION_NAME);
-        tv_os_version.setText(Build.VERSION.RELEASE);
-        tv_device_name.setText(Build.MANUFACTURER);
-       new PermissionUtils().requestLocationPermissions(this, new PermissionListener() {
+        tvDeviceId.setText(new PropertyManager(this).getSingularProperty(PropertyManager.PROPMGR_DEVICE_ID));
+        tvFcmToken.setText(SharedPreferenceUtils.getFromPrefs(this, SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, ""));
+        tvAppVersion.setText(BuildConfig.VERSION_NAME);
+        tvOsVersion.setText(Build.VERSION.RELEASE);
+        tvDeviceName.setText(Build.MANUFACTURER);
+        new PermissionUtils().requestLocationPermissions(this, new PermissionListener() {
             @SuppressLint("MissingPermission")
             @Override
             public void granted() {
@@ -107,8 +108,8 @@ public class ReportActivity extends CollectAbstractActivity {
                             public void onSuccess(Location location) {
                                 // Got last known location. In some rare situations this can be null.
                                 if (location != null) {
-                                    tv_lat.setText(location.getLatitude() + "");
-                                    tv_lng.setText(location.getLongitude() + "");
+                                    tvLat.setText(String.valueOf(location.getLatitude()));
+                                    tvLng.setText(String.valueOf(location.getLongitude()));
                                 }
                             }
                         });
@@ -121,40 +122,40 @@ public class ReportActivity extends CollectAbstractActivity {
         });
 
 
-
     }
 
     private String checkEmptyWithFallback(View v, String fallback) {
         CharSequence data = "";
-        if(v instanceof TextView) {
-            data = ((TextView)v).getText();
-        }else if(v instanceof EditText){
-            data = ((EditText)v).getText();
-        }else if(v instanceof Spinner){
-            Spinner spnr = (Spinner)v;
+        if (v instanceof TextView) {
+            data = ((TextView) v).getText();
+        } else if (v instanceof EditText) {
+            data = ((EditText) v).getText();
+        } else if (v instanceof Spinner) {
+            Spinner spnr = (Spinner) v;
             data = spnr.getSelectedItemPosition() == 0 ? fallback : spnr.getSelectedItem().toString();
         }
-        return TextUtils.isEmpty(data)? fallback : data.toString();
+        return TextUtils.isEmpty(data) ? fallback : data.toString();
     }
+
     @OnClick(R.id.btn_report)
     void submitReport() {
-        if(isSubmitting) {
+        if (isSubmitting) {
             Toast.makeText(getApplicationContext(), "Report form is submitting please wait", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(chkbx_agree.isChecked()) {
+        if (chkbxAgree.isChecked()) {
             isSubmitting = true;
-            String deviceId = checkEmptyWithFallback(tv_device_id, "0");
-            String deviceName = checkEmptyWithFallback(tv_device_name, "");
-            String fcmToken = checkEmptyWithFallback(tv_fcm_token, "");
-            String app_os_version = checkEmptyWithFallback(tv_os_version, "");
-            String lat = checkEmptyWithFallback(tv_lat, "0");
-            String lng = checkEmptyWithFallback(tv_lng, "0");
-            String message_type = checkEmptyWithFallback(spnr_type, "");
-            String app_version = checkEmptyWithFallback(tv_app_version, "");
-            String message = checkEmptyWithFallback(edt_message, "I have an issues using the app");
+            String deviceId = checkEmptyWithFallback(tvDeviceId, "0");
+            String deviceName = checkEmptyWithFallback(tvDeviceName, "");
+            String fcmToken = checkEmptyWithFallback(tvFcmToken, "");
+            String appOsVersion = checkEmptyWithFallback(tvOsVersion, "");
+            String lat = checkEmptyWithFallback(tvLat, "0");
+            String lng = checkEmptyWithFallback(tvLng, "0");
+            String messageType = checkEmptyWithFallback(spnrType, "");
+            String appVersion = checkEmptyWithFallback(tvAppVersion, "");
+            String message = checkEmptyWithFallback(edtMessage, "I have an issues using the app");
             observer = ServiceGenerator.getRxClient().create(ApiInterface.class)
-                    .submitReport(deviceId, fcmToken, app_version, app_os_version, message_type, message, deviceName, lat, lng)
+                    .submitReport(deviceId, fcmToken, appVersion, appOsVersion, messageType, message, deviceName, lat, lng)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeWith(new DisposableObserver<ResponseBody>() {
@@ -162,7 +163,7 @@ public class ReportActivity extends CollectAbstractActivity {
                         @Override
                         public void onNext(ResponseBody response) {
                             try {
-                                if(response != null) {
+                                if (response != null) {
                                     String reply = response.string();
                                     JSONObject replyJSON = new JSONObject(reply);
                                     Toast.makeText(getApplicationContext(), replyJSON.optString("message"), Toast.LENGTH_SHORT).show();
@@ -170,7 +171,7 @@ public class ReportActivity extends CollectAbstractActivity {
                                     hideProgressDialog();
                                 }
                             } catch (IOException | JSONException e) {
-                                e.printStackTrace();
+                                Timber.e(e);
                                 isSubmitting = false;
                                 hideProgressDialog();
                                 Toast.makeText(getApplicationContext(), "Unknown error in sending report, Please try again", Toast.LENGTH_SHORT).show();
@@ -190,7 +191,7 @@ public class ReportActivity extends CollectAbstractActivity {
                         }
                     });
             showPrgressDialog();
-        }else {
+        } else {
             Toast.makeText(this, "Please select I agree", Toast.LENGTH_SHORT).show();
         }
     }
@@ -198,29 +199,30 @@ public class ReportActivity extends CollectAbstractActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(observer != null && !observer.isDisposed()) {
+        if (observer != null && !observer.isDisposed()) {
             observer.dispose();
         }
     }
 
-    ProgressDialog pd = null;
+    ProgressDialog pd;
+
     void showPrgressDialog() {
-       if(pd == null) {
-           pd = new ProgressDialog(this);
-       }
-       pd.setMessage("Submitting your report please wait");
-       pd.show();
+        if (pd == null) {
+            pd = new ProgressDialog(this);
+        }
+        pd.setMessage("Submitting your report please wait");
+        pd.show();
     }
 
     void hideProgressDialog() {
-        if(pd != null) {
+        if (pd != null) {
             pd.hide();
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
@@ -230,9 +232,9 @@ public class ReportActivity extends CollectAbstractActivity {
 
     public void hideKeyboardInActivity() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
+        //Find the currently focused view, so we can grab the correct window TOKEN from it.
         View view = getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        //If no view currently has focus, create a new one, just so we can grab a window TOKEN from it
         if (view == null) {
             view = new View(this);
         }

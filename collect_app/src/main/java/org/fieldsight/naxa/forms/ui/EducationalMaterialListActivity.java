@@ -20,7 +20,6 @@ import org.fieldsight.naxa.educational.Edu_Image_Model;
 import org.fieldsight.naxa.educational.Edu_PDF_Model;
 import org.fieldsight.naxa.educational.Edu_Title_Desc_Model;
 import org.fieldsight.naxa.educational.PagerAdapter;
-import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSource;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.generalforms.data.Em;
@@ -33,7 +32,6 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -42,6 +40,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_ID;
 import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
@@ -50,23 +49,20 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 public class EducationalMaterialListActivity extends CollectAbstractActivity {
 
     private Em em;
-    List<Fragment> fragments = new Vector<>();
+    List<Fragment> fragments = new ArrayList<>();
 
 
-    private int defaultPagerPosition = 0;
+    private static final int DEFAULT_PAGER_POSITION = 0;
     private PagerAdapter mPagerAdapter;
     public ViewPager viewPager;
     public TabLayout tabLayout;
-    private String fsFormId;
     private String formName;
-    private TextView title;
 
     public static void start(Context context, String formName, Em em) {
-        WeakReference<Context> weakReference = new WeakReference<Context>(context);
-        Intent intent = new Intent(weakReference.get(), EducationalMaterialListActivity.class);
+        Intent intent = new Intent(context, EducationalMaterialListActivity.class);
         intent.putExtra(EXTRA_OBJECT, em);
         intent.putExtra(EXTRA_MESSAGE, formName);
-        weakReference.get().startActivity(intent);
+        context.startActivity(intent);
     }
 
 
@@ -85,7 +81,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
         ButterKnife.bind(this);
 
         em = getIntent().getParcelableExtra(EXTRA_OBJECT);
-        fsFormId = getIntent().getStringExtra(EXTRA_ID);
+        String fsFormId = getIntent().getStringExtra(EXTRA_ID);
         formName = getIntent().getStringExtra(EXTRA_MESSAGE);
 
         if (fsFormId != null && em == null) {
@@ -109,7 +105,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
     private void bindUI() {
         viewPager = findViewById(R.id.view_pager);
         tabLayout = findViewById(R.id.tab_layout);
-        title = findViewById(R.id.title);
+        TextView title = findViewById(R.id.title);
 
         title.setText(formName);
     }
@@ -119,7 +115,7 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
         mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(mPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(defaultPagerPosition);
+        viewPager.setCurrentItem(DEFAULT_PAGER_POSITION);
         viewPager.setPageMargin(ViewUtils.dp2px(getApplicationContext(), 16));
         viewPager.setClipToPadding(false);
         viewPager.setPadding(16, 16, 16, 0);
@@ -185,12 +181,12 @@ public class EducationalMaterialListActivity extends CollectAbstractActivity {
                     public void onSuccess(List<Fragment> dynamicFragments) {
                         fragments.addAll(dynamicFragments);
                         mPagerAdapter.notifyDataSetChanged();
-                        viewPager.setCurrentItem(defaultPagerPosition, false);
+                        viewPager.setCurrentItem(DEFAULT_PAGER_POSITION, false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         if (e instanceof EmptyResultSetException) {
                             ToastUtils.showLongToast("No education materials present for this form");
                         } else {

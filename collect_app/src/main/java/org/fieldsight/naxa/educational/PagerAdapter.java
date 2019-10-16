@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
-    private List<Fragment> fragments;
+    private final List<Fragment> fragments;
     /**
      * @param fm
      * @param fragments

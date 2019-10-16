@@ -4,9 +4,6 @@ package org.fieldsight.naxa.project;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +25,6 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.ForceUpdateChecker;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.InternetUtils;
@@ -48,6 +44,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.application.ForceUpdateChecker;
 
 import java.util.ArrayList;
 
@@ -82,18 +79,17 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_list);
-        setupWindowTransition();
         ButterKnife.bind(this);
         setupToolbar();
         setupProjectList();
 
         ForceUpdateChecker.with(this).onUpdateNeeded(this).check();
 
-        ViewModelFactory factory = ViewModelFactory.getInstance(getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         viewModel = ViewModelProviders.of(this, factory).get(ProjectViewModel.class);
         viewModel
                 .getAll(false)
-                .observe(ProjectListActivity.this, projects -> {
+                .observe(this, projects -> {
                     if (projectlistAdapter.getItemCount() == 0) {
                         projectlistAdapter.updateList(projects);
                         runLayoutAnimation(rvProjects);
@@ -248,19 +244,7 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     }
 
 
-    private void setupWindowTransition() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Transition slide = TransitionInflater.from(this).inflateTransition(R.transition.slide_top);
-            Transition exit = TransitionInflater.from(this).inflateTransition(R.transition.slide_bottom);
 
-            Fade fade = new Fade();
-            fade.setDuration(1000);
-
-//            getWindow().setEnterTransition(fade);
-//            getWindow().setExitTransition(fade);
-
-        }
-    }
 
 
     @Override

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import org.fieldsight.naxa.common.BaseFormListFragment;
-import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 
@@ -27,15 +26,15 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         FieldSightFormListFragment fragment = new FieldSightFormListFragment();
         Bundle bundle = new Bundle();
 
-        //hacking way to load survey forms - Nishon
+        //hacking way to load survey FORMS - Nishon
         if (site == null) {
             site = new Site();
             site.setName(project.getName());
             site.setProject(project.getId());
         }
 
-        bundle.putParcelable(Constant.EXTRA_OBJECT, site);
-        bundle.putString(Constant.EXTRA_ID, loadFormType);
+        bundle.putParcelable(EXTRA_OBJECT, site);
+        bundle.putString(EXTRA_ID, loadFormType);
         fragment.setArguments(bundle);
         return fragment;
     }

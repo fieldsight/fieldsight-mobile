@@ -50,11 +50,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
     @BindView(R.id.fieldsight_migrate_act_error_card)
     CardView cardViewError;
 
-    final Integer errorOccured = -1;
-    private final Integer max = 3;
-    private Observable<Integer> migration;
-
-    private final int MAX_PROGRESS = 8;
+    private static final int MAX_PROGRESS = 8;
 
     public static void start(Context context, String usernameOrEmail) {
         Intent intent = new Intent(context, MigrateFieldSightActivity.class);
@@ -74,7 +70,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
         subtitle.setText(usernameOrEmail);
 
 
-        migration = viewModel.copyFromOldAccount();
+        Observable<Integer> migration = viewModel.copyFromOldAccount();
 
         migration
                 .subscribeOn(Schedulers.computation())
@@ -127,7 +123,7 @@ public class MigrateFieldSightActivity extends CollectAbstractActivity {
 
 
     private void setupViewModel(String userNameOrEmail) {
-        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         viewModel = ViewModelProviders.of(this, factory).get(MigrateFieldSightViewModel.class);
         viewModel.setUserNameEmail(userNameOrEmail);
     }

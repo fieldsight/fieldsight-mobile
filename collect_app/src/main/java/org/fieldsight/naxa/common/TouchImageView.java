@@ -16,7 +16,6 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -29,7 +28,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 public class TouchImageView extends AppCompatImageView {
 
-    private static final String DEBUG = "DEBUG";
+
 
     //
     // SuperMin and SuperMax multipliers. Determine how much the image can be
@@ -57,7 +56,7 @@ public class TouchImageView extends AppCompatImageView {
 
     private FixedPixel orientationChangeFixedPixel = FixedPixel.CENTER;
     private FixedPixel viewSizeChangeFixedPixel = FixedPixel.CENTER;
-    private boolean orientationJustChanged = false;
+    private boolean orientationJustChanged;
 
     private enum State {NONE, DRAG, ZOOM, FLING, ANIMATE_ZOOM}
 
@@ -69,7 +68,7 @@ public class TouchImageView extends AppCompatImageView {
     public static final float AUTOMATIC_MIN_ZOOM = -1.0f;
     private float userSpecifiedMinScale;
     private float minScale;
-    private boolean maxScaleIsSetByMultiplier = false;
+    private boolean maxScaleIsSetByMultiplier;
     private float maxScaleMultiplier;
     private float maxScale;
     private float superMinScale;
@@ -99,9 +98,9 @@ public class TouchImageView extends AppCompatImageView {
 
     private ScaleGestureDetector mScaleDetector;
     private GestureDetector mGestureDetector;
-    private GestureDetector.OnDoubleTapListener doubleTapListener = null;
-    private OnTouchListener userTouchListener = null;
-    private OnTouchImageViewListener touchImageViewListener = null;
+    private GestureDetector.OnDoubleTapListener doubleTapListener;
+    private OnTouchListener userTouchListener;
+    private OnTouchImageViewListener touchImageViewListener;
 
     public TouchImageView(Context context) {
         this(context, null);
@@ -113,10 +112,10 @@ public class TouchImageView extends AppCompatImageView {
 
     public TouchImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        configureImageView(context, attrs, defStyle);
+        configureImageView(context);
     }
 
-    private void configureImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    private void configureImageView(Context context) {
         this.context = context;
 
         super.setClickable(true);
@@ -598,10 +597,12 @@ public class TouchImageView extends AppCompatImageView {
             maxTrans = 0;
         }
 
-        if (trans < minTrans)
+        if (trans < minTrans) {
             return -trans + minTrans;
-        if (trans > maxTrans)
+        }
+        if (trans > maxTrans) {
             return -trans + maxTrans;
+        }
         return 0;
     }
 
@@ -1020,7 +1021,7 @@ public class TouchImageView extends AppCompatImageView {
         //
         // Remember last point position for dragging
         //
-        private PointF last = new PointF();
+        private final PointF last = new PointF();
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -1036,8 +1037,9 @@ public class TouchImageView extends AppCompatImageView {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         last.set(curr);
-                        if (fling != null)
+                        if (fling != null) {
                             fling.cancelFling();
+                        }
                         setState(State.DRAG);
                         break;
 
@@ -1163,14 +1165,14 @@ public class TouchImageView extends AppCompatImageView {
      */
     private class DoubleTapZoom implements Runnable {
 
-        private long startTime;
+        private final long startTime;
         private static final float ZOOM_TIME = 500;
-        private float startZoom, targetZoom;
-        private float bitmapX, bitmapY;
-        private boolean stretchImageToSuper;
-        private AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
-        private PointF startTouch;
-        private PointF endTouch;
+        private final float startZoom, targetZoom;
+        private final float bitmapX, bitmapY;
+        private final boolean stretchImageToSuper;
+        private final AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
+        private final PointF startTouch;
+        private final PointF endTouch;
 
         DoubleTapZoom(float targetZoom, float focusX, float focusY, boolean stretchImageToSuper) {
             setState(State.ANIMATE_ZOOM);
@@ -1446,12 +1448,6 @@ public class TouchImageView extends AppCompatImageView {
             this.focusY = focusY;
             this.scaleType = scaleType;
         }
-    }
-
-    private void printMatrixInfo() {
-        float[] n = new float[9];
-        matrix.getValues(n);
-        Log.d(DEBUG, "Scale: " + n[Matrix.MSCALE_X] + " TransX: " + n[Matrix.MTRANS_X] + " TransY: " + n[Matrix.MTRANS_Y]);
     }
 
 }

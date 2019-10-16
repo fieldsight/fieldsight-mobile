@@ -15,7 +15,7 @@ public class NotificationDetail {
     private Finstance finstance;
     @SerializedName("images")
     @Expose
-    private List<NotificationImage> images = null;
+    private List<NotificationImage> images;
     @SerializedName("user")
     @Expose
     private String user;

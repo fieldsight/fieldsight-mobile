@@ -52,16 +52,20 @@ import timber.log.Timber;
 
 public class FieldSightUserSession {
 
+    private FieldSightUserSession(){
+
+    }
+
     public static void login() {
 
     }
 
     public static String getAuthToken() {
-        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.token, "");
+        return SharedPreferenceUtils.getFromPrefs(Collect.getInstance(), Constant.PrefKey.TOKEN, "");
     }
 
     public static void saveAuthToken(String token) {
-        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), Constant.PrefKey.token, "Token " + token);
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), Constant.PrefKey.TOKEN, "Token " + token);
     }
 
     public static FCMParameter getFCMParameter(String username, String token, boolean deviceStatus) {
@@ -139,7 +143,7 @@ public class FieldSightUserSession {
             try {
                 FirebaseInstanceId.getInstance().deleteInstanceId();
             } catch (Exception e) {
-                e.printStackTrace();
+                Timber.e(e);
             }
             return null;
         }
@@ -230,7 +234,7 @@ public class FieldSightUserSession {
 
             @Override
             public void progressUpdate(int progress, int total) {
-                Timber.i("Deleting %s out of %s instances", progress, total);
+                Timber.i("Deleting %s out of %s INSTANCES", progress, total);
             }
         });
 
@@ -361,7 +365,7 @@ public class FieldSightUserSession {
                 }
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();//should never happen
+            Timber.e(e);//should never happen
         } finally {
             if (results != null) {
                 results.close();
@@ -387,7 +391,7 @@ public class FieldSightUserSession {
                 }
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();//should never happen
+            Timber.e(e);//should never happen
         } finally {
             if (results != null) {
                 results.close();

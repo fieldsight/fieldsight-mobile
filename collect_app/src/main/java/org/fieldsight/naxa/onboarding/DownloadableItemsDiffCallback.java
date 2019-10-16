@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
 
+@Deprecated
 public class DownloadableItemsDiffCallback extends DiffUtil.Callback {
 
-    private List<SyncableItem> oldItems;
-    private List<SyncableItem> newItems;
+    private final List<SyncableItem> oldItems;
+    private final List<SyncableItem> newItems;
 
 
     public DownloadableItemsDiffCallback(List<SyncableItem> newItems, List<SyncableItem> oldItems) {

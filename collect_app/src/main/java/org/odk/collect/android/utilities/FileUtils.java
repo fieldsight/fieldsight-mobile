@@ -22,14 +22,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 
 import org.apache.commons.io.IOUtils;
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Document;
 import org.kxml2.kdom.Element;
 import org.kxml2.kdom.Node;
+import org.odk.collect.android.application.Collect;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -49,10 +50,15 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import timber.log.Timber;
 
 /**
@@ -72,21 +78,37 @@ public class FileUtils {
     public static final String AUTO_DELETE = "autoDelete";
     public static final String AUTO_SEND = "autoSend";
 
-    /** Suffix for the form media directory. */
+    /**
+     * Suffix for the form media directory.
+     */
     public static final String MEDIA_SUFFIX = "-media";
 
-    /** Filename of the last-saved instance data. */
+    /**
+     * Filename of the last-saved instance data.
+     */
     public static final String LAST_SAVED_FILENAME = "last-saved.xml";
 
-    /** Valid XML stub that can be parsed without error. */
+    /**
+     * Valid XML stub that can be parsed without error.
+     */
     private static final String STUB_XML = "<?xml version='1.0' ?><stub />";
+
+    /**
+     * True if we have checked whether /sdcard points to getExternalStorageDirectory().
+     */
+    private static boolean isSdcardSymlinkChecked;
+
+    /**
+     * The result of checking whether /sdcard points to getExternalStorageDirectory().
+     */
+    private static boolean isSdcardSymlinkSameAsExternalStorageDirectory;
 
     static int bufSize = 16 * 1024; // May be set by unit test
 
     private FileUtils() {
     }
 
-    public static String getMimeType(String fileUrl) {
+    public static String getMimeType(String fileUrl) throws IOException {
         FileNameMap fileNameMap = URLConnection.getFileNameMap();
         return fileNameMap.getContentTypeFor(fileUrl);
     }
@@ -280,7 +302,7 @@ public class FileUtils {
             try {
                 isr.close();
             } catch (IOException e) {
-                Timber.w("%s error closing siteName reader", xmlFile.getAbsolutePath());
+                Timber.w("%s error closing from reader", xmlFile.getAbsolutePath());
             }
         }
 
@@ -320,7 +342,7 @@ public class FileUtils {
             }
 
             fields.put(FORMID, (id == null) ? cur.getNamespace() : id);
-            fields.put(VERSION, version);
+            fields.put(VERSION, (version == null) ? null : version);
         } else {
             throw new IllegalStateException(xmlFile.getAbsolutePath() + " could not be parsed");
         }
@@ -585,13 +607,6 @@ public class FileUtils {
         }
     }
 
-
-    public static void revokeFileReadWritePermission(Context context, Uri uri) {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            context.revokeUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
-    }
-
     public static boolean isFileExists(File file) {
         return file != null && file.exists();
     }
@@ -604,10 +619,11 @@ public class FileUtils {
         return isSpace(filePath) ? null : new File(filePath);
     }
 
-
     private static boolean isSpace(String s) {
-        if (s == null) return true;
-        for (int i = 0, len = s.length(); i < len; ++i) {
+        if (s == null) {
+            return true;
+        }
+        for (int i = 0; i < s.length(); ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return false;
             }
@@ -615,10 +631,41 @@ public class FileUtils {
         return true;
     }
 
-    public static String getFileExtension(File file) {
-        if (file == null) return null;
-        return getFileExtension(file.getPath());
+    /**
+     * Delete the directory.
+     *
+     * @param dir The directory.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean deleteDir(final File dir) {
+        if (dir == null) {
+            return false;
+        }
+        // dir doesn't exist then return true
+        if (!dir.exists()) {
+            return true;
+        }
+        // dir isn't a directory then return false
+        if (!dir.isDirectory()) {
+            return false;
+        }
+        File[] files = dir.listFiles();
+        if (files != null && files.length != 0) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    if (!file.delete()) {
+                        return false;
+                    }
+                } else if (file.isDirectory()) {
+                    if (!deleteDir(file)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return dir.delete();
     }
+
 
     /**
      * Copy the directory.
@@ -650,8 +697,141 @@ public class FileUtils {
         return copyDir(getFileByPath(srcDirPath), getFileByPath(destDirPath));
     }
 
+
+    private static boolean copyOrMoveDir(final File srcDir,
+                                         final File destDir,
+                                         final OnReplaceListener listener,
+                                         final boolean isMove) {
+        if (srcDir == null || destDir == null) {
+            return false;
+        }
+        // destDir's path locate in srcDir's path then return false
+        String srcPath = srcDir.getPath() + File.separator;
+        String destPath = destDir.getPath() + File.separator;
+        if (destPath.contains(srcPath)) {
+            return false;
+        }
+        if (!srcDir.exists() || !srcDir.isDirectory()) {
+            return false;
+        }
+        if (destDir.exists()) {
+            if (listener == null || listener.onReplace()) {// require delete the old directory
+                if (!deleteAllInDir(destDir)) {// unsuccessfully delete then return false
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+        if (!createOrExistsDir(destDir)) {
+            return false;
+        }
+        File[] files = srcDir.listFiles();
+
+        for (File file : files) {
+
+            File oneDestFile = new File(destPath + file.getName());
+            if (file.isFile()) {
+                if (!copyOrMoveFile(file, oneDestFile, listener, isMove)) {
+                    return false;
+                }
+            } else if (file.isDirectory()) {
+                if (!copyOrMoveDir(file, oneDestFile, listener, isMove)) {
+                    return false;
+                }
+            }
+        }
+        return !isMove || deleteDir(srcDir);
+    }
+
     public interface OnReplaceListener {
         boolean onReplace();
+    }
+
+    private static boolean copyOrMoveFile(final File srcFile,
+                                          final File destFile,
+                                          final OnReplaceListener listener,
+                                          final boolean isMove) {
+        if (srcFile == null || destFile == null) {
+            return false;
+        }
+        // srcFile equals destFile then return false
+        if (srcFile.equals(destFile)) {
+            return false;
+        }
+        // srcFile doesn't exist or isn't a file then return false
+        if (!srcFile.exists() || !srcFile.isFile()) {
+            return false;
+        }
+        if (destFile.exists()) {
+            if (listener == null || listener.onReplace()) {// require delete the old file
+                if (!destFile.delete()) {// unsuccessfully delete then return false
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+        if (!createOrExistsDir(destFile.getParentFile())) {
+            return false;
+        }
+        try {
+            return writeFileFromIS(destFile, new FileInputStream(srcFile))
+                    && !(isMove && !deleteFile(srcFile));
+        } catch (FileNotFoundException e) {
+            Timber.e(e);
+            return false;
+        }
+    }
+
+    /**
+     * Create a directory if it doesn't exist, otherwise do nothing.
+     *
+     * @param file The file.
+     * @return {@code true}: exists or creates successfully<br>{@code false}: otherwise
+     */
+    public static boolean createOrExistsDir(final File file) {
+        return file != null && (file.exists() ? file.isDirectory() : file.mkdirs());
+    }
+
+    /**
+     * Delete the file.
+     *
+     * @param file The file.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean deleteFile(final File file) {
+        return file != null && (!file.exists() || file.isFile() && file.delete());
+    }
+
+    private static boolean writeFileFromIS(final File file,
+                                           final InputStream is) {
+        OutputStream os = null;
+        try {
+            os = new BufferedOutputStream(new FileOutputStream(file));
+            byte data[] = new byte[8192];
+            int len;
+            while ((len = is.read(data, 0, 8192)) != -1) {
+                os.write(data, 0, len);
+            }
+            return true;
+        } catch (IOException e) {
+            Timber.e(e);
+            return false;
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                Timber.e(e);
+            }
+            try {
+                if (os != null) {
+                    os.close();
+                }
+            } catch (IOException e) {
+                Timber.e(e);
+            }
+        }
     }
 
     /**
@@ -678,19 +858,29 @@ public class FileUtils {
      * @return {@code true}: success<br>{@code false}: fail
      */
     public static boolean deleteFilesInDirWithFilter(final File dir, final FileFilter filter) {
-        if (dir == null) return false;
+        if (dir == null) {
+            return false;
+        }
         // dir doesn't exist then return true
-        if (!dir.exists()) return true;
+        if (!dir.exists()) {
+            return true;
+        }
         // dir isn't a directory then return false
-        if (!dir.isDirectory()) return false;
+        if (!dir.isDirectory()) {
+            return false;
+        }
         File[] files = dir.listFiles();
         if (files != null && files.length != 0) {
             for (File file : files) {
                 if (filter.accept(file)) {
                     if (file.isFile()) {
-                        if (!file.delete()) return false;
+                        if (!file.delete()) {
+                            return false;
+                        }
                     } else if (file.isDirectory()) {
-                        if (!deleteDir(file)) return false;
+                        if (!deleteDir(file)) {
+                            return false;
+                        }
                     }
                 }
             }
@@ -699,142 +889,100 @@ public class FileUtils {
     }
 
     /**
-     * Delete the directory.
-     *
-     * @param dir The directory.
-     * @return {@code true}: success<br>{@code false}: fail
+     * Uses the /sdcard symlink to shorten a path, if it's valid to do so.
      */
-    public static boolean deleteDir(final File dir) {
-        if (dir == null) return false;
-        // dir doesn't exist then return true
-        if (!dir.exists()) return true;
-        // dir isn't a directory then return false
-        if (!dir.isDirectory()) return false;
-        File[] files = dir.listFiles();
-        if (files != null && files.length != 0) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    if (!file.delete()) return false;
-                } else if (file.isDirectory()) {
-                    if (!deleteDir(file)) return false;
-                }
+    @SuppressWarnings("PMD.DoNotHardCodeSDCard")
+    public static File simplifyPath(File file) {
+        // The symlink at /sdcard points to the same location as the storage
+        // path returned by getExternalStorageDirectory() on every Android
+        // device and emulator as far as we know; but, just to be certain
+        // that we don't lie to the user, we'll confirm that's really true.
+        if (!isSdcardSymlinkChecked) {
+            checkIfSdcardSymlinkSameAsExternalStorageDirectory();
+            isSdcardSymlinkChecked = true;  // this check is expensive; only do it once
+        }
+        if (isSdcardSymlinkSameAsExternalStorageDirectory) {
+            // They point to the same place, so it's safe to replace the longer
+            // storage path with the short symlink.
+            String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            String path = file.getAbsolutePath();
+            if (path.startsWith(storagePath + "/")) {
+                return new File("/sdcard" + path.substring(storagePath.length()));
             }
         }
-        return dir.delete();
+        return file;
     }
 
 
-    private static boolean copyOrMoveDir(final File srcDir,
-                                         final File destDir,
-                                         final OnReplaceListener listener,
-                                         final boolean isMove) {
-        if (srcDir == null || destDir == null) return false;
-        // destDir's path locate in srcDir's path then return false
-        String srcPath = srcDir.getPath() + File.separator;
-        String destPath = destDir.getPath() + File.separator;
-        if (destPath.contains(srcPath)) return false;
-        if (!srcDir.exists() || !srcDir.isDirectory()) return false;
-        if (destDir.exists()) {
-            if (listener == null || listener.onReplace()) {// require delete the old directory
-                if (!deleteAllInDir(destDir)) {// unsuccessfully delete then return false
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        }
-        if (!createOrExistsDir(destDir)) return false;
-        File[] files = srcDir.listFiles();
-
-        for (File file : files) {
-
-            File oneDestFile = new File(destPath + file.getName());
-            if (file.isFile()) {
-                if (!copyOrMoveFile(file, oneDestFile, listener, isMove)) return false;
-            } else if (file.isDirectory()) {
-                if (!copyOrMoveDir(file, oneDestFile, listener, isMove)) return false;
-            }
-        }
-        return !isMove || deleteDir(srcDir);
-    }
-
-
-    private static boolean copyOrMoveFile(final File srcFile,
-                                          final File destFile,
-                                          final OnReplaceListener listener,
-                                          final boolean isMove) {
-        if (srcFile == null || destFile == null) return false;
-        // srcFile equals destFile then return false
-        if (srcFile.equals(destFile)) return false;
-        // srcFile doesn't exist or isn't a file then return false
-        if (!srcFile.exists() || !srcFile.isFile()) return false;
-        if (destFile.exists()) {
-            if (listener == null || listener.onReplace()) {// require delete the old file
-                if (!destFile.delete()) {// unsuccessfully delete then return false
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        }
-        if (!createOrExistsDir(destFile.getParentFile())) return false;
+    /**
+     * Checks whether /sdcard points to the same place as getExternalStorageDirectory().
+     */
+    @SuppressWarnings("PMD.DoNotHardCodeSDCard")
+    @SuppressFBWarnings(
+            value = "DMI_HARDCODED_ABSOLUTE_FILENAME",
+            justification = "The purpose of this function is to test this specific path."
+    )
+    private static void checkIfSdcardSymlinkSameAsExternalStorageDirectory() {
         try {
-            return writeFileFromIS(destFile, new FileInputStream(srcFile))
-                    && !(isMove && !deleteFile(srcFile));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
+            // createTempFile() guarantees a randomly named file that did not previously exist.
+            File shortPathFile = File.createTempFile("odk", null, new File("/sdcard"));
+            try {
+                String name = shortPathFile.getName();
+                File longPathFile = new File(Environment.getExternalStorageDirectory(), name);
+
+                // If we delete the file via one path and the file disappears at the
+                // other path, then we know that both paths point to the same place.
+                if (shortPathFile.exists() && longPathFile.exists()) {
+                    longPathFile.delete();
+                    if (!shortPathFile.exists()) {
+                        isSdcardSymlinkSameAsExternalStorageDirectory = true;
+                        return;
+                    }
+                }
+            } finally {
+                shortPathFile.delete();
+            }
+        } catch (IOException e) { /* ignore */ }
+        isSdcardSymlinkSameAsExternalStorageDirectory = false;
+    }
+
+
+    /**
+     * Iterates over all directories and files under a root path.
+     */
+    public static Iterable<File> walk(File root) {
+        return () -> new Walker(root, true);
     }
 
     /**
-     * Delete the file.
-     *
-     * @param file The file.
-     * @return {@code true}: success<br>{@code false}: fail
+     * An iterator that walks over all the directories and files under a given path.
      */
-    public static boolean deleteFile(final File file) {
-        return file != null && (!file.exists() || file.isFile() && file.delete());
-    }
+    private static class Walker implements Iterator<File> {
+        private final List<File> queue = new ArrayList<>();
+        private final boolean depthFirst;
 
-    private static boolean writeFileFromIS(final File file,
-                                           final InputStream is) {
-        OutputStream os = null;
-        try {
-            os = new BufferedOutputStream(new FileOutputStream(file));
-            byte data[] = new byte[8192];
-            int len;
-            while ((len = is.read(data, 0, 8192)) != -1) {
-                os.write(data, 0, len);
+        Walker(File root, boolean depthFirst) {
+            queue.add(root);
+            this.depthFirst = depthFirst;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !queue.isEmpty();
+        }
+
+        @Override
+        public File next() {
+            if (queue.isEmpty()) {
+                throw new NoSuchElementException();
             }
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            File next = queue.remove(0);
+            if (next.isDirectory()) {
+                queue.addAll(depthFirst ? 0 : queue.size(), Arrays.asList(next.listFiles()));
             }
-            try {
-                if (os != null) {
-                    os.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            return next;
         }
     }
 
-    /**
-     * Create a directory if it doesn't exist, otherwise do nothing.
-     *
-     * @param file The file.
-     * @return {@code true}: exists or creates successfully<br>{@code false}: otherwise
-     */
-    public static boolean createOrExistsDir(final File file) {
-        return file != null && (file.exists() ? file.isDirectory() : file.mkdirs());
-    }
 
 }

@@ -24,8 +24,8 @@ import io.reactivex.annotations.NonNull;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHolder> {
 
-    private List<FieldSightContactModel> contactList;
-    private ContactDetailListener contactDetailListener;
+    private final List<FieldSightContactModel> contactList;
+    private final ContactDetailListener contactDetailListener;
     private Context context;
 
 
@@ -37,10 +37,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvFullName, tvUserName, tvPhone;
-        private ImageView ivProfilePicture;
-
-        private CardView card;
+        private final TextView tvFullName, tvUserName;
+        private final ImageView ivProfilePicture;
 
         MyViewHolder(View view) {
             super(view);
@@ -48,7 +46,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             ivProfilePicture = view.findViewById(R.id.imageView2);
             tvFullName = view.findViewById(R.id.contact_name);
             tvUserName = view.findViewById(R.id.contact_username);
-            card = view.findViewById(R.id.card_contact_list_item);
+            CardView card = view.findViewById(R.id.card_contact_list_item);
 
             card.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -75,7 +73,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     @Override
     public void onBindViewHolder( final MyViewHolder holder, int position) {
         final FieldSightContactModel contact = contactList.get(position);
-        holder.tvFullName.setText(contact.getFull_name());
+        holder.tvFullName.setText(contact.getFullName());
         holder.tvUserName.setText(contact.getEmail());
         /*
         //open tvSkype
@@ -139,11 +137,11 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
             }
         });
 */
-        String Img_Thumb_Url = contact.getProfilePicture();
+        String profilePicture = contact.getProfilePicture();
 
-        if (Img_Thumb_Url != null) {
+        if (profilePicture != null) {
             GlideApp.with(context)
-                    .load(Img_Thumb_Url)
+                    .load(profilePicture)
                     .circleCrop()
                     .thumbnail(0.5f)
                     .into(holder.ivProfilePicture);

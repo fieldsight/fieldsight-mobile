@@ -16,14 +16,14 @@ import io.reactivex.Single;
 
 public class EducationalMaterialsLocalSource implements BaseLocalDataSource<Em> {
 
-    private static EducationalMaterialsLocalSource INSTANCE;
+    private static EducationalMaterialsLocalSource educationalMaterialsLocalSource;
     private final EducationalMaterialsDao dao;
 
-    public static EducationalMaterialsLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new EducationalMaterialsLocalSource();
+    public synchronized static EducationalMaterialsLocalSource getInstance() {
+        if (educationalMaterialsLocalSource == null) {
+            educationalMaterialsLocalSource = new EducationalMaterialsLocalSource();
         }
-        return INSTANCE;
+        return educationalMaterialsLocalSource;
     }
 
     private EducationalMaterialsLocalSource() {

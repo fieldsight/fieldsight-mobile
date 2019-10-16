@@ -37,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.observers.DisposableObserver;
+import timber.log.Timber;
 
 public class UserActivity extends CollectAbstractActivity {
 
@@ -315,7 +316,7 @@ public class UserActivity extends CollectAbstractActivity {
 
                             @Override
                             public void onError(Throwable e) {
-                                e.printStackTrace();
+                                Timber.e(e);
                                 userProfileViewModel.setProgressBar(false);
                                 userProfileViewModel.setSyncLiveData(false);
                                 mUser.setSync(false);
@@ -341,11 +342,13 @@ public class UserActivity extends CollectAbstractActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) return;
+        if (resultCode != RESULT_OK) {
+            return;
+        }
         switch (requestCode) {
             case Constant.RequestCode.RC_CAMERA:
                 userProfileViewModel.getUser().getValue().setProfilepic(photoToUpload.getAbsolutePath());
-                Glide.with(UserActivity.this)
+                Glide.with(this)
                         .load(photoToUpload)
                         .into(civProfilePic);
                 break;
@@ -353,7 +356,7 @@ public class UserActivity extends CollectAbstractActivity {
                 Uri uri = data.getData();
                 String path = ImageFileUtils.getPath(this, uri);
                 userProfileViewModel.getUser().getValue().setProfilepic(path);
-                Glide.with(UserActivity.this)
+                Glide.with(this)
                         .load(path)
                         .into(civProfilePic);
                 break;

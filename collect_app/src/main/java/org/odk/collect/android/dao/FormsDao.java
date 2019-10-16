@@ -63,7 +63,7 @@ public class FormsDao {
                     + FormsProviderAPI.FormsColumns.JR_VERSION + "=?";
         }
 
-        // As long as we allow storing multiple forms with the same id and version number, choose
+        // As long as we allow storing multiple FORMS with the same id and version number, choose
         // the newest one
         String order = FormsProviderAPI.FormsColumns.DATE + " DESC";
 
@@ -191,7 +191,7 @@ public class FormsDao {
         }
         selection.append("? )");
 
-        //This will break if the number of forms to delete > SQLITE_MAX_VARIABLE_NUMBER (999)
+        //This will break if the number of FORMS to delete > SQLITE_MAX_VARIABLE_NUMBER (999)
         Collect.getInstance().getContentResolver().delete(FormsProviderAPI.FormsColumns.CONTENT_URI, selection.toString(), idsToDelete);
     }
 
@@ -229,7 +229,7 @@ public class FormsDao {
     }
 
     /**
-     * Returns all forms available through the cursor and closes the cursor.
+     * Returns all FORMS available through the cursor and closes the cursor.
      */
     public List<Form> getFormsFromCursor(Cursor cursor) {
         List<Form> forms = new ArrayList<>();
@@ -245,7 +245,6 @@ public class FormsDao {
                     int formFilePathColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.FORM_FILE_PATH);
                     int submissionUriColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.SUBMISSION_URI);
                     int base64RSAPublicKeyColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.BASE64_RSA_PUBLIC_KEY);
-                    int displaySubtextColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.DISPLAY_SUBTEXT);
                     int md5HashColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.MD5_HASH);
                     int dateColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.DATE);
                     int jrCacheFilePathColumnIndex = cursor.getColumnIndex(FormsProviderAPI.FormsColumns.JRCACHE_FILE_PATH);
@@ -265,7 +264,6 @@ public class FormsDao {
                             .formFilePath(cursor.getString(formFilePathColumnIndex))
                             .submissionUri(cursor.getString(submissionUriColumnIndex))
                             .base64RSAPublicKey(cursor.getString(base64RSAPublicKeyColumnIndex))
-                            .displaySubtext(cursor.getString(displaySubtextColumnIndex))
                             .md5Hash(cursor.getString(md5HashColumnIndex))
                             .date(cursor.getLong(dateColumnIndex))
                             .jrCacheFilePath(cursor.getString(jrCacheFilePathColumnIndex))
@@ -292,7 +290,7 @@ public class FormsDao {
         selectionArgs = new String[]{formId};
         selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
 
-        // As long as we allow storing multiple forms with the same id and version number, choose
+        // As long as we allow storing multiple FORMS with the same id and version number, choose
         // the newest one
         String order = FormsProviderAPI.FormsColumns.DATE + " DESC";
 
@@ -308,7 +306,6 @@ public class FormsDao {
         values.put(FormsProviderAPI.FormsColumns.FORM_FILE_PATH, form.getFormFilePath());
         values.put(FormsProviderAPI.FormsColumns.SUBMISSION_URI, form.getSubmissionUri());
         values.put(FormsProviderAPI.FormsColumns.BASE64_RSA_PUBLIC_KEY, form.getBASE64RSAPublicKey());
-        values.put(FormsProviderAPI.FormsColumns.DISPLAY_SUBTEXT, form.getDisplaySubtext());
         values.put(FormsProviderAPI.FormsColumns.MD5_HASH, form.getMD5Hash());
         values.put(FormsProviderAPI.FormsColumns.DATE, form.getDate());
         values.put(FormsProviderAPI.FormsColumns.JRCACHE_FILE_PATH, form.getJrCacheFilePath());

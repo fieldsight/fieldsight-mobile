@@ -15,6 +15,7 @@ import org.fieldsight.naxa.generalforms.data.FormResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @Entity(tableName = "scheduled_form",
         primaryKeys = {"scheduleId", "formDeployedFrom"})
 public class ScheduleForm {
@@ -41,7 +42,7 @@ public class ScheduleForm {
     @Ignore
     @SerializedName("latest_submission")
     @Expose
-    private List<FormResponse> latestSubmission = null;
+    private List<FormResponse> latestSubmission;
 
     @SerializedName("schedule_level")
     @Expose
@@ -122,7 +123,7 @@ public class ScheduleForm {
         this.lastFilledDateTime = lastFilledDateTime;
     }
 
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     @Expose
     private String projectId;
 
@@ -340,8 +341,12 @@ public class ScheduleForm {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ScheduleForm that = (ScheduleForm) o;
         return Objects.equal(formResponse, that.formResponse) &&
                 Objects.equal(em, that.em) &&

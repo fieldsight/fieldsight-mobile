@@ -124,14 +124,14 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private boolean isUpdate;
 
 
-    public static void start(Context context, @NonNull Project project, @Nullable Site site, String site_label, String region_label) {
+    public static void start(Context context, @NonNull Project project, @Nullable Site site, String siteLabel, String regionLabel) {
         Intent intent = new Intent(context, CreateSiteActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
         if (site != null) {
             intent.putExtra("site", site);
         }
-        intent.putExtra("site_label", site_label);
-        intent.putExtra("region_label", region_label);
+        intent.putExtra("site_label", siteLabel);
+        intent.putExtra("region_label", regionLabel);
         context.startActivity(intent);
     }
 
@@ -148,7 +148,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         try {
             project = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
         } catch (Exception e) {
-            Timber.e("Can't start activity without project extra_object");
+            Timber.e("Can't start activity without PROJECT extra_object");
             ToastUtils.showLongToast(getString(R.string.msg_failed_to_load));
             finish();
             return;
@@ -764,7 +764,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     }
 
     private void setupViewModel() {
-        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         createSiteViewModel = ViewModelProviders.of(this, factory).get(CreateSiteViewModel.class);
     }
 
@@ -908,7 +908,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
                 }
             } catch (JSONException e) {
                 Timber.e(e);
-                e.printStackTrace();
+                Timber.e(e);
             }
         }
 

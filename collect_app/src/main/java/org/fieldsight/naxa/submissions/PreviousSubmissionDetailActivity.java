@@ -125,11 +125,11 @@ public class PreviousSubmissionDetailActivity extends CollectAbstractActivity im
                         String key = keys.next();
                         question.append(questionJson.getString(key));
                         if (keys.hasNext()) {
-                            question.append("\n");
+                            question.append('\n');
                         }
                     }
                 } catch (JSONException e) {
-                    Timber.i("Failed to parse %s as json. his can be ignored",question);
+                    Timber.i("Failed to parse %s as json. his can be ignored", question);
                 }
 
                 answer = new ViewModel(question.toString(), response.getAnswer(), "id", "id");

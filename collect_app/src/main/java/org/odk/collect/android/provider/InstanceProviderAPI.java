@@ -19,36 +19,30 @@ package org.odk.collect.android.provider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Convenience definitions for NotePadProvider
- */
 public final class InstanceProviderAPI {
-    public static final String AUTHORITY = "org.odk.collect.android.provider.instances";
+    public static final String AUTHORITY = "org.odk.collect.android.provider.INSTANCES";
 
     // This class cannot be instantiated
     private InstanceProviderAPI() {
     }
 
-    // status for instances
+    // status for INSTANCES
     public static final String STATUS_INCOMPLETE = "incomplete";
     public static final String STATUS_COMPLETE = "complete";
     public static final String STATUS_SUBMITTED = "submitted";
     public static final String STATUS_FLAGGED = "flagged";
     public static final String STATUS_SUBMISSION_FAILED = "submissionFailed";
 
-    /**
-     * Notes table
-     */
     public static final class InstanceColumns implements BaseColumns {
         // This class cannot be instantiated
         private InstanceColumns() {
         }
 
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/instances");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/INSTANCES");
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.bcss.instance";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.bcss.instance";
 
-        // These are the only things needed for an insert
+        // instance column names
         public static final String DISPLAY_NAME = "displayName";
         public static final String SUBMISSION_URI = "submissionUri";
         public static final String INSTANCE_FILE_PATH = "instanceFilePath";
@@ -62,14 +56,6 @@ public final class InstanceProviderAPI {
         public static final String STATUS = "status";
         public static final String CAN_EDIT_WHEN_COMPLETE = "canEditWhenComplete";
         public static final String LAST_STATUS_CHANGE_DATE = "date";
-        public static final String DISPLAY_SUBTEXT = "displaySubtext";
         public static final String DELETED_DATE = "deletedDate";
-        //public static final String DISPLAY_SUB_SUBTEXT = "displaySubSubtext";
-
-        //        public static final String DEFAULT_SORT_ORDER = "modified DESC";
-        //        public static final String TITLE = "title";
-        //        public static final String NOTE = "note";
-        //        public static final String CREATED_DATE = "created";
-        //        public static final String MODIFIED_DATE = "modified";
     }
 }

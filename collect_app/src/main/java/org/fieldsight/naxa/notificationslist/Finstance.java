@@ -27,7 +27,7 @@ public class Finstance {
     @SerializedName("site")
     @Expose
     private Integer site;
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     @Expose
     private Integer project;
     @SerializedName("submitted_by")

@@ -27,13 +27,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
 
-    private static SubStageLocalSource INSTANCE;
-    private SubStageDAO dao;
+    private static SubStageLocalSource subStageLocalSource;
+    private final SubStageDAO dao;
 
 
     private SubStageLocalSource() {
@@ -41,11 +42,11 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
         this.dao = database.getSubStageDAO();
     }
 
-    public static SubStageLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SubStageLocalSource();
+    public synchronized static SubStageLocalSource getInstance() {
+        if (subStageLocalSource == null) {
+            subStageLocalSource = new SubStageLocalSource();
         }
-        return INSTANCE;
+        return subStageLocalSource;
     }
 
     @Override
@@ -119,7 +120,7 @@ public class SubStageLocalSource implements BaseLocalDataSource<SubStage> {
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    e.printStackTrace();
+                                    Timber.e(e);
                                     mediatorLiveData.removeSource(source);
                                 }
                             });

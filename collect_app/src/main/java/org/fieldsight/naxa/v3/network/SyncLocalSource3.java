@@ -3,7 +3,6 @@ package org.fieldsight.naxa.v3.network;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
@@ -18,8 +17,8 @@ import io.reactivex.Single;
 public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
 
-    private static SyncLocalSource3 INSTANCE;
-    private SyncDaoV3 dao;
+    private static SyncLocalSource3 syncLocalSource3;
+    private final SyncDaoV3 dao;
 
 
     private SyncLocalSource3() {
@@ -28,11 +27,11 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
     }
 
 
-    public static SyncLocalSource3 getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SyncLocalSource3();
+    public synchronized static SyncLocalSource3 getInstance() {
+        if (syncLocalSource3 == null) {
+            syncLocalSource3 = new SyncLocalSource3();
         }
-        return INSTANCE;
+        return syncLocalSource3;
     }
 
 
@@ -43,7 +42,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
 
     public void delete(SyncStat stat) {
-        MutableLiveData<Integer> affectedRowsMutData = new MutableLiveData<>();
+
         AsyncTask.execute(() -> dao.delete(stat));
     }
 
@@ -58,17 +57,17 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
     }
 
     public void markAsQueued(String projectId, int type) {
-        SyncStat syncStat = new SyncStat(projectId, type + "", "", false, Constant.DownloadStatus.QUEUED, System.currentTimeMillis());
+        SyncStat syncStat = new SyncStat(projectId, String.valueOf(type) , "", false, Constant.DownloadStatus.QUEUED, System.currentTimeMillis());
         save(syncStat);
     }
 
     public void markAsFailed(String projectId, int type, String failedUrl) {
-        SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, false, Constant.DownloadStatus.FAILED, System.currentTimeMillis());
+        SyncStat syncStat = new SyncStat(projectId, String.valueOf(type), failedUrl, false, Constant.DownloadStatus.FAILED, System.currentTimeMillis());
         save(syncStat);
     }
 
     public void markAsCompleted(String projectId, int type) {
-        SyncStat syncStat = new SyncStat(projectId, type + "", "", false, Constant.DownloadStatus.COMPLETED, System.currentTimeMillis());
+        SyncStat syncStat = new SyncStat(projectId, String.valueOf(type), "", false, Constant.DownloadStatus.COMPLETED, System.currentTimeMillis());
         save(syncStat);
     }
 
@@ -99,7 +98,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
     }
 
     public void updateDownloadProgress(String projectId, int progress, int totalFormsInProject) {
-        SyncStat syncStat = new SyncStat(projectId, 1 + "", "", false, Constant.DownloadStatus.RUNNING, System.currentTimeMillis());
+        SyncStat syncStat = new SyncStat(projectId, String.valueOf(1) , "", false, Constant.DownloadStatus.RUNNING, System.currentTimeMillis());
         syncStat.setProgress(progress);
         syncStat.setTotal(totalFormsInProject);
         save(syncStat);

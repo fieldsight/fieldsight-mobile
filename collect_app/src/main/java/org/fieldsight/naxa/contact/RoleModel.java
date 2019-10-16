@@ -9,8 +9,7 @@ public class RoleModel {
     public String group;
     public String site;
 
-    public RoleModel() {
-    }
+
 
     public String getProject() {
         return project;

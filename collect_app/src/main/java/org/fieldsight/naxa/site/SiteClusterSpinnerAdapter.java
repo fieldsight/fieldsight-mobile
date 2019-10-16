@@ -19,9 +19,9 @@ import java.util.List;
 
 public class SiteClusterSpinnerAdapter extends ArrayAdapter<Region> {
 
-    private Context context;
+    private final Context context;
 
-    private List<Region> values;
+    private final List<Region> values;
 
     SiteClusterSpinnerAdapter(Context context, int textViewResourceId, String hint, List<Region> values) {
         super(context, textViewResourceId, values);
@@ -36,8 +36,7 @@ public class SiteClusterSpinnerAdapter extends ArrayAdapter<Region> {
 
     public int getCount() {
         int count = super.getCount();
-        int newCount = count > 0 ? count - 1 : count;
-        return newCount;
+        return count > 0 ? count - 1 : count;
     }
 
 

@@ -120,9 +120,9 @@
         <activity android:name="org.fieldsight.naxa.migrate.MigrateFieldSightActivity" />
         <activity android:name="org.fieldsight.naxa.educational.EducationalMaterialActivity" />
         <activity android:name="org.fieldsight.naxa.project.AppUpdateActivity" />
-        <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewTextTitleDetailsActivity" />
-        <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewImageDetailsActivity" />
-        <activity android:name="org.fieldsight.naxa.educational.EduMat_ViewVideoDetailsActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EduMatViewTextTitleDetailsActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EduMatImageDetailsActivity" />
+        <activity android:name="org.fieldsight.naxa.educational.EduMatViewVideoDetailsActivity" />
         <activity android:name="org.fieldsight.naxa.FSInstanceUploaderListActivity" />
         <activity android:name="org.fieldsight.naxa.FSInstanceChooserList" />
         <activity android:name="org.fieldsight.naxa.sync.ContentDownloadActivity" />
@@ -248,11 +248,8 @@
 
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
-            android:value="@bool/FIREBASE_CRASHLYTICS_ENABLED" />
+            android:value="@bool/FIREBASE_ENABLED" />
 
-        <meta-data
-            android:name="firebase_analytics_collection_enabled"
-            android:value="@bool/FIREBASE_CRASHLYTICS_ENABLED" />
 
         <uses-library
             android:name="com.google.android.maps"

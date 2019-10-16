@@ -13,9 +13,9 @@ import java.util.Set;
 
 public class Syncable implements Serializable {
 
-    private String title;
+    private final String title;
     boolean sync; // this flag is used to enable it to sync or not
-    private Set<String> lastFailedUrl = new HashSet<>();
+    private final Set<String> lastFailedUrl = new HashSet<>();
     private int total;
     private int progress;
     public int status;
@@ -56,7 +56,7 @@ public class Syncable implements Serializable {
         this.sync = sync;
     }
 
-    public boolean getSync() {
+    public boolean isSync() {
         return this.sync;
     }
 

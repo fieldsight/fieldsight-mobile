@@ -131,7 +131,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
 
         final ReferenceManager referenceManager = ReferenceManager.instance();
 
-        // Remove previous forms
+        // Remove previous FORMS
         referenceManager.clearSession();
 
         // This should get moved to the Application Class
@@ -222,8 +222,8 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
     }
 
     private void addSessionRootTranslators(String formMediaDir, ReferenceManager referenceManager, String... hostStrings) {
-        // Set jr://... to point to /sdcard/odk/forms/formBasename-media/
-        final String translatedPrefix = String.format("jr://file/forms/" + formMediaDir + "/");
+        // Set jr://... to point to /sdcard/odk/FORMS/formBasename-media/
+        final String translatedPrefix = String.format("jr://file/FORMS/" + formMediaDir + "/");
         for (String t : hostStrings) {
             referenceManager.addSessionRootTranslator(new RootTranslator(String.format("jr://%s/", t), translatedPrefix));
         }
@@ -420,11 +420,11 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         // convert files into a byte array
         byte[] fileBytes = org.apache.commons.io.FileUtils.readFileToByteArray(instanceFile);
 
-        // get the root of the saved and template instances
+        // get the root of the saved and template INSTANCES
         TreeElement savedRoot = XFormParser.restoreDataModel(fileBytes, null).getRoot();
         TreeElement templateRoot = fec.getModel().getForm().getInstance().getRoot().deepCopy(true);
 
-        // weak check for matching forms
+        // weak check for matching FORMS
         if (!savedRoot.getName().equals(templateRoot.getName()) || savedRoot.getMult() != 0) {
             Timber.e("Saved form instance does not match template form definition");
             return;

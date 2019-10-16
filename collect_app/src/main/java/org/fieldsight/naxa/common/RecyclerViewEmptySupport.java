@@ -19,12 +19,9 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 ////https://stackoverflow.com/questions/28217436/how-to-show-an-empty-view-with-a-recyclerview
 public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
-    private View progressView;
-
-    private long lastDispatch;
 
 
-    private AdapterDataObserver emptyObserver = new AdapterDataObserver() {
+    private final AdapterDataObserver emptyObserver = new AdapterDataObserver() {
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
@@ -77,10 +74,10 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         if (adapter != null && emptyView != null) {
             if (adapter.getItemCount() == 0) {
                 emptyView.setVisibility(View.VISIBLE);
-                RecyclerViewEmptySupport.this.setVisibility(View.GONE);
+                this.setVisibility(View.GONE);
             } else {
                 emptyView.setVisibility(View.GONE);
-                RecyclerViewEmptySupport.this.setVisibility(View.VISIBLE);
+                this.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -119,7 +116,7 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                     .setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent =  new Intent(Collect.getInstance(), ContentDownloadActivity.class);
+                            Intent intent = new Intent(Collect.getInstance(), ContentDownloadActivity.class);
                             intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                             Collect.getInstance().startActivity(intent);
                         }
@@ -129,22 +126,11 @@ public class RecyclerViewEmptySupport extends RecyclerView {
 
 
     public void setProgressView(View progressView) {
-        this.progressView = progressView;
         progressView.setVisibility(GONE);
     }
 
 
-    public void showProgressView(boolean show) {
-        if (show) {
-            emptyView.setVisibility(GONE);
-            RecyclerViewEmptySupport.this.setVisibility(GONE);
-            progressView.setVisibility(VISIBLE);
-        } else {
-            emptyView.setVisibility(VISIBLE);
-            RecyclerViewEmptySupport.this.setVisibility(VISIBLE);
-            progressView.setVisibility(GONE);
-        }
-    }
+
 
     public interface OnEmptyLayoutClickListener {
         void onRetryButtonClick();

@@ -33,17 +33,15 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.HitBuilders;
-
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.exception.ExternalParamsException;
-import org.odk.collect.android.external.ExternalAppsUtils;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.parser.XPathSyntaxException;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.exception.ExternalParamsException;
+import org.odk.collect.android.external.ExternalAppsUtils;
 import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.DependencyProvider;
 import org.odk.collect.android.utilities.ObjectUtils;
@@ -58,7 +56,6 @@ import timber.log.Timber;
 
 import static android.content.Intent.ACTION_SENDTO;
 import static org.odk.collect.android.utilities.ApplicationConstants.RequestCodes;
-
 
 /**
  * <p>Launch an external app to supply a string value. If the app
@@ -158,13 +155,7 @@ public class ExStringWidget extends QuestionWidget implements BinaryWidget {
         answerLayout.addView(answer);
         addAnswerView(answerLayout);
 
-        Collect.getInstance().getDefaultTracker()
-                .send(new HitBuilders.EventBuilder()
-                        .setCategory("WidgetType")
-                        .setAction("ExternalApp")
-                        .setLabel(Collect.getCurrentFormIdentifierHash())
-                        .build());
-
+        Collect.getInstance().logRemoteAnalytics("WidgetType", "ExternalApp", Collect.getCurrentFormIdentifierHash());
     }
 
     protected void fireActivity(Intent i) throws ActivityNotFoundException {

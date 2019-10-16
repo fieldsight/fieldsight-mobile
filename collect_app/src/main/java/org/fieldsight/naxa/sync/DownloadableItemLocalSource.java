@@ -20,6 +20,8 @@ import java.util.Locale;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
+import static org.fieldsight.naxa.common.Constant.DownloadStatus.COMPLETED;
+import static org.fieldsight.naxa.common.Constant.DownloadStatus.DISABLED;
 import static org.fieldsight.naxa.common.Constant.DownloadStatus.PENDING;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.ODK_FORMS;
@@ -28,15 +30,15 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<DownloadableItem> {
 
-    private static DownloadableItemLocalSource INSTANCE;
-    private DownloadableItemDAO syncDAO;
+    private static DownloadableItemLocalSource downloadableItemLocalSource;
+    private final DownloadableItemDAO syncDAO;
 
-    public static DownloadableItemLocalSource getINSTANCE() {
-        if (INSTANCE == null) {
-            INSTANCE = new DownloadableItemLocalSource();
+    public synchronized static DownloadableItemLocalSource getDownloadableItemLocalSource() {
+        if (downloadableItemLocalSource == null) {
+            downloadableItemLocalSource = new DownloadableItemLocalSource();
         }
 
-        return INSTANCE;
+        return downloadableItemLocalSource;
     }
 
 
@@ -144,7 +146,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
     }
 
     public void markAsDisabled(int uid, String message) {
-        AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.DISABLED, formattedDate(), message));
+        AsyncTask.execute(() -> syncDAO.markSelectedAsDisabled(uid, DISABLED, formattedDate(), message));
 
     }
 
@@ -180,7 +182,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsRunning(uid, Constant.DownloadStatus.PENDING);
+                syncDAO.markSelectedAsRunning(uid,  PENDING);
             }
         });
 
@@ -190,7 +192,7 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                syncDAO.markSelectedAsDisabled(uid, Constant.DownloadStatus.PENDING, formattedDate(), message);
+                syncDAO.markSelectedAsDisabled(uid,  PENDING, formattedDate(), message);
             }
         });
 
@@ -199,13 +201,13 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
 
     public void markAllAsPending() {
         AsyncTask.execute(() -> {
-            syncDAO.markAllAsPending(PENDING, Constant.DownloadStatus.DISABLED);
+            syncDAO.markAllAsPending(PENDING,  DISABLED);
         });
     }
 
     public void markAsCompleted(int uid) {
         AsyncTask.execute(() -> {
-            syncDAO.markSelectedAsCompleted(uid, Constant.DownloadStatus.COMPLETED, formattedDate());
+            syncDAO.markSelectedAsCompleted(uid,  COMPLETED, formattedDate());
             clearErrorMessage(uid);
         });
     }
@@ -217,20 +219,19 @@ public class DownloadableItemLocalSource implements BaseLocalDataSourceRX<Downlo
     private String formattedDate() {
         Date date = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd, hh:mm aa", Locale.US);
-        String formattedDate = df.format(date);
-        return formattedDate;
+        return df.format(date);
     }
 
 
     private DownloadableItem[] getData() {
 
         return new DownloadableItem[]{
-                new DownloadableItem(PROJECT_SITES, PENDING, "Project and sites", "Downloads your assigned project and sites"),
-                new DownloadableItem(Constant.DownloadUID.ALL_FORMS, PENDING, "Forms", "Downloads all forms for assigned sites"),
-                new DownloadableItem(Constant.DownloadUID.SITE_TYPES, PENDING, "Site type(s)", "Download site types to filter staged forms"),
+                new DownloadableItem(PROJECT_SITES, PENDING, "Project and sites", "Downloads your assigned PROJECT and sites"),
+                new DownloadableItem(Constant.DownloadUID.ALL_FORMS, PENDING, "Forms", "Downloads all FORMS for assigned sites"),
+                new DownloadableItem(Constant.DownloadUID.SITE_TYPES, PENDING, "Site type(s)", "Download site types to filter staged FORMS"),
                 new DownloadableItem(Constant.DownloadUID.EDU_MATERIALS, PENDING, "Educational Materials", "Download educational attached for form(s)"),
-                new DownloadableItem(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your project"),
-                //new DownloadableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for forms"),
+                new DownloadableItem(Constant.DownloadUID.PROJECT_CONTACTS, PENDING, "Project Contact(s)", "Download contact information for people associated with your PROJECT"),
+                //new DownloadableItem(Constant.DownloadUID.PREV_SUBMISSION, PENDING, "Previous Submissions", "Download previous submission(s) for FORMS"),
                 new DownloadableItem(EDITED_SITES, PENDING, "Edited Site(s)", ""),
                 new DownloadableItem(OFFLINE_SITES, PENDING, "Offline Site(s)", ""),
         };

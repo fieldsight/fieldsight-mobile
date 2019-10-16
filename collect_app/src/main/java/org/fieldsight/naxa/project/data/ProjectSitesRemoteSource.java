@@ -1,7 +1,7 @@
 package org.fieldsight.naxa.project.data;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseRemoteDataSource;
+import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.GSONInstance;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.common.event.DataSyncEvent;
@@ -15,14 +15,11 @@ import org.fieldsight.naxa.network.ApiInterface;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.site.data.SiteRegion;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
-import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.site.db.SiteRepository;
-import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.sync.DownloadableItemLocalSource;
-import org.fieldsight.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
+import org.odk.collect.android.application.Collect;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,84 +39,24 @@ import timber.log.Timber;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.PROJECT_SITES;
 
 public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse> {
-    private static ProjectSitesRemoteSource INSTANCE;
-    private SiteRepository siteRepository;
-    private ProjectLocalSource projectLocalSource;
-    private SyncRepository syncRepository;
+    private static ProjectSitesRemoteSource projectSitesRemoteSource;
+    private final SiteRepository siteRepository;
+    private final ProjectLocalSource projectLocalSource;
 
-    public static ProjectSitesRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ProjectSitesRemoteSource();
+    public synchronized static ProjectSitesRemoteSource getInstance() {
+        if (projectSitesRemoteSource == null) {
+            projectSitesRemoteSource = new ProjectSitesRemoteSource();
         }
-        return INSTANCE;
+        return projectSitesRemoteSource;
     }
 
     public ProjectSitesRemoteSource() {
-        siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance(), SiteRemoteSource.getInstance());
+        siteRepository = SiteRepository.getInstance(SiteLocalSource.getInstance());
         projectLocalSource = ProjectLocalSource.getInstance();
-        syncRepository = SyncRepository.getInstance();
+
     }
 
 
-    private Single<List<Object>> fetchProjectSites() {
-        return ServiceGenerator.getRxClient()
-                .create(ApiInterface.class)
-                .getUser()
-                .flatMap((Function<MeResponse, ObservableSource<List<MySites>>>) meResponse -> {
-                    if (meResponse.getData() == null || !meResponse.getData().getIsSupervisor()) {
-                        throw new BadUserException("You have not been assigned as a site supervisor.");
-                    }
-                    String user = GSONInstance.getInstance().toJson(meResponse.getData());
-                    SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
-
-                    return ServiceGenerator.getRxClient().create(ApiInterface.class).getAssignedSites();
-                }).flatMapIterable((Function<List<MySites>, Iterable<MySites>>) mySites -> mySites)
-                .map(mySites -> {
-                    siteRepository.saveSitesAsVerified(mySites.getSite(), mySites.getProject());
-                    return mySites.getProject();
-                })
-                .toList()
-                .map((Function<List<Project>, Set<Project>>) projects -> {
-                    ArrayList<Project> uniqueList = new ArrayList<>();
-                    ArrayList<String> projectIds = new ArrayList<>();
-                    for (Project project : projects) {
-                        if (!projectIds.contains(project.getId())) {
-                            projectIds.add(project.getId());
-                            uniqueList.add(project);
-                        }
-                    }
-
-                    return new HashSet<>(uniqueList);
-                })
-                .flattenAsObservable(new Function<Set<Project>, Iterable<Project>>() {
-                    @Override
-                    public Iterable<Project> apply(Set<Project> projects) throws Exception {
-                        return projects;
-                    }
-                })
-                .flatMap(new Function<Project, ObservableSource<?>>() {
-                    @Override
-                    public ObservableSource<?> apply(Project project) throws Exception {
-                        ProjectLocalSource.getInstance().save(project);
-                        Observable<Project> siteRegionObservable = ServiceGenerator.getRxClient().create(ApiInterface.class)
-                                .getRegionsByProjectId(project.getId())
-                                .flatMap(new Function<List<SiteRegion>, ObservableSource<Project>>() {
-                                    @Override
-                                    public ObservableSource<Project> apply(List<SiteRegion> siteRegions) {
-                                        siteRegions.add(new SiteRegion("", "Unassigned ", ""));
-                                        String value = GSONInstance.getInstance().toJson(siteRegions);
-                                        ProjectLocalSource.getInstance().updateSiteClusters(project.getId(), value);
-                                        return Observable.just(project);
-                                    }
-                                });
-
-                        return Observable.concat(siteRegionObservable, Observable.just("demo"));
-                    }
-                })
-                .toList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
 
 
     private Single<List<Object>> fetchProjectAndSites() {
@@ -136,7 +73,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         String user = GSONInstance.getInstance().toJson(meResponse.getData());
                         SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
 
-                        return getPageAndNext(APIEndpoint.GET_MY_SITES_v2);
+                        return getPageAndNext(APIEndpoint.GET_MY_SITES_V2);
 
                     }
                 })
@@ -252,7 +189,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                 .doOnDispose(new Action() {
                     @Override
                     public void run() {
-                        DownloadableItemLocalSource.getINSTANCE()
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                                 .markAsFailed(PROJECT_SITES);
                     }
                 })
@@ -263,7 +200,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         ProjectLocalSource.getInstance().deleteAll();
                         SiteLocalSource.getInstance().deleteSyncedSitesAsync();
                         EventBus.getDefault().post(new DataSyncEvent(uid, DataSyncEvent.EventStatus.EVENT_START));
-                        DownloadableItemLocalSource.getINSTANCE()
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                                 .markAsRunning(PROJECT_SITES);
                     }
                 })
@@ -271,7 +208,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                     @Override
                     public void onNext(List<Object> objects) {
                         FieldSightNotificationLocalSource.getInstance().markSitesAsRead();
-                        DownloadableItemLocalSource.getINSTANCE()
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                                 .markAsCompleted(PROJECT_SITES);
                     }
 
@@ -284,7 +221,7 @@ public class ProjectSitesRemoteSource implements BaseRemoteDataSource<MeResponse
                         } else {
                             message = e.getMessage();
                         }
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(PROJECT_SITES, message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(PROJECT_SITES, message);
                     }
 
                     @Override

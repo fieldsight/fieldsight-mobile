@@ -54,7 +54,7 @@ public class FormDownloader {
 
     protected FormsDao formsDao;
 
-    private boolean isTempDownload;
+    private final boolean isTempDownload;
 
     @Inject CollectServerClient collectServerClient;
 
@@ -113,7 +113,7 @@ public class FormDownloader {
     /**
      * Processes one form download.
      *
-     * @param total the total number of forms being downloaded by this task
+     * @param total the total number of FORMS being downloaded by this task
      * @param count the number of this form
      * @param fd    the FormDetails
      * @return an empty string for success, or a nonblank string with one or more error messages
@@ -155,7 +155,7 @@ public class FormDownloader {
             Timber.i(e);
             cleanUp(fileResult, e.file, tempMediaPath);
 
-            // do not download additional forms.
+            // do not download additional FORMS.
             throw e;
         } catch (Exception e) {
             message += getExceptionMessage(e);
@@ -241,7 +241,6 @@ public class FormDownloader {
             if (md5Hash != null) {
                 formsDao.deleteFormsFromMd5Hash(md5Hash);
             }
-
             FileUtils.deleteAndReport(fileResult.getFile());
         }
 

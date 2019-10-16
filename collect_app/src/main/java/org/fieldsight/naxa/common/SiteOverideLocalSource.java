@@ -1,6 +1,7 @@
 package org.fieldsight.naxa.common;
 
 import androidx.lifecycle.LiveData;
+
 import android.os.AsyncTask;
 
 import org.odk.collect.android.application.Collect;
@@ -14,9 +15,9 @@ import java.util.List;
 
 public class SiteOverideLocalSource implements BaseLocalDataSource<SiteOveride> {
 
-    private static SiteOverideLocalSource INSTANCE = null;
-    private SiteOverideDAO dao;
-    private SiteDao siteDao;
+    private static SiteOverideLocalSource siteOverideLocalSource;
+    private final SiteOverideDAO dao;
+    private final SiteDao siteDao;
 
     private SiteOverideLocalSource() {
         FieldSightConfigDatabase database = FieldSightConfigDatabase.getDatabase(Collect.getInstance());//todo inject context
@@ -25,15 +26,13 @@ public class SiteOverideLocalSource implements BaseLocalDataSource<SiteOveride> 
         this.siteDao = fieldSightDatabase.getSiteDAO();
     }
 
-    public static SiteOverideLocalSource getInstance() {
-        if (INSTANCE == null) {
-            synchronized (SiteOverideLocalSource.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new SiteOverideLocalSource();
-                }
-            }
+    public synchronized static SiteOverideLocalSource getInstance() {
+
+        if (siteOverideLocalSource == null) {
+            siteOverideLocalSource = new SiteOverideLocalSource();
+
         }
-        return INSTANCE;
+        return siteOverideLocalSource;
     }
 
 

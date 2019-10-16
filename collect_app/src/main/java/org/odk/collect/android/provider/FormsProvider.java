@@ -17,17 +17,16 @@ package org.odk.collect.android.provider;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.fieldsight.collect.android.R;
+import androidx.annotation.NonNull;
+
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.database.ItemsetDbAdapter;
 import org.odk.collect.android.database.helpers.FormsDatabaseHelper;
@@ -36,10 +35,7 @@ import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.MediaUtils;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import timber.log.Timber;
@@ -116,7 +112,7 @@ public class FormsProvider extends ContentProvider {
                 // Only include the latest form that was downloaded with each form_id
                 case NEWEST_FORMS_BY_FORM_ID:
                     Map<String, String> filteredProjectionMap = new HashMap<>(sFormsProjectionMap);
-                    filteredProjectionMap.put(FormsColumns.DATE, "MAX(" + FormsColumns.DATE + ")");
+                    filteredProjectionMap.put(FormsColumns.DATE, FormsColumns.MAX_DATE);
 
                     qb.setProjectionMap(filteredProjectionMap);
                     groupBy = FormsColumns.JR_FORM_ID;
@@ -187,10 +183,6 @@ public class FormsProvider extends ContentProvider {
                 values.put(FormsColumns.DATE, now);
             }
 
-            if (!values.containsKey(FormsColumns.DISPLAY_SUBTEXT)) {
-                values.put(FormsColumns.DISPLAY_SUBTEXT, getDisplaySubtext());
-            }
-
             if (!values.containsKey(FormsColumns.DISPLAY_NAME)) {
                 values.put(FormsColumns.DISPLAY_NAME, form.getName());
             }
@@ -243,7 +235,7 @@ public class FormsProvider extends ContentProvider {
             }
         }
 
-        throw new SQLException("Failed to insert row into " + uri);
+        throw new SQLException("Failed to insert into the FORMS database.");
     }
 
     private void deleteFileOrDir(String fileName) {
@@ -436,11 +428,6 @@ public class FormsProvider extends ContentProvider {
                         }
                     }
 
-                    // Make sure that the necessary fields are all set
-                    if (values.containsKey(FormsColumns.DATE)) {
-                        values.put(FormsColumns.DISPLAY_SUBTEXT, getDisplaySubtext());
-                    }
-
                     count = db.update(FORMS_TABLE_NAME, values, where, whereArgs);
                     break;
 
@@ -494,11 +481,6 @@ public class FormsProvider extends ContentProvider {
                                                 + ".formdef");
                             }
 
-                            // Make sure that the necessary fields are all set
-                            if (values.containsKey(FormsColumns.DATE)) {
-                                values.put(FormsColumns.DISPLAY_SUBTEXT, getDisplaySubtext());
-                            }
-
                             count = db.update(
                                     FORMS_TABLE_NAME,
                                     values,
@@ -527,20 +509,6 @@ public class FormsProvider extends ContentProvider {
         return count;
     }
 
-    private String getDisplaySubtext() {
-        String displaySubtext = "";
-        try {
-            Context context = getContext();
-            if (context != null) {
-                displaySubtext = new SimpleDateFormat(context.getString(R.string.added_on_date_at_time),
-                        Locale.getDefault()).format(new Date());
-            }
-        } catch (IllegalArgumentException e) {
-            Timber.e(e);
-        }
-        return displaySubtext;
-    }
-
     @NonNull
     private String[] prepareWhereArgs(String[] whereArgs, String formId) {
         String[] newWhereArgs;
@@ -566,7 +534,6 @@ public class FormsProvider extends ContentProvider {
         sFormsProjectionMap = new HashMap<>();
         sFormsProjectionMap.put(FormsColumns._ID, FormsColumns._ID);
         sFormsProjectionMap.put(FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_NAME);
-        sFormsProjectionMap.put(FormsColumns.DISPLAY_SUBTEXT, FormsColumns.DISPLAY_SUBTEXT);
         sFormsProjectionMap.put(FormsColumns.DESCRIPTION, FormsColumns.DESCRIPTION);
         sFormsProjectionMap.put(FormsColumns.JR_FORM_ID, FormsColumns.JR_FORM_ID);
         sFormsProjectionMap.put(FormsColumns.JR_VERSION, FormsColumns.JR_VERSION);

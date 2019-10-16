@@ -31,7 +31,7 @@ public class SiteType {
     private String identifer;
 
     @Expose
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     private String projectId;
 
     public String getProjectId() {

@@ -38,7 +38,7 @@ import java.util.List;
 import timber.log.Timber;
 
 /**
- * Background task for adding to the forms content provider, any forms that have been added to the
+ * Background task for adding to the FORMS content provider, any FORMS that have been added to the
  * sdcard manually. Returns immediately if it detects an error.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -109,7 +109,7 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                                 cursor.getColumnIndex(FormsColumns.MD5_HASH));
                         File sqlFile = new File(sqlFilename);
                         if (sqlFile.exists()) {
-                            // remove it from the list of forms (we only want forms
+                            // remove it from the list of FORMS (we only want FORMS
                             // we haven't added at the end)
                             formsToAdd.remove(sqlFile);
                             String md5Computed = FileUtils.getMd5Hash(sqlFile);
@@ -139,7 +139,7 @@ public class DiskSyncTask extends AsyncTask<Void, String, String> {
                 }
 
                 if (!idsToDelete.isEmpty()) {
-                    //Delete the forms not found in sdcard from the database
+                    //Delete the FORMS not found in sdcard from the database
                     formsDao.deleteFormsFromIDs(idsToDelete.toArray(new String[idsToDelete.size()]));
                 }
 

@@ -1,7 +1,5 @@
 package org.fieldsight.naxa.submissions;
 
-import android.content.Context;
-
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +11,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,22 +26,15 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int TEXT_DESC = 1;
     private static final int HTTP_URL = 2;
 
-    private ArrayList<ViewModel> listOfItems;
-    private OnCardClickListener onCardClickListener;
-    private Context context;
+    private final ArrayList<ViewModel> listOfItems;
+
 
     public MultiViewAdapter() {
         listOfItems = new ArrayList<>();
     }
 
-    public MultiViewAdapter(ArrayList<ViewModel> listOfItems) {
-        this.listOfItems = listOfItems;
-    }
 
-    public List<ViewModel> getListOfItems() {
-        return listOfItems;
-    }
-
+    @NotNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder = null;
@@ -122,10 +114,9 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NotNull RecyclerView.ViewHolder holder, int position) {
 
         final ViewModel result = listOfItems.get(position);
-        context = holder.itemView.getContext();
 
         switch (getItemViewType(position)) {
             case TEXT_DESC:
@@ -149,8 +140,11 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         ViewModel viewModel = listOfItems.get(position);
         boolean isURL = isValidURL(viewModel.getDesc());
 
-        if (isURL) itemType = HTTP_URL;
-        else itemType = TEXT_DESC;
+        if (isURL) {
+            itemType = HTTP_URL;
+        } else {
+            itemType = TEXT_DESC;
+        }
 
 
         return itemType;
@@ -174,7 +168,7 @@ public class MultiViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void setOnCardClickListener(OnCardClickListener onCardClickListener) {
-        this.onCardClickListener = onCardClickListener;
+
     }
 
     public interface OnCardClickListener {

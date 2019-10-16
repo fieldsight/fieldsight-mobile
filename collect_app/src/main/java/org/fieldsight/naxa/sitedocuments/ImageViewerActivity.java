@@ -24,9 +24,6 @@ public class ImageViewerActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    private String url;
-
-
 
     public static void start(Context context, String list) {
         Intent intent = new Intent(context, ImageViewerActivity.class);
@@ -47,7 +44,7 @@ public class ImageViewerActivity extends BaseActivity {
         ButterKnife.bind(this);
         setupToolbar();
 
-        url = getIntent().getExtras().getString(EXTRA_MESSAGE);
+        String url = getIntent().getExtras().getString(EXTRA_MESSAGE);
         ViewUtils.loadRemoteImage(getApplicationContext(), url)
                 .into(ivImageViewer);
 

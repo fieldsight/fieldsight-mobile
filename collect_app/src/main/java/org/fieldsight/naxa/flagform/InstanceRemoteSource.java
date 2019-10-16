@@ -1,20 +1,19 @@
 package org.fieldsight.naxa.flagform;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.dto.Instance;
-import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.fieldsight.naxa.common.FieldSightUserSession;
-import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
+import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.data.FieldSightNotification;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ApiInterface;
 import org.fieldsight.naxa.network.ServiceGenerator;
-import org.fieldsight.naxa.helpers.FSInstancesDao;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -33,14 +32,14 @@ import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class InstanceRemoteSource {
-    private static InstanceRemoteSource INSTANCE;
+    private static InstanceRemoteSource instanceRemoteSource;
 
 
-    public static InstanceRemoteSource getINSTANCE() {
-        if (INSTANCE == null) {
-            INSTANCE = new InstanceRemoteSource();
+    public static synchronized InstanceRemoteSource getInstanceRemoteSource() {
+        if (instanceRemoteSource == null) {
+            instanceRemoteSource = new InstanceRemoteSource();
         }
-        return INSTANCE;
+        return instanceRemoteSource;
     }
 
 
@@ -113,7 +112,6 @@ public class InstanceRemoteSource {
 
     private Instance.Builder mapNotificationToInstance(FieldSightNotification notificationFormDetail) {
         String siteId = notificationFormDetail.getSiteId() == null ? "0" : notificationFormDetail.getSiteId();//survey form have 0 as siteId
-        String fsFormIdProject = notificationFormDetail.getFsFormIdProject();
         String formName = notificationFormDetail.getFormName();
         String jrFormId = notificationFormDetail.getIdString();
         String fsFormId = notificationFormDetail.getFsFormId();
@@ -135,25 +133,13 @@ public class InstanceRemoteSource {
                 .fieldSightSiteId(siteId)
                 .displayName(formName)
                 .canEditWhenComplete("true")
-                .lastStatusChangeDate(System.currentTimeMillis())
-                .displaySubtext("");
+                .lastStatusChangeDate(System.currentTimeMillis());
     }
 
     private String formatFileName(String text) {
         return text.replace(" ", "_");
     }
 
-    private String getColumnString(Cursor cursor, String columnName) {
-        return cursor.getString(cursor.getColumnIndex(columnName));
-    }
-
-
-    private String getInstanceFolderPath(String formName) {
-
-        String time = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.ENGLISH).format(Calendar.getInstance().getTime());
-        String instancePath = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
-        return instancePath + File.separator + formName + "_" + time;
-    }
 
     private String addDateTimeToFileName(String formName) {
         String time = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.ENGLISH).format(Calendar.getInstance().getTime());

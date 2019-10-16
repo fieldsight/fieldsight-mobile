@@ -23,7 +23,6 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.NonNull;
 
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.logic.FormController;
 
 public class SoftKeyboardUtils {
 
@@ -44,10 +43,5 @@ public class SoftKeyboardUtils {
         return (InputMethodManager) Collect.getInstance().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
-    // The keyboard should be show automatically if we have only one question displayed
-    private static boolean shouldSoftKeyboardBeShown() {
-        FormController formController = Collect.getInstance().getFormController();
-        return formController != null
-                && (!formController.indexIsInFieldList() || formController.getQuestionPrompts().length == 1);
-    }
+
 }

@@ -25,8 +25,8 @@ import static org.fieldsight.naxa.common.Constant.SiteStatus.IS_ONLINE;
 public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
 
-    private static SiteLocalSource INSTANCE;
-    private SiteDao dao;
+    private static SiteLocalSource siteLocalSource;
+    private final SiteDao dao;
 
 
     private SiteLocalSource() {
@@ -35,11 +35,11 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
 
-    public static SiteLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SiteLocalSource();
+    public synchronized static SiteLocalSource getInstance() {
+        if (siteLocalSource == null) {
+            siteLocalSource = new SiteLocalSource();
         }
-        return INSTANCE;
+        return siteLocalSource;
     }
 
 
@@ -127,14 +127,14 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     public void setSiteAsNotFinalized(String siteId) {
         AsyncTask.execute(() -> {
-            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE);
+             dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE);
         });
 
     }
 
     public void setSiteAsFinalized(String siteId) {
         AsyncTask.execute(() -> {
-            long i = dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_FINALIZED);
+             dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_FINALIZED);
         });
 
     }

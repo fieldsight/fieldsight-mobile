@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -16,7 +15,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
@@ -50,10 +48,9 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     private LoginPresenter loginPresenter;
     private Button mEmailSignInButton;
-    private RelativeLayout rootLayout;
-    private ImageButton btnChangeUrl;
+
     private SignInButton btnGmailLogin;
-    private boolean isFromGooleSignin = false;
+    private boolean isFromGooleSignin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +60,8 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         mEmailView = findViewById(R.id.email);
 
         mPasswordView = findViewById(R.id.password);
-        rootLayout = findViewById(R.id.root_layout_activity_login);
 
-        btnChangeUrl = findViewById(R.id.btn_change_server_url);
+        ImageButton btnChangeUrl = findViewById(R.id.btn_change_server_url);
         mEmailSignInButton = findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -221,7 +217,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         if(isFinishing()){
             return;
         }
-        Dialog dialog = DialogFactory.createActionDialog(LoginActivity.this, "Login Failed", msg)
+        Dialog dialog = DialogFactory.createActionDialog(this, "Login Failed", msg)
                 .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -241,9 +237,9 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
      */
     public void hideKeyboardInActivity(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
+        //Find the currently focused view, so we can grab the correct window TOKEN from it.
         View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        //If no view currently has focus, create a new one, just so we can grab a window TOKEN from it
         if (view == null) {
             view = new View(activity);
         }

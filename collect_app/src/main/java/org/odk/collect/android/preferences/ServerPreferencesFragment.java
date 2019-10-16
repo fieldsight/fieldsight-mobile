@@ -35,17 +35,15 @@ import android.widget.ListPopupWindow;
 
 import androidx.appcompat.content.res.AppCompatResources;
 
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.fieldsight.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.http.CollectServerClient;
+import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.injection.DaggerUtils;
-
 import org.odk.collect.android.preferences.filters.ControlCharacterFilter;
 import org.odk.collect.android.preferences.filters.WhitespaceFilter;
 import org.odk.collect.android.utilities.FileUtils;
@@ -176,7 +174,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         smsGatewayPreference.getEditText().setFilters(
                 new InputFilter[]{new ControlCharacterFilter()});
 
-        Transport transport = Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
+        Transport transport = Transport.fromPreference(GeneralSharedPreferences.newInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
 
         boolean smsEnabled = !transport.equals(Transport.Internet);
         smsGatewayPreference.setEnabled(smsEnabled);
@@ -449,12 +447,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
         String urlHash = FileUtils.getMd5Hash(
                 new ByteArrayInputStream(url.getBytes()));
 
-        Collect.getInstance().getDefaultTracker()
-                .send(new HitBuilders.EventBuilder()
-                        .setCategory("SetServer")
-                        .setAction(scheme + " " + host)
-                        .setLabel(urlHash)
-                        .build());
+        Collect.getInstance().logRemoteAnalytics("SetServer", scheme + " " + host, urlHash);
     }
 
     private void maskPasswordSummary(String password) {
@@ -489,7 +482,7 @@ public class ServerPreferencesFragment extends BasePreferenceFragment implements
      */
     /*
     private void runSmsPhoneNumberValidation() {
-        Transport transport = Transport.fromPreference(GeneralSharedPreferences.getInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
+        Transport transport = Transport.fromPreference(GeneralSharedPreferences.newInstance().get(KEY_SUBMISSION_TRANSPORT_TYPE));
 
         if (!transport.equals(Transport.Internet)) {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getActivity());

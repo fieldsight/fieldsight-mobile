@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,17 +29,11 @@ import org.fieldsight.naxa.common.OnFormItemClickListener;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.common.ViewModelFactory;
-import org.fieldsight.naxa.common.event.DataSyncEvent;
-import org.fieldsight.naxa.common.utilities.SnackBarUtils;
-import org.fieldsight.naxa.educational.EducationalMaterialActivity;
 import org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.fieldsight.naxa.stages.data.SubStage;
 import org.fieldsight.naxa.submissions.PreviousSubmissionListActivity;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -56,9 +49,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -68,7 +59,6 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_ID;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.Constant.EXTRA_POSITION;
 import static org.fieldsight.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
-import static org.fieldsight.naxa.generalforms.data.FormType.TABLE_GENERAL_FORM;
 import static org.fieldsight.naxa.helpers.FSInstancesDao.generateSubmissionUrl;
 
 public class SubStageListFragment extends Fragment implements OnFormItemClickListener<SubStage> {
@@ -87,7 +77,6 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
 
     private SubStageListAdapter listAdapter;
     private Site loadedSite;
-    private String stageId;
     private String stagePosition;
 
 
@@ -121,15 +110,11 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
 
     }
 
-    public SubStageListFragment() {
-
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
-        stageId = getArguments().getString(EXTRA_ID);
+
         stagePosition = getArguments().getString(EXTRA_POSITION);
 
         substages = getArguments().getString("substages");
@@ -200,7 +185,7 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
     private void setupListAdapter() {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged forms"), () -> {
+        recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged FORMS"), () -> {
 
         });
         listAdapter = new SubStageListAdapter(new ArrayList<>(0), stagePosition, this);

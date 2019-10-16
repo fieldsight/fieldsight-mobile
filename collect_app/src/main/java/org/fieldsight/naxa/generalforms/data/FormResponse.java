@@ -22,7 +22,7 @@ public class FormResponse implements Parcelable {
     private Integer id;
     @SerializedName("get_responces")
     @Expose
-    private List<GetResponce> getResponces = null;
+    private List<GetResponce> getResponces;
     @SerializedName("form_status")
     @Expose
     private Integer formStatus;
@@ -35,7 +35,7 @@ public class FormResponse implements Parcelable {
     @SerializedName("site")
     @Expose
     private Integer site;
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     @Expose
     private Integer project;
     @SerializedName("site_fxf")

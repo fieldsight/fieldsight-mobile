@@ -16,8 +16,6 @@ package org.odk.collect.android.upload;
 
 import android.net.Uri;
 
-import org.odk.collect.android.tasks.InstanceUploaderTask;
-
 /**
  * Thrown to indicate that the server an upload attempt was made to is requesting authentication.
  * This may lead to a re-try attempt if the upload was triggered manually by the user (as opposed to
@@ -28,7 +26,7 @@ public class UploadAuthRequestedException extends UploadException {
      * The URI for the server that requested authentication. This URI may not match the server
      * specified in the app settings or the blank form because there could have been a redirect.
      *
-     * See also {@link InstanceUploaderTask.Outcome}
+     *
      */
     private final Uri authRequestingServer;
 

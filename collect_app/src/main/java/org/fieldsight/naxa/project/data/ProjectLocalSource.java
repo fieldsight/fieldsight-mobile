@@ -16,8 +16,8 @@ import io.reactivex.Single;
 
 public class ProjectLocalSource implements BaseLocalDataSource<Project> {
 
-    private static ProjectLocalSource INSTANCE;
-    private ProjectDao dao;
+    private static ProjectLocalSource projectLocalSource;
+    private final ProjectDao dao;
 
 
     private ProjectLocalSource() {
@@ -26,11 +26,11 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
     }
 
 
-    public static ProjectLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ProjectLocalSource();
+    public static synchronized ProjectLocalSource getInstance() {
+        if (projectLocalSource == null) {
+            projectLocalSource = new ProjectLocalSource();
         }
-        return INSTANCE;
+        return projectLocalSource;
     }
 
 

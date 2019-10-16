@@ -8,34 +8,32 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.fieldsight.naxa.previoussubmission.LastSubmissionLocalSource;
 import org.fieldsight.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.fieldsight.naxa.previoussubmission.model.SubmissionDetail;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.ObservableTransformer;
-
 import io.reactivex.SingleObserver;
-import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> {
 
-    private static GeneralFormLocalSource INSTANCE;
-    private GeneralFormDAO dao;
+    private static GeneralFormLocalSource generalFormLocalSource;
+    private final GeneralFormDAO dao;
 
 
     private GeneralFormLocalSource() {
@@ -44,11 +42,11 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
     }
 
 
-    public static GeneralFormLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new GeneralFormLocalSource();
+    public static synchronized GeneralFormLocalSource getInstance() {
+        if (generalFormLocalSource == null) {
+            generalFormLocalSource = new GeneralFormLocalSource();
         }
-        return INSTANCE;
+        return generalFormLocalSource;
     }
 
 
@@ -116,7 +114,7 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
                                         @Override
                                         public void onError(Throwable e) {
-                                            e.printStackTrace();
+                                            Timber.e(e);
                                             generalFormMediator.removeSource(source);
                                         }
                                     });
@@ -200,10 +198,10 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
     @Override
     public void save(GeneralForm... items) {
-        io.reactivex.Observable.just(items)
+         Observable.just(items)
                 .flatMap(generalForms -> {
                     dao.insert(generalForms);
-                    return io.reactivex.Observable.empty();
+                    return  Observable.empty();
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -239,23 +237,8 @@ public class GeneralFormLocalSource implements BaseLocalDataSource<GeneralForm> 
 
     }
 
-    private <T> ObservableTransformer applySchedulers() {
-        return observable -> observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    private <T> SingleTransformer applySchedulersSingle() {
-        return observable -> observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-
     public LiveData<List<GeneralForm>> getById(String fsFormId) {
         return dao.getById(fsFormId);
-    }
-
-    public void updateLastSubmission(SubmissionDetail formResponse) {
-
     }
 
 

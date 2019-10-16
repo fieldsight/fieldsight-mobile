@@ -22,14 +22,7 @@ public class SiteOveride {
     private String scheduleFormIds;
     private String stagedFormIds;
 
-    @Ignore
-    private List<String> generalformIdList;
 
-    @Ignore
-    private List<String> scheduleFormIdList;
-
-    @Ignore
-    private List<String> stagedformIdList;
 
 
     public SiteOveride() {

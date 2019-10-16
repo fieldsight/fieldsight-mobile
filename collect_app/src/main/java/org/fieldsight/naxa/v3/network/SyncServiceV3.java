@@ -5,41 +5,22 @@ import android.content.Intent;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Pair;
-import android.util.SparseArray;
-import android.util.SparseIntArray;
-
-import com.google.common.collect.Sets;
 
 import org.apache.commons.io.FilenameUtils;
-import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
+import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
-import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV2;
 import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV3;
-import org.fieldsight.naxa.v3.HashMapUtils;
-import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.logic.FormDetails;
-import org.fieldsight.naxa.ResponseUtils;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DisposableManager;
-import org.fieldsight.naxa.common.ODKFormRemoteSource;
-import org.fieldsight.naxa.common.exception.FormDownloadFailedException;
 import org.fieldsight.naxa.common.rx.RetrofitException;
-import org.fieldsight.naxa.educational.EducationalMaterialsRemoteSource;
-import org.fieldsight.naxa.generalforms.data.GeneralForm;
-import org.fieldsight.naxa.generalforms.data.GeneralFormRemoteSource;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
-import org.fieldsight.naxa.scheduled.data.ScheduleForm;
-import org.fieldsight.naxa.scheduled.data.ScheduledFormsRemoteSource;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
-import org.fieldsight.naxa.stages.data.Stage;
-import org.fieldsight.naxa.stages.data.StageRemoteSource;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
@@ -48,13 +29,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
-import java.util.Set;
 
-import butterknife.internal.Utils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Scheduler;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -73,10 +52,10 @@ public class SyncServiceV3 extends IntentService {
      */
 
     ArrayList<Project> selectedProject;
-    HashMap<String, List<Syncable>> selectedMap = null;
-    private List<String> failedSiteUrls = new ArrayList<>();
-    private ArrayList<Disposable> syncDisposable = new ArrayList<>();
-    int currentWorkingProjectIndex = 0;
+    HashMap<String, List<Syncable>> selectedMap;
+    private final List<String> failedSiteUrls = new ArrayList<>();
+    private final ArrayList<Disposable> syncDisposable = new ArrayList<>();
+    int currentWorkingProjectIndex;
 
     public SyncServiceV3() {
         super("SyncserviceV3");
@@ -145,7 +124,7 @@ public class SyncServiceV3 extends IntentService {
                                         @Override
                                         public ArrayList<Integer> apply(List<Pair<FieldsightFormDetailsv3, String>> pairs) throws Exception {
                                             HashSet<Integer> failedProjectId = new HashSet<>();
-                                            //collect project ids with failed forms
+                                            //collect PROJECT ids with failed FORMS
                                             for (Pair<FieldsightFormDetailsv3, String> pair : pairs) {
                                                 String message = pair.second;
                                                 FieldsightFormDetailsv3 fd = pair.first;
@@ -184,8 +163,9 @@ public class SyncServiceV3 extends IntentService {
                             for (FieldsightFormDetailsv3 fieldsightFormDetailsv3 : educationMaterial) {
                                 String em = fieldsightFormDetailsv3.getEm();
                                 Timber.i("SyncServicev3, em = %s", em);
-                                if (TextUtils.isEmpty(em) || TextUtils.equals(em, "null"))
+                                if (TextUtils.isEmpty(em) || TextUtils.equals(em, "null")) {
                                     continue;
+                                }
 
                                 JSONObject jsonObject = new JSONObject(em);
                                 // add image
@@ -215,7 +195,7 @@ public class SyncServiceV3 extends IntentService {
                                     }
                                 }
                             }
-                            if(educationMaterialUrls.size() == 0) {
+                            if (educationMaterialUrls.size() == 0) {
                                 markAsCompleted(project.getId(), 2);
                             } else {
                                 markAsRunning(project.getId(), 2);
@@ -237,7 +217,7 @@ public class SyncServiceV3 extends IntentService {
                         public void accept(Object o) throws Exception {
                             Timber.i("SyncService: educationMaterials finalized = %s, currentWorkingIndex = %s, currentWorkingProject = %s", o.toString(), currentWorkingProjectIndex, projectidList.get(currentWorkingProjectIndex));
                             String projectId = projectidList.get(currentWorkingProjectIndex);
-                            if(eduMaterialsMap.containsKey(projectId)) {
+                            if (eduMaterialsMap.containsKey(projectId)) {
                                 eduMaterialsMap.put(projectId, eduMaterialsMap.get(projectId) - 1);
                                 if (eduMaterialsMap.get(projectId) <= 0) {
                                     markAsCompleted(projectId, 2);
@@ -265,7 +245,7 @@ public class SyncServiceV3 extends IntentService {
 
         //todo bug RxDownloadmanager is adding /storage/emulated so remove it before we send path
         String savePath = "";
-        switch (FileUtils.getFileExtension(url).toLowerCase()) {
+        switch (FileUtils.getFileExtension(url).toLowerCase(Locale.getDefault())) {
             case "pdf":
                 savePath = Collect.PDF.replace(Environment.getExternalStorageDirectory().toString(), "");
                 break;
@@ -358,7 +338,9 @@ public class SyncServiceV3 extends IntentService {
                                 boolean hasErrorBeenThrown = false;
                                 for (Object o : objects) {
                                     hasErrorBeenThrown = o instanceof String;
-                                    if (hasErrorBeenThrown) break;
+                                    if (hasErrorBeenThrown) {
+                                        break;
+                                    }
                                 }
 
                                 if (!hasErrorBeenThrown) {//error has been thrown
@@ -391,7 +373,6 @@ public class SyncServiceV3 extends IntentService {
         String projectId = "";
         if (throwable instanceof RetrofitException) {
             RetrofitException retrofitException = (RetrofitException) throwable;
-            String msg = retrofitException.getMessage();
             failedUrl = retrofitException.getUrl();
             projectId = retrofitException.getProjectId();
 
@@ -400,14 +381,11 @@ public class SyncServiceV3 extends IntentService {
         return new String[]{failedUrl, projectId};
     }
 
-    private void markAsFailed(String projectId, int type, String failedUrl, boolean shouldRetry) {
+    private void markAsFailed(String projectId, int type, String failedUrl) {
         saveState(projectId, type, failedUrl, false, Constant.DownloadStatus.FAILED);
-        Timber.e("Download stopped %s for project %s", failedUrl, projectId);
+        Timber.e("Download stopped %s for PROJECT %s", failedUrl, projectId);
     }
 
-    private void markAsFailed(String projectId, int type, String failedUrl) {
-        markAsFailed(projectId, type, failedUrl, false);
-    }
 
 
     private void markAsRunning(String projectId, int type) {
@@ -417,14 +395,14 @@ public class SyncServiceV3 extends IntentService {
 
     private void markAsCompleted(String projectId, int type) {
         saveState(projectId, type, "", false, Constant.DownloadStatus.COMPLETED);
-        Timber.i("Download completed for project %s", projectId);
+        Timber.i("Download completed for PROJECT %s", projectId);
     }
 
     private void saveState(String projectId, int type, String failedUrl, boolean started, int status) {
         Timber.d("saving for for %d stopped at %s for %s", type, failedUrl, projectId);
         if (selectedMap != null && selectedMap.containsKey(projectId)) {
 //            selectedMap.get(projectId).get(type).completed = true;
-            SyncStat syncStat = new SyncStat(projectId, type + "", failedUrl, started, status, System.currentTimeMillis());
+            SyncStat syncStat = new SyncStat(projectId, String.valueOf(type) , failedUrl, started, status, System.currentTimeMillis());
             SyncLocalSource3.getInstance().save(syncStat);
         }
     }
@@ -467,14 +445,14 @@ public class SyncServiceV3 extends IntentService {
     }
 
     private String getProjectId(FieldsightFormDetailsv3 fd) {
-        return TextUtils.isEmpty(fd.getProject()) || TextUtils.equals(fd.getProject(), "null") ? fd.getSite_project_id() : fd.getProject();
+        return TextUtils.isEmpty(fd.getProject()) || TextUtils.equals(fd.getProject(), "null") ? fd.getSiteProjectId() : fd.getProject();
     }
 
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {
         String logString = "";
         for (Syncable syncable : list) {
-            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.getSync();
+            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.isSync();
         }
         return String.format("%s \n params = %s", projectName, logString);
     }

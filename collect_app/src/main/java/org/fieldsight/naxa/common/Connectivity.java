@@ -9,8 +9,15 @@ import org.odk.collect.android.application.Collect;
 
 import java.io.IOException;
 
+import timber.log.Timber;
+
 
 public class Connectivity {
+
+    private Connectivity() {
+
+    }
+
     /**
      * Get the network info
      *
@@ -40,19 +47,17 @@ public class Connectivity {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int exitValue = ipProcess.waitFor();
             return (exitValue == 0);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException e) {
+            Timber.i(e);
         }
         return false;
     }
 
-    public static boolean isNotOnline(){
+    public static boolean isNotOnline() {
         return !isOnline();
     }
 
-    public static boolean isAbsoluteNotOnline(){
+    public static boolean isAbsoluteNotOnline() {
         return isNotOnline() || isNotConnected(Collect.getInstance());
     }
 

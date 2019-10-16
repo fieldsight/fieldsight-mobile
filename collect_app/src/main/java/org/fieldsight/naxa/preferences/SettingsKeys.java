@@ -13,14 +13,14 @@ public final class SettingsKeys {
     public static final String KEY_APP_UPDATE= "app_update";
 
 
-    public final static HashMap<String, Object> defaultvalues = new HashMap<>();
+    public final static HashMap<String, Object> DEFAULTVALUES = new HashMap<>();
 
     static {
-        defaultvalues.put(KEY_NOTIFICATION_TIME_DAILY, "8:00");
-        defaultvalues.put(KEY_NOTIFICATION_TIME_WEEKLY, 0);
-        defaultvalues.put(KEY_NOTIFICATION_TIME_MONTHLY, 0);
-        defaultvalues.put(KEY_NOTIFICATION_SWITCH_DAILY, true);
-        defaultvalues.put(KEY_NOTIFICATION_SWITCH_WEEKLY, true);
-        defaultvalues.put(KEY_NOTIFICATION_SWITCH_MONTHLY, true);
+        DEFAULTVALUES.put(KEY_NOTIFICATION_TIME_DAILY, "8:00");
+        DEFAULTVALUES.put(KEY_NOTIFICATION_TIME_WEEKLY, 0);
+        DEFAULTVALUES.put(KEY_NOTIFICATION_TIME_MONTHLY, 0);
+        DEFAULTVALUES.put(KEY_NOTIFICATION_SWITCH_DAILY, true);
+        DEFAULTVALUES.put(KEY_NOTIFICATION_SWITCH_WEEKLY, true);
+        DEFAULTVALUES.put(KEY_NOTIFICATION_SWITCH_MONTHLY, true);
     }
 }

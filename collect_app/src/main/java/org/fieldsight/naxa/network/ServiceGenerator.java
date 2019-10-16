@@ -22,12 +22,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ServiceGenerator {
-    private static Retrofit retrofit = null;
-    private static Retrofit cacheablesRetrofit = null;
+    private static Retrofit retrofit;
+    private static Retrofit cacheablesRetrofit ;
     private static Gson gson = new GsonBuilder().create();
     private static Retrofit rxRetrofit;
     private static OkHttpClient okHttp;
 
+
+    private ServiceGenerator(){
+
+    }
 
     public static void clearInstance() {
         retrofit = null;
@@ -78,7 +82,7 @@ public class ServiceGenerator {
                 .build();
     }
 
-    public static <T> T createService(Class<T> serviceClass) {
+    public synchronized static <T> T createService(Class<T> serviceClass) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .client(createOkHttpClient(false))
@@ -90,7 +94,7 @@ public class ServiceGenerator {
         return retrofit.create(serviceClass);
     }
 
-    public static <T> T createCacheService(Class<T> serviceClass) {
+    public synchronized static <T> T createCacheService(Class<T> serviceClass) {
         if (cacheablesRetrofit == null) {
             cacheablesRetrofit = new Retrofit.Builder()
                     .client(createOkHttpClient(true))
@@ -103,7 +107,7 @@ public class ServiceGenerator {
         return cacheablesRetrofit.create(serviceClass);
     }
 
-    public static Retrofit getRxClient() {
+    public synchronized static Retrofit getRxClient() {
 
 
         if (okHttp == null) {
@@ -125,13 +129,17 @@ public class ServiceGenerator {
 
 
     public static int getRunningAPICount() {
-        if (okHttp == null) return 0;
+        if (okHttp == null) {
+            return 0;
+        }
 
         return okHttp.dispatcher().runningCallsCount();
     }
 
     public static int getQueuedAPICount() {
-        if (okHttp == null) return 0;
+        if (okHttp == null) {
+            return 0;
+        }
 
         return okHttp.dispatcher().queuedCallsCount();
     }

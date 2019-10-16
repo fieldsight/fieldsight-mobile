@@ -13,6 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 import timber.log.Timber;
 
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**

@@ -327,30 +327,30 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
 
         ProjectLocalSource.getInstance()
                 .getProjectById(loadedSite.getProject())
-                .observe(this, project -> {
-                    if (project == null) {
+                .observe(this, termsAndLabels -> {
+                    if (termsAndLabels == null) {
                         ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
                         return;
                     }
 
-                    String site_label = "Site", region_label = "Region";
-                    if (!TextUtils.equals("null", project.getTerms_and_labels())) {
+                    String siteLabel = "Site", regionLabel = "Region";
+                    if (!TextUtils.equals("null", termsAndLabels.getTermsAndLabels())) {
                         TermsLabels tl;
                         Timber.i("null siteProfileActivity");
                         try {
-                            tl = TermsLabels.fromJSON(new JSONObject(project.getTerms_and_labels()));
+                            tl = TermsLabels.fromJSON(new JSONObject(termsAndLabels.getTermsAndLabels()));
                             if (!TextUtils.isEmpty(tl.site)) {
-                                site_label = tl.site;
+                                siteLabel = tl.site;
                             }
                             if (!TextUtils.isEmpty(tl.region)) {
-                                region_label = tl.region;
+                                regionLabel = tl.region;
                             }
                         } catch (JSONException e) {
                             Timber.e(e);
                         }
                     }
 
-                    CreateSiteActivity.start(this, project, loadedSite, site_label, region_label);
+                    CreateSiteActivity.start(this, termsAndLabels, loadedSite, siteLabel, regionLabel);
 
 
                 });

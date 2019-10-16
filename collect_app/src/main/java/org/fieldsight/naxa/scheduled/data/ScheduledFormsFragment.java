@@ -79,7 +79,7 @@ public class ScheduledFormsFragment extends BaseFormListFragment implements OnFo
                 inflater.inflate(R.layout.scheduled_forms_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
 
         viewModel =
                 ViewModelProviders.of(getActivity(), factory).get(ScheduledFormViewModel.class);
@@ -112,12 +112,11 @@ public class ScheduledFormsFragment extends BaseFormListFragment implements OnFo
 
     private void setupListAdapter() {
 
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         scheduledFormsAdapter = new ScheduledFormsAdapter(new ArrayList<>(0), this);
         recyclerView.setEmptyView(emptyLayout,
-                getString(R.string.empty_message, "scheduled forms"),
+                getString(R.string.empty_message, "scheduled FORMS"),
                 new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {

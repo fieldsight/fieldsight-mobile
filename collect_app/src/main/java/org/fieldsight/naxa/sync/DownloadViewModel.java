@@ -4,7 +4,6 @@ import android.os.Handler;
 
 import androidx.lifecycle.ViewModel;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.ODKFormRemoteSource;
@@ -29,6 +28,7 @@ import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.stages.data.StageRemoteSource;
 import org.greenrobot.eventbus.EventBus;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,6 @@ import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -62,7 +61,6 @@ import static org.fieldsight.naxa.common.event.DataSyncEvent.EventStatus.EVENT_S
 
 public class DownloadViewModel extends ViewModel {
 
-    private final CompositeDisposable disposables = new CompositeDisposable();
 
     public void queueSyncTask(List<DownloadableItem> downloadableItems) {
         for (DownloadableItem downloadableItem : downloadableItems) {
@@ -73,7 +71,7 @@ public class DownloadViewModel extends ViewModel {
 
     public void cancelAllTask() {
         DisposableManager.dispose();
-        DownloadableItemLocalSource.getINSTANCE().markAllAsPending();
+        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAllAsPending();
     }
 
 
@@ -84,12 +82,12 @@ public class DownloadViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //                        ProjectSitesRemoteSource
-//                                .getInstance()
+//                                .newInstance()
 //                                .fetchProjecSites()
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist() to wait to complete all odk forms download
+                     *2. used tolist() to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -109,21 +107,21 @@ public class DownloadViewModel extends ViewModel {
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(GENERAL_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(GENERAL_FORMS);
                     }
 
                     @Override
                     public void onSuccess(Object o) {
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(GENERAL_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(GENERAL_FORMS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(GENERAL_FORMS);
+                        Timber.e(e);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(GENERAL_FORMS);
                         if (e instanceof RetrofitException) {
                             String message = e.getMessage();
-                            DownloadableItemLocalSource.getINSTANCE().addErrorMessage(GENERAL_FORMS, message);
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().addErrorMessage(GENERAL_FORMS, message);
                         }
                     }
                 });
@@ -137,12 +135,12 @@ public class DownloadViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //        ProjectSitesRemoteSource
-//                .getInstance()
+//                .newInstance()
 //                .fetchProjecSites()
                 .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -163,20 +161,20 @@ public class DownloadViewModel extends ViewModel {
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(SCHEDULED_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(SCHEDULED_FORMS);
                     }
 
                     @Override
                     public void onSuccess(ArrayList<ScheduleForm> scheduleForms) {
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(SCHEDULED_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(SCHEDULED_FORMS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(SCHEDULED_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(SCHEDULED_FORMS);
                         if (e instanceof RetrofitException) {
                             String message = e.getMessage();
-                            DownloadableItemLocalSource.getINSTANCE().addErrorMessage(SCHEDULED_FORMS, message);
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().addErrorMessage(SCHEDULED_FORMS, message);
                         }
                     }
                 });
@@ -186,7 +184,7 @@ public class DownloadViewModel extends ViewModel {
     private void fetchStagedForms() {
 
 //        ProjectSitesRemoteSource
-//                .getInstance()
+//                .newInstance()
 //                .fetchProjecSites()
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
@@ -195,7 +193,7 @@ public class DownloadViewModel extends ViewModel {
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -216,20 +214,20 @@ public class DownloadViewModel extends ViewModel {
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(STAGED_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(STAGED_FORMS);
                     }
 
                     @Override
                     public void onSuccess(ArrayList<Stage> scheduleForms) {
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(STAGED_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(STAGED_FORMS);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(STAGED_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(STAGED_FORMS);
                         if (e instanceof RetrofitException) {
                             String message = e.getMessage();
-                            DownloadableItemLocalSource.getINSTANCE().addErrorMessage(STAGED_FORMS, message);
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().addErrorMessage(STAGED_FORMS, message);
                         }
                     }
                 });
@@ -247,7 +245,7 @@ public class DownloadViewModel extends ViewModel {
                 case DownloadProgress.STATUS_PROGRESS_UPDATE:
                     DownloadProgress progress = (DownloadProgress) resultData.getSerializable(EXTRA_OBJECT);
                     Timber.i(progress.getMessage());
-                    DownloadableItemLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
+                    DownloadableItemLocalSource.getDownloadableItemLocalSource().updateProgress(ALL_FORMS, progress.getTotal(), progress.getProgress());
                     break;
                 case DownloadProgress.STATUS_ERROR:
                     EventBus.getDefault().post(new DataSyncEvent(uid, EVENT_ERROR));
@@ -278,19 +276,19 @@ public class DownloadViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //        ProjectSitesRemoteSource
-//                .getInstance()
+//                .newInstance()
 //                .fetchProjecSites()
                 .flatMap((Function<List<Project>, SingleSource<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
                             .map(downloadProgress -> {
                                 //todo: broadcast odk form progress
                                 Timber.i(downloadProgress.toString());
-                                DownloadableItemLocalSource.getINSTANCE().updateProgress(ALL_FORMS, downloadProgress.getTotal(), downloadProgress.getProgress());
+                                DownloadableItemLocalSource.getDownloadableItemLocalSource().updateProgress(ALL_FORMS, downloadProgress.getTotal(), downloadProgress.getProgress());
                                 return downloadProgress;
                             })
                             .toList();
@@ -311,13 +309,13 @@ public class DownloadViewModel extends ViewModel {
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(ALL_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(ALL_FORMS);
                     }
 
                     @Override
                     public void onNext(Object o) {
                         FieldSightNotificationLocalSource.getInstance().markFormsAsRead();
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(ALL_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(ALL_FORMS);
                     }
 
                     @Override
@@ -329,12 +327,12 @@ public class DownloadViewModel extends ViewModel {
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(ALL_FORMS, message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(ALL_FORMS, message);
                     }
 
                     @Override
                     public void onComplete() {
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(ALL_FORMS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(ALL_FORMS);
                     }
                 });
 
@@ -361,7 +359,7 @@ public class DownloadViewModel extends ViewModel {
                 ContactRemoteSource.getInstance().getAll();
                 break;
             case SITE_TYPES:
-                SiteTypeRemoteSource.getINSTANCE().getAll();
+                SiteTypeRemoteSource.getSiteTypeRemoteSource().getAll();
                 break;
             case ALL_FORMS:
                 fetchAllForms();
@@ -384,6 +382,6 @@ public class DownloadViewModel extends ViewModel {
 
 
     void setAllRunningTaskAsFailed() {
-        DownloadableItemLocalSource.getINSTANCE().setAllRunningTaskAsFailed();
+        DownloadableItemLocalSource.getDownloadableItemLocalSource().setAllRunningTaskAsFailed();
     }
 }

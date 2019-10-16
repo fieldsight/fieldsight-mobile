@@ -26,10 +26,10 @@ import java.util.HashMap;
 import timber.log.Timber;
 
 /**
- * Background task for downloading forms siteName urls or a formlist siteName a url. We overload this task
+ * Background task for downloading FORMS siteName urls or a formlist siteName a url. We overload this task
  * a bit so that we don't have to keep track of two separate downloading tasks and it simplifies
  * interfaces. If LIST_URL is passed to doInBackground(), we fetch a form list. If a hashmap
- * containing form/url pairs is passed, we download those forms.
+ * containing form/url pairs is passed, we download those FORMS.
  *
  * @author carlhartung
  */
@@ -50,7 +50,7 @@ public class FieldSightDownloadFormListTask extends AsyncTask<Void, String, Hash
     protected HashMap<String, FormDetails> doInBackground(Void... values) {
         HashMap<String, FormDetails> formDetailsHashMap = new HashMap<>();
         for (XMLForm xmlForm : xmlForms) {
-            Timber.i("Downloading forms from %s", xmlForm.getDownloadUrl());
+            Timber.i("Downloading FORMS from %s", xmlForm.getDownloadUrl());
             formDetailsHashMap.putAll(new FieldSightFormListDownloadUtils().downloadFormList(xmlForm, false));
         }
 

@@ -24,8 +24,8 @@ import static org.fieldsight.naxa.common.Constant.DownloadStatus.RUNNING;
 public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapter.ViewHolder> {
 
     private final SyncRepository syncRepository;
-    private ArrayList<SyncableItem> syncableItems;
-    private int selectedItemCount = 0;
+    private final ArrayList<SyncableItem> syncableItems;
+    private int selectedItemCount ;
 
     public DownloadListAdapter(ArrayList<SyncableItem> syncableItems) {
         this.syncableItems = syncableItems;
@@ -124,7 +124,7 @@ public class DownloadListAdapter extends RecyclerView.Adapter<DownloadListAdapte
         }
 
         private void manipulateCheckedUI(SyncableItem syncableItem) {
-            if (syncableItem.getIsSelected()) {
+            if (syncableItem.isSelected()) {
                 selectedItemCount++;
             } else {
                 selectedItemCount--;

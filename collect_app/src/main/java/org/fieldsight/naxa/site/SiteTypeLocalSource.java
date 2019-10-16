@@ -14,8 +14,8 @@ import java.util.List;
 
 public class SiteTypeLocalSource implements BaseLocalDataSource<SiteType> {
 
-    private static SiteTypeLocalSource INSTANCE;
-    private SiteTypeDAO dao;
+    private static SiteTypeLocalSource siteTypeLocalSource;
+    private final SiteTypeDAO dao;
 
 
     private SiteTypeLocalSource() {
@@ -24,11 +24,11 @@ public class SiteTypeLocalSource implements BaseLocalDataSource<SiteType> {
     }
 
 
-    public static SiteTypeLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SiteTypeLocalSource();
+    public synchronized static SiteTypeLocalSource getInstance() {
+        if (siteTypeLocalSource == null) {
+            siteTypeLocalSource = new SiteTypeLocalSource();
         }
-        return INSTANCE;
+        return siteTypeLocalSource;
     }
 
     @Override

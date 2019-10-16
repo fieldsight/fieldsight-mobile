@@ -3,7 +3,6 @@ package org.fieldsight.naxa.generalforms.data;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseRemoteDataSource;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.database.FieldSightConfigDatabase;
@@ -15,8 +14,8 @@ import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.onboarding.XMLForm;
 import org.fieldsight.naxa.onboarding.XMLFormBuilder;
 import org.fieldsight.naxa.project.data.ProjectLocalSource;
-import org.fieldsight.naxa.sync.SyncRepository;
 import org.greenrobot.eventbus.EventBus;
+import org.odk.collect.android.application.Collect;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -40,21 +39,20 @@ import static org.fieldsight.naxa.common.event.DataSyncEvent.EventStatus.EVENT_S
 
 public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm> {
 
-    private static GeneralFormRemoteSource INSTANCE;
-    private ProjectLocalSource projectLocalSource;
-    private SyncRepository syncRepository;
+    private static GeneralFormRemoteSource generalFormRemoteSource;
+    private final ProjectLocalSource projectLocalSource;
 
-    public static GeneralFormRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new GeneralFormRemoteSource();
+    public static synchronized GeneralFormRemoteSource getInstance() {
+        if (generalFormRemoteSource == null) {
+            generalFormRemoteSource = new GeneralFormRemoteSource();
         }
-        return INSTANCE;
+        return generalFormRemoteSource;
     }
 
 
     public GeneralFormRemoteSource() {
         this.projectLocalSource = ProjectLocalSource.getInstance();
-        this.syncRepository = SyncRepository.getInstance();
+
     }
 
 
@@ -210,12 +208,12 @@ public class GeneralFormRemoteSource implements BaseRemoteDataSource<GeneralForm
                     @Override
                     public void onSuccess(ArrayList<GeneralForm> generalForms) {
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_END));
-                        Timber.i("%s general forms downloaded successfully ", generalForms.size());
+                        Timber.i("%s general FORMS downloaded successfully ", generalForms.size());
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         EventBus.getDefault().post(new DataSyncEvent(Constant.DownloadUID.GENERAL_FORMS, EVENT_ERROR));
                     }
                 });

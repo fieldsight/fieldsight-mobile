@@ -23,7 +23,7 @@ import timber.log.Timber;
  * @author: yubaraj poudel
  * @Since 2019/05/10
  * <p>
- * Manages the sync of all the project related contents. It is the controller that allows the user to select
+ * Manages the sync of all the PROJECT related contents. It is the controller that allows the user to select
  * which content of the projects to download
  **/
 
@@ -31,8 +31,8 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
     List<Project> selectedProjectList;
     HashMap<String, List<Syncable>> syncableMap;
     boolean auto;
-    SyncAdapterCallback callback = null;
-    boolean disableItemClick = false;
+    SyncAdapterCallback callback ;
+    boolean disableItemClick;
     HashMap<String, Integer> progressMap = new HashMap<>();
 
     public SyncAdapterv3(boolean auto, List<Project> selectedProjectList, HashMap<String, List<Syncable>> syncableMap) {
@@ -53,12 +53,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         }
     }
 
-    public void toggleAllSelection(HashMap<String, List<Syncable>> syncableMap) {
-        syncableMap.clear();
-        this.auto = !auto;
-        this.syncableMap = syncableMap;
-        notifyDataSetChanged();
-    }
+
 
     public void setAdapterCallback(SyncAdapterCallback callback) {
         this.callback = callback;
@@ -81,9 +76,9 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
                 if (syncableMap.containsKey(syncStat.getProjectId())) {
                     List<Syncable> list = syncableMap.get(syncStat.getProjectId());
                     int syncType = Integer.parseInt(syncStat.getType());
-                    boolean isValidList = syncStat.getFailedUrl().contains("[") ;
+                    boolean isValidList = syncStat.getFailedUrl().contains("[");
 
-                    if(syncStat.isProgressBarEnabled()){
+                    if (syncStat.isProgressBarEnabled()) {
                         Syncable syncable = list.get(syncType);
                         syncable.setProgress(syncStat.getProgress());
                         syncable.setTotal(syncStat.getTotal());
@@ -117,15 +112,16 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
             int totalSynced = 0;
             int totalSize = 0;
             for (Syncable syncable : syncableList) {
-                if (!syncable.getSync())
+                if (!syncable.isSync()) {
                     continue;
+                }
                 if (syncable.getStatus() == Constant.DownloadStatus.COMPLETED) {
                     totalSynced++;
                 }
                 totalSize++;
             }
 
-            if(totalSize > 0) {
+            if (totalSize > 0) {
                 progressMap.put(key, totalSynced * 100 / totalSize);
             }
         }
@@ -137,7 +133,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         return new SyncViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_sync_all, viewGroup, false)) {
             @Override
             public void downloadListItemClicked(int parentPos, int pos) {
-                Timber.i("Syncadapterv3, project details clicked");
+                Timber.i("Syncadapterv3, PROJECT details clicked");
                 if (callback != null) {
                     Project p = selectedProjectList.get(parentPos);
                     syncableMap.get(p.getId()).get(pos).toggleSync();
@@ -148,8 +144,8 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
 
             @Override
             public void retryButtonClicked(Project project, String[] failedUrls) {
-                if(callback != null){
-                    callback.onRetryButtonClicked(project,failedUrls);
+                if (callback != null) {
+                    callback.onRetryButtonClicked(project, failedUrls);
                 }
             }
         };
@@ -161,7 +157,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
         syncViewHolder.bindView(project, progressMap, disableItemClick);
         List<Syncable> syncables = syncableMap.get(project.getId());
         syncViewHolder.manageChildView(syncables, disableItemClick);
-        syncViewHolder.iv_cancel.setOnClickListener(v -> {
+        syncViewHolder.ivCancel.setOnClickListener(v -> {
             if (callback != null) {
                 callback.onRequestInterrupt(i, project);
             }

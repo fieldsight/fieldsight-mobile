@@ -35,9 +35,9 @@ import static org.fieldsight.naxa.common.Constant.NotificationType.FORM_FLAG;
 
 public class FieldSightFirebaseMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "FirebaseService";
-    private final static AtomicInteger notificationId = new AtomicInteger(0);
-    private static final String NOTIFY_STATUS = "status";
+
+    private final static AtomicInteger NOTIFICATION_ID = new AtomicInteger(0);
+
     public static final String NEW_FORM = "New Form";
 
 
@@ -54,9 +54,9 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     String submissionDateTime;
 
 
-    String date_str;
+    String dateStr;
     String localTime;
-    public static Boolean notificationStatus = false;
+
 
     DateFormat dateFormat, date1;
     Date date, currentLocalTime;
@@ -64,21 +64,20 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
     Uri notificationSound;
     Ringtone ringtonePlayer;
-    private String comment;
+
     private String fsFormId;
     private String fsFormIdProject;
     private String fsFormSubmissionId;
     private String formType;
     private String formName;
     private String formComment;
-    private String form;
+ 
     private String formVerion;
 
-    private String deleteForm;
+
     private String isDeployed, webDeployedId;
     private String notificationDetailsUrl = "";
 
-    private String isDeployedFromProject;//todo: this needs to be checked and removed coz we are using isDeployedFromSite in flag forms
     private boolean isDeployedFromSite;
     private String siteIdentifier;
 
@@ -100,7 +99,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
             Map<String, String> notificationData = remoteMessage.getData();
             parseNotificationData(notificationData);
 
-            builder.setDetails_url(notificationDetailsUrl)
+            builder.setDetailsUrl(notificationDetailsUrl)
                     .setNotificationType(notifyType)
                     .setFsFormId(fsFormId)
                     .setFormName(formName)
@@ -110,7 +109,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     .setProjectName(projectName)
                     .setFormStatus(formStatus)
                     .setSiteIdentifier(siteIdentifier)
-                    .setNotifiedDate(date_str)
+                    .setNotifiedDate(dateStr)
                     .setNotifiedTime(localTime)
                     .setIdString(jrFormId)
                     .setComment(formComment)
@@ -196,12 +195,12 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     siteIdentifier = siteData.getString("identifier");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Timber.e(e);
 
             }
         }
-        if (notificationData.containsKey("project")) {
-            String site = notificationData.get("project");
+        if (notificationData.containsKey("PROJECT")) {
+            String site = notificationData.get("PROJECT");
             try {
                 JSONObject siteData = new JSONObject(site);
                 if (siteData.has("name")) {
@@ -211,7 +210,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
                     projectId = siteData.getString("id");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Timber.e(e);
 
             }
         }
@@ -227,12 +226,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
         if (notificationData.containsKey("form_type")) {
             formType = notificationData.get("form_type");
         }
-        if (notificationData.containsKey("form")) {
-            String form = notificationData.get("form");
-        }
-        if (notificationData.containsKey("is_delete")) {
-            deleteForm = notificationData.get("is_delete");
-        }
         if (notificationData.containsKey("is_deployed")) {
             isDeployed = notificationData.get("is_deployed");
         }
@@ -244,11 +237,6 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
             webDeployedId = notificationData.get("deploy_id");
             Timber.i("deploy_id %s", webDeployedId);
         }
-
-        if (notificationData.containsKey("is_project")) {
-            isDeployedFromProject = notificationData.get("is_project");
-        }
-
         if (notificationData.containsKey("project_form_id")) {
             fsFormIdProject = notificationData.get("project_form_id");
         }
@@ -268,14 +256,14 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
 
 
     public static int getID() {
-        return notificationId.incrementAndGet();
+        return NOTIFICATION_ID.incrementAndGet();
     }
 
 
     private void getAndSetDateTime() {
         dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
         date = new Date();
-        date_str = dateFormat.format(date);
+        dateStr = dateFormat.format(date);
         cal = Calendar.getInstance(TimeZone.getTimeZone("GMT-4:00"));
         currentLocalTime = cal.getTime();
         date1 = new SimpleDateFormat("hh:mm a", Locale.US);
@@ -285,7 +273,7 @@ public class FieldSightFirebaseMessagingService extends FirebaseMessagingService
     }
 
     @Override
-    public void onNewToken(String fcm_token) {
-        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcm_token);
-        Timber.i("Messaging service, firebase %s",fcm_token);    }
+    public void onNewToken(String fcmToken) {
+        SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_VALUE_KEY.KEY_FCM, fcmToken);
+        Timber.i("Messaging service, firebase %s",fcmToken);    }
 }

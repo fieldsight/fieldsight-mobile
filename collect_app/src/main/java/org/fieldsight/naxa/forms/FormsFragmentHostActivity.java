@@ -8,15 +8,11 @@ import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.InternetUtils;
-import org.fieldsight.naxa.common.ViewModelFactory;
-import org.fieldsight.naxa.forms.viewmodel.FieldSightFormViewModel;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
@@ -33,14 +29,14 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 
 public class FormsFragmentHostActivity extends CollectAbstractActivity {
 
-    Site loadedSite = null;
+    Site loadedSite;
     Toolbar toolbar;
-    boolean is_parent = false;
+    boolean isParent;
 
     public static void start(Context context, Site site, boolean isParent) {
         Intent intent = new Intent(context, FormsFragmentHostActivity.class);
         intent.putExtra(EXTRA_OBJECT, site);
-        intent.putExtra("is_parent", isParent);
+        intent.putExtra("isParent", isParent);
         context.startActivity(intent);
     }
 
@@ -58,12 +54,12 @@ public class FormsFragmentHostActivity extends CollectAbstractActivity {
         }
 
         loadedSite = extras.getParcelable(EXTRA_OBJECT);
-        is_parent = extras.getBoolean("is_parent");
+        isParent = extras.getBoolean("isParent");
         bindUI();
         setupToolbar();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_container, SiteDashboardFragment.newInstance(loadedSite, is_parent), "frag0")
+                .add(R.id.fragment_container, SiteDashboardFragment.newInstance(loadedSite, isParent), "frag0")
                 .commit();
 
     }

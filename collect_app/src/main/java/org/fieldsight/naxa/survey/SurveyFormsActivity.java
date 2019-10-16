@@ -42,7 +42,6 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.fieldsight.naxa.common.SharedPreferenceUtils.isFormSaveCacheSafe;
 
-;
 
 public class SurveyFormsActivity extends CollectAbstractActivity implements TitleDescAdapter.OnCardClickListener {
 
@@ -55,8 +54,6 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
 
     @BindView(R.id.recycler_survey_form_list)
     RecyclerViewEmptySupport recyclerSurveyFormList;
-
-    private ActionBar actionBar;
 
     private Project loadedProject;
     private TitleDescAdapter adapter;
@@ -90,7 +87,9 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
                 new Observer<List<SurveyForm>>() {
                     @Override
                     public void onChanged(@Nullable List<SurveyForm> surveyForms) {
-                        if (surveyForms == null) return;
+                        if (surveyForms == null){
+                            return;
+                        }
 
                         adapter.clear();
                         adapter.addAll(surveyForms);
@@ -106,7 +105,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     private void setupToolbar() {
 
         setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +151,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
     }
 
     private void setupViewModel() {
-        ViewModelFactory factory = ViewModelFactory.getInstance(this.getApplication());
+        ViewModelFactory factory = ViewModelFactory.getInstance();
         surveyFormViewModel = ViewModelProviders.of(this, factory).get(SurveyFormViewModel.class);
     }
 
@@ -173,7 +172,7 @@ public class SurveyFormsActivity extends CollectAbstractActivity implements Titl
 
             }
         } catch (NullPointerException | NumberFormatException e) {
-            e.printStackTrace();
+            Timber.e(e);
             DialogFactory.createGenericErrorDialog(this, e.getMessage()).show();
             Timber.e("Failed to load xml form %s", e.getMessage());
         } catch (CursorIndexOutOfBoundsException e) {

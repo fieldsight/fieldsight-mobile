@@ -13,8 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -22,33 +20,23 @@ import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
 import org.fieldsight.naxa.common.ViewModelFactory;
-import org.fieldsight.naxa.common.event.DataSyncEvent;
-import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.substages.SubStageListFragment;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentExitAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_ENTER_ANIMATION;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_EXIT_ANIMATION;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_POP_ENTER_ANIMATION;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_POP_EXIT_ANIMATION;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 
 public class StageListFragment extends Fragment implements OnFormItemClickListener<Stage> {
@@ -66,7 +54,6 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
     private Site loadedSite;
     Unbinder unbinder;
 
-    private StageViewModel viewModel;
 
     @BindView(R.id.root_layout_empty_layout)
     public LinearLayout emptyLayout;
@@ -80,9 +67,6 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
 
     }
 
-    public StageListFragment() {
-
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,9 +81,6 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
                 inflater.inflate(R.layout.general_forms_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
-
-        viewModel = ViewModelProviders.of(getActivity(), factory).get(StageViewModel.class);
 
         setToolbarText();
         return rootView;
@@ -136,7 +117,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged forms")
+        recyclerView.setEmptyView(emptyLayout, getString(R.string.empty_message, "staged FORMS")
                 , new RecyclerViewEmptySupport.OnEmptyLayoutClickListener() {
                     @Override
                     public void onRetryButtonClick() {
@@ -160,7 +141,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation);
+        fragmentTransaction.setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack("myfrag3");
         fragmentTransaction.commit();

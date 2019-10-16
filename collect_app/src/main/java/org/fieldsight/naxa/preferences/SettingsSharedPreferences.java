@@ -36,7 +36,7 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_PERIODIC_FORM_
 public class SettingsSharedPreferences {
 
     private static SettingsSharedPreferences instance;
-    private final android.content.SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     private SettingsSharedPreferences() {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Collect.getInstance());
@@ -68,7 +68,7 @@ public class SettingsSharedPreferences {
         Object value = null;
 
         try {
-            defaultValue = SettingsKeys.defaultvalues.get(key);
+            defaultValue = SettingsKeys.DEFAULTVALUES.get(key);
         } catch (Exception e) {
             Timber.e("Default for %s not found", key);
         }

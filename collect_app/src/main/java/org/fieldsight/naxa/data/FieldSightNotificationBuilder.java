@@ -18,7 +18,7 @@ public class FieldSightNotificationBuilder {
     private String formStatus;
     private String role;
     private String isFormDeployed;
-    private String details_url;
+    private String detailsUrl;
     private String comment;
     private String formType;
     private boolean isRead;
@@ -117,8 +117,8 @@ public class FieldSightNotificationBuilder {
         return this;
     }
 
-    public FieldSightNotificationBuilder setDetails_url(String details_url) {
-        this.details_url = details_url;
+    public FieldSightNotificationBuilder setDetailsUrl(String detailsUrl) {
+        this.detailsUrl = detailsUrl;
         return this;
     }
 
@@ -150,7 +150,7 @@ public class FieldSightNotificationBuilder {
     public FieldSightNotification createFieldSightNotification() {
         return new FieldSightNotification(id, notificationType, notifiedDate, notifiedTime,
                 idString, fsFormId, fsFormIdProject, formName, siteId, siteName, projectId,
-                projectName, formStatus, role, isFormDeployed, details_url, comment,
+                projectName, formStatus, role, isFormDeployed, detailsUrl, comment,
                 formType, isRead, formSubmissionId, formVersion, siteIdentifier, isDeployedFromSite, scheduleFormsCount,receivedDateTime, receivedDateTimeInMillis);
     }
 

@@ -70,7 +70,8 @@ public class GeneralForm {
     @SerializedName("site")
     @Expose
     private String siteId;
-    @SerializedName(value = "project")
+
+    @SerializedName("PROJECT")
     @Expose
     private String projectId;
 
@@ -108,7 +109,7 @@ public class GeneralForm {
     //@SerializedName("latest_submission")
     @Expose
     @Ignore
-    private List<FormResponse> latestSubmission = null;
+    private List<FormResponse> latestSubmission;
 
     @NonNull
     public String getFsFormId() {

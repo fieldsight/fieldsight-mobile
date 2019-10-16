@@ -1,11 +1,11 @@
 package org.fieldsight.naxa.login;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -16,13 +16,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.model.File;
 
 import org.fieldsight.collect.android.R;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -84,7 +80,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
                 handleSignInResult(task);
             } catch (Exception e) {
 
-                e.printStackTrace();
+                Timber.e(e);
             }
         }
 
@@ -98,7 +94,7 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
             Timber.d("handleSignInResult: suthCode " + authCode);
             updateUI(account);
         } catch (ApiException e) {
-            e.printStackTrace();
+            Timber.e(e);
             gmailLoginFailed(e.getMessage());
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             updateUI(null);
@@ -120,21 +116,13 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
 
 
     private class GetAccessTokenTask extends AsyncTask<String, Void, GoogleTokenResponse> {
-        private ProgressDialog pd;
 
-        // onPreExecute called before the doInBackgroud start for display
-        // progress dialog.
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
 
         @Override
         protected GoogleTokenResponse doInBackground(String... urls) {
 
             try {
-// Exchange auth code for access token
+// Exchange auth code for access TOKEN
                 GoogleClientSecrets clientSecrets =
                         GoogleClientSecrets.load(
                                 JacksonFactory.getDefaultInstance(), new BufferedReader(
@@ -162,40 +150,17 @@ public abstract class BaseLoginActivity extends CollectAbstractActivity {
         protected void onPostExecute(GoogleTokenResponse tokenResponse) {
    
             if (tokenResponse == null) {
-                gmailLoginFailed("Unable to get Gmail auth token");
+                gmailLoginFailed("Unable to get Gmail auth TOKEN");
             }else {
                 gmailLoginSuccess(tokenResponse.getAccessToken(), username);
-                Log.d(TAG, "onPostExecute: accessToken " + tokenResponse.getAccessToken());
+                Timber.d("onPostExecute: accessToken " + tokenResponse.getAccessToken());
 
             }
 
 
         }
     }
-
-
-    private void useAccessTokenToCallAPI(@NonNull GoogleTokenResponse tokenResponse) throws IOException {
-        // Use access token to call API
-        GoogleCredential credential = new GoogleCredential().setAccessToken(tokenResponse.getAccessToken());
-        Drive drive =
-                new Drive.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential)
-                        .setApplicationName("Auth Code Exchange Demo")
-                        .build();
-        File file = drive.files().get("appfolder").execute();
-
-// Get profile info from ID token
-        GoogleIdToken idToken = tokenResponse.parseIdToken();
-        GoogleIdToken.Payload payload = idToken.getPayload();
-        String userId = payload.getSubject();  // Use this value as a key to identify a user.
-        String email = payload.getEmail();
-        boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-        String name = (String) payload.get("name");
-        String pictureUrl = (String) payload.get("picture");
-        String locale = (String) payload.get("locale");
-        String familyName = (String) payload.get("family_name");
-        String givenName = (String) payload.get("given_name");
-    }
-
+    
 }
 
 

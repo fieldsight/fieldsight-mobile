@@ -32,19 +32,19 @@ import butterknife.OnClick;
 
 public class BackupActivity extends CollectAbstractActivity {
     @BindView(R.id.tv_data_info)
-    TextView tv_data_info;
+    TextView tvDataInfo;
 
     @BindView(R.id.tv_info)
-    TextView tv_info;
+    TextView tvInfo;
 
     @BindView(R.id.tv_progress)
-    TextView tv_progress;
+    TextView tvProgress;
 
     @BindView(R.id.zip_progress)
-    ProgressBar zip_progress;
+    ProgressBar progressBar;
 
     @BindView(R.id.tv_progress_message)
-    TextView tv_progress_message;
+    TextView tvProgressMessage;
 
     @BindView(R.id.btn_backup)
     Button backup;
@@ -53,10 +53,10 @@ public class BackupActivity extends CollectAbstractActivity {
     Toolbar toolbar;
 
     @BindView(R.id.btn_share)
-    Button btn_share;
+    Button btnShare;
 
     ZipUtils zipUtils;
-    StringBuilder builder = null;
+    StringBuilder builder;
     Handler handler;
     String destination = Environment.getExternalStorageDirectory() + File.separator + "fieldsight_compressed";
 
@@ -67,8 +67,9 @@ public class BackupActivity extends CollectAbstractActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setTitle("Backup all data");
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         zipUtils = new ZipUtils();
         builder = new StringBuilder();
 
@@ -84,22 +85,22 @@ public class BackupActivity extends CollectAbstractActivity {
                         "size = %s", folderInfo.get("type"), folderInfo.get("name"),
                 folderInfo.get("total_file"), folderInfo.get("size"));
 
-        tv_data_info.setText(infoMessage);
+        tvDataInfo.setText(infoMessage);
         zipUtils.setZipProgressListener(new ZipUtils.ZipProgressListener() {
             @Override
             public void onZipping(String message, int progress) {
                 builder.append(message + " ===> " + progress + "%\n");
-                zip_progress.setProgress(progress);
-                tv_progress.setText(progress + "%");
+                progressBar.setProgress(progress);
+                tvProgress.setText(progress + "%");
             }
 
             @Override
             public void onComplete() {
                 handler = new Handler();
                 handler.post(runnable);
-                btn_share.setEnabled(true);
-                tv_progress_message.setText("Project backup complete");
-                tv_info.setText("Loading zip info..");
+                btnShare.setEnabled(true);
+                tvProgressMessage.setText("Project backup complete");
+                tvInfo.setText("Loading zip info..");
             }
         });
 
@@ -108,8 +109,9 @@ public class BackupActivity extends CollectAbstractActivity {
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (builder.length() > 0)
-                tv_info.setText(builder.toString());
+            if (builder.length() > 0) {
+                tvInfo.setText(builder.toString());
+            }
         }
     };
 
@@ -149,9 +151,9 @@ public class BackupActivity extends CollectAbstractActivity {
                 Toast.makeText(this, "Deleted old backup file", Toast.LENGTH_SHORT).show();
             }
         }
-        tv_data_info.setVisibility(View.GONE);
-        btn_share.setEnabled(false);
-        tv_progress_message.setText("");
+        tvDataInfo.setVisibility(View.GONE);
+        btnShare.setEnabled(false);
+        tvProgressMessage.setText("");
         zipUtils.zipFileAtPath(Collect.ODK_ROOT, destination);
     }
 }

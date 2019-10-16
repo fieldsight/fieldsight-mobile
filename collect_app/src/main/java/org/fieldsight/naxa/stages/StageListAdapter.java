@@ -20,8 +20,8 @@ import java.util.List;
 public class StageListAdapter extends
         RecyclerView.Adapter<StageListAdapter.ViewHolder> implements View.OnClickListener {
 
-    private ArrayList<Stage> totalList;
-    public OnFormItemClickListener<Stage> onFormItemClickListener;
+    private final ArrayList<Stage> totalList;
+    public final OnFormItemClickListener<Stage> onFormItemClickListener;
 
 
     public StageListAdapter(ArrayList<Stage> totalList, OnFormItemClickListener<Stage> onFormItemClickListener) {

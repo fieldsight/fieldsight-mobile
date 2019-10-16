@@ -32,8 +32,6 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
 
     private ContactAdapter contactAdapter;
 
-    private ProjectContactViewModel viewModel;
-
 
     @BindView(R.id.root_layout_empty_layout)
     LinearLayout emptyLayout;
@@ -42,7 +40,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    public static ProjectContactsFragment getInstance() {
+    public static ProjectContactsFragment newInstance() {
         return new ProjectContactsFragment();
     }
 
@@ -54,8 +52,8 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
         setupRecycleView();
 
         ContactRemoteSource.getInstance().getAll();
-        ViewModelFactory factory = ViewModelFactory.getInstance(getActivity().getApplication());
-        viewModel = ViewModelProviders.of(getActivity(), factory).get(ProjectContactViewModel.class);
+        ViewModelFactory factory = ViewModelFactory.getInstance();
+        ProjectContactViewModel viewModel = ViewModelProviders.of(getActivity(), factory).get(ProjectContactViewModel.class);
         viewModel.getContacts()
                 .observe(this, new Observer<List<FieldSightContactModel>>() {
                     @Override
@@ -78,7 +76,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
     }
 
     private void setupRecycleView() {
-        contactAdapter = new ContactAdapter(new ArrayList<>(0), ProjectContactsFragment.this, getActivity());
+        contactAdapter = new ContactAdapter(new ArrayList<>(0), this, getActivity());
 
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
@@ -96,7 +94,7 @@ public class ProjectContactsFragment extends Fragment implements ContactAdapter.
 
     @Override
     public void onContactClicked(FieldSightContactModel contactModel) {
-        ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.getInstance();
+        ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.newInstance();
         contactDetailsBottomSheetFragmentDialog.setContact(contactModel);
         contactDetailsBottomSheetFragmentDialog.show(requireFragmentManager(), "Contact Bottom Sheet");
     }

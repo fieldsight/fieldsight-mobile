@@ -53,7 +53,7 @@ import timber.log.Timber;
 import static org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 
 /**
- * Background task for syncing form instances from the instances folder to the instances table.
+ * Background task for syncing form INSTANCES from the INSTANCES folder to the INSTANCES table.
  * Returns immediately if it detects an error.
  */
 public class InstanceSyncTask extends AsyncTask<Void, String, String> {
@@ -81,7 +81,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
             File instancesPath = new File(Collect.INSTANCES_PATH);
             if (instancesPath.exists() && instancesPath.isDirectory()) {
                 File[] instanceFolders = instancesPath.listFiles();
-                if (instanceFolders.length == 0) {
+                if (instanceFolders == null || instanceFolders.length == 0) {
                     Timber.i("[%d] Empty instance folder. Stopping scan process.", instance);
                     Timber.d(Collect.getInstance().getString(R.string.instance_scan_completed));
                     return currentStatus;

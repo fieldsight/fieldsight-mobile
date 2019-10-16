@@ -20,6 +20,7 @@ import org.fieldsight.naxa.stages.StringListTypeConvertor;
 
 import java.util.List;
 
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @Entity(tableName = "sites")
 public class Site implements Parcelable {
     @PrimaryKey
@@ -81,7 +82,7 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "dateCreated")
     private String dateCreated;
 
-    @ColumnInfo(name = "project")
+    @ColumnInfo(name = "PROJECT")
     private String project;
 
     @ColumnInfo(name = "isSiteVerified")
@@ -136,7 +137,7 @@ public class Site implements Parcelable {
                 Boolean isSurvey, String dateCreated, String project,
                 int isSiteVerified, String siteTypeError, String metaAttributes,
                 String regionId, String generalFormDeployedFrom, String stagedFormDeployedFrom, String scheduleFormDeployedForm,
-                List<String> siteDocuments, boolean enable_subsites, String site) {
+                List<String> siteDocuments, String site) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -166,15 +167,15 @@ public class Site implements Parcelable {
     }
 
 
-    private final static String postfix = "fake";
+    private final static String POSTFIX = "fake";
 
 
     public static String getMockedId() {
-        return String.valueOf(System.currentTimeMillis()).concat("-").concat(postfix);
+        return String.valueOf(System.currentTimeMillis()).concat("-").concat(POSTFIX);
     }
 
     public static boolean isFakeSiteId(String siteId) {
-        return siteId.contains(Site.postfix);
+        return siteId.contains(Site.POSTFIX);
     }
 
     public boolean hasSubSites() {
@@ -434,8 +435,12 @@ public class Site implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Site site = (Site) o;
         return isSiteVerified == site.isSiteVerified &&
                 Objects.equal(id, site.id) &&

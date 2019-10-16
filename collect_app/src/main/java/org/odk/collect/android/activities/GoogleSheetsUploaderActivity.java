@@ -13,7 +13,7 @@
  */
 
 /**
- * Activity to upload completed forms to gme.
+ * Activity to upload completed FORMS to gme.
  *
  * @author Carl Hartung (chartung@nafundi.com)
  */
@@ -22,7 +22,6 @@ package org.odk.collect.android.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,14 +38,13 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 
 import org.fieldsight.collect.android.R;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.fragments.dialogs.GoogleSheetsUploaderProgressDialog;
+import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.provider.InstanceProviderAPI;
-import org.odk.collect.android.dao.InstancesDao;
-import org.odk.collect.android.injection.DaggerUtils;
-
 import org.odk.collect.android.preferences.GeneralKeys;
-
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.InstanceGoogleSheetsUploaderTask;
 import org.odk.collect.android.utilities.ArrayUtils;
 import org.odk.collect.android.utilities.InstanceUploaderUtils;
@@ -63,16 +61,15 @@ import javax.inject.Inject;
 
 import timber.log.Timber;
 
+import static org.odk.collect.android.fragments.dialogs.GoogleSheetsUploaderProgressDialog.GOOGLE_SHEETS_UPLOADER_PROGRESS_DIALOG_TAG;
 import static org.odk.collect.android.utilities.gdrive.GoogleAccountsManager.showSettingsDialog;
 
-public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implements InstanceUploaderListener {
+public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implements InstanceUploaderListener, GoogleSheetsUploaderProgressDialog.OnSendingFormsCanceledListener {
 
     private static final int REQUEST_AUTHORIZATION = 1001;
-    private static final int PROGRESS_DIALOG = 1;
     private static final int GOOGLE_USER_DIALOG = 3;
     private static final String ALERT_MSG = "alertmsg";
     private static final String ALERT_SHOWING = "alertshowing";
-    private ProgressDialog progressDialog;
     private AlertDialog alertDialog;
     private String alertMsg;
     private boolean alertShowing;
@@ -119,11 +116,11 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
 
         // at this point, we don't expect this to be empty...
         if (instancesToSend.length == 0) {
-            Timber.e("onCreate: No instances to upload!");
+            Timber.e("onCreate: No INSTANCES to upload!");
             // drop through --
             // everything will process through OK
         } else {
-            Timber.i("onCreate: Beginning upload of %d instances!", instancesToSend.length);
+            Timber.i("onCreate: Beginning upload of %d INSTANCES!", instancesToSend.length);
         }
 
         getResultsFromApi();
@@ -211,7 +208,7 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
 
         switch (requestCode) {
             case REQUEST_AUTHORIZATION:
-                dismissDialog(PROGRESS_DIALOG);
+                dismissProgressDialog();
                 if (resultCode == RESULT_OK) {
                     getResultsFromApi();
                 }
@@ -277,7 +274,7 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
     @Override
     public void uploadingComplete(HashMap<String, String> result) {
         try {
-            dismissDialog(PROGRESS_DIALOG);
+            dismissProgressDialog();
         } catch (Exception e) {
             // tried to close a dialog not open. don't care.
         }
@@ -286,7 +283,7 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
             // probably got an auth request, so ignore
             return;
         }
-        Timber.i("uploadingComplete: Processing results ( %d ) from upload of %d instances!",
+        Timber.i("uploadingComplete: Processing results ( %d ) from upload of %d INSTANCES!",
                 result.size(), instancesToSend.length);
 
         StringBuilder selection = new StringBuilder();
@@ -323,31 +320,15 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
     @Override
     public void progressUpdate(int progress, int total) {
         alertMsg = getString(R.string.sending_items, String.valueOf(progress), String.valueOf(total));
-        progressDialog.setMessage(alertMsg);
+        GoogleSheetsUploaderProgressDialog progressDialog = getProgressDialog();
+        if (progressDialog != null) {
+            progressDialog.setMessage(alertMsg);
+        }
     }
 
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
-            case PROGRESS_DIALOG:
-                progressDialog = new ProgressDialog(this);
-                DialogInterface.OnClickListener loadingButtonListener =
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                instanceGoogleSheetsUploaderTask.cancel(true);
-                                instanceGoogleSheetsUploaderTask.setUploaderListener(null);
-                                finish();
-                            }
-                        };
-                progressDialog.setTitle(getString(R.string.uploading_data));
-                progressDialog.setMessage(alertMsg);
-                progressDialog.setIndeterminate(true);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.setCancelable(false);
-                progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
-                return progressDialog;
             case GOOGLE_USER_DIALOG:
                 AlertDialog.Builder gudBuilder = new AlertDialog.Builder(this);
 
@@ -391,10 +372,29 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
     }
 
     private void authorized() {
-        showDialog(PROGRESS_DIALOG);
+        GoogleSheetsUploaderProgressDialog.newInstance(alertMsg)
+                .show(getSupportFragmentManager(), GOOGLE_SHEETS_UPLOADER_PROGRESS_DIALOG_TAG);
 
         instanceGoogleSheetsUploaderTask.setUploaderListener(this);
         instanceGoogleSheetsUploaderTask.execute(instancesToSend);
+    }
+
+    private void dismissProgressDialog() {
+        GoogleSheetsUploaderProgressDialog progressDialog = getProgressDialog();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+    private GoogleSheetsUploaderProgressDialog getProgressDialog() {
+        return (GoogleSheetsUploaderProgressDialog) getSupportFragmentManager().findFragmentByTag(GOOGLE_SHEETS_UPLOADER_PROGRESS_DIALOG_TAG);
+    }
+
+    @Override
+    public void onSendingFormsCanceled() {
+        instanceGoogleSheetsUploaderTask.cancel(true);
+        instanceGoogleSheetsUploaderTask.setUploaderListener(null);
+        finish();
     }
 
     private class AuthorizationChecker extends AsyncTask<Void, Void, Boolean> {

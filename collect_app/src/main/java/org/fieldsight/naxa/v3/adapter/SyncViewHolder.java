@@ -37,25 +37,25 @@ import timber.log.Timber;
 
 public class SyncViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_project_name)
-    TextView tv_project_name;
+    TextView tvProjectName;
 
     @BindView(R.id.tv_project_other)
-    TextView tv_project_other;
+    TextView tvProjectOther;
 
     @BindView(R.id.iv_cancel)
-    ImageView iv_cancel;
+    ImageView ivCancel;
 
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
 
     @BindView(R.id.lv_options)
-    ListView lv_options;
+    ListView lvOptions;
 
     @BindView(R.id.iv_avatar)
-    ImageView iv_avatar;
+    ImageView ivAvatar;
 
     @BindView(R.id.tv_project_progress_percentage)
-    TextView tv_project_progress_percentage;
+    TextView tvProjectProgressPercentage;
 
 
     private Project project;
@@ -68,23 +68,23 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
     void bindView(Project project, HashMap<String, Integer> progressMap, boolean disable) {
         this.project = project;
 
-        tv_project_name.setText(project.getName());
-        tv_project_other.setText(String.format("By %s", project.getOrganizationName()));
+        tvProjectName.setText(project.getName());
+        tvProjectOther.setText(String.format("By %s", project.getOrganizationName()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             progressBar.setProgress(progressMap.get(project.getId()), true);
         } else {
             progressBar.setProgress(progressMap.get(project.getId()));
         }
-        iv_cancel.setVisibility(disable ? View.GONE : View.VISIBLE);
-        tv_project_progress_percentage.setText(progressMap.get(project.getId()) + "%");
+        ivCancel.setVisibility(disable ? View.GONE : View.VISIBLE);
+        tvProjectProgressPercentage.setText(progressMap.get(project.getId()) + "%");
         Timber.i("SyncViewHolder, projectImage = %s", project.getUrl());
         Glide.with(itemView.getContext()).load(project.getUrl()).
-                apply(RequestOptions.circleCropTransform()).into(iv_avatar);
+                apply(RequestOptions.circleCropTransform()).into(ivAvatar);
     }
 
     void manageChildView(List<Syncable> syncableList, boolean disable) {
         Timber.i("SyncViewHolder, syncablelistsize = %d", syncableList.size());
-        lv_options.setAdapter(new ArrayAdapter<Syncable>(itemView.getContext(), R.layout.row_text_checkbox_v2, syncableList) {
+        lvOptions.setAdapter(new ArrayAdapter<Syncable>(itemView.getContext(), R.layout.row_text_checkbox_v2, syncableList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -93,17 +93,17 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                 }
                 Syncable syncable = getItem(position);
                 CheckBox chkbx = convertView.findViewById(R.id.chkbx_sync_select);
-                chkbx.setChecked(syncable.getSync());
+                chkbx.setChecked(syncable.isSync());
                 ((TextView) convertView.findViewById(R.id.tv_name)).setText(syncable.getTitle());
                 convertView.setOnClickListener(v -> {
                     Timber.i("SyncViewHolder clicked");
                     downloadListItemClicked(getLayoutPosition(), position);
                 });
-                TextView tv_stat = convertView.findViewById(R.id.tv_secondary);
+                TextView tvStat = convertView.findViewById(R.id.tv_secondary);
                 if (syncable.getStatus() != Constant.DownloadStatus.COMPLETED) {
                     Timber.i("syncable item name = %s and status = %s", syncable.getTitle(), syncable.getStatus());
                 }
-                tv_stat.setTextColor(syncable.status == Constant.DownloadStatus.FAILED ?
+                tvStat.setTextColor(syncable.status == Constant.DownloadStatus.FAILED ?
                         getContext().getResources().getColor(R.color.red_500) :
                         getContext().getResources().getColor(R.color.green));
 
@@ -114,15 +114,16 @@ public class SyncViewHolder extends RecyclerView.ViewHolder {
                         messageWithProgress = "(" + syncable.getProgress() + "/" + syncable.getTotal() + ")";
                     }
 
-                    tv_stat.setText(String.format(Objects.requireNonNull(Constant.DOWNLOADMAP.get(syncable.getStatus())), messageWithProgress));
+                    tvStat.setText(String.format(Objects.requireNonNull(Constant.DOWNLOADMAP.get(syncable.getStatus())), messageWithProgress));
                 } else {
-                    tv_stat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
+                    tvStat.setText(Constant.DOWNLOADMAP.get(syncable.getStatus()));
                 }
 
                 chkbx.setEnabled(!disable);
                 chkbx.setOnClickListener(v -> {
-                    if (!disable)
+                    if (!disable) {
                         downloadListItemClicked(getLayoutPosition(), position);
+                    }
                 });
 
                 TextView btnRetry = convertView.findViewById(R.id.btn_retry);

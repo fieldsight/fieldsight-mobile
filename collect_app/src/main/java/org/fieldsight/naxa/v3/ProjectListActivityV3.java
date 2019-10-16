@@ -47,13 +47,13 @@ import timber.log.Timber;
 
 public class ProjectListActivityV3 extends CollectAbstractActivity {
     @BindView(R.id.rv_projectlist)
-    RecyclerView rv_projectlist;
+    RecyclerView rvProjectlist;
 
     @BindView(R.id.ll_nodata)
-    LinearLayout ll_nodata;
+    LinearLayout llNodata;
 
     @BindView(R.id.tv_nodata)
-    TextView tv_nodata;
+    TextView tvNodata;
 
     @BindView(R.id.prgbar)
     ProgressBar prgbar;
@@ -62,18 +62,18 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     Toolbar toolbar;
 
     @BindView(R.id.tv_sync_project)
-    TextView tv_sync_project;
+    TextView tvSyncProject;
 
     @BindView(R.id.cv_resync)
-    CardView cv_resync;
+    CardView cvResync;
 
-    ProjectListAdapter adapter = null;
+    ProjectListAdapter adapter;
     List<Project> projectList = new ArrayList<>();
-    boolean auto = false;
+
     RecyclerView.AdapterDataObserver observer;
-    boolean allSelected = false;
+    boolean allSelected ;
     LiveData<List<ProjectNameTuple>> projectIds;
-    Observer<List<ProjectNameTuple>> projectObserver = null;
+    Observer<List<ProjectNameTuple>> projectObserver ;
     boolean showSyncMenu = true;
 
     @Override
@@ -90,16 +90,17 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             public void onChanged() {
                 int selected = 0;
                 for (int i = 0; i < projectList.size(); i++) {
-                    if (projectList.get(i).isChecked())
+                    if (projectList.get(i).isChecked()) {
                         selected++;
+                    }
                 }
-                Timber.d("project list counter is %d", selected);
+                Timber.d("PROJECT list counter is %d", selected);
                 if (selected > 0) {
-                    tv_sync_project.setVisibility(View.VISIBLE);
-                    tv_sync_project.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
-                    tv_sync_project.setText(String.format(Locale.getDefault(), "Sync %d projects", selected));
+                    tvSyncProject.setVisibility(View.VISIBLE);
+                    tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
+                    tvSyncProject.setText(String.format(Locale.getDefault(), "Sync %d projects", selected));
                 } else {
-                    tv_sync_project.setVisibility(View.GONE);
+                    tvSyncProject.setVisibility(View.GONE);
                     allSelected = false;
                     invalidateOptionsMenu();
                 }
@@ -108,11 +109,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         };
 
         adapter.registerAdapterDataObserver(observer);
-        rv_projectlist.setLayoutManager(new LinearLayoutManager(this));
-        rv_projectlist.setAdapter(adapter);
+        rvProjectlist.setLayoutManager(new LinearLayoutManager(this));
+        rvProjectlist.setAdapter(adapter);
         getDataFromServer();
         manageNodata(true);
-        tv_sync_project.setOnClickListener(v -> openDownloadAActivity());
+        tvSyncProject.setOnClickListener(v -> openDownloadAActivity());
         projectObserver = projectNameList -> {
             Timber.i("list live data = %d", projectNameList.size());
             adapter.notifyProjectisSynced(projectNameList);
@@ -126,14 +127,14 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     protected void onResume() {
         super.onResume();
         Timber.i("ProjectListActivityv3 :: anyProject checked = " + adapter.anyProjectSelectedForSync());
-        if(tv_sync_project.getVisibility() == View.VISIBLE && !adapter.anyProjectSelectedForSync()) {
-            tv_sync_project.setVisibility(View.GONE);
+        if (tvSyncProject.getVisibility() == View.VISIBLE && !adapter.anyProjectSelectedForSync()) {
+            tvSyncProject.setVisibility(View.GONE);
         }
     }
 
     @OnClick(R.id.cv_resync)
     void resyncProject() {
-        if(NetworkUtils.isNetworkConnected()) {
+        if (NetworkUtils.isNetworkConnected()) {
             getDataFromServer();
             manageNodata(true);
         } else {
@@ -144,21 +145,23 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (observer != null)
+        if (observer != null) {
             adapter.unregisterAdapterDataObserver(observer);
-        if (projectIds != null && projectIds.hasObservers() && projectObserver != null)
+        }
+        if (projectIds != null && projectIds.hasObservers() && projectObserver != null) {
             projectIds.removeObserver(projectObserver);
+        }
     }
 
     void manageNodata(boolean loading) {
         if (adapter.getItemCount() == 0) {
-            ll_nodata.setVisibility(View.VISIBLE);
-            cv_resync.setVisibility(loading ? View.GONE : View.VISIBLE);
+            llNodata.setVisibility(View.VISIBLE);
+            cvResync.setVisibility(loading ? View.GONE : View.VISIBLE);
         } else {
-            ll_nodata.setVisibility(View.GONE);
+            llNodata.setVisibility(View.GONE);
         }
         prgbar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        tv_nodata.setText(loading ? "Loading data ... " : "Error in syncing the project");
+        tvNodata.setText(loading ? "Loading data ... " : "Error in syncing the PROJECT");
     }
 
     void getDataFromServer() {
@@ -182,7 +185,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
     }
 
-    //    Clear the sync project list and add the selected projects
+    //    Clear the sync PROJECT list and add the selected projects
     ArrayList<Project> manageSyncList() {
         ArrayList<Project> syncProjectList = new ArrayList<>();
         for (Project project : projectList) {
@@ -216,7 +219,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 //        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
-        if(showSyncMenu) {
+        if (showSyncMenu) {
             menu.findItem(R.id.action_refresh).setIcon(allSelected ?
                     R.drawable.ic_cancel_white_24dp :
                     R.drawable.ic_action_sync
@@ -234,13 +237,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 startActivity(new Intent(this, BackupActivity.class));
                 return true;
             case R.id.action_refresh:
-//                check all the project and make auto true
+//                check all the PROJECT and make auto true
                 allSelected = !allSelected;
                 for (Project project : projectList) {
-//                    if (!project.isSynced()) {
-                        project.setChecked(allSelected);
+//                    if (!PROJECT.isSynced()) {
+                    project.setChecked(allSelected);
 //                    } else {
-//                        project.setChecked(false);
+//                        PROJECT.setChecked(false);
 //                    }
                 }
                 adapter.toggleAllSelected(allSelected);

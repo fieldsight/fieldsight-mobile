@@ -21,14 +21,14 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
 public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
 
-    private static SiteTypeRemoteSource INSTANCE;
+    private static SiteTypeRemoteSource siteTypeRemoteSource;
 
-    public static SiteTypeRemoteSource getINSTANCE() {
-        if (INSTANCE == null) {
-            INSTANCE = new SiteTypeRemoteSource();
+    public synchronized static SiteTypeRemoteSource getSiteTypeRemoteSource() {
+        if (siteTypeRemoteSource == null) {
+            siteTypeRemoteSource = new SiteTypeRemoteSource();
 
         }
-        return INSTANCE;
+        return siteTypeRemoteSource;
     }
 
     @Override
@@ -37,21 +37,21 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                 .doOnDispose(new Action() {
                     @Override
                     public void run() {
-                         DownloadableItemLocalSource.getINSTANCE().markAsPending(SITE_TYPES);
+                         DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsPending(SITE_TYPES);
                     }
                 })
                 .subscribe(new SingleObserver<List<SiteType>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
-                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(SITE_TYPES);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(SITE_TYPES);
                     }
 
                     @Override
                     public void onSuccess(List<SiteType> siteTypes) {
                         SiteType[] list = siteTypes.toArray(new SiteType[siteTypes.size()]);
                         SiteTypeLocalSource.getInstance().refreshCache(list);
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(SITE_TYPES);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(SITE_TYPES);
                     }
 
                     @Override
@@ -64,7 +64,7 @@ public class SiteTypeRemoteSource implements BaseRemoteDataSource<SiteType> {
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(SITE_TYPES,message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(SITE_TYPES,message);
 
                     }
                 });

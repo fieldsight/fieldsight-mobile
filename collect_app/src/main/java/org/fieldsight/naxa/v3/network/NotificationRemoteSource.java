@@ -11,13 +11,13 @@ import okhttp3.ResponseBody;
 
 public class NotificationRemoteSource {
 
-    private static NotificationRemoteSource INSTANCE = null;
+    private static NotificationRemoteSource notificationRemoteSource;
 
-    public static NotificationRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new NotificationRemoteSource();
+    public synchronized static NotificationRemoteSource getInstance() {
+        if (notificationRemoteSource == null) {
+            notificationRemoteSource = new NotificationRemoteSource();
         }
-        return INSTANCE;
+        return notificationRemoteSource;
     }
 
     public Single<ResponseBody> getNotifications(String epochTime, String type) {
@@ -28,7 +28,7 @@ public class NotificationRemoteSource {
 
     private Map<String, String> getHasMap(String epochTime, String type) {
         HashMap<String, String> requestParams = new HashMap<>();
-        requestParams.put("last_updated", epochTime+ "");
+        requestParams.put("last_updated", epochTime);
         requestParams.put("type", type);
         return requestParams;
     }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ProjectViewModel extends ViewModel {
 
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
     public ProjectViewModel(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;

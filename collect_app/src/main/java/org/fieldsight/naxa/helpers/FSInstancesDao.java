@@ -5,7 +5,6 @@ import android.database.Cursor;
 
 import androidx.loader.content.CursorLoader;
 
-import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.site.db.SiteUploadHistoryLocalSource;
@@ -174,7 +173,6 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
                     int jrVersionColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.JR_VERSION);
                     int statusColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS);
                     int lastStatusChangeDateColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.LAST_STATUS_CHANGE_DATE);
-                    int displaySubtextColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DISPLAY_SUBTEXT);
                     int deletedDateColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.DELETED_DATE);
                     int fsSiteColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.FS_SITE_ID);
                     int fsInstanceIdColumnIndex = cursor.getColumnIndex(InstanceProviderAPI.InstanceColumns.FS_SUBMISSION_INSTANCE_ID);
@@ -191,7 +189,6 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
                             .jrVersion(cursor.getString(jrVersionColumnIndex))
                             .status(cursor.getString(statusColumnIndex))
                             .lastStatusChangeDate(cursor.getLong(lastStatusChangeDateColumnIndex))
-                            .displaySubtext(cursor.getString(displaySubtextColumnIndex))
                             .deletedDate(cursor.getLong(deletedDateColumnIndex))
                             .fieldSightInstanceId(cursor.getString(fsInstanceIdColumnIndex))
                             .fieldSightSiteId(cursor.getString(fsSiteColumnIndex))
@@ -220,7 +217,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
                 url = generateSubmissionUrl(deployedFrom, siteId, fsFormId);
             }
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            Timber.e(e);
             Timber.e("Failed to fix url");
         }
         return url;
@@ -245,7 +242,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
 
         switch (formDeployedFrom) {
             case PROJECT:
-                submissionUrl += "project/" + fsFormId + "/" + siteId;
+                submissionUrl += "PROJECT/" + fsFormId + "/" + siteId;
                 break;
             case SITE:
                 submissionUrl += fsFormId + "/" + siteId;
@@ -290,10 +287,10 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
 
     private String getFormDeployedFrom(String url) {
         String[] split = url.split("/");
-        if (Constant.FormDeploymentFrom.PROJECT.equals(split[split.length - 3])) {
-            return Constant.FormDeploymentFrom.PROJECT;
+        if ( PROJECT.equals(split[split.length - 3])) {
+            return  PROJECT;
         } else {
-            return Constant.FormDeploymentFrom.SITE;
+            return  SITE;
         }
     }
 
@@ -313,8 +310,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
         String[] selectionArgs = new String[]{siteId};
 
         cursor = getInstancesCursor(selection, selectionArgs);
-        List<Instance> list = getInstancesFromCursor(cursor);
-        return list;
+        return getInstancesFromCursor(cursor);
     }
 
 

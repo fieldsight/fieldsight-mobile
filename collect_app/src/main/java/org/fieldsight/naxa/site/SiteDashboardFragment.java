@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -23,7 +22,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LiveData;
 
 import com.google.common.primitives.Longs;
 
@@ -34,14 +32,11 @@ import org.fieldsight.naxa.FSInstanceUploaderListActivity;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
-import org.fieldsight.naxa.common.FilterOption;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
-import org.fieldsight.naxa.generalforms.GeneralFormsFragment;
 import org.fieldsight.naxa.login.model.Site;
-import org.fieldsight.naxa.project.MapActivity;
-import org.fieldsight.naxa.scheduled.data.ScheduledFormsFragment;
+
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.sitedocuments.SiteDocumentsListActivity;
@@ -50,7 +45,6 @@ import org.odk.collect.android.SiteProfileActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.activities.InstanceUploaderActivity;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
@@ -80,10 +74,10 @@ import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentExitAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_ENTER_ANIMATION;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_EXIT_ANIMATION;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_POP_ENTER_ANIMATION;
+import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_POP_EXIT_ANIMATION;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.ViewUtils.showOrHide;
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
@@ -99,18 +93,14 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private TextView tvSiteType;
     private Unbinder unbinder;
     private View rootView;
-    private LiveData<Site> siteLiveData;
-    boolean isParent = false;
 
-    public SiteDashboardFragment() {
-
-    }
+    boolean isParent ;
 
 
     public static SiteDashboardFragment newInstance(Site site, boolean isParent) {
         SiteDashboardFragment fragment = new SiteDashboardFragment();
         Bundle bundle = new Bundle();
-        bundle.putBoolean("is_parent", isParent);
+        bundle.putBoolean("isParent", isParent);
         bundle.putParcelable(EXTRA_OBJECT, site);
         fragment.setArguments(bundle);
         return fragment;
@@ -131,7 +121,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         //Constants.MY_FRAG = 1;
         unbinder = ButterKnife.bind(this, rootView);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
-        isParent = getArguments().getBoolean("is_parent");
+        isParent = getArguments().getBoolean("isParent");
 
         bindUI(rootView);
 
@@ -252,7 +242,8 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             new PermissionUtils().requestLocationPermissions(requireActivity(), new PermissionListener() {
                 @Override
                 public void granted() {
-                    MapActivity.start(getActivity(), loadedSite);
+//                    MapActivity.start(getActivity(), loadedSite);
+                    ToastUtils.showLongToast("Map has been disabled");
                 }
                 @Override
                 public void denied() {
@@ -289,10 +280,10 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         btnToggleFinalized = rootView.findViewById(R.id.site_option_btn_finalize_site);
         btnShowInfo = rootView.findViewById(R.id.site_option_frag_btn_info);
         btnShowInfo.setOnClickListener(this);
-        CardView cv_stageform = rootView.findViewById(R.id.cv_stageform);
+        CardView cvStageform = rootView.findViewById(R.id.cv_stageform);
 
         Timber.d("SitesdashboardFragment, isParentsite = %s", isParent);
-        cv_stageform.setVisibility(isParent ? View.GONE : View.VISIBLE);
+        cvStageform.setVisibility(isParent ? View.GONE : View.VISIBLE);
 
         rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
         rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);
@@ -491,7 +482,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                                 startActivityForResult(i, FSInstanceUploaderListActivity.INSTANCE_UPLOADER);
                             } else {
 
-                                SnackBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                                SnackBarUtils.showFlashbar(requireActivity(), "There are no FORMS to upload");
                                 SnackBarUtils.showFlashbar(requireActivity(), requireActivity().getString(R.string.msg_site_upload_sucess));
 
                                 requireActivity().onBackPressed();
@@ -572,10 +563,10 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void toForms() {
-        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.GENERAl, loadedSite);
+        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.GENERAL, loadedSite);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation);
+        fragmentTransaction.setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION);
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack("generalfrag");
         fragmentTransaction.commit();
@@ -590,7 +581,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation)
+                .setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION)
                 .replace(R.id.fragment_container, stageListFragment)
                 .addToBackStack("myfrag2").commit();
 
@@ -604,7 +595,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .setCustomAnimations(fragmentEnterAnimation, fragmentExitAnimation, fragmentPopEnterAnimation, fragmentPopExitAnimation)
+                .setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION)
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack("myfrag1").commit();
 

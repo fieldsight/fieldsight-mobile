@@ -35,15 +35,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StageRemoteSource implements BaseRemoteDataSource<Stage> {
 
-    private static StageRemoteSource INSTANCE;
-    private SyncRepository syncRepository;
+    private static StageRemoteSource stageRemoteSource;
+    private final SyncRepository syncRepository;
 
 
-    public static StageRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new StageRemoteSource();
+    public synchronized static StageRemoteSource getInstance() {
+        if (stageRemoteSource == null) {
+            stageRemoteSource = new StageRemoteSource();
         }
-        return INSTANCE;
+        return stageRemoteSource;
     }
 
     public StageRemoteSource() {

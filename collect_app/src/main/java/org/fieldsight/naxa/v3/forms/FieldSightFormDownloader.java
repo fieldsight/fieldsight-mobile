@@ -2,14 +2,10 @@ package org.fieldsight.naxa.v3.forms;
 
 import android.util.Pair;
 
-import androidx.room.ColumnInfo;
-
-import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormDetails;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
-import org.fieldsight.naxa.network.APIEndpoint;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.logic.FormDetails;
@@ -25,7 +21,7 @@ public class FieldSightFormDownloader extends FormDownloader {
         super(isTempDownload);
     }
 
-    private String urlPrefix = FieldSightUserSession.getServerUrl(Collect.getInstance());
+    private final String urlPrefix = FieldSightUserSession.getServerUrl(Collect.getInstance());
 
     HashMap<FieldSightFormDetails, String> downloadFieldSightForms(List<FieldSightFormDetails> toDownload) {
 
@@ -77,9 +73,9 @@ public class FieldSightFormDownloader extends FormDownloader {
         try {
             message = processOneForm(1, 1, fd);
             pair = Pair.create(fieldsightFormDetailsv3, message);
-            Timber.d("form downloading starts for project = " + fieldsightFormDetailsv3.getSite_project_id() + " or " + fieldsightFormDetailsv3.getProject() + " for = " + fd.getFormName());
+            Timber.d("form downloading starts for PROJECT = " + fieldsightFormDetailsv3.getSiteProjectId() + " or " + fieldsightFormDetailsv3.getProject() + " for = " + fd.getFormName());
         } catch (TaskCancelledException e) {
-            e.printStackTrace();
+            Timber.e(e);
             pair = Pair.create(fieldsightFormDetailsv3, "Failed to create form download request");
         }
         return pair;
@@ -104,7 +100,7 @@ public class FieldSightFormDownloader extends FormDownloader {
             pair = Pair.create(fd, message.isEmpty() ?
                     Collect.getInstance().getString(R.string.success) : message);
         } catch (TaskCancelledException e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
 
         return pair;

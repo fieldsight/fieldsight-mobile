@@ -32,25 +32,23 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
 import org.fieldsight.collect.android.R;
+import org.odk.collect.android.adapters.InstanceListCursorAdapter;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.fieldsight.naxa.login.model.Site;
-import org.odk.collect.android.adapters.InstanceListCursorAdapter;
-import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
 
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
 /**
- * Responsible for displaying all the valid instances in the instance directory.
+ * Responsible for displaying all the valid INSTANCES in the instance directory.
  *
  * @author Yaw Anokwa (yanokwa@gmail.com)
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -199,10 +197,10 @@ public class InstanceChooserList extends InstanceListActivity implements
 
     private void setupAdapter() {
         String[] data = new String[]{
-                InstanceColumns.DISPLAY_NAME, InstanceColumns.DISPLAY_SUBTEXT, InstanceColumns.DELETED_DATE
+                InstanceColumns.DISPLAY_NAME, InstanceColumns.DELETED_DATE
         };
         int[] view = new int[]{
-                R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2
+                R.id.form_title, R.id.form_subtitle2
         };
 
         boolean shouldCheckDisabled = !editMode;

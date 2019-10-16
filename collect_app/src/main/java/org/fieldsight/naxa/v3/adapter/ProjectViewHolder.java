@@ -21,40 +21,40 @@ import timber.log.Timber;
 
 class ProjectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.primary_text)
-    TextView primary_text;
+    TextView primaryText;
 
     @BindView(R.id.sub_text)
-    TextView sub_text;
+    TextView textView;
 
     @BindView(R.id.chkbx_sync)
-    CheckBox chkbx_sync;
+    CheckBox chkbxSync;
 
     @BindView(R.id.tv_synced_date)
-    TextView tv_synced_date;
+    TextView tvSyncedDate;
 
     @BindView(R.id.iv_card_status)
     AppCompatImageView imageView;
 
     @BindView(R.id.iv_project_thumbnail)
-    ImageView iv_thumbnail;
+    ImageView ivThumbnail;
 
     public ProjectViewHolder(@NonNull View itemView) {
         super(itemView);
 
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener((v) -> itemClicked(getLayoutPosition()));
-        chkbx_sync.setOnClickListener((v -> checkBoxChanged(getLayoutPosition(), ((CheckBox) v).isChecked())));
+        chkbxSync.setOnClickListener((v -> checkBoxChanged(getLayoutPosition(), ((CheckBox) v).isChecked())));
     }
 
     void bindView(Project project, boolean allTrue) {
-        primary_text.setText(project.getName());
-        sub_text.setText(String.format("A project by %s", project.getOrganizationName()));
-        tv_synced_date.setText(project.getStatusMessage());
-        chkbx_sync.setChecked(project.isChecked());
-        chkbx_sync.setVisibility(allTrue ? View.VISIBLE : View.GONE);
-//        imageView.setImageResource(project.isSynced() ? R.drawable.ic_action_check : android.R.drawable.stat_sys_download_done);
-        Timber.i("project image = %s", project.getUrl());
-        Glide.with(itemView.getContext()).load(project.getUrl()).apply(RequestOptions.circleCropTransform()).into(iv_thumbnail);
+        primaryText.setText(project.getName());
+        textView.setText(String.format("A PROJECT by %s", project.getOrganizationName()));
+        tvSyncedDate.setText(project.getStatusMessage());
+        chkbxSync.setChecked(project.isChecked());
+        chkbxSync.setVisibility(allTrue ? View.VISIBLE : View.GONE);
+//        imageView.setImageResource(PROJECT.isSynced() ? R.drawable.ic_action_check : android.R.drawable.stat_sys_download_done);
+        Timber.i("PROJECT image = %s", project.getUrl());
+        Glide.with(itemView.getContext()).load(project.getUrl()).apply(RequestOptions.circleCropTransform()).into(ivThumbnail);
     }
 
     void checkBoxChanged(int index, boolean isChecked) {

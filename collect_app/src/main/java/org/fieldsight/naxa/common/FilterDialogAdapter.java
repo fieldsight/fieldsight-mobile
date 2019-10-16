@@ -30,7 +30,6 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.FilterOption.FilterType;
 import org.odk.collect.android.utilities.ThemeUtils;
 
 import java.util.ArrayList;
@@ -38,17 +37,15 @@ import java.util.ArrayList;
 public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_TEXT = 0, VIEW_TYPE_SPINNER = 1, VIEW_TYPE_BUTTON = 2, VIEW_TYPE_LIST = 3;
     private final FilterDialogAdapter.RecyclerViewClickListener listener;
-    private final FilterType selectedSortingOrder;
     private final RecyclerView recyclerView;
     private final ThemeUtils themeUtils;
     private final ArrayList<FilterOption> sortList;
 
 
-    public FilterDialogAdapter(Context context, RecyclerView recyclerView, ArrayList<FilterOption> sortList, FilterType selectedSortingOrder, RecyclerViewClickListener recyclerViewClickListener) {
+    public FilterDialogAdapter(Context context, RecyclerView recyclerView, ArrayList<FilterOption> sortList, RecyclerViewClickListener recyclerViewClickListener) {
         themeUtils = new ThemeUtils(context);
         this.recyclerView = recyclerView;
         this.sortList = sortList;
-        this.selectedSortingOrder = selectedSortingOrder;
         listener = recyclerViewClickListener;
     }
 
@@ -107,15 +104,18 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     ((ViewHolderSpinner) holder).spinnerSiteCluster.setSelection(filterOption.getOptions().size() - 1);
                     Pair intialIdLabelPair = (Pair) ((ViewHolderSpinner) holder).spinnerSiteCluster.getSelectedItem();
-                    if (intialIdLabelPair != null) filterOption.setSelection(intialIdLabelPair);
+                    if (intialIdLabelPair != null) {
+                        filterOption.setSelection(intialIdLabelPair);
+                    }
 
 
                     viewHolderSpinner.spinnerSiteCluster.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             Pair tappedIdLabelPair = filterOption.getOptions().get(position);
-                            if (tappedIdLabelPair != null)
+                            if (tappedIdLabelPair != null){
                                 filterOption.setSelection(tappedIdLabelPair);
+                            }
 
                         }
 

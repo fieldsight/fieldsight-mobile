@@ -1,22 +1,20 @@
 package org.fieldsight.naxa.site.db;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseRemoteDataSource;
-import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.database.SiteUploadHistory;
 import org.fieldsight.naxa.common.rx.RetrofitException;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ApiInterface;
-import org.fieldsight.naxa.common.DisposableManager;
-import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.sync.DownloadableItemLocalSource;
 import org.fieldsight.naxa.sync.SyncRepository;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
 import org.fieldsight.naxa.v3.network.SiteResponse;
-import org.fieldsight.naxa.helpers.FSInstancesDao;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
@@ -37,7 +35,6 @@ import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.DownloadUID.EDITED_SITES;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.OFFLINE_SITES;
-
 import static org.fieldsight.naxa.common.Constant.SiteStatus.IS_EDITED;
 import static org.fieldsight.naxa.common.Constant.SiteStatus.IS_OFFLINE;
 import static org.fieldsight.naxa.common.Constant.SiteStatus.IS_ONLINE;
@@ -45,15 +42,14 @@ import static org.fieldsight.naxa.network.ServiceGenerator.getRxClient;
 
 public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
-    private static SiteRemoteSource INSTANCE;
-    private SiteDao dao;
+    private static SiteRemoteSource siteRemoteSource;
 
 
-    public static SiteRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SiteRemoteSource();
+    public synchronized static SiteRemoteSource getInstance() {
+        if (siteRemoteSource == null) {
+            siteRemoteSource = new SiteRemoteSource();
         }
-        return INSTANCE;
+        return siteRemoteSource;
     }
 
 
@@ -67,10 +63,10 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     public void updateAllEditedSite() {
         DisposableSingleObserver<List<Site>> dis = SiteLocalSource.getInstance()
                 .getAllByStatus(IS_EDITED)
-                .doOnDispose(() -> DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDITED_SITES))
+                .doOnDispose(() -> DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(EDITED_SITES))
                 .doOnSubscribe(disposable -> {
                     SyncRepository.getInstance().showProgress(EDITED_SITES);
-                    DownloadableItemLocalSource.getINSTANCE().markAsRunning(EDITED_SITES);
+                    DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(EDITED_SITES);
                 })
                 .flattenAsObservable((Function<List<Site>, Iterable<Site>>) sites -> sites)
                 .flatMap((Function<Site, ObservableSource<Site>>) this::updateSite)
@@ -94,9 +90,9 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                                 msg = Collect.getInstance().getString(R.string.msg_single_site_upload, sites.get(0).getName());
                             }
                             FieldSightNotificationUtils.getINSTANCE().notifyHeadsUp(title, msg);
-                            DownloadableItemLocalSource.getINSTANCE().markAsCompleted(EDITED_SITES);
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(EDITED_SITES);
                         } else {
-                            DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDITED_SITES);
+                            DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(EDITED_SITES);
                         }
                     }
 
@@ -110,7 +106,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDITED_SITES, message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(EDITED_SITES, message);
                     }
                 });
 
@@ -120,11 +116,11 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
 
     public void uploadAllOfflineSite() {
         DisposableSingleObserver<List<Site>> dis = SiteLocalSource.getInstance()
-                .getAllByStatus(Constant.SiteStatus.IS_OFFLINE)
-                .doOnDispose(() -> DownloadableItemLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES))
+                .getAllByStatus(IS_OFFLINE)
+                .doOnDispose(() -> DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(OFFLINE_SITES))
                 .doOnSubscribe(disposable -> {
                     SyncRepository.getInstance().showProgress(OFFLINE_SITES);
-                    DownloadableItemLocalSource.getINSTANCE().markAsRunning(OFFLINE_SITES);
+                    DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(OFFLINE_SITES);
                 })
                 .toObservable()
                 .flatMap((Function<List<Site>, ObservableSource<Site>>) this::uploadMultipleSites)
@@ -134,7 +130,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                 .subscribeWith(new DisposableSingleObserver<List<Site>>() {
                     @Override
                     public void onSuccess(List<Site> sites) {
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(OFFLINE_SITES);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(OFFLINE_SITES);
                     }
 
                     @Override
@@ -146,7 +142,7 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
                         } else {
                             message = e.getMessage();
                         }
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(OFFLINE_SITES, message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(OFFLINE_SITES, message);
                     }
                 });
 
@@ -225,13 +221,13 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
             siteTypeRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getTypeId()));
         }
 
-        RequestBody SiteNameRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getName());
+        RequestBody siteNameRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getName());
         RequestBody latRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getLatitude());
         RequestBody lonRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getLongitude());
         RequestBody identifierRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getIdentifier());
-        RequestBody SitePhoneRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPhone());
-        RequestBody SiteAddressRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getAddress());
-        RequestBody SitePublicDescRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPublicDesc());
+        RequestBody sitePhoneRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPhone());
+        RequestBody siteAddressRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getAddress());
+        RequestBody sitePublicDescRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPublicDesc());
         RequestBody projectIdRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getProject());
         RequestBody isSurvey = RequestBody.create(MediaType.parse("text/plain"), "false");
         RequestBody metaAttrs = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getMetaAttributes());
@@ -241,8 +237,8 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         return getRxClient()
                 .create(ApiInterface.class)
                 .uploadSite(APIEndpoint.ADD_SITE_URL, body, isSurvey
-                        , SiteNameRequest, latRequest, lonRequest, identifierRequest, SitePhoneRequest,
-                        SiteAddressRequest, SitePublicDescRequest, projectIdRequest, siteTypeRequest, regionId, metaAttrs);
+                        , siteNameRequest, latRequest, lonRequest, identifierRequest, sitePhoneRequest,
+                        siteAddressRequest, sitePublicDescRequest, projectIdRequest, siteTypeRequest, regionId, metaAttrs);
     }
 
     private Observable<Site> updateSite(Site siteLocationPojo) {
@@ -256,15 +252,15 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
             body = MultipartBody.Part.createFormData("logo", file.getName(), requestBody);
         }
 
-        RequestBody SiteNameRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getName());
+        RequestBody siteNameRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getName());
         RequestBody latRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getLatitude()));
         RequestBody lonRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getLongitude()));
         RequestBody identifierRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getIdentifier());
-        RequestBody SitePhoneRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPhone());
-        RequestBody SiteAddressRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getAddress());
-        RequestBody SitePublicDescRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPublicDesc());
+        RequestBody sitePhoneRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPhone());
+        RequestBody siteAddressRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getAddress());
+        RequestBody sitePublicDescRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getPublicDesc());
         RequestBody projectIdRequest = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getProject());
-        RequestBody SiteRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getTypeId()));
+        RequestBody siteRequest = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(siteLocationPojo.getTypeId()));
         RequestBody metaAttrs = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getMetaAttributes());
         RequestBody regionId = RequestBody.create(MediaType.parse("text/plain"), siteLocationPojo.getRegionId());
 
@@ -272,8 +268,8 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
         return getRxClient()
                 .create(ApiInterface.class)
                 .updateSite(APIEndpoint.SITE_UPDATE_URL.concat(siteLocationPojo.getId()), body
-                        , SiteNameRequest, latRequest, lonRequest, identifierRequest, SitePhoneRequest,
-                        SiteAddressRequest, SitePublicDescRequest, projectIdRequest, SiteRequest, regionId, metaAttrs);
+                        , siteNameRequest, latRequest, lonRequest, identifierRequest, sitePhoneRequest,
+                        siteAddressRequest, sitePublicDescRequest, projectIdRequest, siteRequest, regionId, metaAttrs);
 
     }
 
@@ -291,14 +287,14 @@ public class SiteRemoteSource implements BaseRemoteDataSource<Site> {
     }
 
     public Single<SiteResponse> getSitesByURL(String url) {
-        return ServiceGenerator.getRxClient()
+        return getRxClient()
                 .create(ApiV3Interface.class)
                 .getSites(url)
                 .subscribeOn(Schedulers.io());
     }
 
     public Single<SiteResponse> getSites(HashMap<String, String> params) {
-        return ServiceGenerator.getRxClient()
+        return getRxClient()
                 .create(ApiV3Interface.class)
                 .getSites(params)
                 .subscribeOn(Schedulers.io());

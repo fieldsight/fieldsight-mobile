@@ -6,6 +6,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.common.base.Objects;
+
 
 @Entity(tableName = "sync")
 public class DownloadableItem {
@@ -26,7 +28,7 @@ public class DownloadableItem {
     private String syncMessage;
 
     @ColumnInfo(name = "is_determinate")
-    private boolean isDeterminate = false;
+    private boolean isDeterminate;
 
     @Ignore
     private boolean isOutOfSync;
@@ -89,7 +91,7 @@ public class DownloadableItem {
     }
 
 
-    public boolean getIsSelected() {
+    public boolean isSelected() {
         return isSelected;
     }
 
@@ -164,24 +166,26 @@ public class DownloadableItem {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DownloadableItem that = (DownloadableItem) o;
-
-        if (uid != that.uid) return false;
-        if (downloadingStatus != that.downloadingStatus) return false;
-        if (checked != that.checked) return false;
-        if (syncProgress != that.syncProgress) return false;
-        if (syncTotal != that.syncTotal) return false;
-        if (isDeterminate != that.isDeterminate) return false;
-        if (isOutOfSync != that.isOutOfSync) return false;
-        if (isSelected != that.isSelected) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (detail != null ? !detail.equals(that.detail) : that.detail != null) return false;
-        if (lastSyncDateTime != null ? !lastSyncDateTime.equals(that.lastSyncDateTime) : that.lastSyncDateTime != null)
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
-        return errorMessage != null ? errorMessage.equals(that.errorMessage) : that.errorMessage == null;
+        }
+        DownloadableItem that = (DownloadableItem) o;
+        return uid == that.uid &&
+                downloadingStatus == that.downloadingStatus &&
+                checked == that.checked &&
+                syncProgress == that.syncProgress &&
+                syncTotal == that.syncTotal &&
+                isDeterminate == that.isDeterminate &&
+                isOutOfSync == that.isOutOfSync &&
+                isSelected == that.isSelected &&
+                Objects.equal(title, that.title) &&
+                Objects.equal(detail, that.detail) &&
+                Objects.equal(lastSyncDateTime, that.lastSyncDateTime) &&
+                Objects.equal(errorMessage, that.errorMessage) &&
+                Objects.equal(syncMessage, that.syncMessage);
     }
 
     @Override

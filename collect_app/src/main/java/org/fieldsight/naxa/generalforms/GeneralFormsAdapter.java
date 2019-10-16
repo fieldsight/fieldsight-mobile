@@ -28,13 +28,14 @@ import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.fieldsight.naxa.common.AnimationUtils.getRotationAnimation;
 
 public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapter.ViewHolder> {
 
-    private ArrayList<GeneralFormAndSubmission> generalForms;
-    private OnFormItemClickListener<GeneralForm> listener;
+    private final ArrayList<GeneralFormAndSubmission> generalForms;
+    private final OnFormItemClickListener<GeneralForm> listener;
 
     GeneralFormsAdapter(ArrayList<GeneralFormAndSubmission> totalList, OnFormItemClickListener<GeneralForm> listener) {
         this.generalForms = totalList;
@@ -80,7 +81,7 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
         String relativeDateTime = DateTimeUtils.getRelativeTime(generalForm.getDateCreated(), true);
         viewHolder.tvDesc.setText(viewHolder.tvFormName.getContext().getString(R.string.form_created_on, relativeDateTime));
         if (generalForm.getName() != null) {
-            viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1).toUpperCase());
+            viewHolder.tvIconText.setText(generalForm.getName().substring(0, 1).toUpperCase(Locale.getDefault()));
         }
         setSubmissionText(viewHolder, submissionDetail, generalForm);
     }
@@ -129,19 +130,21 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
         Drawable drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
 
-        if (status == null) return drawable;
+        if (status == null) {
+            return drawable;
 
+        }
         switch (status) {
-            case Constant.FormStatus.Approved:
+            case Constant.FormStatus.APPROVED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
                 break;
-            case Constant.FormStatus.Flagged:
+            case Constant.FormStatus.FLAGGED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_yellow);
                 break;
-            case Constant.FormStatus.Rejected:
+            case Constant.FormStatus.REJECTED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
                 break;
-            case Constant.FormStatus.Pending:
+            case Constant.FormStatus.PENDING:
             default:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
                 break;
@@ -162,11 +165,11 @@ public class GeneralFormsAdapter extends RecyclerView.Adapter<GeneralFormsAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvFormName, tvDesc, tvIconText, tvSubtext;
-        private Button btnOpenEdu, btnOpenHistory;
-        private ImageView ivCardCircle;
-        private CardView cardView;
-        private ImageButton btnExpandCard;
+        private final TextView tvFormName, tvDesc, tvIconText, tvSubtext;
+        private final Button btnOpenEdu, btnOpenHistory;
+        private final ImageView ivCardCircle;
+        private final CardView cardView;
+        private final ImageButton btnExpandCard;
 
 
         public ViewHolder(View view) {

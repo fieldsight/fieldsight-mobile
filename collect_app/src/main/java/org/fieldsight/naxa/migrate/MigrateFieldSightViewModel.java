@@ -32,15 +32,15 @@ import io.reactivex.Observable;
 
 public class MigrateFieldSightViewModel extends ViewModel {
 
-    private MutableLiveData<List<File>> oldAccounts = new MutableLiveData<>();
-    private String usernameOrEmail = null;
+    private final MutableLiveData<List<File>> oldAccounts = new MutableLiveData<>();
+    private String usernameOrEmail;
     private MigrationHelper migrationHelper;
 
 
     private void copyProjects() {
         SQLiteDatabase db = getProjSiteDB();
-        Cursor cursor = null;
-        cursor = selectAll(db, MigrationHelper.Table.project);
+        Cursor cursor;
+        cursor = selectAll(db, MigrationHelper.Table.PROJECT);
         ArrayList<Project> projects = new ArrayList<>();
 
         while (cursor.moveToNext()) {
@@ -99,7 +99,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
         SQLiteDatabase db = getProjSiteDB();
 
         Cursor cursor = null;
-        cursor = selectAll(db, MigrationHelper.Table.my_site);
+        cursor = selectAll(db, MigrationHelper.Table.TABLE_MY_SITE_DETAIL);
 
         while (cursor.moveToNext()) {
 
@@ -154,7 +154,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
         SQLiteDatabase db = getInstancesDB();
         FSInstancesDao dao = new FSInstancesDao();
         Cursor cursor;
-        cursor = selectAll(db, MigrationHelper.Table.instances);
+        cursor = selectAll(db, MigrationHelper.Table.INSTANCES);
         while (cursor.moveToNext()) {
 
             String formDeployedFrom = getString(cursor, MigrationHelper.InstanceColumns.FS_FORM_DEPLOYED_FROM);
@@ -178,7 +178,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
                     .fieldSightSiteId(getString(cursor, MigrationHelper.InstanceColumns.FS_SITE_ID))
                     .jrVersion(getString(cursor, MigrationHelper.InstanceColumns.JR_VERSION))
                     .status(getString(cursor, MigrationHelper.InstanceColumns.STATUS))
-                    .displaySubtext(getString(cursor, MigrationHelper.InstanceColumns.DISPLAY_SUBTEXT))
+
                     .lastStatusChangeDate(lastStatusChangeDate)
                     .build();
 
@@ -191,7 +191,7 @@ public class MigrateFieldSightViewModel extends ViewModel {
         SQLiteDatabase db = getFormsDB();
         FormsDao dao = new FormsDao();
         Cursor cursor;
-        cursor = selectAll(db, MigrationHelper.Table.forms);
+        cursor = selectAll(db, MigrationHelper.Table.FORMS);
         while (cursor.moveToNext()) {
 
             String fixedFormFilePath = migrationHelper.fixFormAndInstancesPath(getString(cursor, MigrationHelper.FormColumns.FORM_FILE_PATH), usernameOrEmail);
@@ -203,7 +203,6 @@ public class MigrateFieldSightViewModel extends ViewModel {
                     .formFilePath(fixedFormFilePath)
                     .jrCacheFilePath(fixedJrCacheFilePath)
                     .displayName(getString(cursor, MigrationHelper.FormColumns.DISPLAY_NAME))
-                    .displaySubtext(getString(cursor, MigrationHelper.FormColumns.DISPLAY_SUBTEXT))
                     .description(getString(cursor, MigrationHelper.FormColumns.DESCRIPTION))
                     .jrFormId(getString(cursor, MigrationHelper.FormColumns.JR_FORM_ID))
                     .jrVersion(getString(cursor, MigrationHelper.FormColumns.JR_VERSION))
@@ -222,8 +221,9 @@ public class MigrateFieldSightViewModel extends ViewModel {
         String dbPath = migrationHelper.getOldRootPath() + File.separator + MigrationHelper.Folder.METADATA + File.separator + MigrationHelper.Database.FORMS;
         File dbfile = new File(dbPath);
 
-        if (!dbfile.exists())
+        if (!dbfile.exists()) {
             throw new RuntimeException("Forms Database does not exist for " + usernameOrEmail);
+        }
 
         return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
     }
@@ -242,8 +242,9 @@ public class MigrateFieldSightViewModel extends ViewModel {
                 File.separator + MigrationHelper.Folder.DB_FOLDER +
                 File.separator + MigrationHelper.Database.PROJ_SITES);
 
-        if (!dbfile.exists())
+        if (!dbfile.exists()) {
             throw new RuntimeException("Database file does not exist for " + usernameOrEmail);
+        }
 
         return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
     }
@@ -252,15 +253,13 @@ public class MigrateFieldSightViewModel extends ViewModel {
         String dbPath = migrationHelper.getOldRootPath() + File.separator + MigrationHelper.Folder.METADATA + File.separator + MigrationHelper.Database.INSTANCES;
         File dbfile = new File(dbPath);
 
-        if (!dbfile.exists())
+        if (!dbfile.exists()) {
             throw new RuntimeException("Instance Database does not exist for " + usernameOrEmail);
+        }
 
         return SQLiteDatabase.openOrCreateDatabase(dbfile, null);
     }
 
-    public MigrateFieldSightViewModel() {
-
-    }
 
     Observable<Integer> copyFromOldAccount() {
 
@@ -299,7 +298,6 @@ public class MigrateFieldSightViewModel extends ViewModel {
 
                 emitter.onComplete();
             } catch (Exception ex) {
-                ex.printStackTrace();
                 emitter.onError(ex);
             }
 

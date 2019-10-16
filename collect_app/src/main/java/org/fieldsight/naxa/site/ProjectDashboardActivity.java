@@ -1,7 +1,6 @@
 package org.fieldsight.naxa.site;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -66,13 +65,11 @@ import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.login.model.User;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.profile.UserActivity;
-import org.fieldsight.naxa.project.MapFragment;
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
@@ -108,10 +105,10 @@ public class ProjectDashboardActivity extends BaseActivity {
     private NavigationView navigationView;
     private ActionBarDrawerToggle drawerToggle;
 
-    private boolean mapIsVisible = false;
+    private boolean mapIsVisible;
     private FrameLayout navigationHeader;
     private int mapExistReachesPosition;
-    TermsLabels tl = null;
+    TermsLabels tl;
 
     public static void start(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
@@ -122,7 +119,6 @@ public class ProjectDashboardActivity extends BaseActivity {
 
     @SafeVarargs
     public static void start(Activity context, Project project, Pair<View, String>... pairs) {
-        ActivityOptions activityOptions = null;
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
         context.startActivity(intent);
@@ -166,10 +162,10 @@ public class ProjectDashboardActivity extends BaseActivity {
     }
 
     private TermsLabels getTermsAndLabels() {
-        if(!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
+        if(!TextUtils.isEmpty(loadedProject.getTermsAndLabels())) {
             try{
-                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
-                JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
+                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTermsAndLabels());
+                JSONObject tlJson = new JSONObject(loadedProject.getTermsAndLabels());
                 return TermsLabels.fromJSON(tlJson);
             }catch (Exception e){
                 Timber.e("Failed to load terms and labels; Reason: %s",e.getMessage());
@@ -223,17 +219,10 @@ public class ProjectDashboardActivity extends BaseActivity {
     private void setupSearchView() {
 
         searchView.setOnClickListener(view -> {
-            if (Collect.allowClick(getClass().getName())) {
+            if (allowClick(getClass().getName())) {
                 loadToolBarSearch();
             }
         });
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
 
     }
 
@@ -242,9 +231,9 @@ public class ProjectDashboardActivity extends BaseActivity {
             User user = FieldSightUserSession.getUser();
             ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFullName());
             ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
-             if(tl != null && !TextUtils.isEmpty(tl.site_supervisor)) {
-                 Timber.i("ProjectDashboardActivity, data:: sitesv = %s", tl.site_supervisor);
-                 ((TextView)navigationHeader.findViewById(R.id.tv_user_post)).setText(tl.site_supervisor);
+             if(tl != null && !TextUtils.isEmpty(tl.siteSupervisor)) {
+                 Timber.i("ProjectDashboardActivity, data:: sitesv = %s", tl.siteSupervisor);
+                 ((TextView)navigationHeader.findViewById(R.id.tv_user_post)).setText(tl.siteSupervisor);
              }
 
             ImageView ivProfilePicture = navigationHeader.findViewById(R.id.image_profile);
@@ -258,7 +247,7 @@ public class ProjectDashboardActivity extends BaseActivity {
                 toggleNavDrawer();
                 new Handler()
                         .postDelayed(() -> {
-                            UserActivity.start(ProjectDashboardActivity.this);
+                            UserActivity.start(this);
                         }, 250);
             });
         } catch (IllegalArgumentException e) {
@@ -316,14 +305,14 @@ public class ProjectDashboardActivity extends BaseActivity {
         ArrayList<Integer> totalTabs = new ArrayList<>();
         totalTabs.add(0);
         totalTabs.add(1);
-        totalTabs.add(2);
+//        totalTabs.add(2);
         totalTabs.remove(position);
 
         FloatingActionButton unselectedFab1 = (FloatingActionButton) tabLayout.getTabAt(totalTabs.get(0)).getCustomView();
         ViewUtils.setButtonTint(unselectedFab1, ColorStateList.valueOf(Color.parseColor("#00628e")));
 
-        FloatingActionButton unselectedFab2 = (FloatingActionButton) tabLayout.getTabAt(totalTabs.get(1)).getCustomView();
-        ViewUtils.setButtonTint(unselectedFab2, ColorStateList.valueOf(Color.parseColor("#00628e")));
+//        FloatingActionButton unselectedFab2 = (FloatingActionButton) tabLayout.getTabAt(totalTabs.get(1)).getCustomView();
+//        ViewUtils.setButtonTint(unselectedFab2, ColorStateList.valueOf(Color.parseColor("#00628e")));
 
     }
 
@@ -371,13 +360,13 @@ public class ProjectDashboardActivity extends BaseActivity {
     private void handleNavDrawerClicks(int id) {
         switch (id) {
             case R.id.nav_create_offline_site:
-                String site_label = "Site";
-                String region_label = "Region";
+                String siteLabel = "Site";
+                String regionLabel = "Region";
                 if(tl != null) {
-                    site_label = tl.site;
-                    region_label = tl.region;
+                    siteLabel = tl.site;
+                    regionLabel = tl.region;
                 }
-                CreateSiteActivity.start(this, loadedProject, null, site_label, region_label);
+                CreateSiteActivity.start(this, loadedProject, null, siteLabel, regionLabel);
                 break;
             case R.id.nav_delete_saved_form:
 
@@ -485,8 +474,8 @@ public class ProjectDashboardActivity extends BaseActivity {
 
         tabLayout.getTabAt(0).setCustomView(fabTabSitelist);
         tabLayout.getTabAt(1).setCustomView(fabTabContactList);
-        tabLayout.getTabAt(2).setCustomView(fabMap);
-
+//        tabLayout.getTabAt(2).setCustomView(fabMap);
+//
         ViewUtils.setButtonTint(fabTabSitelist, ColorStateList.valueOf(Color.parseColor("#4b8fbe")));
     }
 
@@ -495,13 +484,13 @@ public class ProjectDashboardActivity extends BaseActivity {
 
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        SiteListFragment siteListFragment = SiteListFragment.getInstance(loadedProject);
-        ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.getInstance();
+        SiteListFragment siteListFragment = SiteListFragment.newInstance(loadedProject);
+        ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.newInstance();
 
-        MapFragment mapFragment = MapFragment.getInstance(loadedProject);
+//        MapFragment mapFragment = MapFragment.newInstance(loadedProject);
         fragments.add(siteListFragment);
         fragments.add(projectContactsFragment);
-        fragments.add(mapFragment);
+//        fragments.add(mapFragment);
 
 
         DashboardAdapter dashboardAdapter = new DashboardAdapter(getSupportFragmentManager());
@@ -522,8 +511,12 @@ public class ProjectDashboardActivity extends BaseActivity {
         } else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            if (isHome) toggleNavDrawer();
-            else finish();
+            if (isHome) {
+                toggleNavDrawer();
+            }
+            else{
+                finish();
+            }
         }
     }
 
@@ -597,7 +590,7 @@ public class ProjectDashboardActivity extends BaseActivity {
             case R.id.action_app_settings:
                 if (allowClick(getClass().getName())) {
 
-                    startActivity(new Intent(ProjectDashboardActivity.this, SettingsActivity.class));
+                    startActivity(new Intent(this, SettingsActivity.class));
                 }
                 break;
         }
@@ -631,7 +624,7 @@ public class ProjectDashboardActivity extends BaseActivity {
         toolbarSearchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
         //sitesStored = (sitesStored != null && sitesStored.size() > 0) ? sitesStored : new ArrayList<String>();
-        final SearchAdapter searchAdapter = new SearchAdapter(this, sitesStored, false);
+        final SearchAdapter searchAdapter = new SearchAdapter(this, sitesStored);
 
         listSearch.setVisibility(View.VISIBLE);
         listSearch.setAdapter(searchAdapter);

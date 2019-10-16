@@ -65,7 +65,7 @@ public class ODKFormRemoteSource {
                             }
                         }
 
-                        Timber.i("%d forms failed to download",failedForms.size());
+                        Timber.i("%d FORMS failed to download",failedForms.size());
                         return failedForms;
                     }
                 });
@@ -117,7 +117,7 @@ public class ODKFormRemoteSource {
             FormDownloader formDownloader = new FormDownloader(false);
             HashMap<FormDetails, String> forms = formDownloader.downloadForms(formDetailsArrayList);
 
-            Timber.i("Downloaded %s forms from %s and %s",forms.size(),xmlForms.get(0).getDownloadUrl(),xmlForms.get(1).getDownloadUrl());
+            Timber.i("Downloaded %s FORMS from %s and %s",forms.size(),xmlForms.get(0).getDownloadUrl(),xmlForms.get(1).getDownloadUrl());
             return forms;
         });
     }
@@ -125,7 +125,6 @@ public class ODKFormRemoteSource {
 
     @Deprecated
     public Observable<DownloadProgress> fetchODKForms() {
-        int uid = Constant.DownloadUID.ODK_FORMS;
         return Observable.create(emitter -> {
             XMLFormDownloadReceiver xmlFormDownloadReceiver = new XMLFormDownloadReceiver(new Handler());
 
@@ -136,7 +135,7 @@ public class ODKFormRemoteSource {
                     case DownloadProgress.STATUS_PROGRESS_UPDATE:
                         DownloadProgress progress = (DownloadProgress) resultData.getSerializable(EXTRA_OBJECT);
                         emitter.onNext(progress);
-                        DownloadableItemLocalSource.getINSTANCE().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().updateProgress(Constant.DownloadUID.ALL_FORMS, progress.getTotal(), progress.getProgress());
                         break;
                     case DownloadProgress.STATUS_ERROR:
                         emitter.onError(new RuntimeException(resultData.getString(Constant.EXTRA_MESSAGE)));

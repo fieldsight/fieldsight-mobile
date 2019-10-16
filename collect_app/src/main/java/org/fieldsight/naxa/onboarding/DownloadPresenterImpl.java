@@ -6,7 +6,6 @@ import android.net.NetworkInfo;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import org.fieldsight.collect.android.R;
@@ -28,16 +27,14 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.SITE_TYPES;
 
-
+@Deprecated
 public class DownloadPresenterImpl implements DownloadPresenter {
 
-    private DownloadView downloadView;
-    private DownloadModel downloadModel;
-    private SyncRepository syncRepository;
-    private MutableLiveData<Boolean> isDownloading = new MutableLiveData<>();
+    private final DownloadModel downloadModel;
+    private final SyncRepository syncRepository;
 
     public DownloadPresenterImpl(DownloadView downloadView) {
-        this.downloadView = downloadView;
+
         this.downloadModel = new DownloadModelImpl();
         syncRepository = SyncRepository.getInstance();
 
@@ -116,7 +113,7 @@ public class DownloadPresenterImpl implements DownloadPresenter {
                 ContactRemoteSource.getInstance().getAll();
                 break;
             case SITE_TYPES:
-                SiteTypeRemoteSource.getINSTANCE().getAll();
+                SiteTypeRemoteSource.getSiteTypeRemoteSource().getAll();
                 break;
             case ALL_FORMS:
                 downloadModel.fetchAllForms();

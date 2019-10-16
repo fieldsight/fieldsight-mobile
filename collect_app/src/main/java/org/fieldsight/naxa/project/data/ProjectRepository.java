@@ -1,20 +1,18 @@
 package org.fieldsight.naxa.project.data;
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import org.fieldsight.naxa.common.BaseRepository;
-import org.fieldsight.naxa.generalforms.data.GeneralFormRepository;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.SiteMetaAttribute;
 import org.fieldsight.naxa.network.NetworkUtils;
-import org.fieldsight.naxa.scheduled.data.ScheduleForm;
 import org.fieldsight.naxa.site.SiteType;
 import org.fieldsight.naxa.site.SiteTypeLocalSource;
 import org.fieldsight.naxa.v3.network.LoadProjectCallback;
@@ -37,27 +35,23 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import timber.log.Timber;
 
+@SuppressWarnings({"PMD.SingleMethodSingleton"})
 public class ProjectRepository implements BaseRepository<Project> {
 
-    private static ProjectRepository INSTANCE = null;
+    private static ProjectRepository projectRepository;
     private final ProjectLocalSource localSource;
     private final ProjectSitesRemoteSource remoteSource;
 
-    private MediatorLiveData<List<ScheduleForm>> mediatorLiveData = new MediatorLiveData<>();
 
     public static ProjectRepository getInstance() {
         return getInstance(ProjectLocalSource.getInstance(), ProjectSitesRemoteSource.getInstance());
     }
 
-    public static ProjectRepository getInstance(ProjectLocalSource localSource, ProjectSitesRemoteSource remoteSource) {
-        if (INSTANCE == null) {
-            synchronized (GeneralFormRepository.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new ProjectRepository(localSource, remoteSource);
-                }
-            }
+    public synchronized static ProjectRepository getInstance(ProjectLocalSource localSource, ProjectSitesRemoteSource remoteSource) {
+        if (projectRepository == null) {
+            projectRepository = new ProjectRepository(localSource, remoteSource);
         }
-        return INSTANCE;
+        return projectRepository;
     }
 
 
@@ -68,7 +62,9 @@ public class ProjectRepository implements BaseRepository<Project> {
 
     @Override
     public LiveData<List<Project>> getAll(boolean forceUpdate) {
-        if (forceUpdate) remoteSource.getAll();
+        if (forceUpdate) {
+            remoteSource.getAll();
+        }
         return localSource.getAll();
     }
 
@@ -148,14 +144,18 @@ public class ProjectRepository implements BaseRepository<Project> {
                     }
 
                     private ArrayList<SiteType> mapJSONtoSiteTypes(String types) {
-                        if (TextUtils.isEmpty(types)) return new ArrayList<>();
+                        if (TextUtils.isEmpty(types)) {
+                            return new ArrayList<>();
+                        }
                         Type siteTypeToken = new TypeToken<ArrayList<SiteType>>() {
                         }.getType();
                         return new Gson().fromJson(types, siteTypeToken);
                     }
 
                     private List<SiteMetaAttribute> mapJSONtoMetaArributes(String jsonArray) {
-                        if (TextUtils.isEmpty(jsonArray)) return new ArrayList<>();
+                        if (TextUtils.isEmpty(jsonArray)) {
+                            return new ArrayList<>();
+                        }
                         Type siteMetaAttrsList = new TypeToken<List<SiteMetaAttribute>>() {
                         }.getType();
                         return new Gson().fromJson(jsonArray, siteMetaAttrsList);

@@ -4,20 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.view.Menu;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,9 +25,6 @@ import org.fieldsight.naxa.network.ServiceGenerator;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observer;
@@ -47,28 +37,26 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 
 public class PreviousSubmissionListActivity extends CollectAbstractActivity implements PaginationAdapter.OnCardClickListener {
 
-    private static final String EXTRA_FORM_HISTORY = "org.bcss.collect.android.fieldsight.model.FormHistoryResponse";
     ActionBar actionBar;
-    private String fsFormId, fsFormName, fsFormRecordName, siteId;
+    private String fsFormId;
+    private String fsFormName;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerView listFormHistory;
     private PaginationAdapter adapter;
-    private TextView tvNoData;
 
     ProgressBar progressBar;
 
-    private boolean isLoading = false;
+    private boolean isLoading ;
 
-    private boolean isLastPage = false;
+    private boolean isLastPage ;
 
     private String urlFirstPage;
     private String urlNextPage;
     private Toolbar toolbar;
-    private String count;
     private CardView cardSubmissionInfo;
     private TextView tvTotalSubmissionMessage;
     private TextView tvListTitle;
-    private Button btnLoadLatestSubmission;
+
     private String tableName;
 
     FormResponse offlineLatestResponse;
@@ -93,14 +81,14 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         Bundle bundle = getIntent().getExtras();
         fsFormId = bundle.getString(Constant.BundleKey.KEY_FS_FORM_ID);
         fsFormName = bundle.getString(Constant.BundleKey.KEY_FS_FORM_NAME);
-        fsFormRecordName = bundle.getString(Constant.BundleKey.KEY_FS_FORM_RECORD_NAME);
-        siteId = bundle.getString(Constant.BundleKey.KEY_SITE_ID);
+
+        String siteId = bundle.getString(Constant.BundleKey.KEY_SITE_ID);
         tableName = bundle.getString(Constant.BundleKey.KEY_TABLE_NAME);
 
         offlineLatestResponse = null;
         urlFirstPage = FieldSightUserSession.getServerUrl(this) + "/forms/api/responses/" + fsFormId + "/" + siteId;
         Timber.i(urlFirstPage);
-        count = bundle.getString("count");
+        String count = bundle.getString("count");
 
         bindUI();
         setupRecyclerView();
@@ -166,15 +154,13 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
                         tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
 
                         if (response == null) {
-
-                            showNoDataLayout();
                             tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
                             return;
 
                         }
 
                         if (response.getResults().size() <= 0) {
-                            showNoDataLayout();
+
                             tvTotalSubmissionMessage.setText(getString(R.string.msg_no_form_submission));
                             return;
                         }
@@ -203,7 +189,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
                         ToastUtils.showLongToast(e.getMessage());
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
 
                     @Override
@@ -213,26 +199,6 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
                 });
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // getMenuInflater().inflate(R.menu.menu_sort, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    private void sortByDate(List<FormResponse> formResponses) {
-        Collections.sort(formResponses, new Comparator<FormResponse>() {
-            @Override
-            public int compare(FormResponse lhs, FormResponse rhs) {
-                return lhs.getDate().compareTo(rhs.getDate());
-            }
-        });
-
-        adapter.clear();
-        adapter.addAll(formResponses);
-
-    }
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
@@ -265,16 +231,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         listFormHistory.setNestedScrollingEnabled(false);
     }
 
-    private void runLayoutAnimation(final RecyclerView recyclerView) {
 
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
-
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }
 
     private void setupPagination(final RecyclerView rv) {
 
@@ -328,7 +285,7 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
                     public void onError(Throwable e) {
                         progressBar.setVisibility(View.GONE);
                         ToastUtils.showLongToast(e.getMessage());
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
 
                     @Override
@@ -342,11 +299,10 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         toolbar = findViewById(R.id.toolbar);
         listFormHistory = findViewById(R.id.recycler_form_history_list);
         progressBar = findViewById(R.id.main_progress);
-        tvNoData = findViewById(R.id.no_message);
         cardSubmissionInfo = findViewById(R.id.card_info);
         tvTotalSubmissionMessage = findViewById(R.id.tv_total_submission_message);
         tvListTitle = findViewById(R.id.tv_list_title);
-        btnLoadLatestSubmission = findViewById(R.id.btn_load_prev_submissions);
+
     }
 
     @Override
@@ -355,21 +311,9 @@ public class PreviousSubmissionListActivity extends CollectAbstractActivity impl
         toFormDetail.putExtra(EXTRA_OBJECT, form);
         startActivity(toFormDetail);
 
-//        String transitionName = getString(R.string.transition_previous_submission);
-//        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, transitionName);
-//        ActivityCompat.startActivity(this, toFormDetail, options.toBundle());
+
     }
 
-    private void hideNoDataLayout() {
-        tvNoData.setVisibility(View.GONE);
-        listFormHistory.setVisibility(View.VISIBLE);
-    }
 
-    @Deprecated
-    private void showNoDataLayout() {
-
-//        tvNoData.setVisibility(View.GONE);
-//        listFormHistory.setVisibility(View.GONE);
-    }
 
 }

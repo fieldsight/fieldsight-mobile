@@ -72,12 +72,10 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
     private FieldSightDownloadFormListTask mDownloadFormListTask;
     private HashMap<String, FormDetails> mFormNamesAndURLs = new HashMap<String, FormDetails>();
-    private ArrayList<HashMap<String, String>> mFormList;
     private LinkedList<XMLForm> formsToDownlaod;
     private Bundle message;
 
     private ResultReceiver receiver;
-    private DownloadProgress downloadProgress;
 
 
     public static void start(Context context, @NonNull XMLFormDownloadReceiver receiver) {
@@ -102,11 +100,11 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         message = new Bundle();
         receiver = intent.getParcelableExtra(EXTRA_RECEIVER);
 
-        DownloadableItemLocalSource.getINSTANCE()
+        DownloadableItemLocalSource.getDownloadableItemLocalSource()
                 .getStatusById(Constant.DownloadUID.PROJECT_SITES)
                 .map(syncableItem -> {
                     if (syncableItem.getDownloadingStatus() == Constant.DownloadStatus.RUNNING) {
-                        throw new DownloadRunningException("Waiting until project and sites are downloaded");
+                        throw new DownloadRunningException("Waiting until PROJECT and sites are downloaded");
 
                     }
                     return syncableItem;
@@ -119,7 +117,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                             @Override
                             public ObservableSource<?> apply(Throwable throwable) {
                                 if (throwable instanceof DownloadRunningException) {
-                                    Timber.i("Polling for project sites");
+                                    Timber.i("Polling for PROJECT sites");
                                     return Observable.timer(3, TimeUnit.SECONDS);
                                 }
 
@@ -140,7 +138,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                     @Override
                     public List<Project> apply(List<Project> projects) throws Exception {
                         if (projects.isEmpty()) {
-                            throw new RuntimeException("Download project(s) site(s) first");
+                            throw new RuntimeException("Download PROJECT(s) site(s) first");
                         }
                         return projects;
                     }
@@ -164,28 +162,28 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                         }
 
                         for (String projectId : projectIds) {
-                            XMLForm XMLForm;
+                            XMLForm xmlForm;
 
                             String baseurl = FieldSightUserSession.getServerUrl(Collect.getInstance());
-                            XMLForm = new XMLFormBuilder()
+                            xmlForm = new XMLFormBuilder()
                                     .setFormCreatorsId(projectId)
                                     .setIsCreatedFromProject(false)
                                     .setDownloadUrl(baseurl + APIEndpoint.ASSIGNED_FORM_LIST_SITE.concat(projectId))
                                     .createXMLForm();
 
-                            formsToDownlaod.add(XMLForm);
+                            formsToDownlaod.add(xmlForm);
 
-                            XMLForm = new XMLFormBuilder()
+                            xmlForm = new XMLFormBuilder()
                                     .setFormCreatorsId(projectId)
                                     .setIsCreatedFromProject(true)
                                     .setDownloadUrl(baseurl + APIEndpoint.ASSIGNED_FORM_LIST_PROJECT.concat(projectId))
                                     .createXMLForm();
-                            formsToDownlaod.add(XMLForm);
+                            formsToDownlaod.add(xmlForm);
 
                         }
 
                         if (formsToDownlaod == null || formsToDownlaod.isEmpty()) {
-                            broadcastDownloadError("No project id provided to download forms");
+                            broadcastDownloadError("No PROJECT id provided to download FORMS");
                         } else {
                             downloadFormList(getApplicationContext(), XMLFormDownloadService.this, XMLFormDownloadService.this, formsToDownlaod.get(0));
                             broadcastDownloadStarted();
@@ -195,7 +193,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
                     @Override
                     public void onError(Throwable e) {
                         Timber.i("onError");
-                        e.printStackTrace();
+                        Timber.e(e);
                         broadcastDownloadError(e.getMessage());
                     }
 
@@ -244,12 +242,12 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
         }
 
         if (result.containsKey(DL_AUTH_REQUIRED)) {
-            Log.e(TAG, " Mismatched token");
+            Log.e(TAG, " Mismatched TOKEN");
             broadcastDownloadError("Forms could not be downloaded");
             return;
         }
 
-        Log.d(TAG, "Forms Downloading Complete for project " + formsToDownlaod.get(0).getFormCreatorsId());
+        Log.d(TAG, "Forms Downloading Complete for PROJECT " + formsToDownlaod.get(0).getFormCreatorsId());
 
 
         //remove the site that has completed download
@@ -258,7 +256,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
             downloadFormList(getApplicationContext(), this, this, formsToDownlaod.get(0));
             Log.d(TAG, " Forms downloading for site " + formsToDownlaod.get(0));
         } else {
-            Log.d(TAG, " All forms downloading complete ");
+            Log.d(TAG, " All FORMS downloading complete ");
             broadcastCompletedDownload();
         }
     }
@@ -313,7 +311,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
             // Everything worked. Clear the list and add the results.
             mFormNamesAndURLs = result;
             //array list added here siteName on Create
-            mFormList = new ArrayList<HashMap<String, String>>();
+            ArrayList<HashMap<String, String>> mFormList = new ArrayList<HashMap<String, String>>();
 
             mFormList.clear();
 
@@ -363,7 +361,7 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
         totalCount = filesToDownload.size();
 
-        Log.d(TAG, "Total number of forms being downloaded: " + totalCount);
+        Log.d(TAG, "Total number of FORMS being downloaded: " + totalCount);
 
 
         if (totalCount > 0) {
@@ -377,10 +375,10 @@ public class XMLFormDownloadService extends IntentService implements DownloadFor
 
             //nullify the asyc task
             mDownloadFormListTask = null;
-            Log.e(TAG, " There are no forms to be downloaded ");
+            Log.e(TAG, " There are no FORMS to be downloaded ");
 
             //report an error to formsDownloadingComplete
-            FormDetails dummyForm = new FormDetails("There are no forms to be downloaded");
+            FormDetails dummyForm = new FormDetails("There are no FORMS to be downloaded");
             HashMap<FormDetails, String> dummyHash = new HashMap<>();
             dummyHash.put(dummyForm, "dlerrormessage");
             formsDownloadingComplete(dummyHash);

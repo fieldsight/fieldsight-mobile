@@ -37,9 +37,9 @@ public class SubStageListAdapter extends
         RecyclerView.Adapter<SubStageListAdapter.ViewHolder> {
 
 
-    private List<SubStageAndSubmission> subStages;
-    private OnFormItemClickListener<SubStage> listener;
-    private String stageOrder;
+    private final List<SubStageAndSubmission> subStages;
+    private final OnFormItemClickListener<SubStage> listener;
+    private final String stageOrder;
 
 
     public SubStageListAdapter(List<SubStageAndSubmission> subStages, String stageOrder, OnFormItemClickListener<SubStage> listener) {
@@ -98,7 +98,7 @@ public class SubStageListAdapter extends
         String submittedBy = "";
         String submissionStatus = "";
         String subStageDesc = "";
-        String formCreatedAt = "";
+
         Context context = viewHolder.cardView.getContext();
 
 
@@ -138,18 +138,20 @@ public class SubStageListAdapter extends
 
         Drawable drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
 
-        if (status == null) return drawable;
+        if (status == null) {
+            return drawable;
+        }
         switch (status) {
-            case Constant.FormStatus.Approved:
+            case Constant.FormStatus.APPROVED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
                 break;
-            case Constant.FormStatus.Flagged:
+            case Constant.FormStatus.FLAGGED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_yellow);
                 break;
-            case Constant.FormStatus.Rejected:
+            case Constant.FormStatus.REJECTED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
                 break;
-            case Constant.FormStatus.Pending:
+            case Constant.FormStatus.PENDING:
             default:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
                 break;
@@ -170,11 +172,11 @@ public class SubStageListAdapter extends
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvFormName, tvDesc, tvIconText, tvSubtext;
-        private Button btnOpenEdu, btnOpenHistory;
-        private ImageView ivCardCircle;
-        private CardView cardView;
-        private ImageButton btnExpandCard;
+        private final TextView tvFormName, tvDesc, tvIconText, tvSubtext;
+        private final Button btnOpenEdu, btnOpenHistory;
+        private final ImageView ivCardCircle;
+        private final CardView cardView;
+        private final ImageButton btnExpandCard;
 
 
         public ViewHolder(View view) {
@@ -276,16 +278,16 @@ public class SubStageListAdapter extends
 
             Drawable drawable;
             switch (status) {
-                case Constant.FormStatus.Approved:
+                case Constant.FormStatus.APPROVED:
                     drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
                     break;
-                case Constant.FormStatus.Flagged:
+                case Constant.FormStatus.FLAGGED:
                     drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_yellow);
                     break;
-                case Constant.FormStatus.Rejected:
+                case Constant.FormStatus.REJECTED:
                     drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
                     break;
-                case Constant.FormStatus.Pending:
+                case Constant.FormStatus.PENDING:
                 default:
                     drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
                     break;

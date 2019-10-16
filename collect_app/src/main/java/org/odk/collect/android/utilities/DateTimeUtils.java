@@ -5,13 +5,14 @@ import android.os.Build;
 import android.text.format.DateUtils;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.logic.DatePickerDetails;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.joda.time.chrono.CopticChronology;
 import org.joda.time.chrono.EthiopicChronology;
 import org.joda.time.chrono.IslamicChronology;
+import org.joda.time.chrono.PersianChronologyKhayyamBorkowski;
+import org.odk.collect.android.logic.DatePickerDetails;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -78,6 +79,10 @@ public class DateTimeUtils {
                         customDate.getMonthOfYear(), customDate.getDayOfMonth(), customDate.getHourOfDay(),
                         customDate.getMinuteOfHour(), customDate.getSecondOfMinute());
                 monthArray = MyanmarDateUtils.getMyanmarMonthsArray(myanmarDate.getYearInt());
+                break;
+            case PERSIAN:
+                customDate = new DateTime(date).withChronology(PersianChronologyKhayyamBorkowski.getInstance());
+                monthArray = context.getResources().getStringArray(R.array.persian_months);
                 break;
             default:
                 Timber.w("Not supported date type.");
@@ -184,6 +189,9 @@ public class DateTimeUtils {
             } else if (appearance.contains(WidgetAppearanceUtils.MYANMAR)) {
                 datePickerType = DatePickerDetails.DatePickerType.MYANMAR;
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
+            } else if (appearance.contains(WidgetAppearanceUtils.PERSIAN)) {
+                datePickerType = DatePickerDetails.DatePickerType.PERSIAN;
+                datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             } else if (appearance.contains(WidgetAppearanceUtils.NO_CALENDAR)) {
                 datePickerMode = DatePickerDetails.DatePickerMode.SPINNERS;
             }
@@ -199,13 +207,15 @@ public class DateTimeUtils {
     }
 
     public static long tsToSec8601(String timestamp) {
-        if (timestamp == null) return 0;
+        if (timestamp == null) {
+            return 0;
+        }
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-            long epoch =  sdf.parse(timestamp).getTime();
+            long epoch = sdf.parse(timestamp).getTime();
             return ((epoch / 1000));
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             return 0;
         }
     }
@@ -215,7 +225,9 @@ public class DateTimeUtils {
 
         String relativeTime;
 
-        if(dateTime == null)return "";
+        if (dateTime == null) {
+            return "";
+        }
 
         try {
             SimpleDateFormat sdf;
@@ -234,12 +246,12 @@ public class DateTimeUtils {
             CharSequence ago =
                     DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
             relativeTime = ago.toString();
-            if("0 minutes ago".equals(relativeTime)){
+            if ("0 minutes ago".equals(relativeTime)) {
                 relativeTime = "just now";
             }
 
         } catch (ParseException e) {
-            e.printStackTrace();
+            Timber.e(e);
             relativeTime = dateTime;
         }
 
@@ -250,9 +262,10 @@ public class DateTimeUtils {
         try {
             Date date = new Date();
             date.setTime(time);
-            return new SimpleDateFormat(format).format(date);
-        }catch (Exception e) {e.printStackTrace();
-            return time+"";
+            return new SimpleDateFormat(format,Locale.getDefault()).format(date);
+        } catch (Exception e) {
+            Timber.e(e);
+            return String.valueOf(time);
         }
     }
 

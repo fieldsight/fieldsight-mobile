@@ -1,13 +1,9 @@
 package org.fieldsight.naxa.educational;
 
-import android.content.Context;
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,18 +63,6 @@ public class DynamicFragment extends Fragment {
         noDataLayout.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
     }
-
-    private void runLayoutAnimation(final RecyclerView recyclerView) {
-
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
-
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }
-
 
 
     private void bindDataToAdapter() {

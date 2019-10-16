@@ -25,24 +25,25 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.SITE;
 
 public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleForm> {
 
-    private static ScheduledFormsLocalSource INSTANCE;
-    private ScheduledFormDAO dao;
+    private static ScheduledFormsLocalSource scheduledFormsLocalSource;
+    private final ScheduledFormDAO dao;
 
     private ScheduledFormsLocalSource() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
         this.dao = database.getProjectScheduledFormsDAO();
     }
 
-    public static ScheduledFormsLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ScheduledFormsLocalSource();
+    public synchronized static ScheduledFormsLocalSource getInstance() {
+        if (scheduledFormsLocalSource == null) {
+            scheduledFormsLocalSource = new ScheduledFormsLocalSource();
         }
-        return INSTANCE;
+        return scheduledFormsLocalSource;
 
 
     }
@@ -148,7 +149,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
 
                                         @Override
                                         public void onError(Throwable e) {
-                                            e.printStackTrace();
+                                            Timber.e(e);
                                             generalFormMediator.removeSource(source);
                                         }
                                     });
@@ -213,7 +214,7 @@ public class ScheduledFormsLocalSource implements BaseLocalDataSource<ScheduleFo
 
                                         @Override
                                         public void onError(Throwable e) {
-                                            e.printStackTrace();
+                                            Timber.e(e);
                                             generalFormMediator.removeSource(source);
                                         }
                                     });

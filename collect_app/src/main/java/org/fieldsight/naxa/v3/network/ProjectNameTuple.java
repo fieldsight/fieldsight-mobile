@@ -7,7 +7,7 @@ public class ProjectNameTuple {
     public String projectId;
 
     @ColumnInfo(name = "created_date")
-    public long created_date;
+    public long createdDate;
 
     @ColumnInfo(name = "status")
     public int status;

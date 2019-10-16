@@ -8,13 +8,13 @@ import okhttp3.ResponseBody;
 
 public class ProjectRemoteSource {
 
-    private static ProjectRemoteSource INSTANCE = null;
+    private static ProjectRemoteSource projectRemoteSource;
 
-    public static ProjectRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ProjectRemoteSource();
+    public synchronized static ProjectRemoteSource getInstance() {
+        if (projectRemoteSource == null) {
+            projectRemoteSource = new ProjectRemoteSource();
         }
-        return INSTANCE;
+        return projectRemoteSource;
     }
 
     public Single<ResponseBody> getProjects() {

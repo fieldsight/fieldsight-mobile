@@ -11,8 +11,6 @@ import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.stages.data.SubStage;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
@@ -31,19 +29,19 @@ import timber.log.Timber;
 
 public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<FieldsightFormDetailsv3> {
 
-    private static FieldSightFormsLocalSourcev3 INSTANCE;
-    private FieldSightFormDetailDAOV3 dao;
+    private static FieldSightFormsLocalSourcev3 localSourcev3;
+    private final FieldSightFormDetailDAOV3 dao;
 
     private FieldSightFormsLocalSourcev3() {
         FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
         this.dao = database.getFieldSightFOrmDAOV3();
     }
 
-    public static FieldSightFormsLocalSourcev3 getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new FieldSightFormsLocalSourcev3();
+    public static synchronized FieldSightFormsLocalSourcev3 getInstance() {
+        if (localSourcev3 == null) {
+            localSourcev3 = new FieldSightFormsLocalSourcev3();
         }
-        return INSTANCE;
+        return localSourcev3;
     }
 
     public LiveData<List<FieldsightFormDetailsv3>> getFormByType(String formType, String projectId, String siteId, String siteTypeId) {
@@ -81,31 +79,6 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         });
 
         return mediator;
-    }
-
-    private Single<JSONArray> getStageAndSubStagesAsJSON(List<FieldsightFormDetailsv3> forms, String siteTypeId) {
-        return getSortedStages(forms, siteTypeId)
-                .map(new Function<List<FieldsightFormDetailsv3>, JSONArray>() {
-                    @Override
-                    public JSONArray apply(List<FieldsightFormDetailsv3> formDetailsv3s) throws Exception {
-                        JSONArray stages = new JSONArray();
-
-                        JSONObject stage = new JSONObject();
-                        JSONArray subStages = new JSONArray();
-
-
-                        for (FieldsightFormDetailsv3 form : formDetailsv3s) {
-                            StageSubStage stageAndSubStage = FieldsightFormDetailsv3.getStageAndSubstage(form.getMetaAttributes());
-
-
-                        }
-
-                        stages.put(stage);
-                        stages.put(subStages);
-
-                        return stages;
-                    }
-                });
     }
 
 

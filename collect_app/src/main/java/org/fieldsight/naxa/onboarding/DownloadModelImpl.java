@@ -43,10 +43,6 @@ import static org.fieldsight.naxa.common.event.DataSyncEvent.EventStatus.EVENT_S
 public class DownloadModelImpl implements DownloadModel {
 
 
-    public DownloadModelImpl() {
-
-
-    }
 
     @Deprecated
     @Override
@@ -57,12 +53,12 @@ public class DownloadModelImpl implements DownloadModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //                        ProjectSitesRemoteSource
-//                                .getInstance()
+//                                .newInstance()
 //                                .fetchProjecSites()
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist() to wait to complete all odk forms download
+                     *2. used tolist() to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -92,7 +88,7 @@ public class DownloadModelImpl implements DownloadModel {
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         SyncRepository.getInstance().setError(Constant.DownloadUID.GENERAL_FORMS);
                     }
                 });
@@ -106,12 +102,12 @@ public class DownloadModelImpl implements DownloadModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //        ProjectSitesRemoteSource
-//                .getInstance()
+//                .newInstance()
 //                .fetchProjecSites()
                 .flatMap((Function<List<Project>, Single<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -150,7 +146,7 @@ public class DownloadModelImpl implements DownloadModel {
     public void fetchStagedForms() {
 
 //        ProjectSitesRemoteSource
-//                .getInstance()
+//                .newInstance()
 //                .fetchProjecSites()
         ProjectLocalSource.getInstance()
                 .getProjectsMaybe()
@@ -159,7 +155,7 @@ public class DownloadModelImpl implements DownloadModel {
                 .flatMap((Function<List<Project>, SingleSource<?>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()
@@ -241,12 +237,12 @@ public class DownloadModelImpl implements DownloadModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
 //        ProjectSitesRemoteSource
-//                .getInstance()
+//                .newInstance()
 //                .fetchProjecSites()
                 .flatMap((Function<List<Project>, SingleSource<List<DownloadProgress>>>) projects -> {
                     /*note:
                      *1. ignored projects from flat map
-                     *2. used tolist to wait to complete all odk forms download
+                     *2. used tolist to wait to complete all odk FORMS download
                      */
                     return ODKFormRemoteSource.getInstance()
                             .fetchODKForms()

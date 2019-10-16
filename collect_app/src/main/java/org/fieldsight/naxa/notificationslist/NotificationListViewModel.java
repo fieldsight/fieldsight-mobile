@@ -12,7 +12,7 @@ import java.util.List;
 
 public class NotificationListViewModel extends ViewModel {
 
-    private MutableLiveData<Boolean> hasListData = new MutableLiveData<Boolean>();
+    private final MutableLiveData<Boolean> hasListData = new MutableLiveData<Boolean>();
 
     public MutableLiveData<List<FieldSightNotification>> fieldSightNoticationLiveData = new MutableLiveData<>();
 

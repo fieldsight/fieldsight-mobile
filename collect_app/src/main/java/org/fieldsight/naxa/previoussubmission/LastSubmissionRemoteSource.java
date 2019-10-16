@@ -30,13 +30,13 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
 
 public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubmissionResponse> {
 
-    private static LastSubmissionRemoteSource INSTANCE;
+    private static LastSubmissionRemoteSource lastSubmissionRemoteSource;
 
-    public static LastSubmissionRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new LastSubmissionRemoteSource();
+    public synchronized static LastSubmissionRemoteSource getInstance() {
+        if (lastSubmissionRemoteSource == null) {
+            lastSubmissionRemoteSource = new LastSubmissionRemoteSource();
         }
-        return INSTANCE;
+        return lastSubmissionRemoteSource;
     }
 
     private LastSubmissionRemoteSource() {
@@ -55,13 +55,13 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
                     public void onSubscribe(Disposable d) {
                         DisposableManager.add(d);
                         LastSubmissionLocalSource.getInstance().deleteAll();
-                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(PREV_SUBMISSION);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(PREV_SUBMISSION);
                     }
 
                     @Override
                     public void onSuccess(List<LastSubmissionResponse> lastSubmissionResponses) {
                         FieldSightNotificationLocalSource.getInstance().markFormStatusChangeAsRead();
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(PREV_SUBMISSION);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(PREV_SUBMISSION);
                     }
 
                     @Override
@@ -74,7 +74,7 @@ public class LastSubmissionRemoteSource implements BaseRemoteDataSource<LastSubm
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(PREV_SUBMISSION,message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(PREV_SUBMISSION,message);
                     }
                 });
 

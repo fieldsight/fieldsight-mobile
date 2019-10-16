@@ -16,7 +16,7 @@ public class SurveyForm {
     @SerializedName("id")
     private String fsFormId;
 
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     private String projectId;
 
     @Ignore

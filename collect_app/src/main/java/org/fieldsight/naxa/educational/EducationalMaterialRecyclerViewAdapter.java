@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,15 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.Connectivity;
-import org.fieldsight.naxa.common.GlideApp;
 
 import java.io.File;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by susan on 7/5/2017.
@@ -33,12 +30,10 @@ import java.util.List;
 
 public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private String TAG = "Education Material";
-    // The items to display in your RecyclerView
-    private List<Object> items;
+    private final List<Object> items;
 
     private static final int TEXT_VIEW = 0, IMAGE = 1, VIDEO = 2, PDF = 3;
-    private Context context;
+    private final Context context;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public EducationalMaterialRecyclerViewAdapter(Context context, List<Object> items) {
@@ -133,7 +128,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
             return TEXT_VIEW;
         } else if (items.get(position) instanceof Edu_Image_Model) {
             return IMAGE;
-        } else if (items.get(position) instanceof Edu_Video_Model) {
+        } else if (items.get(position) instanceof EduVideoModel) {
             return VIDEO;
         } else if (items.get(position) instanceof Edu_PDF_Model) {
             return PDF;
@@ -153,7 +148,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    Intent intent = new Intent(context, EduMat_ViewTextTitleDetailsActivity.class);
+                    Intent intent = new Intent(context, EduMatViewTextTitleDetailsActivity.class);
                     bundle.putSerializable("TEXT_TITLE", user.getTitle());
                     bundle.putSerializable("TEXT_DESC", user.getDesc());
                     intent.putExtras(bundle);
@@ -165,7 +160,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    Intent intent = new Intent(context, EduMat_ViewTextTitleDetailsActivity.class);
+                    Intent intent = new Intent(context, EduMatViewTextTitleDetailsActivity.class);
                     bundle.putSerializable("TEXT_TITLE", user.getTitle());
                     bundle.putSerializable("TEXT_DESC", user.getDesc());
                     intent.putExtras(bundle);
@@ -177,7 +172,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    Intent intent = new Intent(context, EduMat_ViewTextTitleDetailsActivity.class);
+                    Intent intent = new Intent(context, EduMatViewTextTitleDetailsActivity.class);
                     bundle.putSerializable("TEXT_TITLE", user.getTitle());
                     bundle.putSerializable("TEXT_DESC", user.getDesc());
                     intent.putExtras(bundle);
@@ -195,20 +190,10 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
         final Edu_Image_Model edu_image_model = (Edu_Image_Model) items.get(position);
         if (edu_image_model != null) {
 
-            Log.d(TAG, "configureViewHolderImage: " + edu_image_model.getThumbImageOn());
 
-            if (edu_image_model.getThumbImageOff() != null || !edu_image_model.getThumbImageOff().equals("")) {
-                Log.d(TAG, "configureViewHolderImage: " + edu_image_model.getThumbImageOff());
-                File f = new File(edu_image_model.getThumbImageOff());
-                ViewHolderImage.imageView.setImageURI(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", f));
-            } else {
-                if (Connectivity.isConnected(context)) {
-                    GlideApp.with(context.getApplicationContext())
-                            .load(edu_image_model.getThumbImageOn())
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(ViewHolderImage.imageView);
-                }
-            }
+            Timber.d("configureViewHolderImage: %s", edu_image_model.getThumbImageOff());
+            File f = new File(edu_image_model.getThumbImageOff());
+            ViewHolderImage.imageView.setImageURI(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", f));
 
 
             try {
@@ -217,7 +202,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                     @Override
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
-                        Intent intent = new Intent(context, EduMat_ViewImageDetailsActivity.class);
+                        Intent intent = new Intent(context, EduMatImageDetailsActivity.class);
                         bundle.putSerializable("IMAGE_URL_ON", edu_image_model.getThumbImageOn());
                         bundle.putSerializable("IMAGE_URL_OFF", edu_image_model.getThumbImageOff());
                         bundle.putSerializable("IMAGE_TITLE", edu_image_model.getTitle());
@@ -231,7 +216,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                     @Override
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
-                        Intent intent = new Intent(context, EduMat_ViewImageDetailsActivity.class);
+                        Intent intent = new Intent(context, EduMatImageDetailsActivity.class);
                         bundle.putSerializable("IMAGE_URL_ON", edu_image_model.getThumbImageOn());
                         bundle.putSerializable("IMAGE_URL_OFF", edu_image_model.getThumbImageOff());
                         bundle.putSerializable("IMAGE_TITLE", edu_image_model.getTitle());
@@ -242,7 +227,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 });
 
             } catch (Exception e) {
-                e.getLocalizedMessage();
+                Timber.e(e);
             }
 
             vh2.getiTitle().setText(edu_image_model.getTitle());
@@ -253,14 +238,14 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
     //Video View Holder
     private void configureViewHolderVideo(ViewHolderVideo vh3, int position) {
 
-        final Edu_Video_Model edu_video_model = (Edu_Video_Model) items.get(position);
+        final EduVideoModel edu_video_model = (EduVideoModel) items.get(position);
         if (edu_video_model != null) {
             ViewHolderVideo.videoView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    Intent intent = new Intent(context, EduMat_ViewVideoDetailsActivity.class);
-                    bundle.putSerializable("VIDEO_THUMB_URL", edu_video_model.getThumbnail_url());
+                    Intent intent = new Intent(context, EduMatViewVideoDetailsActivity.class);
+                    bundle.putSerializable("VIDEO_THUMB_URL", edu_video_model.getThumbnailUrl());
                     bundle.putSerializable("VIDEO_URL", edu_video_model.getVideoFile());
                     bundle.putSerializable("VIDEO_TITLE", edu_video_model.getTitle());
                     bundle.putSerializable("VIDEO_DESC", edu_video_model.getDesc());
@@ -273,8 +258,8 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    Intent intent = new Intent(context, EduMat_ViewVideoDetailsActivity.class);
-                    bundle.putSerializable("VIDEO_THUMB_URL", edu_video_model.getThumbnail_url());
+                    Intent intent = new Intent(context, EduMatViewVideoDetailsActivity.class);
+                    bundle.putSerializable("VIDEO_THUMB_URL", edu_video_model.getThumbnailUrl());
                     bundle.putSerializable("VIDEO_URL", edu_video_model.getVideoFile());
                     bundle.putSerializable("VIDEO_TITLE", edu_video_model.getTitle());
                     bundle.putSerializable("VIDEO_DESC", edu_video_model.getDesc());
@@ -287,8 +272,8 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    Intent intent = new Intent(context, EduMat_ViewVideoDetailsActivity.class);
-                    bundle.putSerializable("VIDEO_THUMB_URL", edu_video_model.getThumbnail_url());
+                    Intent intent = new Intent(context, EduMatViewVideoDetailsActivity.class);
+                    bundle.putSerializable("VIDEO_THUMB_URL", edu_video_model.getThumbnailUrl());
                     bundle.putSerializable("VIDEO_URL", edu_video_model.getVideoFile());
                     bundle.putSerializable("VIDEO_TITLE", edu_video_model.getTitle());
                     bundle.putSerializable("VIDEO_DESC", edu_video_model.getDesc());
@@ -319,7 +304,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                     target.setDataAndType(path, "application/pdf");
                     target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-//                    Uri fileUri = FileProvider.getUriForFile(context, Collect.getInstance().getString(R.string.android_file_provider_fieldsight), file);
+//                    Uri fileUri = FileProvider.getUriForFile(context, Collect.newInstance().getString(R.string.android_file_provider_fieldsight), file);
 //                    Log.d(TAG, "PDF_URI: " + fileUri);
 //                    target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //                    target.setDataAndType(fileUri, "application/pdf");
@@ -365,7 +350,7 @@ public class EducationalMaterialRecyclerViewAdapter extends RecyclerView.Adapter
                     target.setDataAndType(path, "application/pdf");
                     target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-//                    Uri fileUri = FileProvider.getUriForFile(context, Collect.getInstance().getString(R.string.android_file_provider_fieldsight), file);
+//                    Uri fileUri = FileProvider.getUriForFile(context, Collect.newInstance().getString(R.string.android_file_provider_fieldsight), file);
 //                    Log.d(TAG, "PDF_URI: " + fileUri);
 //                    target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //                    target.setDataAndType(fileUri, "application/pdf");

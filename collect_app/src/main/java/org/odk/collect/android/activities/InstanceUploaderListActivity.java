@@ -79,7 +79,7 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
 
 
 /**
- * Responsible for displaying all the valid forms in the forms directory. Stores
+ * Responsible for displaying all the valid FORMS in the FORMS directory. Stores
  * the path to selected form for use by {@link MainMenuActivity}.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -89,7 +89,6 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
 public class InstanceUploaderListActivity extends InstanceListActivity implements
         OnLongClickListener, DiskSyncListener, AdapterView.OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private static final String SHOW_ALL_MODE = "showAllMode";
-    private static final String FILTER_BY_SITE_MODE = "filterBySiteMode";
     private static final String INSTANCE_UPLOADER_LIST_SORTING_ORDER = "instanceUploaderListSortingOrder";
 
     public static final int INSTANCE_UPLOADER = 0;

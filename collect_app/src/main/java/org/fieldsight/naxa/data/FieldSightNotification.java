@@ -10,7 +10,7 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @Entity(indices = {@Index(value = "receivedDateTimeInMillis", unique = true)})
 public class FieldSightNotification implements Parcelable {
 
@@ -32,7 +32,7 @@ public class FieldSightNotification implements Parcelable {
     private String formStatus;
     private String role;
     private String isFormDeployed;
-    private String details_url;
+    private String detailsUrl;
     private String comment;
     private String formType;
     private boolean isRead;
@@ -43,7 +43,7 @@ public class FieldSightNotification implements Parcelable {
     private boolean isDeployedFromSite;
 
     @NonNull
-    private long receivedDateTimeInMillis = 0;
+    private long receivedDateTimeInMillis;
 
     @ColumnInfo(name = "schedule_forms_count")
     private String scheduleFormsCount;
@@ -55,7 +55,7 @@ public class FieldSightNotification implements Parcelable {
     @Ignore
     public FieldSightNotification(@NonNull int id, String notificationType, String notifiedDate, String notifiedTime, String idString,
                                   String fsFormId, String fsFormIdProject, String formName, String siteId, String siteName, String projectId,
-                                  String projectName, String formStatus, String role, String isFormDeployed, String details_url, String comment,
+                                  String projectName, String formStatus, String role, String isFormDeployed, String detailsUrl, String comment,
                                   String formType, boolean isRead, String formSubmissionId, String formVersion, String siteIdentifier, boolean isDeployedFromSite, String scheduleFormsCount,String receivedDateTime, long receivedDateTimeInMillis) {
         this.id = id;
         this.notificationType = notificationType;
@@ -72,7 +72,7 @@ public class FieldSightNotification implements Parcelable {
         this.formStatus = formStatus;
         this.role = role;
         this.isFormDeployed = isFormDeployed;
-        this.details_url = details_url;
+        this.detailsUrl = detailsUrl;
         this.comment = comment;
         this.formType = formType;
         this.isRead = isRead;
@@ -258,12 +258,12 @@ public class FieldSightNotification implements Parcelable {
         this.isFormDeployed = isFormDeployed;
     }
 
-    public String getDetails_url() {
-        return details_url;
+    public String getDetailsUrl() {
+        return detailsUrl;
     }
 
-    public void setDetails_url(String details_url) {
-        this.details_url = details_url;
+    public void setDetailsUrl(String detailsUrl) {
+        this.detailsUrl = detailsUrl;
     }
 
     public String getComment() {
@@ -308,7 +308,7 @@ public class FieldSightNotification implements Parcelable {
         dest.writeString(this.formStatus);
         dest.writeString(this.role);
         dest.writeString(this.isFormDeployed);
-        dest.writeString(this.details_url);
+        dest.writeString(this.detailsUrl);
         dest.writeString(this.comment);
         dest.writeString(this.formType);
         dest.writeString(this.formSubmissionId);
@@ -337,7 +337,7 @@ public class FieldSightNotification implements Parcelable {
         this.formStatus = in.readString();
         this.role = in.readString();
         this.isFormDeployed = in.readString();
-        this.details_url = in.readString();
+        this.detailsUrl = in.readString();
         this.comment = in.readString();
         this.formType = in.readString();
         this.formSubmissionId = in.readString();

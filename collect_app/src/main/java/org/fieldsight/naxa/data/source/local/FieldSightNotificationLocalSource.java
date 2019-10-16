@@ -8,7 +8,6 @@ import android.util.Pair;
 import androidx.lifecycle.LiveData;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightDatabase;
@@ -17,6 +16,7 @@ import org.fieldsight.naxa.data.FieldSightNotificationBuilder;
 import org.fieldsight.naxa.notificationslist.FieldSightNotificationDAO;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +38,11 @@ import static org.fieldsight.naxa.common.Constant.NotificationType.PROJECT_FORM;
 import static org.fieldsight.naxa.common.Constant.NotificationType.SITE_FORM;
 import static org.fieldsight.naxa.common.Constant.NotificationType.UNASSIGNED_SITE;
 import static org.fieldsight.naxa.common.Constant.NotificationType.WEEKLY_REMINDER;
-import static org.fieldsight.naxa.firebase.FieldSightFirebaseMessagingService.NEW_FORM;
 
 
 public class FieldSightNotificationLocalSource implements BaseLocalDataSource<FieldSightNotification> {
 
-    private static FieldSightNotificationLocalSource INSTANCE;
+    private static FieldSightNotificationLocalSource fieldSightNotificationLocalSource;
     private final FieldSightNotificationDAO dao;
 
 
@@ -60,11 +59,8 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     String submissionDateTime;
 
 
-    String date_str;
+    String dateStr;
     String localTime;
-    Boolean notificationStatus = false;
-
-    String comment;
     String fsFormId;
     String fsFormIdProject;
     String fsFormSubmissionId;
@@ -77,15 +73,15 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
     String deleteForm;
     String isDeployed, webDeployedId;
     String notificationDetailsUrl = "";
-    String isDeployedFromProject;//todo: this needs to be checked and removed coz we are using isDeployedFromSite in flag forms
+    String isDeployedFromProject;//todo: this needs to be checked and removed coz we are using isDeployedFromSite in flag FORMS
     boolean isDeployedFromSite;
-    String siteIdentifier = null;
+    String siteIdentifier;
 
-    public static FieldSightNotificationLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new FieldSightNotificationLocalSource();
+    public synchronized static FieldSightNotificationLocalSource getInstance() {
+        if (fieldSightNotificationLocalSource == null) {
+            fieldSightNotificationLocalSource = new FieldSightNotificationLocalSource();
         }
-        return INSTANCE;
+        return fieldSightNotificationLocalSource;
     }
 
     private FieldSightNotificationLocalSource() {
@@ -138,13 +134,13 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
     public Maybe<Integer> anyFormStatusChangeOutOfSync() {
         return dao.countForNotificationType(false,
-                Constant.NotificationType.FORM_FLAG
+                FORM_FLAG
         );
     }
 
     public void markFormStatusChangeAsRead() {
         AsyncTask.execute(() -> dao.applyReadToNotificationType(true,
-                Constant.NotificationType.FORM_FLAG));
+                FORM_FLAG));
     }
 
     public void markSitesAsRead() {
@@ -235,7 +231,6 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 break;
             case SITE_FORM:
 
-                boolean isNewForm = NEW_FORM.equalsIgnoreCase(notification.getFormStatus());
                 String siteOrProjectName = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
                 title = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
                 message = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName);
@@ -288,13 +283,13 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
 
         switch (fieldSightNotification.getFormStatus()) {
-            case Constant.FormStatus.Flagged:
+            case Constant.FormStatus.FLAGGED:
                 formStatus = context.getResources().getString(R.string.notify_form_flagged);
                 break;
-            case Constant.FormStatus.Approved:
+            case Constant.FormStatus.APPROVED:
                 formStatus = context.getResources().getString(R.string.notify_form_approved);
                 break;
-            case Constant.FormStatus.Rejected:
+            case Constant.FormStatus.REJECTED:
                 formStatus = context.getResources().getString(R.string.notify_form_rejected);
                 break;
         }
@@ -362,12 +357,12 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                     siteIdentifier = siteData.getString("identifier");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Timber.e(e);
 
             }
         }
-        if (notificationData.has("project")) {
-            String site = notificationData.optString("project");
+        if (notificationData.has("PROJECT")) {
+            String site = notificationData.optString("PROJECT");
             try {
                 JSONObject siteData = new JSONObject(site);
                 if (siteData.has("name")) {
@@ -377,7 +372,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                     projectId = siteData.getString("id");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Timber.e(e);
 
             }
         }
@@ -433,7 +428,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
 
 
         FieldSightNotification notification = new FieldSightNotificationBuilder()
-                .setDetails_url(notificationDetailsUrl)
+                .setDetailsUrl(notificationDetailsUrl)
                 .setNotificationType(notifyType)
                 .setFsFormId(fsFormId)
                 .setFormName(formName)
@@ -443,7 +438,7 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 .setProjectName(projectName)
                 .setFormStatus(formStatus)
                 .setSiteIdentifier(siteIdentifier)
-                .setNotifiedDate(date_str)
+                .setNotifiedDate(dateStr)
                 .setNotifiedTime(localTime)
                 .setIdString(jrFormId)
                 .setComment(formComment)

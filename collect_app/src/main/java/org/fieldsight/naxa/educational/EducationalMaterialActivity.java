@@ -3,7 +3,6 @@ package org.fieldsight.naxa.educational;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -15,23 +14,21 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.apache.commons.io.FilenameUtils;
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.generalforms.data.Em;
 import org.fieldsight.naxa.generalforms.data.EmImage;
-import org.fieldsight.naxa.generalforms.data.GeneralForm;
 import org.fieldsight.naxa.previoussubmission.model.GeneralFormAndSubmission;
 import org.fieldsight.naxa.previoussubmission.model.ScheduledFormAndSubmission;
 import org.fieldsight.naxa.previoussubmission.model.SubStageAndSubmission;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
@@ -50,7 +48,7 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
 
 
     private ArrayList<String> fsFormIds;
-    private int defaultPagerPosition = 0;
+    private int defaultPagerPosition;
 
 
     private PagerAdapter mPagerAdapter;
@@ -63,9 +61,7 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
     @BindView(R.id.title)
     public TextView subStageTitle;
 
-    List<Fragment> fragments = new Vector<>();
-    private ArrayList<GeneralForm> generalFormList;
-    private String fsFormId, id, deployedFrom, formType;
+    List<Fragment> fragments = new ArrayList<>();
 
 
     private static Single<List<String>> getFsFormIdsFromGeneral(ArrayList<GeneralFormAndSubmission> list) {
@@ -270,7 +266,7 @@ public class EducationalMaterialActivity extends CollectAbstractActivity impleme
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         if (e instanceof EmptyResultSetException) {
                             ToastUtils.showLongToast("No education materials present for this form");
                         } else {

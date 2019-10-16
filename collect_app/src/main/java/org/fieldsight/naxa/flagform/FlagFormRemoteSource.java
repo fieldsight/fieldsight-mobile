@@ -12,7 +12,7 @@ import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.fieldsight.naxa.common.FieldSightUserSession;
-import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
+import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.data.FieldSightNotification;
 import org.odk.collect.android.dao.FormsDao;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
@@ -35,16 +35,15 @@ import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_AUTH_RE
 import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_MSG;
 
 public class FlagFormRemoteSource {
-    private static FlagFormRemoteSource INSTANCE;
-    String INSTANCES_PATH = Collect.INSTANCES_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
-    private FSInstancesDao instancesDao;
+    private static FlagFormRemoteSource flagFormRemoteSource;
+    private final FSInstancesDao instancesDao;
 
 
-    public static FlagFormRemoteSource getINSTANCE() {
-        if (INSTANCE == null) {
-            INSTANCE = new FlagFormRemoteSource();
+    public synchronized static FlagFormRemoteSource getFlagFormRemoteSource() {
+        if (flagFormRemoteSource == null) {
+            flagFormRemoteSource = new FlagFormRemoteSource();
         }
-        return INSTANCE;
+        return flagFormRemoteSource;
     }
 
     private FlagFormRemoteSource() {
@@ -52,13 +51,13 @@ public class FlagFormRemoteSource {
     }
 
     Observable<String> getXMLInstance(String submissionId) {
-        String INSTANCES_PATH = Collect.FORMS_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
+        String instancePath = Collect.FORMS_PATH.replace(Environment.getExternalStorageDirectory().toString(), "");
 
         String url = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + "/forms/api/instance/download_xml_version/%s", submissionId);
 
 
         return new RxDownloader(Collect.getInstance())
-                .download(url, "temp.xml", INSTANCES_PATH, "*/*", true);
+                .download(url, "temp.xml", instancePath, "*/*", true);
     }
 
 
@@ -75,12 +74,10 @@ public class FlagFormRemoteSource {
 
     private Single<String> getKOBOForm(FieldSightNotification notificationFormDetail) {
 
-        String fsFormId = notificationFormDetail.getFsFormId();
-        String siteId = notificationFormDetail.getSiteId();
         String formName = notificationFormDetail.getFormName();
         String fsFormSubmissionId = notificationFormDetail.getFormSubmissionId();
         String jrFormId = "";
-        return getODKForm(fsFormId, siteId, formName, fsFormSubmissionId, jrFormId);
+        return getODKForm( formName, fsFormSubmissionId, jrFormId);
     }
 
 
@@ -104,7 +101,7 @@ public class FlagFormRemoteSource {
 
     }
 
-    private Single<String> getODKForm(String fsFormId, String siteId, String formName, String fsFormSubmissionId, String jrFormId) {
+    private Single<String> getODKForm(String formName, String fsFormSubmissionId, String jrFormId) {
 
 
         return Single.create(emitter -> {
@@ -136,8 +133,8 @@ public class FlagFormRemoteSource {
                         msg = "Forms could not be downloaded ";
                     }
                     if (result.containsKey(DL_AUTH_REQUIRED)) {
-                        Timber.e(" Mismatched token");
-                        msg = "Mismatched token";
+                        Timber.e(" Mismatched TOKEN");
+                        msg = "Mismatched TOKEN";
                     }
 
                     if ("Success".equals(msg)) {
@@ -180,8 +177,7 @@ public class FlagFormRemoteSource {
                 .jrFormId(jrFormId)
                 .fieldSightSiteId(siteId == null ? "0" : siteId)//survey form have 0 as siteId
                 .displayName(formName)
-                .canEditWhenComplete("true")
-                .displaySubtext("");
+                .canEditWhenComplete("true");
 
 
         return Observable.just(flaggedInstance)
@@ -239,44 +235,5 @@ public class FlagFormRemoteSource {
         return instancePath + File.separator + formName + "_"
                 + time;
     }
-
-    private Observable<Uri> getODKInstance(String fsFormId, String siteId, String formName, String jrFormId, Long date, String downloadUrl) {
-
-        Instance.Builder flaggedInstance = new Instance.Builder()
-                .status(InstanceProviderAPI.STATUS_FLAGGED)
-                .jrFormId(jrFormId)
-                .fieldSightSiteId(siteId == null ? "0" : siteId)//survey form have 0 as siteId
-                .displayName(formName)
-                .displaySubtext("");
-
-
-        return Observable.just(flaggedInstance)
-                .flatMap((Function<Instance.Builder, ObservableSource<Uri>>) instance -> {
-                    String pathToDownload = getInstanceFolderPath(instance.build().getDisplayName());
-
-                    return new RxDownloader(Collect.getInstance())
-                            .download(downloadUrl,
-                                    formName.concat(".xml"),
-                                    pathToDownload,
-                                    "*/*",
-                                    true)
-                            .map(new Function<String, Uri>() {
-                                @Override
-                                public Uri apply(String path) {
-                                    path = path.replace("file:///", "");
-
-                                    instance.instanceFilePath(path);
-                                    instance.lastStatusChangeDate(System.currentTimeMillis());
-                                    ContentValues values = instancesDao.getValuesFromInstanceObject(instance.build());
-                                    Uri instanceUri = instancesDao.saveInstance(values);
-                                    Timber.i("Downloaded and saved instance at %s", path);
-                                    return instanceUri;
-                                }
-                            });
-                });
-
-
-    }
-
 
 }

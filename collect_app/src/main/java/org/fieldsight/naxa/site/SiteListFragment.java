@@ -19,8 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -30,24 +28,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.primitives.Longs;
-import com.google.gson.reflect.TypeToken;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FilterDialogAdapter;
 import org.fieldsight.naxa.common.FilterOption;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
-import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.project.TermsLabels;
-import org.fieldsight.naxa.site.data.SiteRegion;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
-import org.fieldsight.naxa.survey.SurveyFormsActivity;
 import org.fieldsight.naxa.v3.network.Region;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -57,7 +50,6 @@ import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ThemeUtils;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,10 +65,6 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentExitAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopEnterAnimation;
-import static org.fieldsight.naxa.common.Constant.ANIM.fragmentPopExitAnimation;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.InstanceUploaderListActivity.INSTANCE_UPLOADER;
 
@@ -88,18 +76,15 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private Unbinder unbinder;
     private SiteListAdapter siteListAdapter;
     private LiveData<List<Site>> allSitesLiveData;
-    private LiveData<List<Site>> offlineSitesLiveData;
     private BottomSheetDialog bottomSheetDialog;
-    private FilterOption.FilterType selectedFilter;
 
     private ActionMode actionMode;
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
-    private LiveData<List<Site>> filteredSiteLiveData;
     private MenuItem sortActionFilter;
-    TermsLabels tl = null;
+    TermsLabels tl;
 
 
-    public static SiteListFragment getInstance(Project project) {
+    public static SiteListFragment newInstance(Project project) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_OBJECT, project);
         SiteListFragment siteListFragment = new SiteListFragment();
@@ -122,7 +107,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
         setupRecycleView();
         allSitesLiveData = SiteLocalSource.getInstance().getAllParentSite(loadedProject.getId());
-        offlineSitesLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_OFFLINE);
 
         collectFilterAndApply(new ArrayList<>());
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
@@ -161,13 +145,13 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         if (loadedProject == null) {
             return null;
         }
-        if (!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
+        if (!TextUtils.isEmpty(loadedProject.getTermsAndLabels())) {
             try {
-                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
-                JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
+                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTermsAndLabels());
+                JSONObject tlJson = new JSONObject(loadedProject.getTermsAndLabels());
                 return TermsLabels.fromJSON(tlJson);
             } catch (Exception e) {
-                e.printStackTrace();
+                Timber.e(e);
                 return null;
             }
         } else {
@@ -183,12 +167,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
 
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
-    }
-
-
     private void setupRecycleView() {
         siteListAdapter = new SiteListAdapter(new ArrayList<>(0), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -197,36 +175,15 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
 
-    private void assignFilterToList(FilterOption.FilterType type) {
-        LiveData<List<Site>> source;
-
-        switch (type) {
-            case OFFLINE_SITES:
-                source = offlineSitesLiveData;
-                break;
-            case ALL_SITES:
-            default:
-                source = allSitesLiveData;
-                break;
-        }
-        source.observe(this, sites -> {
-            siteListAdapter.updateList(sites);
-        });
-
-    }
-
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
-        String site = "", selectedRegion = "0", regionLabel = "";
+        String selectedRegion = "0";
 
         for (FilterOption filterOption : sortList) {
             switch (filterOption.getType()) {
-                case SITE:
-                    site = filterOption.getSelectionId();
-                    break;
                 case SELECTED_REGION:
                     selectedRegion = filterOption.getSelectionId();
-                    regionLabel = filterOption.getSelectionLabel();
+
                     break;
             }
         }
@@ -281,7 +238,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         filterOptions.observe(this, new Observer<ArrayList<FilterOption>>() {
             @Override
             public void onChanged(@Nullable ArrayList<FilterOption> filterOptions) {
-                final FilterDialogAdapter adapter = new FilterDialogAdapter(getActivity(), recyclerView, filterOptions, getSelectedFilter(), new FilterDialogAdapter.RecyclerViewClickListener() {
+                final FilterDialogAdapter adapter = new FilterDialogAdapter(getActivity(), recyclerView, filterOptions, new FilterDialogAdapter.RecyclerViewClickListener() {
                     @Override
                     public void onFilterButtonClicked(ArrayList<FilterOption> sortList) {
                         bottomSheetDialog.dismiss();
@@ -308,14 +265,14 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     public MutableLiveData<ArrayList<FilterOption>> getFilterOptionForSites() {
 
 
-        Type type = new TypeToken<ArrayList<SiteRegion>>() {
-        }.getType();
 
         List<Region> siteRegions;
         siteRegions = loadedProject.getRegionList();
         MutableLiveData<ArrayList<FilterOption>> sortingOptionsMutableLive = new MutableLiveData<>();
 
-        if (siteRegions == null) siteRegions = new ArrayList<>(0);
+        if (siteRegions == null) {
+            siteRegions = new ArrayList<>(0);
+        }
         Observable.just(siteRegions)
                 .flatMapIterable(new Function<List<Region>, Iterable<Region>>() {
                     @Override
@@ -361,12 +318,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     }
 
-    protected FilterOption.FilterType getSelectedFilter() {
-        if (selectedFilter == null) {
-            return FilterOption.FilterType.ALL_SITES;
-        }
-        return selectedFilter;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -415,7 +366,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     @Override
     public void onSurveyFormClicked() {
-        FragmentHostActivity.startWithSurveyForm(requireActivity(),loadedProject);
+        FragmentHostActivity.startWithSurveyForm(requireActivity(), loadedProject);
     }
 
 
@@ -519,13 +470,13 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                         }
 
                         if (uploadForms && instanceIDs.size() == 0) {
-                            SnackBarUtils.showFlashbar(requireActivity(), "There are no forms to upload");
+                            SnackBarUtils.showFlashbar(requireActivity(), "There are no FORMS to upload");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                         Timber.e(e);
                         String message;
                         if (e instanceof RetrofitException && ((RetrofitException) e).getResponse().errorBody() == null) {

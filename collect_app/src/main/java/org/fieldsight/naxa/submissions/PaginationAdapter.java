@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
@@ -18,6 +17,8 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 
 public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -25,12 +26,12 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int LOADING = 1;
     private static final int END = -1;
 
-    private List<FormResponse> movies;
-    private Context context;
+    private  List<FormResponse> movies;
+    private final Context context;
 
-    private boolean isLoadingAdded = false;
+    private boolean isLoadingAdded;
     public OnCardClickListener listener;
-    private boolean isLastPageFooterAdded = false;
+
 
     public PaginationAdapter(Context context) {
         this.context = context;
@@ -114,7 +115,7 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             msg = "Cannot load date time";
         }
 
@@ -194,19 +195,14 @@ public class PaginationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return movies.get(position);
     }
 
-    public void addLastPageFooter() {
-        isLastPageFooterAdded = true;
-        add(new FormResponse());
-    }
+
 
 
     protected class FormVH extends RecyclerView.ViewHolder {
-        private final CardView rootLayout;
-        private TextView tvTitle, tvSubmissionDateTime;
+        private final TextView tvTitle, tvSubmissionDateTime;
 
         public FormVH(View itemView) {
             super(itemView);
-            rootLayout = itemView.findViewById(R.id.card_view_item_recycler_view);
             tvTitle = itemView.findViewById(R.id.item_text);
             tvSubmissionDateTime = itemView.findViewById(R.id.tv_item_submitted_by);
         }

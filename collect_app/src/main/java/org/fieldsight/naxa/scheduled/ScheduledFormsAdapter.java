@@ -26,6 +26,7 @@ import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.fieldsight.naxa.common.AnimationUtils.getRotationAnimation;
 
@@ -36,9 +37,9 @@ import static org.fieldsight.naxa.common.AnimationUtils.getRotationAnimation;
 public class ScheduledFormsAdapter extends
         RecyclerView.Adapter<ScheduledFormsAdapter.ViewHolder> {
 
-    private ArrayList<ScheduledFormAndSubmission> totalList;
+    private final ArrayList<ScheduledFormAndSubmission> totalList;
 
-    private OnFormItemClickListener<ScheduleForm> listener;
+    private final OnFormItemClickListener<ScheduleForm> listener;
 
     public ScheduledFormsAdapter(ArrayList<ScheduledFormAndSubmission> totalList, OnFormItemClickListener<ScheduleForm> listener) {
         this.totalList = totalList;
@@ -63,7 +64,7 @@ public class ScheduledFormsAdapter extends
         viewHolder.tvFormName.setText(scheduleForm.getFormName());
         viewHolder.tvDesc.setText(scheduleForm.getScheduleName());
         if(!TextUtils.isEmpty(scheduleForm.getScheduleName())){
-            viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1).toUpperCase());
+            viewHolder.tvIconText.setText(scheduleForm.getScheduleName().substring(0, 1).toUpperCase(Locale.getDefault()));
         }
 
         setSubmissionText(viewHolder, submissionDetail, scheduleForm);
@@ -76,7 +77,6 @@ public class ScheduledFormsAdapter extends
         String submittedBy = "";
         String submissionStatus = "";
         String scheduleType = "";
-        String formCreatedAt = "";
         Context context = viewHolder.cardView.getContext();
 
 
@@ -117,19 +117,21 @@ public class ScheduledFormsAdapter extends
 
         Drawable drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
 
-        if (status == null) return drawable;
+        if (status == null) {
+            return drawable;
+        }
 
         switch (status) {
-            case Constant.FormStatus.Approved:
+            case Constant.FormStatus.APPROVED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_green);
                 break;
-            case Constant.FormStatus.Flagged:
+            case Constant.FormStatus.FLAGGED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_yellow);
                 break;
-            case Constant.FormStatus.Rejected:
+            case Constant.FormStatus.REJECTED:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_red);
                 break;
-            case Constant.FormStatus.Pending:
+            case Constant.FormStatus.PENDING:
             default:
                 drawable = ContextCompat.getDrawable(Collect.getInstance().getApplicationContext(), R.drawable.circle_blue);
                 break;
@@ -161,11 +163,11 @@ public class ScheduledFormsAdapter extends
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView tvFormName, tvDesc, tvIconText, tvSubtext;
-        private Button btnOpenEdu, btnOpenHistory;
-        private ImageView ivCardCircle;
-        private View cardView;
-        private ImageButton btnExpandCard;
+        private final TextView tvFormName, tvDesc, tvIconText, tvSubtext;
+        private final Button btnOpenEdu, btnOpenHistory;
+        private final ImageView ivCardCircle;
+        private final View cardView;
+        private final ImageButton btnExpandCard;
 
         public ViewHolder(View view) {
             super(view);

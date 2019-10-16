@@ -77,10 +77,6 @@ public class GeneralFormsFragment extends BaseFormListFragment implements OnForm
 
     }
 
-    public GeneralFormsFragment() {
-
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -143,7 +139,7 @@ public class GeneralFormsFragment extends BaseFormListFragment implements OnForm
         generalFormsAdapter = new GeneralFormsAdapter(new ArrayList<>(0), this);
 
         recyclerView.setEmptyView(emptyLayout,
-                getString(R.string.empty_message, "general forms"),
+                getString(R.string.empty_message, "general FORMS"),
                 () -> {
 
                 });

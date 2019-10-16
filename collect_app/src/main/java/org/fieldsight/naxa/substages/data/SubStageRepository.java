@@ -6,7 +6,6 @@ import androidx.lifecycle.MediatorLiveData;
 
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.previoussubmission.model.SubStageAndSubmission;
-import org.fieldsight.naxa.stages.data.StageRemoteSource;
 import org.fieldsight.naxa.stages.data.SubStage;
 
 import java.util.ArrayList;
@@ -15,30 +14,25 @@ import java.util.List;
 public class SubStageRepository implements BaseLocalDataSource<SubStage> {
 
 
-    private static SubStageRepository INSTANCE = null;
+    private static SubStageRepository subStageRepository;
     private final SubStageLocalSource localSource;
-    private final StageRemoteSource remoteSource;
 
-    public static SubStageRepository getInstance(SubStageLocalSource localSource, StageRemoteSource remoteSource) {
-        if (INSTANCE == null) {
-            synchronized (SubStageRepository.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new SubStageRepository(localSource, remoteSource);
-                }
-            }
+    public synchronized static SubStageRepository getInstance(SubStageLocalSource localSource) {
+        if (subStageRepository == null) {
+            subStageRepository = new SubStageRepository(localSource);
         }
-        return INSTANCE;
+        return subStageRepository;
     }
 
 
-    private SubStageRepository(@NonNull SubStageLocalSource localSource, @NonNull StageRemoteSource remoteSource) {
+    private SubStageRepository(@NonNull SubStageLocalSource localSource) {
         this.localSource = localSource;
-        this.remoteSource = remoteSource;
+
     }
 
 
     @Override
-    public LiveData<List<SubStage>> getAll( ) {
+    public LiveData<List<SubStage>> getAll() {
         return localSource.getAll();
     }
 
@@ -58,6 +52,6 @@ public class SubStageRepository implements BaseLocalDataSource<SubStage> {
     }
 
     public MediatorLiveData<List<SubStageAndSubmission>> getByStageId(String stageId, String siteTypeId) {
-        return localSource.getByStageId(stageId,siteTypeId);
+        return localSource.getByStageId(stageId, siteTypeId);
     }
 }

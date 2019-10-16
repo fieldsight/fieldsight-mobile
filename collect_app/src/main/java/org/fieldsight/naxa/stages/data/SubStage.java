@@ -85,7 +85,7 @@ public class SubStage implements Parcelable {
     @Ignore
     @SerializedName("latest_submission")
     @Expose
-    private List<FormResponse> latestSubmission = null;
+    private List<FormResponse> latestSubmission;
 
     private String lastSubmissionBy;
     private String lastSubmissionDateTime;
@@ -116,7 +116,6 @@ public class SubStage implements Parcelable {
         this.jrFormId = stageForms.getXf().getJrFormId();
         this.fsFormId = stageForms.getId();
     }
-
 
 
     public String getFsFormId() {
@@ -233,8 +232,12 @@ public class SubStage implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SubStage subStage = (SubStage) o;
         return Objects.equal(id, subStage.id) &&
                 Objects.equal(stageId, subStage.stageId) &&

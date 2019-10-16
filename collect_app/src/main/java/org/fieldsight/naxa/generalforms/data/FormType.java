@@ -12,13 +12,13 @@ public class FormType {
 
 
     @SerializedName("is_staged")
-    private boolean isStaged;
+    private final boolean isStaged;
 
     @SerializedName("is_survey")
-    private boolean isSurvey;
+    private final boolean isSurvey;
 
     @SerializedName("is_scheduled")
-    private boolean isScheduled;
+    private final boolean isScheduled;
 
     public boolean isStaged() {
         return isStaged;

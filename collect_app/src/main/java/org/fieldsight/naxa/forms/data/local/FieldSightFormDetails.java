@@ -5,16 +5,14 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-
 import com.google.gson.annotations.SerializedName;
 
-import org.fieldsight.naxa.forms.data.local.FormSchedule;
 import org.fieldsight.naxa.stages.data.SubStage;
-import org.json.JSONObject;
 import org.odk.collect.android.logic.FormDetails;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("PMD.ExcessiveParameterList")
 @Entity(tableName = "fieldsight_forms")
 public class FieldSightFormDetails extends FormDetails {
 
@@ -26,10 +24,10 @@ public class FieldSightFormDetails extends FormDetails {
     @SerializedName("site")
     private String formDeployedSiteId;
 
-    @SerializedName("project")
+    @SerializedName("PROJECT")
     private String formDeployedProjectId;
 
-    @SerializedName("site_project_id")
+    @SerializedName("siteProjectId")
     private Integer projectId;
 
     @SerializedName("name")

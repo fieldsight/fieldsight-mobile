@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
 
 import androidx.appcompat.widget.Toolbar;
@@ -17,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
-import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.data.source.local.FieldSightNotificationLocalSource;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
@@ -36,7 +33,6 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.ALL_FORMS;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 import static org.fieldsight.naxa.common.Constant.DownloadUID.PREV_SUBMISSION;
@@ -67,13 +63,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
     public static void start(Activity context, int outOfSyncUid) {
         Intent intent = new Intent(context, DownloadActivity.class);
         intent.putExtra(EXTRA_OBJECT, outOfSyncUid);
-        context.startActivity(intent);
-    }
-
-
-    private static void start(Context context) {
-        Intent intent = new Intent(context, DownloadActivity.class);
-        intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -169,7 +158,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                                     @Override
                                     public SyncableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
-                                            case Constant.DownloadUID.ALL_FORMS:
+                                            case ALL_FORMS:
                                                 syncableItem.setOutOfSync(integer > 0);
                                                 break;
                                         }
@@ -187,7 +176,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                                     @Override
                                     public SyncableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
-                                            case Constant.DownloadUID.PROJECT_SITES:
+                                            case PROJECT_SITES:
                                                 syncableItem.setOutOfSync(integer > 0);
                                                 break;
                                         }
@@ -205,7 +194,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
                                     @Override
                                     public SyncableItem apply(Integer integer) {
                                         switch (syncableItem.getUid()) {
-                                            case Constant.DownloadUID.PREV_SUBMISSION:
+                                            case PREV_SUBMISSION:
                                                 syncableItem.setOutOfSync(integer > 0);
                                                 break;
                                         }
@@ -220,7 +209,7 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 //                    public ObservableSource<SyncableItem> apply(SyncableItem syncableItem) throws Exception {
 //                        boolean hasAPIRunning = ServiceGenerator.getRunningAPICount() > 0;
 //                        if(!hasAPIRunning){
-//                            SyncRepository.getInstance().setError(syncableItem.getUid());
+//                            SyncRepository.newInstance().setError(syncableItem.getUid());
 //                        }
 //                        return Observable.just(syncableItem);
 //                    }
@@ -241,22 +230,10 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        Timber.e(e);
                     }
                 });
 
-    }
-
-
-    private void runLayoutAnimation(final RecyclerView recyclerView) {
-
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_animation_fall_down);
-
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
     }
 
     @Override
@@ -277,9 +254,6 @@ public class DownloadActivity extends CollectAbstractActivity implements Downloa
         }
     }
 
-    protected boolean areCheckedItems() {
-        return getCheckedCount() > 0;
-    }
 
     protected int getCheckedCount() {
         return downloadListAdapter.getSelectedItemsCount();

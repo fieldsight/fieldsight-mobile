@@ -17,12 +17,6 @@ public class FSInstanceChooserList extends InstanceChooserList {
 
     private Site loadedSite;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

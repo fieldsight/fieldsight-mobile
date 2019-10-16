@@ -4,7 +4,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.login.model.Site;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;

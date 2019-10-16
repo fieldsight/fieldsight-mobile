@@ -9,8 +9,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseRemoteDataSource;
 import org.fieldsight.naxa.common.DisposableManager;
-import org.fieldsight.naxa.common.FieldSightDatabase;
-import org.fieldsight.naxa.common.RxDownloader.RxDownloader;
+import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.generalforms.data.Em;
 import org.fieldsight.naxa.generalforms.data.EmImage;
@@ -28,6 +27,7 @@ import org.odk.collect.android.utilities.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -46,19 +46,18 @@ import static org.fieldsight.naxa.common.Constant.DownloadUID.EDU_MATERIALS;
 
 public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em> {
 
-    private static EducationalMaterialsRemoteSource INSTANCE;
-    private final EducationalMaterialsDao dao;
+    private static EducationalMaterialsRemoteSource educationalMaterialsRemoteSource;
 
-    public static EducationalMaterialsRemoteSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new EducationalMaterialsRemoteSource();
+
+    public synchronized static EducationalMaterialsRemoteSource getInstance() {
+        if (educationalMaterialsRemoteSource == null) {
+            educationalMaterialsRemoteSource = new EducationalMaterialsRemoteSource();
         }
-        return INSTANCE;
+        return educationalMaterialsRemoteSource;
     }
 
     private EducationalMaterialsRemoteSource() {
-        FieldSightDatabase database = FieldSightDatabase.getDatabase(Collect.getInstance());//todo inject context
-        this.dao = database.getEducationalMaterialDAO();
+
     }
 
 
@@ -144,14 +143,14 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                     @Override
                     public void accept(Disposable disposable) throws Exception {
                         DisposableManager.add(disposable);
-                        DownloadableItemLocalSource.getINSTANCE().markAsRunning(EDU_MATERIALS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsRunning(EDU_MATERIALS);
                     }
                 })
                 .doOnSuccess(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
                         Timber.i("%s has been downloaded", s);
-                        DownloadableItemLocalSource.getINSTANCE().markAsCompleted(EDU_MATERIALS);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsCompleted(EDU_MATERIALS);
                     }
                 })
 
@@ -166,7 +165,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                             message = e.getMessage();
                         }
 
-                        DownloadableItemLocalSource.getINSTANCE().markAsFailed(EDU_MATERIALS, message);
+                        DownloadableItemLocalSource.getDownloadableItemLocalSource().markAsFailed(EDU_MATERIALS, message);
                     }
                 });
     }
@@ -176,7 +175,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
 
         //todo bug RxDownloadmanager is adding /storage/emulated so remove it before we send path
         String savePath = "";
-        switch (FileUtils.getFileExtension(url).toLowerCase()) {
+        switch (FileUtils.getFileExtension(url).toLowerCase(Locale.getDefault())) {
             case "pdf":
                 savePath = Collect.PDF.replace(Environment.getExternalStorageDirectory().toString(), "");
                 break;
@@ -203,7 +202,7 @@ public class EducationalMaterialsRemoteSource implements BaseRemoteDataSource<Em
                         @Override
                         public List<Project> apply(List<Project> projects) throws Exception {
                             if (projects.isEmpty()) {
-                                throw new RuntimeException("Download project(s) site(s) first");
+                                throw new RuntimeException("Download PROJECT(s) site(s) first");
                             }
                             return projects;
                         }

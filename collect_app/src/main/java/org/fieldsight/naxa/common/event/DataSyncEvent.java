@@ -10,8 +10,8 @@ import static org.fieldsight.naxa.common.event.DataSyncEvent.EventStatus.EVENT_U
 
 public class DataSyncEvent {
 
-    private String event;
-    private int uid;
+    private final String event;
+    private final int uid;
     private DownloadProgress downloadProgress;
 
 
@@ -19,7 +19,6 @@ public class DataSyncEvent {
         this.uid = uid;
         this.event = event;
     }
-
 
 
     public DataSyncEvent(int uid, DownloadProgress downloadProgress) {

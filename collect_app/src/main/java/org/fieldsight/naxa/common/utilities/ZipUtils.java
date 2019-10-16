@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import timber.log.Timber;
+
 public class ZipUtils {
     /*
      *
@@ -21,6 +23,7 @@ public class ZipUtils {
 
     public interface ZipProgressListener {
         void onZipping(String message, int progress);
+
         void onComplete();
     }
 
@@ -34,8 +37,8 @@ public class ZipUtils {
         if (sourceFile.isDirectory()) {
             allinfo.put("type", "Folder");
             File files[] = sourceFile.listFiles();
-            allinfo.put("size", sourceFile.length() + "");
-            allinfo.put("total_file", files.length + "");
+            allinfo.put("size", String.valueOf(sourceFile.length()));
+            allinfo.put("total_file", String.valueOf(files.length));
             StringBuilder fileName = new StringBuilder();
             boolean first = true;
             for (File file : files) {
@@ -50,7 +53,7 @@ public class ZipUtils {
         } else {
             allinfo.put("type", "File");
             allinfo.put("name", sourceFile.getName());
-            allinfo.put("size", sourceFile.length() + "");
+            allinfo.put("size", String.valueOf(sourceFile.length()));
             allinfo.put("total_file", "1");
         }
         return allinfo;
@@ -86,11 +89,11 @@ public class ZipUtils {
                 }
             }
             out.close();
-            if(listener != null) {
+            if (listener != null) {
                 listener.onComplete();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
             return false;
         }
         return true;
@@ -119,7 +122,6 @@ public class ZipUtils {
                 String relativePath = unmodifiedFilePath
                         .substring(basePathLength);
                 FileInputStream fi = new FileInputStream(unmodifiedFilePath);
-                int total = fi.available();
                 origin = new BufferedInputStream(fi, BUFFER);
                 ZipEntry entry = new ZipEntry(relativePath);
                 entry.setTime(file.lastModified()); // to keep modification time after unzipping
@@ -135,14 +137,14 @@ public class ZipUtils {
 //                    }
                 }
 //                here the progress is measured out of file zipped vs total file
-                totalCount ++;
+                totalCount++;
                 if (listener != null) {
                     listener.onZipping("Zipping " + file.getName(), totalCount * 100 / fileList.length);
                 }
                 origin.close();
             }
         }
-        if(listener != null) {
+        if (listener != null) {
             listener.onComplete();
         }
     }
@@ -155,9 +157,9 @@ public class ZipUtils {
      */
     public String getLastPathComponent(String filePath) {
         String[] segments = filePath.split("/");
-        if (segments.length == 0)
+        if (segments.length == 0) {
             return "";
-        String lastPathComponent = segments[segments.length - 1];
-        return lastPathComponent;
+        }
+        return segments[segments.length - 1];
     }
 }

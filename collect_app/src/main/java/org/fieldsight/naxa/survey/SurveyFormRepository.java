@@ -3,14 +3,13 @@ package org.fieldsight.naxa.survey;
 import androidx.lifecycle.LiveData;
 
 import org.fieldsight.naxa.common.BaseRepository;
-import org.fieldsight.naxa.site.db.SiteRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SurveyFormRepository implements BaseRepository<SurveyForm> {
 
-    private static SurveyFormRepository INSTANCE = null;
+    private static SurveyFormRepository surveyFormRepository;
     private final SurveyFormLocalSource localSource;
 
     public SurveyFormRepository(SurveyFormLocalSource localSource) {
@@ -18,15 +17,11 @@ public class SurveyFormRepository implements BaseRepository<SurveyForm> {
     }
 
 
-    public static SurveyFormRepository getInstance(SurveyFormLocalSource localSource) {
-        if (INSTANCE == null) {
-            synchronized (SiteRepository.class) {
-                if (INSTANCE == null) {
-                    INSTANCE = new SurveyFormRepository(localSource);
-                }
-            }
+    public synchronized static SurveyFormRepository getInstance(SurveyFormLocalSource localSource) {
+        if (surveyFormRepository == null) {
+            surveyFormRepository = new SurveyFormRepository(localSource);
         }
-        return INSTANCE;
+        return surveyFormRepository;
     }
 
 

@@ -15,45 +15,39 @@
 package org.odk.collect.android.tasks;
 
 import android.os.AsyncTask;
+
 import androidx.annotation.Nullable;
 
 import org.odk.collect.android.listeners.FormListDownloaderListener;
 import org.odk.collect.android.logic.FormDetails;
-import org.fieldsight.naxa.onboarding.XMLForm;
 import org.odk.collect.android.utilities.DownloadFormListUtils;
 
 import java.util.HashMap;
 
 /**
- * Background task for downloading forms from urls or a formlist from a url. We overload this task
+ * Background task for downloading FORMS from urls or a formlist from a url. We overload this task
  * a bit so that we don't have to keep track of two separate downloading tasks and it simplifies
  * interfaces. If LIST_URL is passed to doInBackground(), we fetch a form list. If a hashmap
- * containing form/url pairs is passed, we download those forms.
+ * containing form/url pairs is passed, we download those FORMS.
  *
  * @author carlhartung
  */
 public class DownloadFormListTask extends AsyncTask<Void, String, HashMap<String, FormDetails>> {
+
+    private final DownloadFormListUtils downloadFormListUtils;
 
     private FormListDownloaderListener stateListener;
     private String url;
     private String username;
     private String password;
 
-
-    private XMLForm xmlForm;
-
-    public DownloadFormListTask(XMLForm xmlForm) {
-        this.xmlForm = xmlForm;
-        this.url = xmlForm.getDownloadUrl();
-    }
-
-    public DownloadFormListTask(){
-
+    public DownloadFormListTask(DownloadFormListUtils downloadFormListUtils) {
+        this.downloadFormListUtils = downloadFormListUtils;
     }
 
     @Override
     protected HashMap<String, FormDetails> doInBackground(Void... values) {
-        return new DownloadFormListUtils().downloadFormList(url, username, password, false);
+        return downloadFormListUtils.downloadFormList(url, username, password, false);
     }
 
     @Override

@@ -40,14 +40,14 @@ import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.PermissionUtils;
-import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
+import org.odk.collect.android.adapters.VersionHidingCursorAdapter;
 
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
 /**
- * Responsible for displaying all the valid forms in the forms directory. Stores the path to
+ * Responsible for displaying all the valid FORMS in the FORMS directory. Stores the path to
  * selected form for use by {@link MainMenuActivity}.
  *
  * @author Yaw Anokwa (yanokwa@gmail.com)
@@ -91,7 +91,7 @@ public class FormChooserList extends FormListActivity implements
     private void init() {
         setupAdapter();
 
-        // DiskSyncTask checks the disk for any forms not already in the content provider
+        // DiskSyncTask checks the disk for any FORMS not already in the content provider
         // that is, put here by dragging and dropping onto the SDCard
         diskSyncTask = (DiskSyncTask) getLastCustomNonConfigurationInstance();
         if (diskSyncTask == null) {
@@ -172,7 +172,7 @@ public class FormChooserList extends FormListActivity implements
 
     private void setupAdapter() {
         String[] data = new String[]{
-                FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.DISPLAY_SUBTEXT
+                FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, hideOldFormVersions() ? FormsColumns.MAX_DATE : FormsColumns.DATE
         };
         int[] view = new int[]{
                 R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2
@@ -223,8 +223,7 @@ public class FormChooserList extends FormListActivity implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
 
-        boolean newestByFormId = GeneralSharedPreferences.getInstance().getBoolean(GeneralKeys.KEY_HIDE_OLD_FORM_VERSIONS, false);
-        return new FormsDao().getFormsCursorLoader(getFilterText(), getSortingOrder(), newestByFormId);
+        return new FormsDao().getFormsCursorLoader(getFilterText(), getSortingOrder(), hideOldFormVersions());
     }
 
     @Override
@@ -236,5 +235,9 @@ public class FormChooserList extends FormListActivity implements
     @Override
     public void onLoaderReset(@NonNull Loader loader) {
         listAdapter.swapCursor(null);
+    }
+
+    private boolean hideOldFormVersions() {
+        return GeneralSharedPreferences.getInstance().getBoolean(GeneralKeys.KEY_HIDE_OLD_FORM_VERSIONS, false);
     }
 }

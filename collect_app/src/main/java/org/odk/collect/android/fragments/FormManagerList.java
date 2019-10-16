@@ -31,12 +31,12 @@ import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.tasks.DeleteFormsTask;
 import org.odk.collect.android.tasks.DiskSyncTask;
 import org.odk.collect.android.utilities.ToastUtils;
-import org.odk.collect.android.utilities.VersionHidingCursorAdapter;
+import org.odk.collect.android.adapters.VersionHidingCursorAdapter;
 
 import timber.log.Timber;
 
 /**
- * Responsible for displaying and deleting all the valid forms in the forms
+ * Responsible for displaying and deleting all the valid FORMS in the FORMS
  * directory.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -101,7 +101,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     private void setupAdapter() {
-        String[] data = new String[]{FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.DISPLAY_SUBTEXT,
+        String[] data = new String[]{FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.DATE,
                                         FormsColumns.JR_FORM_ID};
         int[] view = new int[]{R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2};
 
@@ -183,7 +183,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
 
     @Override
     public void deleteComplete(int deletedForms) {
-        Timber.i("Delete forms complete");
+        Timber.i("Delete FORMS complete");
         final int toDeleteCount = backgroundTasks.deleteFormsTask.getToDeleteCount();
 
         if (deletedForms == toDeleteCount) {
@@ -191,7 +191,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
             ToastUtils.showShortToast(getString(R.string.file_deleted_ok, String.valueOf(deletedForms)));
         } else {
             // had some failures
-            Timber.e("Failed to delete %d forms", toDeleteCount - deletedForms);
+            Timber.e("Failed to delete %d FORMS", toDeleteCount - deletedForms);
             ToastUtils.showLongToast(getString(R.string.file_deleted_error, String.valueOf(getCheckedCount()
                     - deletedForms), String.valueOf(getCheckedCount())));
         }

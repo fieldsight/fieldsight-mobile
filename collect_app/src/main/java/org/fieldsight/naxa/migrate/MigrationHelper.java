@@ -47,7 +47,9 @@ public class MigrationHelper {
     }
 
     private static boolean isSpace(final String s) {
-        if (s == null) return true;
+        if (s == null) {
+            return true;
+        }
         for (int i = 0, len = s.length(); i < len; ++i) {
             if (!Character.isWhitespace(s.charAt(i))) {
                 return false;
@@ -92,7 +94,9 @@ public class MigrationHelper {
     public static List<File> listFilesInDirWithFilter(final File dir,
                                                       final FileFilter filter,
                                                       final boolean isRecursive) {
-        if (!isDir(dir)) return null;
+        if (!isDir(dir)) {
+            return null;
+        }
         List<File> list = new ArrayList<>();
         File[] files = dir.listFiles();
         if (files != null && files.length != 0) {
@@ -127,19 +131,17 @@ public class MigrationHelper {
 
 
     public static class Table {
-        public static final String project = "table_project";
-        static final String my_site = "table_my_site_detail";
-        public static final String notifications = "table_notify";
-        public static final String all_contacts = "table_contact";
+        public static final String PROJECT = "table_project";
+        static final String TABLE_MY_SITE_DETAIL = "table_my_site_detail";
 
-        public final static String instances = "instances";
-        public final static String forms = "forms";
+        public final static String INSTANCES = "INSTANCES";
+        public final static String FORMS = "forms";
     }
 
     public static class Folder {
         static final String DB_FOLDER = "records";
         static final String FORMS = "forms";
-        static final String INSTANCES = "instances";
+        static final String INSTANCES = "INSTANCES";
         static final String METADATA = "metadata";
         static final String OLD_SITE_PHOTOS = "tempimages";
         static final String NEW_SITE_PHOTOS = "sites";
@@ -147,8 +149,8 @@ public class MigrationHelper {
 
     public static class Database {
         static final String PROJ_SITES = "fieldsight_notify_schema.db";
-        static final String INSTANCES = "instances.db";
-        static final String FORMS = "forms.db";
+        static final String INSTANCES = "INSTANCES.db";
+        static final String FORMS = "FORMS.db";
     }
 
     public static class SiteColumns {

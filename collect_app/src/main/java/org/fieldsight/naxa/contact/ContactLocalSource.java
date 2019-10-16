@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ContactLocalSource implements BaseLocalDataSource<FieldSightContactModel> {
 
-    private static ContactLocalSource INSTANCE;
+    private static ContactLocalSource contactLocalSource;
     private final ContacstDao dao;
 
 
@@ -23,11 +23,11 @@ public class ContactLocalSource implements BaseLocalDataSource<FieldSightContact
     }
 
 
-    public static ContactLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new ContactLocalSource();
+    public synchronized static ContactLocalSource getInstance() {
+        if (contactLocalSource == null) {
+            contactLocalSource = new ContactLocalSource();
         }
-        return INSTANCE;
+        return contactLocalSource;
     }
 
 

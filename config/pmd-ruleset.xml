@@ -28,6 +28,8 @@
         <exclude name="PreserveStackTrace" />
         <exclude name="SwitchStmtsShouldHaveDefault" />
         <exclude name="UseVarargs" />
+        <exclude name="UseCollectionIsEmpty" />
+        <exclude name="OneDeclarationPerLine" />
     </rule>
 
     <rule ref="category/java/codestyle.xml">
@@ -112,6 +114,8 @@
         <exclude name="NullAssignment" />
         <exclude name="TestClassWithoutTestCases" />
         <exclude name="UnnecessaryBooleanAssertion" />
+        <exclude name="UseProperClassLoader" />
+        <exclude name="NonStaticInitializer" />
     </rule>
 
     <rule ref="category/java/multithreading.xml">

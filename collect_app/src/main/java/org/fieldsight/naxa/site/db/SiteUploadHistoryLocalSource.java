@@ -18,14 +18,14 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Action;
 
 public class SiteUploadHistoryLocalSource implements BaseLocalDataSource<SiteUploadHistory> {
-    public static SiteUploadHistoryLocalSource INSTANCE;
-    private SiteUploadHistoryDAO dao;
+    public static SiteUploadHistoryLocalSource siteUploadHistoryLocalSource;
+    private final SiteUploadHistoryDAO dao;
 
-    public static SiteUploadHistoryLocalSource getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SiteUploadHistoryLocalSource();
+    public synchronized static SiteUploadHistoryLocalSource getInstance() {
+        if (siteUploadHistoryLocalSource == null) {
+            siteUploadHistoryLocalSource = new SiteUploadHistoryLocalSource();
         }
-        return INSTANCE;
+        return siteUploadHistoryLocalSource;
     }
 
     public SiteUploadHistoryLocalSource() {
