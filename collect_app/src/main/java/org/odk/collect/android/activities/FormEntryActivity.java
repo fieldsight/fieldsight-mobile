@@ -945,7 +945,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      */
     public void refreshCurrentView() {
         int event = getFormController().getEvent();
-
         View current = createView(event, false);
         showView(current, AnimationType.FADE);
     }
@@ -1420,7 +1419,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         if (showNavigationButtons) {
             backButton.setEnabled(allowMovingBackwards);
-            nextButton.setEnabled(false);
+//            nextButton.setEnabled(false);
         }
 
         return endView;
@@ -2183,7 +2182,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         String navigation = (String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_NAVIGATION);
         showNavigationButtons = navigation.contains(GeneralKeys.NAVIGATION_BUTTONS);
-        showNavigationButtons = true;
+//        showNavigationButtons = true;
         findViewById(R.id.buttonholder).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
         findViewById(R.id.shadow_up).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
 
