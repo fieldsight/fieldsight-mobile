@@ -29,7 +29,7 @@ public class FieldsightFormDetailsv3 {
     @ColumnInfo(name = "site")
     String site;
 
-    @ColumnInfo(name = "PROJECT")
+    @ColumnInfo(name = "project")
     String project;
 
     @ColumnInfo(name = "site_project_id")
@@ -151,8 +151,8 @@ public class FieldsightFormDetailsv3 {
         FieldsightFormDetailsv3 fieldsightFormDetailsv3 = new FieldsightFormDetailsv3();
         FormDetails formDetails = formDetailsfromJSON(jsonObject);
         fieldsightFormDetailsv3.setId(jsonObject.optString("id"));
-        fieldsightFormDetailsv3.setProject(jsonObject.optString("PROJECT"));
-        fieldsightFormDetailsv3.setSiteProjectId(jsonObject.optString("siteProjectId"));
+        fieldsightFormDetailsv3.setProject(jsonObject.optString("project"));
+        fieldsightFormDetailsv3.setSiteProjectId(jsonObject.optString("site_project_id"));
         fieldsightFormDetailsv3.setSite(jsonObject.optString("site"));
         fieldsightFormDetailsv3.setFormDetails(formDetailsfromJSON(jsonObject));
         Timber.i("Fieldsightformdetailsv3, type = %s, em = %s", type, jsonObject.optString("em"));

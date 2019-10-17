@@ -82,7 +82,7 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "dateCreated")
     private String dateCreated;
 
-    @ColumnInfo(name = "PROJECT")
+    @ColumnInfo(name = "project")
     private String project;
 
     @ColumnInfo(name = "isSiteVerified")

@@ -24,10 +24,10 @@ public class FieldSightFormDetails extends FormDetails {
     @SerializedName("site")
     private String formDeployedSiteId;
 
-    @SerializedName("PROJECT")
+    @SerializedName("project")
     private String formDeployedProjectId;
 
-    @SerializedName("siteProjectId")
+    @SerializedName("site_project_id")
     private Integer projectId;
 
     @SerializedName("name")
