@@ -48,7 +48,7 @@ import static org.odk.collect.android.provider.InstanceProviderAPI.InstanceColum
  * This class helps open, create, and upgrade the database file.
  */
 public class InstancesDatabaseHelper extends SQLiteOpenHelper {
-    static final String DATABASE_NAME = "INSTANCES.db";
+    static final String DATABASE_NAME = "instances.db";
     public static final String INSTANCES_TABLE_NAME = "instances";
 
     static final int DATABASE_VERSION = 6;

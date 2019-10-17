@@ -91,12 +91,12 @@ public class FieldSightFormRemoteSourceV3 {
                                     boolean downloadFile;
                                     if (hash.matches("\\w+:\\w+")) {
                                         String formHash = hash.split(":")[1];
-//                                        Cursor fileCursor = formsDao.getFormsCursorForMd5Hash(formHash);
-//                                        Timber.i("FieldsightFormRemoteSourcev3, formhash = %s, cursor = %s count = %d", formHash, fileCursor.getColumnCount(), fileCursor.getCount());
-//                                        downloadFile = fileCursor.getCount() < 2;
-                                        downloadFile = false;
+                                        Cursor fileCursor = formsDao.getFormsCursorForMd5Hash(formHash);
+                                        Timber.i("FieldsightFormRemoteSourcev3, formhash = %s, cursor = %s count = %d", formHash, fileCursor.getColumnCount(), fileCursor.getCount());
+                                        downloadFile = fileCursor.getCount() < 2;
+                                        downloadFile = true;
                                     } else {
-                                        downloadFile = false;
+                                        downloadFile = true;
                                     }
                                     if (!downloadFile) {
                                         projectIdUrlMap.put(getProjectId(fieldsightFormDetailsv3), projectIdUrlMap.get(getProjectId(fieldsightFormDetailsv3)) - 1);

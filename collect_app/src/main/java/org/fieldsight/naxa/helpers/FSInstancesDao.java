@@ -242,7 +242,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
 
         switch (formDeployedFrom) {
             case PROJECT:
-                submissionUrl += "Timber.e(e);/" + fsFormId + "/" + siteId;
+                submissionUrl += "/" + fsFormId + "/" + siteId;
                 break;
             case SITE:
                 submissionUrl += fsFormId + "/" + siteId;

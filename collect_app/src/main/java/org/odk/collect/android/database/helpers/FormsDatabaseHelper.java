@@ -48,7 +48,7 @@ import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.SUB
  * This class helps open, create, and upgrade the database file.
  */
 public class FormsDatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "FORMS.db";
+    private static final String DATABASE_NAME = "forms.db";
     public static final String FORMS_TABLE_NAME = "forms";
 
     private static final int DATABASE_VERSION = 8;
