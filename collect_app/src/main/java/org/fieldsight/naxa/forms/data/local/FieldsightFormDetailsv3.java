@@ -215,8 +215,8 @@ public class FieldsightFormDetailsv3 {
 
                     JSONObject subStageFormDetailJSON = subStageFormJSON.optJSONObject("stage_forms");
                     fieldsightFormDetails.setId(subStageFormDetailJSON.optString("id"));
-                    fieldsightFormDetails.setProject(subStageFormDetailJSON.optString("PROJECT"));
-                    fieldsightFormDetails.setSiteProjectId(subStageFormDetailJSON.optString("siteProjectId"));
+                    fieldsightFormDetails.setProject(subStageFormDetailJSON.optString("project"));
+                    fieldsightFormDetails.setSiteProjectId(subStageFormDetailJSON.optString("site_project_id"));
                     fieldsightFormDetails.setSite(subStageFormDetailJSON.optString("site"));
 
                     fieldsightFormDetails.setFormDetails(formDetailsfromJSON(subStageFormDetailJSON));
