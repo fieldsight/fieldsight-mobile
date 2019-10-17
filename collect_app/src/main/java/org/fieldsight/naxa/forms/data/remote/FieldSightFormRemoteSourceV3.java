@@ -171,9 +171,9 @@ public class FieldSightFormRemoteSourceV3 {
     }
 
     private Integer getProjectId(FieldsightFormDetailsv3 fieldSightForm) {
-        String value = TextUtils.isEmpty(fieldSightForm.getProject()) || TextUtils.equals(fieldSightForm.getProject(), "null") ? fieldSightForm.getSiteProjectId() : fieldSightForm.getProject();
+        String value = TextUtils.isEmpty(fieldSightForm.getProject()) || TextUtils.equals(fieldSightForm.getProject(), "null") ? fieldSightForm.getSite_project_id() : fieldSightForm.getProject();
         Timber.i("Fieldsightformremotesourcev3, id = %s, value = %s, projectName = %s, project = %s, site_project_id = %s",
-                fieldSightForm.getId(), value, fieldSightForm.getDescription(), fieldSightForm.getProject(), fieldSightForm.getSiteProjectId());
+                fieldSightForm.getId(), value, fieldSightForm.getDescription(), fieldSightForm.getProject(), fieldSightForm.getSite_project_id());
         return Integer.parseInt(value);
     }
 

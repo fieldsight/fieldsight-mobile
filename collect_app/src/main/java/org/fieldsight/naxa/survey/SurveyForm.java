@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
+@SuppressWarnings("PMD")
 @Entity(tableName = "survey_forms")
 public class SurveyForm {
 
@@ -16,7 +16,7 @@ public class SurveyForm {
     @SerializedName("id")
     private String fsFormId;
 
-    @SerializedName("PROJECT")
+    @SerializedName("project")
     private String projectId;
 
     @Ignore

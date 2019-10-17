@@ -11,6 +11,7 @@ import org.fieldsight.naxa.common.Constant;
 
 import java.util.List;
 
+@SuppressWarnings("PMD")
 @Entity(tableName = "general_forms",
         primaryKeys = {"fsFormId", "formDeployedFrom"})
 public class GeneralForm {
@@ -70,8 +71,7 @@ public class GeneralForm {
     @SerializedName("site")
     @Expose
     private String siteId;
-
-    @SerializedName("PROJECT")
+    @SerializedName(value = "project")
     @Expose
     private String projectId;
 
@@ -109,7 +109,7 @@ public class GeneralForm {
     //@SerializedName("latest_submission")
     @Expose
     @Ignore
-    private List<FormResponse> latestSubmission;
+    private List<FormResponse> latestSubmission = null;
 
     @NonNull
     public String getFsFormId() {

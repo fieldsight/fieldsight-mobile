@@ -17,7 +17,7 @@ import org.fieldsight.naxa.generalforms.EmImageTypeConverter;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressWarnings("PMD")
 @Entity(tableName = "educational_materials")
 public class Em implements Parcelable {
 
@@ -29,7 +29,7 @@ public class Em implements Parcelable {
     @SerializedName("em_images")
     @Expose
     @TypeConverters(EmImageTypeConverter.class)
-    private List<EmImage> emImages ;
+    private List<EmImage> emImages = null;
 
     @SerializedName("is_pdf")
     @Expose

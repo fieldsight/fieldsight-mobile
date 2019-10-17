@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 21,
-    "identityHash": "d47f0a31025adb529ced2c13665ec235",
+    "identityHash": "10c529a9b424519f55eafba149787072",
     "entities": [
       {
         "tableName": "sites",
@@ -176,7 +176,7 @@
       },
       {
         "tableName": "project",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `description` TEXT, `address` TEXT, `lat` TEXT, `lon` TEXT, `url` TEXT, `siteClusters` TEXT, `organizationName` TEXT, `organizationlogourl` TEXT, `hasClusteredSites` INTEGER, `typeId` INTEGER, `typeLabel` TEXT, `phone` TEXT, `isSyncedWithRemote` INTEGER NOT NULL, `termsAndLabels` TEXT, `regionList` TEXT, `siteMetaAttributes` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `description` TEXT, `address` TEXT, `lat` TEXT, `lon` TEXT, `url` TEXT, `siteClusters` TEXT, `organizationName` TEXT, `organizationlogourl` TEXT, `hasClusteredSites` INTEGER, `typeId` INTEGER, `typeLabel` TEXT, `phone` TEXT, `isSyncedWithRemote` INTEGER NOT NULL, `terms_and_labels` TEXT, `regionList` TEXT, `siteMetaAttributes` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -269,8 +269,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "termsAndLabels",
-            "columnName": "termsAndLabels",
+            "fieldPath": "terms_and_labels",
+            "columnName": "terms_and_labels",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -893,7 +893,7 @@
       },
       {
         "tableName": "FieldSightNotification",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `detailsUrl` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `receivedDateTime` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `receivedDateTimeInMillis` INTEGER NOT NULL, `schedule_forms_count` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `notificationType` TEXT, `notifiedDate` TEXT, `notifiedTime` TEXT, `idString` TEXT, `fsFormId` TEXT, `fsFormIdProject` TEXT, `formName` TEXT, `siteId` TEXT, `siteName` TEXT, `projectId` TEXT, `projectName` TEXT, `formStatus` TEXT, `role` TEXT, `isFormDeployed` TEXT, `details_url` TEXT, `comment` TEXT, `formType` TEXT, `isRead` INTEGER NOT NULL, `formSubmissionId` TEXT, `formVersion` TEXT, `siteIdentifier` TEXT, `receivedDateTime` TEXT, `isDeployedFromSite` INTEGER NOT NULL, `receivedDateTimeInMillis` INTEGER NOT NULL, `schedule_forms_count` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -986,8 +986,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "detailsUrl",
-            "columnName": "detailsUrl",
+            "fieldPath": "details_url",
+            "columnName": "details_url",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1122,7 +1122,7 @@
       },
       {
         "tableName": "contacts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `email` TEXT, `address` TEXT, `gender` TEXT, `phone` TEXT, `skype` TEXT, `twitter` TEXT, `tango` TEXT, `hike` TEXT, `qq` TEXT, `googleTalk` TEXT, `profilePicture` TEXT, `viber` TEXT, `whatsapp` TEXT, `wechat` TEXT, `fullName` TEXT, `primaryNumber` TEXT, `secondaryNumber` TEXT, `officeNumber` TEXT, `roleString` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `username` TEXT, `email` TEXT, `address` TEXT, `gender` TEXT, `phone` TEXT, `skype` TEXT, `twitter` TEXT, `tango` TEXT, `hike` TEXT, `qq` TEXT, `google_talk` TEXT, `profilePicture` TEXT, `viber` TEXT, `whatsapp` TEXT, `wechat` TEXT, `full_name` TEXT, `primary_number` TEXT, `secondary_number` TEXT, `office_number` TEXT, `roleString` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -1191,8 +1191,8 @@
             "notNull": false
           },
           {
-            "fieldPath": "googleTalk",
-            "columnName": "googleTalk",
+            "fieldPath": "google_talk",
+            "columnName": "google_talk",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1221,26 +1221,26 @@
             "notNull": false
           },
           {
-            "fieldPath": "fullName",
-            "columnName": "fullName",
+            "fieldPath": "full_name",
+            "columnName": "full_name",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "primaryNumber",
-            "columnName": "primaryNumber",
+            "fieldPath": "primary_number",
+            "columnName": "primary_number",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "secondaryNumber",
-            "columnName": "secondaryNumber",
+            "fieldPath": "secondary_number",
+            "columnName": "secondary_number",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "officeNumber",
-            "columnName": "officeNumber",
+            "fieldPath": "office_number",
+            "columnName": "office_number",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1357,7 +1357,7 @@
             "notNull": true
           },
           {
-            "fieldPath": "createdDate",
+            "fieldPath": "created_date",
             "columnName": "created_date",
             "affinity": "INTEGER",
             "notNull": true
@@ -1548,7 +1548,7 @@
             "notNull": false
           },
           {
-            "fieldPath": "siteProjectId",
+            "fieldPath": "site_project_id",
             "columnName": "site_project_id",
             "affinity": "TEXT",
             "notNull": false
@@ -1603,7 +1603,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd47f0a31025adb529ced2c13665ec235')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '10c529a9b424519f55eafba149787072')"
     ]
   }
 }

@@ -11,8 +11,7 @@ import org.fieldsight.naxa.stages.data.SubStage;
 import org.odk.collect.android.logic.FormDetails;
 
 import java.util.ArrayList;
-
-@SuppressWarnings("PMD.ExcessiveParameterList")
+@SuppressWarnings("PMD")
 @Entity(tableName = "fieldsight_forms")
 public class FieldSightFormDetails extends FormDetails {
 

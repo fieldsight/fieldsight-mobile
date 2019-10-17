@@ -1,7 +1,5 @@
 package org.fieldsight.naxa.stages.data;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -10,11 +8,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.fieldsight.naxa.common.Constant;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("PMD.ExcessiveParameterList")
+@SuppressWarnings("PMD")
 @Entity(tableName = "stages",
         primaryKeys = {"id", "formDeployedFrom"})
 public class Stage {
@@ -88,15 +85,11 @@ public class Stage {
 
     }
 
-    public String getFormDeployedFrom(){
-        if(TextUtils.isEmpty(formDeployedFrom)){
-            return project != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
-        }
-        return formDeployedFrom;
+    public String getFormDeployedFrom() {
+        return project != null ? Constant.FormDeploymentFrom.PROJECT : Constant.FormDeploymentFrom.SITE;
     }
 
-
-    public void setFormDeployedFrom(@NotNull String formDeployedFrom) {
+    public void setFormDeployedFrom(String formDeployedFrom) {
         this.formDeployedFrom = formDeployedFrom;
     }
 

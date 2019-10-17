@@ -2,6 +2,7 @@
 package org.fieldsight.naxa.previoussubmission.model;
 
 
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -12,7 +13,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.fieldsight.naxa.generalforms.data.FormType;
-
+@SuppressWarnings("PMD")
 @Entity(tableName = "submission_detail")
 public class SubmissionDetail {
 
@@ -24,7 +25,7 @@ public class SubmissionDetail {
     @Expose
     private String site;
 
-    @SerializedName("PROJECT")
+    @SerializedName("project")
     @Expose
     private String project;
 
@@ -123,12 +124,8 @@ public class SubmissionDetail {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         SubmissionDetail that = (SubmissionDetail) o;
         return
                 Objects.equal(site, that.site) &&

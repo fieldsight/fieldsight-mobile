@@ -73,7 +73,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
     @Override
     public void onBindViewHolder( final MyViewHolder holder, int position) {
         final FieldSightContactModel contact = contactList.get(position);
-        holder.tvFullName.setText(contact.getFullName());
+        holder.tvFullName.setText(contact.getFull_name());
         holder.tvUserName.setText(contact.getEmail());
         /*
         //open tvSkype

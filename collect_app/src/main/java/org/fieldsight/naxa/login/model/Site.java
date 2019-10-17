@@ -20,7 +20,7 @@ import org.fieldsight.naxa.stages.StringListTypeConvertor;
 
 import java.util.List;
 
-@SuppressWarnings("PMD.ExcessiveParameterList")
+@SuppressWarnings("PMD")
 @Entity(tableName = "sites")
 public class Site implements Parcelable {
     @PrimaryKey
@@ -167,15 +167,15 @@ public class Site implements Parcelable {
     }
 
 
-    private final static String POSTFIX = "fake";
+    private final static String postfix = "fake";
 
 
     public static String getMockedId() {
-        return String.valueOf(System.currentTimeMillis()).concat("-").concat(POSTFIX);
+        return String.valueOf(System.currentTimeMillis()).concat("-").concat(postfix);
     }
 
     public static boolean isFakeSiteId(String siteId) {
-        return siteId.contains(Site.POSTFIX);
+        return siteId.contains(Site.postfix);
     }
 
     public boolean hasSubSites() {
@@ -435,12 +435,8 @@ public class Site implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Site site = (Site) o;
         return isSiteVerified == site.isSiteVerified &&
                 Objects.equal(id, site.id) &&

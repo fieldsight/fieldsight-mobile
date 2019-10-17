@@ -13,6 +13,7 @@ import com.google.gson.annotations.SerializedName;
  * Created on 8/1/17
  * by nishon.tan@gmail.com
  */
+@SuppressWarnings("PMD")
 @Entity(tableName = "site_types")
 public class SiteType {
 
@@ -31,7 +32,7 @@ public class SiteType {
     private String identifer;
 
     @Expose
-    @SerializedName("PROJECT")
+    @SerializedName("project")
     private String projectId;
 
     public String getProjectId() {
