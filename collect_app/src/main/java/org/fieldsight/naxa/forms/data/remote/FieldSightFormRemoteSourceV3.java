@@ -94,9 +94,8 @@ public class FieldSightFormRemoteSourceV3 {
                                         Cursor fileCursor = formsDao.getFormsCursorForMd5Hash(formHash);
                                         Timber.i("FieldsightFormRemoteSourcev3, formhash = %s, cursor = %s count = %d", formHash, fileCursor.getColumnCount(), fileCursor.getCount());
                                         downloadFile = fileCursor.getCount() < 2;
-                                        downloadFile = true;
                                     } else {
-                                        downloadFile = true;
+                                        downloadFile = false;
                                     }
                                     if (!downloadFile) {
                                         projectIdUrlMap.put(getProjectId(fieldsightFormDetailsv3), projectIdUrlMap.get(getProjectId(fieldsightFormDetailsv3)) - 1);
