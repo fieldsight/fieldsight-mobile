@@ -334,11 +334,11 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                     }
 
                     String siteLabel = "Site", regionLabel = "Region";
-                    if (!TextUtils.equals("null", termsAndLabels.getTermsAndLabels())) {
+                    if (!TextUtils.equals("null", termsAndLabels.getTerms_and_labels())) {
                         TermsLabels tl;
                         Timber.i("null siteProfileActivity");
                         try {
-                            tl = TermsLabels.fromJSON(new JSONObject(termsAndLabels.getTermsAndLabels()));
+                            tl = TermsLabels.fromJSON(new JSONObject(termsAndLabels.getTerms_and_labels()));
                             if (!TextUtils.isEmpty(tl.site)) {
                                 siteLabel = tl.site;
                             }

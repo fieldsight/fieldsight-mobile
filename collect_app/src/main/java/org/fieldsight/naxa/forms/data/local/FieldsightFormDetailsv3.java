@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
-
+@SuppressWarnings("PMD")
 @Entity(tableName = "fieldsight_formv3")
 public class FieldsightFormDetailsv3 {
 
@@ -29,11 +29,11 @@ public class FieldsightFormDetailsv3 {
     @ColumnInfo(name = "site")
     String site;
 
-    @ColumnInfo(name = "PROJECT")
+    @ColumnInfo(name = "project")
     String project;
 
     @ColumnInfo(name = "site_project_id")
-    String siteProjectId;
+    String site_project_id;
 
     @ColumnInfo(name = "type")
     String type;
@@ -52,6 +52,9 @@ public class FieldsightFormDetailsv3 {
 
     String metaAttributes;
 
+    public FieldsightFormDetailsv3() {
+
+    }
 
     public String getId() {
         return id;
@@ -77,12 +80,12 @@ public class FieldsightFormDetailsv3 {
         this.project = project;
     }
 
-    public String getSiteProjectId() {
-        return siteProjectId;
+    public String getSite_project_id() {
+        return site_project_id;
     }
 
-    public void setSiteProjectId(String siteProjectId) {
-        this.siteProjectId = siteProjectId;
+    public void setSite_project_id(String site_project_id) {
+        this.site_project_id = site_project_id;
     }
 
     public String getType() {
@@ -151,8 +154,8 @@ public class FieldsightFormDetailsv3 {
         FieldsightFormDetailsv3 fieldsightFormDetailsv3 = new FieldsightFormDetailsv3();
         FormDetails formDetails = formDetailsfromJSON(jsonObject);
         fieldsightFormDetailsv3.setId(jsonObject.optString("id"));
-        fieldsightFormDetailsv3.setProject(jsonObject.optString("PROJECT"));
-        fieldsightFormDetailsv3.setSiteProjectId(jsonObject.optString("siteProjectId"));
+        fieldsightFormDetailsv3.setProject(jsonObject.optString("project"));
+        fieldsightFormDetailsv3.setSite_project_id(jsonObject.optString("site_project_id"));
         fieldsightFormDetailsv3.setSite(jsonObject.optString("site"));
         fieldsightFormDetailsv3.setFormDetails(formDetailsfromJSON(jsonObject));
         Timber.i("Fieldsightformdetailsv3, type = %s, em = %s", type, jsonObject.optString("em"));
@@ -170,7 +173,7 @@ public class FieldsightFormDetailsv3 {
             }
             fieldsightFormDetailsv3.setMetaAttributes(metaJSON.toString());
         } catch (Exception e) {
-            Timber.e(e);
+            e.printStackTrace();
         }
         return fieldsightFormDetailsv3;
     }
@@ -190,7 +193,7 @@ public class FieldsightFormDetailsv3 {
                 atJSON.put(prefix + "_regions", fromJSON.optJSONArray("regions"));
             }
         } catch (Exception e) {
-            Timber.e(e);
+            e.printStackTrace();
         }
     }
 
@@ -215,8 +218,8 @@ public class FieldsightFormDetailsv3 {
 
                     JSONObject subStageFormDetailJSON = subStageFormJSON.optJSONObject("stage_forms");
                     fieldsightFormDetails.setId(subStageFormDetailJSON.optString("id"));
-                    fieldsightFormDetails.setProject(subStageFormDetailJSON.optString("PROJECT"));
-                    fieldsightFormDetails.setSiteProjectId(subStageFormDetailJSON.optString("siteProjectId"));
+                    fieldsightFormDetails.setProject(subStageFormDetailJSON.optString("project"));
+                    fieldsightFormDetails.setSite_project_id(subStageFormDetailJSON.optString("site_project_id"));
                     fieldsightFormDetails.setSite(subStageFormDetailJSON.optString("site"));
 
                     fieldsightFormDetails.setFormDetails(formDetailsfromJSON(subStageFormDetailJSON));
@@ -230,7 +233,7 @@ public class FieldsightFormDetailsv3 {
                 }
 
             } catch (Exception e) {
-                Timber.e(e);
+                e.printStackTrace();
             }
         }
         return fieldsightFormDetailsNewArrayList;

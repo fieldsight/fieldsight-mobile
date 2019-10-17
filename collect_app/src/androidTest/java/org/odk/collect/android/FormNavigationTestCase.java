@@ -47,7 +47,7 @@ import static junit.framework.Assert.assertEquals;
 @RunWith(Parameterized.class)
 public class FormNavigationTestCase {
 
-    private static final String FORMS_DIRECTORY = "/odk/FORMS/";
+    private static final String FORMS_DIRECTORY = "/odk/forms/";
 
     @Parameters(name = "{0}")
     public static Iterable<Object[]> data() {

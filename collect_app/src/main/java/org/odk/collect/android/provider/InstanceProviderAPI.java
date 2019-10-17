@@ -20,7 +20,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public final class InstanceProviderAPI {
-    public static final String AUTHORITY = "org.odk.collect.android.provider.INSTANCES";
+    public static final String AUTHORITY = "org.bcss.collect.android.provider.instances";
 
     // This class cannot be instantiated
     private InstanceProviderAPI() {

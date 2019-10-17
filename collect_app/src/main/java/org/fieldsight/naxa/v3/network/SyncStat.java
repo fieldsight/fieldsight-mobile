@@ -7,7 +7,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 
 import org.jetbrains.annotations.NotNull;
-
+@SuppressWarnings("PMD")
 @Entity(tableName = "syncstat", primaryKeys = {"project_id", "type"})
 
 public class SyncStat {
@@ -31,7 +31,7 @@ public class SyncStat {
     int status;
 
     @ColumnInfo(name = "created_date")
-    long createdDate;
+    long created_date;
 
     private int total;
     private int progress;
@@ -46,13 +46,13 @@ public class SyncStat {
             @params started
      */
     @Ignore
-    public SyncStat(@NotNull String projectId, @NotNull String type, String failedUrl, boolean started, int status, long createdDate) {
+    public SyncStat(@NotNull String projectId, @NotNull String type, String failedUrl, boolean started, int status, long created_date) {
         this.projectId = projectId;
         this.type = type;
         this.failedUrl = failedUrl;
         this.started = started;
         this.status = status;
-        this.createdDate = createdDate;
+        this.created_date = created_date;
     }
 
     public void setProgress(int progress) {
@@ -71,12 +71,12 @@ public class SyncStat {
         this.total = total;
     }
 
-    public long getCreatedDate() {
-        return createdDate;
+    public long getCreated_date() {
+        return created_date;
     }
 
-    public void setCreatedDate(long createdDate) {
-        this.createdDate = createdDate;
+    public void setCreated_date(long created_date) {
+        this.created_date = created_date;
     }
 
     public int getStatus() {

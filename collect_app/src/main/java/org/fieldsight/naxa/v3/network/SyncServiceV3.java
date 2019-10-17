@@ -445,7 +445,7 @@ public class SyncServiceV3 extends IntentService {
     }
 
     private String getProjectId(FieldsightFormDetailsv3 fd) {
-        return TextUtils.isEmpty(fd.getProject()) || TextUtils.equals(fd.getProject(), "null") ? fd.getSiteProjectId() : fd.getProject();
+        return TextUtils.isEmpty(fd.getProject()) || TextUtils.equals(fd.getProject(), "null") ? fd.getSite_project_id() : fd.getProject();
     }
 
 

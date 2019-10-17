@@ -145,10 +145,10 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         if (loadedProject == null) {
             return null;
         }
-        if (!TextUtils.isEmpty(loadedProject.getTermsAndLabels())) {
+        if (!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
             try {
-                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTermsAndLabels());
-                JSONObject tlJson = new JSONObject(loadedProject.getTermsAndLabels());
+                Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
+                JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
                 return TermsLabels.fromJSON(tlJson);
             } catch (Exception e) {
                 Timber.e(e);

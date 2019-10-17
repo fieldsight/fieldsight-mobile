@@ -613,7 +613,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private void getNotificationDetail() {
 
-        String url = FieldSightUserSession.getServerUrl(Collect.getInstance()) + loadedFieldSightNotification.getDetailsUrl();
+        String url = FieldSightUserSession.getServerUrl(Collect.getInstance()) + loadedFieldSightNotification.getDetails_url();
 
         ServiceGenerator.getRxClient().create(ApiInterface.class)
                 .getNotificationDetail(url)

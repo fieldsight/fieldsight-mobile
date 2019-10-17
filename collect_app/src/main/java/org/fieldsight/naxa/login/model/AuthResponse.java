@@ -3,7 +3,7 @@ package org.fieldsight.naxa.login.model;
 import com.google.gson.annotations.SerializedName;
 
 public class AuthResponse {
-    @SerializedName("TOKEN")
+    @SerializedName("token")
     private String token;
 
     @SerializedName("data")

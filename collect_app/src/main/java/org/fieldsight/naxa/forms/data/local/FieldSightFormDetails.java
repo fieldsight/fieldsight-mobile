@@ -11,8 +11,7 @@ import org.fieldsight.naxa.stages.data.SubStage;
 import org.odk.collect.android.logic.FormDetails;
 
 import java.util.ArrayList;
-
-@SuppressWarnings("PMD.ExcessiveParameterList")
+@SuppressWarnings("PMD")
 @Entity(tableName = "fieldsight_forms")
 public class FieldSightFormDetails extends FormDetails {
 
@@ -24,10 +23,10 @@ public class FieldSightFormDetails extends FormDetails {
     @SerializedName("site")
     private String formDeployedSiteId;
 
-    @SerializedName("PROJECT")
+    @SerializedName("project")
     private String formDeployedProjectId;
 
-    @SerializedName("siteProjectId")
+    @SerializedName("site_project_id")
     private Integer projectId;
 
     @SerializedName("name")
