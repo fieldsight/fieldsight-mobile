@@ -6,46 +6,37 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
-import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings;
-
 import org.apache.commons.io.FilenameUtils;
+import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.downloader.RxDownloader;
+import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV3;
-import org.fieldsight.naxa.network.APIEndpoint;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.odk.collect.android.application.Collect;
-import org.fieldsight.naxa.common.Constant;
-import org.fieldsight.naxa.common.DisposableManager;
-import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -54,8 +45,6 @@ import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
-
-import static org.fieldsight.naxa.common.InternetUtils.getReactiveNetworkSettings;
 
 public class SyncServiceV3 extends IntentService {
     /***
