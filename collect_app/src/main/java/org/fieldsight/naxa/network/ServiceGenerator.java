@@ -23,13 +23,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
     private static Retrofit retrofit;
-    private static Retrofit cacheablesRetrofit ;
+    private static Retrofit cacheablesRetrofit;
     private static Gson gson = new GsonBuilder().create();
     private static Retrofit rxRetrofit;
     private static OkHttpClient okHttp;
 
 
-    private ServiceGenerator(){
+    private ServiceGenerator() {
 
     }
 
@@ -44,7 +44,7 @@ public class ServiceGenerator {
         return chain -> {
             try {
                 Request authorization = chain.request().newBuilder()
-                        .addHeader("Authorization", "Token " + token).build();
+                        .addHeader("Authorization", token).build();
 
                 return chain.proceed(authorization);
             } catch (Exception e) {
@@ -68,7 +68,7 @@ public class ServiceGenerator {
         okHttpClientBuilder.writeTimeout(60, TimeUnit.SECONDS);
         okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);
 
-        if(cacheRequest) {
+        if (cacheRequest) {
             int cacheSize = 10 * 1024 * 1024;
             Cache cache = new Cache(Collect.getInstance().getCacheDir(), cacheSize);
             okHttpClientBuilder.cache(cache);

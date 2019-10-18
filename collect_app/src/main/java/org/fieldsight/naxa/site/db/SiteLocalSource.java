@@ -83,7 +83,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteByIdAsLive(siteId);
     }
 
-    public boolean isSiteOffline(String siteId){
+    public boolean isSiteOffline(String siteId) {
         return dao.getSiteById(siteId).getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
     }
 
@@ -114,7 +114,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     @Override
     public void save(ArrayList<Site> items) {
-        AsyncTask.execute(() ->  {
+        AsyncTask.execute(() -> {
             long[] rowAffected = dao.insert(items);
             Timber.i("Saving %d Total affected row = %d in saving ", items.size(), rowAffected.length);
         });
@@ -127,14 +127,14 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
 
     public void setSiteAsNotFinalized(String siteId) {
         AsyncTask.execute(() -> {
-             dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE);
+            dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_OFFLINE);
         });
 
     }
 
     public void setSiteAsFinalized(String siteId) {
         AsyncTask.execute(() -> {
-             dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_FINALIZED);
+            dao.updateSiteStatus(siteId, Constant.SiteStatus.IS_FINALIZED);
         });
 
     }
@@ -167,6 +167,12 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         AsyncTask.execute(() -> {
             dao.deleteSyncedSites(IS_ONLINE);
         });
+    }
+
+    public void deleteSyncedSites() {
+
+        dao.deleteSyncedSites(IS_ONLINE);
+
     }
 
     public void updateSiteIdAsync(String siteId, int siteStatus) {
