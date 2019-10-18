@@ -7,25 +7,27 @@ import android.text.TextUtils;
 import android.util.Pair;
 
 import org.apache.commons.io.FilenameUtils;
+import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.DisposableManager;
+import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.downloader.RxDownloader;
+import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV3;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.odk.collect.android.application.Collect;
-import org.fieldsight.naxa.common.Constant;
-import org.fieldsight.naxa.common.DisposableManager;
-import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +37,6 @@ import java.util.Objects;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.SingleSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -82,26 +83,35 @@ public class SyncServiceV3 extends IntentService {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
 
-            //Start syncing sites
-            Disposable sitesObservable = downloadByRegionObservable(selectedProject, selectedMap)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(new DisposableObserver<Object>() {
+
+            Disposable sitesObservable = Observable.fromCallable(() -> {
+                URL url = new URL(FieldSightUserSession.getServerUrl(Collect.getInstance()));
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                boolean isOnline = httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK;
+                Timber.i("Sending a ping to %s", url.toString());
+                Timber.i("%s replied %s", url.toString(), isOnline);
+                return isOnline;
+            }).filter(isOnline -> isOnline)
+                    .flatMap(aBoolean -> {
+                        SiteLocalSource.getInstance().deleteSyncedSites();
+                        return downloadSiteObservable(selectedProject, selectedMap);
+                    }).subscribeWith(new DisposableObserver<Object>() {
                         @Override
                         public void onNext(Object o) {
-                            //unused
+
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Timber.e(e);
+
                         }
 
                         @Override
                         public void onComplete() {
-                            //unused
+
                         }
                     });
+
 
             DisposableManager.add(sitesObservable);
 
@@ -142,7 +152,22 @@ public class SyncServiceV3 extends IntentService {
                                         }
                                     });
                         }
-                    }).subscribe();
+                    }).subscribeWith(new DisposableObserver<Object>() {
+                        @Override
+                        public void onNext(Object o) {
+                            //unused
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Timber.e(e);
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            //unused
+                        }
+                    });
 
             DisposableManager.add(formDisposable);
             // sync form ends
@@ -262,7 +287,13 @@ public class SyncServiceV3 extends IntentService {
     private Observable<List<Project>> filterSelectedProjects() {
         return Observable.just(selectedProject)
                 .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
-                .filter(project -> selectedMap.get(project.getId()).get(1).sync)
+                .filter(new Predicate<Project>() {
+                    @Override
+                    public boolean test(Project project) throws Exception {
+                        boolean shouldDownloadForms = selectedMap.get(project.getId()).get(1).sync;
+                        return shouldDownloadForms;
+                    }
+                })
                 .toList()
                 .toObservable();
     }
@@ -387,7 +418,6 @@ public class SyncServiceV3 extends IntentService {
     }
 
 
-
     private void markAsRunning(String projectId, int type) {
         saveState(projectId, type, "", true, Constant.DownloadStatus.RUNNING);
     }
@@ -402,12 +432,12 @@ public class SyncServiceV3 extends IntentService {
         Timber.d("saving for for %d stopped at %s for %s", type, failedUrl, projectId);
         if (selectedMap != null && selectedMap.containsKey(projectId)) {
 //            selectedMap.get(projectId).get(type).completed = true;
-            SyncStat syncStat = new SyncStat(projectId, String.valueOf(type) , failedUrl, started, status, System.currentTimeMillis());
+            SyncStat syncStat = new SyncStat(projectId, String.valueOf(type), failedUrl, started, status, System.currentTimeMillis());
             SyncLocalSource3.getInstance().save(syncStat);
         }
     }
 
-    private Observable<Object> downloadByRegionObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
+    private Observable<Object> downloadSiteObservable(ArrayList<Project> selectedProject, HashMap<String, List<Syncable>> selectedMap) {
         return Observable.just(selectedProject)
                 .flatMapIterable((Function<ArrayList<Project>, Iterable<Project>>) projects -> projects)
                 .filter(project -> selectedMap.get(project.getId()).get(0).sync)

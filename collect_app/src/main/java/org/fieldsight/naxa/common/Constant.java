@@ -25,7 +25,7 @@ public class Constant {
     }
 
     public static class PrefKey {
-        public static final String TOKEN = "TOKEN";
+        public static final String TOKEN = "token";
     }
 
     public static class RequestCode {

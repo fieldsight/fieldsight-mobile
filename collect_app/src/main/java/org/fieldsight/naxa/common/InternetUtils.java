@@ -8,7 +8,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 public class InternetUtils {
-    private InternetUtils(){
+    private InternetUtils() {
 
     }
 
@@ -71,4 +71,5 @@ public class InternetUtils {
 
         void onCheckComplete();
     }
+
 }
