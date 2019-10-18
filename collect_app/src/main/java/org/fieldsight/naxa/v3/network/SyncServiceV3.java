@@ -10,6 +10,7 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings;
 
 import org.apache.commons.io.FilenameUtils;
+import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
@@ -28,6 +29,10 @@ import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.odk.collect.android.utilities.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -35,6 +40,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -89,36 +95,34 @@ public class SyncServiceV3 extends IntentService {
             }
 
 
-            InternetObservingSettings settings = getReactiveNetworkSettings();
-            //Start syncing sites
-            Disposable sitesObservable = ReactiveNetwork.checkInternetConnectivity()
-                    .filter(new Predicate<Boolean>() {
-                        @Override
-                        public boolean test(Boolean isOnline) {
-                            Timber.i("Sending a ping to %s", settings.host());
-                            Timber.i("%s replied %s", settings.host(), isOnline);
-
-                            SiteLocalSource.getInstance().deleteSyncedSites();
-                            return isOnline;
-                        }
-                    })
-                    .flatMapObservable(isOnline -> downloadSiteObservable(selectedProject, selectedMap))
-                    .subscribeWith(new DisposableObserver<Object>() {
+            Disposable sitesObservable = Observable.fromCallable(() -> {
+                URL url = new URL(FieldSightUserSession.getServerUrl(Collect.getInstance()));
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                boolean isOnline = httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK;
+                Timber.i("Sending a ping to %s", url.toString());
+                Timber.i("%s replied %s", url.toString(), isOnline);
+                return isOnline;
+            }).filter(isOnline -> isOnline)
+                    .flatMap(aBoolean -> {
+                        SiteLocalSource.getInstance().deleteSyncedSites();
+                        return downloadSiteObservable(selectedProject, selectedMap);
+                    }).subscribeWith(new DisposableObserver<Object>() {
                         @Override
                         public void onNext(Object o) {
-                            //unused
+
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Timber.e(e);
+
                         }
 
                         @Override
                         public void onComplete() {
-                            //unused
+
                         }
                     });
+
 
             DisposableManager.add(sitesObservable);
 

@@ -2,6 +2,7 @@ package org.fieldsight.naxa.common;
 
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.InternetObservingSettings;
+import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.strategy.SocketInternetObservingStrategy;
 import com.github.pwittchen.reactivenetwork.library.rx2.internet.observing.strategy.WalledGardenInternetObservingStrategy;
 
 import org.odk.collect.android.application.Collect;
@@ -10,6 +11,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static java.net.HttpURLConnection.HTTP_OK;
 
 public class InternetUtils {
     private InternetUtils() {
@@ -81,8 +84,11 @@ public class InternetUtils {
 
         String host = FieldSightUserSession.getServerUrl(Collect.getInstance().getApplicationContext());
         host = host.replace("https://", "http://");
+        host = "https://www.fieldsight.naxa.com.np";
 
-        return InternetObservingSettings.host(host)
+        return InternetObservingSettings.builder().host(host)
+                .httpResponse(HTTP_OK)
+                .strategy(new SocketInternetObservingStrategy())
                 .build();
     }
 }

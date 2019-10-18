@@ -271,7 +271,7 @@ dependencies {
     implementation "android.arch.lifecycle:reactivestreams:${rootProject.roomVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${rootProject.roomVersion}"
 
-    implementation 'com.github.pwittchen:reactivenetwork-rx2:2.0.0'
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.6'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 
     implementation 'com.facebook.stetho:stetho:1.5.0'
