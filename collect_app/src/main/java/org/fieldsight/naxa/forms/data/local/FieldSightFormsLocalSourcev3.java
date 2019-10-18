@@ -135,7 +135,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                             stage.setOrder(Integer.valueOf(stageAndSubStage.getStageOrder()));
 
 
-                            if(!stagesId.contains(stage.getOrder())){
+                            if (!stagesId.contains(stage.getOrder())) {
                                 stages.add(stage);
                                 stagesId.add(stage.getOrder());
                             }
@@ -237,6 +237,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
 
     @Override
     public void updateAll(ArrayList<FieldsightFormDetailsv3> items) {
+        dao.updateAll();
 
     }
 

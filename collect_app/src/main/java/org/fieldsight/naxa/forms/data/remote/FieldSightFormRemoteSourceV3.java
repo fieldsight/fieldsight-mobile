@@ -78,7 +78,8 @@ public class FieldSightFormRemoteSourceV3 {
                 .doOnNext(new Consumer<ArrayList<FieldsightFormDetailsv3>>() {
                     @Override
                     public void accept(ArrayList<FieldsightFormDetailsv3> fieldSightFormDetails) {
-                        FieldSightFormsLocalSourcev3.getInstance().save(fieldSightFormDetails);
+
+                        FieldSightFormsLocalSourcev3.getInstance().updateAll(fieldSightFormDetails);
                     }
                 })
                 .flatMap((Function<ArrayList<FieldsightFormDetailsv3>, ObservableSource<Pair<FieldsightFormDetailsv3, String>>>) fieldSightFormDetails -> {
