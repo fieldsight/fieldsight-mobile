@@ -10,15 +10,14 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 
-
 import com.evernote.android.job.JobManager;
 import com.google.android.gms.analytics.HitBuilders;
 
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.FieldSightUserSession;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.jobs.DailyNotificationJob;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.tasks.ServerPollingJob;
