@@ -89,6 +89,7 @@ public final class GeneralKeys {
     public static final String NAVIGATION_SWIPE             = "swipe";
     public static final String CONSTRAINT_BEHAVIOR_ON_SWIPE = "on_swipe";
     public static final String NAVIGATION_BUTTONS           = "buttons";
+    public static final String NAVIGATION_SWIPE_BUTTONS           = "swipe_buttons";
     private static final String AUTOSEND_OFF                = "off";
     private static final String GUIDANCE_HINT_OFF           = "no";
 
@@ -131,7 +132,7 @@ public final class GeneralKeys {
         hashMap.put(KEY_APP_THEME,                  Collect.getInstance().getString(R.string.app_theme_light));
         hashMap.put(KEY_APP_LANGUAGE,               "");
         hashMap.put(KEY_FONT_SIZE,                  Collect.DEFAULT_FONTSIZE);
-        hashMap.put(KEY_NAVIGATION,                 NAVIGATION_BUTTONS);
+        hashMap.put(KEY_NAVIGATION,                 NAVIGATION_SWIPE_BUTTONS);
         hashMap.put(KEY_SHOW_SPLASH,                true);
         hashMap.put(KEY_SPLASH_PATH,                Collect.getInstance().getString(R.string.default_splash_path));
         // map_preferences.xml
