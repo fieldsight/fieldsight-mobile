@@ -20,7 +20,7 @@ public abstract class FieldSightFormDetailDAOV3 implements BaseDaoFieldSight<Fie
     @Query("DELETE FROM fieldsight_formv3")
     protected abstract void deleteAll();
 
-    @Query("SELECT * from fieldsight_formv3 WHERE type=:type AND (project=:projectId OR site_project_id=:siteId)")
+    @Query("SELECT * from fieldsight_formv3 WHERE type=:type AND (project=:projectId OR site_project_id=:projectId OR site(:siteId))")
     abstract LiveData<List<FieldsightFormDetailsv3>> getFormByType(String type, String projectId, String siteId);
 
     @Query("SELECT * from fieldsight_formv3 WHERE project=:projectId OR site_project_id=:projectId AND em IS NOT NULL AND em !='null'")

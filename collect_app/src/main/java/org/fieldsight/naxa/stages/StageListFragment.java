@@ -99,7 +99,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
 
-        FieldSightFormsLocalSourcev3.getInstance().getStageForms(loadedSite.getProject(), loadedSite.getSite(), loadedSite.getTypeId())
+        FieldSightFormsLocalSourcev3.getInstance().getStageForms(loadedSite.getProject(), loadedSite.getSite(), loadedSite.getTypeId(), loadedSite.getRegionId())
                 .observe(this, stages -> listAdapter.updateList(stages));
 
 
