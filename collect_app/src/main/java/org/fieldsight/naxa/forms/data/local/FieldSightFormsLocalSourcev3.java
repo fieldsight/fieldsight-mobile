@@ -12,6 +12,7 @@ import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.stages.data.SubStage;
 import org.odk.collect.android.application.Collect;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,7 +94,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         LiveData<List<FieldsightFormDetailsv3>> formSource = dao.getFormByType(Constant.FormType.STAGED, projectId, siteId);
 
         mediator.addSource(formSource, forms -> {
-            getStageAndSubStages(forms, siteTypeId)
+            getStageAndSubStages(forms, siteTypeId, siteRegionId)
                     .subscribe(new SingleObserver<List<Stage>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
@@ -186,11 +187,20 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         // if form types and form regions both has undefined value -0,0 and sites types is null and sites region is null - always show
                         // else check form types and regions contains the site type and region
 
-
-                        return TextUtils.isEmpty(siteTypeId)
-                                || Constant.DEFAULT_SITE_TYPE.equals(siteTypeId)
-                                || stage.getSubstageTags().contains(siteTypeId)
-                                || stage.getSubstageTags().size() == 0;
+                        boolean showForm ;
+                        if(stage.getStageType().size() > 0 && stage.getStageRegions().size() > 0) {
+                            // if both first element is 0, then the form belongs to undefined sites
+                            //i.e. if sites both region and types is empty
+                            if(Integer.parseInt(stage.getStageRegions().get(0).toString()) == 0 && Integer.parseInt(stage.getStageType().get(0).toString()) == 0) {
+                                // this form donot belongs to undefined sites
+                                showForm = TextUtils.isEmpty(siteTypeId) && TextUtils.isEmpty(siteRegionId);
+                            } else {
+                                showForm = stage.getSubstageTags().contains(siteTypeId) && stage.getSubstageRegions().contains(siteRegionId);
+                            }
+                        } else {
+                            showForm = false;
+                        }
+                        return showForm;
 
                     }
                 })

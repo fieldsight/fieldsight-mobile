@@ -11,33 +11,47 @@ public class StageSubStage {
     @SerializedName("stage_name")
     @Expose
     private String stageName;
+
     @SerializedName("stage_description")
     @Expose
     private String stageDescription;
+
     @SerializedName("stage_type")
     @Expose
     private List<Object> stageType ;
+
     @SerializedName("stage_order")
     @Expose
     private String stageOrder;
+
     @SerializedName("stage_weight")
     @Expose
     private String stageWeight;
+
+    @SerializedName("stage_regions")
+    @Expose
+    private  List<Object> stageRegions;
+
     @SerializedName("substage_name")
     @Expose
     private String substageName;
+
     @SerializedName("substage_description")
     @Expose
     private String substageDescription;
+
     @SerializedName("substage_order")
     @Expose
     private String substageOrder;
+
     @SerializedName("substage_weight")
     @Expose
     private String substageWeight;
+
     @SerializedName("substage_tags")
     @Expose
     private List<Object> substageTags;
+
     @SerializedName("substage_regions")
     @Expose
     private List<Object> substageRegions;
@@ -60,6 +74,14 @@ public class StageSubStage {
 
     public List<Object> getStageType() {
         return stageType;
+    }
+
+    public List<Object> getStageRegions() {
+        return stageRegions;
+    }
+
+    public void setStageRegions(List<Object> stageRegions) {
+        this.stageRegions = stageRegions;
     }
 
     public void setStageType(List<Object> stageType) {
