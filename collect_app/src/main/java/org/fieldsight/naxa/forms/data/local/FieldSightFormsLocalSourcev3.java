@@ -237,7 +237,8 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
 
     @Override
     public void updateAll(ArrayList<FieldsightFormDetailsv3> items) {
-        dao.updateAll();
+        dao.deleteAll();
+        dao.insert(items);
 
     }
 
