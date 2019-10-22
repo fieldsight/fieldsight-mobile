@@ -64,7 +64,9 @@
             android:title="@string/image_size_title" />
 
 
+
     </PreferenceCategory>
+
 
 
     <Preference

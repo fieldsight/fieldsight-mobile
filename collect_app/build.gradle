@@ -75,7 +75,7 @@ if (secretsFile.exists()) {
     secrets.load(new FileInputStream(secretsFile))
 }
 def googleMapsApiKey = secrets.getProperty('GOOGLE_MAPS_API_KEY', '')
-def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', '')
+def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', getProps("mapbox"))
 
 def versionMajor = 3
 def versionMinor = 2
@@ -208,8 +208,8 @@ android {
         // abiFilters to exclude any ABIs; but to keep the APK slim, we include
         // the Mapbox native library only for 32-bit and 64-bit ARM devices and
         // omit it for all X86 devices.
-//        exclude 'lib/x86/libmapbox-gl.so'
-//        exclude 'lib/x86_64/libmapbox-gl.so'
+        exclude 'lib/x86/libmapbox-gl.so'
+        exclude 'lib/x86_64/libmapbox-gl.so'
     }
 
     compileOptions {

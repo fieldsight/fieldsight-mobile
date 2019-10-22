@@ -36,7 +36,6 @@ import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
 import org.fieldsight.naxa.login.model.Site;
-
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.sitedocuments.SiteDocumentsListActivity;
@@ -94,7 +93,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private Unbinder unbinder;
     private View rootView;
 
-    boolean isParent ;
+    boolean isParent;
 
 
     public static SiteDashboardFragment newInstance(Site site, boolean isParent) {
@@ -237,20 +236,25 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             }
         });
     }
+
     private void checkPermissionAndOpenMap() {
         if (!checkIfLocationPermissionsGranted(requireActivity())) {
             new PermissionUtils().requestLocationPermissions(requireActivity(), new PermissionListener() {
                 @Override
                 public void granted() {
-//                    MapActivity.start(getActivity(), loadedSite);
-                    ToastUtils.showLongToast("Map has been disabled");
+                    FieldSightMapActivity.start(getActivity(), loadedSite);
+
                 }
+
                 @Override
                 public void denied() {
                     //unused
                 }
             });
+        } else {
+            FieldSightMapActivity.start(getActivity(), loadedSite);
         }
+
     }
 
     private void setupFinalizedButton() {
