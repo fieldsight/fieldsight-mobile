@@ -12,22 +12,22 @@
  * the License.
  */
 
-package org.fieldsight.naxa.site;
+package org.fieldsight.naxa.site.map;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.text.TextUtils;
 import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import androidx.fragment.app.FragmentActivity;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.BaseGeoMapActivity;
 import org.odk.collect.android.activities.FormEntryActivity;
 import org.odk.collect.android.geo.MapFragment;
@@ -37,18 +37,27 @@ import org.odk.collect.android.preferences.MapsPreferences;
 import org.odk.collect.android.utilities.GeoUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
+import org.osmdroid.util.BoundingBox;
+import org.osmdroid.util.GeoPoint;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.utilities.PermissionUtils.areLocationPermissionsGranted;
 
 /**
- * Allow the user to indicate a location by placing a marker on a map, either
- * by touching a point on the map or by tapping a button to place the marker
- * at the current location (obtained from GPS or other location sensors).
+ * A modified version of org.odk.collect.android.activities.GeoPointMapActivity
  */
 public class FieldSightMapActivity extends BaseGeoMapActivity {
     public static final String MAP_CENTER_KEY = "map_center";
@@ -66,23 +75,19 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
 
     public static final String PLACE_MARKER_BUTTON_ENABLED_KEY = "place_marker_button_enabled";
     public static final String ZOOM_BUTTON_ENABLED_KEY = "zoom_button_enabled";
-    public static final String CLEAR_BUTTON_ENABLED_KEY = "clear_button_enabled";
-    public static final String LOCATION_STATUS_VISIBILITY_KEY = "location_status_visibility";
-    public static final String LOCATION_INFO_VISIBILITY_KEY = "location_info_visibility";
+
 
     private MapFragment map;
     private int featureId = -1;  // will be a positive featureId once map is ready
 
-    private TextView locationStatus;
-    private TextView locationInfo;
 
-    private MapPoint location;
-    private ImageButton placeMarkerButton;
+    private FieldSightMapPoint location;
+
 
     private boolean isDragged;
 
     private ImageButton zoomButton;
-    private ImageButton clearButton;
+
 
     private boolean captureLocation;
     private boolean foundFirstLocation;
@@ -142,14 +147,15 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
             return;
         }
 
-        locationStatus = findViewById(R.id.location_status);
-        locationInfo = findViewById(R.id.location_info);
-        placeMarkerButton = findViewById(R.id.place_marker);
+
         zoomButton = findViewById(R.id.zoom);
 
         Context context = getApplicationContext();
         MapProvider.createMapFragment(context)
                 .addTo(this, R.id.map_container, this::initMap, this::finish);
+
+
+
     }
 
     @Override
@@ -179,11 +185,10 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
         state.putBoolean(IS_POINT_LOCKED_KEY, isPointLocked);
 
         // UI state
-        state.putBoolean(PLACE_MARKER_BUTTON_ENABLED_KEY, placeMarkerButton.isEnabled());
+
         state.putBoolean(ZOOM_BUTTON_ENABLED_KEY, zoomButton.isEnabled());
-        state.putBoolean(CLEAR_BUTTON_ENABLED_KEY, clearButton.isEnabled());
-        state.putInt(LOCATION_STATUS_VISIBILITY_KEY, locationStatus.getVisibility());
-        state.putInt(LOCATION_INFO_VISIBILITY_KEY, locationInfo.getVisibility());
+
+
     }
 
     public void returnLocation() {
@@ -207,16 +212,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
     public void initMap(MapFragment newMapFragment) {
         map = newMapFragment;
         map.setDragEndListener(this::onDragEnd);
-        map.setLongPressListener(this::onLongPress);
 
-        ImageButton acceptLocation = findViewById(R.id.accept_location);
-        acceptLocation.setOnClickListener(v -> returnLocation());
-
-        placeMarkerButton.setEnabled(false);
-        placeMarkerButton.setOnClickListener(v -> {
-            placeMarker(map.getGpsLocation());
-            zoomToMarker(true);
-        });
 
         // Focuses on marked location
         zoomButton.setEnabled(false);
@@ -227,60 +223,83 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
             MapsPreferences.showReferenceLayerDialog(this);
         });
 
-        clearButton = findViewById(R.id.clear);
-        clearButton.setEnabled(false);
-        clearButton.setOnClickListener(v -> {
-            clear();
-            if (map.getGpsLocation() != null) {
-                placeMarkerButton.setEnabled(true);
-                // locationStatus.setVisibility(View.VISIBLE);
-            }
-            // placeMarkerButton.setEnabled(true);
-            locationInfo.setVisibility(View.VISIBLE);
-            locationStatus.setVisibility(View.VISIBLE);
-            pointFromIntent = false;
-        });
 
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
             intentDraggable = intent.getBooleanExtra(GeoPointWidget.DRAGGABLE_ONLY, false);
             if (!intentDraggable) {
                 // Not Draggable, set text for Map else leave as placement-map text
-                locationInfo.setText(getString(R.string.geopoint_no_draggable_instruction));
+
             }
 
             intentReadOnly = intent.getBooleanExtra(GeoPointWidget.READ_ONLY, false);
             if (intentReadOnly) {
                 captureLocation = true;
-                clearButton.setEnabled(false);
+
             }
 
-            if (intent.hasExtra(GeoPointWidget.LOCATION)) {
-                double[] point = intent.getDoubleArrayExtra(GeoPointWidget.LOCATION);
 
-                // If the point is initially set from the intent, the "place marker"
-                // button, dragging, and long-pressing are all initially disabled.
-                // To enable them, the user must clear the marker and add a new one.
-                isPointLocked = true;
-                placeMarker(new MapPoint(point[0], point[1], point[2], point[3]));
-                placeMarkerButton.setEnabled(false);
-
-                captureLocation = true;
-                pointFromIntent = true;
-                locationInfo.setVisibility(View.GONE);
-                locationStatus.setVisibility(View.GONE);
-                zoomButton.setEnabled(true);
-                foundFirstLocation = true;
-                zoomToMarker(false);
-            }
         }
 
-        map.setGpsLocationListener(this::onLocationChanged);
+//        map.setGpsLocationListener(this::onLocationChanged);
         map.setGpsLocationEnabled(true);
 
         if (previousState != null) {
             restoreFromInstanceState(previousState);
         }
+
+        loadSites("183");
+        map.setClickListener(new MapFragment.PointListener() {
+            @Override
+            public void onPoint(@NonNull MapPoint point) {
+                ToastUtils.showLongToast("Hi");
+            }
+        });
+
+    }
+
+    private void loadSites(String projectId) {
+        SiteLocalSource.getInstance().getById(projectId).observe(this, sites -> {
+            Timber.i("Plotting %d sites on map", sites.size());
+            Observable.just(sites)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
+                    .filter(site -> !TextUtils.isEmpty(site.getLatitude())
+                            && !TextUtils.isEmpty(site.getLatitude()))
+                    .map(new Function<Site, FieldSightMapPoint>() {
+                        @Override
+                        public FieldSightMapPoint apply(Site site) {
+                            Timber.i("prep Adding %s",site.getName());
+                            return new FieldSightMapPoint(site, site.getLatitude(), site.getLongitude());
+                        }
+                    })
+                    .doOnNext(new Consumer<FieldSightMapPoint>() {
+                        @Override
+                        public void accept(FieldSightMapPoint fieldSightMapPoint) {
+                            Timber.i("Adding %s",fieldSightMapPoint.getSite().getName());
+                            placeMarker(fieldSightMapPoint);
+
+                        }
+                    })
+
+                    .subscribe(new DisposableObserver<FieldSightMapPoint>() {
+                        @Override
+                        public void onNext(FieldSightMapPoint fieldSightMapPoint) {
+                            Timber.i("Adding thoriwng %s",fieldSightMapPoint.getSite().getName());
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Timber.e(e);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        });
     }
 
     protected void restoreFromInstanceState(Bundle state) {
@@ -294,7 +313,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
         isPointLocked = state.getBoolean(IS_POINT_LOCKED_KEY, false);
 
         // Restore the marker and dialog after the flags, because they use some of them.
-        MapPoint point = state.getParcelable(POINT_KEY);
+        FieldSightMapPoint point = state.getParcelable(POINT_KEY);
         if (point != null) {
             placeMarker(point);
         } else {
@@ -318,20 +337,16 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
             map.zoomToPoint(mapCenter, mapZoom, false);
         }
 
-        placeMarkerButton.setEnabled(state.getBoolean(PLACE_MARKER_BUTTON_ENABLED_KEY, false));
-        zoomButton.setEnabled(state.getBoolean(ZOOM_BUTTON_ENABLED_KEY, false));
-        clearButton.setEnabled(state.getBoolean(CLEAR_BUTTON_ENABLED_KEY, false));
 
-        locationInfo.setVisibility(state.getInt(LOCATION_INFO_VISIBILITY_KEY, View.GONE));
-        locationStatus.setVisibility(state.getInt(LOCATION_STATUS_VISIBILITY_KEY, View.GONE));
+        zoomButton.setEnabled(state.getBoolean(ZOOM_BUTTON_ENABLED_KEY, false));
+
+
     }
 
-    public void onLocationChanged(MapPoint point) {
-        if (setClear) {
-            placeMarkerButton.setEnabled(true);
-        }
+    public void onLocationChanged(FieldSightMapPoint point) {
 
-        MapPoint previousLocation = this.location;
+
+        FieldSightMapPoint previousLocation = this.location;
         this.location = point;
 
         if (point != null) {
@@ -340,7 +355,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
 
                 if (!captureLocation && !setClear) {
                     placeMarker(point);
-                    placeMarkerButton.setEnabled(true);
+
                 }
 
                 if (!foundFirstLocation) {
@@ -348,7 +363,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
                     foundFirstLocation = true;
                 }
 
-                locationStatus.setText(formatLocationStatus(map.getLocationProvider(), point.sd));
+
             }
         }
     }
@@ -374,13 +389,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
         }
     }
 
-    public void onLongPress(MapPoint point) {
-        if (intentDraggable && !intentReadOnly && !isPointLocked) {
-            placeMarker(point);
-            enableZoomButton(true);
-            isDragged = true;
-        }
-    }
+
 
     private void enableZoomButton(boolean shouldEnable) {
         if (zoomButton != null) {
@@ -395,7 +404,6 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
     private void clear() {
         map.clearFeatures();
         featureId = -1;
-        clearButton.setEnabled(false);
 
         isPointLocked = false;
         isDragged = false;
@@ -403,25 +411,14 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
         setClear = true;
     }
 
-    /**
-     * Places the marker and enables the button to remove it.
-     */
-    private void placeMarker(MapPoint point) {
-        map.clearFeatures();
+    private void placeMarker(FieldSightMapPoint point) {
         featureId = map.addMarker(point, intentDraggable && !intentReadOnly && !isPointLocked);
-        clearButton.setEnabled(true);
-        captureLocation = true;
-        setClear = false;
     }
 
     public void setCaptureLocation(boolean captureLocation) {
         this.captureLocation = captureLocation;
     }
 
-    @VisibleForTesting
-    public String getLocationStatus() {
-        return locationStatus.getText().toString();
-    }
 
     @VisibleForTesting
     public MapFragment getMapFragment() {

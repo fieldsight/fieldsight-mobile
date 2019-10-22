@@ -38,6 +38,7 @@ import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
+import org.fieldsight.naxa.site.map.FieldSightMapActivity;
 import org.fieldsight.naxa.sitedocuments.SiteDocumentsListActivity;
 import org.fieldsight.naxa.stages.StageListFragment;
 import org.odk.collect.android.SiteProfileActivity;

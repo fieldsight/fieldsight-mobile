@@ -370,6 +370,8 @@
         </activity>
         <activity android:name="org.fieldsight.naxa.forms.FormsFragmentHostActivity" />
         <activity android:name="org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity" />
-        <activity android:name="org.fieldsight.naxa.site.FieldSightMapActivity" />
+        <activity
+            android:exported="true"
+            android:name="org.fieldsight.naxa.site.map.FieldSightMapActivity" />
     </application>
 </manifest>
