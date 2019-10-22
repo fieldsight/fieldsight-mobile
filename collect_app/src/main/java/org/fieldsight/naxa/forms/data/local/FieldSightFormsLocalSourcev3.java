@@ -11,6 +11,8 @@ import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.stages.data.SubStage;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.odk.collect.android.application.Collect;
 import org.w3c.dom.Text;
 
@@ -50,12 +52,6 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         MediatorLiveData<List<FieldsightFormDetailsv3>> mediator = new MediatorLiveData<>();
         LiveData<List<FieldsightFormDetailsv3>> formSource = dao.getFormByType(formType, projectId, siteId);
 
-        if(TextUtils.equals(formType, Constant.FormType.STAGED)) {
-
-        } else {
-            return formSource;
-        }
-
         mediator.addSource(formSource, forms -> {
             if (TextUtils.equals(formType, Constant.FormType.STAGED)) {
                 getSortedStages(forms, siteTypeId, siteRegionId)
@@ -82,6 +78,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
             } else {
                 mediator.removeSource(formSource);
                 mediator.setValue(forms);
+                Timber.i("getFormByType, formsLength = %d", forms.size());
             }
         });
 
@@ -90,9 +87,9 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
 
 
     public MediatorLiveData<List<Stage>> getStageForms(String projectId, String siteId, String siteTypeId, String siteRegionId) {
+        Timber.i("getStageForms, projectId = %s, siteId = %s, siteTypeId = %s, regionId = %s", projectId, siteId, siteTypeId, siteRegionId);
         MediatorLiveData<List<Stage>> mediator = new MediatorLiveData<>();
         LiveData<List<FieldsightFormDetailsv3>> formSource = dao.getFormByType(Constant.FormType.STAGED, projectId, siteId);
-
         mediator.addSource(formSource, forms -> {
             getStageAndSubStages(forms, siteTypeId, siteRegionId)
                     .subscribe(new SingleObserver<List<Stage>>() {
@@ -104,6 +101,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         @Override
                         public void onSuccess(List<Stage> stages) {
                             mediator.removeSource(formSource);
+                            Timber.i("getStageForms, stages size = %d", stages.size());
                             mediator.setValue(stages);
                         }
 
@@ -120,6 +118,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
 
 
     public Single<List<Stage>> getStageAndSubStages(List<FieldsightFormDetailsv3> forms, String siteTypeId, String siteRegionId) {
+        Timber.i("getStageAndSubstages, formsSize = %d", forms.size());
         return getSortedStages(forms, siteTypeId, siteRegionId)
                 .map(new Function<List<FieldsightFormDetailsv3>, List<Stage>>() {
                     @Override
@@ -128,8 +127,8 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         List<Integer> stagesId = new ArrayList<>();
                         List<Stage> stages = new ArrayList<>();
                         Stage stage;
-
                         SubStage subStage = null;
+
                         SparseArray<List<SubStage>> groupByStage = new SparseArray<>();
 
                         for (FieldsightFormDetailsv3 form : formDetailsv3s) {
@@ -174,34 +173,49 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
     }
 
     private Single<List<FieldsightFormDetailsv3>> getSortedStages
-            (List<FieldsightFormDetailsv3> forms, String siteTypeId, String siteRegionId) {
+            (List<FieldsightFormDetailsv3> forms, final String siteTypeId, String siteRegionId) {
+        Timber.i("getSortedPages, formsSize = %d, siteTypeId = %s, siteRegionId = %s", forms.size(), siteTypeId, siteRegionId);
         return Observable.just(forms)
                 .flatMapIterable((Function<List<FieldsightFormDetailsv3>, Iterable<FieldsightFormDetailsv3>>) formDetailsv3s -> formDetailsv3s)
                 .filter(new Predicate<FieldsightFormDetailsv3>() {
                     @Override
                     public boolean test(FieldsightFormDetailsv3 formDetailsv3) {
-                        StageSubStage stage = FieldsightFormDetailsv3.getStageAndSubstage(formDetailsv3.getMetaAttributes());
+                        Timber.i("getSortedPages, metaAttributes:: %s", formDetailsv3.getMetaAttributes());
                         // regions and types should not be empty array
 
                         // undefined case
                         // if form types and form regions both has undefined value -0,0 and sites types is null and sites region is null - always show
                         // else check form types and regions contains the site type and region
+                        //form type undefined and region [1,2,3] =>
 
-                        boolean showForm ;
-                        if(stage.getStageType().size() > 0 && stage.getStageRegions().size() > 0) {
-                            // if both first element is 0, then the form belongs to undefined sites
-                            //i.e. if sites both region and types is empty
-                            if(Integer.parseInt(stage.getStageRegions().get(0).toString()) == 0 && Integer.parseInt(stage.getStageType().get(0).toString()) == 0) {
-                                // this form donot belongs to undefined sites
-                                showForm = TextUtils.isEmpty(siteTypeId) && TextUtils.isEmpty(siteRegionId);
-                            } else {
-                                showForm = stage.getSubstageTags().contains(siteTypeId) && stage.getSubstageRegions().contains(siteRegionId);
+                        Integer newsiteTypeId = TextUtils.isEmpty(siteTypeId) ? 0 : Integer.parseInt(siteTypeId);
+                        Integer newsiteRegionId = TextUtils.isEmpty(siteRegionId) ? 0 : Integer.parseInt(siteRegionId);
+                        boolean typeFound = false;
+                        boolean regionFound = false;
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(formDetailsv3.getMetaAttributes());
+                            if(jsonObject.has("stage_type")) {
+                                JSONArray jsonArray = jsonObject.optJSONArray("stage_type");
+                                for(int i = 0; i < jsonArray.length(); i ++) {
+                                    if(jsonArray.optInt(i) == newsiteTypeId) {
+                                        typeFound = true;
+                                        break;
+                                    }
+                                }
                             }
-                        } else {
-                            showForm = false;
-                        }
-                        return showForm;
-
+                            if(jsonObject.has("stage_regions")) {
+                                JSONArray jsonArray = jsonObject.optJSONArray("stage_regions");
+                                for(int i = 0; i < jsonArray.length(); i ++) {
+                                    if(jsonArray.optInt(i) == newsiteRegionId) {
+                                        regionFound = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }catch( Exception e) {e.printStackTrace();}
+                        Timber.i("getSortedPages, typeFound = " + typeFound + " regionFound = " + regionFound);
+                        return typeFound & regionFound;
                     }
                 })
                 .toList()
@@ -213,15 +227,12 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                             public int compare(FieldsightFormDetailsv3 t1, FieldsightFormDetailsv3 t2) {
                                 StageSubStage stage1 = FieldsightFormDetailsv3.getStageAndSubstage(t1.getMetaAttributes());
                                 StageSubStage stage2 = FieldsightFormDetailsv3.getStageAndSubstage(t2.getMetaAttributes());
-
                                 Double stageOneOrder = Double.parseDouble(stage1.getStageOrder() + "." + stage1.getSubstageOrder());
                                 Double stageTwoOrder = Double.parseDouble(stage2.getStageOrder() + "." + stage2.getSubstageOrder());
 
                                 return stageOneOrder.compareTo(stageTwoOrder);
                             }
                         });
-
-
                         return formDetailsv3;
                     }
                 });
@@ -249,7 +260,11 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
 
     @Override
     public void updateAll(ArrayList<FieldsightFormDetailsv3> items) {
-        dao.updateAll();
+        FieldsightFormDetailsv3[] fieldsightFormDetailsv3s = new FieldsightFormDetailsv3[items.size()];
+        for (int i = 0; i < items.size(); i++) {
+            fieldsightFormDetailsv3s[i] = items.get(i);
+        }
+        dao.updateAll(fieldsightFormDetailsv3s);
 
     }
 

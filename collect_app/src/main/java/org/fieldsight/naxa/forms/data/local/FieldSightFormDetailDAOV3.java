@@ -9,18 +9,21 @@ import org.fieldsight.naxa.common.database.BaseDaoFieldSight;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 @Dao
 public abstract class FieldSightFormDetailDAOV3 implements BaseDaoFieldSight<FieldsightFormDetailsv3> {
     @Transaction
     public void updateAll(FieldsightFormDetailsv3... fieldSightForms) {
         deleteAll();
+        Timber.i("updateAll, listSize = %d", fieldSightForms.length);
         insert(fieldSightForms);
     }
 
     @Query("DELETE FROM fieldsight_formv3")
     protected abstract void deleteAll();
 
-    @Query("SELECT * from fieldsight_formv3 WHERE type=:type AND (project=:projectId OR site_project_id=:projectId OR site(:siteId))")
+    @Query("SELECT * from fieldsight_formv3 WHERE type=:type AND (project=:projectId OR site_project_id=:projectId) OR site=:siteId")
     abstract LiveData<List<FieldsightFormDetailsv3>> getFormByType(String type, String projectId, String siteId);
 
     @Query("SELECT * from fieldsight_formv3 WHERE project=:projectId OR site_project_id=:projectId AND em IS NOT NULL AND em !='null'")

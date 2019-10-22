@@ -114,9 +114,7 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
-
         stagePosition = getArguments().getString(EXTRA_POSITION);
-
         substages = getArguments().getString("substages");
 
     }
@@ -145,7 +143,6 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-
         parseSubstage().subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subStageAndSubmissions -> {
@@ -164,10 +161,8 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
                 List<SubStageAndSubmission> subStageAndSubmissions = new ArrayList<>();
                 SubStageAndSubmission subStageAndSubmission;
                 for (SubStage subStage : substageList) {
-
                     subStageAndSubmission = new SubStageAndSubmission();
                     subStageAndSubmission.setSubStage(subStage);
-
                     subStageAndSubmissions.add(subStageAndSubmission);
                 }
                 return subStageAndSubmissions;
@@ -202,7 +197,6 @@ public class SubStageListFragment extends Fragment implements OnFormItemClickLis
 
     @Override
     public void onFormItemClicked(SubStage subStage, int position) {
-
         String formDeployedFrom = subStage.getFormDeployedFrom();
         Timber.i("Nishon %s", formDeployedFrom);
         String submissionUrl = generateSubmissionUrl(formDeployedFrom, loadedSite.getId(), subStage.getFsFormId());

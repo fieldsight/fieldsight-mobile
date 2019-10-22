@@ -190,7 +190,6 @@ public class BaseFormListFragment extends Fragment {
 
     public void updateList(List<FieldsightFormDetailsv3> fieldSightForms, String siteId) {
         this.siteId = siteId;
-
         adapter.getData().clear();
         adapter.getData().addAll(fieldSightForms);
         adapter.notifyDataSetChanged();

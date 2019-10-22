@@ -78,7 +78,6 @@ public class FieldSightFormRemoteSourceV3 {
                 .doOnNext(new Consumer<ArrayList<FieldsightFormDetailsv3>>() {
                     @Override
                     public void accept(ArrayList<FieldsightFormDetailsv3> fieldSightFormDetails) {
-
                         FieldSightFormsLocalSourcev3.getInstance().updateAll(fieldSightFormDetails);
                     }
                 })
@@ -161,7 +160,6 @@ public class FieldSightFormRemoteSourceV3 {
         for (int i = 0; i < projectIdUrlMap.size(); i++) {
             SyncLocalSource3.getInstance().markAsQueued(String.valueOf(projectIdUrlMap.keyAt(i)), 1);
         }
-
         return fieldSightFormsv3List;
     }
 
