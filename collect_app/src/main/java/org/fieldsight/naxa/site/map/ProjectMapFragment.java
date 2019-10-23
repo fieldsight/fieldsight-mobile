@@ -16,7 +16,6 @@ import org.fieldsight.naxa.site.SiteInfoWindow;
 import org.fieldsight.naxa.site.SiteMarker;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.fragments.OsmMapFragment;
-import org.odk.collect.android.utilities.ToastUtils;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
@@ -42,6 +41,9 @@ public class ProjectMapFragment extends OsmMapFragment {
     private Project loadedProject;
     private MapView map;
     private Site loadedSite;
+
+    private final Handler handler = new Handler();
+
 
     public static ProjectMapFragment newInstance(Project project) {
         Bundle bundle = new Bundle();
@@ -120,7 +122,6 @@ public class ProjectMapFragment extends OsmMapFragment {
 
     }
 
-    private Handler handler = new Handler();
 
     private SiteMarker mapSiteToMarker(Site site) {
         GeoPoint geoPoint = new GeoPoint(Double.parseDouble(site.getLatitude()), Double.parseDouble(site.getLongitude()));
@@ -160,7 +161,7 @@ public class ProjectMapFragment extends OsmMapFragment {
 
 
         getMapAsync(map -> {
-            ProjectMapFragment.this.map = map;
+            this.map = map;
             setupInfoDialogSettings();
 
             map.setMinZoomLevel(3);

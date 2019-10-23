@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.Window;
 import android.widget.ImageButton;
 
@@ -49,6 +48,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -117,6 +117,8 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
      */
     private boolean isPointLocked;
 
+    private final HashMap<String, Site> featureIdAndSite = new HashMap<>();
+
     public static void start(Context context, Site loadedSite) {
 
 
@@ -126,7 +128,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
 
     }
 
-    private HashMap<String, Site> featureIdAndSite = new HashMap<>();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -260,7 +262,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
     }
 
     private void loadSites(String projectId) {
-        Disposable disposable = SiteLocalSource.getInstance().getByIdAsSingle(projectId)
+        SiteLocalSource.getInstance().getByIdAsSingle(projectId)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -291,20 +293,23 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
                                     }
                                 });
                     }
-                }).subscribe(new Consumer<Object>() {
+                })
+                .subscribe(new DisposableObserver<Object>() {
                     @Override
-                    public void accept(Object o) throws Exception {
+                    public void onNext(Object o) {
 
                     }
 
-                }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
+                    public void onError(Throwable e) {
+                        Timber.e(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
-
-
     }
 
     protected void restoreFromInstanceState(Bundle state) {
