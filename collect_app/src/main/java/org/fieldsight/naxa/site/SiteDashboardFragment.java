@@ -36,9 +36,9 @@ import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.project.ProjectMapActivity;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
-import org.fieldsight.naxa.site.map.FieldSightMapActivity;
 import org.fieldsight.naxa.sitedocuments.SiteDocumentsListActivity;
 import org.fieldsight.naxa.stages.StageListFragment;
 import org.odk.collect.android.SiteProfileActivity;
@@ -243,7 +243,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
             new PermissionUtils().requestLocationPermissions(requireActivity(), new PermissionListener() {
                 @Override
                 public void granted() {
-                    FieldSightMapActivity.start(getActivity(), loadedSite);
+                    ProjectMapActivity.start(getActivity(), loadedSite);
 
                 }
 
@@ -253,7 +253,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
                 }
             });
         } else {
-            FieldSightMapActivity.start(getActivity(), loadedSite);
+            ProjectMapActivity.start(getActivity(), loadedSite);
         }
 
     }

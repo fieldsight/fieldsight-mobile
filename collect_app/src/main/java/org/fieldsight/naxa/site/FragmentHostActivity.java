@@ -98,8 +98,6 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
     private void bindUI() {
         toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
     }
 
     @Override

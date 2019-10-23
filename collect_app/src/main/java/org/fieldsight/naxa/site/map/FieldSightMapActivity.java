@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.Window;
 import android.widget.ImageButton;
 
@@ -37,19 +38,17 @@ import org.odk.collect.android.preferences.MapsPreferences;
 import org.odk.collect.android.utilities.GeoUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
-import org.osmdroid.util.BoundingBox;
-import org.osmdroid.util.GeoPoint;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.SingleObserver;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -81,7 +80,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
     private int featureId = -1;  // will be a positive featureId once map is ready
 
 
-    private FieldSightMapPoint location;
+    private MapPoint location;
 
 
     private boolean isDragged;
@@ -127,6 +126,8 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
 
     }
 
+    private HashMap<String, Site> featureIdAndSite = new HashMap<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,7 +154,6 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
         Context context = getApplicationContext();
         MapProvider.createMapFragment(context)
                 .addTo(this, R.id.map_container, this::initMap, this::finish);
-
 
 
     }
@@ -241,7 +241,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
 
         }
 
-//        map.setGpsLocationListener(this::onLocationChanged);
+        map.setGpsLocationListener(this::onLocationChanged);
         map.setGpsLocationEnabled(true);
 
         if (previousState != null) {
@@ -252,54 +252,59 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
         map.setClickListener(new MapFragment.PointListener() {
             @Override
             public void onPoint(@NonNull MapPoint point) {
-                ToastUtils.showLongToast("Hi");
+                String index = point.lat + ":" + point.lon;
+                ToastUtils.showLongToast(featureIdAndSite.get(index).getName());
             }
         });
 
     }
 
     private void loadSites(String projectId) {
-        SiteLocalSource.getInstance().getById(projectId).observe(this, sites -> {
-            Timber.i("Plotting %d sites on map", sites.size());
-            Observable.just(sites)
-                    .subscribeOn(Schedulers.computation())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
-                    .filter(site -> !TextUtils.isEmpty(site.getLatitude())
-                            && !TextUtils.isEmpty(site.getLatitude()))
-                    .map(new Function<Site, FieldSightMapPoint>() {
-                        @Override
-                        public FieldSightMapPoint apply(Site site) {
-                            Timber.i("prep Adding %s",site.getName());
-                            return new FieldSightMapPoint(site, site.getLatitude(), site.getLongitude());
-                        }
-                    })
-                    .doOnNext(new Consumer<FieldSightMapPoint>() {
-                        @Override
-                        public void accept(FieldSightMapPoint fieldSightMapPoint) {
-                            Timber.i("Adding %s",fieldSightMapPoint.getSite().getName());
-                            placeMarker(fieldSightMapPoint);
+        Disposable disposable = SiteLocalSource.getInstance().getByIdAsSingle(projectId)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        featureIdAndSite.clear();
+                    }
+                })
+                .flattenAsObservable(new Function<List<Site>, Iterable<Site>>() {
+                    @Override
+                    public Iterable<Site> apply(List<Site> sites) throws Exception {
+                        return sites;
+                    }
+                })
+                .filter(site -> !TextUtils.isEmpty(site.getLatitude())
+                        && !TextUtils.isEmpty(site.getLatitude()))
+                .flatMap(new Function<Site, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Site site) throws Exception {
+                        MapPoint mapPoint = new MapPoint(Double.parseDouble(site.getLatitude()),
+                                Double.parseDouble(site.getLongitude()));
+                        return Observable.just(mapPoint)
+                                .doOnNext(new Consumer<MapPoint>() {
+                                    @Override
+                                    public void accept(MapPoint mapPoint) throws Exception {
+                                        featureId = placeMarker(mapPoint);
+                                        featureIdAndSite.put(mapPoint.lat + ":" + mapPoint.lon, site);
+                                    }
+                                });
+                    }
+                }).subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
 
-                        }
-                    })
+                    }
 
-                    .subscribe(new DisposableObserver<FieldSightMapPoint>() {
-                        @Override
-                        public void onNext(FieldSightMapPoint fieldSightMapPoint) {
-                            Timber.i("Adding thoriwng %s",fieldSightMapPoint.getSite().getName());
-                        }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                    }
+                });
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Timber.e(e);
-                        }
 
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-        });
     }
 
     protected void restoreFromInstanceState(Bundle state) {
@@ -313,7 +318,7 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
         isPointLocked = state.getBoolean(IS_POINT_LOCKED_KEY, false);
 
         // Restore the marker and dialog after the flags, because they use some of them.
-        FieldSightMapPoint point = state.getParcelable(POINT_KEY);
+        MapPoint point = state.getParcelable(POINT_KEY);
         if (point != null) {
             placeMarker(point);
         } else {
@@ -343,10 +348,10 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
 
     }
 
-    public void onLocationChanged(FieldSightMapPoint point) {
+    public void onLocationChanged(MapPoint point) {
 
 
-        FieldSightMapPoint previousLocation = this.location;
+        MapPoint previousLocation = this.location;
         this.location = point;
 
         if (point != null) {
@@ -390,7 +395,6 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
     }
 
 
-
     private void enableZoomButton(boolean shouldEnable) {
         if (zoomButton != null) {
             zoomButton.setEnabled(shouldEnable);
@@ -411,8 +415,9 @@ public class FieldSightMapActivity extends BaseGeoMapActivity {
         setClear = true;
     }
 
-    private void placeMarker(FieldSightMapPoint point) {
+    private int placeMarker(MapPoint point) {
         featureId = map.addMarker(point, intentDraggable && !intentReadOnly && !isPointLocked);
+        return featureId;
     }
 
     public void setCaptureLocation(boolean captureLocation) {
