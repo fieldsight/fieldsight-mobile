@@ -575,29 +575,20 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack("generalfrag");
         fragmentTransaction.commit();
-
     }
 
 
     private void toStageList() {
-
-
         StageListFragment stageListFragment = StageListFragment.newInstance(loadedSite);
-
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION)
                 .replace(R.id.fragment_container, stageListFragment)
                 .addToBackStack("myfrag2").commit();
-
-
     }
 
     private void toScheduleList() {
-
         FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.SCHEDULE, loadedSite);
-
-
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION)

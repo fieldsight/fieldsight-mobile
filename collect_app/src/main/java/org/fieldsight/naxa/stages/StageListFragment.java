@@ -80,8 +80,6 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         View rootView =
                 inflater.inflate(R.layout.general_forms_list_fragment, container, false);
         unbinder = ButterKnife.bind(this, rootView);
-
-
         setToolbarText();
         return rootView;
     }
@@ -99,7 +97,7 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
 
-        FieldSightFormsLocalSourcev3.getInstance().getStageForms(loadedSite.getProject(), loadedSite.getSite(), loadedSite.getTypeId())
+        FieldSightFormsLocalSourcev3.getInstance().getStageForms(loadedSite.getProject(), loadedSite.getSite(), loadedSite.getTypeId(), loadedSite.getRegionId())
                 .observe(this, stages -> listAdapter.updateList(stages));
 
 
@@ -137,8 +135,6 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
     @Override
     public void onFormItemClicked(Stage stage, int position) {
         Fragment fragment = SubStageListFragment.newInstance(loadedSite, stage.getSubStage(), String.valueOf(position));
-
-
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION);

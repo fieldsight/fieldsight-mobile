@@ -118,7 +118,6 @@ public class BaseFormListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fieldsight_forms_list_fragment, container, false);
         recyclerView = view.findViewById(R.id.recycler_view_fieldsight_form_list);
         emptyLayout = view.findViewById(R.id.root_layout_empty_layout);
-
         return view;
     }
 
@@ -191,7 +190,6 @@ public class BaseFormListFragment extends Fragment {
 
     public void updateList(List<FieldsightFormDetailsv3> fieldSightForms, String siteId) {
         this.siteId = siteId;
-
         adapter.getData().clear();
         adapter.getData().addAll(fieldSightForms);
         adapter.notifyDataSetChanged();

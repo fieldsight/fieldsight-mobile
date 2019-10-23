@@ -89,7 +89,7 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
         Timber.i("SyncActivity, isSyncing = " + syncing);
         // clear the sync stat table if it is not syncing when opened
         if (!syncing) {
-            SyncLocalSource3.getInstance().delete();
+//            SyncLocalSource3.getInstance().delete();
         }
 
         setTitle(String.format(Locale.getDefault(), "Projects (%d)", projectList.size()));

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FieldSightFormViewModel extends ViewModel {
 
-    public LiveData<List<FieldsightFormDetailsv3>> loadForm(String type, String projectId, String siteId,String siteTypeId) {
-        return FieldSightFormsLocalSourcev3.getInstance().getFormByType(type, projectId, siteId,siteTypeId);
+    public LiveData<List<FieldsightFormDetailsv3>> loadForm(String type, String projectId, String siteId,String siteTypeId, String siteRegionId) {
+        return FieldSightFormsLocalSourcev3.getInstance().getFormByType(type, projectId, siteId,siteTypeId, siteRegionId);
     }
 }
