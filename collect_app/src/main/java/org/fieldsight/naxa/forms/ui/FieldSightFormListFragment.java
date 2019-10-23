@@ -1,12 +1,19 @@
 package org.fieldsight.naxa.forms.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
 import org.fieldsight.naxa.common.BaseFormListFragment;
+import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -56,9 +63,44 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         super.onActivityCreated(savedInstanceState);
         getViewModel().loadForm(formType, loadedSite.getProject(), loadedSite.getId(), loadedSite.getTypeId(), loadedSite.getRegionId())
                 .observe(this, fieldSightForms -> {
-                    Timber.i(fieldSightForms.toString());
-                    showEmptyLayout(fieldSightForms.isEmpty());
-                    updateList(fieldSightForms, loadedSite.getId());
+                    // filter form by setting
+                    // for the form that belongs to all the site not having regions and types, it will have 0 value
+                    int newSiteTypeId = TextUtils.isEmpty(loadedSite.getTypeId()) ? 0 : Integer.parseInt(loadedSite.getTypeId());
+                    int newSiteRegionId = TextUtils.isEmpty(loadedSite.getRegionId()) ? 0 : Integer.parseInt(loadedSite.getRegionId());
+
+                    List<FieldsightFormDetailsv3> filteredList = new ArrayList<>();
+                    for(FieldsightFormDetailsv3 fieldsightFormDetailsv3 : fieldSightForms) {
+                        if(TextUtils.isEmpty(fieldsightFormDetailsv3.getSettings())) {
+                            filteredList.add(fieldsightFormDetailsv3);
+                            continue;
+                        }
+                        try{
+                            JSONObject settingJSON = new JSONObject(fieldsightFormDetailsv3.getSettings());
+                            JSONArray typesArray = settingJSON.optJSONArray("types");
+                            boolean typeFound = false;
+                            for(int i = 0; i < typesArray.length(); i++) {
+                                if(typesArray.optInt(i) == newSiteTypeId) {
+                                    typeFound = true;
+                                    break;
+                                }
+                            }
+                            JSONArray regionsArray = settingJSON.optJSONArray("regions");
+                            boolean regionFound = false;
+                            for(int i = 0; i < regionsArray.length(); i++) {
+                                if(regionsArray.optInt(i) == newSiteRegionId) {
+                                    regionFound = true;
+                                    break;
+                                }
+                            }
+                            if(typeFound && regionFound) {
+                                filteredList.add(fieldsightFormDetailsv3);
+                            }
+
+                        }catch (Exception e) {e.printStackTrace();}
+                    }
+                    Timber.i(filteredList.toString());
+                    showEmptyLayout(filteredList.isEmpty());
+                    updateList(filteredList, loadedSite.getId());
                 });
     }
 
