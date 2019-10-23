@@ -71,7 +71,9 @@
             android:title="@string/navigation" />
 
 
+
     </PreferenceCategory>
+
 
 
     <Preference
