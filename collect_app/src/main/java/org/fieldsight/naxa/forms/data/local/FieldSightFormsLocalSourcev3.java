@@ -14,7 +14,6 @@ import org.fieldsight.naxa.stages.data.SubStage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.application.Collect;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -213,7 +212,9 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                                     }
                                 }
                             }
-                        }catch( Exception e) {e.printStackTrace();}
+                        }catch( Exception e) {
+                            Timber.e(e);
+                        }
                         Timber.i("getSortedPages, typeFound = " + typeFound + " regionFound = " + regionFound);
                         return typeFound & regionFound;
                     }

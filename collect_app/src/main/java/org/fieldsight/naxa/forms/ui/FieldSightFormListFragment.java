@@ -96,7 +96,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                                 filteredList.add(fieldsightFormDetailsv3);
                             }
 
-                        }catch (Exception e) {e.printStackTrace();}
+                        }catch (Exception e) {Timber.e(e);}
                     }
                     Timber.i(filteredList.toString());
                     showEmptyLayout(filteredList.isEmpty());
