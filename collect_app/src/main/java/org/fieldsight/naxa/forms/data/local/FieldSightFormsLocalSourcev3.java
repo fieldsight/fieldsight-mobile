@@ -266,7 +266,6 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
             fieldsightFormDetailsv3s[i] = items.get(i);
         }
         dao.updateAll(fieldsightFormDetailsv3s);
-
     }
 
     public List<FieldsightFormDetailsv3> getEducationMaterial(String projectId) {

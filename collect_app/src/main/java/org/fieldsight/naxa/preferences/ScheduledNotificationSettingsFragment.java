@@ -1,22 +1,23 @@
 package org.fieldsight.naxa.preferences;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
 
-
-
 import com.evernote.android.job.JobManager;
 import com.google.android.gms.analytics.HitBuilders;
 
 import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
+import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.jobs.DailyNotificationJob;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.AdminSharedPreferences;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.tasks.ServerPollingJob;
@@ -28,6 +29,7 @@ import java.util.Locale;
 
 import timber.log.Timber;
 
+import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_APP_URL;
 import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_DAILY;
 import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_MONTHLY;
 import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_WEEKLY;
@@ -72,11 +74,11 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
 
 
     private void setupUpdateButton() {
-        Preference preference = findPreference(SettingsKeys.KEY_APP_UPDATE);
+        Preference preference = findPreference(KEY_APP_URL);
         preference.setOnPreferenceClickListener(this);
         String title = getString(R.string.app_name).concat(": ").concat(BuildConfig.VERSION_NAME);
         preference.setTitle(title);
-        preference.setSummary(getString(R.string.msg_check_for_update));
+        preference.setSummary(FieldSightUserSession.getServerUrl(Collect.getInstance()));
     }
 
 
@@ -107,6 +109,10 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
                 break;
             case KEY_NOTIFICATION_TIME_MONTHLY:
                 showMonthlyPickerDialog();
+                break;
+            case KEY_APP_URL:
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(FieldSightUserSession.getServerUrl(Collect.getInstance()))));
                 break;
         }
         return false;

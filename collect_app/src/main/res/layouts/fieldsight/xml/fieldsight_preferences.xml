@@ -63,13 +63,22 @@
             android:key="image_size"
             android:title="@string/image_size_title" />
 
+        <ListPreference
+            android:dialogTitle="@string/navigation"
+            android:entries="@array/navigation_entries"
+            android:entryValues="@array/navigation_entry_values"
+            android:key="navigation"
+            android:title="@string/navigation" />
+
+
 
     </PreferenceCategory>
+
 
 
     <Preference
         android:icon="@drawable/ic_launcher_fieldsight"
         android:key="app_update"
-        android:summary="Check for update"
+        android:summary=""
         android:title="FieldSight 2.6.2" />
 </PreferenceScreen>

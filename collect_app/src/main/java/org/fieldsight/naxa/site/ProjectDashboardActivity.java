@@ -67,6 +67,7 @@ import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.profile.UserActivity;
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
+import org.fieldsight.naxa.site.map.ProjectMapFragment;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.FileManagerTabs;
@@ -153,8 +154,8 @@ public class ProjectDashboardActivity extends BaseActivity {
         setupAnimation();
         tl = getTermsAndLabels();
         setupNavigationHeader();
-        if(tl != null) {
-            if(!TextUtils.isEmpty(tl.site)) {
+        if (tl != null) {
+            if (!TextUtils.isEmpty(tl.site)) {
                 navigationView.getMenu().findItem(R.id.nav_create_offline_site).setTitle(String.format("Create New %s", tl.site));
                 navigationView.getMenu().findItem(R.id.nav_view_site_dashboard).setTitle(String.format("My %s", tl.site));
             }
@@ -162,13 +163,13 @@ public class ProjectDashboardActivity extends BaseActivity {
     }
 
     private TermsLabels getTermsAndLabels() {
-        if(!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
-            try{
+        if (!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
+            try {
                 Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
                 JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
                 return TermsLabels.fromJSON(tlJson);
-            }catch (Exception e){
-                Timber.e("Failed to load terms and labels; Reason: %s",e.getMessage());
+            } catch (Exception e) {
+                Timber.e("Failed to load terms and labels; Reason: %s", e.getMessage());
                 return null;
             }
         } else {
@@ -231,10 +232,10 @@ public class ProjectDashboardActivity extends BaseActivity {
             User user = FieldSightUserSession.getUser();
             ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFullName());
             ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
-             if(tl != null && !TextUtils.isEmpty(tl.siteSupervisor)) {
-                 Timber.i("ProjectDashboardActivity, data:: sitesv = %s", tl.siteSupervisor);
-                 ((TextView)navigationHeader.findViewById(R.id.tv_user_post)).setText(tl.siteSupervisor);
-             }
+            if (tl != null && !TextUtils.isEmpty(tl.siteSupervisor)) {
+                Timber.i("ProjectDashboardActivity, data:: sitesv = %s", tl.siteSupervisor);
+                ((TextView) navigationHeader.findViewById(R.id.tv_user_post)).setText(tl.siteSupervisor);
+            }
 
             ImageView ivProfilePicture = navigationHeader.findViewById(R.id.image_profile);
 
@@ -305,14 +306,14 @@ public class ProjectDashboardActivity extends BaseActivity {
         ArrayList<Integer> totalTabs = new ArrayList<>();
         totalTabs.add(0);
         totalTabs.add(1);
-//        totalTabs.add(2);
+        totalTabs.add(2);
         totalTabs.remove(position);
 
         FloatingActionButton unselectedFab1 = (FloatingActionButton) tabLayout.getTabAt(totalTabs.get(0)).getCustomView();
         ViewUtils.setButtonTint(unselectedFab1, ColorStateList.valueOf(Color.parseColor("#00628e")));
 
-//        FloatingActionButton unselectedFab2 = (FloatingActionButton) tabLayout.getTabAt(totalTabs.get(1)).getCustomView();
-//        ViewUtils.setButtonTint(unselectedFab2, ColorStateList.valueOf(Color.parseColor("#00628e")));
+        FloatingActionButton unselectedFab2 = (FloatingActionButton) tabLayout.getTabAt(totalTabs.get(1)).getCustomView();
+        ViewUtils.setButtonTint(unselectedFab2, ColorStateList.valueOf(Color.parseColor("#00628e")));
 
     }
 
@@ -362,7 +363,7 @@ public class ProjectDashboardActivity extends BaseActivity {
             case R.id.nav_create_offline_site:
                 String siteLabel = "Site";
                 String regionLabel = "Region";
-                if(tl != null) {
+                if (tl != null) {
                     siteLabel = tl.site;
                     regionLabel = tl.region;
                 }
@@ -474,7 +475,7 @@ public class ProjectDashboardActivity extends BaseActivity {
 
         tabLayout.getTabAt(0).setCustomView(fabTabSitelist);
         tabLayout.getTabAt(1).setCustomView(fabTabContactList);
-//        tabLayout.getTabAt(2).setCustomView(fabMap);
+        tabLayout.getTabAt(2).setCustomView(fabMap);
 //
         ViewUtils.setButtonTint(fabTabSitelist, ColorStateList.valueOf(Color.parseColor("#4b8fbe")));
     }
@@ -487,10 +488,10 @@ public class ProjectDashboardActivity extends BaseActivity {
         SiteListFragment siteListFragment = SiteListFragment.newInstance(loadedProject);
         ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.newInstance();
 
-//        MapFragment mapFragment = MapFragment.newInstance(loadedProject);
+        ProjectMapFragment mapFragment = ProjectMapFragment.newInstance(loadedProject);
         fragments.add(siteListFragment);
         fragments.add(projectContactsFragment);
-//        fragments.add(mapFragment);
+        fragments.add(mapFragment);
 
 
         DashboardAdapter dashboardAdapter = new DashboardAdapter(getSupportFragmentManager());
@@ -513,8 +514,7 @@ public class ProjectDashboardActivity extends BaseActivity {
         } else {
             if (isHome) {
                 toggleNavDrawer();
-            }
-            else{
+            } else {
                 finish();
             }
         }
@@ -525,7 +525,7 @@ public class ProjectDashboardActivity extends BaseActivity {
         MenuItem menuItem = menu.findItem(R.id.action_app_settings);
         menuItem.setVisible((BuildConfig.BUILD_TYPE.equals("internal")));
         // change the title of the filter with terms and labels case
-        if( tl != null ) {
+        if (tl != null) {
             menu.findItem(R.id.action_filter).setTitle("Filter " + tl.site);
         }
 

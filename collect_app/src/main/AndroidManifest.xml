@@ -109,7 +109,7 @@
         <activity android:name="org.fieldsight.naxa.submissions.PreviousSubmissionDetailActivity" />
         <activity android:name="org.fieldsight.naxa.notificationslist.NotificationListActivity" />
         <activity android:name="org.fieldsight.naxa.flagform.FlaggedInstanceActivity" />
-        <activity android:name="org.fieldsight.naxa.project.MapActivity" />
+        <activity android:name="org.fieldsight.naxa.project.ProjectMapActivity" />
         <activity android:name="org.fieldsight.naxa.profile.UserProfileActivity" />
         <activity android:name="org.fieldsight.naxa.profile.UserActivity" />
         <activity android:name="org.fieldsight.naxa.sitedocuments.SiteDocumentsListActivity" />
@@ -370,5 +370,9 @@
         </activity>
         <activity android:name="org.fieldsight.naxa.forms.FormsFragmentHostActivity" />
         <activity android:name="org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity" />
+        <activity
+            android:exported="true"
+            android:name="org.fieldsight.naxa.site.map.FieldSightMapActivity" />
+        <activity android:name="org.fieldsight.naxa.PROJECT.MapActivity" />
     </application>
 </manifest>
