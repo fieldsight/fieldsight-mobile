@@ -77,6 +77,6 @@
     <Preference
         android:icon="@drawable/ic_launcher_fieldsight"
         android:key="app_update"
-        android:summary="Check for update"
+        android:summary=""
         android:title="FieldSight 2.6.2" />
 </PreferenceScreen>

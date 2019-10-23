@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
 
-import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.common.FieldSightUserSession;
@@ -120,14 +119,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        if(BuildConfig.BUILD_TYPE.equals("release")) {
-            menu.findItem(R.id.action_server_url).setVisible(false);
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu_fieldsight, menu);
         return super.onCreateOptionsMenu(menu);
@@ -163,9 +154,6 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
 
                 break;
 
-            case R.id.action_server_url:
-                startActivity(new Intent(this, org.fieldsight.naxa.common.SettingsActivity.class));
-                return true;
 
             case R.id.action_backup:
                 startActivity(new Intent(this, BackupActivity.class));
