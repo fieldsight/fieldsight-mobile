@@ -187,8 +187,9 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         // else check form types and regions contains the site type and region
                         //form type undefined and region [1,2,3] =>
 
-                        Integer newsiteTypeId = TextUtils.isEmpty(siteTypeId) ? 0 : Integer.parseInt(siteTypeId);
-                        Integer newsiteRegionId = TextUtils.isEmpty(siteRegionId) ? 0 : Integer.parseInt(siteRegionId);
+                        int newsiteTypeId = TextUtils.isEmpty(siteTypeId) ? 0 : Integer.parseInt(siteTypeId);
+                        int newsiteRegionId = TextUtils.isEmpty(siteRegionId) ? 0 : Integer.parseInt(siteRegionId);
+                        Timber.i("FieldsightFormlocalsourcev3, newsitetyoeId = %d, newsiteRegionId = %d", newsiteTypeId, newsiteRegionId);
                         boolean typeFound = false;
                         boolean regionFound = false;
 
@@ -196,6 +197,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                             JSONObject jsonObject = new JSONObject(formDetailsv3.getMetaAttributes());
                             if(jsonObject.has("stage_type")) {
                                 JSONArray jsonArray = jsonObject.optJSONArray("stage_type");
+                                Timber.i("FieldsightFormlocalsourcev3, stageTypeArray = %s", jsonArray.toString());
                                 for(int i = 0; i < jsonArray.length(); i ++) {
                                     if(jsonArray.optInt(i) == newsiteTypeId) {
                                         typeFound = true;
@@ -205,6 +207,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                             }
                             if(jsonObject.has("stage_regions")) {
                                 JSONArray jsonArray = jsonObject.optJSONArray("stage_regions");
+                                Timber.i("FieldsightFormlocalsourcev3, stageRegionArray = %s", jsonArray.toString());
                                 for(int i = 0; i < jsonArray.length(); i ++) {
                                     if(jsonArray.optInt(i) == newsiteRegionId) {
                                         regionFound = true;

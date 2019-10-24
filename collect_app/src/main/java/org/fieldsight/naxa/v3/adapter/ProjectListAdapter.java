@@ -34,6 +34,11 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
         this.allTrue = allSelected;
     }
 
+    public void toggleAllSelectedAndNotify(boolean allSelected) {
+        this.allTrue = allSelected;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ProjectViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
