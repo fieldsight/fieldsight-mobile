@@ -387,8 +387,8 @@ public class InstanceProvider extends ContentProvider {
 
     static {
         URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
-        URI_MATCHER.addURI(InstanceProviderAPI.AUTHORITY, "INSTANCES", INSTANCES);
-        URI_MATCHER.addURI(InstanceProviderAPI.AUTHORITY, "INSTANCES/#", INSTANCE_ID);
+        URI_MATCHER.addURI(InstanceProviderAPI.AUTHORITY, "instances", INSTANCES);
+        URI_MATCHER.addURI(InstanceProviderAPI.AUTHORITY, "instances/#", INSTANCE_ID);
 
         sInstancesProjectionMap = new HashMap<>();
         sInstancesProjectionMap.put(InstanceColumns._ID, InstanceColumns._ID);
