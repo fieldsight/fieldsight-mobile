@@ -5,8 +5,7 @@ apply from: '../config/jacoco.gradle'
 
 //import com.android.ddmlib.DdmPreferences
 //
-//DdmPreferences.setTimeOut(60000)
-
+//DdmPreferences.setTimeOut(60
 ant.condition(property: 'os', value: 'windows') {
     os(family: 'windows')
 }
@@ -79,7 +78,7 @@ def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', getProps("mapbox"))
 
 def versionMajor = 3
 def versionMinor = 2
-def versionPatch = 2
+def versionPatch = 3
 
 android {
     compileSdkVersion(28)
