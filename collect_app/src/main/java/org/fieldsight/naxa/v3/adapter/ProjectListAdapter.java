@@ -16,6 +16,7 @@ import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.utilities.DateTimeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -65,13 +66,13 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
             for (int j = 0; j < projecttuple.size(); j++) {
                 if (projectList.get(i).getId().equals(projecttuple.get(j).projectId)) {
                     int status = projecttuple.get(j).status;
-                    if(status == Constant.DownloadStatus.RUNNING) {
+                    if (status == Constant.DownloadStatus.RUNNING) {
                         projectList.get(i).setStatusMessage("Syncing PROJECT");
-                    } else if(status == Constant.DownloadStatus.COMPLETED) {
+                    } else if (status == Constant.DownloadStatus.COMPLETED) {
                         projectList.get(i).setSynced(true);
                         projectList.get(i).setSyncedDate(projecttuple.get(j).createdDate);
                         projectList.get(i).setStatusMessage("Synced On " + DateTimeUtils.getFormattedDate("yyyy-MM-dd, HH:mm", projectList.get(i).getSyncedDate()));
-                    } else if(status == Constant.DownloadStatus.FAILED) {
+                    } else if (status == Constant.DownloadStatus.FAILED) {
                         projectList.get(i).setSynced(false);
                         projectList.get(i).setStatusMessage("Sync failed");
                     } else {
@@ -85,14 +86,22 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
 
     public boolean anyProjectSelectedForSync() {
         boolean found = false;
-        for(Project project: this.projectList) {
-            if(!project.isSynced()) {
+        for (Project project : this.projectList) {
+            if (!project.isSynced()) {
                 found = true;
                 break;
             }
         }
         return found;
     }
+
+    public void clearAndUpdate(List<Project> projects) {
+        projectList.clear();
+        projectList.addAll(projects);
+        notifyDataSetChanged();
+    }
+
+
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
         projectViewHolder.bindView(projectList.get(i), allTrue);

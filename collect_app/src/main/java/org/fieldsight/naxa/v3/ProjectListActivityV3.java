@@ -2,7 +2,6 @@ package org.fieldsight.naxa.v3;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +17,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
@@ -71,9 +71,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     List<Project> projectList = new ArrayList<>();
 
     RecyclerView.AdapterDataObserver observer;
-    boolean allSelected ;
+
+    @BindView(R.id.swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    boolean allSelected;
     LiveData<List<ProjectNameTuple>> projectIds;
-    Observer<List<ProjectNameTuple>> projectObserver ;
+    Observer<List<ProjectNameTuple>> projectObserver;
     boolean showSyncMenu = true;
 
     @Override
@@ -121,6 +125,14 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             invalidateOptionsMenu();
         };
         projectIds = SyncLocalSource3.getInstance().getAllSiteSyncingProject();
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDataFromServer();
+
+            }
+        });
     }
 
     @Override
@@ -168,17 +180,19 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         ProjectRepository.getInstance().getAll(new LoadProjectCallback() {
             @Override
             public void onProjectLoaded(List<Project> projects) {
-                projectList.addAll(projects);
-                adapter.notifyDataSetChanged();
+                adapter.clearAndUpdate(projects);
                 manageNodata(false);
                 Timber.e("data found with %d size", projects.size());
                 projectIds.observe(ProjectListActivityV3.this, projectObserver);
+
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onDataNotAvailable() {
                 Timber.d("data not available");
                 manageNodata(false);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
