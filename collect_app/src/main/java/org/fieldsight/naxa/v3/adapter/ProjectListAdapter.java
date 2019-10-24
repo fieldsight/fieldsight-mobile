@@ -8,15 +8,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.site.ProjectDashboardActivity;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.DateTimeUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;

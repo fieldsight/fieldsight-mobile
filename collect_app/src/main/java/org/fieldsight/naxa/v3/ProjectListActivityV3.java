@@ -283,10 +283,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    boolean exit = false;
+    boolean exit;
+
     @Override
     public void finish() {
-        if(allSelected) {
+        if (allSelected) {
             allSelected = !allSelected;
             for (Project project : projectList) {
                 project.setChecked(allSelected);
@@ -296,7 +297,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             invalidateOptionsMenu();
         } else {
             // exit the app in double back pressed
-            if(exit) {
+            if (exit) {
                 super.finish();
             } else {
                 Toast.makeText(getApplicationContext(), "Please double tap to exit", Toast.LENGTH_SHORT).show();
