@@ -38,7 +38,7 @@ public final class InstanceProviderAPI {
         private InstanceColumns() {
         }
 
-        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/INSTANCES");
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/instances");
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.bcss.instance";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.bcss.instance";
 

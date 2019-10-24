@@ -70,7 +70,9 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
 
                     List<FieldsightFormDetailsv3> filteredList = new ArrayList<>();
                     for(FieldsightFormDetailsv3 fieldsightFormDetailsv3 : fieldSightForms) {
-                        if(TextUtils.isEmpty(fieldsightFormDetailsv3.getSettings())) {
+                        Timber.i("loadForm :: formsettings = %s", fieldsightFormDetailsv3.getSettings());
+                        if(TextUtils.isEmpty(fieldsightFormDetailsv3.getSettings()) || TextUtils.equals(fieldsightFormDetailsv3.getSettings(), "null")) {
+
                             filteredList.add(fieldsightFormDetailsv3);
                             continue;
                         }

@@ -169,8 +169,7 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         });
     }
 
-    public void deleteSyncedSites() {
-
+    public void deleteSyncedSites(String... selectedProjectIds) {
         dao.deleteSyncedSites(IS_ONLINE);
 
     }

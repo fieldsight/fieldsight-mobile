@@ -31,7 +31,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
         } else {
             String selection =
                     InstanceProviderAPI.InstanceColumns.STATUS + " !=? and "
-                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
+                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " =?";
             String[] selectionArgs = {
                     InstanceProviderAPI.STATUS_SUBMITTED,
                     siteId};
@@ -50,7 +50,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
             String selection =
                     "(" + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                             + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
+                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " =?";
             String[] selectionArgs = {
                     InstanceProviderAPI.STATUS_COMPLETE,
                     InstanceProviderAPI.STATUS_SUBMISSION_FAILED,
@@ -69,7 +69,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
         } else {
             String selection =
                     InstanceProviderAPI.InstanceColumns.DELETED_DATE + " IS NULL and "
-                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
+                            + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " =?";
             String[] selectionArgs = {siteId};
             cursorLoader = getInstancesCursorLoader(null, selection, selectionArgs, sortOrder);
         }
@@ -131,7 +131,7 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
                     + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                     + InstanceProviderAPI.InstanceColumns.STATUS + "=? or "
                     + InstanceProviderAPI.InstanceColumns.STATUS + "=?) and "
-                    + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " = ?";
+                    + InstanceProviderAPI.InstanceColumns.FS_SITE_ID + " =?";
 
 
             String[] selectionArgs = {
@@ -242,8 +242,6 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
 
         switch (formDeployedFrom) {
             case PROJECT:
-                submissionUrl += "/" + fsFormId + "/" + siteId;
-                break;
             case SITE:
                 submissionUrl += fsFormId + "/" + siteId;
                 break;
@@ -287,14 +285,12 @@ public class FSInstancesDao extends org.odk.collect.android.dao.InstancesDao {
 
     private String getFormDeployedFrom(String url) {
         String[] split = url.split("/");
-        if ( PROJECT.equals(split[split.length - 3])) {
-            return  PROJECT;
+        if (PROJECT.equals(split[split.length - 3])) {
+            return PROJECT;
         } else {
-            return  SITE;
+            return SITE;
         }
     }
-
-
 
 
     public String getFsFormIdFromUrl(String url) {

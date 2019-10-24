@@ -93,7 +93,12 @@ public class SyncServiceV3 extends IntentService {
                 return isOnline;
             }).filter(isOnline -> isOnline)
                     .flatMap(aBoolean -> {
-                        SiteLocalSource.getInstance().deleteSyncedSites();
+                        String[] selectedProjectIds = new String[selectedProject.size()];
+                        for(int i = 0; i < selectedProject.size(); i ++) {
+                            selectedProjectIds[i] = selectedProject.get(i).getId();
+                        }
+                        Timber.i("SyncServiceV3, getSitesObservable, selectedProjectIds Length = %d", selectedProjectIds.length);
+                        SiteLocalSource.getInstance().deleteSyncedSites(selectedProjectIds);
                         return downloadSiteObservable(selectedProject, selectedMap);
                     }).subscribeWith(new DisposableObserver<Object>() {
                         @Override

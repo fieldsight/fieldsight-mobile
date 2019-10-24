@@ -2,6 +2,7 @@ package org.fieldsight.naxa.v3;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -282,7 +283,34 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    boolean exit;
 
+    @Override
+    public void finish() {
+        if (allSelected) {
+            allSelected = !allSelected;
+            for (Project project : projectList) {
+                project.setChecked(allSelected);
+            }
+            adapter.toggleAllSelected(allSelected);
+            adapter.notifyDataSetChanged();
+            invalidateOptionsMenu();
+        } else {
+            // exit the app in double back pressed
+            if (exit) {
+                super.finish();
+            } else {
+                Toast.makeText(getApplicationContext(), "Please double tap to exit", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        exit = false;
+                    }
+                }, 2000);
+                exit = true;
+            }
+        }
+    }
 }
 
 
