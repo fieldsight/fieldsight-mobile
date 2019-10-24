@@ -5,8 +5,7 @@ apply from: '../config/jacoco.gradle'
 
 //import com.android.ddmlib.DdmPreferences
 //
-//DdmPreferences.setTimeOut(60000)
-
+//DdmPreferences.setTimeOut(60
 ant.condition(property: 'os', value: 'windows') {
     os(family: 'windows')
 }
