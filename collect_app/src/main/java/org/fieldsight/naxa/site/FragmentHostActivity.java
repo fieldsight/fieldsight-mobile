@@ -141,21 +141,22 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 });
                 break;
             case R.id.action_refresh:
-                ProjectLocalSource.getInstance()
-                        .getProjectById(loadedSite.getProject()).observe(this, new Observer<Project>() {
-                    @Override
-                    public void onChanged(@Nullable Project project) {
-                        if (project != null) {
-                            Bundle bundle = new Bundle();
-                            ArrayList<Project> projectArrayList = new ArrayList<>();
-                            projectArrayList.add(project);
-                            bundle.putParcelableArrayList("projects", projectArrayList);
-                            bundle.getBoolean("auto", true);
-                            startActivity(new Intent(FragmentHostActivity.this, SyncActivity.class)
-                                    .putExtra("params", bundle));
-                        }
-                    }
-                });
+                String projectId = project != null ? project.getId() : loadedSite.getProject();
+                ProjectLocalSource.getInstance().getProjectById(projectId)
+                        .observe(this, new Observer<Project>() {
+                            @Override
+                            public void onChanged(@Nullable Project project) {
+                                if (project != null) {
+                                    Bundle bundle = new Bundle();
+                                    ArrayList<Project> projectArrayList = new ArrayList<>();
+                                    projectArrayList.add(project);
+                                    bundle.putParcelableArrayList("projects", projectArrayList);
+                                    bundle.getBoolean("auto", true);
+                                    startActivity(new Intent(FragmentHostActivity.this, SyncActivity.class)
+                                            .putExtra("params", bundle));
+                                }
+                            }
+                        });
                 return true;
         }
         return super.onOptionsItemSelected(item);

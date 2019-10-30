@@ -46,7 +46,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         return fragment;
     }
 
-    private FieldSightFormListFragment() {
+    public FieldSightFormListFragment() {
     }
 
     @Override
@@ -69,36 +69,38 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                     int newSiteRegionId = TextUtils.isEmpty(loadedSite.getRegionId()) ? 0 : Integer.parseInt(loadedSite.getRegionId());
 
                     List<FieldsightFormDetailsv3> filteredList = new ArrayList<>();
-                    for(FieldsightFormDetailsv3 fieldsightFormDetailsv3 : fieldSightForms) {
+                    for (FieldsightFormDetailsv3 fieldsightFormDetailsv3 : fieldSightForms) {
                         Timber.i("loadForm :: formsettings = %s", fieldsightFormDetailsv3.getSettings());
-                        if(TextUtils.isEmpty(fieldsightFormDetailsv3.getSettings()) || TextUtils.equals(fieldsightFormDetailsv3.getSettings(), "null")) {
+                        if (TextUtils.isEmpty(fieldsightFormDetailsv3.getSettings()) || TextUtils.equals(fieldsightFormDetailsv3.getSettings(), "null")) {
 
                             filteredList.add(fieldsightFormDetailsv3);
                             continue;
                         }
-                        try{
+                        try {
                             JSONObject settingJSON = new JSONObject(fieldsightFormDetailsv3.getSettings());
                             JSONArray typesArray = settingJSON.optJSONArray("types");
                             boolean typeFound = false;
-                            for(int i = 0; i < typesArray.length(); i++) {
-                                if(typesArray.optInt(i) == newSiteTypeId) {
+                            for (int i = 0; i < typesArray.length(); i++) {
+                                if (typesArray.optInt(i) == newSiteTypeId) {
                                     typeFound = true;
                                     break;
                                 }
                             }
                             JSONArray regionsArray = settingJSON.optJSONArray("regions");
                             boolean regionFound = false;
-                            for(int i = 0; i < regionsArray.length(); i++) {
-                                if(regionsArray.optInt(i) == newSiteRegionId) {
+                            for (int i = 0; i < regionsArray.length(); i++) {
+                                if (regionsArray.optInt(i) == newSiteRegionId) {
                                     regionFound = true;
                                     break;
                                 }
                             }
-                            if(typeFound && regionFound) {
+                            if (typeFound && regionFound) {
                                 filteredList.add(fieldsightFormDetailsv3);
                             }
 
-                        }catch (Exception e) {Timber.e(e);}
+                        } catch (Exception e) {
+                            Timber.e(e);
+                        }
                     }
                     Timber.i(filteredList.toString());
                     showEmptyLayout(filteredList.isEmpty());

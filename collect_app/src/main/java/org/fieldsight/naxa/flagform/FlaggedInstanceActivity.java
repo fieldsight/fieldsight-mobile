@@ -162,8 +162,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         tvSiteIdentifier.setText(siteIdentifier);
         tvSiteAddress.setText(address);
         ivCircleSite.setImageResource(R.drawable.circle_blue);
-
-
     }
 
     @Override
