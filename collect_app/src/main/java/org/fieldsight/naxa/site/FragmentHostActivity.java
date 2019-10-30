@@ -1,21 +1,19 @@
 package org.fieldsight.naxa.site;
 
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
@@ -141,21 +139,22 @@ public class FragmentHostActivity extends CollectAbstractActivity {
                 });
                 break;
             case R.id.action_refresh:
-                ProjectLocalSource.getInstance()
-                        .getProjectById(loadedSite.getProject()).observe(this, new Observer<Project>() {
-                    @Override
-                    public void onChanged(@Nullable Project project) {
-                        if (project != null) {
-                            Bundle bundle = new Bundle();
-                            ArrayList<Project> projectArrayList = new ArrayList<>();
-                            projectArrayList.add(project);
-                            bundle.putParcelableArrayList("projects", projectArrayList);
-                            bundle.getBoolean("auto", true);
-                            startActivity(new Intent(FragmentHostActivity.this, SyncActivity.class)
-                                    .putExtra("params", bundle));
-                        }
-                    }
-                });
+                String projectId = project != null ? project.getId() : loadedSite.getProject();
+                ProjectLocalSource.getInstance().getProjectById(projectId)
+                        .observe(this, new Observer<Project>() {
+                            @Override
+                            public void onChanged(@Nullable Project project) {
+                                if (project != null) {
+                                    Bundle bundle = new Bundle();
+                                    ArrayList<Project> projectArrayList = new ArrayList<>();
+                                    projectArrayList.add(project);
+                                    bundle.putParcelableArrayList("projects", projectArrayList);
+                                    bundle.getBoolean("auto", true);
+                                    startActivity(new Intent(FragmentHostActivity.this, SyncActivity.class)
+                                            .putExtra("params", bundle));
+                                }
+                            }
+                        });
                 return true;
         }
         return super.onOptionsItemSelected(item);
