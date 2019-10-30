@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -27,12 +28,14 @@ import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.preferences.SettingsActivity;
 import org.fieldsight.naxa.project.data.ProjectLocalSource;
+import org.fieldsight.naxa.v3.forms.FormsStateFragment;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 
+import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.Constant.EXTRA_PROJECT;
 
@@ -42,6 +45,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     Project project;
     Toolbar toolbar;
     boolean isParent;
+    String loadFlagForm;
 
     public static void start(Context context, Site site, boolean isParent) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
@@ -54,6 +58,12 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     public static void startWithSurveyForm(Context context, Project project) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
         intent.putExtra(EXTRA_PROJECT, project);
+        context.startActivity(intent);
+    }
+
+    public static void startFlaggedForm(Context context, String type) {
+        Intent intent = new Intent(context, FragmentHostActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, type);
         context.startActivity(intent);
     }
 
@@ -77,10 +87,20 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         loadedSite = extras.getParcelable(EXTRA_OBJECT);
         project = extras.getParcelable(EXTRA_PROJECT);
         isParent = extras.getBoolean("isParent");
+        loadedSite = extras.getParcelable(EXTRA_OBJECT);
+        loadFlagForm = extras.getString(EXTRA_MESSAGE);
         bindUI();
         setupToolbar();
+        Fragment fragment;
 
-        Fragment fragment = project == null ? SiteDashboardFragment.newInstance(loadedSite, isParent) : FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
+        if (project == null && TextUtils.isEmpty(loadFlagForm)) {
+            fragment = SiteDashboardFragment.newInstance(loadedSite, isParent);
+        } else if (!TextUtils.isEmpty(loadFlagForm)) {
+            fragment = FormsStateFragment.newInstance(loadFlagForm);
+        } else {
+            fragment = FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
+        }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment, "frag0")

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<?xml version="1.0" encoding="utf-8"?>
+<!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
 <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
 <!--xmlns:card_view="http://schemas.android.com/tools"-->
 
@@ -11,15 +12,15 @@
 <!--card_view:cardCornerRadius="@dimen/card_recycler_corner_radius"-->
 <!--card_view:cardElevation="@dimen/card_recycler_elevation">-->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view_list_item_title_desc"
+<RelativeLayout android:id="@+id/card_view_list_item_title_desc"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="@dimen/margin_large"
     android:background="?android:attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:padding="@dimen/margin_large">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <RelativeLayout
@@ -38,24 +39,24 @@
             android:src="@drawable/circle_blue" />
 
         <ImageView
+            android:scaleType="centerInside"
+            android:src="@drawable/fieldsight_logo"
             android:id="@+id/iv_notification_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_centerInParent="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/fieldsight_logo"
-            android:textSize="@dimen/text_size_medium"
-            android:tint="@color/white" />
+            android:tint="@color/white"
+            android:textSize="@dimen/text_size_medium" />
 
     </RelativeLayout>
 
 
     <TextView
+        android:layout_toLeftOf="@+id/tv_notification_date"
+        android:layout_toStartOf="@+id/tv_notification_date"
         android:id="@+id/tv_list_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/tv_notification_date"
-        android:layout_toLeftOf="@+id/tv_notification_date"
         android:layout_toEndOf="@id/rela_round"
         android:layout_toRightOf="@id/rela_round"
         tools:text="Title"
@@ -75,14 +76,15 @@
 
     <TextView
 
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:textSize="@dimen/text_size_extra_small"
         android:id="@+id/tv_notification_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/margin_small"
-        android:textSize="@dimen/text_size_extra_small"
         tools:text="2019/22/12" />
 
 
-</RelativeLayout><!--</androidx.cardview.widget.CardView>-->
+</RelativeLayout>
+    <!--</androidx.cardview.widget.CardView>-->

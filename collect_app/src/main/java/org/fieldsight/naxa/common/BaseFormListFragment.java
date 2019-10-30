@@ -115,8 +115,8 @@ public class BaseFormListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fieldsight_forms_list_fragment, container, false);
-        recyclerView = view.findViewById(R.id.recycler_view_fieldsight_form_list);
+        View view = inflater.inflate(R.layout.fieldsight_list_fragment, container, false);
+        recyclerView = view.findViewById(R.id.recycler_view_list);
         emptyLayout = view.findViewById(R.id.root_layout_empty_layout);
         return view;
     }

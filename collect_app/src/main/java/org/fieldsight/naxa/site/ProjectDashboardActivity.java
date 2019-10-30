@@ -396,6 +396,12 @@ public class ProjectDashboardActivity extends BaseActivity {
             case R.id.nav_setting:
                 startActivity(new Intent(this, org.fieldsight.naxa.preferences.SettingsActivity.class));
                 break;
+            case R.id.nav_flagged_form:
+                FragmentHostActivity.startFlaggedForm(this, "flagged");
+                break;
+            case R.id.nav_rejected_form:
+                FragmentHostActivity.startFlaggedForm(this, "rejected");
+                break;
         }
     }
 

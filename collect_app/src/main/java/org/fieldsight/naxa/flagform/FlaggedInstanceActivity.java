@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,11 +54,13 @@ import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.DownloadFormsTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -99,11 +102,19 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     private ImageView ivCircleSite;
     private TextView tvSiteMissing;
     private RelativeLayout cardViewSite;
+    private String message;
 
 
     public static void start(Context context, FieldSightNotification fieldSightNotification) {
         Intent intent = new Intent(context, FlaggedInstanceActivity.class);
         intent.putExtra(Constant.EXTRA_OBJECT, fieldSightNotification);
+        context.startActivity(intent);
+    }
+
+    public static void startWithForm(FragmentActivity context, FieldSightNotification notification) {
+        Intent intent = new Intent(context, FlaggedInstanceActivity.class);
+        intent.putExtra(Constant.EXTRA_OBJECT, notification);
+        intent.putExtra(Constant.EXTRA_MESSAGE, "open_form");
         context.startActivity(intent);
     }
 
@@ -127,6 +138,19 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         formBox.setOnClickListener(this);
 
         loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
+        message = getIntent().getStringExtra(Constant.EXTRA_MESSAGE);
+        if (TextUtils.equals(message, "open_form")) {
+            boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
+            Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
+            findViewById(R.id.root_layout).setVisibility(View.INVISIBLE);
+            if (isInstanceDownloadNeeded) {
+                runDownload();
+            } else {
+                loadSavedInstance(loadedFieldSightNotification.getFormSubmissionId(), loadedFieldSightNotification.getIdString());
+            }
+
+            return;
+        }
 
 
         setupData(loadedFieldSightNotification);
@@ -233,7 +257,9 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     @Override
     protected void onResume() {
         super.onResume();
-        getNotificationDetail();
+        if (!TextUtils.equals(message, "open_form")) {
+            getNotificationDetail();
+        }
 
     }
 
@@ -321,22 +347,26 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                 .setPositiveButton(R.string.dialog_action_download, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (hasFormInstance() && !hasFormVersion()) {
-                            Timber.i("Downloading form version");
-                            //download form version and load instance
-                            downloadFormVersion(loadedFieldSightNotification);
-                        } else if (!hasFormInstance() && hasFormVersion()) {
-                            Timber.i("Downloading filled form");
-                            //download form instance and load instance
-                            downloadInstance(loadedFieldSightNotification);
-                        } else {
-                            Timber.i("Downloading form instance and form version");
-                            downloadFormAndInstance(loadedFieldSightNotification, false);
-                        }
+                        runDownload();
                     }
                 })
                 .setNegativeButton(R.string.dialog_action_dismiss, null)
                 .show();
+    }
+
+    private void runDownload() {
+        if (hasFormInstance() && !hasFormVersion()) {
+            Timber.i("Downloading form version");
+            //download form version and load instance
+            downloadFormVersion(loadedFieldSightNotification);
+        } else if (!hasFormInstance() && hasFormVersion()) {
+            Timber.i("Downloading filled form");
+            //download form instance and load instance
+            downloadInstance(loadedFieldSightNotification);
+        } else {
+            Timber.i("Downloading form instance and form version");
+            downloadFormAndInstance(loadedFieldSightNotification, false);
+        }
     }
 
 
@@ -625,7 +655,8 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
                     @Override
                     public void onError(Throwable e) {
-                        ToastUtils.showLongToast(getString(R.string.error_message_fail_to_load_images));
+                        Timber.e(e);
+
                     }
                 });
     }
