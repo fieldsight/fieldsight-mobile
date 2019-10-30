@@ -46,7 +46,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         return fragment;
     }
 
-    public FieldSightFormListFragment() {
+    private FieldSightFormListFragment() {
     }
 
     @Override

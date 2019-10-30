@@ -1,21 +1,19 @@
 package org.fieldsight.naxa.site;
 
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
