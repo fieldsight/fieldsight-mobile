@@ -80,7 +80,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         bindUI();
         setupToolbar();
 
-        Fragment fragment = project == null ? SiteDashboardFragment.newInstance(loadedSite, isParent) : FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
+        Fragment fragment = loadedSite != null ? SiteDashboardFragment.newInstance(loadedSite, isParent, project) : FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment, "frag0")

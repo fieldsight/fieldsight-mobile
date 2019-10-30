@@ -15,19 +15,19 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.internal.Utils;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_ID;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
+import static org.fieldsight.naxa.common.Constant.EXTRA_PROJECT;
 
 public class FieldSightFormListFragment extends BaseFormListFragment {
 
     private Site loadedSite;
     private String formType;
+    private Project project;
 
-    public static FieldSightFormListFragment newInstance(String formType, Site site) {
-        return newInstance(formType, site, null);
-    }
 
     public static FieldSightFormListFragment newInstance(String loadFormType, Site site, Project project) {
         FieldSightFormListFragment fragment = new FieldSightFormListFragment();
@@ -42,6 +42,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
 
         bundle.putParcelable(EXTRA_OBJECT, site);
         bundle.putString(EXTRA_ID, loadFormType);
+        bundle.putParcelable(EXTRA_PROJECT, project);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -55,6 +56,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         setHasOptionsMenu(true);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
         formType = getArguments().getString(EXTRA_ID);
+        project = getArguments().getParcelable(EXTRA_PROJECT);
         setToolbarText(loadedSite.getName(), loadedSite.getName());
     }
 
@@ -69,37 +71,48 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                     int newSiteRegionId = TextUtils.isEmpty(loadedSite.getRegionId()) ? 0 : Integer.parseInt(loadedSite.getRegionId());
 
                     List<FieldsightFormDetailsv3> filteredList = new ArrayList<>();
-                    for (FieldsightFormDetailsv3 fieldsightFormDetailsv3 : fieldSightForms) {
-                        Timber.i("loadForm :: formsettings = %s", fieldsightFormDetailsv3.getSettings());
-                        if (TextUtils.isEmpty(fieldsightFormDetailsv3.getSettings()) || TextUtils.equals(fieldsightFormDetailsv3.getSettings(), "null")) {
+                    boolean isProjectRegionsEmpty = project.getRegionList() == null && project.getRegionList().size() == 0;
+                    boolean isProjectTypesEmpty = project.getTypesList() == null && project.getTypesList().size() == 0;
 
-                            filteredList.add(fieldsightFormDetailsv3);
-                            continue;
-                        }
-                        try {
-                            JSONObject settingJSON = new JSONObject(fieldsightFormDetailsv3.getSettings());
-                            JSONArray typesArray = settingJSON.optJSONArray("types");
-                            boolean typeFound = false;
-                            for (int i = 0; i < typesArray.length(); i++) {
-                                if (typesArray.optInt(i) == newSiteTypeId) {
-                                    typeFound = true;
-                                    break;
-                                }
-                            }
-                            JSONArray regionsArray = settingJSON.optJSONArray("regions");
-                            boolean regionFound = false;
-                            for (int i = 0; i < regionsArray.length(); i++) {
-                                if (regionsArray.optInt(i) == newSiteRegionId) {
-                                    regionFound = true;
-                                    break;
-                                }
-                            }
-                            if (typeFound && regionFound) {
+                    Timber.i("loadForm:: isProjectRegionempty = " + isProjectRegionsEmpty + " isProjectTypeEmpty = " + isProjectTypesEmpty);
+                    if (isProjectRegionsEmpty && isProjectTypesEmpty) {
+                        filteredList.addAll(fieldSightForms);
+                    } else {
+                        for (FieldsightFormDetailsv3 fieldsightFormDetailsv3 : fieldSightForms) {
+                            Timber.i("loadForm :: formsettings = %s", fieldsightFormDetailsv3.getSettings());
+                            if (TextUtils.isEmpty(fieldsightFormDetailsv3.getSettings()) || TextUtils.equals(fieldsightFormDetailsv3.getSettings(), "null")) {
                                 filteredList.add(fieldsightFormDetailsv3);
+                                continue;
                             }
+                            try {
+                                JSONObject settingJSON = new JSONObject(fieldsightFormDetailsv3.getSettings());
+                                boolean typeFound = isProjectRegionsEmpty;
+                                if(!typeFound) {
+                                    JSONArray typesArray = settingJSON.optJSONArray("types");
+                                    for (int i = 0; i < typesArray.length(); i++) {
+                                        if (typesArray.optInt(i) == newSiteTypeId) {
+                                            typeFound = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                boolean regionFound = isProjectTypesEmpty;
+                                if(!regionFound) {
+                                    JSONArray regionsArray = settingJSON.optJSONArray("regions");
+                                    for (int i = 0; i < regionsArray.length(); i++) {
+                                        if (regionsArray.optInt(i) == newSiteRegionId) {
+                                            regionFound = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (typeFound && regionFound) {
+                                    filteredList.add(fieldsightFormDetailsv3);
+                                }
 
-                        } catch (Exception e) {
-                            Timber.e(e);
+                            } catch (Exception e) {
+                                Timber.e(e);
+                            }
                         }
                     }
                     Timber.i(filteredList.toString());
