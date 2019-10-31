@@ -10,6 +10,7 @@ import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.site.SiteType;
+import org.fieldsight.naxa.site.SiteTypeLocalSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -64,16 +65,18 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getViewModel().loadForm(formType, loadedSite.getProject(), loadedSite.getId(), loadedSite.getTypeId(), loadedSite.getRegionId())
+        getViewModel().loadForm(formType, loadedSite.getProject(), loadedSite.getId(), loadedSite.getTypeId(), loadedSite.getRegionId(), project)
                 .observe(this, fieldSightForms -> {
                     // filter form by setting
                     // for the form that belongs to all the site not having regions and types, it will have 0 value
+
                     int newSiteTypeId = TextUtils.isEmpty(loadedSite.getTypeId()) ? 0 : Integer.parseInt(loadedSite.getTypeId());
                     int newSiteRegionId = TextUtils.isEmpty(loadedSite.getRegionId()) ? 0 : Integer.parseInt(loadedSite.getRegionId());
 
                     List<FieldsightFormDetailsv3> filteredList = new ArrayList<>();
-                    boolean isProjectRegionsEmpty = project.getRegionList() == null || project.getRegionList().size() == 0;
-                    boolean isProjectTypesEmpty = project.getTypesList() == null || project.getTypesList().size() == 0;
+                    boolean isProjectRegionsEmpty = project.getRegionList() == null || project.getRegionList().size() == 1;
+                    List<SiteType> siteTypeList = SiteTypeLocalSource.getInstance().getByid(project.getId());
+                    boolean isProjectTypesEmpty = siteTypeList == null || siteTypeList.size() == 0;
 
 
 

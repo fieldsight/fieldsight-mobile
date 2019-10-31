@@ -9,6 +9,9 @@ import androidx.lifecycle.MediatorLiveData;
 import org.fieldsight.naxa.common.BaseLocalDataSourceRX;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightDatabase;
+import org.fieldsight.naxa.login.model.Project;
+import org.fieldsight.naxa.site.SiteType;
+import org.fieldsight.naxa.site.SiteTypeLocalSource;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.stages.data.SubStage;
 import org.json.JSONArray;
@@ -46,14 +49,14 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         return localSourcev3;
     }
 
-    public LiveData<List<FieldsightFormDetailsv3>> getFormByType(String formType, String projectId, String siteId, String siteTypeId, String siteRegionId) {
+    public LiveData<List<FieldsightFormDetailsv3>> getFormByType(String formType, String projectId, String siteId, String siteTypeId, String siteRegionId, Project project) {
         Timber.i("getFormByType, formType = %s, projectId = %s, siteId = %s, siteTypeId = %s, regionId = %s", formType, projectId, siteId, siteTypeId, siteRegionId);
         MediatorLiveData<List<FieldsightFormDetailsv3>> mediator = new MediatorLiveData<>();
         LiveData<List<FieldsightFormDetailsv3>> formSource = dao.getFormByType(formType, projectId, siteId);
 
         mediator.addSource(formSource, forms -> {
             if (TextUtils.equals(formType, Constant.FormType.STAGED)) {
-                getSortedStages(forms, siteTypeId, siteRegionId)
+                getSortedStages(forms, siteTypeId, siteRegionId, project)
                         .subscribe(new SingleObserver<List<FieldsightFormDetailsv3>>() {
                             @Override
                             public void onSubscribe(Disposable d) {
@@ -85,12 +88,12 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
     }
 
 
-    public MediatorLiveData<List<Stage>> getStageForms(String projectId, String siteId, String siteTypeId, String siteRegionId) {
+    public MediatorLiveData<List<Stage>> getStageForms(String projectId, String siteId, String siteTypeId, String siteRegionId, Project project) {
         Timber.i("getStageForms, projectId = %s, siteId = %s, siteTypeId = %s, regionId = %s", projectId, siteId, siteTypeId, siteRegionId);
         MediatorLiveData<List<Stage>> mediator = new MediatorLiveData<>();
         LiveData<List<FieldsightFormDetailsv3>> formSource = dao.getFormByType(Constant.FormType.STAGED, projectId, siteId);
         mediator.addSource(formSource, forms -> {
-            getStageAndSubStages(forms, siteTypeId, siteRegionId)
+            getStageAndSubStages(forms, siteTypeId, siteRegionId, project)
                     .subscribe(new SingleObserver<List<Stage>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
@@ -116,9 +119,9 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
     }
 
 
-    public Single<List<Stage>> getStageAndSubStages(List<FieldsightFormDetailsv3> forms, String siteTypeId, String siteRegionId) {
+    public Single<List<Stage>> getStageAndSubStages(List<FieldsightFormDetailsv3> forms, String siteTypeId, String siteRegionId, Project project) {
         Timber.i("getStageAndSubstages, formsSize = %d", forms.size());
-        return getSortedStages(forms, siteTypeId, siteRegionId)
+        return getSortedStages(forms, siteTypeId, siteRegionId, project)
                 .map(new Function<List<FieldsightFormDetailsv3>, List<Stage>>() {
                     @Override
                     public List<Stage> apply(List<FieldsightFormDetailsv3> formDetailsv3s) throws Exception {
@@ -172,7 +175,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
     }
 
     private Single<List<FieldsightFormDetailsv3>> getSortedStages
-            (List<FieldsightFormDetailsv3> forms, final String siteTypeId, String siteRegionId) {
+            (List<FieldsightFormDetailsv3> forms, final String siteTypeId, String siteRegionId, Project project) {
         Timber.i("getSortedPages, formsSize = %d, siteTypeId = %s, siteRegionId = %s", forms.size(), siteTypeId, siteRegionId);
         return Observable.just(forms)
                 .flatMapIterable((Function<List<FieldsightFormDetailsv3>, Iterable<FieldsightFormDetailsv3>>) formDetailsv3s -> formDetailsv3s)
@@ -190,36 +193,49 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         int newsiteTypeId = TextUtils.isEmpty(siteTypeId) ? 0 : Integer.parseInt(siteTypeId);
                         int newsiteRegionId = TextUtils.isEmpty(siteRegionId) ? 0 : Integer.parseInt(siteRegionId);
                         Timber.i("FieldsightFormlocalsourcev3, newsitetyoeId = %d, newsiteRegionId = %d", newsiteTypeId, newsiteRegionId);
-                        boolean typeFound = false;
-                        boolean regionFound = false;
+                        boolean isProjectRegionsEmpty = project.getRegionList() == null || project.getRegionList().size() == 1;
+                        List<SiteType> siteTypeList = SiteTypeLocalSource.getInstance().getByid(project.getId());
+                        boolean isProjectTypesEmpty = siteTypeList == null || siteTypeList.size() == 0;
 
-                        try {
-                            JSONObject jsonObject = new JSONObject(formDetailsv3.getMetaAttributes());
-                            if(jsonObject.has("stage_type")) {
-                                JSONArray jsonArray = jsonObject.optJSONArray("stage_type");
-                                Timber.i("FieldsightFormlocalsourcev3, stageTypeArray = %s", jsonArray.toString());
-                                for(int i = 0; i < jsonArray.length(); i ++) {
-                                    if(jsonArray.optInt(i) == newsiteTypeId) {
-                                        typeFound = true;
-                                        break;
+                        Timber.i("loadForm:: isProjectRegionempty = " + isProjectRegionsEmpty + " isProjectTypeEmpty = " + isProjectTypesEmpty);
+                        if (isProjectRegionsEmpty && isProjectTypesEmpty) {
+                           return true;
+                        } else {
+                            boolean typeFound = isProjectTypesEmpty;
+                            boolean regionFound = isProjectRegionsEmpty;
+
+                            try {
+                                JSONObject jsonObject = new JSONObject(formDetailsv3.getMetaAttributes());
+                                if(!typeFound) {
+                                    if (jsonObject.has("stage_type")) {
+                                        JSONArray jsonArray = jsonObject.optJSONArray("stage_type");
+                                        Timber.i("FieldsightFormlocalsourcev3, stageTypeArray = %s", jsonArray.toString());
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            if (jsonArray.optInt(i) == newsiteTypeId) {
+                                                typeFound = true;
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            if(jsonObject.has("stage_regions")) {
-                                JSONArray jsonArray = jsonObject.optJSONArray("stage_regions");
-                                Timber.i("FieldsightFormlocalsourcev3, stageRegionArray = %s", jsonArray.toString());
-                                for(int i = 0; i < jsonArray.length(); i ++) {
-                                    if(jsonArray.optInt(i) == newsiteRegionId) {
-                                        regionFound = true;
-                                        break;
+                                if(!regionFound) {
+                                    if (jsonObject.has("stage_regions")) {
+                                        JSONArray jsonArray = jsonObject.optJSONArray("stage_regions");
+                                        Timber.i("FieldsightFormlocalsourcev3, stageRegionArray = %s", jsonArray.toString());
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            if (jsonArray.optInt(i) == newsiteRegionId) {
+                                                regionFound = true;
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
+                            } catch (Exception e) {
+                                Timber.e(e);
                             }
-                        }catch( Exception e) {
-                            Timber.e(e);
+                            Timber.i("getSortedPages, typeFound = " + typeFound + " regionFound = " + regionFound);
+                            return typeFound & regionFound;
                         }
-                        Timber.i("getSortedPages, typeFound = " + typeFound + " regionFound = " + regionFound);
-                        return typeFound & regionFound;
                     }
                 })
                 .toList()
