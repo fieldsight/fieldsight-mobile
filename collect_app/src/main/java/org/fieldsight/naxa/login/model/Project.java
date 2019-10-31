@@ -12,9 +12,6 @@ import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import org.fieldsight.naxa.v3.network.ProjectTypeConverter;
-import org.fieldsight.naxa.v3.network.ProjectTypes;
 import org.fieldsight.naxa.v3.network.Region;
 import org.fieldsight.naxa.v3.network.RegionConverter;
 
@@ -143,10 +140,6 @@ public class Project implements Parcelable {
     @TypeConverters(RegionConverter.class)
     List<Region> regionList;
 
-    @SerializedName("types")
-    @TypeConverters(ProjectTypeConverter.class)
-    List<ProjectTypes> typesList;
-
     public boolean isChecked() {
         return checked;
     }
@@ -166,14 +159,6 @@ public class Project implements Parcelable {
     public Project(@NonNull String id, String name) {
         this.id = id;
         this.name = name;
-    }
-
-    public List<ProjectTypes> getTypesList() {
-        return typesList;
-    }
-
-    public void setTypesList(List<ProjectTypes> typesList) {
-        this.typesList = typesList;
     }
 
     public static Creator<Project> getCREATOR() {
@@ -352,7 +337,6 @@ public class Project implements Parcelable {
         dest.writeLong(this.syncedDate);
         dest.writeTypedList(this.regionList);
         dest.writeTypedList(this.siteMetaAttributes);
-        dest.writeTypedList(this.typesList);
     }
 
     protected Project(Parcel in) {
@@ -377,7 +361,6 @@ public class Project implements Parcelable {
         this.terms_and_labels = in.readString();
         this.syncedDate = in.readLong();
         this.regionList = in.createTypedArrayList(Region.CREATOR);
-        this.typesList = in.createTypedArrayList(ProjectTypes.CREATOR);
         this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
     }
 
