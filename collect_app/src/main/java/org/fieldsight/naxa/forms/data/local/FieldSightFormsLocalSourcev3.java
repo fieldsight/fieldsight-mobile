@@ -243,6 +243,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                             } catch (Exception e) {
                                 Timber.e(e);
                             }
+                            return typeFound && regionFound;
                         }
                     }
                 })
