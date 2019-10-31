@@ -521,7 +521,8 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
             String successKey = result.get(formDetails);
             if (Collect.getInstance().getString(R.string.success).equals(successKey)) {
                 if (loadInstanceAfterDownloadComplete) {
-                    loadSavedInstance(notification.getFormSubmissionId(), notification.getIdString());
+                    loadSavedInstance(notification.getFormSubmissionId(),
+                            notification.getIdString());
                 } else {
                     downloadInstance(notification);
                 }
@@ -656,7 +657,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                     @Override
                     public void onError(Throwable e) {
                         Timber.e(e);
-
                     }
                 });
     }

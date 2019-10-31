@@ -82,7 +82,7 @@ public class FormsStateFragment extends Fragment {
                 .subscribe(new SingleObserver<List<FormState>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        progressBar.setVisibility(View.VISIBLE);
                     }
 
                     @Override
@@ -160,6 +160,7 @@ public class FormsStateFragment extends Fragment {
                                 .setFormSubmissionId(String.valueOf(form.getPk()))
                                 .setFormName(form.getFormName())
                                 .setIdString("")
+                                .setFormVersion("")
                                 .createFieldSightNotification();
 
                         FlaggedInstanceActivity.startWithForm(requireActivity(), notification);
