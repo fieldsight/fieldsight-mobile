@@ -106,7 +106,6 @@ public class FormsStateFragment extends Fragment {
                     public void onSuccess(List<FormState> formStates) {
                         updateList(formStates);
                         swipeToRefresh.setRefreshing(false);
-
                     }
 
                     @Override
@@ -131,7 +130,7 @@ public class FormsStateFragment extends Fragment {
 
 
     private Single<List<FormState>> getFormUsingProjectId(String url) {
-        return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
+        return ServiceGenerator.createCacheService(ApiV3Interface.class)
                 .getMyFlaggedSubmissionAsRaw(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -216,8 +215,6 @@ public class FormsStateFragment extends Fragment {
                                 public void onSuccess(List<FormState> formStates) {
                                     appendToList(formStates);
                                     swipeToRefresh.setRefreshing(false);
-
-
                                 }
 
                                 @Override

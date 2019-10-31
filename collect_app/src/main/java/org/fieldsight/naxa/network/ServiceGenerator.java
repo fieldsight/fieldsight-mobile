@@ -107,6 +107,7 @@ public class ServiceGenerator {
         return cacheablesRetrofit.create(serviceClass);
     }
 
+
     public synchronized static Retrofit getRxClient() {
 
 
