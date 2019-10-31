@@ -1,3 +1,4 @@
+
 package org.fieldsight.naxa.v3;
 
 import com.google.gson.annotations.Expose;
@@ -7,13 +8,13 @@ public class FormState {
 
     @SerializedName("pk")
     @Expose
-    private Integer pk;
+    private Integer fsFormId;
     @SerializedName("project_fxf")
     @Expose
     private Integer projectFxf;
     @SerializedName("site_fxf")
     @Expose
-    private Integer siteFxf;
+    private Object siteFxf;
     @SerializedName("project")
     @Expose
     private Integer project;
@@ -35,13 +36,19 @@ public class FormState {
     @SerializedName("status_display")
     @Expose
     private String statusDisplay;
+    @SerializedName("version")
+    @Expose
+    private String version;
+    @SerializedName("id_string")
+    @Expose
+    private String idString;
 
-    public Integer getPk() {
-        return pk;
+    public Integer getFsFormId() {
+        return fsFormId;
     }
 
-    public void setPk(Integer pk) {
-        this.pk = pk;
+    public void setFsFormId(Integer fsFormId) {
+        this.fsFormId = fsFormId;
     }
 
     public Integer getProjectFxf() {
@@ -52,11 +59,11 @@ public class FormState {
         this.projectFxf = projectFxf;
     }
 
-    public Integer getSiteFxf() {
+    public Object getSiteFxf() {
         return siteFxf;
     }
 
-    public void setSiteFxf(Integer siteFxf) {
+    public void setSiteFxf(Object siteFxf) {
         this.siteFxf = siteFxf;
     }
 
@@ -114,6 +121,22 @@ public class FormState {
 
     public void setStatusDisplay(String statusDisplay) {
         this.statusDisplay = statusDisplay;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getIdString() {
+        return idString;
+    }
+
+    public void setIdString(String idString) {
+        this.idString = idString;
     }
 
 }

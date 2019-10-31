@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.v3.FormState;
 
+import java.util.Locale;
+
 class FieldSightFormStateVH extends RecyclerView.ViewHolder {
     private final TextView tvTitle, tvSubtitle, tvDate;
 
@@ -34,13 +36,14 @@ class FieldSightFormStateVH extends RecyclerView.ViewHolder {
 
         tvTitle.setText(form.getStatusDisplay());
         String message = itemView.getContext().getString(R.string.msg_form_flagged, form.getFormName()
-                , form.getStatusDisplay().toLowerCase(), form.getSiteName());
+                , form.getStatusDisplay().toLowerCase(Locale.getDefault()),
+                form.getSiteName());
         tvSubtitle.setText(message);
 
-        if (TextUtils.equals(form.getStatusDisplay().toLowerCase(), "flagged")) {
+        if (TextUtils.equals(form.getStatusDisplay().toLowerCase(Locale.getDefault()), "flagged")) {
             ivNotificationBg.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(),
                     R.drawable.circle_yellow));
-        } else if (TextUtils.equals(form.getStatusDisplay().toLowerCase(), "rejected")) {
+        } else if (TextUtils.equals(form.getStatusDisplay().toLowerCase(Locale.getDefault()), "rejected")) {
             ivNotificationBg.setImageDrawable(ContextCompat.getDrawable(itemView.getContext(),
                     R.drawable.circle_red));
         }

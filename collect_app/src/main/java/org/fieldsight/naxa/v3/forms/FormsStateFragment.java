@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.common.GSONInstance;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -44,10 +46,11 @@ import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
 public class FormsStateFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private View emptyLayout;
-    private View progressBar;
+
+    private SwipeRefreshLayout swipeToRefresh;
     private BaseRecyclerViewAdapter<FormState, FieldSightFormStateVH> adapter;
     private String submissionStatus;
+    private String url = APIEndpoint.V3.GET_MY_FLAGGED_SUBMISSIONS;
 
     public static FormsStateFragment newInstance(String type) {
         FormsStateFragment fragment = new FormsStateFragment();
@@ -65,41 +68,55 @@ public class FormsStateFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fieldsight_list_fragment, container, false);
         submissionStatus = getArguments().getString(EXTRA_MESSAGE);
         bindUI(rootView);
+
         return rootView;
     }
 
     private void bindUI(View view) {
         recyclerView = view.findViewById(R.id.recycler_view_list);
-        emptyLayout = view.findViewById(R.id.root_layout_empty_layout);
-        progressBar = view.findViewById(R.id.progress_bar);
+        swipeToRefresh = view.findViewById(R.id.swipe_container);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-        getFormUsingProjectId()
+        setupSwipeToRefresh();
+        forceReload();
+        requireActivity()
+                .setTitle(submissionStatus + " form(s)");
+    }
+
+    private void setupSwipeToRefresh() {
+        swipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                forceReload();
+            }
+        });
+    }
+
+    private void forceReload() {
+        getFormUsingProjectId(url)
                 .subscribe(new SingleObserver<List<FormState>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        progressBar.setVisibility(View.VISIBLE);
+                        swipeToRefresh.setRefreshing(true);
                     }
 
                     @Override
                     public void onSuccess(List<FormState> formStates) {
                         updateList(formStates);
-                        progressBar.setVisibility(View.GONE);
+                        swipeToRefresh.setRefreshing(false);
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        progressBar.setVisibility(View.GONE);
+                        swipeToRefresh.setRefreshing(false);
                     }
                 });
 
-        requireActivity()
-                .setTitle(submissionStatus + " form(s)");
     }
 
 
@@ -115,13 +132,16 @@ public class FormsStateFragment extends Fragment {
     }
 
 
-    private Single<List<FormState>> getFormUsingProjectId() {
+    private Single<List<FormState>> getFormUsingProjectId(String url) {
         return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
-                .getMyFlaggedSubmissionAsRaw(APIEndpoint.V3.GET_MY_FLAGGED_SUBMISSIONS)
+                .getMyFlaggedSubmissionAsRaw(url)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap((Function<ResponseBody, ObservableSource<JSONObject>>) responseBody -> {
-                    JSONArray jsonArray = new JSONArray(responseBody.string());
+                    JSONObject jsonObject = new JSONObject(responseBody.string());
+                    JSONArray jsonArray = jsonObject.optJSONArray("results");
+                    this.url = jsonObject.optString("next");
+
                     return Observable.range(0, jsonArray.length())
                             .map(jsonArray::getJSONObject);
                 })
@@ -134,8 +154,8 @@ public class FormsStateFragment extends Fragment {
                 .filter(new Predicate<FormState>() {
                     @Override
                     public boolean test(FormState formState) throws Exception {
-                        return TextUtils.equals(formState.getStatusDisplay().toLowerCase(),
-                                submissionStatus.toLowerCase());
+                        return TextUtils.equals(formState.getStatusDisplay().toLowerCase(Locale.getDefault()),
+                                submissionStatus.toLowerCase(Locale.getDefault()));
                     }
                 })
                 .toList();
@@ -157,7 +177,7 @@ public class FormsStateFragment extends Fragment {
 
 
                         FieldSightNotification notification = new FieldSightNotificationBuilder()
-                                .setFormSubmissionId(String.valueOf(form.getPk()))
+                                .setFormSubmissionId(String.valueOf(form.getFsFormId()))
                                 .setFormName(form.getFormName())
                                 .setIdString("")
                                 .setFormVersion("")
@@ -170,6 +190,39 @@ public class FormsStateFragment extends Fragment {
         };
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)
+                        && newState == RecyclerView.SCROLL_STATE_IDLE
+                        && !TextUtils.isEmpty(url)
+                ) {
+
+                    getFormUsingProjectId(url)
+                            .subscribe(new SingleObserver<List<FormState>>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                    swipeToRefresh.setRefreshing(true);
+                                }
+
+                                @Override
+                                public void onSuccess(List<FormState> formStates) {
+                                    appendToList(formStates);
+                                    swipeToRefresh.setRefreshing(false);
+
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    swipeToRefresh.setRefreshing(false);
+                                }
+                            });
+                }
+            }
+        });
     }
 
 
