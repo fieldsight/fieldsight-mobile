@@ -9,6 +9,7 @@ import org.fieldsight.naxa.common.BaseFormListFragment;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.site.SiteType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -71,8 +72,10 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                     int newSiteRegionId = TextUtils.isEmpty(loadedSite.getRegionId()) ? 0 : Integer.parseInt(loadedSite.getRegionId());
 
                     List<FieldsightFormDetailsv3> filteredList = new ArrayList<>();
-                    boolean isProjectRegionsEmpty = project.getRegionList() == null && project.getRegionList().size() == 0;
-                    boolean isProjectTypesEmpty = project.getTypesList() == null && project.getTypesList().size() == 0;
+                    boolean isProjectRegionsEmpty = project.getRegionList() == null || project.getRegionList().size() == 0;
+                    boolean isProjectTypesEmpty = project.getTypesList() == null || project.getTypesList().size() == 0;
+
+
 
                     Timber.i("loadForm:: isProjectRegionempty = " + isProjectRegionsEmpty + " isProjectTypeEmpty = " + isProjectTypesEmpty);
                     if (isProjectRegionsEmpty && isProjectTypesEmpty) {
