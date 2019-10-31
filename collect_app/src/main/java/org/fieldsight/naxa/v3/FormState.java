@@ -1,4 +1,5 @@
 
+
 package org.fieldsight.naxa.v3;
 
 import com.google.gson.annotations.Expose;
@@ -30,6 +31,9 @@ public class FormState {
     @SerializedName("site_name")
     @Expose
     private String siteName;
+    @SerializedName("site_identifier")
+    @Expose
+    private String siteIdentifier;
     @SerializedName("project_name")
     @Expose
     private String projectName;
@@ -42,6 +46,9 @@ public class FormState {
     @SerializedName("id_string")
     @Expose
     private String idString;
+    @SerializedName("date")
+    @Expose
+    private String date;
 
     public String getFsFormId() {
         return fsFormId;
@@ -107,6 +114,14 @@ public class FormState {
         this.siteName = siteName;
     }
 
+    public String getSiteIdentifier() {
+        return siteIdentifier;
+    }
+
+    public void setSiteIdentifier(String siteIdentifier) {
+        this.siteIdentifier = siteIdentifier;
+    }
+
     public String getProjectName() {
         return projectName;
     }
@@ -137,6 +152,14 @@ public class FormState {
 
     public void setIdString(String idString) {
         this.idString = idString;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
 }

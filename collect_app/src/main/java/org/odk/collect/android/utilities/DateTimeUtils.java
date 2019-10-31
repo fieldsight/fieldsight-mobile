@@ -240,7 +240,7 @@ public class DateTimeUtils {
             }
             sdf = new SimpleDateFormat(format, Locale.US);
             sdf.setTimeZone(TimeZone.getDefault());
-            long time = 0;
+            long time;
             time = sdf.parse(dateTime).getTime();
             long now = System.currentTimeMillis();
             CharSequence ago =

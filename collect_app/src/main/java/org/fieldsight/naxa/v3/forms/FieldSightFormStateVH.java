@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.v3.FormState;
+import org.odk.collect.android.utilities.DateTimeUtils;
 
 import java.util.Locale;
 
@@ -34,10 +35,10 @@ class FieldSightFormStateVH extends RecyclerView.ViewHolder {
 
     public void bindView(FormState form) {
 
-        tvTitle.setText(form.getStatusDisplay());
-        String message = itemView.getContext().getString(R.string.msg_form_flagged, form.getFormName()
-                , form.getStatusDisplay().toLowerCase(Locale.getDefault()),
-                form.getSiteName());
+        tvTitle.setText(form.getFormName());
+        String message = itemView.getContext().getString(R.string.msg_form_flagged, form.getSiteName()
+                , form.getSiteIdentifier(),
+                form.getProjectName());
         tvSubtitle.setText(message);
 
         if (TextUtils.equals(form.getStatusDisplay().toLowerCase(Locale.getDefault()), "flagged")) {
@@ -48,7 +49,7 @@ class FieldSightFormStateVH extends RecyclerView.ViewHolder {
                     R.drawable.circle_red));
         }
 
-        tvDate.setVisibility(View.GONE);
+        tvDate.setText(DateTimeUtils.getRelativeTime(form.getDate(),true));
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

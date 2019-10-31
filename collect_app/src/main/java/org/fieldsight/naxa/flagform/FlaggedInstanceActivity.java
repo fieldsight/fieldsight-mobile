@@ -26,11 +26,14 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.BaseActivity;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.common.InternetUtils;
 import org.fieldsight.naxa.common.downloader.RxDownloader;
 import org.fieldsight.naxa.common.exception.InstanceAttachmentDownloadFailedException;
 import org.fieldsight.naxa.common.exception.InstanceDownloadFailedException;
@@ -142,7 +145,24 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
             Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
             findViewById(R.id.root_layout).setVisibility(View.INVISIBLE);
             if (isInstanceDownloadNeeded) {
-                runDownload();
+                InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {
+                    @Override
+                    public void onConnectionSuccess() {
+                        runDownload();
+                    }
+
+                    @Override
+                    public void onConnectionFailure() {
+                        ToastUtils.showLongToast(R.string.no_internet_body);
+                        finish();
+                    }
+
+                    @Override
+                    public void onCheckComplete() {
+
+                    }
+                });
+
             } else {
                 loadSavedInstance(loadedFieldSightNotification.getFormSubmissionId(), loadedFieldSightNotification.getIdString());
             }
