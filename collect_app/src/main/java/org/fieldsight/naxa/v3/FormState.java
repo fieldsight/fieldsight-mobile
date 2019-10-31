@@ -8,22 +8,22 @@ public class FormState {
 
     @SerializedName("pk")
     @Expose
-    private Integer fsFormId;
+    private String fsFormId;
     @SerializedName("project_fxf")
     @Expose
-    private Integer projectFxf;
+    private String projectFxf;
     @SerializedName("site_fxf")
     @Expose
-    private Object siteFxf;
+    private String siteFxf;
     @SerializedName("project")
     @Expose
-    private Integer project;
+    private String project;
     @SerializedName("site")
     @Expose
-    private Integer site;
+    private String site;
     @SerializedName("form_status")
     @Expose
-    private Integer formStatus;
+    private String formStatus;
     @SerializedName("form_name")
     @Expose
     private String formName;
@@ -43,51 +43,51 @@ public class FormState {
     @Expose
     private String idString;
 
-    public Integer getFsFormId() {
+    public String getFsFormId() {
         return fsFormId;
     }
 
-    public void setFsFormId(Integer fsFormId) {
+    public void setFsFormId(String fsFormId) {
         this.fsFormId = fsFormId;
     }
 
-    public Integer getProjectFxf() {
+    public String getProjectFxf() {
         return projectFxf;
     }
 
-    public void setProjectFxf(Integer projectFxf) {
+    public void setProjectFxf(String projectFxf) {
         this.projectFxf = projectFxf;
     }
 
-    public Object getSiteFxf() {
+    public String getSiteFxf() {
         return siteFxf;
     }
 
-    public void setSiteFxf(Object siteFxf) {
+    public void setSiteFxf(String siteFxf) {
         this.siteFxf = siteFxf;
     }
 
-    public Integer getProject() {
+    public String getProject() {
         return project;
     }
 
-    public void setProject(Integer project) {
+    public void setProject(String project) {
         this.project = project;
     }
 
-    public Integer getSite() {
+    public String getSite() {
         return site;
     }
 
-    public void setSite(Integer site) {
+    public void setSite(String site) {
         this.site = site;
     }
 
-    public Integer getFormStatus() {
+    public String getFormStatus() {
         return formStatus;
     }
 
-    public void setFormStatus(Integer formStatus) {
+    public void setFormStatus(String formStatus) {
         this.formStatus = formStatus;
     }
 

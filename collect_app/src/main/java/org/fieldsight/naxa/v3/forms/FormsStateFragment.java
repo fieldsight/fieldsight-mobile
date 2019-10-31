@@ -88,11 +88,9 @@ public class FormsStateFragment extends Fragment {
     }
 
     private void setupSwipeToRefresh() {
-        swipeToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                forceReload();
-            }
+        swipeToRefresh.setOnRefreshListener(() -> {
+            url = APIEndpoint.V3.GET_MY_FLAGGED_SUBMISSIONS;
+            forceReload();
         });
     }
 
@@ -140,7 +138,7 @@ public class FormsStateFragment extends Fragment {
                 .flatMap((Function<ResponseBody, ObservableSource<JSONObject>>) responseBody -> {
                     JSONObject jsonObject = new JSONObject(responseBody.string());
                     JSONArray jsonArray = jsonObject.optJSONArray("results");
-                    this.url = jsonObject.optString("next");
+                    this.url = "null".equals(jsonObject.optString("next")) ? null : jsonObject.optString("next");
 
                     return Observable.range(0, jsonArray.length())
                             .map(jsonArray::getJSONObject);
@@ -175,15 +173,22 @@ public class FormsStateFragment extends Fragment {
                     @Override
                     public void onItemTapped(FormState form) {
 
+                        if (isSafeToLoad(form)) {
+                            FieldSightNotification notification = new FieldSightNotificationBuilder()
+                                    .setFormSubmissionId(String.valueOf(form.getFsFormId()))
+                                    .setSiteId(String.valueOf(form.getSite()))
+                                    .setFormName(form.getFormName())
+                                    .setIdString(form.getIdString())
+                                    .setFormVersion(form.getVersion())
+                                    .setFsFormId(form.getProjectFxf() != null ?
+                                            form.getProjectFxf() :
+                                            String.valueOf(form.getSiteFxf()))
+                                    .createFieldSightNotification();
 
-                        FieldSightNotification notification = new FieldSightNotificationBuilder()
-                                .setFormSubmissionId(String.valueOf(form.getFsFormId()))
-                                .setFormName(form.getFormName())
-                                .setIdString("")
-                                .setFormVersion("")
-                                .createFieldSightNotification();
+                            FlaggedInstanceActivity.startWithForm(requireActivity(), notification);
+                        }
 
-                        FlaggedInstanceActivity.startWithForm(requireActivity(), notification);
+
                     }
                 };
             }
@@ -225,5 +230,7 @@ public class FormsStateFragment extends Fragment {
         });
     }
 
-
+    private boolean isSafeToLoad(FormState form) {
+        return form != null;
+    }
 }
