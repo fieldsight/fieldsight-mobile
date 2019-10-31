@@ -35,6 +35,7 @@ import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.forms.ui.FieldSightFormListFragment;
+import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.project.ProjectMapActivity;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
@@ -79,6 +80,7 @@ import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_EXIT_ANIMATION;
 import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_POP_ENTER_ANIMATION;
 import static org.fieldsight.naxa.common.Constant.ANIM.FRAGMENT_POP_EXIT_ANIMATION;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
+import static org.fieldsight.naxa.common.Constant.EXTRA_PROJECT;
 import static org.fieldsight.naxa.common.ViewUtils.showOrHide;
 import static org.odk.collect.android.utilities.PermissionUtils.checkIfLocationPermissionsGranted;
 
@@ -93,15 +95,17 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     private TextView tvSiteType;
     private Unbinder unbinder;
     private View rootView;
+    private Project project;
 
     boolean isParent;
 
 
-    public static SiteDashboardFragment newInstance(Site site, boolean isParent) {
+    public static SiteDashboardFragment newInstance(Site site, boolean isParent, Project project) {
         SiteDashboardFragment fragment = new SiteDashboardFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("isParent", isParent);
         bundle.putParcelable(EXTRA_OBJECT, site);
+        bundle.putParcelable(EXTRA_PROJECT, project);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -122,6 +126,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
         unbinder = ButterKnife.bind(this, rootView);
         loadedSite = getArguments().getParcelable(EXTRA_OBJECT);
         isParent = getArguments().getBoolean("isParent");
+        project = getArguments().getParcelable(EXTRA_PROJECT);
 
         bindUI(rootView);
 
@@ -568,7 +573,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
 
 
     private void toForms() {
-        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.GENERAL, loadedSite);
+        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.GENERAL, loadedSite, project);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION);
@@ -588,7 +593,7 @@ public class SiteDashboardFragment extends Fragment implements View.OnClickListe
     }
 
     private void toScheduleList() {
-        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.SCHEDULE, loadedSite);
+        FieldSightFormListFragment fragment = FieldSightFormListFragment.newInstance(Constant.FormType.SCHEDULE, loadedSite, project);
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(FRAGMENT_ENTER_ANIMATION, FRAGMENT_EXIT_ANIMATION, FRAGMENT_POP_ENTER_ANIMATION, FRAGMENT_POP_EXIT_ANIMATION)

@@ -134,7 +134,6 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         return fieldSightDatabase;
     }
 
-
     public abstract SubmissionDetailDAO getSubmissionDetailDAO();
 
     private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
@@ -276,7 +275,6 @@ public abstract class FieldSightDatabase extends RoomDatabase {
             database.execSQL("CREATE TABLE IF NOT EXISTS `fieldsight_forms` (`fieldSightFormId` TEXT NOT NULL, `formDeployedSiteId` TEXT, `formDeployedProjectId` TEXT, `projectId` INTEGER, `odkFormName` TEXT, `formDescriptionText` TEXT, `odkFormVersion` TEXT, `metadata` TEXT, `formOrder` INTEGER, `formType` TEXT, `totalFormsInProject` INTEGER NOT NULL, `errorStr` TEXT, `formName` TEXT, `downloadUrl` TEXT, `manifestUrl` TEXT, `formID` TEXT, `formVersion` TEXT, `hash` TEXT, `manifestFileHash` TEXT, `isNewerFormVersionAvailable` INTEGER NOT NULL, `areNewerMediaFilesAvailable` INTEGER NOT NULL, PRIMARY KEY(`fieldSightFormId`))");
         }
     };
-
 
 
 }

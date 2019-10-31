@@ -133,7 +133,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             invalidateOptionsMenu();
         };
         projectIds = SyncLocalSource3.getInstance().getAllSiteSyncingProject();
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -328,7 +327,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     public void finish() {
         if (allSelected) {
-            allSelected = !allSelected;
+            allSelected = false;
             for (Project project : projectList) {
                 project.setChecked(allSelected);
             }

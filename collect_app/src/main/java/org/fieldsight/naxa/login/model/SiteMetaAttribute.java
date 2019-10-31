@@ -110,7 +110,7 @@ public class SiteMetaAttribute implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.questionName);
-        dest.writeValue(this.isDeleted);
+//        dest.writeValue(this.isDeleted);
         dest.writeString(this.questionText);
         dest.writeString(this.questionType);
         dest.writeString(this.questionPlaceholder);
@@ -120,7 +120,7 @@ public class SiteMetaAttribute implements Parcelable {
 
     protected SiteMetaAttribute(Parcel in) {
         this.questionName = in.readString();
-        this.isDeleted = (Boolean) in.readValue(Boolean.class.getClassLoader());
+//        this.isDeleted = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.questionText = in.readString();
         this.questionType = in.readString();
         this.questionPlaceholder = in.readString();

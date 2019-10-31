@@ -33,6 +33,8 @@ import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 
+import timber.log.Timber;
+
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.Constant.EXTRA_PROJECT;
 
@@ -75,12 +77,17 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         }
 
         loadedSite = extras.getParcelable(EXTRA_OBJECT);
-        project = extras.getParcelable(EXTRA_PROJECT);
+        if(extras.containsKey(EXTRA_PROJECT)) {
+            project = extras.getParcelable(EXTRA_PROJECT);
+        }else {
+            project = ProjectLocalSource.getInstance().getProject(loadedSite.getProject());
+            Timber.i("hasProject = " + (project != null));
+        }
         isParent = extras.getBoolean("isParent");
         bindUI();
         setupToolbar();
 
-        Fragment fragment = project == null ? SiteDashboardFragment.newInstance(loadedSite, isParent) : FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
+        Fragment fragment = loadedSite != null ? SiteDashboardFragment.newInstance(loadedSite, isParent, project) : FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment, "frag0")
