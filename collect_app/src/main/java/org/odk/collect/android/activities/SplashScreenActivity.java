@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
@@ -30,7 +31,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.fieldsight.collect.android.R;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.dao.InstancesDao;
+import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.login.LoginActivity;
@@ -44,9 +48,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
+import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 import static org.odk.collect.android.preferences.GeneralKeys.KEY_SPLASH_PATH;
 
 

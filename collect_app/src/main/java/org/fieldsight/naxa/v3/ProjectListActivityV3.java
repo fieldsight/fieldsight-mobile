@@ -1,8 +1,10 @@
 package org.fieldsight.naxa.v3;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +25,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
@@ -35,6 +38,8 @@ import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.fieldsight.naxa.v3.network.SyncLocalSource3;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.dto.Instance;
+import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
@@ -45,6 +50,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
+
+import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
 public class ProjectListActivityV3 extends CollectAbstractActivity {
     @BindView(R.id.rv_projectlist)
@@ -134,6 +141,36 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
             }
         });
+
+        fixNullUrl();
+    }
+
+
+    private void fixNullUrl() {
+        FSInstancesDao instancesDao = new FSInstancesDao();
+        List<Instance> instances = instancesDao.getBySiteId("");
+        List<ContentValues> fixedInstances = new ArrayList<>();
+        for (Instance instance : instances) {
+            instance.setFieldSightSiteId("0");
+            String[] path = instance.getSubmissionUri().split("/");
+            String lastItem = path[path.length - 1];
+            String fsFormId = path[path.length - 2];
+            if (TextUtils.equals("null", lastItem)) {
+                String where = InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + "=?";
+
+                String[] whereArgs = {
+                        instance.getSubmissionUri()
+                };
+
+                String fixedUrl = FSInstancesDao.generateSubmissionUrl(PROJECT, "0", fsFormId);
+
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(InstanceProviderAPI.InstanceColumns.FS_SITE_ID, "0");
+                contentValues.put(InstanceProviderAPI.InstanceColumns.SUBMISSION_URI, fixedUrl);
+                instancesDao.updateInstance(contentValues, where, whereArgs);
+                Timber.e("Fixed %s to %s", instance.getSubmissionUri(), fixedUrl);
+            }
+        }
     }
 
     @Override

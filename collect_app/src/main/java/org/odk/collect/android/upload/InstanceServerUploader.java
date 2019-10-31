@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import androidx.annotation.NonNull;
 
+import org.fieldsight.collect.android.BuildConfig;
 import org.fieldsight.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dto.Instance;
