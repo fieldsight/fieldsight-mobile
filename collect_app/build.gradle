@@ -78,7 +78,7 @@ def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', getProps("mapbox"))
 
 def versionMajor = 3
 def versionMinor = 2
-def versionPatch = 4
+def versionPatch = 5
 
 android {
     compileSdkVersion(28)
@@ -89,8 +89,8 @@ android {
         targetSdkVersion(26)
         //versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         //versionName getVersionName()
-        versionCode versionMajor*1000+versionMinor*100+versionPatch
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}-beta"
+        versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         System.out.println(versionName + " " + versionCode)
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
@@ -180,7 +180,7 @@ android {
     // https://stackoverflow.com/a/27119543/152938
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            String fileName =  "${defaultConfig.versionName}.apk"
+            String fileName = "${defaultConfig.versionName}.apk"
             outputFileName = new File(outputFileName.replace(".apk", fileName))
         }
     }
@@ -398,7 +398,8 @@ dependencies {
     // Dagger:
     implementation "com.google.dagger:dagger:${rootProject.daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
-    testAnnotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}" // Needed for injection into Robolectric tests
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
+    // Needed for injection into Robolectric tests
 
     // Dagger Android:
     implementation "com.google.dagger:dagger-android:${rootProject.daggerVersion}"
