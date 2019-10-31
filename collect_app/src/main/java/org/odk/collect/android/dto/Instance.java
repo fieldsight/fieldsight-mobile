@@ -27,7 +27,7 @@ import androidx.annotation.NonNull;
  */
 public final class Instance {
     private final String displayName;
-    private final String submissionUri;
+    private String submissionUri;
     private final String canEditWhenComplete;
     private final String instanceFilePath;
     private final String jrFormId;
@@ -35,7 +35,7 @@ public final class Instance {
     private final String status;
     private final Long lastStatusChangeDate;
     private final Long deletedDate;
-    private final String fieldSightSiteId;
+    private String fieldSightSiteId;
     private final String fieldSightInstanceId;
 
 
@@ -136,6 +136,14 @@ public final class Instance {
         public Instance build() {
             return new Instance(this);
         }
+    }
+
+    public void setFieldSightSiteId(String fieldSightSiteId) {
+        this.fieldSightSiteId = fieldSightSiteId;
+    }
+
+    public void setSubmissionUri(String submissionUri) {
+        this.submissionUri = submissionUri;
     }
 
     public String getDisplayName() {
