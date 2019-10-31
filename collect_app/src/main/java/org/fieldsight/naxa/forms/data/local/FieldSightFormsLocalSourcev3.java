@@ -149,6 +149,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                             String formDeployedFrom = form.getProject() == null ? Constant.FormDeploymentFrom.SITE : Constant.FormDeploymentFrom.PROJECT;
                             subStage.setFormDeployedFrom(formDeployedFrom);
                             subStage.setFsFormId(form.getId());
+                            subStage.setOrder(Integer.valueOf(stageAndSubStage.getSubstageOrder()));
 
                             // Group subStage
                             int stageOrder = Integer.parseInt(stageAndSubStage.getStageOrder());
@@ -164,7 +165,16 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         // add subStage to stages
                         for (Stage stage1 : stages) {
                             Integer stageOrder = stage1.getOrder();
-                            stage1.setSubStage((ArrayList<SubStage>) groupByStage.get(stageOrder));
+                            ArrayList<SubStage> substages = (ArrayList<SubStage>) groupByStage.get(stageOrder);
+                            Collections.sort(substages, new Comparator<SubStage>() {
+                                @Override
+                                public int compare(SubStage t1, SubStage t2) {
+                                    return t1.getOrder().compareTo(t2.getOrder());
+                                }
+                            });
+
+                            stage1.setSubStage(substages);
+
                         }
                         return new ArrayList<>(stages);
                     }
@@ -195,27 +205,27 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
 
                         try {
                             JSONObject jsonObject = new JSONObject(formDetailsv3.getMetaAttributes());
-                            if(jsonObject.has("stage_type")) {
+                            if (jsonObject.has("stage_type")) {
                                 JSONArray jsonArray = jsonObject.optJSONArray("stage_type");
                                 Timber.i("FieldsightFormlocalsourcev3, stageTypeArray = %s", jsonArray.toString());
-                                for(int i = 0; i < jsonArray.length(); i ++) {
-                                    if(jsonArray.optInt(i) == newsiteTypeId) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    if (jsonArray.optInt(i) == newsiteTypeId) {
                                         typeFound = true;
                                         break;
                                     }
                                 }
                             }
-                            if(jsonObject.has("stage_regions")) {
+                            if (jsonObject.has("stage_regions")) {
                                 JSONArray jsonArray = jsonObject.optJSONArray("stage_regions");
                                 Timber.i("FieldsightFormlocalsourcev3, stageRegionArray = %s", jsonArray.toString());
-                                for(int i = 0; i < jsonArray.length(); i ++) {
-                                    if(jsonArray.optInt(i) == newsiteRegionId) {
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    if (jsonArray.optInt(i) == newsiteRegionId) {
                                         regionFound = true;
                                         break;
                                     }
                                 }
                             }
-                        }catch( Exception e) {
+                        } catch (Exception e) {
                             Timber.e(e);
                         }
                         Timber.i("getSortedPages, typeFound = " + typeFound + " regionFound = " + regionFound);
