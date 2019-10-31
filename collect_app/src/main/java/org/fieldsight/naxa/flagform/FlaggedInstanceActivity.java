@@ -26,8 +26,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
-
 import org.fieldsight.collect.android.R;
 import org.fieldsight.naxa.BaseActivity;
 import org.fieldsight.naxa.common.Constant;

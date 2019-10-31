@@ -221,6 +221,26 @@ public class DateTimeUtils {
     }
 
 
+    private static final String SERVER_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+    public static String formatDateFromServer(String time) {
+        String outputPattern = "MMM d, yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(SERVER_DATE_FORMAT, Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.getDefault());
+
+        Date date;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            Timber.e(e);
+        }
+        return str;
+    }
+
+
     public static String getRelativeTime(String dateTime, Boolean dateTimeFromServer) {
 
         String relativeTime;
@@ -233,7 +253,7 @@ public class DateTimeUtils {
             SimpleDateFormat sdf;
             String format;
             if (dateTimeFromServer) {
-                format = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+                format = SERVER_DATE_FORMAT;
             } else {
                 format = "yyyy-MM-dd, hh:mm aa";
 
@@ -243,6 +263,7 @@ public class DateTimeUtils {
             long time;
             time = sdf.parse(dateTime).getTime();
             long now = System.currentTimeMillis();
+
             CharSequence ago =
                     DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
             relativeTime = ago.toString();
@@ -262,7 +283,7 @@ public class DateTimeUtils {
         try {
             Date date = new Date();
             date.setTime(time);
-            return new SimpleDateFormat(format,Locale.getDefault()).format(date);
+            return new SimpleDateFormat(format, Locale.getDefault()).format(date);
         } catch (Exception e) {
             Timber.e(e);
             return String.valueOf(time);

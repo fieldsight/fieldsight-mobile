@@ -49,7 +49,7 @@ class FieldSightFormStateVH extends RecyclerView.ViewHolder {
                     R.drawable.circle_red));
         }
 
-        tvDate.setText(DateTimeUtils.getRelativeTime(form.getDate(),true));
+        tvDate.setText(DateTimeUtils.formatDateFromServer(form.getDate()));
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
