@@ -149,7 +149,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     private void fixNullUrl() {
         FSInstancesDao instancesDao = new FSInstancesDao();
         List<Instance> instances = instancesDao.getBySiteId("");
-        List<ContentValues> fixedInstances = new ArrayList<>();
         for (Instance instance : instances) {
             instance.setFieldSightSiteId("0");
             String[] path = instance.getSubmissionUri().split("/");
