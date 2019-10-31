@@ -42,6 +42,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
+import static org.fieldsight.naxa.common.Constant.FormStatus.FLAGGED;
 
 public class FormsStateFragment extends Fragment {
 
@@ -83,8 +84,8 @@ public class FormsStateFragment extends Fragment {
         setupListAdapter();
         setupSwipeToRefresh();
         forceReload();
-        requireActivity()
-                .setTitle(submissionStatus + " form(s)");
+        requireActivity().setTitle(FLAGGED.equalsIgnoreCase(submissionStatus) ? R.string.nav_flagged_form
+                : R.string.nav_rejected_form);
     }
 
     private void setupSwipeToRefresh() {

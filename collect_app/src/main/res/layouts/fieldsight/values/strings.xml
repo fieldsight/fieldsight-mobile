@@ -284,8 +284,8 @@
     <string name="msg_syncing_data">Syncing data</string>
     <string name="msg_education_material_not_present">No education materials present for this form</string>
     <string name="nav_my_submissions">My Submissions</string>
-    <string name="nav_rejected_form">Rejected form(s)</string>
-    <string name="nav_flagged_form">Flagged form(s)</string>
+    <string name="nav_rejected_form">Rejected submissions</string>
+    <string name="nav_flagged_form">Flagged submissions</string>
     <string name="msg_form_flagged">%s(%s) in %s</string>
     <string-array name="bug_type">
         <item>Select error type</item>
