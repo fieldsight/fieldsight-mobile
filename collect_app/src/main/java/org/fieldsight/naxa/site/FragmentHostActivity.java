@@ -46,6 +46,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     Toolbar toolbar;
     boolean isParent;
     String loadFlagForm;
+    private boolean openSubmissionScreen;
 
     public static void start(Context context, Site site, boolean isParent) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
@@ -93,9 +94,12 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         setupToolbar();
         Fragment fragment;
 
-        if (project == null && TextUtils.isEmpty(loadFlagForm)) {
+        boolean openSiteDashboard = project == null && TextUtils.isEmpty(loadFlagForm);
+        openSubmissionScreen = !TextUtils.isEmpty(loadFlagForm);
+
+        if (openSiteDashboard) {
             fragment = SiteDashboardFragment.newInstance(loadedSite, isParent);
-        } else if (!TextUtils.isEmpty(loadFlagForm)) {
+        } else if (openSubmissionScreen) {
             fragment = FormsStateFragment.newInstance(loadFlagForm);
         } else {
             fragment = FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
@@ -110,7 +114,6 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -121,6 +124,9 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (openSubmissionScreen) {
+            menu.findItem(R.id.action_refresh).setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

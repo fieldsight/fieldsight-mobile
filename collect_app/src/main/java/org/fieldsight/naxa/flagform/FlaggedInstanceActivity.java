@@ -295,6 +295,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                 Intent toFormEntry = new Intent(Intent.ACTION_EDIT, formUri);
                 toFormEntry.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(toFormEntry);
+                finish();
 
             }
         } catch (CursorIndexOutOfBoundsException e) {
@@ -309,30 +310,27 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.relative_layout_comment_open_form:
-                boolean emptyVersion = TextUtils.isEmpty(loadedFieldSightNotification.getFormVersion());
-                if (emptyVersion) {
-                    showFormIsLegacyDialog();
-                    return;
-                }
+        if (v.getId() == R.id.relative_layout_comment_open_form) {
+            boolean emptyVersion = TextUtils.isEmpty(loadedFieldSightNotification.getFormVersion());
+            if (emptyVersion) {
+                showFormIsLegacyDialog();
+                return;
+            }
 
-                boolean isFormApproved = "APPROVED".equals(loadedFieldSightNotification.getFormStatus());
-                if (isFormApproved) {
-                    showFormIsApprovedDialog();
-                    return;
-                }
+            boolean isFormApproved = "APPROVED".equals(loadedFieldSightNotification.getFormStatus());
+            if (isFormApproved) {
+                showFormIsApprovedDialog();
+                return;
+            }
 
 
-                boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
-                Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
-                if (isInstanceDownloadNeeded) {
-                    showDownloadInstanceDialog();
-                } else {
-                    loadSavedInstance(loadedFieldSightNotification.getFormSubmissionId(), loadedFieldSightNotification.getIdString());
-                }
-
-                break;
+            boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
+            Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
+            if (isInstanceDownloadNeeded) {
+                showDownloadInstanceDialog();
+            } else {
+                loadSavedInstance(loadedFieldSightNotification.getFormSubmissionId(), loadedFieldSightNotification.getIdString());
+            }
         }
     }
 
@@ -582,6 +580,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                             hideDialog();
                             Uri instanceUri = (Uri) comparable;
                             loadInstance(instanceUri);
+                            finish();
                         }
                     }
 
