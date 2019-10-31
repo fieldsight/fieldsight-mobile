@@ -152,6 +152,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                             String formDeployedFrom = form.getProject() == null ? Constant.FormDeploymentFrom.SITE : Constant.FormDeploymentFrom.PROJECT;
                             subStage.setFormDeployedFrom(formDeployedFrom);
                             subStage.setFsFormId(form.getId());
+                            subStage.setOrder(Integer.valueOf(stageAndSubStage.getSubstageOrder()));
 
                             // Group subStage
                             int stageOrder = Integer.parseInt(stageAndSubStage.getStageOrder());
@@ -167,7 +168,16 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         // add subStage to stages
                         for (Stage stage1 : stages) {
                             Integer stageOrder = stage1.getOrder();
-                            stage1.setSubStage((ArrayList<SubStage>) groupByStage.get(stageOrder));
+                            ArrayList<SubStage> substages = (ArrayList<SubStage>) groupByStage.get(stageOrder);
+                            Collections.sort(substages, new Comparator<SubStage>() {
+                                @Override
+                                public int compare(SubStage t1, SubStage t2) {
+                                    return t1.getOrder().compareTo(t2.getOrder());
+                                }
+                            });
+
+                            stage1.setSubStage(substages);
+
                         }
                         return new ArrayList<>(stages);
                     }
@@ -233,8 +243,6 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                             } catch (Exception e) {
                                 Timber.e(e);
                             }
-                            Timber.i("getSortedPages, typeFound = " + typeFound + " regionFound = " + regionFound);
-                            return typeFound & regionFound;
                         }
                     }
                 })

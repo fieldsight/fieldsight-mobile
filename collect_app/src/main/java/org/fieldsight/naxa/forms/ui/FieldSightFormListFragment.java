@@ -38,6 +38,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         //hacking way to load survey FORMS - Nishon
         if (site == null) {
             site = new Site();
+            site.setSite("0");
             site.setName(project.getName());
             site.setProject(project.getId());
         }
