@@ -142,11 +142,15 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             }
         });
 
-        fixNullUrl();
+        try {
+            fixNullUrl();
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 
 
-    private void fixNullUrl() {
+    private void fixNullUrl() throws Exception {
         FSInstancesDao instancesDao = new FSInstancesDao();
         List<Instance> instances = instancesDao.getBySiteId("");
         for (Instance instance : instances) {
