@@ -24,7 +24,9 @@ import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
 import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
@@ -107,7 +109,12 @@ public class ProjectMapFragment extends OsmMapFragment {
 
                             SimpleFastPointOverlayOptions opt = SimpleFastPointOverlayOptions.getDefaultStyle()
                                     .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
-                                    .setRadius(7).setIsClickable(true).setCellSize(15).setTextStyle(textStyle);
+                                    .setMaxNShownLabels(2)
+                                    .setMinZoomShowLabels(18)
+                                    .setRadius(7)
+                                    .setIsClickable(true)
+                                    .setCellSize(15)
+                                    .setTextStyle(textStyle);
 
                             final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
                             map.zoomToBoundingBox(sfpo.getBoundingBox(),true);
@@ -116,12 +123,9 @@ public class ProjectMapFragment extends OsmMapFragment {
                                 @Override
                                 public void onClick(SimpleFastPointOverlay.PointAdapter points, Integer point) {
 
-
                                 }
                             });
-
                             map.getOverlays().add(sfpo);
-
                         }
 
                         @Override
@@ -180,6 +184,16 @@ public class ProjectMapFragment extends OsmMapFragment {
         return marker;
     }
 
+    private void setupCompass(){
+        CompassOverlay compassOverlay = new CompassOverlay(requireContext(), map);
+        compassOverlay.enableCompass();
+        map.getOverlays().add(compassOverlay);
+    }
+
+    private void setupFollowLocation(){
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Object obj = getArguments().getParcelable(EXTRA_OBJECT);
@@ -193,8 +207,9 @@ public class ProjectMapFragment extends OsmMapFragment {
         getMapAsync(map -> {
             this.map = map;
             setupInfoDialogSettings();
-
-            map.setMinZoomLevel(3);
+            setupCompass();
+            map.setBuiltInZoomControls(true);
+            map.setMultiTouchControls(true);
 
             if (loadedProject != null) {
                 String projectId = loadedProject.getId();
@@ -203,10 +218,7 @@ public class ProjectMapFragment extends OsmMapFragment {
             } else if (loadedSite != null) {
                 SiteMarker marker = mapSiteToMarker(loadedSite);
                 map.getOverlays().add(marker);
-
                 map.getController().zoomTo(15);
-
-
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
