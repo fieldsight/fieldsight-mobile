@@ -1,11 +1,14 @@
 package org.fieldsight.naxa.site.map;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -16,21 +19,26 @@ import org.fieldsight.naxa.site.SiteInfoWindow;
 import org.fieldsight.naxa.site.SiteMarker;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.fragments.OsmMapFragment;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.events.MapEventsReceiver;
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
+import org.osmdroid.views.overlay.simplefastpoint.LabelledGeoPoint;
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
+import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -69,37 +77,59 @@ public class ProjectMapFragment extends OsmMapFragment {
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
-                    .filter(new Predicate<Site>() {
-                        @Override
-                        public boolean test(Site site) throws Exception {
-                            boolean cantParseLocation = TextUtils.isEmpty(site.getLatitude())
-                                    && TextUtils.isEmpty(site.getLatitude());
-                            boolean isBadValue = TextUtils.equals(site.getLatitude(), "0") &&
-                                    TextUtils.equals(site.getLongitude(), "0");
-                            return !cantParseLocation && !isBadValue;
-                        }
+                    .filter(site -> {
+                        boolean cantParseLocation = TextUtils.isEmpty(site.getLatitude())
+                                && TextUtils.isEmpty(site.getLatitude());
+                        boolean isBadValue = TextUtils.equals(site.getLatitude(), "0") &&
+                                TextUtils.equals(site.getLongitude(), "0");
+                        return !cantParseLocation && !isBadValue;
                     })
-                    .doOnNext(site -> map.getOverlays().add(mapSiteToMarker(site)))
-                    .map(site -> new GeoPoint(Double.parseDouble(site.getLatitude()),
-                            Double.parseDouble(site.getLongitude())))
+                    .map((Function<Site, IGeoPoint>) site -> new LabelledGeoPoint(Double.parseDouble(site.getLatitude()),
+                            Double.parseDouble(site.getLongitude())
+                            , site.getName()))
                     .toList()
-                    .map(BoundingBox::fromGeoPoints)
-                    .subscribe(new SingleObserver<BoundingBox>() {
+                    .subscribe(new SingleObserver<List<IGeoPoint>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onSuccess(BoundingBox boundingBox) {
-                            map.zoomToBoundingBox(boundingBox, false);
+                        public void onSuccess(List<IGeoPoint> points) {
+
+                            SimplePointTheme pt = new SimplePointTheme(points, true);
+
+                            Paint textStyle = new Paint();
+                            textStyle.setStyle(Paint.Style.FILL);
+                            textStyle.setColor(Color.parseColor("#0000ff"));
+                            textStyle.setTextAlign(Paint.Align.CENTER);
+                            textStyle.setTextSize(24);
+
+                            SimpleFastPointOverlayOptions opt = SimpleFastPointOverlayOptions.getDefaultStyle()
+                                    .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
+                                    .setRadius(7).setIsClickable(true).setCellSize(15).setTextStyle(textStyle);
+
+                            final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
+                            map.zoomToBoundingBox(sfpo.getBoundingBox(),true);
+
+                            sfpo.setOnClickListener(new SimpleFastPointOverlay.OnClickListener() {
+                                @Override
+                                public void onClick(SimpleFastPointOverlay.PointAdapter points, Integer point) {
+
+
+                                }
+                            });
+
+                            map.getOverlays().add(sfpo);
+
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Timber.e(e);
+
                         }
                     });
+
         });
     }
 
@@ -169,6 +199,7 @@ public class ProjectMapFragment extends OsmMapFragment {
             if (loadedProject != null) {
                 String projectId = loadedProject.getId();
                 loadSites(projectId);
+
             } else if (loadedSite != null) {
                 SiteMarker marker = mapSiteToMarker(loadedSite);
                 map.getOverlays().add(marker);
