@@ -2,6 +2,7 @@ package org.fieldsight.naxa.site.map;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import org.fieldsight.naxa.site.SiteInfoWindow;
 import org.fieldsight.naxa.site.SiteMarker;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.fragments.OsmMapFragment;
+import org.odk.collect.android.utilities.ToastUtils;
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.util.GeoPoint;
@@ -86,9 +88,14 @@ public class ProjectMapFragment extends OsmMapFragment {
                                 TextUtils.equals(site.getLongitude(), "0");
                         return !cantParseLocation && !isBadValue;
                     })
-                    .map((Function<Site, IGeoPoint>) site -> new LabelledGeoPoint(Double.parseDouble(site.getLatitude()),
-                            Double.parseDouble(site.getLongitude())
-                            , site.getName()))
+                    .map(new Function<Site, IGeoPoint>() {
+                        @Override
+                        public IGeoPoint apply(Site site) {
+                            return new SiteGeoPoint(Double.parseDouble(site.getLatitude()),
+                                    Double.parseDouble(site.getLongitude())
+                                    , site.getName(), site);
+                        }
+                    })
                     .toList()
                     .subscribe(new SingleObserver<List<IGeoPoint>>() {
                         @Override
@@ -116,14 +123,15 @@ public class ProjectMapFragment extends OsmMapFragment {
                                     .setCellSize(15)
                                     .setTextStyle(textStyle);
 
+
                             final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
-                            map.zoomToBoundingBox(sfpo.getBoundingBox(),true);
 
-                            sfpo.setOnClickListener(new SimpleFastPointOverlay.OnClickListener() {
-                                @Override
-                                public void onClick(SimpleFastPointOverlay.PointAdapter points, Integer point) {
+                            map.zoomToBoundingBox(sfpo.getBoundingBox(), true);
 
-                                }
+                            sfpo.setOnClickListener((points1, point) -> {
+                                Site site = ((SiteGeoPoint) points1.get(point)).getSite();
+                                infoWindowOnFastOverlay(site);
+
                             });
                             map.getOverlays().add(sfpo);
                         }
@@ -156,10 +164,24 @@ public class ProjectMapFragment extends OsmMapFragment {
 
     }
 
+    private void infoWindowOnFastOverlay(Site site) {
+        GeoPoint geoPoint = new GeoPoint(Double.parseDouble(site.getLatitude()), Double.parseDouble(site.getLongitude()));
+        SiteMarker marker = getMarker(geoPoint, site.getName(), site.getAddress(), null);
+        InfoWindow infoWindow = new SiteInfoWindow(R.layout.site_bubble, map);
+        marker.setSite(site);
+        marker.setInfoWindow(infoWindow);
+        marker.setSubDescription(site.getId());
+
+        InfoWindow.closeAllInfoWindowsOn(map);
+
+        marker.showInfoWindow();
+        map.getController().animateTo(marker.getPosition());
+        handler.postDelayed(marker::showInfoWindow, 500);
+    }
 
     private SiteMarker mapSiteToMarker(Site site) {
         GeoPoint geoPoint = new GeoPoint(Double.parseDouble(site.getLatitude()), Double.parseDouble(site.getLongitude()));
-        SiteMarker marker = getMarker(geoPoint, site.getName(), site.getAddress());
+        SiteMarker marker = getMarker(geoPoint, site.getName(), site.getAddress(), ContextCompat.getDrawable(requireContext(), R.drawable.ic_place_blue));
         InfoWindow infoWindow = new SiteInfoWindow(R.layout.site_bubble, map);
         marker.setSite(site);
         marker.setInfoWindow(infoWindow);
@@ -175,23 +197,21 @@ public class ProjectMapFragment extends OsmMapFragment {
 
     }
 
-    private SiteMarker getMarker(GeoPoint geoPoint, String title, String snippet) {
+    private SiteMarker getMarker(GeoPoint geoPoint, String title, String snippet, Drawable icon) {
         SiteMarker marker = new SiteMarker(map);
         marker.setSnippet(snippet);
         marker.setTitle(title);
-        marker.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_place_blue));
+        if(icon != null){
+            marker.setIcon(icon);
+        }
         marker.setPosition(geoPoint);
         return marker;
     }
 
-    private void setupCompass(){
+    private void setupCompass() {
         CompassOverlay compassOverlay = new CompassOverlay(requireContext(), map);
         compassOverlay.enableCompass();
         map.getOverlays().add(compassOverlay);
-    }
-
-    private void setupFollowLocation(){
-
     }
 
     @Override
