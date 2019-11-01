@@ -30,6 +30,7 @@ import org.fieldsight.naxa.site.CreateSiteViewModel;
 import org.fieldsight.naxa.site.FragmentHostViewModel;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRepository;
+import org.fieldsight.naxa.site.list.SiteListViewModel;
 import org.fieldsight.naxa.stages.StageFormRepository;
 import org.fieldsight.naxa.stages.StageViewModel;
 import org.fieldsight.naxa.stages.data.StageLocalSource;
@@ -151,6 +152,10 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         } else if (modelClass.isAssignableFrom(FieldSightFormViewModel.class)) {
             //noinspection unchecked
             return (T) new FieldSightFormViewModel();
+        }
+        else if (modelClass.isAssignableFrom(SiteListViewModel.class)) {
+            //noinspection unchecked
+            return (T) new SiteListViewModel();
         }
         throw new IllegalArgumentException("Unknown ViewModel class" + modelClass.getName());
     }

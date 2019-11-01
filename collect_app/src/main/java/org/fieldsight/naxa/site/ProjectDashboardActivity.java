@@ -67,6 +67,7 @@ import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.profile.UserActivity;
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
+import org.fieldsight.naxa.site.list.SiteListFragment;
 import org.fieldsight.naxa.site.map.ProjectMapFragment;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;

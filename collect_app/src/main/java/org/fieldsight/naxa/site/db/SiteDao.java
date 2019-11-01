@@ -1,6 +1,7 @@
 package org.fieldsight.naxa.site.db;
 
 import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -84,4 +85,9 @@ public interface SiteDao {
 
     @Query("SELECT * from sites WHERE site IS NULL AND project=:projectId")
     LiveData<List<Site>> getParentSite(String projectId);
+
+
+    @Query("SELECT * from sites WHERE site IS NULL AND project=:projectId")
+    DataSource.Factory<Integer, Site> siteByProjectId(String projectId);
+
 }

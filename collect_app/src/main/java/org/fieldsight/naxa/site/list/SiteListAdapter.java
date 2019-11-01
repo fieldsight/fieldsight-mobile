@@ -1,4 +1,4 @@
-package org.fieldsight.naxa.site;
+package org.fieldsight.naxa.site.list;
 
 import android.util.SparseBooleanArray;
 import android.view.HapticFeedbackConstants;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.fieldsight.collect.android.R;
@@ -22,7 +24,7 @@ import org.fieldsight.naxa.login.model.SiteBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SiteListAdapter extends PagedListAdapter<Site, RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_SURVEY_FORM = 0, VIEW_TYPE_SITE = 1;
 
@@ -34,21 +36,22 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static int currentSelectedIndex = -1;
     private boolean reverseAllAnimations;
 
+
     SiteListAdapter(List<Site> sitelist, SiteListAdapter.SiteListAdapterListener listener) {
+        super(DIFF_CALLBACK);
 
         this.listener = listener;
         this.selectedItems = new SparseBooleanArray();
         this.animationItemsIndex = new SparseBooleanArray();
 
         ArrayList<Site> surveyFormAndSites = new ArrayList<>();
-        surveyFormAndSites.add(new SiteBuilder()
-                .setName("project_survey")
-                .setId("0")
-                .createSite());
-        surveyFormAndSites.addAll(sitelist);
+//        surveyFormAndSites.add(new SiteBuilder()
+//                .setName("project_survey")
+//                .setId("0")
+//                .createSite());
+//        surveyFormAndSites.addAll(sitelist);
 
         this.siteList = surveyFormAndSites;
-
 
 
     }
@@ -56,8 +59,8 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder holder = null;
-        View itemView = null;
+        RecyclerView.ViewHolder holder;
+        View itemView;
 
         switch (viewType) {
             case VIEW_TYPE_SURVEY_FORM:
@@ -79,26 +82,19 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        switch (holder.getItemViewType()) {
-            case VIEW_TYPE_SURVEY_FORM:
-                break;
-            default:
-                SiteViewHolder siteViewHolder = (SiteViewHolder) holder;
-                Site site = siteList.get(holder.getAdapterPosition());
-                siteViewHolder.siteName.setText(site.getName());
-                siteViewHolder.iconText.setText(site.getName().substring(0, 1));
-                siteViewHolder.identifier.setText(site.getIdentifier());
-                siteViewHolder.message.setText(site.getAddress());
-                siteViewHolder.imgProfile.setImageResource(R.drawable.circle_blue);
+        Site site = getItem(position);
+        if (site != null && holder.getItemViewType() == VIEW_TYPE_SITE) {
+            SiteViewHolder siteViewHolder = (SiteViewHolder) holder;
+            siteViewHolder.siteName.setText(site.getName());
+            siteViewHolder.iconText.setText(site.getName().substring(0, 1));
+            siteViewHolder.identifier.setText(site.getIdentifier());
+            siteViewHolder.message.setText(site.getAddress());
+            siteViewHolder.imgProfile.setImageResource(R.drawable.circle_blue);
 
-                applyIconAnimation(siteViewHolder, position);
-                applyOffilineSiteTag(siteViewHolder, site);
-                break;
+            applyIconAnimation(siteViewHolder, position);
+            applyOffilineSiteTag(siteViewHolder, site);
         }
-
-
     }
-
 
     private void applyIconAnimation(SiteViewHolder holder, int position) {
         if (selectedItems.get(position, false)) {
@@ -258,8 +254,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.siteName.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
             holder.identifier.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.message));
         }
-
-
     }
 
 
@@ -275,10 +269,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.siteList.clear();
         this.siteList.addAll(surveyFormAndSites);
 
-
         notifyDataSetChanged();
-
-
     }
 
     public ArrayList<Site> getSelected() {
@@ -307,6 +298,21 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
         notifyItemChanged(pos);
     }
+
+    private static DiffUtil.ItemCallback<Site> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<Site>() {
+                @Override
+                public boolean areItemsTheSame(Site oldConcert, Site newConcert) {
+                    return oldConcert.getId().equals(newConcert.getId());
+                }
+
+                @Override
+                public boolean areContentsTheSame(Site oldConcert,
+                                                  Site newConcert) {
+                    return oldConcert.equals(newConcert);
+                }
+            };
+
 
     public interface SiteListAdapterListener {
         void onIconClicked(int position);

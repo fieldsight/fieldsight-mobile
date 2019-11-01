@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.paging.DataSource;
 
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.Constant;
@@ -58,7 +59,12 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     }
 
     public LiveData<List<Site>> getAllParentSite(String projectId) {
+
         return dao.getParentSite(projectId);
+    }
+
+    public DataSource.Factory<Integer, Site> getPagedSites(String projectId){
+        return dao.siteByProjectId(projectId);
     }
 
     public LiveData<List<String>> getAllDistinctProjectIds() {

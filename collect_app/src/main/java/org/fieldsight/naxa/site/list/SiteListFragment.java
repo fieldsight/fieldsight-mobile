@@ -1,4 +1,4 @@
-package org.fieldsight.naxa.site;
+package org.fieldsight.naxa.site.list;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,11 +36,14 @@ import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FilterDialogAdapter;
 import org.fieldsight.naxa.common.FilterOption;
+import org.fieldsight.naxa.common.ViewModelFactory;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.migrate.MigrateFieldSightViewModel;
 import org.fieldsight.naxa.project.TermsLabels;
+import org.fieldsight.naxa.site.FragmentHostActivity;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.fieldsight.naxa.v3.network.Region;
@@ -59,6 +64,7 @@ import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -75,13 +81,15 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private Project loadedProject;
     private Unbinder unbinder;
     private SiteListAdapter siteListAdapter;
-    private LiveData<List<Site>> allSitesLiveData;
+    //    private LiveData<List<Site>> allSitesLiveData;
     private BottomSheetDialog bottomSheetDialog;
 
     private ActionMode actionMode;
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
     private MenuItem sortActionFilter;
     TermsLabels tl;
+    private SiteListViewModel viewModel;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
 
     public static SiteListFragment newInstance(Project project) {
@@ -106,12 +114,26 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         unbinder = ButterKnife.bind(this, view);
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
         setupRecycleView();
-        allSitesLiveData = SiteLocalSource.getInstance().getAllParentSite(loadedProject.getId());
+
+        ViewModelFactory factory = ViewModelFactory.getInstance();
+        viewModel = ViewModelProviders.of(this, factory).get(SiteListViewModel.class);
+
+
+//        allSitesLiveData = SiteLocalSource.getInstance().getAllParentSite(loadedProject.getId());
 
         collectFilterAndApply(new ArrayList<>());
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
         tl = getTermsAndLabels();
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        viewModel.getPagedSites(loadedProject.getId())
+                .observe(this, sites -> {
+                    siteListAdapter.submitList(sites);
+                });
     }
 
     @Override
@@ -175,33 +197,32 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
 
-
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
-        String selectedRegion = "0";
-
-        for (FilterOption filterOption : sortList) {
-            switch (filterOption.getType()) {
-                case SELECTED_REGION:
-                    selectedRegion = filterOption.getSelectionId();
-
-                    break;
-            }
-        }
-
-        LiveData<List<Site>> source;
-        switch (selectedRegion) {
-            case "0":
-                source = allSitesLiveData;
-                break;
-            default:
-                source = SiteLocalSource.getInstance()
-                        .getByIdStatusAndCluster(loadedProject.getId(), selectedRegion);
-                break;
-        }
-
-        source.observe(this, sites -> {
-            siteListAdapter.updateList(sites);
-        });
+//        String selectedRegion = "0";
+//
+//        for (FilterOption filterOption : sortList) {
+//            switch (filterOption.getType()) {
+//                case SELECTED_REGION:
+//                    selectedRegion = filterOption.getSelectionId();
+//
+//                    break;
+//            }
+//        }
+//
+//        LiveData<List<Site>> source;
+//        switch (selectedRegion) {
+//            case "0":
+////                source = allSitesLiveData;
+//                break;
+//            default:
+//                source = SiteLocalSource.getInstance()
+//                        .getByIdStatusAndCluster(loadedProject.getId(), selectedRegion);
+//                break;
+//        }
+//
+//        source.observe(this, sites -> {
+//            siteListAdapter.updateList(sites);
+//        });
 
     }
 
@@ -263,7 +284,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     public MutableLiveData<ArrayList<FilterOption>> getFilterOptionForSites() {
-
 
 
         List<Region> siteRegions;

@@ -56,4 +56,5 @@ ext {
     okhttp3Version = '3.12.3'
     okhttp3Version = '3.11.0'
     playServicesVersion = '10.0.1'
+    archPagingVersion = "2.1.0"
 }
