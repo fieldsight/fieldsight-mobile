@@ -1,6 +1,5 @@
 package org.fieldsight.naxa.login.model;
 
-import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,6 +11,7 @@ import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import org.fieldsight.naxa.v3.network.Region;
 import org.fieldsight.naxa.v3.network.RegionConverter;
 
