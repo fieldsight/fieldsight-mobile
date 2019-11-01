@@ -28,12 +28,16 @@ public class FieldSightFormVH extends RecyclerView.ViewHolder {
     public void bindView(FieldsightFormDetailsv3 form) {
         FormDetails formDetails = form.getFormDetails();
 
-        tvTitle.setText(formDetails.getFormName());
-        tvSubtitle.setText(formDetails.getFormName());
-        tvIconText.setText(formDetails.getFormName().substring(0, 1));
-        itemView.setOnClickListener(view -> openForm(form));
-        btnViewEduMaterial.setOnClickListener(view -> openEducationalMaterial(form));
-        btnViewSubmission.setOnClickListener(view -> openPreviousSubmission(form));
+        try{
+            tvTitle.setText(formDetails.getFormName());
+            tvSubtitle.setText(formDetails.getFormName());
+            tvIconText.setText(formDetails.getFormName().substring(0, 1));
+            itemView.setOnClickListener(view -> openForm(form));
+            btnViewEduMaterial.setOnClickListener(view -> openEducationalMaterial(form));
+            btnViewSubmission.setOnClickListener(view -> openPreviousSubmission(form));
+        }catch (Exception e){
+
+        }
 
 
     }

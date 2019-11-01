@@ -31,4 +31,7 @@ public interface ApiV3Interface {
     @GET
     Observable<ResponseBody> getFormsFromUrlAsRaw(@Url String url);
 
+    @GET
+    Observable<ResponseBody> getMyFlaggedSubmissionAsRaw(@Url String url);
+
 }

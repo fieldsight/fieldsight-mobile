@@ -7,10 +7,10 @@
             android:title="@string/nav_create_offline_site" />
 
         <item
-            android:visible="false"
             android:id="@+id/nav_view_finalized_offline_site"
             android:icon="@drawable/ic_format_list_bulleted"
-            android:title="@string/nav_finalized_offline_site" />
+            android:title="@string/nav_finalized_offline_site"
+            android:visible="false" />
 
         <item
             android:id="@+id/nav_view_site_dashboard"
@@ -18,6 +18,20 @@
             android:title="@string/nav_site_dashboard" />
     </group>
 
+
+    <item android:title="@string/nav_my_submissions">
+        <menu>
+            <item
+                android:id="@+id/nav_rejected_form"
+                android:icon="@drawable/ic_format_list_bulleted"
+                android:title="@string/nav_rejected_form" />
+            <item
+                android:id="@+id/nav_flagged_form"
+                android:icon="@drawable/ic_format_list_bulleted"
+                android:title="@string/nav_flagged_form" />
+
+        </menu>
+    </item>
 
     <item android:title="@string/nav_overall_forms">
         <menu>
@@ -37,14 +51,16 @@
     </item>
 
     <item
-        android:icon="@drawable/ic_action_backup"
         android:id="@+id/nav_backup"
-        android:title="@string/backup_data" />
+        android:icon="@drawable/ic_action_backup"
+        android:title="@string/backup_data"
+        android:visible="false" />
 
 
     <item
-        android:icon="@drawable/ic_setting"
         android:id="@+id/nav_setting"
-        android:title="@string/toolbar_settings" />
+        android:icon="@drawable/ic_setting"
+        android:title="@string/toolbar_settings"
+        android:visible="false" />
 
 </menu>

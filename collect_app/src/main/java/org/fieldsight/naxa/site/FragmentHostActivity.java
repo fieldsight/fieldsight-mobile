@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -27,6 +28,7 @@ import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.preferences.SettingsActivity;
 import org.fieldsight.naxa.project.data.ProjectLocalSource;
+import org.fieldsight.naxa.v3.forms.FormsStateFragment;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 
 import timber.log.Timber;
 
+import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.Constant.EXTRA_PROJECT;
 
@@ -44,6 +47,8 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     Project project;
     Toolbar toolbar;
     boolean isParent;
+    String loadFlagForm;
+    private boolean openSubmissionScreen;
 
     public static void start(Context context, Site site, boolean isParent) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
@@ -56,6 +61,12 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     public static void startWithSurveyForm(Context context, Project project) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
         intent.putExtra(EXTRA_PROJECT, project);
+        context.startActivity(intent);
+    }
+
+    public static void startFlaggedForm(Context context, String type) {
+        Intent intent = new Intent(context, FragmentHostActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, type);
         context.startActivity(intent);
     }
 
@@ -84,10 +95,23 @@ public class FragmentHostActivity extends CollectAbstractActivity {
             Timber.i("hasProject = " + (project != null));
         }
         isParent = extras.getBoolean("isParent");
+        loadedSite = extras.getParcelable(EXTRA_OBJECT);
+        loadFlagForm = extras.getString(EXTRA_MESSAGE);
         bindUI();
         setupToolbar();
+        Fragment fragment;
 
-        Fragment fragment = loadedSite != null ? SiteDashboardFragment.newInstance(loadedSite, isParent, project) : FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
+        boolean openSiteDashboard = project == null && TextUtils.isEmpty(loadFlagForm);
+        openSubmissionScreen = !TextUtils.isEmpty(loadFlagForm);
+
+        if (openSiteDashboard) {
+            fragment = SiteDashboardFragment.newInstance(loadedSite, isParent,project);
+        } else if (openSubmissionScreen) {
+            fragment = FormsStateFragment.newInstance(loadFlagForm);
+        } else {
+            fragment = FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
+        }
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment, "frag0")
@@ -97,7 +121,6 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -108,6 +131,9 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (openSubmissionScreen) {
+            menu.findItem(R.id.action_refresh).setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
