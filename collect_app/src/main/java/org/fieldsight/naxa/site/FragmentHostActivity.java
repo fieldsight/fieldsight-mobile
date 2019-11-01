@@ -47,7 +47,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     Project project;
     Toolbar toolbar;
     boolean isParent;
-    String loadFlagForm;
+    String extraMessage;
     private boolean openSubmissionScreen;
 
     public static void start(Context context, Site site, boolean isParent) {
@@ -61,6 +61,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     public static void startWithSurveyForm(Context context, Project project) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
         intent.putExtra(EXTRA_PROJECT, project);
+        intent.putExtra(EXTRA_MESSAGE, "open_survey_form");
         context.startActivity(intent);
     }
 
@@ -87,29 +88,34 @@ public class FragmentHostActivity extends CollectAbstractActivity {
             return;
         }
 
-        loadedSite = extras.getParcelable(EXTRA_OBJECT);
-        if(extras.containsKey(EXTRA_PROJECT)) {
-            project = extras.getParcelable(EXTRA_PROJECT);
-        }else {
-            project = ProjectLocalSource.getInstance().getProject(loadedSite.getProject());
-            Timber.i("hasProject = " + (project != null));
-        }
-        isParent = extras.getBoolean("isParent");
-        loadedSite = extras.getParcelable(EXTRA_OBJECT);
-        loadFlagForm = extras.getString(EXTRA_MESSAGE);
         bindUI();
         setupToolbar();
+
+        loadedSite = extras.getParcelable(EXTRA_OBJECT);
+        extraMessage = extras.getString(EXTRA_MESSAGE);
+        isParent = extras.getBoolean("isParent");
+
+
+        if (extras.containsKey(EXTRA_PROJECT)) {
+            project = extras.getParcelable(EXTRA_PROJECT);
+        } else if (loadedSite != null) {
+            project = ProjectLocalSource.getInstance().getProject(loadedSite.getProject());
+            Timber.i("hasProject = %s", (project != null));
+        }
+
         Fragment fragment;
+        boolean openSubmissionScreen = TextUtils.equals(Constant.FormStatus.FLAGGED, extraMessage)
+                || TextUtils.equals(Constant.FormStatus.REJECTED, extraMessage);
+        boolean openSurveyForm = TextUtils.equals("open_survey_form", extraMessage);
 
-        boolean openSiteDashboard = project == null && TextUtils.isEmpty(loadFlagForm);
-        openSubmissionScreen = !TextUtils.isEmpty(loadFlagForm);
 
-        if (openSiteDashboard) {
-            fragment = SiteDashboardFragment.newInstance(loadedSite, isParent,project);
-        } else if (openSubmissionScreen) {
-            fragment = FormsStateFragment.newInstance(loadFlagForm);
-        } else {
+        if (openSubmissionScreen) {
+            fragment = FormsStateFragment.newInstance(extraMessage);
+        } else if (openSurveyForm) {
+
             fragment = FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
+        } else {
+            fragment = SiteDashboardFragment.newInstance(loadedSite, isParent, project);
         }
 
         getSupportFragmentManager()

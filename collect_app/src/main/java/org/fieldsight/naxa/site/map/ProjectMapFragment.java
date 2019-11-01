@@ -1,5 +1,8 @@
 package org.fieldsight.naxa.site.map;
 
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -16,12 +19,16 @@ import org.fieldsight.naxa.site.SiteInfoWindow;
 import org.fieldsight.naxa.site.SiteMarker;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.fragments.OsmMapFragment;
+import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.events.MapEventsReceiver;
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
+import org.osmdroid.views.overlay.compass.CompassOverlay;
 import org.osmdroid.views.overlay.infowindow.InfoWindow;
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlay;
+import org.osmdroid.views.overlay.simplefastpoint.SimpleFastPointOverlayOptions;
+import org.osmdroid.views.overlay.simplefastpoint.SimplePointTheme;
 
 import java.util.List;
 
@@ -30,7 +37,6 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -69,37 +75,67 @@ public class ProjectMapFragment extends OsmMapFragment {
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .flatMapIterable((Function<List<Site>, Iterable<Site>>) sites1 -> sites1)
-                    .filter(new Predicate<Site>() {
+                    .filter(site -> {
+                        boolean cantParseLocation = TextUtils.isEmpty(site.getLatitude())
+                                && TextUtils.isEmpty(site.getLatitude());
+                        boolean isBadValue = TextUtils.equals(site.getLatitude(), "0") &&
+                                TextUtils.equals(site.getLongitude(), "0");
+                        return !cantParseLocation && !isBadValue;
+                    })
+                    .map(new Function<Site, IGeoPoint>() {
                         @Override
-                        public boolean test(Site site) throws Exception {
-                            boolean cantParseLocation = TextUtils.isEmpty(site.getLatitude())
-                                    && TextUtils.isEmpty(site.getLatitude());
-                            boolean isBadValue = TextUtils.equals(site.getLatitude(), "0") &&
-                                    TextUtils.equals(site.getLongitude(), "0");
-                            return !cantParseLocation && !isBadValue;
+                        public IGeoPoint apply(Site site) {
+                            return new SiteGeoPoint(Double.parseDouble(site.getLatitude()),
+                                    Double.parseDouble(site.getLongitude())
+                                    , site.getName(), site);
                         }
                     })
-                    .doOnNext(site -> map.getOverlays().add(mapSiteToMarker(site)))
-                    .map(site -> new GeoPoint(Double.parseDouble(site.getLatitude()),
-                            Double.parseDouble(site.getLongitude())))
                     .toList()
-                    .map(BoundingBox::fromGeoPoints)
-                    .subscribe(new SingleObserver<BoundingBox>() {
+                    .subscribe(new SingleObserver<List<IGeoPoint>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onSuccess(BoundingBox boundingBox) {
-                            map.zoomToBoundingBox(boundingBox, false);
+                        public void onSuccess(List<IGeoPoint> points) {
+
+                            SimplePointTheme pt = new SimplePointTheme(points, true);
+
+                            Paint textStyle = new Paint();
+                            textStyle.setStyle(Paint.Style.FILL);
+                            textStyle.setColor(Color.parseColor("#0000ff"));
+                            textStyle.setTextAlign(Paint.Align.CENTER);
+                            textStyle.setTextSize(24);
+
+                            SimpleFastPointOverlayOptions opt = SimpleFastPointOverlayOptions.getDefaultStyle()
+                                    .setAlgorithm(SimpleFastPointOverlayOptions.RenderingAlgorithm.MAXIMUM_OPTIMIZATION)
+                                    .setMaxNShownLabels(2)
+                                    .setMinZoomShowLabels(18)
+                                    .setRadius(7)
+                                    .setIsClickable(true)
+                                    .setCellSize(15)
+                                    .setTextStyle(textStyle);
+
+
+                            final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
+
+                            map.zoomToBoundingBox(sfpo.getBoundingBox(), true);
+
+                            sfpo.setOnClickListener((points1, point) -> {
+                                Site site = ((SiteGeoPoint) points1.get(point)).getSite();
+                                infoWindowOnFastOverlay(site);
+
+                            });
+                            map.getOverlays().add(sfpo);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Timber.e(e);
+
                         }
                     });
+
         });
     }
 
@@ -122,10 +158,24 @@ public class ProjectMapFragment extends OsmMapFragment {
 
     }
 
+    private void infoWindowOnFastOverlay(Site site) {
+        GeoPoint geoPoint = new GeoPoint(Double.parseDouble(site.getLatitude()), Double.parseDouble(site.getLongitude()));
+        SiteMarker marker = getMarker(geoPoint, site.getName(), site.getAddress(), null);
+        InfoWindow infoWindow = new SiteInfoWindow(R.layout.site_bubble, map);
+        marker.setSite(site);
+        marker.setInfoWindow(infoWindow);
+        marker.setSubDescription(site.getId());
+
+        InfoWindow.closeAllInfoWindowsOn(map);
+
+        marker.showInfoWindow();
+        map.getController().animateTo(marker.getPosition());
+        handler.postDelayed(marker::showInfoWindow, 500);
+    }
 
     private SiteMarker mapSiteToMarker(Site site) {
         GeoPoint geoPoint = new GeoPoint(Double.parseDouble(site.getLatitude()), Double.parseDouble(site.getLongitude()));
-        SiteMarker marker = getMarker(geoPoint, site.getName(), site.getAddress());
+        SiteMarker marker = getMarker(geoPoint, site.getName(), site.getAddress(), ContextCompat.getDrawable(requireContext(), R.drawable.ic_place_blue));
         InfoWindow infoWindow = new SiteInfoWindow(R.layout.site_bubble, map);
         marker.setSite(site);
         marker.setInfoWindow(infoWindow);
@@ -141,13 +191,21 @@ public class ProjectMapFragment extends OsmMapFragment {
 
     }
 
-    private SiteMarker getMarker(GeoPoint geoPoint, String title, String snippet) {
+    private SiteMarker getMarker(GeoPoint geoPoint, String title, String snippet, Drawable icon) {
         SiteMarker marker = new SiteMarker(map);
         marker.setSnippet(snippet);
         marker.setTitle(title);
-        marker.setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.ic_place_blue));
+        if(icon != null){
+            marker.setIcon(icon);
+        }
         marker.setPosition(geoPoint);
         return marker;
+    }
+
+    private void setupCompass() {
+        CompassOverlay compassOverlay = new CompassOverlay(requireContext(), map);
+        compassOverlay.enableCompass();
+        map.getOverlays().add(compassOverlay);
     }
 
     @Override
@@ -163,19 +221,18 @@ public class ProjectMapFragment extends OsmMapFragment {
         getMapAsync(map -> {
             this.map = map;
             setupInfoDialogSettings();
-
-            map.setMinZoomLevel(3);
+            setupCompass();
+            map.setBuiltInZoomControls(true);
+            map.setMultiTouchControls(true);
 
             if (loadedProject != null) {
                 String projectId = loadedProject.getId();
                 loadSites(projectId);
+
             } else if (loadedSite != null) {
                 SiteMarker marker = mapSiteToMarker(loadedSite);
                 map.getOverlays().add(marker);
-
                 map.getController().zoomTo(15);
-
-
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

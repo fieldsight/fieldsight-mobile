@@ -17,7 +17,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.internal.Utils;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_ID;

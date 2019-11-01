@@ -44,9 +44,6 @@ public class SiteMetaAttribute implements Parcelable {
         this.questionType = questionType;
     }
 
-
-
-
     public SiteMetaAttribute toSiteMetaAttribute(String json) {
         return GSONInstance.getInstance().fromJson(json, SiteMetaAttribute.class);
     }
@@ -100,6 +97,10 @@ public class SiteMetaAttribute implements Parcelable {
 
     public void setMcqOptions(List<McqOption> mcqOptions) {
         this.mcqOptions = mcqOptions;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
     }
 
     @Override
