@@ -24,4 +24,7 @@ public abstract class SiteTypeDAO implements BaseDaoFieldSight<SiteType> {
 
     @Query("SELECT * FROM site_types WHERE projectId= :projectId")
     public abstract LiveData<List<SiteType>> getByProjectId(String projectId);
+
+    @Query("SELECT * FROM site_types WHERE projectId= :projectId")
+    public abstract List<SiteType> getAllByProjectId(String projectId);
 }

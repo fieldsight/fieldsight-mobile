@@ -36,6 +36,10 @@ public class SiteTypeLocalSource implements BaseLocalDataSource<SiteType> {
         return null;
     }
 
+    public List<SiteType> getByid(String projectId) {
+        return dao.getAllByProjectId(projectId);
+    }
+
     public LiveData<List<SiteType>> getByProjectId(String projectId) {
         return dao.getByProjectId(projectId);
     }

@@ -77,6 +77,10 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
         return dao.getById(id);
     }
 
+    public Project getProject(String id) {
+        return dao.getProject(id);
+    }
+
 
     public LiveData<Project> getClusterLabelForProject(String id) {
         return dao.getById(id);

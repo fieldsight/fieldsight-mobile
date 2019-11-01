@@ -21,7 +21,9 @@ import org.fieldsight.naxa.common.OnFormItemClickListener;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
 import org.fieldsight.naxa.common.ViewModelFactory;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
+import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.project.data.ProjectLocalSource;
 import org.fieldsight.naxa.stages.data.Stage;
 import org.fieldsight.naxa.substages.SubStageListFragment;
 
@@ -96,8 +98,8 @@ public class StageListFragment extends Fragment implements OnFormItemClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setupListAdapter();
-
-        FieldSightFormsLocalSourcev3.getInstance().getStageForms(loadedSite.getProject(), loadedSite.getSite(), loadedSite.getTypeId(), loadedSite.getRegionId())
+        Project project = ProjectLocalSource.getInstance().getProject(loadedSite.getProject());
+        FieldSightFormsLocalSourcev3.getInstance().getStageForms(loadedSite.getProject(), loadedSite.getSite(), loadedSite.getTypeId(), loadedSite.getRegionId(), project)
                 .observe(this, stages -> listAdapter.updateList(stages));
 
 
