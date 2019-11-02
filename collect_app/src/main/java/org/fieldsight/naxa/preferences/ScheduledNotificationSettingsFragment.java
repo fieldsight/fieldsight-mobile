@@ -14,7 +14,7 @@ import com.evernote.android.job.JobManager;
 import com.google.android.gms.analytics.HitBuilders;
 
 import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.jobs.DailyNotificationJob;
 import org.odk.collect.android.application.Collect;
@@ -35,11 +35,13 @@ import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME
 import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_WEEKLY;
 import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
 
+;
+
 
 public class ScheduledNotificationSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
-    private CustomTimePickerDialog customTimePickerDialog;
+//    private CustomTimePickerDialog customTimePickerDialog;
     private final String[] weeks = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     private final String[] months = {"Beginning of the month", "Middle of the month", "End of the month"};
 
@@ -51,7 +53,7 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
         setupSharedPreferences();
         setupNotificationToggle();
         setupUpdateButton();
-        setupTimePicker();
+//        setupTimePicker();
         initListPref(GeneralKeys.KEY_IMAGE_SIZE);
 
     }
@@ -65,11 +67,11 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
     }
 
     private void setupTimePicker() {
-        String[] dailyTime = ((String) SettingsSharedPreferences.getInstance().get(KEY_NOTIFICATION_TIME_DAILY)).split(":");
-        customTimePickerDialog = new CustomTimePickerDialog(getActivity(), (view, hourOfDay, minute) -> {
-            String time = String.format(Locale.getDefault(), "%d:%d", hourOfDay, minute);
-            SettingsSharedPreferences.getInstance().save(KEY_NOTIFICATION_TIME_DAILY, time);
-        }, Integer.valueOf(dailyTime[0]), Integer.valueOf(dailyTime[1]));
+//        String[] dailyTime = ((String) SettingsSharedPreferences.getInstance().get(KEY_NOTIFICATION_TIME_DAILY)).split(":");
+//        customTimePickerDialog = new CustomTimePickerDialog(getActivity(), (view, hourOfDay, minute) -> {
+//            String time = String.format(Locale.getDefault(), "%d:%d", hourOfDay, minute);
+//            SettingsSharedPreferences.getInstance().save(KEY_NOTIFICATION_TIME_DAILY, time);
+//        }, Integer.valueOf(dailyTime[0]), Integer.valueOf(dailyTime[1]));
     }
 
 
@@ -102,7 +104,7 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
             case KEY_NOTIFICATION_TIME_DAILY:
-                customTimePickerDialog.show();
+//                customTimePickerDialog.show();
                 break;
             case KEY_NOTIFICATION_TIME_WEEKLY:
                 showWeekPickerDialog();
