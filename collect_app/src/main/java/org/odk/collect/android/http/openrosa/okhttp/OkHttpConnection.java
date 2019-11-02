@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.apache.commons.io.IOUtils;
+import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.odk.collect.android.http.openrosa.HttpCredentialsInterface;
 import org.odk.collect.android.http.openrosa.HttpGetResult;
 import org.odk.collect.android.http.openrosa.HttpHeadResult;
@@ -35,6 +36,7 @@ import timber.log.Timber;
 public class OkHttpConnection implements OpenRosaHttpInterface {
 
     private static final String HTTP_CONTENT_TYPE_TEXT_XML = "text/xml";
+    private static final String FIELDSIGHT_AUTH_HEADER = "Authorization";
 
     private final OkHttpOpenRosaServerClientProvider clientFactory;
 
@@ -55,6 +57,7 @@ public class OkHttpConnection implements OpenRosaHttpInterface {
     public HttpGetResult executeGetRequest(@NonNull URI uri, @Nullable String contentType, @Nullable HttpCredentialsInterface credentials) throws Exception {
         OpenRosaServerClient httpClient = clientFactory.get(uri.getScheme(), userAgent, credentials);
         Request request = new Request.Builder()
+                .addHeader(FIELDSIGHT_AUTH_HEADER, FieldSightUserSession.getAuthToken())
                 .url(uri.toURL())
                 .get()
                 .build();
@@ -115,6 +118,7 @@ public class OkHttpConnection implements OpenRosaHttpInterface {
     public HttpHeadResult executeHeadRequest(@NonNull URI uri, @Nullable HttpCredentialsInterface credentials) throws Exception {
         OpenRosaServerClient httpClient = clientFactory.get(uri.getScheme(), userAgent, credentials);
         Request request = new Request.Builder()
+                .addHeader(FIELDSIGHT_AUTH_HEADER, FieldSightUserSession.getAuthToken())
                 .url(uri.toURL())
                 .head()
                 .build();
@@ -203,6 +207,7 @@ public class OkHttpConnection implements OpenRosaHttpInterface {
         HttpPostResult postResult;
         Request request = new Request.Builder()
                 .url(uri.toURL())
+                .addHeader(FIELDSIGHT_AUTH_HEADER,FieldSightUserSession.getAuthToken())
                 .post(multipartBody)
                 .build();
         Response response = httpClient.makeRequest(request, new Date());
