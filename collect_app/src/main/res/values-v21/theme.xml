@@ -10,10 +10,32 @@
     <style name="Theme.Collect.Dark" parent="Theme.Collect.BaseDark">
         <item name="android:buttonStyle">@style/Widget.Collect.Button.Custom</item>
         <item name="imageButtonStyle">@style/Widget.Collect.ImageButton.Custom.Dark</item>
+
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/fade</item>
+        <item name="android:windowExitTransition">@transition/fade</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/enter</item>
+        <item name="android:windowSharedElementExitTransition">@transition/enter</item>
+        <item name="android:windowSharedElementsUseOverlay">false</item>
     </style>
 
     <style name="Theme.Collect.Light" parent="Theme.Collect.BaseLight">
         <item name="android:buttonStyle">@style/Widget.Collect.Button.Custom</item>
         <item name="imageButtonStyle">@style/Widget.Collect.ImageButton.Custom.Light</item>
+
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/fade</item>
+        <item name="android:windowExitTransition">@transition/fade</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/enter</item>
+        <item name="android:windowSharedElementExitTransition">@transition/enter</item>
+        <item name="android:windowSharedElementsUseOverlay">false</item>
     </style>
 </resources>

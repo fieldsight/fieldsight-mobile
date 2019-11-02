@@ -105,10 +105,7 @@ the specific language governing permissions and limitations under the License.
         <activity
             android:name="org.fieldsight.naxa.login.LoginActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="org.fieldsight.naxa.project.ProjectListActivity"
-            android:exported="true"
-            android:theme="@style/AppTheme.Light" />
+        <activity android:name="org.fieldsight.naxa.project.ProjectListActivity" />
         <activity android:name="org.fieldsight.naxa.site.FragmentHostActivity" />
         <activity android:name="org.fieldsight.naxa.site.ProjectDashboardActivity" />
         <activity android:name="org.fieldsight.naxa.site.CreateSiteActivity" />
@@ -218,7 +215,7 @@ the specific language governing permissions and limitations under the License.
             android:name="org.odk.collect.android.activities.SplashScreenActivity"
             android:theme="@android:style/Theme.Dialog">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
         <activity android:name="org.odk.collect.android.activities.CaptureSelfieActivity" />
@@ -379,7 +376,7 @@ the specific language governing permissions and limitations under the License.
         <activity android:name="org.fieldsight.naxa.forms.FormsFragmentHostActivity" />
         <activity android:name="org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity" />
         <activity
-            android:exported="true"
-            android:name="org.fieldsight.naxa.site.map.FieldSightMapActivity" />
+            android:name="org.fieldsight.naxa.site.map.FieldSightMapActivity"
+            android:exported="true" />
     </application>
 </manifest>
