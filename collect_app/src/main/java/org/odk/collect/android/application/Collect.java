@@ -270,7 +270,7 @@ public class Collect extends Application {
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
         }
-        setupFirebaseRemoteConfig();
+
         OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
         installTls12();
