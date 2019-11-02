@@ -22,11 +22,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.fieldsight.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.activities.GeoPolyActivity;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.geo.MapProvider;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
@@ -46,8 +46,8 @@ public class GeoTraceWidget extends QuestionWidget implements BinaryWidget {
     private final Button createTraceButton;
     private final TextView answerDisplay;
 
-    public GeoTraceWidget(Context context, FormEntryPrompt prompt) {
-        super(context, prompt);
+    public GeoTraceWidget(Context context, QuestionDetails questionDetails) {
+        super(context, questionDetails);
 
         answerDisplay = getCenteredAnswerTextView();
 
@@ -60,7 +60,7 @@ public class GeoTraceWidget extends QuestionWidget implements BinaryWidget {
         addAnswerView(answerLayout);
 
         boolean dataAvailable = false;
-        String s = prompt.getAnswerText();
+        String s = questionDetails.getPrompt().getAnswerText();
         if (s != null && !s.equals("")) {
             dataAvailable = true;
             setBinaryData(s);

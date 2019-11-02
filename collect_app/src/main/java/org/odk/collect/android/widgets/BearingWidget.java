@@ -31,11 +31,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.BearingActivity;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
@@ -55,8 +55,8 @@ public class BearingWidget extends QuestionWidget implements BinaryWidget {
     private final EditText answer;
     private final Drawable textBackground;
 
-    public BearingWidget(Context context, FormEntryPrompt prompt) {
-        super(context, prompt);
+    public BearingWidget(Context context, QuestionDetails questionDetails) {
+        super(context, questionDetails);
 
         isSensorAvailable = checkForRequiredSensors();
 
@@ -72,7 +72,7 @@ public class BearingWidget extends QuestionWidget implements BinaryWidget {
         answerLayout.addView(getBearingButton);
         answerLayout.addView(answer);
 
-        String s = prompt.getAnswerText();
+        String s = questionDetails.getPrompt().getAnswerText();
         if (s != null && !s.equals("")) {
             getBearingButton.setText(getContext().getString(R.string.replace_bearing));
             if (!isSensorAvailable) {

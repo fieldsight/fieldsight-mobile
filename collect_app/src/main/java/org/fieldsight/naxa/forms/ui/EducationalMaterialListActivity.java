@@ -13,7 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 import org.apache.commons.io.FilenameUtils;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.educational.DynamicFragment;
 import org.fieldsight.naxa.educational.Edu_Image_Model;

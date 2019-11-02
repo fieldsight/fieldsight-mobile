@@ -1,6 +1,6 @@
 package org.odk.collect.android.preferences;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 
 import java.util.Arrays;
@@ -136,7 +136,7 @@ public final class GeneralKeys {
         hashMap.put(KEY_SHOW_SPLASH,                true);
         hashMap.put(KEY_SPLASH_PATH,                Collect.getInstance().getString(R.string.default_splash_path));
         // map_preferences.xml
-        hashMap.put(KEY_BASEMAP_SOURCE,             BASEMAP_SOURCE_MAPBOX);
+        hashMap.put(KEY_BASEMAP_SOURCE,             BASEMAP_SOURCE_GOOGLE);
         return hashMap;
     }
 

@@ -63,7 +63,11 @@ public class FormsProvider extends ContentProvider {
             return null;
         }
 
-        if (dbHelper == null) {
+        boolean databaseNeedsUpgrade = FormsDatabaseHelper.databaseNeedsUpgrade();
+        if (dbHelper == null || (databaseNeedsUpgrade && !FormsDatabaseHelper.isDatabaseBeingMigrated())) {
+            if (databaseNeedsUpgrade) {
+                FormsDatabaseHelper.databaseMigrationStarted();
+            }
             dbHelper = new FormsDatabaseHelper();
         }
 
@@ -122,6 +126,7 @@ public class FormsProvider extends ContentProvider {
                     throw new IllegalArgumentException("Unknown URI " + uri);
             }
             c = qb.query(formsDatabaseHelper.getReadableDatabase(), projection, selection, selectionArgs, groupBy, null, sortOrder);
+
             // Tell the cursor what uri to watch, so it knows when its source data changes
             c.setNotificationUri(getContext().getContentResolver(), uri);
         }
@@ -235,7 +240,7 @@ public class FormsProvider extends ContentProvider {
             }
         }
 
-        throw new SQLException("Failed to insert into the FORMS database.");
+        throw new SQLException("Failed to insert into the forms database.");
     }
 
     private void deleteFileOrDir(String fileName) {

@@ -23,8 +23,8 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.logic.PropertyManager;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;

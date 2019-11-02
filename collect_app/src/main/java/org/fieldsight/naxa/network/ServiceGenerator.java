@@ -6,7 +6,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.fieldsight.collect.android.BuildConfig;
+import org.bcss.collect.android.BuildConfig;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.rx.RxErrorHandlingCallAdapterFactory;

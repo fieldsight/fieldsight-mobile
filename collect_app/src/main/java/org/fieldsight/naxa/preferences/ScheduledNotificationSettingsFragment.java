@@ -13,8 +13,8 @@ import android.preference.SwitchPreference;
 import com.evernote.android.job.JobManager;
 import com.google.android.gms.analytics.HitBuilders;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.jobs.DailyNotificationJob;
 import org.odk.collect.android.application.Collect;

@@ -24,7 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.fragments.FSDataManagerList;
 import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.adapters.ViewPagerAdapter;

@@ -7,7 +7,7 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
 

@@ -26,11 +26,13 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 
-import org.odk.collect.android.views.MediaLayout;
+import org.bcss.collect.android.R;
+import org.odk.collect.android.formentry.questions.AudioVideoImageTextLabel;
+
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.helper.Selection;
 import org.odk.collect.android.widgets.SelectWidget;
-import org.fieldsight.collect.android.R;
+
 
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class SelectMultipleListAdapter extends AbstractSelectListAdapter {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(noButtonsMode
                 ? LayoutInflater.from(parent.getContext()).inflate(R.layout.select_item_layout, null)
-                : new MediaLayout(parent.getContext()));
+                : new AudioVideoImageTextLabel(parent.getContext()));
     }
 
     class ViewHolder extends AbstractSelectListAdapter.ViewHolder {
@@ -56,8 +58,8 @@ public class SelectMultipleListAdapter extends AbstractSelectListAdapter {
             if (noButtonsMode) {
                 view = (FrameLayout) v;
             } else {
-                mediaLayout = (MediaLayout) v;
-                widget.initMediaLayoutSetUp(mediaLayout);
+                audioVideoImageTextLabel = (AudioVideoImageTextLabel) v;
+                widget.init(audioVideoImageTextLabel);
             }
         }
 
@@ -78,6 +80,8 @@ public class SelectMultipleListAdapter extends AbstractSelectListAdapter {
     CheckBox setUpButton(final int index) {
         AppCompatCheckBox checkBox = new AppCompatCheckBox(widget.getContext());
         adjustButton(checkBox, index);
+        checkCheckBoxIfNeeded(checkBox, index); // perform before setting onCheckedChangeListener to avoid redundant calls of its body
+
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 addItem(filteredItems.get(index).selection());
@@ -87,6 +91,10 @@ public class SelectMultipleListAdapter extends AbstractSelectListAdapter {
             widget.widgetValueChanged();
         });
 
+        return checkBox;
+    }
+
+    private void checkCheckBoxIfNeeded(CheckBox checkBox, int index) {
         for (Selection selectedItem : selectedItems) {
             // match based on value, not key
             if (filteredItems.get(index).getValue().equals(selectedItem.getValue())) {
@@ -94,8 +102,6 @@ public class SelectMultipleListAdapter extends AbstractSelectListAdapter {
                 break;
             }
         }
-
-        return checkBox;
     }
 
     @Override

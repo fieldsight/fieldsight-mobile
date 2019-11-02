@@ -20,8 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 import android.view.Gravity;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -29,12 +27,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
+
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.FileUtil;
@@ -59,15 +60,15 @@ public class ArbitraryFileWidget extends QuestionWidget implements FileWidget {
     private TextView chosenFileNameTextView;
     private LinearLayout answerLayout;
 
-    public ArbitraryFileWidget(Context context, FormEntryPrompt prompt) {
+    public ArbitraryFileWidget(Context context, QuestionDetails prompt) {
         this(context, prompt, new FileUtil());
     }
 
-    ArbitraryFileWidget(Context context, FormEntryPrompt prompt, @NonNull FileUtil fileUtil) {
-        super(context, prompt);
+    ArbitraryFileWidget(Context context, QuestionDetails questionDetails, @NonNull FileUtil fileUtil) {
+        super(context, questionDetails);
 
         this.fileUtil = fileUtil;
-        binaryName = prompt.getAnswerText();
+        binaryName = questionDetails.getPrompt().getAnswerText();
 
         setUpLayout();
     }

@@ -23,7 +23,7 @@ import androidx.loader.content.CursorLoader;
 import android.view.View;
 import android.widget.ListView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.listeners.DeleteFormsListener;
 import org.odk.collect.android.listeners.DiskSyncListener;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
@@ -36,7 +36,7 @@ import org.odk.collect.android.adapters.VersionHidingCursorAdapter;
 import timber.log.Timber;
 
 /**
- * Responsible for displaying and deleting all the valid FORMS in the FORMS
+ * Responsible for displaying and deleting all the valid forms in the forms
  * directory.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -101,9 +101,9 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     private void setupAdapter() {
-        String[] data = new String[]{FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.DATE,
-                                        FormsColumns.JR_FORM_ID};
-        int[] view = new int[]{R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2};
+        String[] data = {FormsColumns.DISPLAY_NAME, FormsColumns.JR_VERSION, FormsColumns.DATE,
+                FormsColumns.JR_FORM_ID};
+        int[] view = {R.id.form_title, R.id.form_subtitle, R.id.form_subtitle2};
 
         listAdapter = new VersionHidingCursorAdapter(
                 FormsColumns.JR_VERSION, getActivity(),
@@ -153,7 +153,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
     }
 
     /**
-     * Deletes the selected files.First siteName the database then siteName the file
+     * Deletes the selected files.First from the database then from the file
      * system
      */
     private void deleteSelectedForms() {
@@ -183,7 +183,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
 
     @Override
     public void deleteComplete(int deletedForms) {
-        Timber.i("Delete FORMS complete");
+        Timber.i("Delete forms complete");
         final int toDeleteCount = backgroundTasks.deleteFormsTask.getToDeleteCount();
 
         if (deletedForms == toDeleteCount) {
@@ -191,7 +191,7 @@ public class FormManagerList extends FormListFragment implements DiskSyncListene
             ToastUtils.showShortToast(getString(R.string.file_deleted_ok, String.valueOf(deletedForms)));
         } else {
             // had some failures
-            Timber.e("Failed to delete %d FORMS", toDeleteCount - deletedForms);
+            Timber.e("Failed to delete %d forms", toDeleteCount - deletedForms);
             ToastUtils.showLongToast(getString(R.string.file_deleted_error, String.valueOf(getCheckedCount()
                     - deletedForms), String.valueOf(getCheckedCount())));
         }

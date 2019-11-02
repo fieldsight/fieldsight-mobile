@@ -13,7 +13,7 @@
  */
 
 /**
- * Activity to upload completed FORMS to gme.
+ * Activity to upload completed forms to gme.
  *
  * @author Carl Hartung (chartung@nafundi.com)
  */
@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -37,14 +36,12 @@ import android.preference.PreferenceManager;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 
-import org.fieldsight.collect.android.R;
-import org.odk.collect.android.dao.InstancesDao;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.fragments.dialogs.GoogleSheetsUploaderProgressDialog;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralKeys;
-import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.tasks.InstanceGoogleSheetsUploaderTask;
 import org.odk.collect.android.utilities.ArrayUtils;
 import org.odk.collect.android.utilities.InstanceUploaderUtils;
@@ -54,8 +51,6 @@ import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -116,11 +111,11 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
 
         // at this point, we don't expect this to be empty...
         if (instancesToSend.length == 0) {
-            Timber.e("onCreate: No INSTANCES to upload!");
+            Timber.e("onCreate: No instances to upload!");
             // drop through --
             // everything will process through OK
         } else {
-            Timber.i("onCreate: Beginning upload of %d INSTANCES!", instancesToSend.length);
+            Timber.i("onCreate: Beginning upload of %d instances!", instancesToSend.length);
         }
 
         getResultsFromApi();
@@ -283,38 +278,10 @@ public class GoogleSheetsUploaderActivity extends CollectAbstractActivity implem
             // probably got an auth request, so ignore
             return;
         }
-        Timber.i("uploadingComplete: Processing results ( %d ) from upload of %d INSTANCES!",
+        Timber.i("uploadingComplete: Processing results ( %d ) from upload of %d instances!",
                 result.size(), instancesToSend.length);
 
-        StringBuilder selection = new StringBuilder();
-        Set<String> keys = result.keySet();
-        String message;
-
-        if (keys.isEmpty()) {
-            message = getString(R.string.no_forms_uploaded);
-        } else {
-            Iterator<String> it = keys.iterator();
-
-            String[] selectionArgs = new String[keys.size()];
-            int i = 0;
-            while (it.hasNext()) {
-                String id = it.next();
-                selection.append(InstanceProviderAPI.InstanceColumns._ID + "=?");
-                selectionArgs[i++] = id;
-                if (i != keys.size()) {
-                    selection.append(" or ");
-                }
-            }
-
-            try (Cursor results = new InstancesDao().getInstancesCursor(selection.toString(), selectionArgs)) {
-                if (results != null && results.getCount() > 0) {
-                    message = InstanceUploaderUtils.getUploadResultMessage(results, result);
-                } else {
-                    message = getString(R.string.no_forms_uploaded);
-                }
-            }
-        }
-        createAlertDialog(message.trim());
+        createAlertDialog(InstanceUploaderUtils.getUploadResultMessage(this, result));
     }
 
     @Override

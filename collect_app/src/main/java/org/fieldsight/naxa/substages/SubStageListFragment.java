@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.reflect.TypeToken;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.GSONInstance;

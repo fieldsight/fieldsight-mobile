@@ -28,7 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.content.CursorLoader;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.InstanceListCursorAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
@@ -40,12 +40,15 @@ import org.odk.collect.android.tasks.InstanceSyncTask;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.utilities.ToastUtils;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import timber.log.Timber;
 
 /**
- * Responsible for displaying and deleting all the saved form INSTANCES
+ * Responsible for displaying and deleting all the saved form instances
  * directory.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -62,6 +65,10 @@ public class DataManagerList extends InstanceListFragment
 
     @Inject
     SmsSubmissionManagerContract smsSubmissionManager;
+
+    public static DataManagerList newInstance() {
+        return new DataManagerList();
+    }
 
     @Nullable
     @Override
@@ -129,8 +136,8 @@ public class DataManagerList extends InstanceListFragment
     }
 
     private void setupAdapter() {
-        String[] data = new String[]{InstanceColumns.DISPLAY_NAME};
-        int[] view = new int[]{R.id.form_title};
+        String[] data = {InstanceColumns.DISPLAY_NAME};
+        int[] view = {R.id.form_title};
 
         listAdapter = new InstanceListCursorAdapter(getActivity(),
                 R.layout.form_chooser_list_item_multiple_choice, null, data, view, false);
@@ -208,7 +215,7 @@ public class DataManagerList extends InstanceListFragment
     }
 
     private void deleteSmsSubmissions(Long[] ids) {
-        Long[] list = ids;
+        List<Long> list = Arrays.asList(ids);
 
         for (Long id : list) {
             smsSubmissionManager.forgetSubmission(String.valueOf(id));
@@ -222,7 +229,7 @@ public class DataManagerList extends InstanceListFragment
 
     @Override
     public void deleteComplete(int deletedInstances) {
-        Timber.i("Delete INSTANCES complete");
+        Timber.i("Delete instances complete");
         final int toDeleteCount = deleteInstancesTask.getToDeleteCount();
 
         if (deletedInstances == toDeleteCount) {
@@ -230,7 +237,7 @@ public class DataManagerList extends InstanceListFragment
             ToastUtils.showShortToast(getString(R.string.file_deleted_ok, String.valueOf(deletedInstances)));
         } else {
             // had some failures
-            Timber.e("Failed to delete %d INSTANCES", toDeleteCount - deletedInstances);
+            Timber.e("Failed to delete %d instances", toDeleteCount - deletedInstances);
             ToastUtils.showLongToast(getString(R.string.file_deleted_error,
                     String.valueOf(toDeleteCount - deletedInstances),
                     String.valueOf(toDeleteCount)));

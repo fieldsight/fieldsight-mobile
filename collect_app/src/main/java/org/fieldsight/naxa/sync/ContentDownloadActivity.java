@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.OnItemClickListener;
 import org.fieldsight.naxa.common.AnimationUtils;
 import org.fieldsight.naxa.common.Constant;

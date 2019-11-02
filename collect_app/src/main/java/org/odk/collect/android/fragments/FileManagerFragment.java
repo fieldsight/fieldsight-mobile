@@ -29,7 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.utilities.SnackbarUtils;
 
 public abstract class FileManagerFragment extends AppListFragment implements LoaderManager.LoaderCallbacks<Cursor> {

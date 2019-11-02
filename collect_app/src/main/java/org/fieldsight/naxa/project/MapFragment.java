@@ -15,7 +15,7 @@
 //import androidx.core.content.ContextCompat;
 //import androidx.fragment.app.Fragment;
 //
-//import org.fieldsight.collect.android.R;
+//import org.bcss.collect.android.R;;
 //import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 //import org.fieldsight.naxa.login.model.Project;
 //import org.fieldsight.naxa.login.model.Site;

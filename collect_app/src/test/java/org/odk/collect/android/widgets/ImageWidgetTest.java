@@ -10,7 +10,8 @@ import org.javarosa.core.model.data.StringData;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.fieldsight.collect.android.R;
+import org.odk.collect.android.R;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.widgets.base.FileWidgetTest;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class ImageWidgetTest extends FileWidgetTest<ImageWidget> {
     @NonNull
     @Override
     public ImageWidget createWidget() {
-        return new ImageWidget(activity, formEntryPrompt);
+        return new ImageWidget(activity, new QuestionDetails(formEntryPrompt, "formAnalyticsID"));
     }
 
     @NonNull

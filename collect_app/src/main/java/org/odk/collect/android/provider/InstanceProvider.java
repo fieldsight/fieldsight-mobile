@@ -28,7 +28,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.database.helpers.InstancesDatabaseHelper;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
@@ -63,7 +63,11 @@ public class InstanceProvider extends ContentProvider {
             return null;
         }
 
-        if (dbHelper == null) {
+        boolean databaseNeedsUpgrade = InstancesDatabaseHelper.databaseNeedsUpgrade();
+        if (dbHelper == null || (databaseNeedsUpgrade && !InstancesDatabaseHelper.isDatabaseBeingMigrated())) {
+            if (databaseNeedsUpgrade) {
+                InstancesDatabaseHelper.databaseMigrationStarted();
+            }
             dbHelper = new InstancesDatabaseHelper();
         }
 
@@ -172,7 +176,7 @@ public class InstanceProvider extends ContentProvider {
             }
         }
 
-        throw new SQLException("Failed to insert into the INSTANCES database.");
+        throw new SQLException("Failed to insert into the instances database.");
     }
 
     public static String getDisplaySubtext(Context context, String state, Date date) {

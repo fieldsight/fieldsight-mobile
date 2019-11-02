@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 
 import java.util.List;
 

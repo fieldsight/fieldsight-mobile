@@ -32,9 +32,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.gms.location.LocationListener;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.location.client.LocationClients;
 import org.odk.collect.android.utilities.IconUtils;
@@ -61,11 +67,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import timber.log.Timber;
 
 /** A MapFragment drawn by OSMDroid. */
@@ -155,8 +156,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         map.getController().setCenter(toGeoPoint(INITIAL_CENTER));
         map.getController().setZoom((int) INITIAL_ZOOM);
         map.setTilesScaledToDpi(true);
-        map.getOverlays().add(new AttributionOverlay(getContext()));
-        map.getOverlays().add(new MapEventsOverlay(this));
+        addAttributionAndMapEventsOverlays();
         loadReferenceOverlay();
         addMapLayoutChangeListener(map);
         myLocationOverlay = new MyLocationNewOverlay(map);
@@ -302,7 +302,7 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
 
     @Override public void clearFeatures() {
         map.getOverlays().clear();
-        map.getOverlays().add(new MapEventsOverlay(this));
+        addAttributionAndMapEventsOverlays();
         map.getOverlays().add(myLocationOverlay);
         map.invalidate();
         features.clear();
@@ -534,6 +534,11 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
         }
     }
 
+    private void addAttributionAndMapEventsOverlays() {
+        map.getOverlays().add(new AttributionOverlay(getContext()));
+        map.getOverlays().add(new MapEventsOverlay(this));
+    }
+
     /**
      * A MapFeature is a physical feature on a map, such as a point, a road,
      * a building, a region, etc.  It is presented to the user as one editable
@@ -552,11 +557,11 @@ public class OsmDroidMapFragment extends Fragment implements MapFragment,
     }
 
     /** A marker that can optionally be dragged by the user. */
-    private class MarkerFeature implements MapFeature {
+    protected class MarkerFeature implements MapFeature {
         final MapView map;
         Marker marker;
 
-        MarkerFeature(MapView map, MapPoint point, boolean draggable) {
+        public MarkerFeature(MapView map, MapPoint point, boolean draggable) {
             this.map = map;
             this.marker = createMarker(map, point, draggable ? this : null);
         }

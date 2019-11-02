@@ -29,7 +29,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.login.LoginActivity;
 import org.fieldsight.naxa.v3.ProjectListActivityV3;

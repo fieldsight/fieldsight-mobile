@@ -33,8 +33,8 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import org.fieldsight.collect.android.R;
-import org.fieldsight.collect.android.R.string;
+import org.bcss.collect.android.R;
+import org.bcss.collect.android.R.string;
 import org.odk.collect.android.adapters.RankingListAdapter;
 import org.odk.collect.android.application.Collect;
 import org.javarosa.core.model.FormIndex;

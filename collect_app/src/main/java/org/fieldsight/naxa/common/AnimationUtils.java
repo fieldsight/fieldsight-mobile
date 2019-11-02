@@ -8,7 +8,7 @@ import android.view.animation.RotateAnimation;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 
 public class AnimationUtils {
 

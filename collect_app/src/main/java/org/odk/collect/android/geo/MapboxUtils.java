@@ -2,7 +2,7 @@ package org.odk.collect.android.geo;
 
 import com.mapbox.mapboxsdk.Mapbox;
 
-import org.fieldsight.collect.android.BuildConfig;
+import org.bcss.collect.android.BuildConfig;
 import org.odk.collect.android.application.Collect;
 
 public class MapboxUtils {
@@ -13,17 +13,15 @@ public class MapboxUtils {
 
     }
 
-    /**
-     * Attempts to initialize Mapbox; returns the singleton Mapbox if successful.
-     */
-    public static Mapbox initMapbox() {
+    /** Attempts to initialize Mapbox; returns the singleton Mapbox if successful. */
+    static Mapbox initMapbox() {
         if (initAttempted) {
             return mapbox;
         }
 
         try {
             // To use the Mapbox base maps, we have to initialize the Mapbox SDK with
-            // an access TOKEN. Configure this TOKEN in collect_app/secrets.properties.
+            // an access token. Configure this token in collect_app/secrets.properties.
             mapbox = Mapbox.getInstance(Collect.getInstance(), BuildConfig.MAPBOX_ACCESS_TOKEN);
         } catch (Exception | Error e) {
             // To keep our APK from getting too big, we decided to include the
@@ -33,7 +31,7 @@ public class MapboxUtils {
             mapbox = null;
         }
 
-        // It's not safe to call Mapbox.newInstance() more than once.  It can fail on
+        // It's not safe to call Mapbox.getInstance() more than once.  It can fail on
         // the first call and then succeed on the second call, returning an invalid,
         // crashy Mapbox object.  We trust only the result of the first attempt.
         initAttempted = true;

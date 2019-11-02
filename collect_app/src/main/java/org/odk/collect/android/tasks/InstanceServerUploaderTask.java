@@ -14,10 +14,10 @@
 
 package org.odk.collect.android.tasks;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dto.Instance;
-import org.odk.collect.android.http.OpenRosaHttpInterface;
+import org.odk.collect.android.http.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.logic.PropertyManager;
 import org.odk.collect.android.upload.InstanceServerUploader;
 import org.odk.collect.android.upload.UploadAuthRequestedException;
@@ -30,7 +30,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * Background task for uploading completed FORMS.
+ * Background task for uploading completed forms.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
  */

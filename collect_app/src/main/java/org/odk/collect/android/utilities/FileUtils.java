@@ -25,7 +25,7 @@ import android.os.Build;
 import android.os.Environment;
 
 import org.apache.commons.io.IOUtils;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Document;
 import org.kxml2.kdom.Element;
@@ -61,6 +61,8 @@ import java.util.NoSuchElementException;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import timber.log.Timber;
 
+import static org.fieldsight.naxa.migrate.MigrationHelper.getFileByPath;
+
 /**
  * Static methods used for common file operations.
  *
@@ -78,29 +80,19 @@ public class FileUtils {
     public static final String AUTO_DELETE = "autoDelete";
     public static final String AUTO_SEND = "autoSend";
 
-    /**
-     * Suffix for the form media directory.
-     */
+    /** Suffix for the form media directory. */
     public static final String MEDIA_SUFFIX = "-media";
 
-    /**
-     * Filename of the last-saved instance data.
-     */
+    /** Filename of the last-saved instance data. */
     public static final String LAST_SAVED_FILENAME = "last-saved.xml";
 
-    /**
-     * Valid XML stub that can be parsed without error.
-     */
+    /** Valid XML stub that can be parsed without error. */
     private static final String STUB_XML = "<?xml version='1.0' ?><stub />";
 
-    /**
-     * True if we have checked whether /sdcard points to getExternalStorageDirectory().
-     */
+    /** True if we have checked whether /sdcard points to getExternalStorageDirectory(). */
     private static boolean isSdcardSymlinkChecked;
 
-    /**
-     * The result of checking whether /sdcard points to getExternalStorageDirectory().
-     */
+    /** The result of checking whether /sdcard points to getExternalStorageDirectory(). */
     private static boolean isSdcardSymlinkSameAsExternalStorageDirectory;
 
     static int bufSize = 16 * 1024; // May be set by unit test
@@ -275,7 +267,7 @@ public class FileUtils {
     }
 
     public static HashMap<String, String> parseXML(File xmlFile) {
-        final HashMap<String, String> fields = new HashMap<String, String>();
+        final HashMap<String, String> fields = new HashMap<>();
         final InputStream is;
         try {
             is = new FileInputStream(xmlFile);
@@ -547,6 +539,19 @@ public class FileUtils {
         }
     }
 
+    /** Sorts file paths as if sorting the path components and extensions lexicographically. */
+    public static int comparePaths(String a, String b) {
+        // Regular string compareTo() is incorrect, because it will sort "/" and "."
+        // after other punctuation (e.g. "foo/bar" will sort AFTER "foo-2/bar" and
+        // "pic.jpg" will sort AFTER "pic-2.jpg").  Replacing these delimiters with
+        // '\u0000' and '\u0001' causes paths to sort correctly (assuming the paths
+        // don't already contain '\u0000' or '\u0001').  This is a bit of a hack,
+        // but it's a lot simpler and faster than comparing components one by one.
+        String sortKeyA = a.replace('/', '\u0000').replace('.', '\u0001');
+        String sortKeyB = b.replace('/', '\u0000').replace('.', '\u0001');
+        return sortKeyA.compareTo(sortKeyB);
+    }
+
     public static String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex == -1) {
@@ -557,11 +562,11 @@ public class FileUtils {
 
     /**
      * Grants read and write permissions to a content URI added to the specified intent.
-     * <p>
+     *
      * For Android > 4.4, the permissions expire when the receiving app's stack is finished. For
      * Android <= 4.4, the permissions are granted to all applications that can respond to the
      * intent.
-     * <p>
+     *
      * For true security, the permissions for Android <= 4.4 should be revoked manually but we don't
      * revoke them because we don't have many users on lower API levels and prior to targeting API
      * 24+, all apps always had access to the files anyway.
@@ -587,7 +592,7 @@ public class FileUtils {
 
     /**
      * Grants read permissions to a content URI added to the specified Intent.
-     * <p>
+     *
      * See {@link #grantFileReadPermissions(Intent, Uri, Context)} for details.
      */
     public static void grantFileReadPermissions(Intent intent, Uri uri, Context context) {
@@ -607,6 +612,68 @@ public class FileUtils {
         }
     }
 
+    /** Uses the /sdcard symlink to shorten a path, if it's valid to do so. */
+    @SuppressWarnings("PMD.DoNotHardCodeSDCard")
+    public static File simplifyPath(File file) {
+        // The symlink at /sdcard points to the same location as the storage
+        // path returned by getExternalStorageDirectory() on every Android
+        // device and emulator as far as we know; but, just to be certain
+        // that we don't lie to the user, we'll confirm that's really true.
+        if (!isSdcardSymlinkChecked) {
+            checkIfSdcardSymlinkSameAsExternalStorageDirectory();
+            isSdcardSymlinkChecked = true;  // this check is expensive; only do it once
+        }
+        if (isSdcardSymlinkSameAsExternalStorageDirectory) {
+            // They point to the same place, so it's safe to replace the longer
+            // storage path with the short symlink.
+            String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            String path = file.getAbsolutePath();
+            if (path.startsWith(storagePath + "/")) {
+                return new File("/sdcard" + path.substring(storagePath.length()));
+            }
+        }
+        return file;
+    }
+
+    /** Checks whether /sdcard points to the same place as getExternalStorageDirectory(). */
+    @SuppressWarnings("PMD.DoNotHardCodeSDCard")
+    @SuppressFBWarnings(
+        value = "DMI_HARDCODED_ABSOLUTE_FILENAME",
+        justification = "The purpose of this function is to test this specific path."
+    )
+    private static void checkIfSdcardSymlinkSameAsExternalStorageDirectory() {
+        try {
+            // createTempFile() guarantees a randomly named file that did not previously exist.
+            File shortPathFile = File.createTempFile("odk", null, new File("/sdcard"));
+            try {
+                String name = shortPathFile.getName();
+                File longPathFile = new File(Environment.getExternalStorageDirectory(), name);
+
+                // If we delete the file via one path and the file disappears at the
+                // other path, then we know that both paths point to the same place.
+                if (shortPathFile.exists() && longPathFile.exists()) {
+                    longPathFile.delete();
+                    if (!shortPathFile.exists()) {
+                        isSdcardSymlinkSameAsExternalStorageDirectory = true;
+                        return;
+                    }
+                }
+            } finally {
+                shortPathFile.delete();
+            }
+        } catch (IOException e) { /* ignore */ }
+        isSdcardSymlinkSameAsExternalStorageDirectory = false;
+    }
+
+    /** Iterates over all directories and files under a root path. */
+    public static Iterable<File> walk(File root) {
+        return () -> new Walker(root, true);
+    }
+
+    public static Iterable<File> walkBreadthFirst(File root) {
+        return () -> new Walker(root, false);
+    }
+
     public static boolean isFileExists(File file) {
         return file != null && file.exists();
     }
@@ -614,58 +681,6 @@ public class FileUtils {
     public static boolean isFileExists(String filePath) {
         return isFileExists(getFileByPath(filePath));
     }
-
-    public static File getFileByPath(String filePath) {
-        return isSpace(filePath) ? null : new File(filePath);
-    }
-
-    private static boolean isSpace(String s) {
-        if (s == null) {
-            return true;
-        }
-        for (int i = 0; i < s.length(); ++i) {
-            if (!Character.isWhitespace(s.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Delete the directory.
-     *
-     * @param dir The directory.
-     * @return {@code true}: success<br>{@code false}: fail
-     */
-    public static boolean deleteDir(final File dir) {
-        if (dir == null) {
-            return false;
-        }
-        // dir doesn't exist then return true
-        if (!dir.exists()) {
-            return true;
-        }
-        // dir isn't a directory then return false
-        if (!dir.isDirectory()) {
-            return false;
-        }
-        File[] files = dir.listFiles();
-        if (files != null && files.length != 0) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    if (!file.delete()) {
-                        return false;
-                    }
-                } else if (file.isDirectory()) {
-                    if (!deleteDir(file)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return dir.delete();
-    }
-
 
     /**
      * Copy the directory.
@@ -684,19 +699,6 @@ public class FileUtils {
             }
         }, false);
     }
-
-    /**
-     * Copy the directory.
-     *
-     * @param srcDirPath  The path of source directory.
-     * @param destDirPath The path of destination directory.
-     * @return {@code true}: success<br>{@code false}: fail
-     */
-    public static boolean copyDir(final String srcDirPath,
-                                  final String destDirPath) {
-        return copyDir(getFileByPath(srcDirPath), getFileByPath(destDirPath));
-    }
-
 
     private static boolean copyOrMoveDir(final File srcDir,
                                          final File destDir,
@@ -744,9 +746,25 @@ public class FileUtils {
         return !isMove || deleteDir(srcDir);
     }
 
+    public static File getFileByPath(String filePath) {
+        return isSpace(filePath) ? null : new File(filePath);
+    }
+
+    private static boolean isSpace(String s) {
+        if (s == null) {
+            return true;
+        }
+        for (int i = 0; i < s.length(); ++i) {
+            if (!Character.isWhitespace(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
     public interface OnReplaceListener {
         boolean onReplace();
     }
+
 
     private static boolean copyOrMoveFile(final File srcFile,
                                           final File destFile,
@@ -783,17 +801,6 @@ public class FileUtils {
             return false;
         }
     }
-
-    /**
-     * Create a directory if it doesn't exist, otherwise do nothing.
-     *
-     * @param file The file.
-     * @return {@code true}: exists or creates successfully<br>{@code false}: otherwise
-     */
-    public static boolean createOrExistsDir(final File file) {
-        return file != null && (file.exists() ? file.isDirectory() : file.mkdirs());
-    }
-
     /**
      * Delete the file.
      *
@@ -889,74 +896,65 @@ public class FileUtils {
     }
 
     /**
-     * Uses the /sdcard symlink to shorten a path, if it's valid to do so.
+     * Delete the directory.
+     *
+     * @param dir The directory.
+     * @return {@code true}: success<br>{@code false}: fail
      */
-    @SuppressWarnings("PMD.DoNotHardCodeSDCard")
-    public static File simplifyPath(File file) {
-        // The symlink at /sdcard points to the same location as the storage
-        // path returned by getExternalStorageDirectory() on every Android
-        // device and emulator as far as we know; but, just to be certain
-        // that we don't lie to the user, we'll confirm that's really true.
-        if (!isSdcardSymlinkChecked) {
-            checkIfSdcardSymlinkSameAsExternalStorageDirectory();
-            isSdcardSymlinkChecked = true;  // this check is expensive; only do it once
+    public static boolean deleteDir(final File dir) {
+        if (dir == null) {
+            return false;
         }
-        if (isSdcardSymlinkSameAsExternalStorageDirectory) {
-            // They point to the same place, so it's safe to replace the longer
-            // storage path with the short symlink.
-            String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            String path = file.getAbsolutePath();
-            if (path.startsWith(storagePath + "/")) {
-                return new File("/sdcard" + path.substring(storagePath.length()));
-            }
+        // dir doesn't exist then return true
+        if (!dir.exists()) {
+            return true;
         }
-        return file;
-    }
-
-
-    /**
-     * Checks whether /sdcard points to the same place as getExternalStorageDirectory().
-     */
-    @SuppressWarnings("PMD.DoNotHardCodeSDCard")
-    @SuppressFBWarnings(
-            value = "DMI_HARDCODED_ABSOLUTE_FILENAME",
-            justification = "The purpose of this function is to test this specific path."
-    )
-    private static void checkIfSdcardSymlinkSameAsExternalStorageDirectory() {
-        try {
-            // createTempFile() guarantees a randomly named file that did not previously exist.
-            File shortPathFile = File.createTempFile("odk", null, new File("/sdcard"));
-            try {
-                String name = shortPathFile.getName();
-                File longPathFile = new File(Environment.getExternalStorageDirectory(), name);
-
-                // If we delete the file via one path and the file disappears at the
-                // other path, then we know that both paths point to the same place.
-                if (shortPathFile.exists() && longPathFile.exists()) {
-                    longPathFile.delete();
-                    if (!shortPathFile.exists()) {
-                        isSdcardSymlinkSameAsExternalStorageDirectory = true;
-                        return;
+        // dir isn't a directory then return false
+        if (!dir.isDirectory()) {
+            return false;
+        }
+        File[] files = dir.listFiles();
+        if (files != null && files.length != 0) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    if (!file.delete()) {
+                        return false;
+                    }
+                } else if (file.isDirectory()) {
+                    if (!deleteDir(file)) {
+                        return false;
                     }
                 }
-            } finally {
-                shortPathFile.delete();
             }
-        } catch (IOException e) { /* ignore */ }
-        isSdcardSymlinkSameAsExternalStorageDirectory = false;
-    }
-
-
-    /**
-     * Iterates over all directories and files under a root path.
-     */
-    public static Iterable<File> walk(File root) {
-        return () -> new Walker(root, true);
+        }
+        return dir.delete();
     }
 
     /**
-     * An iterator that walks over all the directories and files under a given path.
+     * Create a directory if it doesn't exist, otherwise do nothing.
+     *
+     * @param file The file.
+     * @return {@code true}: exists or creates successfully<br>{@code false}: otherwise
      */
+    public static boolean createOrExistsDir(final File file) {
+        return file != null && (file.exists() ? file.isDirectory() : file.mkdirs());
+    }
+
+
+
+    /**
+     * Copy the directory.
+     *
+     * @param srcDirPath  The path of source directory.
+     * @param destDirPath The path of destination directory.
+     * @return {@code true}: success<br>{@code false}: fail
+     */
+    public static boolean copyDir(final String srcDirPath,
+                                  final String destDirPath) {
+        return copyDir(getFileByPath(srcDirPath), getFileByPath(destDirPath));
+    }
+
+    /** An iterator that walks over all the directories and files under a given path. */
     private static class Walker implements Iterator<File> {
         private final List<File> queue = new ArrayList<>();
         private final boolean depthFirst;
@@ -966,13 +964,11 @@ public class FileUtils {
             this.depthFirst = depthFirst;
         }
 
-        @Override
-        public boolean hasNext() {
+        @Override public boolean hasNext() {
             return !queue.isEmpty();
         }
 
-        @Override
-        public File next() {
+        @Override public File next() {
             if (queue.isEmpty()) {
                 throw new NoSuchElementException();
             }
@@ -983,6 +979,4 @@ public class FileUtils {
             return next;
         }
     }
-
-
 }

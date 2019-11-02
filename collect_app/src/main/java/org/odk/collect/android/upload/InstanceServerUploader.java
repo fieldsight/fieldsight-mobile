@@ -20,12 +20,12 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dto.Instance;
-import org.odk.collect.android.http.HttpHeadResult;
-import org.odk.collect.android.http.HttpPostResult;
-import org.odk.collect.android.http.OpenRosaHttpInterface;
+import org.odk.collect.android.http.openrosa.HttpHeadResult;
+import org.odk.collect.android.http.openrosa.HttpPostResult;
+import org.odk.collect.android.http.openrosa.OpenRosaHttpInterface;
 import org.odk.collect.android.preferences.GeneralKeys;
 import org.odk.collect.android.utilities.ResponseMessageParser;
 import org.odk.collect.android.utilities.WebCredentialsUtils;

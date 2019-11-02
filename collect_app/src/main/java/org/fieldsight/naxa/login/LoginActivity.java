@@ -19,8 +19,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.SettingsActivity;

@@ -23,8 +23,8 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.ImageFileUtils;

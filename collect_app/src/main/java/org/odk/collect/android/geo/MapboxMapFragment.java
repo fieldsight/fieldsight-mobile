@@ -8,6 +8,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.common.collect.ImmutableSet;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
@@ -43,8 +49,8 @@ import com.mapbox.mapboxsdk.style.sources.TileSet;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
 import com.mapbox.mapboxsdk.utils.ColorUtils;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.geo.MbtilesFile.LayerType;
 import org.odk.collect.android.geo.MbtilesFile.MbtilesException;
 
@@ -56,11 +62,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import timber.log.Timber;
 
@@ -106,6 +107,7 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     private File referenceLayerFile;
     private final List<Layer> overlayLayers = new ArrayList<>();
     private final List<Source> overlaySources = new ArrayList<>();
+    private static String lastLocationProvider;
 
     private TileHttpServer tileServer;
 
@@ -295,7 +297,7 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     }
 
     @Override public @Nullable String getLocationProvider() {
-        return null;
+        return lastLocationProvider;
     }
 
     @Override public boolean onMapClick(@NonNull LatLng point) {
@@ -388,10 +390,12 @@ public class MapboxMapFragment extends org.odk.collect.android.geo.mapboxsdk.Map
     }
 
     @Override public void onSuccess(LocationEngineResult result) {
-        lastLocationFix = fromLocation(result.getLastLocation());
+        Location location = result.getLastLocation();
+        lastLocationFix = fromLocation(location);
+        lastLocationProvider = location != null ? location.getProvider() : null;
         Timber.i("Received LocationEngineResult: %s", lastLocationFix);
         if (locationComponent != null) {
-            locationComponent.forceLocationUpdate(result.getLastLocation());
+            locationComponent.forceLocationUpdate(location);
         }
         for (ReadyListener listener : gpsLocationReadyListeners) {
             listener.onReady(this);

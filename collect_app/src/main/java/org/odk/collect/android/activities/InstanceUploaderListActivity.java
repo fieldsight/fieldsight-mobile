@@ -34,23 +34,16 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
-import androidx.work.State;
-import androidx.work.WorkManager;
-import androidx.work.WorkStatus;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
-
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.InstanceUploaderAdapter;
-import org.odk.collect.android.listeners.DiskSyncListener;
-import org.odk.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.upload.AutoSendWorker;
+import org.odk.collect.android.analytics.Analytics;
 import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.injection.DaggerUtils;
+import org.odk.collect.android.listeners.DiskSyncListener;
+import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralSharedPreferences;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.preferences.Transport;
@@ -62,8 +55,6 @@ import org.odk.collect.android.tasks.sms.models.SmsSubmission;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.ToastUtils;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -77,9 +68,8 @@ import static org.odk.collect.android.preferences.GeneralKeys.KEY_SUBMISSION_TRA
 import static org.odk.collect.android.tasks.sms.SmsSender.SMS_INSTANCE_ID;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
-
 /**
- * Responsible for displaying all the valid FORMS in the FORMS directory. Stores
+ * Responsible for displaying all the valid forms in the forms directory. Stores
  * the path to selected form for use by {@link MainMenuActivity}.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -130,7 +120,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
     SmsSubmissionManagerContract smsSubmissionManager;
 
     @Inject
-    Tracker tracker;
+    Analytics analytics;
 
     @Inject
     PermissionUtils permissionUtils;
@@ -149,13 +139,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
 
         if (savedInstanceState != null) {
             showAllMode = savedInstanceState.getBoolean(SHOW_ALL_MODE);
-//            loadedSite = savedInstanceState.getParcelable(EXTRA_OBJECT);
         }
-
-//        Bundle bundle = getIntent().getExtras();
-//        if (bundle != null) {
-//            loadedSite = bundle.getParcelable(EXTRA_OBJECT);
-//        }
 
         permissionUtils.requestStoragePermissions(this, new PermissionListener() {
             @Override
@@ -262,7 +246,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
         instanceSyncTask.setDiskSyncListener(this);
         instanceSyncTask.execute();
 
-        sortingOptions = new int[]{
+        sortingOptions = new int[] {
                 R.string.sort_by_name_asc, R.string.sort_by_name_desc,
                 R.string.sort_by_date_asc, R.string.sort_by_date_desc
         };
@@ -270,27 +254,27 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
         // Start observer that sets autoSendOngoing field based on AutoSendWorker status
-        updateAutoSendStatus();
+//        updateAutoSendStatus();
     }
 
-    /**
-     * Updates whether an auto-send job is ongoing.
-     */
-    private void updateAutoSendStatus() {
-        LiveData<List<WorkStatus>> statuses = WorkManager.getInstance().getStatusesForUniqueWorkLiveData(AutoSendWorker.class.getName());
-
-        statuses.observe(this, workStatuses -> {
-            if (workStatuses != null) {
-                for (WorkStatus status : workStatuses) {
-                    if (status.getState().equals(State.RUNNING)) {
-                        autoSendOngoing = true;
-                        return;
-                    }
-                }
-                autoSendOngoing = false;
-            }
-        });
-    }
+//    /**
+//     * Updates whether an auto-send job is ongoing.
+//     */
+//    private void updateAutoSendStatus() {
+//        LiveData<List<WorkInfo>> statuses = WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(AutoSendWorker.class.getName());
+//
+//        statuses.observe(this, workStatuses -> {
+//            if (workStatuses != null) {
+//                for (WorkInfo status : workStatuses) {
+//                    if (status.getState().equals(WorkInfo.State.RUNNING)) {
+//                        autoSendOngoing = true;
+//                        return;
+//                    }
+//                }
+//                autoSendOngoing = false;
+//            }
+//        });
+//    }
 
     @Override
     protected void onResume() {
@@ -444,8 +428,6 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(SHOW_ALL_MODE, showAllMode);
-//        outState.putParcelable(EXTRA_OBJECT, loadedSite);
-
     }
 
     @Override
@@ -488,7 +470,6 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         showProgressBar();
-
         if (showAllMode) {
             return instancesDao.getCompletedUndeletedInstancesCursorLoader(getFilterText(), getSortingOrder());
         } else {
@@ -538,10 +519,7 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
                         case 1: // show all
                             showAllMode = true;
                             updateAdapter();
-                            tracker.send(new HitBuilders.EventBuilder()
-                                    .setCategory("FilterSendForms")
-                                    .setAction("SentAndUnsent")
-                                    .build());
+                            analytics.logEvent("FilterSendForms", "SentAndUnsent");
                             break;
 
                         case 2:// do nothing

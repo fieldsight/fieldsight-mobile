@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import timber.log.Timber;
 
+import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 import static org.fieldsight.naxa.common.Constant.NotificationType.FORM_FLAG;
 
 public class FieldSightFirebaseMessagingService extends FirebaseMessagingService {

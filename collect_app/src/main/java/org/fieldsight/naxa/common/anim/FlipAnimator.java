@@ -5,7 +5,7 @@ import android.animation.AnimatorSet;
 import android.content.Context;
 import android.view.View;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 
 
 public class FlipAnimator {

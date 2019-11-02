@@ -18,7 +18,7 @@ package org.odk.collect.android.activities.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.FormDetails;
 

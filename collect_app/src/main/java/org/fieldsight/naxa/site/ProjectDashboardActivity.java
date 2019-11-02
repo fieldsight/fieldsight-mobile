@@ -46,8 +46,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.BaseActivity;
 import org.fieldsight.naxa.FSInstanceChooserList;

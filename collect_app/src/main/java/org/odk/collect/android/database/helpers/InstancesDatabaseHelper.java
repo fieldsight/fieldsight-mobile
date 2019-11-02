@@ -17,6 +17,7 @@
 package org.odk.collect.android.database.helpers;
 
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -25,6 +26,7 @@ import org.odk.collect.android.database.DatabaseContext;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.CustomSQLiteQueryBuilder;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,12 +52,15 @@ import static org.odk.collect.android.provider.InstanceProviderAPI.InstanceColum
 public class InstancesDatabaseHelper extends SQLiteOpenHelper {
     static final String DATABASE_NAME = "instances.db";
     public static final String INSTANCES_TABLE_NAME = "instances";
+    public static final String DATABASE_PATH = Collect.METADATA_PATH + File.separator + DATABASE_NAME;
 
     static final int DATABASE_VERSION = 6;
 
     private static final String[] COLUMN_NAMES_V5 = new String[]{_ID, FS_SITE_ID, FS_SUBMISSION_INSTANCE_ID, DISPLAY_NAME, SUBMISSION_URI, CAN_EDIT_WHEN_COMPLETE,
             INSTANCE_FILE_PATH, JR_FORM_ID, JR_VERSION, STATUS, LAST_STATUS_CHANGE_DATE, DELETED_DATE};
     static final String[] CURRENT_VERSION_COLUMN_NAMES = COLUMN_NAMES_V5;
+
+    private static boolean isDatabaseBeingMigrated;
 
     public InstancesDatabaseHelper() {
         super(new DatabaseContext(Collect.METADATA_PATH), DATABASE_NAME, null, DATABASE_VERSION);
@@ -223,5 +228,25 @@ public class InstancesDatabaseHelper extends SQLiteOpenHelper {
 
         // Build a full-featured ArrayList rather than the limited array-backed List from asList
         return new ArrayList<>(Arrays.asList(columnNames));
+    }
+
+    public static void databaseMigrationStarted() {
+        isDatabaseBeingMigrated = true;
+    }
+
+    public static boolean isDatabaseBeingMigrated() {
+        return isDatabaseBeingMigrated;
+    }
+
+    public static boolean databaseNeedsUpgrade() {
+        boolean isDatabaseHelperOutOfDate = false;
+        try {
+            SQLiteDatabase db = SQLiteDatabase.openDatabase(InstancesDatabaseHelper.DATABASE_PATH, null, SQLiteDatabase.OPEN_READONLY);
+            isDatabaseHelperOutOfDate = InstancesDatabaseHelper.DATABASE_VERSION != db.getVersion();
+            db.close();
+        } catch (SQLException e) {
+            Timber.i(e);
+        }
+        return isDatabaseHelperOutOfDate;
     }
 }

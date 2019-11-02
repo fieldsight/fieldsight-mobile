@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.login.model.Site;

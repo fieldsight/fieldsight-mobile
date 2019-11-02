@@ -7,7 +7,8 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
+
 import org.odk.collect.android.geo.GoogleMapConfigurator.GoogleMapTypeOption;
 import org.odk.collect.android.geo.MapboxMapConfigurator.MapboxUrlOption;
 import org.odk.collect.android.geo.OsmDroidMapConfigurator.WmsOption;

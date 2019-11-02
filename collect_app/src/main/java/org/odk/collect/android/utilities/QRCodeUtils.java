@@ -37,7 +37,7 @@ import com.google.zxing.multi.qrcode.QRCodeMultiReader;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 
 import java.io.File;
@@ -62,7 +62,7 @@ public class QRCodeUtils {
     private QRCodeUtils() {
     }
 
-    public static String decodeFromBitmap(Bitmap bitmap) throws DataFormatException, IOException, FormatException, ChecksumException, NotFoundException {
+    public static String decodeFromBitmap(Bitmap bitmap) throws DataFormatException, IOException, FormatException, ChecksumException, NotFoundException, IllegalArgumentException {
         Map<DecodeHintType, Object> tmpHintsMap = new EnumMap<>(DecodeHintType.class);
         tmpHintsMap.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
         tmpHintsMap.put(DecodeHintType.POSSIBLE_FORMATS, BarcodeFormat.QR_CODE);

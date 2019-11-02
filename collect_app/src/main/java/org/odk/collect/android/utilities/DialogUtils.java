@@ -27,7 +27,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.AuditEvent;
 import org.odk.collect.android.logic.FormController;

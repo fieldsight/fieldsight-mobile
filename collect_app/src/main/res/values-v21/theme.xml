@@ -1,45 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    This file contains the app's light and dark theme definitions for
+    API 21 and above
+-->
+
 <resources>
 
-    <style name="BaseDarkAppTheme.Collect">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:buttonStyle">@style/CustomButtonStyle</item>
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowEnterTransition">@transition/fade</item>
-        <item name="android:windowExitTransition">@transition/fade</item>
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowSharedElementEnterTransition">@transition/enter</item>
-        <item name="android:windowSharedElementExitTransition">@transition/enter</item>
-        <item name="android:windowSharedElementsUseOverlay">false</item>
-
-        <item name="imageButtonStyle">@style/CustomImageButtonDark</item>
-
+    <style name="Theme.Collect.Dark" parent="Theme.Collect.BaseDark">
+        <item name="android:buttonStyle">@style/Widget.Collect.Button.Custom</item>
+        <item name="imageButtonStyle">@style/Widget.Collect.ImageButton.Custom.Dark</item>
     </style>
 
-    <style name="BaseLightAppTheme.Collect">
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:buttonStyle">@style/CustomButtonStyle</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowEnterTransition">@transition/fade</item>
-        <item name="android:windowExitTransition">@transition/fade</item>
-        <item name="android:windowAllowEnterTransitionOverlap">true</item>
-        <item name="android:windowAllowReturnTransitionOverlap">true</item>
-        <item name="android:windowSharedElementEnterTransition">@transition/enter</item>
-        <item name="android:windowSharedElementExitTransition">@transition/enter</item>
-        <item name="android:windowSharedElementsUseOverlay">false</item>
-        <item name="imageButtonStyle">@style/CustomImageButtonLight</item>
-
+    <style name="Theme.Collect.Light" parent="Theme.Collect.BaseLight">
+        <item name="android:buttonStyle">@style/Widget.Collect.Button.Custom</item>
+        <item name="imageButtonStyle">@style/Widget.Collect.ImageButton.Custom.Light</item>
     </style>
 </resources>

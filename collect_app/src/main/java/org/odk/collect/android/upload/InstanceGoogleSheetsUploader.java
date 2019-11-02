@@ -23,7 +23,7 @@ import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.instance.AbstractTreeElement;
 import org.javarosa.core.model.instance.TreeElement;
@@ -49,7 +49,6 @@ import org.odk.collect.android.utilities.gdrive.GoogleAccountsManager;
 import org.odk.collect.android.utilities.gdrive.SheetsHelper;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -293,7 +292,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
         String lastSavedSrc = FileUtils.getOrCreateLastSavedSrc(formXml);
 
         try {
-            formDef = XFormUtils.getFormFromInputStream(new FileInputStream(formXml), lastSavedSrc);
+            formDef = XFormUtils.getFormFromFormXml(formFilePath, lastSavedSrc);
             FormLoaderTask.importData(instanceFile, new FormEntryController(new FormEntryModel(formDef)));
         } catch (IOException | RuntimeException e) {
             throw new UploadException(e);
@@ -392,7 +391,7 @@ public class InstanceGoogleSheetsUploader extends InstanceUploader {
      */
     private @NonNull
     Map<String, String> parseGeopoint(@NonNull List<Object> columnTitles, @NonNull String elementTitle, @NonNull String geoData) {
-        Map<String, String> geoFieldsMap = new HashMap<String, String>();
+        Map<String, String> geoFieldsMap = new HashMap<>();
 
         // Accuracy
         int accuracyLocation = geoData.lastIndexOf(' ');

@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -107,7 +107,7 @@ public class MainActivityTest {
         ShadowActivity shadowActivity = shadowOf(mainMenuActivity);
         Intent startedIntent = shadowActivity.getNextStartedActivity();
         ShadowIntent shadowIntent = shadowOf(startedIntent);
-        assertEquals(FormChooserList.class.getName(),
+        assertEquals(FormChooserListActivity.class.getName(),
                 shadowIntent.getIntentClass().getName());
     }
 
@@ -120,7 +120,7 @@ public class MainActivityTest {
 
         assertNotNull(reviewDataButton);
         assertEquals(View.VISIBLE, reviewDataButton.getVisibility());
-        assertEquals(mainMenuActivity.getString(R.string.review_data_button), reviewDataButton.getText());
+        assertEquals(mainMenuActivity.getString(R.string.review_data), reviewDataButton.getText());
 
         reviewDataButton.performClick();
         ShadowActivity shadowActivity = shadowOf(mainMenuActivity);
@@ -139,7 +139,7 @@ public class MainActivityTest {
 
         assertNotNull(sendDataButton);
         assertEquals(View.VISIBLE, sendDataButton.getVisibility());
-        assertEquals(mainMenuActivity.getString(R.string.send_data_button), sendDataButton.getText());
+        assertEquals(mainMenuActivity.getString(R.string.send_data), sendDataButton.getText());
 
         sendDataButton.performClick();
         ShadowActivity shadowActivity = shadowOf(mainMenuActivity);

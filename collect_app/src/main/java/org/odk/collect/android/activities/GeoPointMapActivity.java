@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import androidx.annotation.VisibleForTesting;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.geo.MapFragment;
 import org.odk.collect.android.geo.MapPoint;
 import org.odk.collect.android.geo.MapProvider;
@@ -33,9 +33,11 @@ import org.odk.collect.android.preferences.MapsPreferences;
 import org.odk.collect.android.utilities.GeoUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 import org.odk.collect.android.widgets.GeoPointWidget;
+import org.osmdroid.tileprovider.IRegisterReceiver;
 
 import java.text.DecimalFormat;
 
+import androidx.annotation.VisibleForTesting;
 import timber.log.Timber;
 
 import static org.odk.collect.android.utilities.PermissionUtils.areLocationPermissionsGranted;

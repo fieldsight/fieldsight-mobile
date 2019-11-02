@@ -14,7 +14,7 @@
 
 package org.odk.collect.android.utilities;
 
-import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
+import com.google.api.client.util.Base64;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
@@ -65,7 +65,7 @@ public class CompressionUtils {
         return base64String;
     }
 
-    public static String decompress(String compressedString) throws IOException, DataFormatException {
+    public static String decompress(String compressedString) throws IOException, DataFormatException, IllegalArgumentException {
         if (compressedString == null || compressedString.length() == 0) {
             return compressedString;
         }

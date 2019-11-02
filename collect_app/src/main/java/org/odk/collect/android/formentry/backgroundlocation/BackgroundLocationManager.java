@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.location.LocationListener;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.location.client.LocationClient;
 import org.odk.collect.android.logic.AuditConfig;
 import org.odk.collect.android.logic.AuditEvent;

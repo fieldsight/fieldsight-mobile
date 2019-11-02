@@ -17,8 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.utilities.ZipUtils;
 import org.odk.collect.android.activities.CollectAbstractActivity;

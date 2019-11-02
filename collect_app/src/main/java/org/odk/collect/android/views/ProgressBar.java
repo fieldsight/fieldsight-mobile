@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

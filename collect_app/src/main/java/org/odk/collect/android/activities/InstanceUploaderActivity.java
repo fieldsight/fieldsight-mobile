@@ -20,13 +20,11 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.dialogs.SimpleDialog;
 import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.listeners.PermissionListener;
-import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
-import org.odk.collect.android.dao.InstancesDao;
 import org.odk.collect.android.tasks.InstanceServerUploaderTask;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ArrayUtils;
@@ -38,13 +36,12 @@ import org.odk.collect.android.utilities.PermissionUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import timber.log.Timber;
 
 /**
- * Activity to upload completed FORMS.
+ * Activity to upload completed forms.
  *
  * @author Carl Hartung (carlhartung@gmail.com)
  */
@@ -120,13 +117,11 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
             url = savedInstanceState.getString(AUTH_URI);
         }
 
-
         Bundle dataBundle;
 
         // If we are resuming, use the TO_SEND list of not-yet-sent submissions
         // Otherwise, construct the list from the incoming intent value
         long[] selectedInstanceIDs;
-
         if (savedInstanceState != null && savedInstanceState.containsKey(TO_SEND)) {
             selectedInstanceIDs = savedInstanceState.getLongArray(TO_SEND);
             dataBundle = savedInstanceState;
@@ -136,7 +131,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
         }
 
         // An external application can temporarily override destination URL, username, password
-        // and whether INSTANCES should be deleted after submission by specifying intent extras.
+        // and whether instances should be deleted after submission by specifying intent extras.
         if (dataBundle != null && dataBundle.containsKey(ApplicationConstants.BundleKeys.URL)) {
             // TODO: I think this means redirection from a URL set through an extra is not supported
             url = dataBundle.getString(ApplicationConstants.BundleKeys.URL);
@@ -160,10 +155,10 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
         instancesToSend = ArrayUtils.toObject(selectedInstanceIDs);
 
         if (instancesToSend.length == 0) {
-            Timber.e("onCreate: No INSTANCES to upload!");
+            Timber.e("onCreate: No instances to upload!");
             // drop through -- everything will process through OK
         } else {
-            Timber.i("onCreate: Beginning upload of %d INSTANCES!", instancesToSend.length);
+            Timber.i("onCreate: Beginning upload of %d instances!", instancesToSend.length);
         }
 
         // Get the task if there was a configuration change but the app did not go out of memory.
@@ -202,7 +197,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
     @Override
     protected void onResume() {
         if (instancesToSend != null) {
-            Timber.i("onResume: Resuming upload of %d INSTANCES!", instancesToSend.length);
+            Timber.i("onResume: Resuming upload of %d instances!", instancesToSend.length);
         }
         if (instanceServerUploaderTask != null) {
             instanceServerUploaderTask.setUploaderListener(this);
@@ -242,7 +237,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
 
     @Override
     public void uploadingComplete(HashMap<String, String> result) {
-        Timber.i("uploadingComplete: Processing results (%d) from upload of %d INSTANCES!",
+        Timber.i("uploadingComplete: Processing results (%d) from upload of %d instances!",
                 result.size(), instancesToSend.length);
 
         try {
@@ -251,47 +246,9 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
             // tried to close a dialog not open. don't care.
         }
 
-        Set<String> keys = result.keySet();
-        Iterator<String> it = keys.iterator();
-
-        String message = "";
-        int count = keys.size();
-        while (count > 0) {
-            String[] selectionArgs;
-
-            if (count > ApplicationConstants.SQLITE_MAX_VARIABLE_NUMBER) {
-                selectionArgs = new String[ApplicationConstants.SQLITE_MAX_VARIABLE_NUMBER];
-            } else {
-                selectionArgs = new String[count];
-            }
-
-            StringBuilder selection = new StringBuilder();
-            selection.append(InstanceColumns._ID + " IN (");
-
-            int i = 0;
-            while (it.hasNext() && i < selectionArgs.length) {
-                selectionArgs[i] = it.next();
-                selection.append('?');
-
-                if (i != selectionArgs.length - 1) {
-                    selection.append(',');
-                }
-                i++;
-            }
-
-            selection.append(')');
-            count -= selectionArgs.length;
-
-            message = InstanceUploaderUtils
-                    .getUploadResultMessage(new InstancesDao().getInstancesCursor(selection.toString(), selectionArgs), result);
-        }
-        if (message.length() == 0) {
-            message = getString(R.string.no_forms_uploaded);
-        }
-
         // If the activity is paused or in the process of pausing, don't show the dialog
         if (!isInstanceStateSaved()) {
-            createUploadInstancesResultDialog(message.trim());
+            createUploadInstancesResultDialog(InstanceUploaderUtils.getUploadResultMessage(this, result));
         } else {
             // Clean up
             finish();
@@ -327,7 +284,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
                 progressDialog.setButton(getString(R.string.cancel), loadingButtonListener);
                 return progressDialog;
             case AUTH_DIALOG:
-                Timber.i("onCreateDialog(AUTH_DIALOG): for upload of %d INSTANCES!",
+                Timber.i("onCreateDialog(AUTH_DIALOG): for upload of %d instances!",
                         instancesToSend.length);
 
                 AuthDialogUtility authDialogUtility = new AuthDialogUtility();
@@ -344,9 +301,9 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
 
     /**
      * Prompts the user for credentials for the server at the given URL. Once credentials are
-     * provided, starts a new upload task with just the INSTANCES that were not yet reached.
+     * provided, starts a new upload task with just the instances that were not yet reached.
      *
-     * messagesByInstanceIdAttempted makes it possible to identify the INSTANCES that were part
+     * messagesByInstanceIdAttempted makes it possible to identify the instances that were part
      * of the latest submission attempt. The database provides generic status which could have come
      * from an unrelated submission attempt.
      */
@@ -357,7 +314,7 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
             progressDialog.dismiss();
         }
 
-        // Remove sent INSTANCES from INSTANCES to send
+        // Remove sent instances from instances to send
         ArrayList<Long> workingSet = new ArrayList<>();
         Collections.addAll(workingSet, instancesToSend);
         if (messagesByInstanceIdAttempted != null) {
@@ -367,13 +324,13 @@ public class InstanceUploaderActivity extends CollectAbstractActivity implements
                 Long removeMe = Long.valueOf(uploadedInstance);
                 boolean removed = workingSet.remove(removeMe);
                 if (removed) {
-
-                    Timber.i("%d was already attempted, removing from queue before restarting task", removeMe);
+                    Timber.i("%d was already attempted, removing from queue before restarting task",
+                            removeMe);
                 }
             }
         }
 
-        // and reconstruct the pending set of INSTANCES to send
+        // and reconstruct the pending set of instances to send
         Long[] updatedToSend = new Long[workingSet.size()];
         for (int i = 0; i < workingSet.size(); ++i) {
             updatedToSend[i] = workingSet.get(i);

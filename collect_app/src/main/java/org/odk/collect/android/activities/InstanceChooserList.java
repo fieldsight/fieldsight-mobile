@@ -31,7 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.InstanceListCursorAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.InstancesDao;
@@ -48,7 +48,7 @@ import timber.log.Timber;
 import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivities;
 
 /**
- * Responsible for displaying all the valid INSTANCES in the instance directory.
+ * Responsible for displaying all the valid instances in the instance directory.
  *
  * @author Yaw Anokwa (yanokwa@gmail.com)
  * @author Carl Hartung (carlhartung@gmail.com)
@@ -70,6 +70,7 @@ public class InstanceChooserList extends InstanceListActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.form_chooser_list);
+
         String formMode = getIntent().getStringExtra(ApplicationConstants.BundleKeys.FORM_MODE);
         if (formMode == null || ApplicationConstants.FormModes.EDIT_SAVED.equalsIgnoreCase(formMode)) {
 
@@ -196,12 +197,8 @@ public class InstanceChooserList extends InstanceListActivity implements
     }
 
     private void setupAdapter() {
-        String[] data = new String[]{
-                InstanceColumns.DISPLAY_NAME, InstanceColumns.DELETED_DATE
-        };
-        int[] view = new int[]{
-                R.id.form_title, R.id.form_subtitle2
-        };
+        String[] data = {InstanceColumns.DISPLAY_NAME, InstanceColumns.DELETED_DATE};
+        int[] view = {R.id.form_title, R.id.form_subtitle2};
 
         boolean shouldCheckDisabled = !editMode;
         listAdapter = new InstanceListCursorAdapter(

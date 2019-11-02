@@ -19,7 +19,7 @@ package org.odk.collect.android.preferences;
 import android.app.Fragment;
 import android.os.Bundle;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.OnBackPressedListener;
 import org.odk.collect.android.activities.CollectAbstractActivity;

@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BaseActivity;
 import org.fieldsight.naxa.common.TouchImageView;
 import org.fieldsight.naxa.common.ViewUtils;

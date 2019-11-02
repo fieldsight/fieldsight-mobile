@@ -14,7 +14,7 @@ package org.odk.collect.android.fragments.dialogs;/*
  * limitations under the License.
  */
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.javarosa.core.model.FormIndex;
 import org.joda.time.LocalDateTime;

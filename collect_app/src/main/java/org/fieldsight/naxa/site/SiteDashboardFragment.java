@@ -25,8 +25,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.common.primitives.Longs;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.FSInstanceChooserList;
 import org.fieldsight.naxa.FSInstanceUploaderListActivity;
 import org.fieldsight.naxa.common.Constant;

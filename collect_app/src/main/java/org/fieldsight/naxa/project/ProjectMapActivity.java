@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import androidx.appcompat.widget.Toolbar;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.site.map.ProjectMapFragment;
 import org.odk.collect.android.activities.CollectAbstractActivity;

@@ -2,7 +2,7 @@ package org.fieldsight.naxa.common;
 
 import android.os.Handler;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.FormDetails;
 import org.fieldsight.naxa.common.utilities.FieldSightFormListDownloadUtils;

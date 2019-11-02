@@ -19,7 +19,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.EncryptionException;
 import org.odk.collect.android.listeners.FormSavedListener;
