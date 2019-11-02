@@ -34,8 +34,11 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
 
 import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.InstanceUploaderAdapter;
@@ -52,9 +55,12 @@ import org.odk.collect.android.tasks.sms.SmsNotificationReceiver;
 import org.odk.collect.android.tasks.sms.SmsService;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;
 import org.odk.collect.android.tasks.sms.models.SmsSubmission;
+import org.odk.collect.android.upload.AutoSendWorker;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.ToastUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -246,35 +252,35 @@ public class InstanceUploaderListActivity extends InstanceListActivity implement
         instanceSyncTask.setDiskSyncListener(this);
         instanceSyncTask.execute();
 
-        sortingOptions = new int[] {
+        sortingOptions = new int[]{
                 R.string.sort_by_name_asc, R.string.sort_by_name_desc,
                 R.string.sort_by_date_asc, R.string.sort_by_date_desc
         };
 
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
-        // Start observer that sets autoSendOngoing field based on AutoSendWorker status
-//        updateAutoSendStatus();
+//         Start observer that sets autoSendOngoing field based on AutoSendWorker status
+        updateAutoSendStatus();
     }
 
-//    /**
-//     * Updates whether an auto-send job is ongoing.
-//     */
-//    private void updateAutoSendStatus() {
-//        LiveData<List<WorkInfo>> statuses = WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(AutoSendWorker.class.getName());
-//
-//        statuses.observe(this, workStatuses -> {
-//            if (workStatuses != null) {
-//                for (WorkInfo status : workStatuses) {
-//                    if (status.getState().equals(WorkInfo.State.RUNNING)) {
-//                        autoSendOngoing = true;
-//                        return;
-//                    }
-//                }
-//                autoSendOngoing = false;
-//            }
-//        });
-//    }
+    /**
+     * Updates whether an auto-send job is ongoing.
+     */
+    private void updateAutoSendStatus() {
+        LiveData<List<WorkInfo>> statuses = WorkManager.getInstance().getWorkInfosForUniqueWorkLiveData(AutoSendWorker.class.getName());
+
+        statuses.observe(this, workStatuses -> {
+            if (workStatuses != null) {
+                for (WorkInfo status : workStatuses) {
+                    if (status.getState().equals(WorkInfo.State.RUNNING)) {
+                        autoSendOngoing = true;
+                        return;
+                    }
+                }
+                autoSendOngoing = false;
+            }
+        });
+    }
 
     @Override
     protected void onResume() {
