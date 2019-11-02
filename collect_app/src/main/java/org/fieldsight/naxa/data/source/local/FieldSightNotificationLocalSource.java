@@ -7,7 +7,7 @@ import android.util.Pair;
 
 import androidx.lifecycle.LiveData;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightDatabase;

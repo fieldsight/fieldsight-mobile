@@ -27,7 +27,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.http.CollectServerClient;
 import org.odk.collect.android.logic.FormDetails;

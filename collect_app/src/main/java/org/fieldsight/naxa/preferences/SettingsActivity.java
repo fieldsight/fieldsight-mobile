@@ -3,7 +3,7 @@ package org.fieldsight.naxa.preferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 public class SettingsActivity extends CollectAbstractActivity {

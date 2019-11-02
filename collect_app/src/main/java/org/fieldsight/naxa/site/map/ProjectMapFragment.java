@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.core.content.ContextCompat;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.site.SiteInfoWindow;

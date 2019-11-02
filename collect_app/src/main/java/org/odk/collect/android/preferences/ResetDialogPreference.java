@@ -28,7 +28,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.utilities.ResetUtility;
 

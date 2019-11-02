@@ -16,14 +16,15 @@ package org.odk.collect.android.widgets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.appcompat.widget.AppCompatCheckBox;
 import android.util.TypedValue;
 import android.widget.CheckBox;
 
-import org.fieldsight.collect.android.R;
+import androidx.appcompat.widget.AppCompatCheckBox;
+
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.utilities.ViewIds;
 
 @SuppressLint("ViewConstructor")
@@ -33,7 +34,7 @@ public class TriggerWidget extends QuestionWidget {
 
     private AppCompatCheckBox triggerButton;
 
-    public TriggerWidget(Context context, FormEntryPrompt prompt) {
+    public TriggerWidget(Context context, QuestionDetails prompt) {
         super(context, prompt);
 
         setUpWidget();

@@ -69,13 +69,30 @@ import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Longs;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.apache.commons.io.IOUtils;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.forms.data.local.FieldSightInstanceDAO;
 import org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity;
@@ -87,10 +104,12 @@ import org.javarosa.core.model.instance.TreeElement;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryPrompt;
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 import org.odk.collect.android.adapters.IconMenuListAdapter;
 import org.odk.collect.android.adapters.model.IconMenuItem;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.audio.AudioControllerView;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.dao.helpers.ContentResolverHelper;
 import org.odk.collect.android.dao.helpers.FormsDaoHelper;
@@ -135,16 +154,17 @@ import org.odk.collect.android.tasks.SavePointTask;
 import org.odk.collect.android.tasks.SaveResult;
 import org.odk.collect.android.tasks.SaveToDiskTask;
 import org.odk.collect.android.upload.AutoSendWorker;
-import org.odk.collect.android.utilities.ActivityAvailability;
 import org.odk.collect.android.utilities.ApplicationConstants;
-import org.odk.collect.android.utilities.DependencyProvider;
+import org.odk.collect.android.utilities.DestroyableLifecyleOwner;
 import org.odk.collect.android.utilities.DialogUtils;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.ImageConverter;
 import org.odk.collect.android.utilities.MediaManager;
 import org.odk.collect.android.utilities.MediaUtils;
 import org.odk.collect.android.utilities.PermissionUtils;
+import org.odk.collect.android.utilities.PlayServicesUtil;
 import org.odk.collect.android.utilities.RegexUtils;
+import org.odk.collect.android.utilities.ScreenContext;
 import org.odk.collect.android.utilities.SnackbarUtils;
 import org.odk.collect.android.utilities.SoftKeyboardUtils;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -191,14 +211,16 @@ import static org.odk.collect.android.utilities.PermissionUtils.finishAllActivit
  * @author Thomas Smyth, Sassafras Tech Collective (tom@sassafrastech.com; constraint behavior
  * option)
  */
+
 public class FormEntryActivity extends CollectAbstractActivity implements AnimationListener,
         FormLoaderListener, FormSavedListener, AdvanceToNextListener,
         OnGestureListener, SavePointListener, NumberPickerDialog.NumberPickerListener,
-        DependencyProvider<ActivityAvailability>,
         CustomDatePickerDialog.CustomDatePickerDialogListener,
         RankingWidgetDialog.RankingListener,
         SaveFormIndexTask.SaveFormIndexListener, FormLoadingDialogFragment.FormLoadingDialogFragmentListener,
-        WidgetValueChangedListener {
+        WidgetValueChangedListener,
+        ScreenContext,
+        AudioControllerView.SwipableParent {
 
     // Defines for FormEntryActivity
     private static final boolean EXIT = true;
@@ -212,7 +234,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     public static final String GEOSHAPE_RESULTS = "GEOSHAPE_RESULTS";
     public static final String ANSWER_KEY = "ANSWER_KEY";
 
-    public static final String KEY_INSTANCES = "INSTANCES";
+    public static final String KEY_INSTANCES = "instances";
     public static final String KEY_SUCCESS = "success";
     public static final String KEY_ERROR = "error";
     private static final String KEY_SAVE_NAME = "saveName";
@@ -276,6 +298,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private TextView backButton;
 
     private ODKView odkView;
+    private final DestroyableLifecyleOwner odkViewLifecycle = new DestroyableLifecyleOwner();
 
     private boolean doSwipe = true;
     private String instancePath;
@@ -289,6 +312,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
     MediaLoadingFragment mediaLoadingFragment;
 
+    @Override
     public void allowSwiping(boolean doSwipe) {
         this.doSwipe = doSwipe;
     }
@@ -300,9 +324,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private boolean showNavigationButtons;
 
     private Bundle state;
-
-    @NonNull
-    private ActivityAvailability activityAvailability = new ActivityAvailability(this);
 
     private boolean shouldOverrideAnimations;
     public boolean saveSendAndExit;
@@ -551,7 +572,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 /**
                  * This is the fill-blank-form code path.See if there is a savepoint for this form
                  * that has never been explicitly saved by the user. If there is, open this savepoint(resume this filled-in form).
-                 * Savepoints for FORMS that were explicitly saved will be recovered when that
+                 * Savepoints for forms that were explicitly saved will be recovered when that
                  * explicitly saved instance is edited via edit-saved-form.
                  */
                 final String filePrefix = formPath.substring(
@@ -613,7 +634,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     /**
-     * Creates save-points asynchronously in order to not affect swiping performance on larger FORMS.
+     * Creates save-points asynchronously in order to not affect swiping performance on larger forms.
      * If moving backwards through a form is disabled, also saves the index of the form element that
      * was last shown to the user so that no matter how the app exits and relaunches, the user can't
      * see previous questions.
@@ -777,7 +798,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.IMAGE_CAPTURE:
                 /*
                  * We saved the image to the tempfile_path, but we really want it to
-                 * be in: /sdcard/odk/INSTANCES/[current instnace]/something.jpg so
+                 * be in: /sdcard/odk/instances/[current instnace]/something.jpg so
                  * we move it there before inserting it into the content provider.
                  * Once the android image capture bug gets fixed, (read, we move on
                  * from Android 1.6) we want to handle images the audio and video
@@ -831,7 +852,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case RequestCodes.IMAGE_CHOOSER:
                 /*
                  * We have a saved image somewhere, but we really want it to be in:
-                 * /sdcard/odk/INSTANCES/[current instnace]/something.jpg so we move
+                 * /sdcard/odk/instances/[current instnace]/something.jpg so we move
                  * it there before inserting it into the content provider. Once the
                  * android image capture bug gets fixed, (read, we move on from
                  * Android 1.6) we want to handle images the audio and video
@@ -987,7 +1008,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 .setEnabled(useability);
 
         if (getFormController() != null && getFormController().currentFormCollectsBackgroundLocation()
-                && LocationClients.areGooglePlayServicesAvailable(this)) {
+                && PlayServicesUtil.isGooglePlayServicesAvailable(this)) {
             MenuItem backgroundLocation = menu.findItem(R.id.track_location);
             backgroundLocation.setVisible(true);
             backgroundLocation.setChecked(GeneralSharedPreferences.getInstance().getBoolean(KEY_BACKGROUND_LOCATION, true));
@@ -1175,6 +1196,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * @return newly created View
      */
     private View createView(int event, boolean advancingPage) {
+        releaseOdkView();
+
         FormController formController = getFormController();
 
         setTitle(formController.getFormTitle());
@@ -1192,7 +1215,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             case FormEntryController.EVENT_QUESTION:
             case FormEntryController.EVENT_GROUP:
             case FormEntryController.EVENT_REPEAT:
-                releaseOdkView();
                 // should only be a group here if the event_group is a field-list
                 try {
                     FormEntryPrompt[] prompts = formController.getQuestionPrompts();
@@ -1203,7 +1225,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                     FormEntryCaption[] groups = formController
                             .getGroupsForCurrentIndex();
 
-                    odkView = new ODKView(this, prompts, groups, advancingPage);
+                    odkView = createODKView(advancingPage, prompts, groups);
                     odkView.setWidgetValueChangedListener(this);
                     Timber.i("Created view for group %s %s",
                             groups.length > 0 ? groups[groups.length - 1].getLongText() : "[top]",
@@ -1245,7 +1267,25 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
         }
     }
 
+    @NotNull
+    private ODKView createODKView(boolean advancingPage, FormEntryPrompt[] prompts, FormEntryCaption[] groups) {
+        odkViewLifecycle.start();
+        return new ODKView(this, prompts, groups, advancingPage);
+    }
+
+    @Override
+    public FragmentActivity getActivity() {
+        return this;
+    }
+
+    @Override
+    public LifecycleOwner getViewLifecycle() {
+        return odkViewLifecycle;
+    }
+
     private void releaseOdkView() {
+        odkViewLifecycle.destroy();
+
         if (odkView != null) {
             odkView.releaseWidgetResources();
             odkView = null;
@@ -1838,16 +1878,19 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      */
     private void createDeleteRepeatConfirmDialog() {
         DialogUtils.showDeleteRepeatConfirmDialog(this, () -> {
-            showNextView();
-        }, () -> {
-            refreshCurrentView();
-        });
+            FormController formController = getFormController();
+            if (formController != null && !formController.indexIsInFieldList()) {
+                showNextView();
+            } else {
+                refreshCurrentView();
+            }
+        }, this::refreshCurrentView);
     }
 
     /**
      * Saves data and writes it to disk. If exit is set, program will exit after
      * save completes. Complete indicates whether the user has marked the
-     * isntancs as complete. If updatedSaveName is non-null, the INSTANCES
+     * isntancs as complete. If updatedSaveName is non-null, the instances
      * content provider is updated with the new name
      */
     // by default, save the current screen
@@ -2131,7 +2174,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         // Register to receive location provider change updates and write them to the audit log
         if (formController != null && formController.currentFormAuditsLocation()
-                && LocationClients.areGooglePlayServicesAvailable(this)) {
+                && PlayServicesUtil.isGooglePlayServicesAvailable(this)) {
             registerReceiver(locationProvidersReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
         }
 
@@ -2163,10 +2206,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 saveAnswersForCurrentScreen(DO_NOT_EVALUATE_CONSTRAINTS);
             }
         }
-        if (getCurrentViewIfODKView() != null) {
-            // stop audio if it's playing
-            getCurrentViewIfODKView().stopAudio();
-        }
 
         super.onPause();
     }
@@ -2182,7 +2221,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
 
         String navigation = (String) GeneralSharedPreferences.getInstance().get(GeneralKeys.KEY_NAVIGATION);
         showNavigationButtons = navigation.contains(GeneralKeys.NAVIGATION_BUTTONS);
-//        showNavigationButtons = true;
+
         findViewById(R.id.buttonholder).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
         findViewById(R.id.shadow_up).setVisibility(showNavigationButtons ? View.VISIBLE : View.GONE);
 
@@ -2492,7 +2531,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 // Register to receive location provider change updates and write them to the audit
                 // log. onStart has already run but the formController was null so try again.
                 if (formController.currentFormAuditsLocation()
-                        && LocationClients.areGooglePlayServicesAvailable(this)) {
+                        && PlayServicesUtil.isGooglePlayServicesAvailable(this)) {
                     registerReceiver(locationProvidersReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
                 }
 
@@ -2631,7 +2670,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     }
 
     /**
-     * Requests that unsent finalized FORMS be auto-sent. If no network connection is available,
+     * Requests that unsent finalized forms be auto-sent. If no network connection is available,
      * the work will be performed when a connection becomes available.
      *
      * TODO: if the user changes auto-send settings, should an auto-send job immediately be enqueued?
@@ -2844,15 +2883,6 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             return (ODKView) currentView;
         }
         return null;
-    }
-
-    @Override
-    public ActivityAvailability provide() {
-        return activityAvailability;
-    }
-
-    public void setActivityAvailability(@NonNull ActivityAvailability activityAvailability) {
-        this.activityAvailability = activityAvailability;
     }
 
     public void setShouldOverrideAnimations(boolean shouldOverrideAnimations) {

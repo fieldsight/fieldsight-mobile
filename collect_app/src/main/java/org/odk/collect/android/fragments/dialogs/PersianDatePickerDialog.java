@@ -16,13 +16,12 @@
 
 package org.odk.collect.android.fragments.dialogs;
 
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.FormIndex;
 import org.joda.time.LocalDateTime;
-
-import org.fieldsight.collect.android.R;
+import org.joda.time.chrono.PersianChronologyKhayyamBorkowski;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.utilities.DateTimeUtils;
-import org.joda.time.chrono.PersianChronologyKhayyamBorkowski;
 
 import java.util.Arrays;
 

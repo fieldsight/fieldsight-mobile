@@ -23,7 +23,7 @@ import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 import android.app.AlertDialog;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 
 public class MovingBackwardsDialog extends DialogFragment {
 

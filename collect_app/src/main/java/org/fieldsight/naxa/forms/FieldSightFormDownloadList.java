@@ -37,10 +37,11 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.FormDownloadListAdapter;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.http.HttpCredentialsInterface;
+;
+import org.odk.collect.android.http.openrosa.HttpCredentialsInterface;
 import org.odk.collect.android.listeners.DownloadFormsTaskListener;
 import org.odk.collect.android.listeners.FormListDownloaderListener;
 import org.odk.collect.android.listeners.PermissionListener;

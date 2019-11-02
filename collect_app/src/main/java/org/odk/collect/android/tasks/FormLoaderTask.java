@@ -19,7 +19,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 
 import org.apache.commons.io.IOUtils;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.database.ItemsetDbAdapter;
 import org.odk.collect.android.external.ExternalAnswerResolver;
@@ -28,6 +28,7 @@ import org.odk.collect.android.external.ExternalDataManager;
 import org.odk.collect.android.external.ExternalDataManagerImpl;
 import org.odk.collect.android.external.ExternalDataReader;
 import org.odk.collect.android.external.ExternalDataReaderImpl;
+import org.odk.collect.android.external.handler.ExternalDataHandlerPull;
 import org.odk.collect.android.listeners.FormLoaderListener;
 import org.odk.collect.android.logic.FileReferenceFactory;
 import org.odk.collect.android.logic.FormController;
@@ -50,7 +51,6 @@ import org.odk.collect.android.utilities.ZipUtils;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -112,7 +112,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
     }
 
     /**
-     * Initialize {@link FormEntryController} with {@link FormDef} siteName binary or
+     * Initialize {@link FormEntryController} with {@link FormDef} from binary or
      * from XML. If given an instance, it will be used to fill the {@link FormDef}.
      */
     @Override
@@ -131,7 +131,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
 
         final ReferenceManager referenceManager = ReferenceManager.instance();
 
-        // Remove previous FORMS
+        // Remove previous forms
         referenceManager.clearSession();
 
         // This should get moved to the Application Class
@@ -149,6 +149,9 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         } catch (StackOverflowError e) {
             Timber.e(e);
             errorMsg = Collect.getInstance().getString(R.string.too_complex_form);
+        } catch (Exception | Error e) {
+            Timber.w(e);
+            errorMsg = e.getMessage();
         }
 
         if (errorMsg != null || formDef == null) {
@@ -158,7 +161,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         externalDataManager = new ExternalDataManagerImpl(formMediaDir);
 
         // add external data function handlers
-        ExternalDataHandler externalDataHandlerPull = new org.odk.collect.android.external.handler.ExternalDataHandlerPull(
+        ExternalDataHandler externalDataHandlerPull = new ExternalDataHandlerPull(
                 externalDataManager);
         formDef.getEvaluationContext().addFunctionHandler(externalDataHandlerPull);
 
@@ -222,8 +225,8 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
     }
 
     private void addSessionRootTranslators(String formMediaDir, ReferenceManager referenceManager, String... hostStrings) {
-        // Set jr://... to point to /sdcard/odk/FORMS/formBasename-media/
-        final String translatedPrefix = String.format("jr://file/FORMS/" + formMediaDir + "/");
+        // Set jr://... to point to /sdcard/odk/forms/formBasename-media/
+        final String translatedPrefix = String.format("jr://file/forms/" + formMediaDir + "/");
         for (String t : hostStrings) {
             referenceManager.addSessionRootTranslator(new RootTranslator(String.format("jr://%s/", t), translatedPrefix));
         }
@@ -238,31 +241,27 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
             return formDefFromCache;
         }
 
-        FileInputStream fis = null;
-        // no binary, read siteName xml
-        try {
-            Timber.i("Attempting to load siteName: %s", formXml.getAbsolutePath());
-            final long start = System.currentTimeMillis();
-            fis = new FileInputStream(formXml);
-            String lastSavedSrc = FileUtils.getOrCreateLastSavedSrc(formXml);
-            FormDef formDefFromXml = XFormUtils.getFormFromInputStream(fis, lastSavedSrc);
-            if (formDefFromXml == null) {
-                errorMsg = "Error reading XForm file";
-            } else {
-                Timber.i("Loaded in %.3f seconds.",
-                        (System.currentTimeMillis() - start) / 1000F);
-                formDef = formDefFromXml;
+        // no binary, read from xml
+        Timber.i("Attempting to load from: %s", formXml.getAbsolutePath());
+        final long start = System.currentTimeMillis();
+        String lastSavedSrc = FileUtils.getOrCreateLastSavedSrc(formXml);
+        FormDef formDefFromXml = XFormUtils.getFormFromFormXml(formPath, lastSavedSrc);
+        if (formDefFromXml == null) {
+            errorMsg = "Error reading XForm file";
+        } else {
+            Timber.i("Loaded in %.3f seconds.",
+                    (System.currentTimeMillis() - start) / 1000F);
+            formDef = formDefFromXml;
 
-                FormDefCache.writeCache(formDef, formPath);
-
-                return formDefFromXml;
+            try {
+                FormDefCache.writeCache(formDef, formXml.getPath());
+            } catch (IOException e) {
+                Timber.e(e);
             }
-        } catch (Exception e) {
-            Timber.e(e);
-            errorMsg = e.getMessage();
-        } finally {
-            IOUtils.closeQuietly(fis);
+
+            return formDefFromXml;
         }
+
         return null;
     }
 
@@ -380,7 +379,7 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
             }
         });
 
-        Map<String, File> externalDataMap = new HashMap<String, File>();
+        Map<String, File> externalDataMap = new HashMap<>();
 
         if (csvFiles != null) {
 
@@ -420,11 +419,11 @@ public class FormLoaderTask extends AsyncTask<String, String, FormLoaderTask.FEC
         // convert files into a byte array
         byte[] fileBytes = org.apache.commons.io.FileUtils.readFileToByteArray(instanceFile);
 
-        // get the root of the saved and template INSTANCES
+        // get the root of the saved and template instances
         TreeElement savedRoot = XFormParser.restoreDataModel(fileBytes, null).getRoot();
         TreeElement templateRoot = fec.getModel().getForm().getInstance().getRoot().deepCopy(true);
 
-        // weak check for matching FORMS
+        // weak check for matching forms
         if (!savedRoot.getName().equals(templateRoot.getName()) || savedRoot.getMult() != 0) {
             Timber.e("Saved form instance does not match template form definition");
             return;

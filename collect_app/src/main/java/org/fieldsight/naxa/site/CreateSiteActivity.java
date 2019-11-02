@@ -35,8 +35,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.fieldsight.naxa.common.Constant;

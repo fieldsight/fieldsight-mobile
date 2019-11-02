@@ -25,7 +25,7 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.activities.BaseGeoMapActivity;

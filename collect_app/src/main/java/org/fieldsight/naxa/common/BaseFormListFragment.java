@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.ui.EducationalMaterialListActivity;

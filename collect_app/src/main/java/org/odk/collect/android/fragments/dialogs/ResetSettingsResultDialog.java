@@ -23,7 +23,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import androidx.fragment.app.DialogFragment;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 
 public class ResetSettingsResultDialog extends DialogFragment {
     public static final String RESET_SETTINGS_RESULT_DIALOG_TAG = "resetSettingsResultDialogTag";

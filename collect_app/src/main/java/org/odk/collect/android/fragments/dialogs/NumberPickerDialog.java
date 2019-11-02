@@ -26,7 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 
 public class NumberPickerDialog extends DialogFragment {
 

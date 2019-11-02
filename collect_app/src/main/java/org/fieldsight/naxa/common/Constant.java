@@ -1,6 +1,6 @@
 package org.fieldsight.naxa.common;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 
 import java.util.HashMap;
 

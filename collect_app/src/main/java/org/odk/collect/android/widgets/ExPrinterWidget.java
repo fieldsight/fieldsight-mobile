@@ -23,10 +23,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 
 
@@ -117,7 +117,7 @@ public class ExPrinterWidget extends QuestionWidget implements BinaryWidget {
 
     private final Button launchIntentButton;
 
-    public ExPrinterWidget(Context context, FormEntryPrompt prompt) {
+    public ExPrinterWidget(Context context, QuestionDetails prompt) {
         super(context, prompt);
 
         String v = getFormEntryPrompt().getSpecialFormQuestionText("buttonText");

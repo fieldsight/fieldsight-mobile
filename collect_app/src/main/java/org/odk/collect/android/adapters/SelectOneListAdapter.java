@@ -28,7 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.helper.Selection;
 import org.odk.collect.android.widgets.AbstractSelectOneWidget;
@@ -81,8 +81,8 @@ public class SelectOneListAdapter extends AbstractSelectListAdapter
             } else {
                 autoAdvanceIcon = v.findViewById(R.id.auto_advance_icon);
                 autoAdvanceIcon.setVisibility(((AbstractSelectOneWidget) widget).isAutoAdvance() ? View.VISIBLE : View.GONE);
-                mediaLayout = v.findViewById(R.id.mediaLayout);
-                widget.initMediaLayoutSetUp(mediaLayout);
+                audioVideoImageTextLabel = v.findViewById(R.id.mediaLayout);
+                widget.init(audioVideoImageTextLabel);
             }
         }
 

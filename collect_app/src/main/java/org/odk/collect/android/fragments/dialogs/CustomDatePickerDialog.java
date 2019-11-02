@@ -26,7 +26,7 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.logic.DatePickerDetails;
 import org.odk.collect.android.logic.FormController;

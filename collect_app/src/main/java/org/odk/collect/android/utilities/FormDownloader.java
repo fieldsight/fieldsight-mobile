@@ -20,7 +20,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.http.CollectServerClient;
 import org.odk.collect.android.listeners.FormDownloaderListener;
@@ -532,7 +532,7 @@ public class FormDownloader {
                     String.valueOf(count), String.valueOf(total));
         }
 
-        List<MediaFile> files = new ArrayList<MediaFile>();
+        List<MediaFile> files = new ArrayList<>();
 
         DocumentFetchResult result = collectServerClient.getXmlDocument(fd.getManifestUrl());
 

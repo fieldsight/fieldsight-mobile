@@ -7,15 +7,16 @@ import com.google.common.collect.ImmutableList;
 
 import net.bytebuddy.utility.RandomString;
 
-import org.javarosa.core.model.osm.OSMTag;
-import org.odk.collect.android.logic.FormController;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.core.model.data.StringData;
+import org.javarosa.core.model.osm.OSMTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.fieldsight.collect.android.R;
+import org.odk.collect.android.R;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
+import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.widgets.base.BinaryWidgetTest;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class OSMWidgetTest extends BinaryWidgetTest<OSMWidget, StringData> {
     @NonNull
     @Override
     public OSMWidget createWidget() {
-        return new OSMWidget(activity, formEntryPrompt);
+        return new OSMWidget(activity, new QuestionDetails(formEntryPrompt, "formAnalyticsID"));
     }
 
     @NonNull

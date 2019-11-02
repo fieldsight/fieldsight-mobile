@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.primitives.Longs;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FilterDialogAdapter;

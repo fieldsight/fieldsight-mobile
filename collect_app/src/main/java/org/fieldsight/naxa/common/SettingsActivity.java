@@ -11,7 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.BaseActivity;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ServiceGenerator;

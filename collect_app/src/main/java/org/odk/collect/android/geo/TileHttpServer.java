@@ -17,7 +17,7 @@ import java.util.Map;
 import timber.log.Timber;
 
 /** A minimal HTTP server that serves tiles from a set of TileSources. */
-public class TileHttpServer {
+class TileHttpServer {
     private static final int PORT_MIN = 8000;
     private static final int PORT_MAX = 8999;
 
@@ -25,7 +25,7 @@ public class TileHttpServer {
     private final ServerThread server;
     private final ServerSocket socket;
 
-    public TileHttpServer() throws IOException {
+    TileHttpServer() throws IOException {
         socket = createBoundSocket(PORT_MIN, PORT_MAX);
         if (socket == null) {
             throw new IOException("Could not find an available port");

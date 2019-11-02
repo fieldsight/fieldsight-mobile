@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.generalforms.data.FormResponse;
 import org.fieldsight.naxa.generalforms.data.GetResponce;

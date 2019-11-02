@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.apache.commons.io.FilenameUtils;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 
 import java.util.List;
 

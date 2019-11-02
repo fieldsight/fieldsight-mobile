@@ -13,7 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.GlideApp;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 

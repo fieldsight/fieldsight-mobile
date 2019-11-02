@@ -5,7 +5,7 @@ import android.os.Handler;
 
 import android.view.View;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 

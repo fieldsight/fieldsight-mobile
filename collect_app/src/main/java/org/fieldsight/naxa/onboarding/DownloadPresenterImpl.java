@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.contact.ContactRemoteSource;

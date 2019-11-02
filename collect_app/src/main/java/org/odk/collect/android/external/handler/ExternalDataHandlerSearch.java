@@ -21,7 +21,7 @@ package org.odk.collect.android.external.handler;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalDataException;
 import org.odk.collect.android.external.ExternalDataManager;
@@ -146,7 +146,7 @@ public class ExternalDataHandlerSearch extends ExternalDataHandlerBase {
                     ExternalDataUtil.createMapWithDisplayingColumns(getValueColumn(),
                             getDisplayColumns());
 
-            List<String> columnsToFetch = new ArrayList<String>(selectColumnMap.keySet());
+            List<String> columnsToFetch = new ArrayList<>(selectColumnMap.keySet());
             String safeImageColumn = null;
             if (getImageColumn() != null && getImageColumn().trim().length() > 0) {
                 safeImageColumn = ExternalDataUtil.toSafeColumnName(getImageColumn());
@@ -197,16 +197,16 @@ public class ExternalDataHandlerSearch extends ExternalDataHandlerBase {
 
     protected ArrayList<SelectChoice> createDynamicSelectChoices(Cursor c,
             LinkedHashMap<String, String> selectColumnMap, String safeImageColumn) {
-        List<String> columnsToExcludeFromLabels = new ArrayList<String>();
+        List<String> columnsToExcludeFromLabels = new ArrayList<>();
         if (safeImageColumn != null) {
             columnsToExcludeFromLabels.add(safeImageColumn);
         }
 
-        ArrayList<SelectChoice> selectChoices = new ArrayList<SelectChoice>();
+        ArrayList<SelectChoice> selectChoices = new ArrayList<>();
         if (c.getCount() > 0) {
             c.moveToPosition(-1);
             int index = 0;
-            Set<String> uniqueValues = new HashSet<String>();
+            Set<String> uniqueValues = new HashSet<>();
             while (c.moveToNext()) {
 
                 // the value is always the first column

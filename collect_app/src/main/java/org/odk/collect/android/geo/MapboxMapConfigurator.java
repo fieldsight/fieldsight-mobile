@@ -8,7 +8,7 @@ import android.preference.Preference;
 import com.google.common.collect.ImmutableSet;
 import com.mapbox.mapboxsdk.maps.Style;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.preferences.PrefUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 

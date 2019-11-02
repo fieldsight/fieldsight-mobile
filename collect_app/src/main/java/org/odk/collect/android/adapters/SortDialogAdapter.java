@@ -25,7 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.listeners.RecyclerViewClickListener;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ThemeUtils;

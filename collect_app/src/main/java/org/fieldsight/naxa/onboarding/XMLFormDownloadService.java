@@ -13,7 +13,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.DownloadFormsTaskListener;
 import org.odk.collect.android.listeners.FormListDownloaderListener;

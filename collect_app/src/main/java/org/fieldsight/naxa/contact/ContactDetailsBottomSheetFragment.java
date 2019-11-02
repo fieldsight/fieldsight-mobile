@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.GlideApp;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 

@@ -26,7 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;

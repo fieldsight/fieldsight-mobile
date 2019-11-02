@@ -20,7 +20,7 @@ package org.odk.collect.android.dto;
 import androidx.annotation.NonNull;
 
 /**
- * This class represents a single row from the INSTANCES table which is located in
+ * This class represents a single row from the instances table which is located in
  * {@link org.odk.collect.android.provider.InstanceProvider#DATABASE_NAME}
  * For more information about this pattern go to https://en.wikipedia.org/wiki/Data_transfer_object
  * Objects of this class are created using builder pattern: https://en.wikipedia.org/wiki/Builder_pattern
@@ -193,26 +193,6 @@ public final class Instance {
 
     public Long getDatabaseId() {
         return databaseId;
-
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "Instance{" +
-                "displayName='" + displayName + '\'' + '\n' +
-                ", submissionUri='" + submissionUri + '\'' + '\n' +
-                ", canEditWhenComplete='" + canEditWhenComplete + '\'' + '\n' +
-                ", instanceFilePath='" + instanceFilePath + '\'' + '\n' +
-                ", jrFormId='" + jrFormId + '\'' + '\n' +
-                ", jrVersion='" + jrVersion + '\'' + '\n' +
-                ", status='" + status + '\'' + '\n' +
-                ", lastStatusChangeDate=" + lastStatusChangeDate + '\n' +
-                ", deletedDate=" + deletedDate + '\n' +
-                ", fieldSightSiteId='" + fieldSightSiteId + '\'' + '\n' +
-                ", fieldSightInstanceId='" + fieldSightInstanceId + '\'' + '\n' +
-                ", databaseId=" + databaseId + '\n' +
-                '}';
     }
 
     @Override

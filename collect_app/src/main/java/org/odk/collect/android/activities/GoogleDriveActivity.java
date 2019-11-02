@@ -41,7 +41,7 @@ import android.widget.ListView;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
 import com.google.api.services.drive.Drive;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.FileArrayAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.MultipleFoldersFoundException;
@@ -442,7 +442,7 @@ public class GoogleDriveActivity extends FormListActivity implements View.OnClic
     }
 
     private Stack<String> buildPath(String[] paths) {
-        Stack<String> pathStack = new Stack<String>();
+        Stack<String> pathStack = new Stack<>();
         for (String path : paths) {
             pathStack.push(path);
         }

@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.widget.Toast;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.AboutListAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.CustomTabHelper;

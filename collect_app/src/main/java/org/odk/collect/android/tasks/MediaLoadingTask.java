@@ -6,7 +6,7 @@ import android.provider.MediaStore;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.GDriveConnectionException;
 import org.odk.collect.android.fragments.dialogs.ProgressDialogFragment;

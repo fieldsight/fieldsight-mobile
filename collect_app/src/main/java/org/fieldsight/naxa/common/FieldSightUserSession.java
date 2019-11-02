@@ -12,7 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.evernote.android.job.JobManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.DeleteFormsListener;
 import org.odk.collect.android.listeners.DeleteInstancesListener;

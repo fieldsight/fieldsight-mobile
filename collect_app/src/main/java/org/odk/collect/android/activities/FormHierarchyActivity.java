@@ -36,7 +36,7 @@ import org.javarosa.core.model.instance.TreeReference;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryPrompt;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.HierarchyListAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.JavaRosaException;

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 
 /**

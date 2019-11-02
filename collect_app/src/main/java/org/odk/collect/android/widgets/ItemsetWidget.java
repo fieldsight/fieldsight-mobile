@@ -18,21 +18,22 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-import androidx.annotation.NonNull;
 import android.widget.TextView;
 
-import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.database.ItemsetDbAdapter;
-import org.odk.collect.android.logic.FormController;
+import androidx.annotation.NonNull;
+
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.condition.EvaluationContext;
 import org.javarosa.core.model.instance.TreeElement;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xpath.XPathNodeset;
 import org.javarosa.xpath.expr.XPathExpression;
 import org.javarosa.xpath.parser.XPathSyntaxException;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.database.ItemsetDbAdapter;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
+import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.utilities.FileUtil;
 import org.odk.collect.android.utilities.XPathParseTool;
 
@@ -57,12 +58,12 @@ public class ItemsetWidget extends AbstractSelectOneWidget {
     private final ItemsetDbAdapter adapter;
     private final FileUtil fileUtil;
 
-    protected ItemsetWidget(Context context, FormEntryPrompt formEntryPrompt, boolean autoAdvanceToNext) {
+    protected ItemsetWidget(Context context, QuestionDetails formEntryPrompt, boolean autoAdvanceToNext) {
         this(context, formEntryPrompt, autoAdvanceToNext, new XPathParseTool(), new ItemsetDbAdapter(), new FileUtil());
     }
 
     public ItemsetWidget(Context context,
-                         FormEntryPrompt formEntryPrompt,
+                         QuestionDetails formEntryPrompt,
                          boolean autoAdvance,
                          @NonNull XPathParseTool parseTool,
                          @NonNull ItemsetDbAdapter adapter,

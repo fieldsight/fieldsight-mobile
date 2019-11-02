@@ -21,16 +21,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.fragments.dialogs.RankingWidgetDialog;
-import org.odk.collect.android.logic.FormController;
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
-import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
+import org.odk.collect.android.fragments.dialogs.RankingWidgetDialog;
+import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.widgets.interfaces.BinaryWidget;
 import org.odk.collect.android.widgets.warnings.SpacesInUnderlyingValuesWarning;
 
@@ -44,7 +44,7 @@ public class RankingWidget extends ItemsWidget implements BinaryWidget {
     private LinearLayout widgetLayout;
     private Button showRankingDialogButton;
 
-    public RankingWidget(Context context, FormEntryPrompt prompt) {
+    public RankingWidget(Context context, QuestionDetails prompt) {
         super(context, prompt);
 
         setUpLayout(getOrderedItems());
@@ -125,8 +125,8 @@ public class RankingWidget extends ItemsWidget implements BinaryWidget {
     private List<SelectChoice> getOrderedItems() {
         List<Selection> savedOrderedItems =
                 getFormEntryPrompt().getAnswerValue() == null
-                        ? new ArrayList<>()
-                        : (List<Selection>) getFormEntryPrompt().getAnswerValue().getValue();
+                ? new ArrayList<>()
+                : (List<Selection>) getFormEntryPrompt().getAnswerValue().getValue();
 
         if (savedOrderedItems.isEmpty()) {
             return items;

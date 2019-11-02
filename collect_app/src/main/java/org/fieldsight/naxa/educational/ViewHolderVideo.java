@@ -7,7 +7,7 @@ import android.widget.VideoView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 
 /**
  * Created by susan on 7/5/2017.

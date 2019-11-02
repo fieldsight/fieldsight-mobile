@@ -24,7 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 
 import timber.log.Timber;
 

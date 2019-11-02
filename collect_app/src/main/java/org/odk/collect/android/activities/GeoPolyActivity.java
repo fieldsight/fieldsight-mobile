@@ -30,7 +30,8 @@ import android.widget.TextView;
 
 import androidx.annotation.VisibleForTesting;
 
-import org.fieldsight.collect.android.R;
+
+import org.bcss.collect.android.R;
 import org.odk.collect.android.geo.MapFragment;
 import org.odk.collect.android.geo.MapPoint;
 import org.odk.collect.android.geo.MapProvider;
@@ -327,7 +328,7 @@ public class GeoPolyActivity extends BaseGeoMapActivity {
     private void populateSpinner(Spinner spinner, String[] options) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
             this, android.R.layout.simple_spinner_item, options);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
 

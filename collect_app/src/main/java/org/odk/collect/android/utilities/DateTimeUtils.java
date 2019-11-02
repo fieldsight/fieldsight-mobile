@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.text.format.DateUtils;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
@@ -12,6 +12,7 @@ import org.joda.time.chrono.CopticChronology;
 import org.joda.time.chrono.EthiopicChronology;
 import org.joda.time.chrono.IslamicChronology;
 import org.joda.time.chrono.PersianChronologyKhayyamBorkowski;
+
 import org.odk.collect.android.logic.DatePickerDetails;
 
 import java.text.DateFormat;

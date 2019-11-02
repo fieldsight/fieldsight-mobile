@@ -46,19 +46,19 @@ import com.google.android.gms.security.ProviderInstaller;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FieldSightUserSession;
-import org.fieldsight.naxa.jobs.DailyNotificationJob;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.v3.network.Syncable;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.external.ExternalDataManager;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
@@ -186,7 +186,6 @@ public class Collect extends Application {
         }
     }
 
-
     /**
      * Predicate that tests whether a directory path might refer to an
      * ODK Tables instance data directory (e.g., for media attachments).
@@ -200,8 +199,8 @@ public class Collect extends Application {
         if (dirPath.startsWith(Collect.ODK_ROOT)) {
             dirPath = dirPath.substring(Collect.ODK_ROOT.length());
             String[] parts = dirPath.split(File.separatorChar == '\\' ? "\\\\" : File.separator);
-            // [appName, INSTANCES, tableId, instanceId ]
-            if (parts.length == 4 && parts[1].equals("INSTANCES")) {
+            // [appName, instances, tableId, instanceId ]
+            if (parts.length == 4 && parts[1].equals("instances")) {
                 return true;
             }
         }
@@ -267,7 +266,7 @@ public class Collect extends Application {
         singleton = this;
         firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-
+        installTls12();
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
         }
@@ -308,16 +307,12 @@ public class Collect extends Application {
         initializeJavaRosa();
 
         if (BuildConfig.BUILD_TYPE.equals("release")) {
-            setupCrashlytics();
             Timber.plant(new CrashReportingTree());
         } else {
             Timber.plant(new Timber.DebugTree());
         }
 
         setupLeakCanary();
-        DailyNotificationJob.schedule();
-
-
         setupOSMDroid();
     }
 

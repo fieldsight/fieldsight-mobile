@@ -16,12 +16,15 @@
 
 package org.odk.collect.android.database.helpers;
 
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.database.DatabaseContext;
 import org.odk.collect.android.utilities.CustomSQLiteQueryBuilder;
+
+import java.io.File;
 
 import timber.log.Timber;
 
@@ -50,12 +53,16 @@ import static org.odk.collect.android.provider.FormsProviderAPI.FormsColumns.SUB
 public class FormsDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "forms.db";
     public static final String FORMS_TABLE_NAME = "forms";
+    public static final String DATABASE_PATH = Collect.METADATA_PATH + File.separator + DATABASE_NAME;
 
     private static final int DATABASE_VERSION = 8;
 
     // These exist in database versions 2 and 3, but not in 4...
     private static final String TEMP_FORMS_TABLE_NAME = "forms_v4";
     private static final String MODEL_VERSION = "modelVersion";
+
+    private static boolean isDatabaseBeingMigrated;
+
 
     public FormsDatabaseHelper() {
         super(new DatabaseContext(Collect.METADATA_PATH), DATABASE_NAME, null, DATABASE_VERSION);
@@ -339,5 +346,26 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
                 + AUTO_DELETE + " text, "
                 + IS_TEMP_DOWNLOAD + " text, "
                 + LAST_DETECTED_FORM_VERSION_HASH + " text);");
+    }
+
+
+    public static void databaseMigrationStarted() {
+        isDatabaseBeingMigrated = true;
+    }
+
+    public static boolean isDatabaseBeingMigrated() {
+        return isDatabaseBeingMigrated;
+    }
+
+    public static boolean databaseNeedsUpgrade() {
+        boolean isDatabaseHelperOutOfDate = false;
+        try {
+            SQLiteDatabase db = SQLiteDatabase.openDatabase(FormsDatabaseHelper.DATABASE_PATH, null, SQLiteDatabase.OPEN_READONLY);
+            isDatabaseHelperOutOfDate = FormsDatabaseHelper.DATABASE_VERSION != db.getVersion();
+            db.close();
+        } catch (SQLException e) {
+            Timber.i(e);
+        }
+        return isDatabaseHelperOutOfDate;
     }
 }

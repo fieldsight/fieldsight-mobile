@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;

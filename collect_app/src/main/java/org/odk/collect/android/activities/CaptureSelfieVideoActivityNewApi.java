@@ -22,7 +22,7 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.fragments.Camera2VideoFragment;
 import org.odk.collect.android.utilities.ToastUtils;
 

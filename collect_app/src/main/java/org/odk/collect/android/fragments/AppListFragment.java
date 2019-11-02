@@ -35,7 +35,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.SortDialogAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.RecyclerViewClickListener;

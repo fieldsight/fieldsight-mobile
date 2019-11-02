@@ -17,8 +17,6 @@ package org.odk.collect.android.widgets;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatRadioButton;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -33,9 +31,10 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.fieldsight.collect.android.R;
-import org.odk.collect.android.external.ExternalSelectChoice;
-import org.odk.collect.android.listeners.AdvanceToNextListener;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatRadioButton;
+
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.SelectChoice;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectOneData;
@@ -43,7 +42,9 @@ import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;
-import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.external.ExternalSelectChoice;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
+import org.odk.collect.android.listeners.AdvanceToNextListener;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
@@ -74,8 +75,8 @@ public class ListWidget extends ItemsWidget implements MultiChoiceWidget, OnChec
     ArrayList<RadioButton> buttons;
     View center;
 
-    public ListWidget(Context context, FormEntryPrompt prompt, boolean displayLabel, boolean autoAdvance) {
-        super(context, prompt);
+    public ListWidget(Context context, QuestionDetails questionDetails, boolean displayLabel, boolean autoAdvance) {
+        super(context, questionDetails);
 
         this.autoAdvance = autoAdvance;
         if (context instanceof AdvanceToNextListener) {
@@ -88,8 +89,8 @@ public class ListWidget extends ItemsWidget implements MultiChoiceWidget, OnChec
         LinearLayout buttonLayout = new LinearLayout(context);
 
         String s = null;
-        if (prompt.getAnswerValue() != null) {
-            s = ((Selection) prompt.getAnswerValue().getValue()).getValue();
+        if (questionDetails.getPrompt().getAnswerValue() != null) {
+            s = ((Selection) questionDetails.getPrompt().getAnswerValue().getValue()).getValue();
         }
 
         if (items != null) {
@@ -97,8 +98,8 @@ public class ListWidget extends ItemsWidget implements MultiChoiceWidget, OnChec
                 AppCompatRadioButton r = new AppCompatRadioButton(getContext());
                 r.setId(ViewIds.generateViewId());
                 r.setTag(i);
-                r.setEnabled(!prompt.isReadOnly());
-                r.setFocusable(!prompt.isReadOnly());
+                r.setEnabled(!questionDetails.getPrompt().isReadOnly());
+                r.setFocusable(!questionDetails.getPrompt().isReadOnly());
 
                 buttons.add(r);
 
@@ -111,7 +112,7 @@ public class ListWidget extends ItemsWidget implements MultiChoiceWidget, OnChec
                 if (items.get(i) instanceof ExternalSelectChoice) {
                     imageURI = ((ExternalSelectChoice) items.get(i)).getImage();
                 } else {
-                    imageURI = prompt.getSpecialFormSelectChoiceText(items.get(i),
+                    imageURI = questionDetails.getPrompt().getSpecialFormSelectChoiceText(items.get(i),
                             FormEntryCaption.TEXT_FORM_IMAGE);
                 }
 
@@ -177,7 +178,7 @@ public class ListWidget extends ItemsWidget implements MultiChoiceWidget, OnChec
                 // build text label. Don't assign the text to the built in label to he
                 // button because it aligns horizontally, and we want the label on top
                 TextView label = new TextView(getContext());
-                label.setText(prompt.getSelectChoiceText(items.get(i)));
+                label.setText(questionDetails.getPrompt().getSelectChoiceText(items.get(i)));
                 label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
                 label.setGravity(Gravity.CENTER_HORIZONTAL);
                 if (!displayLabel) {

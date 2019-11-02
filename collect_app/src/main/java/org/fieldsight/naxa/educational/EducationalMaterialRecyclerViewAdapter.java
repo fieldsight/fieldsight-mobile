@@ -16,8 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;;
 
 import java.io.File;
 import java.util.List;

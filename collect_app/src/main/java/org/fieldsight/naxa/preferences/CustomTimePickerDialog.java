@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.Window;
 import android.widget.TimePicker;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

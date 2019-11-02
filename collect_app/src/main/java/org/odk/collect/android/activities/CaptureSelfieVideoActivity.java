@@ -28,7 +28,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.views.CameraPreview;
 import org.odk.collect.android.utilities.CameraUtils;

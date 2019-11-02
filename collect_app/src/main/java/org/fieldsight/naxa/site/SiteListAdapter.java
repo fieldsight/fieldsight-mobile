@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.anim.FlipAnimator;
 import org.fieldsight.naxa.login.model.Site;

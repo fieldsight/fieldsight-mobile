@@ -35,7 +35,7 @@ import android.widget.ListView;
 import com.google.common.collect.ImmutableList;
 import com.rarepebble.colorpicker.ColorPickerView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.adapters.IconMenuListAdapter;
 import org.odk.collect.android.adapters.model.IconMenuItem;
 import org.odk.collect.android.application.Collect;

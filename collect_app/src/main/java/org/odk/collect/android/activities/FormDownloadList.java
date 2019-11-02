@@ -36,12 +36,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.activities.viewmodels.FormDownloadListViewModel;
 import org.odk.collect.android.adapters.FormDownloadListAdapter;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
-import org.odk.collect.android.http.HttpCredentialsInterface;
+import org.odk.collect.android.http.openrosa.HttpCredentialsInterface;
 import org.odk.collect.android.injection.DaggerUtils;
 import org.odk.collect.android.listeners.DownloadFormsTaskListener;
 import org.odk.collect.android.listeners.FormListDownloaderListener;
@@ -75,13 +75,13 @@ import static org.odk.collect.android.utilities.DownloadFormListUtils.DL_ERROR_M
 /**
  * Responsible for displaying, adding and deleting all the valid FORMS in the FORMS directory. One
  * caveat. If the server requires authentication, a dialog will pop up asking when you request the
- * form list. If somehow you manage to wait long enough and then try to download selected FORMS and
+ * form list. If somehow you manage to wait long enough and then try to download selected forms and
  * your authorization has timed out, it won't again ask for authentication, it will just throw a
  * 401
  * and you'll have to hit 'refresh' where it will ask for credentials again. Technically a server
- * could point at other servers requiring authentication to download the FORMS, but the current
+ * could point at other servers requiring authentication to download the forms, but the current
  * implementation in Collect doesn't allow for that. Mostly this is just because it's a pain in the
- * butt to keep track of which FORMS we've downloaded and where we're needing to authenticate. I
+ * butt to keep track of which forms we've downloaded and where we're needing to authenticate. I
  * think we do something similar in the instanceuploader task/activity, so should change the
  * implementation eventually.
  *
@@ -407,10 +407,10 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     }
 
     /**
-     * starts the task to download the selected FORMS, also shows progress dialog
+     * starts the task to download the selected forms, also shows progress dialog
      */
     private void downloadSelectedFiles() {
-        ArrayList<FormDetails> filesToDownload = new ArrayList<FormDetails>();
+        ArrayList<FormDetails> filesToDownload = new ArrayList<>();
 
         SparseBooleanArray sba = listView.getCheckedItemPositions();
         for (int i = 0; i < listView.getCount(); i++) {
@@ -510,9 +510,9 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
     }
 
     /**
-     * Causes any local FORMS that have been updated on the server to become checked in the list.
+     * Causes any local forms that have been updated on the server to become checked in the list.
      * This is a prompt and a
-     * convenience to users to download the latest version of those FORMS from the server.
+     * convenience to users to download the latest version of those forms from the server.
      */
     private void selectSupersededForms() {
 
@@ -569,13 +569,13 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
             viewModel.clearFormList();
 
-            ArrayList<String> ids = new ArrayList<String>(viewModel.getFormNamesAndURLs().keySet());
+            ArrayList<String> ids = new ArrayList<>(viewModel.getFormNamesAndURLs().keySet());
             for (int i = 0; i < result.size(); i++) {
                 String formDetailsKey = ids.get(i);
                 FormDetails details = viewModel.getFormNamesAndURLs().get(formDetailsKey);
 
                 if (!displayOnlyUpdatedForms || (details.isNewerFormVersionAvailable() || details.areNewerMediaFilesAvailable())) {
-                    HashMap<String, String> item = new HashMap<String, String>();
+                    HashMap<String, String> item = new HashMap<>();
                     item.put(FORMNAME, details.getFormName());
                     item.put(FORMID_DISPLAY,
                             ((details.getFormVersion() == null) ? "" : (getString(R.string.version) + " "
@@ -608,7 +608,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
             toggleButtonLabel(toggleButton, listView);
 
             if (viewModel.isDownloadOnlyMode()) {
-                //1. First check if all form IDS could be found on the server - Register FORMS that could not be found
+                //1. First check if all form IDS could be found on the server - Register forms that could not be found
 
                 for (String formId: viewModel.getFormIdsToDownload()) {
                     viewModel.putFormResult(formId, false);
@@ -624,11 +624,11 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
                     }
                 }
 
-                //2. Select FORMS and start downloading
+                //2. Select forms and start downloading
                 if (!filesToDownload.isEmpty()) {
                     startFormsDownload(filesToDownload);
                 } else {
-                    // None of the FORMS was found
+                    // None of the forms was found
                     setReturnResult(false, "Forms not found on server", viewModel.getFormResults());
                     finish();
                 }
@@ -756,7 +756,7 @@ public class FormDownloadList extends FormListActivity implements FormListDownlo
 
         createAlertDialog(getString(R.string.download_forms_result), getDownloadResultMessage(result), EXIT);
 
-        // Set result to true for FORMS which were downloaded
+        // Set result to true for forms which were downloaded
         if (viewModel.isDownloadOnlyMode()) {
             for (FormDetails formDetails: result.keySet()) {
                 String successKey = result.get(formDetails);

@@ -9,7 +9,7 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.activities.InstanceUploaderListActivity;
 import org.odk.collect.android.tasks.sms.contracts.SmsSubmissionManagerContract;

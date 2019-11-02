@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.helpers.FSInstancesDao;

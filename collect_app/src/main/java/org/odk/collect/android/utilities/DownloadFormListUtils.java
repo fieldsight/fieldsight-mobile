@@ -24,9 +24,9 @@ import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 
-import org.fieldsight.collect.android.R;
 import org.javarosa.xform.parse.XFormParser;
 import org.kxml2.kdom.Element;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.dao.FormsDao;
 import org.odk.collect.android.http.CollectServerClient;
 import org.odk.collect.android.logic.FormDetails;
@@ -94,9 +94,9 @@ public class DownloadFormListUtils {
 
         downloadListUrl += downloadPath;
 
-        // We populate this with available FORMS from the specified server.
+        // We populate this with available forms from the specified server.
         // <formname, details>
-        HashMap<String, FormDetails> formList = new HashMap<String, FormDetails>();
+        HashMap<String, FormDetails> formList = new HashMap<>();
 
         if (url != null) {
             String host = Uri.parse(url).getHost();

@@ -16,7 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.OnFormItemClickListener;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
 import org.fieldsight.naxa.common.ViewModelFactory;

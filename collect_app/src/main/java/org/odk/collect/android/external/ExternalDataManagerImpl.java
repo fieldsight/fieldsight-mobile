@@ -18,7 +18,7 @@
 
 package org.odk.collect.android.external;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.exception.ExternalDataException;
 
@@ -35,7 +35,7 @@ import timber.log.Timber;
  */
 public class ExternalDataManagerImpl implements ExternalDataManager {
 
-    private final Map<String, ExternalSQLiteOpenHelper> dbMap = new HashMap<String, ExternalSQLiteOpenHelper>();
+    private final Map<String, ExternalSQLiteOpenHelper> dbMap = new HashMap<>();
 
     private final File mediaFolder;
 

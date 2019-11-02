@@ -24,13 +24,13 @@ import android.widget.Button;
 
 import androidx.core.content.FileProvider;
 
-import org.fieldsight.collect.android.BuildConfig;
-import org.fieldsight.collect.android.R;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.listeners.PermissionListener;
-import org.javarosa.form.api.FormEntryPrompt;
+import org.bcss.collect.android.BuildConfig;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.activities.CaptureSelfieActivity;
 import org.odk.collect.android.activities.CaptureSelfieActivityNewApi;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
+import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.utilities.CameraUtils;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.WidgetAppearanceUtils;
@@ -55,7 +55,7 @@ public class ImageWidget extends BaseImageWidget {
 
     private boolean selfie;
 
-    public ImageWidget(Context context, final FormEntryPrompt prompt) {
+    public ImageWidget(Context context, final QuestionDetails prompt) {
         super(context, prompt);
         imageClickHandler = new ViewImageClickHandler();
         imageCaptureHandler = new ImageCaptureHandler();

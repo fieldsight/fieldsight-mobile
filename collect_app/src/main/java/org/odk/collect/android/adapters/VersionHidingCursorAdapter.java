@@ -20,7 +20,7 @@ import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.provider.FormsProviderAPI;
 
 import java.text.SimpleDateFormat;

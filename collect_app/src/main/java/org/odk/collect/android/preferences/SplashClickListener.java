@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.preference.Preference;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 
 class SplashClickListener implements Preference.OnPreferenceClickListener {
     private final UserInterfacePreferences preferencesFragment;

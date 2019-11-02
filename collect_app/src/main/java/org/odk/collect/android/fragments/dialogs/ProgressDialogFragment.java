@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import android.view.Window;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 
 import timber.log.Timber;
 

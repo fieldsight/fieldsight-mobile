@@ -48,7 +48,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.fragments.dialogs.ErrorDialog;
 import org.odk.collect.android.utilities.CameraUtils;

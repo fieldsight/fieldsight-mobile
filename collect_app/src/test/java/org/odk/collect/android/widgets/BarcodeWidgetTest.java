@@ -8,8 +8,9 @@ import net.bytebuddy.utility.RandomString;
 import org.javarosa.core.model.data.StringData;
 import org.junit.Before;
 import org.junit.Test;
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.activities.ScannerWithFlashlightActivity;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.widgets.base.BinaryWidgetTest;
 
 /**
@@ -23,7 +24,7 @@ public class BarcodeWidgetTest extends BinaryWidgetTest<BarcodeWidget, StringDat
     @NonNull
     @Override
     public BarcodeWidget createWidget() {
-        return new BarcodeWidget(activity, formEntryPrompt);
+        return new BarcodeWidget(activity, new QuestionDetails(formEntryPrompt, "formAnalyticsID"));
     }
 
     @Override

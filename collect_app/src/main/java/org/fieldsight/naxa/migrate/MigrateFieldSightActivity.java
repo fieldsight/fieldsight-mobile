@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProviders;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.ViewModelFactory;
 import org.fieldsight.naxa.onboarding.DownloadActivity;
 import org.odk.collect.android.activities.CollectAbstractActivity;

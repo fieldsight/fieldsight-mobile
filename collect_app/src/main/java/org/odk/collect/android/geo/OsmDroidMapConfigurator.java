@@ -7,7 +7,7 @@ import android.preference.Preference;
 
 import com.google.common.collect.ImmutableSet;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.preferences.PrefUtils;
 
 import java.io.File;

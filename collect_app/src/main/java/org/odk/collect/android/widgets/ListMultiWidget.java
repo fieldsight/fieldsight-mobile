@@ -17,7 +17,6 @@ package org.odk.collect.android.widgets;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import androidx.appcompat.widget.AppCompatCheckBox;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -31,15 +30,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatCheckBox;
+
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.SelectMultiData;
 import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.core.reference.InvalidReferenceException;
 import org.javarosa.core.reference.ReferenceManager;
 import org.javarosa.form.api.FormEntryCaption;
-import org.javarosa.form.api.FormEntryPrompt;
-import org.fieldsight.collect.android.R;
 import org.odk.collect.android.external.ExternalSelectChoice;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.utilities.FileUtils;
 import org.odk.collect.android.utilities.ViewIds;
 import org.odk.collect.android.widgets.interfaces.MultiChoiceWidget;
@@ -68,8 +69,8 @@ public class ListMultiWidget extends ItemsWidget implements MultiChoiceWidget {
     private View center;
 
     @SuppressWarnings("unchecked")
-    public ListMultiWidget(Context context, FormEntryPrompt prompt, boolean displayLabel) {
-        super(context, prompt);
+    public ListMultiWidget(Context context, QuestionDetails questionDetails, boolean displayLabel) {
+        super(context, questionDetails);
 
         checkBoxes = new ArrayList<>();
 
@@ -77,8 +78,8 @@ public class ListMultiWidget extends ItemsWidget implements MultiChoiceWidget {
         LinearLayout buttonLayout = new LinearLayout(context);
 
         List<Selection> ve = new ArrayList<>();
-        if (prompt.getAnswerValue() != null) {
-            ve = (List<Selection>) prompt.getAnswerValue().getValue();
+        if (questionDetails.getPrompt().getAnswerValue() != null) {
+            ve = (List<Selection>) questionDetails.getPrompt().getAnswerValue().getValue();
         }
 
         if (items != null) {
@@ -87,8 +88,8 @@ public class ListMultiWidget extends ItemsWidget implements MultiChoiceWidget {
                 AppCompatCheckBox c = new AppCompatCheckBox(getContext());
                 c.setTag(i);
                 c.setId(ViewIds.generateViewId());
-                c.setFocusable(!prompt.isReadOnly());
-                c.setEnabled(!prompt.isReadOnly());
+                c.setFocusable(!questionDetails.getPrompt().isReadOnly());
+                c.setEnabled(!questionDetails.getPrompt().isReadOnly());
 
                 for (int vi = 0; vi < ve.size(); vi++) {
                     // match based on value, not key
@@ -120,7 +121,7 @@ public class ListMultiWidget extends ItemsWidget implements MultiChoiceWidget {
                 if (items.get(i) instanceof ExternalSelectChoice) {
                     imageURI = ((ExternalSelectChoice) items.get(i)).getImage();
                 } else {
-                    imageURI = prompt.getSpecialFormSelectChoiceText(items.get(i),
+                    imageURI = questionDetails.getPrompt().getSpecialFormSelectChoiceText(items.get(i),
                             FormEntryCaption.TEXT_FORM_IMAGE);
                 }
 
@@ -186,7 +187,7 @@ public class ListMultiWidget extends ItemsWidget implements MultiChoiceWidget {
                 // build text label. Don't assign the text to the built in label to he
                 // button because it aligns horizontally, and we want the label on top
                 TextView label = new TextView(getContext());
-                label.setText(prompt.getSelectChoiceText(items.get(i)));
+                label.setText(questionDetails.getPrompt().getSelectChoiceText(items.get(i)));
                 label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, getAnswerFontSize());
                 label.setGravity(Gravity.CENTER_HORIZONTAL);
                 if (!displayLabel) {

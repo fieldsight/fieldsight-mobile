@@ -22,10 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
-import org.javarosa.form.api.FormEntryPrompt;
+import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.utilities.CustomTabHelper;
 import org.odk.collect.android.widgets.interfaces.ButtonWidget;
 
@@ -43,14 +43,14 @@ public class UrlWidget extends QuestionWidget implements ButtonWidget {
     private final TextView stringAnswer;
     private final CustomTabHelper customTabHelper;
 
-    public UrlWidget(Context context, FormEntryPrompt prompt) {
-        super(context, prompt);
+    public UrlWidget(Context context, QuestionDetails questionDetails) {
+        super(context, questionDetails);
 
         openUrlButton = getSimpleButton(context.getString(R.string.open_url));
 
         stringAnswer = getCenteredAnswerTextView();
 
-        String s = prompt.getAnswerText();
+        String s = questionDetails.getPrompt().getAnswerText();
         if (s != null) {
             stringAnswer.setText(s);
             uri = Uri.parse(stringAnswer.getText().toString());

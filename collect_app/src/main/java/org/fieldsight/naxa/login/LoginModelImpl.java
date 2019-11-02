@@ -2,7 +2,7 @@ package org.fieldsight.naxa.login;
 
 import android.text.TextUtils;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.SharedPreferenceUtils;
 import org.fieldsight.naxa.common.exception.FirebaseTokenException;

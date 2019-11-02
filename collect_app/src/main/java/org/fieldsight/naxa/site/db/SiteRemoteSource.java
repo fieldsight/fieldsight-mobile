@@ -1,6 +1,6 @@
 package org.fieldsight.naxa.site.db;
 
-import org.fieldsight.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.BaseRemoteDataSource;
 import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;

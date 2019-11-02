@@ -1,6 +1,6 @@
 package org.fieldsight.naxa.network;
 
-import org.fieldsight.collect.android.BuildConfig;
+import org.bcss.collect.android.BuildConfig;
 
 public class APIEndpoint {
     public final static int NEW_RECORD_CREATED = 201;
