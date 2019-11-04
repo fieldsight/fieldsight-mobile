@@ -287,6 +287,8 @@
     <string name="nav_rejected_form">Rejected submissions</string>
     <string name="nav_flagged_form">Flagged submissions</string>
     <string name="msg_form_flagged">%s (%s) in %s</string>
+    <string name="notify_message_form_updated">%s form has been updated</string>
+    <string name="notify_title_form_updated">Form has been updated</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>
