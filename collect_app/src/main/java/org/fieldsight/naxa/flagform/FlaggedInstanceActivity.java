@@ -120,7 +120,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private void setupToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Form FLAGGED");
+        getSupportActionBar().setTitle("Form Flagged");
         initBack();
     }
 
