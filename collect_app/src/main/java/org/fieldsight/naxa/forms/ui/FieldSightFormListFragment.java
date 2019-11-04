@@ -92,7 +92,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                             }
                             try {
                                 JSONObject settingJSON = new JSONObject(fieldsightFormDetailsv3.getSettings());
-                                boolean typeFound = isProjectRegionsEmpty;
+                                boolean typeFound = isProjectTypesEmpty;
                                 if(!typeFound) {
                                     JSONArray typesArray = settingJSON.optJSONArray("types");
                                     for (int i = 0; i < typesArray.length(); i++) {
@@ -102,7 +102,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                                         }
                                     }
                                 }
-                                boolean regionFound = isProjectTypesEmpty;
+                                boolean regionFound = isProjectRegionsEmpty;
                                 if(!regionFound) {
                                     JSONArray regionsArray = settingJSON.optJSONArray("regions");
                                     for (int i = 0; i < regionsArray.length(); i++) {
