@@ -27,4 +27,7 @@ public abstract class SiteTypeDAO implements BaseDaoFieldSight<SiteType> {
 
     @Query("SELECT * FROM site_types WHERE projectId= :projectId")
     public abstract List<SiteType> getAllByProjectId(String projectId);
+
+    @Query("DELETE FROM site_types WHERE projectId= :projectId")
+    public abstract void deleteById(String projectId);
 }

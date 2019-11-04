@@ -44,10 +44,15 @@ public class SiteTypeLocalSource implements BaseLocalDataSource<SiteType> {
         return dao.getByProjectId(projectId);
     }
 
+    public void deleteByProjectId(String projectId) {
+        dao.deleteById(projectId);
+    }
+
     @Override
     public void save(SiteType... items) {
         AsyncTask.execute(() -> dao.insert(items));
     }
+
 
     @Override
     public void save(ArrayList<SiteType> items) {

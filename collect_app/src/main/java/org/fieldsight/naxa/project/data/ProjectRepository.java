@@ -138,6 +138,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                         p.setRegionList(mapJSONtoRegionList(json.getJSONArray("project_region").toString()));
 
                         ArrayList<SiteType> siteTypes = mapJSONtoSiteTypes(json.optString("types"));
+                        SiteTypeLocalSource.getInstance().deleteByProjectId(json.optString("id"));
                         SiteTypeLocalSource.getInstance().save(siteTypes);
 
                         return p;
