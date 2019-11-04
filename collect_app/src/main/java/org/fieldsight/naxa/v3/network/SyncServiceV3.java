@@ -72,6 +72,7 @@ public class SyncServiceV3 extends IntentService {
         return super.onStartCommand(intent, flags, startId);
     }
 
+
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
@@ -94,7 +95,7 @@ public class SyncServiceV3 extends IntentService {
             }).filter(isOnline -> isOnline)
                     .flatMap(aBoolean -> {
                         String[] selectedProjectIds = new String[selectedProject.size()];
-                        for(int i = 0; i < selectedProject.size(); i ++) {
+                        for (int i = 0; i < selectedProject.size(); i++) {
                             selectedProjectIds[i] = selectedProject.get(i).getId();
                         }
                         Timber.i("SyncServiceV3, getSitesObservable, selectedProjectIds Length = %d", selectedProjectIds.length);
@@ -119,6 +120,7 @@ public class SyncServiceV3 extends IntentService {
 
 
             DisposableManager.add(sitesObservable);
+            syncDisposable.add(sitesObservable);
 
             // sync form begins
             Disposable formDisposable = filterSelectedProjects()
@@ -175,6 +177,7 @@ public class SyncServiceV3 extends IntentService {
                     });
 
             DisposableManager.add(formDisposable);
+            syncDisposable.add(formDisposable);
             // sync form ends
 
             // Education material sync begins
@@ -263,6 +266,7 @@ public class SyncServiceV3 extends IntentService {
                         }
                     });
             DisposableManager.add(educationMaterialObserver);
+            syncDisposable.add(educationMaterialObserver);
             // education Material sync ends
 
         } catch (NullPointerException e) {
