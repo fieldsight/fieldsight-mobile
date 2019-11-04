@@ -74,6 +74,8 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                     int newSiteRegionId = TextUtils.isEmpty(loadedSite.getRegionId()) ? 0 : Integer.parseInt(loadedSite.getRegionId());
 
                     List<FieldsightFormDetailsv3> filteredList = new ArrayList<>();
+
+                    Timber.i("FieldsightFormListFragment, project id = %s", project.getId());
                     boolean isProjectRegionsEmpty = project.getRegionList() == null || project.getRegionList().size() == 1;
                     List<SiteType> siteTypeList = SiteTypeLocalSource.getInstance().getByid(project.getId());
                     boolean isProjectTypesEmpty = siteTypeList == null || siteTypeList.size() == 0;
