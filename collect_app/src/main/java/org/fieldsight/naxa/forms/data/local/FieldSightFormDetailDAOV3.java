@@ -7,6 +7,7 @@ import androidx.room.Transaction;
 
 import org.fieldsight.naxa.common.database.BaseDaoFieldSight;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
@@ -14,11 +15,13 @@ import timber.log.Timber;
 @Dao
 public abstract class FieldSightFormDetailDAOV3 implements BaseDaoFieldSight<FieldsightFormDetailsv3> {
     @Transaction
-    public void updateAll(FieldsightFormDetailsv3... fieldSightForms) {
-        deleteAll();
-        Timber.i("updateAll, listSize = %d", fieldSightForms.length);
+    public void updateAll(String[] projectIds, FieldsightFormDetailsv3... fieldSightForms) {
+        deleteByIds(projectIds);
         insert(fieldSightForms);
     }
+
+    @Query("DELETE FROM fieldsight_formv3 WHERE project IN (:projectIds)")
+    protected abstract void deleteByIds(String[] projectIds);
 
     @Query("DELETE FROM fieldsight_formv3")
     protected abstract void deleteAll();

@@ -209,14 +209,14 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
 
                         Timber.i("loadForm:: isProjectRegionempty = " + isProjectRegionsEmpty + " isProjectTypeEmpty = " + isProjectTypesEmpty);
                         if (isProjectRegionsEmpty && isProjectTypesEmpty) {
-                           return true;
+                            return true;
                         } else {
                             boolean typeFound = isProjectTypesEmpty;
                             boolean regionFound = isProjectRegionsEmpty;
 
                             try {
                                 JSONObject jsonObject = new JSONObject(formDetailsv3.getMetaAttributes());
-                                if(!typeFound) {
+                                if (!typeFound) {
                                     if (jsonObject.has("stage_type")) {
                                         JSONArray jsonArray = jsonObject.optJSONArray("stage_type");
                                         Timber.i("FieldsightFormlocalsourcev3, stageTypeArray = %s", jsonArray.toString());
@@ -228,7 +228,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                                         }
                                     }
                                 }
-                                if(!regionFound) {
+                                if (!regionFound) {
                                     if (jsonObject.has("stage_regions")) {
                                         JSONArray jsonArray = jsonObject.optJSONArray("stage_regions");
                                         Timber.i("FieldsightFormlocalsourcev3, stageRegionArray = %s", jsonArray.toString());
@@ -286,14 +286,17 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         dao.insert(items);
     }
 
-
     @Override
     public void updateAll(ArrayList<FieldsightFormDetailsv3> items) {
+        throw new RuntimeException("Not Implemented");
+    }
+
+    public void updateAll(ArrayList<FieldsightFormDetailsv3> items, String[] projectIds) {
         FieldsightFormDetailsv3[] fieldsightFormDetailsv3s = new FieldsightFormDetailsv3[items.size()];
         for (int i = 0; i < items.size(); i++) {
             fieldsightFormDetailsv3s[i] = items.get(i);
         }
-        dao.updateAll(fieldsightFormDetailsv3s);
+        dao.updateAll(projectIds, fieldsightFormDetailsv3s);
     }
 
     public List<FieldsightFormDetailsv3> getEducationMaterial(String projectId) {
