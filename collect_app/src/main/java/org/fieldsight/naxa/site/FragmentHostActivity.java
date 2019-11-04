@@ -104,7 +104,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         }
 
         Fragment fragment;
-        boolean openSubmissionScreen = TextUtils.equals(Constant.FormStatus.FLAGGED, extraMessage)
+        openSubmissionScreen = TextUtils.equals(Constant.FormStatus.FLAGGED, extraMessage)
                 || TextUtils.equals(Constant.FormStatus.REJECTED, extraMessage);
         boolean openSurveyForm = TextUtils.equals("open_survey_form", extraMessage);
 
