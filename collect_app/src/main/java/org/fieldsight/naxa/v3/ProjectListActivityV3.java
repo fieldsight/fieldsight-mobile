@@ -214,7 +214,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             llNodata.setVisibility(View.GONE);
         }
         prgbar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        tvNodata.setText(loading ? "Loading data ... " : "Error in syncing the PROJECT");
+        tvNodata.setText(loading ? "Loading data ... " : "Error in syncing the project");
     }
 
     void refreshSyncStatus() {

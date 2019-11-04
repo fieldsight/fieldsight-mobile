@@ -13,6 +13,7 @@ import com.evernote.android.job.JobManager;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.bcss.collect.android.R;;
+import org.fieldsight.naxa.v3.network.SyncServiceV3;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.DeleteFormsListener;
 import org.odk.collect.android.listeners.DeleteInstancesListener;
@@ -52,7 +53,7 @@ import timber.log.Timber;
 
 public class FieldSightUserSession {
 
-    private FieldSightUserSession(){
+    private FieldSightUserSession() {
 
     }
 
@@ -254,6 +255,9 @@ public class FieldSightUserSession {
 
     private static void logout(Context context, OnLogoutListener logoutListener) {
 
+        DisposableManager.dispose();
+        context.stopService(new Intent(context, SyncServiceV3.class));
+
         Completable purgeDatabase = Completable.fromAction(() -> {
             FieldSightDatabase.getDatabase(context).clearAllTables();
             FieldSightConfigDatabase.getDatabase(context).clearAllTables();
@@ -340,7 +344,6 @@ public class FieldSightUserSession {
 
             throw new IllegalArgumentException("User information is missing from cache");
         }
-
 
 
         return GSONInstance.getInstance().fromJson(userString, User.class);
