@@ -93,10 +93,10 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_simple_recycler_with_nodata);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
         setTitle("Projects");
         adapter = new ProjectListAdapter(projectList, allSelected);
+
         observer = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
@@ -116,15 +116,16 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                     allSelected = false;
                     invalidateOptionsMenu();
                 }
-
             }
         };
 
         adapter.registerAdapterDataObserver(observer);
         rvProjectlist.setLayoutManager(new LinearLayoutManager(this));
         rvProjectlist.setAdapter(adapter);
+
         getDataFromServer();
         manageNodata(true);
+
         tvSyncProject.setOnClickListener(v -> openDownloadAActivity());
         projectObserver = projectNameList -> {
             Timber.i("list live data = %d", projectNameList.size());
@@ -132,7 +133,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             showSyncMenu = projectNameList.size() == 0 || projectNameList.size() < adapter.getItemCount();
             invalidateOptionsMenu();
         };
-        projectIds = SyncLocalSource3.getInstance().getAllSiteSyncingProject();
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -216,6 +217,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         tvNodata.setText(loading ? "Loading data ... " : "Error in syncing the PROJECT");
     }
 
+    void refreshSyncStatus() {
+        projectIds = SyncLocalSource3.getInstance().getAllSiteSyncingProject();
+        projectIds.observe(ProjectListActivityV3.this, projectObserver);
+    }
+
     void getDataFromServer() {
         ProjectRepository.getInstance().getAll(new LoadProjectCallback() {
             @Override
@@ -223,9 +229,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 adapter.clearAndUpdate(projects);
                 manageNodata(false);
                 Timber.e("data found with %d size", projects.size());
-                projectIds.observe(ProjectListActivityV3.this, projectObserver);
-
                 swipeRefreshLayout.setRefreshing(false);
+                refreshSyncStatus();
             }
 
             @Override
@@ -233,6 +238,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 Timber.d("data not available");
                 manageNodata(false);
                 swipeRefreshLayout.setRefreshing(false);
+                refreshSyncStatus();
             }
         });
 
