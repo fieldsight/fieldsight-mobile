@@ -215,9 +215,17 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 break;
             case SINGLE_STAGED_FORM_DEPLOYED:
                 title = context.getString(R.string.notify_title_substage_deployed);
-                message = notification.getSiteId() != null
-                        ? context.getString(R.string.notify_message_multiple_substage_deployed_site, notification.getSiteName())
-                        : context.getString(R.string.notify_message_multiple_substage_deployed_project, notification.getProjectName());
+                String siteOrProjectName2 = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
+
+                if (TextUtils.isEmpty(siteOrProjectName2)) {
+                    title = context.getString(R.string.notify_title_form_updated);
+                    message = context.getString(R.string.notify_message_form_updated, notification.getFormName());
+                } else {
+                    message = notification.getSiteId() != null
+                            ? context.getString(R.string.notify_message_multiple_substage_deployed_site, notification.getSiteName())
+                            : context.getString(R.string.notify_message_multiple_substage_deployed_project, notification.getProjectName());
+                }
+
                 break;
             case ALL_STAGE_DEPLOYED:
                 title = context.getString(R.string.notify_title_stage_deployed);
@@ -227,13 +235,20 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
                 break;
             case FORM_FLAG:
                 title = context.getString(R.string.notify_title_submission_result);
-                message = generateFormStatusChangeMsg(notification).toString();
+                message = generateFormStatusChangeMsg(notification);
                 break;
             case SITE_FORM:
 
                 String siteOrProjectName = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
-                title = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
-                message = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName);
+
+                if (TextUtils.isEmpty(siteOrProjectName)) {
+                    title = context.getString(R.string.notify_title_form_updated);
+                    message = context.getString(R.string.notify_message_form_updated, notification.getFormName());
+                } else {
+                    title = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
+                    message = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName);
+                }
+
                 //todo: download form?
 
                 break;
@@ -243,13 +258,24 @@ public class FieldSightNotificationLocalSource implements BaseLocalDataSource<Fi
             case FORM_ALTERED_PROJECT:
             case PROJECT_FORM:
                 boolean isDeployed = "true".equalsIgnoreCase(notification.getIsFormDeployed());
-                String siteOrProjectName2 = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
+                String siteOrProjectName3 = TextUtils.isEmpty(notification.getSiteName()) ? notification.getProjectName() : notification.getSiteName();
 
                 String undeployedTitle = context.getString(R.string.notify_title_form_undeployed, notification.getFormType());
-                String undeployedContent = context.getString(R.string.notify_message_form_undeployed, notification.getFormName(), siteOrProjectName2);
-
                 String deployedTitle = context.getString(R.string.notify_title_form_deployed, notification.getFormType());
-                String deployedContent = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName2);
+
+                String undeployedContent;
+                String deployedContent;
+
+                if (TextUtils.isEmpty(siteOrProjectName3)) {
+                    deployedTitle = context.getString(R.string.notify_title_form_updated);
+                    undeployedTitle = context.getString(R.string.notify_title_form_updated);
+
+                    deployedContent = context.getString(R.string.notify_message_form_updated, notification.getFormName());
+                    undeployedContent = context.getString(R.string.notify_message_form_updated, notification.getFormName());
+                } else {
+                    deployedContent = context.getString(R.string.notify_message_form_deployed, notification.getFormName(), siteOrProjectName3);
+                    undeployedContent = context.getString(R.string.notify_message_form_undeployed, notification.getFormName(), siteOrProjectName3);
+                }
 
                 title = isDeployed ? deployedTitle : undeployedTitle;
                 message = isDeployed ? deployedContent : undeployedContent;
