@@ -119,8 +119,9 @@ public class ProjectMapFragment extends OsmMapFragment {
 
 
                             final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
-
-                            map.zoomToBoundingBox(sfpo.getBoundingBox(), true);
+                            if (sfpo.getBoundingBox() != null) {
+                                map.zoomToBoundingBox(sfpo.getBoundingBox(), true);
+                            }
 
                             sfpo.setOnClickListener((points1, point) -> {
                                 Site site = ((SiteGeoPoint) points1.get(point)).getSite();
@@ -195,7 +196,7 @@ public class ProjectMapFragment extends OsmMapFragment {
         SiteMarker marker = new SiteMarker(map);
         marker.setSnippet(snippet);
         marker.setTitle(title);
-        if(icon != null){
+        if (icon != null) {
             marker.setIcon(icon);
         }
         marker.setPosition(geoPoint);
