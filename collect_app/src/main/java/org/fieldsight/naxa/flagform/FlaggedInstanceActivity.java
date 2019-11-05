@@ -48,6 +48,7 @@ import org.fieldsight.naxa.site.FragmentHostActivity;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dao.FormsDao;
+import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.listeners.DownloadFormsTaskListener;
 import org.odk.collect.android.logic.FormDetails;
 import org.odk.collect.android.provider.FormsProviderAPI;
@@ -710,8 +711,21 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                             selectionArgs, null);
 
             int count = cursorInstanceForm.getCount();
+            List<Instance> instances = instancesDao.getInstancesFromCursor(cursorInstanceForm);
+
             if (count == 1) {
-                openSavedForm(cursorInstanceForm);
+                Instance instance = instances.get(0);
+                boolean doesVersionMatch = loadedFieldSightNotification.getFormVersion().equals(instance.getJrVersion());
+                if (doesVersionMatch) {
+                    openSavedForm(instance);
+                } else {
+                    DialogFactory.createActionConsentDialog(FlaggedInstanceActivity.this, getString(R.string.error_occured),
+                            getString(R.string.msg_missing_form_version))
+                            .setPositiveButton(R.string.dialog_action_open_anyways, (dialogInterface, i) -> {
+                                openSavedForm(instance);
+                            })
+                            .setNegativeButton(R.string.dialog_action_dismiss, null);
+                }
             } else {
                 fillODKForm(jrFormId);
             }
@@ -724,17 +738,13 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         }
     }
 
-    private void openSavedForm(Cursor cursorInstanceForm) {
+    private void openSavedForm(Instance cursorInstanceForm) {
 
         Toast.makeText(context, "Opening saved form.", Toast.LENGTH_LONG).show();
 
-        cursorInstanceForm.moveToLast();
-        long idFormsTable = Long.parseLong(cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID)));
-        Log.d(TAG, "Opening saved form with _ID" + idFormsTable);
-
         Uri instanceUri =
                 ContentUris.withAppendedId(InstanceProviderAPI.InstanceColumns.CONTENT_URI,
-                        idFormsTable);
+                        cursorInstanceForm.getDatabaseId());
 
 
         String action = getIntent().getAction();
@@ -745,9 +755,9 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
             // the form can be edited if it is incomplete or if, when it was
             // marked as complete, it was determined that it could be edited
             // later.
-            String status = cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns.STATUS));
+            String status = cursorInstanceForm.getStatus();
             String strCanEditWhenComplete =
-                    cursorInstanceForm.getString(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns.CAN_EDIT_WHEN_COMPLETE));
+                    cursorInstanceForm.getCanEditWhenComplete();
 
             boolean canEdit = status.equals(InstanceProviderAPI.STATUS_INCOMPLETE)
                     || Boolean.parseBoolean(strCanEditWhenComplete);
@@ -760,9 +770,9 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
             //send the slected id to the upload button
             //Susan
 
-            Long selectedFormId = cursorInstanceForm.getLong(cursorInstanceForm.getColumnIndex(InstanceProviderAPI.InstanceColumns._ID));
+
             Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
-            toEdit.putExtra("EditedFormID", selectedFormId);
+            toEdit.putExtra("EditedFormID", cursorInstanceForm.getDatabaseId());
             startActivity(toEdit);
         }
         finish();
