@@ -162,16 +162,16 @@ public class FormsStateFragment extends Fragment {
                                 submissionStatus.toLowerCase(Locale.getDefault()));
                     }
                 })
-                .filter(new Predicate<FormState>() {
-                    @Override
-                    public boolean test(FormState formState) {
-                        boolean hasVersion = !TextUtils.isEmpty(formState.getVersion());
-                        if (!hasVersion) {
-                            Timber.e("%s has missing version in project: %s site: %s fsFormId: %s", formState.getFormName(), formState.getProject(), formState.getSite(), formState.getFsFormId());
-                        }
-                        return !hasVersion;
-                    }
-                })
+//                .filter(new Predicate<FormState>() {
+//                    @Override
+//                    public boolean test(FormState formState) {
+//                        boolean hasVersion = !TextUtils.isEmpty(formState.getVersion());
+//                        if (!hasVersion) {
+//                            Timber.e("%s has missing version in project: %s site: %s fsFormId: %s", formState.getFormName(), formState.getProject(), formState.getSite(), formState.getFsFormId());
+//                        }
+//                        return !hasVersion;
+//                    }
+//                })
                 .filter(new Predicate<FormState>() {
                     @Override
                     public boolean test(FormState formState) {
