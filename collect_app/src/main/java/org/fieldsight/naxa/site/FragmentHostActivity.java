@@ -65,9 +65,10 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         context.startActivity(intent);
     }
 
-    public static void startFlaggedForm(Context context, String type) {
+    public static void startFlaggedForm(Context context, String type, Project project) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
         intent.putExtra(EXTRA_MESSAGE, type);
+        intent.putExtra(EXTRA_PROJECT, project);
         context.startActivity(intent);
     }
 
@@ -110,7 +111,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
 
 
         if (openSubmissionScreen) {
-            fragment = FormsStateFragment.newInstance(extraMessage);
+            fragment = FormsStateFragment.newInstance(extraMessage, project);
         } else if (openSurveyForm) {
 
             fragment = FieldSightFormListFragment.newInstance(Constant.FormType.SURVEY, null, project);
