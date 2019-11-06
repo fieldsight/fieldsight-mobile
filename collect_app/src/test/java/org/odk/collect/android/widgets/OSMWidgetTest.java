@@ -14,7 +14,7 @@ import org.javarosa.core.model.osm.OSMTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.formentry.questions.QuestionDetails;
 import org.odk.collect.android.logic.FormController;
 import org.odk.collect.android.widgets.base.BinaryWidgetTest;

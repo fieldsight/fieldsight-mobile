@@ -7,7 +7,7 @@ import androidx.test.rule.GrantPermissionRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.espressoutils.FormEntry;
 import org.odk.collect.android.espressoutils.pages.MainMenuPage;
 import org.odk.collect.android.regression.BaseRegressionTest;

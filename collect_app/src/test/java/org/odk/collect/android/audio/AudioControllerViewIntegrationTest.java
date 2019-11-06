@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.support.FakeLifecycleOwner;
 import org.odk.collect.android.support.FakeScheduler;
 import org.odk.collect.android.support.RobolectricHelpers;

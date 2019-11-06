@@ -21,7 +21,7 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.widget.Toolbar;
 import androidx.test.rule.ActivityTestRule;
 
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.adapters.InstanceListCursorAdapter;
 
 import static androidx.test.espresso.Espresso.onView;

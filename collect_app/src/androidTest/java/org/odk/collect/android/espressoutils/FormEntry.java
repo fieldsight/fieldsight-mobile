@@ -5,7 +5,7 @@ import android.app.Activity;
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.matcher.PreferenceMatchers;
 
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.espressoutils.pages.FormEntryPage;
 import org.odk.collect.android.support.ActivityHelpers;
 

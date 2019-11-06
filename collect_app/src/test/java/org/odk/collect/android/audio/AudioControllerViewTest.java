@@ -5,7 +5,7 @@ import android.widget.SeekBar;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.support.SwipableParentActivity;
 import org.robolectric.RobolectricTestRunner;
 

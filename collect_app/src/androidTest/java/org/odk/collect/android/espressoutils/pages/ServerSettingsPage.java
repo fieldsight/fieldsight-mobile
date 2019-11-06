@@ -3,7 +3,7 @@ package org.odk.collect.android.espressoutils.pages;
 import androidx.test.espresso.matcher.PreferenceMatchers;
 import androidx.test.rule.ActivityTestRule;
 
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.action.ViewActions.click;

@@ -6,7 +6,7 @@ import android.widget.ImageButton;
 
 import androidx.fragment.app.FragmentActivity;
 
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.injection.config.AppDependencyComponent;
 import org.odk.collect.android.injection.config.AppDependencyModule;

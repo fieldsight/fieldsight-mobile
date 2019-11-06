@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;
 import org.odk.collect.android.support.FakeScheduler;
 import org.odk.collect.android.support.LiveDataTester;
 import org.robolectric.RobolectricTestRunner;

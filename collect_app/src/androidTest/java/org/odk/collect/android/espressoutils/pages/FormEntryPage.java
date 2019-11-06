@@ -3,7 +3,7 @@ package org.odk.collect.android.espressoutils.pages;
 import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 
-import org.odk.collect.android.R;
+import org.bcss.collect.android.R;;
 import org.odk.collect.android.support.ActivityHelpers;
 
 import timber.log.Timber;
