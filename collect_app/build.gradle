@@ -24,50 +24,6 @@ def getProps(String propName) {
     }
 }
 
-// Build numbers were manually set until 1067
-def LEGACY_BUILD_NUMBER_OFFSET = 1067
-
-// Based on http://stackoverflow.com/questions/17097263#24121734
-def getMasterCommitCount = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            switch (ant.properties.os) {
-                case 'windows':
-                    commandLine 'cmd', '/c', 'git', 'rev-list', '--first-parent', '--count', 'master'
-                    break
-                case 'unix':
-                    commandLine 'git', 'rev-list', '--first-parent', '--count', 'master'
-                    break
-            }
-            standardOutput = stdout
-        }
-        return Integer.parseInt(stdout.toString().trim())
-    } catch (ignored) {
-        return -1
-    }
-}
-
-def getVersionName = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            switch (ant.properties.os) {
-                case 'windows':
-                    commandLine 'cmd', '/c', 'git', 'describe', '--tags', '--dirty', '--always'
-                    break
-                case 'unix':
-                    commandLine 'git', 'describe', '--tags', '--dirty', '--always'
-                    break
-            }
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    } catch (ignored) {
-        return null
-    }
-}
-
 def secretsFile = file('secrets.properties')
 def secrets = new Properties()
 if (secretsFile.exists()) {
@@ -90,7 +46,7 @@ android {
         //versionCode LEGACY_BUILD_NUMBER_OFFSET + getMasterCommitCount()
         //versionName getVersionName()
         versionCode versionMajor * 1000 + versionMinor * 100 + versionPatch
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}-beta"
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         System.out.println(versionName + " " + versionCode)
         testInstrumentationRunner('android.support.test.runner.AndroidJUnitRunner')
         multiDexEnabled true
@@ -155,6 +111,7 @@ android {
             debuggable false
             minifyEnabled false
             shrinkResources false
+            versionNameSuffix "-beta"
 
         }
         // Release build for the official ODK Collect app
@@ -167,6 +124,8 @@ android {
             resValue("bool", "FIREBASE_ENABLED", "true")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
+            versionNameSuffix "-beta"
+
         }
         debug {
             debuggable(true)
@@ -174,19 +133,21 @@ android {
             resValue("bool", "FIREBASE_ENABLED", "false")
             resValue("string", "GOOGLE_MAPS_API_KEY", googleMapsApiKey)
             buildConfigField 'String', "MAPBOX_ACCESS_TOKEN", '"' + mapboxToken + '"'
+            versionNameSuffix "-debug"
         }
     }
 
     // https://stackoverflow.com/a/27119543/152938
     applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            String fileName = "${defaultConfig.versionName}.apk"
+        variant.outputs.all {
+            String fileName = "${variant.versionName}.apk"
             outputFileName = new File(outputFileName.replace(".apk", fileName))
         }
     }
     testVariants.all { variant ->
         variant.outputs.all { output ->
-            outputFileName = new File(outputFileName.replace(".apk", "-${defaultConfig.versionName}.apk"))
+            def versionName = variant.versionName
+            outputFileName = new File(outputFileName.replace(".apk", "-${versionName}.apk"))
         }
     }
 
@@ -287,13 +248,6 @@ dependencies {
 
 
     implementation fileTree(dir: 'libs', include: '*.jar')
-//    implementation "com.android.support:support-v13:${rootProject.supportLibraryVersion}"
-//    implementation "com.android.support:customtabs:${rootProject.supportLibraryVersion}"
-//    implementation "com.android.support:design:${rootProject.supportLibraryVersion}"
-//    implementation "com.android.support:appcompat-v7:${rootProject.supportLibraryVersion}"
-//    implementation "com.android.support:design:${rootProject.supportLibraryVersion}"
-//    implementation "com.android.support:cardview-v7:${rootProject.supportLibraryVersion}"
-//    implementation "com.android.support:exifinterface:${rootProject.supportLibraryVersion}"
     implementation "com.android.support:multidex:1.0.3"
 
     implementation "com.google.android.gms:play-services-analytics:16.0.8"
