@@ -46,3 +46,4 @@ javarosa/
 # Config for the official ODK Collect build
 collect_app/src/odkCollectRelease/
 /secret.properties
+/fieldsight.jks
