@@ -651,8 +651,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                 RecyclerView.VERTICAL, false));
 
         notificationImageAdapter.setOnItemClickListener(this);
-        //       recyclerViewImages.addItemDecoration(new LinePagerIndicatorDecoration());
-
         recyclerViewImages.setNestedScrollingEnabled(false);
     }
 
@@ -768,11 +766,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                 //this form cannot be edited
                 return;
             }
-
-            // caller wants to view/edit a form, so launch FormEntryActivity
-            //send the slected id to the upload button
-            //Susan
-
 
             Intent toEdit = new Intent(Intent.ACTION_EDIT, instanceUri);
             toEdit.putExtra("EditedFormID", cursorInstanceForm.getDatabaseId());
