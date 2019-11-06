@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import org.bcss.collect.android.R;;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.login.model.Project;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+
+;
 
 class ProjectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.primary_text)
@@ -48,12 +50,12 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
 
     void bindView(Project project, boolean allTrue) {
         primaryText.setText(project.getName());
-        textView.setText(String.format("A PROJECT by %s", project.getOrganizationName()));
+        textView.setText(String.format("A project by %s", project.getOrganizationName()));
         tvSyncedDate.setText(project.getStatusMessage());
         chkbxSync.setChecked(project.isChecked());
         chkbxSync.setVisibility(allTrue ? View.VISIBLE : View.GONE);
 //        imageView.setImageResource(PROJECT.isSynced() ? R.drawable.ic_action_check : android.R.drawable.stat_sys_download_done);
-        Timber.i("PROJECT image = %s", project.getUrl());
+        Timber.i("project image = %s", project.getUrl());
         Glide.with(itemView.getContext()).load(project.getUrl()).apply(RequestOptions.circleCropTransform()).into(ivThumbnail);
     }
 

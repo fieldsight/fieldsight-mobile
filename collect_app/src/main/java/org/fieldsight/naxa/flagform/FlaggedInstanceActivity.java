@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,7 +25,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.bcss.collect.android.R;;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BaseActivity;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
@@ -71,6 +70,8 @@ import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
+
+;
 
 
 public class FlaggedInstanceActivity extends BaseActivity implements View.OnClickListener, NotificationImageAdapter.OnItemClickListener {
@@ -299,7 +300,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     }
 
 
-    protected void fillODKForm(String idString) {
+    protected void createNewSubmission(String idString) {
         try {
             long formId = getFormId(idString);
             Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, formId);
@@ -405,7 +406,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                 .setNegativeButton(R.string.dialog_action_make_new_submission, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        fillODKForm(loadedFieldSightNotification.getIdString());
+                        createNewSubmission(loadedFieldSightNotification.getIdString());
                     }
                 })
                 .setNeutralButton(R.string.dialog_action_dismiss, null)
@@ -715,19 +716,21 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
             if (count == 1) {
                 Instance instance = instances.get(0);
-                boolean doesVersionMatch = loadedFieldSightNotification.getFormVersion().equals(instance.getJrVersion());
+                boolean doesVersionMatch = hasFormVersion();
                 if (doesVersionMatch) {
                     openSavedForm(instance);
                 } else {
-                    DialogFactory.createActionConsentDialog(FlaggedInstanceActivity.this, getString(R.string.error_occured),
+                    hideDialog();
+                    DialogFactory.createActionDialog(FlaggedInstanceActivity.this, getString(R.string.error_occured),
                             getString(R.string.msg_missing_form_version))
                             .setPositiveButton(R.string.dialog_action_open_anyways, (dialogInterface, i) -> {
                                 openSavedForm(instance);
                             })
-                            .setNegativeButton(R.string.dialog_action_dismiss, null);
+                            .setNegativeButton(R.string.dialog_action_dismiss, null)
+                            .show();
                 }
             } else {
-                fillODKForm(jrFormId);
+                createNewSubmission(jrFormId);
             }
         } catch (NullPointerException | CursorIndexOutOfBoundsException e) {
             ToastUtils.showLongToast(getString(R.string.dialog_unexpected_error_title));
