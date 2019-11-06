@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
+import org.bcss.collect.android.R;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.junit.AfterClass;
 import org.junit.Before;

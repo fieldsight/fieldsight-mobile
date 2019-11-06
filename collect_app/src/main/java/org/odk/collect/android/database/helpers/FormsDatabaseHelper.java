@@ -55,7 +55,7 @@ public class FormsDatabaseHelper extends SQLiteOpenHelper {
     public static final String FORMS_TABLE_NAME = "forms";
     public static final String DATABASE_PATH = Collect.METADATA_PATH + File.separator + DATABASE_NAME;
 
-    private static final int DATABASE_VERSION = 8;
+    public static final int DATABASE_VERSION = 8;
 
     // These exist in database versions 2 and 3, but not in 4...
     private static final String TEMP_FORMS_TABLE_NAME = "forms_v4";

@@ -61,23 +61,6 @@ public class FormsDatabaseHelperTest extends SqlLiteHelperTest {
         });
     }
 
-    @Test
-    public void testMigration() throws IOException {
-        copyFileFromAssets("database" + File.separator + dbFilename, DATABASE_PATH);
-        FormsDatabaseHelper databaseHelper = new FormsDatabaseHelper();
-        ensureMigrationAppliesFully(databaseHelper);
-
-        SQLiteDatabase db = databaseHelper.getReadableDatabase();
-        assertThat(db.getVersion(), is(FormsDatabaseHelper.DATABASE_VERSION));
-
-        List<String> newColumnNames = SQLiteUtils.getColumnNames(db, FORMS_TABLE_NAME);
-
-        assertThat(newColumnNames, contains(FormsDatabaseHelper.CURRENT_VERSION_COLUMN_NAMES));
-
-        if (action.equals(UPGRADE)) {
-            assertThatFormsAreKeptAfterUpgrading();
-        }
-    }
 
     private void assertThatFormsAreKeptAfterUpgrading() {
         FormsDao formsDao = new FormsDao();
