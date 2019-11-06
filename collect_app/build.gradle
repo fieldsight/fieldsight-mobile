@@ -13,24 +13,13 @@ ant.condition(property: 'os', value: 'unix') {
     os(family: 'unix')
 }
 
-def getProps(String propName) {
-    def propsFile = rootProject.file('local.properties')
-    if (propsFile.exists()) {
-        def props = new Properties()
-        props.load(new FileInputStream(propsFile))
-        return props[propName]
-    } else {
-        return " "
-    }
-}
-
 def secretsFile = file('secrets.properties')
 def secrets = new Properties()
 if (secretsFile.exists()) {
     secrets.load(new FileInputStream(secretsFile))
 }
 def googleMapsApiKey = secrets.getProperty('GOOGLE_MAPS_API_KEY', '')
-def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', getProps("mapbox"))
+def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', '')
 
 def versionMajor = 3
 def versionMinor = 2
