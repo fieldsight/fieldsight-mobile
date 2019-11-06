@@ -49,9 +49,6 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         return fragment;
     }
 
-    private FieldSightFormListFragment() {
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +78,6 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                     boolean isProjectTypesEmpty = siteTypeList == null || siteTypeList.size() == 0;
 
 
-
                     Timber.i("loadForm:: isProjectRegionempty = " + isProjectRegionsEmpty + " isProjectTypeEmpty = " + isProjectTypesEmpty);
                     if (isProjectRegionsEmpty && isProjectTypesEmpty) {
                         filteredList.addAll(fieldSightForms);
@@ -95,7 +91,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                             try {
                                 JSONObject settingJSON = new JSONObject(fieldsightFormDetailsv3.getSettings());
                                 boolean typeFound = isProjectTypesEmpty;
-                                if(!typeFound) {
+                                if (!typeFound) {
                                     JSONArray typesArray = settingJSON.optJSONArray("types");
                                     for (int i = 0; i < typesArray.length(); i++) {
                                         if (typesArray.optInt(i) == newSiteTypeId) {
@@ -105,7 +101,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                                     }
                                 }
                                 boolean regionFound = isProjectRegionsEmpty;
-                                if(!regionFound) {
+                                if (!regionFound) {
                                     JSONArray regionsArray = settingJSON.optJSONArray("regions");
                                     for (int i = 0; i < regionsArray.length(); i++) {
                                         if (regionsArray.optInt(i) == newSiteRegionId) {
