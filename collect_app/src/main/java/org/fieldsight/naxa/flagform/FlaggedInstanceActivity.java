@@ -63,10 +63,9 @@ import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -582,25 +581,20 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                 });
 
 
-        Observable<Uri> instanceObservable = InstanceRemoteSource.getInstanceRemoteSource()
+        Observable<Instance> instanceObservable = InstanceRemoteSource.getInstanceRemoteSource()
                 .downloadInstances(notification, nameAndPath);
 
         Observable.concat(attachedMediaObservable, instanceObservable)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Comparable<? extends Comparable<?>>>() {
+                .subscribe(new DisposableObserver<Object>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-                        changeDialogMsg("Downloading filled form");
-                    }
-
-                    @Override
-                    public void onNext(Comparable<? extends Comparable<?>> comparable) {
-                        if (comparable instanceof Uri) {
+                    public void onNext(Object comparable) {
+                        if (comparable instanceof Instance) {
                             hideDialog();
-                            Uri instanceUri = (Uri) comparable;
-                            loadInstance(instanceUri);
-                            finish();
+                            Instance instance = (Instance) comparable;
+                            loadSavedInstance(instance.getFieldSightInstanceId(), instance.getJrFormId());
+
                         }
                     }
 
@@ -625,7 +619,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                         hideDialog();
                     }
                 });
-
     }
 
     private void showErrorDialog(String errorMessage) {
@@ -636,8 +629,6 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                 errorDialog.show();
             }
         });
-
-
     }
 
 
@@ -719,12 +710,13 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
                     openSavedForm(instance);
                 } else {
                     hideDialog();
-                    DialogFactory.createActionDialog(FlaggedInstanceActivity.this, getString(R.string.error_occured),
+                    DialogFactory.createActionDialog(FlaggedInstanceActivity.this,
+                            getString(R.string.msg_matching_form_verion_not_found),
                             getString(R.string.msg_missing_form_version))
-                            .setPositiveButton(R.string.dialog_action_open_anyways, (dialogInterface, i) -> {
-                                openSavedForm(instance);
-                            })
-                            .setNegativeButton(R.string.dialog_action_dismiss, null)
+                            .setPositiveButton(R.string.msg_yes_open_missing_version, (dialogInterface, i)
+                                    -> openSavedForm(instance))
+                            .setNegativeButton(R.string.msg_no_open_missing_version, (dialogInterface, i)
+                                    -> createNewSubmission(loadedFieldSightNotification.getIdString()))
                             .show();
                 }
             } else {
