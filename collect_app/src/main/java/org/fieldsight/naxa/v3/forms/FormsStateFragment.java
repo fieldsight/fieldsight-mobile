@@ -19,6 +19,7 @@ import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
 import org.fieldsight.naxa.data.FieldSightNotification;
 import org.fieldsight.naxa.data.FieldSightNotificationBuilder;
 import org.fieldsight.naxa.flagform.FlaggedInstanceActivity;
+import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.v3.FormState;
@@ -40,8 +41,10 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
+import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.Constant.FormStatus.FLAGGED;
 
 public class FormsStateFragment extends Fragment {
@@ -52,12 +55,14 @@ public class FormsStateFragment extends Fragment {
     private View emptyLayout;
     private BaseRecyclerViewAdapter<FormState, FieldSightFormStateVH> adapter;
     private String submissionStatus;
+    private Project project;
     private String url = APIEndpoint.V3.GET_MY_FLAGGED_SUBMISSIONS;
 
-    public static FormsStateFragment newInstance(String type) {
+    public static FormsStateFragment newInstance(String type, Project project) {
         FormsStateFragment fragment = new FormsStateFragment();
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_MESSAGE, type);
+        bundle.putParcelable(EXTRA_OBJECT, project);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -69,6 +74,7 @@ public class FormsStateFragment extends Fragment {
             savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fieldsight_list_fragment, container, false);
         submissionStatus = getArguments().getString(EXTRA_MESSAGE);
+        project = getArguments().getParcelable(EXTRA_OBJECT);
         bindUI(rootView);
 
         return rootView;
@@ -149,15 +155,21 @@ public class FormsStateFragment extends Fragment {
                 })
                 .map(new Function<JSONObject, FormState>() {
                     @Override
-                    public FormState apply(JSONObject jsonObject) throws Exception {
+                    public FormState apply(JSONObject jsonObject) {
                         return GSONInstance.getInstance().fromJson(jsonObject.toString(), FormState.class);
                     }
                 })
                 .filter(new Predicate<FormState>() {
                     @Override
-                    public boolean test(FormState formState) throws Exception {
+                    public boolean test(FormState formState) {
                         return TextUtils.equals(formState.getStatusDisplay().toLowerCase(Locale.getDefault()),
                                 submissionStatus.toLowerCase(Locale.getDefault()));
+                    }
+                })
+                .filter(new Predicate<FormState>() {
+                    @Override
+                    public boolean test(FormState formState) {
+                        return formState.getProject().equals(project.getId());
                     }
                 })
                 .toList();
