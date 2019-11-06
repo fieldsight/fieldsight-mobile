@@ -49,6 +49,7 @@ public class FormsStateFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private SwipeRefreshLayout swipeToRefresh;
+    private View emptyLayout;
     private BaseRecyclerViewAdapter<FormState, FieldSightFormStateVH> adapter;
     private String submissionStatus;
     private String url = APIEndpoint.V3.GET_MY_FLAGGED_SUBMISSIONS;
@@ -76,6 +77,7 @@ public class FormsStateFragment extends Fragment {
     private void bindUI(View view) {
         recyclerView = view.findViewById(R.id.recycler_view_list);
         swipeToRefresh = view.findViewById(R.id.swipe_container);
+        emptyLayout = view.findViewById(R.id.root_layout_empty_layout);
     }
 
     @Override
@@ -107,11 +109,13 @@ public class FormsStateFragment extends Fragment {
                     public void onSuccess(List<FormState> formStates) {
                         updateList(formStates);
                         swipeToRefresh.setRefreshing(false);
+                        emptyLayout.setVisibility(formStates.isEmpty() ? View.VISIBLE : View.GONE);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         swipeToRefresh.setRefreshing(false);
+                        emptyLayout.setVisibility(View.VISIBLE);
                     }
                 });
 
