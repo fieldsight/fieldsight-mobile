@@ -249,7 +249,8 @@ dependencies {
 
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.browser:browser:1.2.0-alpha07'
-    implementation 'androidx.appcompat:appcompat:1.1.0-rc01' // Shouldn't be upgraded until https://issuetracker.google.com/issues/141869006 is fixed
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    // Shouldn't be upgraded until https://issuetracker.google.com/issues/141869006 is fixed
     implementation 'com.google.android.material:material:1.1.0-alpha10'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.1.0-beta01'
@@ -313,8 +314,10 @@ dependencies {
     implementation "org.slf4j:slf4j-api:2.0.0-alpha0"
     implementation "com.arcao:slf4j-timber:3.1@aar"
 
-    implementation "com.google.zxing:core:3.3.0" //updating to 3.4.0 requires minSdkVersion >=24 https://github.com/zxing/zxing/releases/tag/zxing-3.4.0
-    implementation "com.journeyapps:zxing-android-embedded:3.5.0" //updating would require minSdkVersion >=24
+    implementation "com.google.zxing:core:3.3.0"
+    //updating to 3.4.0 requires minSdkVersion >=24 https://github.com/zxing/zxing/releases/tag/zxing-3.4.0
+    implementation "com.journeyapps:zxing-android-embedded:3.5.0"
+    //updating would require minSdkVersion >=24
     implementation "net.danlew:android.joda:2.10.2"
 
     // Real LeakCanary for debug builds only: notifications, analysis, etc
@@ -332,7 +335,8 @@ dependencies {
     // Dagger:
     implementation "com.google.dagger:dagger:${rootProject.daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
-    testAnnotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}" // Needed for injection into Robolectric tests
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:${rootProject.daggerVersion}"
+    // Needed for injection into Robolectric tests
 
     // Dagger Android:
     implementation "com.google.dagger:dagger-android:${rootProject.daggerVersion}"
@@ -364,7 +368,8 @@ dependencies {
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 
     // Used to generate documentation screenshots.
-    androidTestImplementation "tools.fastlane:screengrab:1.1.0" //updating would require minSdkVersion >=18
+    androidTestImplementation "tools.fastlane:screengrab:1.1.0"
+    //updating would require minSdkVersion >=18
 
     // Testing-only dependencies
     testImplementation "junit:junit:4.13-beta-3"
