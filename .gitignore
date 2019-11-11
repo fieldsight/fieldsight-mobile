@@ -11,6 +11,7 @@ local.properties
 
 # gradle env props
 gradle.properties
+secrets.properties
 
 # built application files
 *.apk
@@ -44,4 +45,4 @@ javarosa/
 
 # Config for the official ODK Collect build
 collect_app/src/odkCollectRelease/
-/secret.properties
+
