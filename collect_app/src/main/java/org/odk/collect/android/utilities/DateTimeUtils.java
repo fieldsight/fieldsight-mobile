@@ -221,7 +221,6 @@ public class DateTimeUtils {
         }
     }
 
-
     private static final String SERVER_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     public static String formatDateFromServer(String time) {

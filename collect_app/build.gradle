@@ -12,7 +12,6 @@ ant.condition(property: 'os', value: 'windows') {
 ant.condition(property: 'os', value: 'unix') {
     os(family: 'unix')
 }
-
 def secretsFile = file('secrets.properties')
 def secrets = new Properties()
 if (secretsFile.exists()) {
@@ -23,7 +22,7 @@ def mapboxToken = secrets.getProperty('MAPBOX_ACCESS_TOKEN', '')
 
 def versionMajor = 3
 def versionMinor = 2
-def versionPatch = 10
+def versionPatch = 11
 
 android {
     compileSdkVersion(28)
@@ -54,7 +53,8 @@ android {
 
     signingConfigs {
         release {
-            if (secrets.getProperty('RELEASE_STORE_FILE')) {
+            if (secrets.
+           perty('RELEASE_STORE_FILE')) {
                 storeFile file(secrets.getProperty('RELEASE_STORE_FILE'))
                 storePassword secrets.getProperty('RELEASE_STORE_PASSWORD')
                 keyAlias secrets.getProperty('RELEASE_KEY_ALIAS')

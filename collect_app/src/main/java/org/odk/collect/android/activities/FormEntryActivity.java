@@ -539,6 +539,15 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             }
 
             int formCount = FormsDaoHelper.getFormsCount(selection, selectionArgs);
+            int fallBackFormCount = -1;
+            if (formCount < 1) {
+                selection = FormsColumns.JR_FORM_ID + "=?";
+                selectionArgs = new String[]{jrFormId};
+
+                fallBackFormCount = FormsDaoHelper.getFormsCount(selection, selectionArgs);
+                formCount = fallBackFormCount;
+            }
+
             if (formCount < 1) {
                 createErrorDialog(getString(
                         R.string.parent_form_not_present,
@@ -2154,7 +2163,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * - we are at the first question in the form so the back button is hidden
      * - we are at the end screen so the next button is hidden
      * - settings prevent backwards navigation of the form so the back button is hidden
-     *
+     * <p>
      * The visibility of the container for these buttons is determined once {@link #onResume()}.
      */
     private void updateNavigationButtonVisibility() {
@@ -2397,7 +2406,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * existing instance, shows that instance to the user. Either launches {@link FormHierarchyActivity}
      * if an existing instance is being edited or builds the view for the current question(s) if a
      * new instance is being created.
-     *
+     * <p>
      * May do some or all of these depending on current state:
      * - Ensures phone state permissions are given if this form needs them
      * - Cleans up {@link #formLoaderTask}
@@ -2672,7 +2681,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     /**
      * Requests that unsent finalized forms be auto-sent. If no network connection is available,
      * the work will be performed when a connection becomes available.
-     *
+     * <p>
      * TODO: if the user changes auto-send settings, should an auto-send job immediately be enqueued?
      */
     private void requestAutoSend() {
@@ -2988,7 +2997,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
      * - adds widgets corresponding to questions that are newly-relevant
      * - removes and rebuilds widgets corresponding to questions that have changed in some way. For
      * example, the question text or hint may have updated due to a value they refer to changing.
-     *
+     * <p>
      * The widget corresponding to the {@param lastChangedIndex} is never changed.
      */
     private void updateFieldListQuestions(FormIndex lastChangedIndex) {

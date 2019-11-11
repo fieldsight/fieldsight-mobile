@@ -43,7 +43,7 @@ public class InstanceRemoteSource {
     }
 
 
-    Observable<Uri> downloadInstances(FieldSightNotification fieldSightNotification, String[] nameAndPath) {
+    Observable<Instance> downloadInstances(FieldSightNotification fieldSightNotification, String[] nameAndPath) {
         String downloadUrl = String.format(FieldSightUserSession.getServerUrl(Collect.getInstance()) + APIEndpoint.GET_INSTANCE_XML + "/%s", fieldSightNotification.getFormSubmissionId());
         return downloadInstance(mapNotificationToInstance(fieldSightNotification), downloadUrl, nameAndPath);
     }
@@ -61,11 +61,11 @@ public class InstanceRemoteSource {
         return new String[]{formattedInstanceName.concat(".xml"), pathToDownload};
     }
 
-    private Observable<Uri> downloadInstance(Instance.Builder instance, String downloadUrl, String[] nameAndPath) {
+    private Observable<Instance> downloadInstance(Instance.Builder instance, String downloadUrl, String[] nameAndPath) {
         Timber.i("Downloading filled form from %s for %s", downloadUrl, nameAndPath[0]);
 
         return Observable.just(instance)
-                .flatMap((Function<Instance.Builder, ObservableSource<Uri>>) instance1 -> {
+                .flatMap((Function<Instance.Builder, ObservableSource<Instance>>) instance1 -> {
 
                     String instanceName = nameAndPath[0];
                     String pathToDownload = nameAndPath[1];
@@ -84,10 +84,15 @@ public class InstanceRemoteSource {
 
                                 }
                             })
-                            .map(path -> {
-                                path = path.replace("file://", "");
-                                instance.instanceFilePath(path);
-                                return saveInstance(instance.build());
+                            .map(new Function<String, Instance>() {
+                                @Override
+                                public Instance apply(String path) throws Exception {
+                                    path = path.replace("file://", "");
+                                    instance.instanceFilePath(path);
+                                    saveInstance(instance.build());
+                                    return instance.build();
+                                }
+
                             });
                 });
     }
