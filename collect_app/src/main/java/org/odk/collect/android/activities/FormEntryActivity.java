@@ -539,7 +539,8 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
             }
 
             int formCount = FormsDaoHelper.getFormsCount(selection, selectionArgs);
-            int fallBackFormCount = -1;
+            int fallBackFormCount;
+
             if (formCount < 1) {
                 selection = FormsColumns.JR_FORM_ID + "=?";
                 selectionArgs = new String[]{jrFormId};
@@ -566,10 +567,10 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                  * Still take the first entry, but warn that there are multiple rows. User will
                  * need to hand-edit the SQLite database to fix it.
                  */
-                if (formCount > 1) {
-                    createErrorDialog(getString(R.string.survey_multiple_forms_error), EXIT);
-                    return;
-                }
+//                if (formCount > 1) {
+//                    createErrorDialog(getString(R.string.survey_multiple_forms_error), EXIT);
+//                    return;
+//                }
             }
         } else if (uriMimeType != null
                 && uriMimeType.equals(FormsColumns.CONTENT_ITEM_TYPE)) {
