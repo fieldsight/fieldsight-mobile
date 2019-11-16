@@ -106,7 +106,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                         selected++;
                     }
                 }
-                Timber.d("PROJECT list counter is %d", selected);
+                Timber.d("project list counter is %d", selected);
                 if (selected > 0) {
                     tvSyncProject.setVisibility(View.VISIBLE);
                     tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));

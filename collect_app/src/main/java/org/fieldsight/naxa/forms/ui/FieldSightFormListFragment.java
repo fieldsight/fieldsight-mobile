@@ -38,6 +38,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         if (site == null) {
             site = new Site();
             site.setSite("0");
+            site.setId("0");
             site.setName(project.getName());
             site.setProject(project.getId());
         }
