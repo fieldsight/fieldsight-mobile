@@ -53,13 +53,13 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         Timber.i("getFormByType, formType = %s, projectId = %s, siteId = %s, siteTypeId = %s, regionId = %s", formType, projectId, siteId, siteTypeId, siteRegionId);
         MediatorLiveData<List<FieldsightFormDetailsv3>> mediator = new MediatorLiveData<>();
         LiveData<List<FieldsightFormDetailsv3>> formSource;
-        if(TextUtils.isEmpty(siteId) || TextUtils.equals(siteId, null)) {
+        if(TextUtils.isEmpty(siteId) || TextUtils.equals(siteId, "null")) {
             // filter the form by project id
             // form belongs to project;
-            formSource = dao.getSiteLevelForms(projectId, siteId);
+            formSource = dao.getFormByType(formType, projectId, siteId);
         } else {
             // this is site level forms
-            formSource = dao.getFormByType(formType, projectId, siteId);
+            formSource = dao.getSiteLevelForms(projectId, siteId);
         }
 
         mediator.addSource(formSource, forms -> {
