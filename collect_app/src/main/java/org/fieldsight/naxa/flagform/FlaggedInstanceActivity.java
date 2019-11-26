@@ -111,6 +111,14 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         context.startActivity(intent);
     }
 
+    public static void startWithImages(Context context, FieldSightNotification fieldSightNotification, ArrayList<NotificationImage> images) {
+        Intent intent = new Intent(context, FlaggedInstanceActivity.class);
+        intent.putExtra(Constant.EXTRA_OBJECT, fieldSightNotification);
+        intent.putExtra("images", images);
+        context.startActivity(intent);
+    }
+
+
     public static void startWithForm(FragmentActivity context, FieldSightNotification notification) {
         Intent intent = new Intent(context, FlaggedInstanceActivity.class);
         intent.putExtra(Constant.EXTRA_OBJECT, notification);
@@ -139,6 +147,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
         loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
         message = getIntent().getStringExtra(Constant.EXTRA_MESSAGE);
+        ArrayList<NotificationImage> images = (ArrayList<NotificationImage>) getIntent().getSerializableExtra("images");
         if (TextUtils.equals(message, "open_form")) {
             boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
             Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
@@ -167,6 +176,11 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
             }
 
             return;
+        }
+
+
+        if (images != null) {
+            loadImageInView(images);
         }
 
 
@@ -257,13 +271,13 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         if (formStatus != null && formStatus.equals("APPROVED")) {
             imbStatus.setBackgroundResource(R.color.green_approved);
             relativeStatus.setBackgroundResource(R.color.green_approved);
-        } else if (formStatus != null && formStatus.equals("Outstanding")) {
+        } else if (formStatus != null && formStatus.equalsIgnoreCase("Outstanding")) {
             imbStatus.setBackgroundResource(R.color.grey_outstanding);
             relativeStatus.setBackgroundResource(R.color.grey_outstanding);
-        } else if (formStatus != null && formStatus.equals("FLAGGED")) {
+        } else if (formStatus != null && formStatus.equalsIgnoreCase("FLAGGED")) {
             imbStatus.setBackgroundResource(R.color.yellow_flagged);
             relativeStatus.setBackgroundResource(R.color.yellow_flagged);
-        } else if (formStatus != null && formStatus.equals("REJECTED")) {
+        } else if (formStatus != null && formStatus.equalsIgnoreCase("REJECTED")) {
             imbStatus.setBackgroundResource(R.color.red_rejected);
             relativeStatus.setBackgroundResource(R.color.red_rejected);
         }
@@ -277,6 +291,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         if (!TextUtils.equals(message, "open_form")) {
             getNotificationDetail();
         }
+
 
     }
 
