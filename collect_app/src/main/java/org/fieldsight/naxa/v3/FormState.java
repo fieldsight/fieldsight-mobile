@@ -5,11 +5,15 @@ package org.fieldsight.naxa.v3;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.fieldsight.naxa.notificationslist.NotificationImage;
+
+import java.util.ArrayList;
+
 public class FormState {
 
-    @SerializedName("pk")
+    @SerializedName(value = "pk", alternate = "finstance")
     @Expose
-    private String fsFormId;
+    private String fsSubmissionId;
     @SerializedName("project_fxf")
     @Expose
     private String projectFxf;
@@ -50,12 +54,24 @@ public class FormState {
     @Expose
     private String date;
 
-    public String getFsFormId() {
-        return fsFormId;
+    @SerializedName("message")
+    private String message;
+
+
+    @SerializedName("images")
+    @Expose
+    private ArrayList<NotificationImage> images;
+
+    public String getMessage() {
+        return message;
     }
 
-    public void setFsFormId(String fsFormId) {
-        this.fsFormId = fsFormId;
+    public String getFsSubmissionId() {
+        return fsSubmissionId;
+    }
+
+    public void setFsSubmissionId(String fsSubmissionId) {
+        this.fsSubmissionId = fsSubmissionId;
     }
 
     public String getProjectFxf() {
@@ -68,6 +84,10 @@ public class FormState {
 
     public String getSiteFxf() {
         return siteFxf;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public void setSiteFxf(String siteFxf) {
@@ -162,4 +182,11 @@ public class FormState {
         this.date = date;
     }
 
+    public ArrayList<NotificationImage> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<NotificationImage> images) {
+        this.images = images;
+    }
 }

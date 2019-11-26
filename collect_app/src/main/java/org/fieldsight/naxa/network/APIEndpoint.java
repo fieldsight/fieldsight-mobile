@@ -60,6 +60,7 @@ public class APIEndpoint {
         public static final String GET_SITE_DOCUMENTS = "/fv3/api/site/blueprint/";
         public static final String GET_FORMS = "/fv3/api/forms";
         public static final String GET_MY_FLAGGED_SUBMISSIONS = "/fv3/api/my/submissions/";
+        public static final String GET_MY_FLAGGED_SUBMISSIONS_V2 = "/fv3/api/v2/my/submissions/";
     }
 
     public class PARAMS {
