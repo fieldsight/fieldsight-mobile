@@ -191,19 +191,20 @@ public class FormsStateFragment extends Fragment {
 
                         if (isSafeToLoad(form)) {
                             FieldSightNotification notification = new FieldSightNotificationBuilder()
-                                    .setFormSubmissionId(String.valueOf(form.getFsFormId()))
+                                    .setFormSubmissionId(String.valueOf(form.getFsSubmissionId()))
                                     .setSiteId(String.valueOf(form.getSite()))
                                     .setFormName(form.getFormName())
                                     .setIdString(form.getIdString())
                                     .setComment(form.getMessage())
                                     .setFormVersion(form.getVersion())
                                     .setFormStatus(form.getStatusDisplay())
+
                                     .setFsFormId(form.getProjectFxf() != null ?
                                             form.getProjectFxf() :
                                             String.valueOf(form.getSiteFxf()))
                                     .createFieldSightNotification();
 
-                            FlaggedInstanceActivity.start(requireActivity(), notification);
+                            FlaggedInstanceActivity.startWithImages(requireActivity(), notification, form.getImages());
                         }
 
 

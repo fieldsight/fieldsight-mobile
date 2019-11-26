@@ -111,6 +111,14 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         context.startActivity(intent);
     }
 
+    public static void startWithImages(Context context, FieldSightNotification fieldSightNotification, ArrayList<NotificationImage> images) {
+        Intent intent = new Intent(context, FlaggedInstanceActivity.class);
+        intent.putExtra(Constant.EXTRA_OBJECT, fieldSightNotification);
+        intent.putExtra("images", images);
+        context.startActivity(intent);
+    }
+
+
     public static void startWithForm(FragmentActivity context, FieldSightNotification notification) {
         Intent intent = new Intent(context, FlaggedInstanceActivity.class);
         intent.putExtra(Constant.EXTRA_OBJECT, notification);
@@ -139,6 +147,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
         loadedFieldSightNotification = getIntent().getParcelableExtra(Constant.EXTRA_OBJECT);
         message = getIntent().getStringExtra(Constant.EXTRA_MESSAGE);
+        ArrayList<NotificationImage> images = (ArrayList<NotificationImage>) getIntent().getSerializableExtra("images");
         if (TextUtils.equals(message, "open_form")) {
             boolean isInstanceDownloadNeeded = !hasFormVersion() || !hasFormInstance();
             Timber.d("hasFormVersion %s hasFormInstance %s, isInstanceDownloadNeeded %s", hasFormVersion(), hasFormInstance(), isInstanceDownloadNeeded);
@@ -167,6 +176,11 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
             }
 
             return;
+        }
+
+
+        if (images != null) {
+            loadImageInView(images);
         }
 
 
@@ -277,6 +291,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         if (!TextUtils.equals(message, "open_form")) {
             getNotificationDetail();
         }
+
 
     }
 
