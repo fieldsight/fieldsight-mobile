@@ -52,16 +52,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
     public LiveData<List<FieldsightFormDetailsv3>> getFormByType(String formType, String projectId, String siteId, String siteTypeId, String siteRegionId, Project project) {
         Timber.i("getFormByType, formType = %s, projectId = %s, siteId = %s, siteTypeId = %s, regionId = %s", formType, projectId, siteId, siteTypeId, siteRegionId);
         MediatorLiveData<List<FieldsightFormDetailsv3>> mediator = new MediatorLiveData<>();
-        LiveData<List<FieldsightFormDetailsv3>> formSource;
-        if(TextUtils.isEmpty(siteId) || TextUtils.equals(siteId, "null")) {
-            // filter the form by project id
-            // form belongs to project;
-            formSource = dao.getFormByType(formType, projectId, siteId);
-        } else {
-            // this is site level forms
-            formSource = dao.getSiteLevelForms(projectId, siteId);
-        }
-
+        LiveData<List<FieldsightFormDetailsv3>> formSource = dao.getFormByType(formType, projectId, siteId);
         mediator.addSource(formSource, forms -> {
             if (TextUtils.equals(formType, Constant.FormType.STAGED)) {
                 getSortedStages(forms, siteTypeId, siteRegionId, project)
@@ -207,7 +198,9 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         // if form types and form regions both has undefined value -0,0 and sites types is null and sites region is null - always show
                         // else check form types and regions contains the site type and region
                         //form type undefined and region [1,2,3] =>
-
+                        if(!TextUtils.isEmpty(formDetailsv3.getSite()) || !formDetailsv3.getSite().equals("null")) {
+                            return true;
+                        }
                         int newsiteTypeId = TextUtils.isEmpty(siteTypeId) ? 0 : Integer.parseInt(siteTypeId);
                         int newsiteRegionId = TextUtils.isEmpty(siteRegionId) ? 0 : Integer.parseInt(siteRegionId);
                         Timber.i("FieldsightFormlocalsourcev3, newsitetyoeId = %d, newsiteRegionId = %d", newsiteTypeId, newsiteRegionId);

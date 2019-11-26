@@ -65,6 +65,8 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
         super.onActivityCreated(savedInstanceState);
         getViewModel().loadForm(formType, loadedSite.getProject(), loadedSite.getId(), loadedSite.getTypeId(), loadedSite.getRegionId(), project)
                 .observe(this, fieldSightForms -> {
+
+
                     // filter form by setting
                     // for the form that belongs to all the site not having regions and types, it will have 0 value
 
@@ -78,13 +80,16 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                     List<SiteType> siteTypeList = SiteTypeLocalSource.getInstance().getByid(project.getId());
                     boolean isProjectTypesEmpty = siteTypeList == null || siteTypeList.size() == 0;
 
-
                     Timber.i("loadForm:: isProjectRegionempty = " + isProjectRegionsEmpty + " isProjectTypeEmpty = " + isProjectTypesEmpty);
                     if (isProjectRegionsEmpty && isProjectTypesEmpty) {
                         filteredList.addAll(fieldSightForms);
                     } else {
                         for (FieldsightFormDetailsv3 fieldsightFormDetailsv3 : fieldSightForms) {
                             Timber.i("loadForm :: formsettings = %s", fieldsightFormDetailsv3.getSettings());
+                            if(!TextUtils.isEmpty(fieldsightFormDetailsv3.getSite()) || !TextUtils.equals(fieldsightFormDetailsv3.getSite(), "null") && TextUtils.equals(loadedSite.getId(), fieldsightFormDetailsv3.getSite())) {
+                                filteredList.add(fieldsightFormDetailsv3);
+                                continue;
+                            }
                             if (TextUtils.isEmpty(fieldsightFormDetailsv3.getSettings()) || TextUtils.equals(fieldsightFormDetailsv3.getSettings(), "null")) {
                                 filteredList.add(fieldsightFormDetailsv3);
                                 continue;
