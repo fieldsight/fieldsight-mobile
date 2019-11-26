@@ -50,6 +50,12 @@ public class FormState {
     @Expose
     private String date;
 
+    @SerializedName("message")
+    private String message;
+    public String getMessage() {
+        return message;
+    }
+
     public String getFsFormId() {
         return fsFormId;
     }
@@ -68,6 +74,10 @@ public class FormState {
 
     public String getSiteFxf() {
         return siteFxf;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public void setSiteFxf(String siteFxf) {
@@ -161,5 +171,6 @@ public class FormState {
     public void setDate(String date) {
         this.date = date;
     }
+
 
 }

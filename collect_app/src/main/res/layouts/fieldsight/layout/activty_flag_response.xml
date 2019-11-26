@@ -127,7 +127,6 @@
                     android:id="@+id/relativeLayout_status"
                     android:layout_width="100dp"
                     android:layout_height="140dp"
-
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true">
 

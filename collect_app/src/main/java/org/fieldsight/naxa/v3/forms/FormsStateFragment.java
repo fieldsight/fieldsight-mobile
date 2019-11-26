@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import org.bcss.collect.android.R;;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.GSONInstance;
 import org.fieldsight.naxa.common.view.BaseRecyclerViewAdapter;
 import org.fieldsight.naxa.data.FieldSightNotification;
@@ -41,11 +41,11 @@ import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.Constant.FormStatus.FLAGGED;
+
 
 public class FormsStateFragment extends Fragment {
 
@@ -56,7 +56,7 @@ public class FormsStateFragment extends Fragment {
     private BaseRecyclerViewAdapter<FormState, FieldSightFormStateVH> adapter;
     private String submissionStatus;
     private Project project;
-    private String url = APIEndpoint.V3.GET_MY_FLAGGED_SUBMISSIONS;
+    private String url = APIEndpoint.V3.GET_MY_FLAGGED_SUBMISSIONS_V2;
 
     public static FormsStateFragment newInstance(String type, Project project) {
         FormsStateFragment fragment = new FormsStateFragment();
@@ -98,7 +98,7 @@ public class FormsStateFragment extends Fragment {
 
     private void setupSwipeToRefresh() {
         swipeToRefresh.setOnRefreshListener(() -> {
-            url = APIEndpoint.V3.GET_MY_FLAGGED_SUBMISSIONS;
+            url = APIEndpoint.V3.GET_MY_FLAGGED_SUBMISSIONS_V2;
             forceReload();
         });
     }
@@ -195,13 +195,15 @@ public class FormsStateFragment extends Fragment {
                                     .setSiteId(String.valueOf(form.getSite()))
                                     .setFormName(form.getFormName())
                                     .setIdString(form.getIdString())
+                                    .setComment(form.getMessage())
                                     .setFormVersion(form.getVersion())
+                                    .setFormStatus(form.getStatusDisplay())
                                     .setFsFormId(form.getProjectFxf() != null ?
                                             form.getProjectFxf() :
                                             String.valueOf(form.getSiteFxf()))
                                     .createFieldSightNotification();
 
-                            FlaggedInstanceActivity.startWithForm(requireActivity(), notification);
+                            FlaggedInstanceActivity.start(requireActivity(), notification);
                         }
 
 

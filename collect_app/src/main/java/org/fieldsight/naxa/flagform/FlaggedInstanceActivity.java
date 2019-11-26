@@ -257,13 +257,13 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         if (formStatus != null && formStatus.equals("APPROVED")) {
             imbStatus.setBackgroundResource(R.color.green_approved);
             relativeStatus.setBackgroundResource(R.color.green_approved);
-        } else if (formStatus != null && formStatus.equals("Outstanding")) {
+        } else if (formStatus != null && formStatus.equalsIgnoreCase("Outstanding")) {
             imbStatus.setBackgroundResource(R.color.grey_outstanding);
             relativeStatus.setBackgroundResource(R.color.grey_outstanding);
-        } else if (formStatus != null && formStatus.equals("FLAGGED")) {
+        } else if (formStatus != null && formStatus.equalsIgnoreCase("FLAGGED")) {
             imbStatus.setBackgroundResource(R.color.yellow_flagged);
             relativeStatus.setBackgroundResource(R.color.yellow_flagged);
-        } else if (formStatus != null && formStatus.equals("REJECTED")) {
+        } else if (formStatus != null && formStatus.equalsIgnoreCase("REJECTED")) {
             imbStatus.setBackgroundResource(R.color.red_rejected);
             relativeStatus.setBackgroundResource(R.color.red_rejected);
         }
