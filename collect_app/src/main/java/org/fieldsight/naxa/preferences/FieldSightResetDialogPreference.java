@@ -105,7 +105,6 @@ public class FieldSightResetDialogPreference extends DialogPreference implements
                     hideProgressDialog();
                     handleResult(resetActions, failedResetActions);
                 });
-                hideProgressDialog();
             };
             new Thread(runnable).start();
         }

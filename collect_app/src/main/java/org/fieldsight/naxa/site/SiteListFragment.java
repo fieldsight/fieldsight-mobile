@@ -151,7 +151,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
                 return TermsLabels.fromJSON(tlJson);
             } catch (Exception e) {
-                Timber.e(e);
+                Timber.i("Terms and labels doest not exist for %s", loadedProject.getName());
                 return null;
             }
         } else {
@@ -173,7 +173,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);
     }
-
 
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
@@ -263,7 +262,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     public MutableLiveData<ArrayList<FilterOption>> getFilterOptionForSites() {
-
 
 
         List<Region> siteRegions;

@@ -28,6 +28,7 @@ limitations under the License.
 
 
         <CheckBox
+            android:visibility="gone"
             android:id="@+id/instances"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,6 +40,7 @@ limitations under the License.
             android:drawableRight="?android:attr/listChoiceIndicatorMultiple" />
 
         <CheckBox
+            android:visibility="gone"
             android:id="@+id/forms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

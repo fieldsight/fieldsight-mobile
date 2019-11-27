@@ -39,7 +39,7 @@ class FieldSightResetUtility extends ResetUtility {
         }
     }
 
-    private Long[] getFlaggedForms() {
+    private Long[] getTempFormIds() {
         FormsDao dao = new FormsDao();
 
         String selection = FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + "=? ";
@@ -58,7 +58,9 @@ class FieldSightResetUtility extends ResetUtility {
 
 
     private void clearFormsDownloadFromFlagged(Context context, DeleteFormsListener listener) {
-        Long[] flaggedForms = getFlaggedForms();
+        Long[] flaggedForms = getTempFormIds();
+        Long[] flaggedInstances = getTmpInstanceIds();
+
         DeleteInstancesTask deleteInstancesTask = new DeleteInstancesTask();
         deleteInstancesTask.setContentResolver(context.getContentResolver());
         deleteInstancesTask.setDeleteListener(new DeleteInstancesListener() {
@@ -67,7 +69,7 @@ class FieldSightResetUtility extends ResetUtility {
                 DeleteFormsTask deleteFormsTask = new DeleteFormsTask();
                 deleteFormsTask.setContentResolver(context.getContentResolver());
                 deleteFormsTask.setDeleteListener(listener);
-                deleteFormsTask.execute(getFlaggedForms());
+                deleteFormsTask.execute(flaggedForms);
             }
 
             @Override
@@ -77,11 +79,11 @@ class FieldSightResetUtility extends ResetUtility {
         });
 
 
-        deleteInstancesTask.execute(getFlaggedFormsInstance());
+        deleteInstancesTask.execute(flaggedInstances);
 
     }
 
-    private Long[] getFlaggedFormsInstance() {
+    private Long[] getTmpInstanceIds() {
         FormsDao dao = new FormsDao();
 
         String selection = FormsProviderAPI.FormsColumns.IS_TEMP_DOWNLOAD + "=? ";
@@ -97,7 +99,7 @@ class FieldSightResetUtility extends ResetUtility {
             String version = form.getJrVersion();
             String id = form.getJrFormId();
 
-            String instanceSelection = InstanceProviderAPI.InstanceColumns.JR_VERSION + "=? AND" + InstanceProviderAPI.InstanceColumns.JR_FORM_ID + "=?";
+            String instanceSelection = InstanceProviderAPI.InstanceColumns.JR_VERSION + "=? AND " + InstanceProviderAPI.InstanceColumns.JR_FORM_ID + "=?";
             String[] instanceSelectionArg = new String[]{version, id};
             Cursor instancesCursor = instancesDao.getInstancesCursor(instanceSelection, instanceSelectionArg);
             List<Instance> instances = instancesDao.getInstancesFromCursor(instancesCursor);

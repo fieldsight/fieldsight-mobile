@@ -21,6 +21,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
 import androidx.fragment.app.DialogFragment;
 
 import org.bcss.collect.android.R;
@@ -66,7 +67,9 @@ public class ResetSettingsResultDialog extends DialogFragment {
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        listener.onDialogClosed();
+                        if (listener != null) {
+                            listener.onDialogClosed();
+                        }
                     }
                 })
                 .create();
