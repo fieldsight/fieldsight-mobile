@@ -7,33 +7,40 @@ package org.fieldsight.naxa.common;
  */
 
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 
-import org.bcss.collect.android.R;;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.application.Collect;
 
 import java.util.Calendar;
 import java.util.List;
 
+;
+
 
 public final class DialogFactory {
 
-    private DialogFactory(){
+    private DialogFactory() {
 
     }
 
@@ -231,5 +238,45 @@ public final class DialogFactory {
     public static AlertDialog.Builder createActionConsentDialog(Context context, String title, String message) {
         View viewInflated = LayoutInflater.from(Collect.getInstance()).inflate(R.layout.dialog_site_project_filter, null, false);
         return showCustomLayoutDialog(context, viewInflated);
+    }
+
+    public interface OnValidationListener {
+        void onValidatedSucess();
+
+
+    }
+
+    public static AlertDialog createInputDialog(Context context, String title, String message, OnValidationListener validationListener) {
+
+        String validationText = "continue";
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        View inputLayout = layoutInflater.inflate(R.layout.dialog_layout_input, null);
+
+        TextInputLayout textInput = inputLayout.findViewById(R.id.text_input_layout);
+
+
+        AlertDialog alertDialog = createActionDialog(context, title, message)
+                .setView(inputLayout)
+                .setPositiveButton(R.string.dialog_action_ok,null)
+                .setNegativeButton(R.string.dialog_action_dismiss,null)
+                .create();
+
+
+        alertDialog.setOnShowListener(dialog -> {
+            Button postiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            postiveButton.setOnClickListener(view -> {
+                String text = textInput.getEditText().getText().toString();
+                if (TextUtils.equals(validationText, text)) {
+                    dialog.dismiss();
+                    validationListener.onValidatedSucess();
+                } else {
+                    textInput.setError("");
+                }
+
+            });
+        });
+
+        return alertDialog;
+
     }
 }

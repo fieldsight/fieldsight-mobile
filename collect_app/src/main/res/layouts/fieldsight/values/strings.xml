@@ -295,6 +295,7 @@
     <string name="msg_no_open_missing_version">No, I want to fill a new form</string>
     <string name="msg_matching_form_verion_not_found">Matching form version not found</string>
     <string name="reset_flagged_forms">Flagged forms ( Downloaded flagged forms)</string>
+    <string name="reset_flagged_forms_result">Flagged forms :: %s</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>

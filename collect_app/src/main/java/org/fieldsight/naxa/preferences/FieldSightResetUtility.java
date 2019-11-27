@@ -24,19 +24,23 @@ class FieldSightResetUtility extends ResetUtility {
 
     void resetAsync(Context context, List<Integer> resetActions, OnResetListener onResetListener) {
         List<Integer> failedResetActions = super.reset(context, resetActions);
+        if (failedResetActions.isEmpty()) {
+            onResetListener.onComplete(failedResetActions);
+        } else {
+            for (int action : failedResetActions) {
+                if (action == FieldSightResetActions.RESET_FLAGGED_SUBMISSIONS) {
+                    clearFormsDownloadFromFlagged(context, new DeleteFormsListener() {
+                        @Override
+                        public void deleteComplete(int deletedForms) {
+                            failedResetActions.remove(Integer.valueOf(FieldSightResetActions.RESET_FLAGGED_SUBMISSIONS));
+                            onResetListener.onComplete(failedResetActions);
+                        }
+                    });
+                }
 
-        for (int action : failedResetActions) {
-            if (action == FieldSightResetActions.RESET_FLAGGED_SUBMISSIONS) {
-                clearFormsDownloadFromFlagged(context, new DeleteFormsListener() {
-                    @Override
-                    public void deleteComplete(int deletedForms) {
-                        resetActions.remove(Integer.valueOf(FieldSightResetActions.RESET_FLAGGED_SUBMISSIONS));
-                        onResetListener.onComplete(resetActions);
-                    }
-                });
             }
-
         }
+
     }
 
     private Long[] getTempFormIds() {
@@ -52,6 +56,7 @@ class FieldSightResetUtility extends ResetUtility {
             long id = form.getId();
             formsToRemove.add(id);
         }
+
         Long[] longs = new Long[formsToRemove.size()];
         return formsToRemove.toArray(longs);
     }

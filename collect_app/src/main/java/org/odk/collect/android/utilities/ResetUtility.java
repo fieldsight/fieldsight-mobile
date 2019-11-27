@@ -52,17 +52,17 @@ public class ResetUtility {
                     break;
                 case ResetAction.RESET_LAYERS:
                     if (deleteFolderContents(Collect.OFFLINE_LAYERS)) {
-                        failedResetActions.remove(ResetAction.RESET_LAYERS);
+                        failedResetActions.remove(Integer.valueOf(ResetAction.RESET_LAYERS));
                     }
                     break;
                 case ResetAction.RESET_CACHE:
                     if (deleteFolderContents(Collect.CACHE_PATH)) {
-                        failedResetActions.remove(ResetAction.RESET_CACHE);
+                        failedResetActions.remove(Integer.valueOf(ResetAction.RESET_CACHE));
                     }
                     break;
                 case ResetAction.RESET_OSM_DROID:
                     if (deleteFolderContents(Configuration.getInstance().getOsmdroidTileCache().getPath())) {
-                        failedResetActions.remove(ResetAction.RESET_OSM_DROID);
+                        failedResetActions.remove(Integer.valueOf(ResetAction.RESET_OSM_DROID));
                     }
             }
         }
@@ -93,7 +93,7 @@ public class ResetUtility {
         new InstancesDao().deleteInstancesDatabase();
 
         if (deleteFolderContents(Collect.INSTANCES_PATH)) {
-            failedResetActions.remove(ResetAction.RESET_INSTANCES);
+            failedResetActions.remove(Integer.valueOf(ResetAction.RESET_INSTANCES));
         }
     }
 
@@ -103,7 +103,7 @@ public class ResetUtility {
         File itemsetDbFile = new File(Collect.METADATA_PATH + File.separator + ItemsetDbAdapter.DATABASE_NAME);
 
         if (deleteFolderContents(Collect.FORMS_PATH) && (!itemsetDbFile.exists() || itemsetDbFile.delete())) {
-            failedResetActions.remove(ResetAction.RESET_FORMS);
+            failedResetActions.remove(Integer.valueOf(ResetAction.RESET_FORMS));
         }
     }
 

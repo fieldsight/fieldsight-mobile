@@ -29,9 +29,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import org.bcss.collect.android.R;
+import org.fieldsight.naxa.common.DialogFactory;
 import org.odk.collect.android.fragments.dialogs.ResetSettingsResultDialog;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.utilities.ResetUtility;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +79,20 @@ public class FieldSightResetDialogPreference extends DialogPreference implements
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            resetSelected();
+            showDownloadConsentDialog();
         }
+    }
+
+    private void showDownloadConsentDialog() {
+        String message = getContext().getString(R.string.reset_app_state_warning) + "\n\n"
+                + "Type continue to proceed";
+        DialogFactory.createInputDialog(getContext(), "Reset settings?"
+                , message, new DialogFactory.OnValidationListener() {
+                    @Override
+                    public void onValidatedSucess() {
+                        resetSelected();
+                    }
+                }).show();
     }
 
     private void resetSelected() {
@@ -176,6 +190,15 @@ public class FieldSightResetDialogPreference extends DialogPreference implements
                                 getContext().getString(R.string.error_occured)));
                     } else {
                         resultMessage.append(String.format(getContext().getString(R.string.reset_osm_tiles_result),
+                                getContext().getString(R.string.success)));
+                    }
+                    break;
+                case FieldSightResetUtility.FieldSightResetActions.RESET_FLAGGED_SUBMISSIONS:
+                    if (failedResetActions.contains(action)) {
+                        resultMessage.append(String.format(getContext().getString(R.string.reset_flagged_forms_result),
+                                getContext().getString(R.string.error_occured)));
+                    } else {
+                        resultMessage.append(String.format(getContext().getString(R.string.reset_flagged_forms_result),
                                 getContext().getString(R.string.success)));
                     }
                     break;
