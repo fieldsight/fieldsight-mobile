@@ -59,6 +59,7 @@ import static org.odk.collect.android.provider.InstanceProviderAPI.InstanceColum
 public class InstanceSyncTask extends AsyncTask<Void, String, String> {
 
     private static int counter;
+    private boolean shouldExit = true;
 
     private String currentStatus = "";
     private DiskSyncListener diskSyncListener;
@@ -73,6 +74,11 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
 
     @Override
     protected String doInBackground(Void... params) {
+        if (shouldExit) {
+            Timber.i("%s called a exit on %s", R.string.app_name, this.getClass().getSimpleName());
+            currentStatus = "";
+            return currentStatus;
+        }
         int instance = ++counter;
         Timber.i("[%d] doInBackground begins!", instance);
 
