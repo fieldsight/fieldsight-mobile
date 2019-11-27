@@ -298,6 +298,8 @@ public class FieldSightUserSession {
                         removeFormsAndInstances(context, deletedForms -> {
                             ServiceGenerator.clearInstance();
                             SyncRepository.instance = null;
+                            Collect.syncableMap = null;
+                            Collect.selectedProjectList = null;
                             logoutListener.logoutTaskSuccess();
                             logoutListener.taskComplete();
                         });
