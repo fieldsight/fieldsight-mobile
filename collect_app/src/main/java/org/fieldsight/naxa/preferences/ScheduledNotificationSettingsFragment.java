@@ -29,6 +29,7 @@ import java.util.Locale;
 
 import timber.log.Timber;
 
+import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_APP_RESET;
 import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_APP_URL;
 import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_DAILY;
 import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_MONTHLY;
@@ -41,7 +42,7 @@ import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_
 public class ScheduledNotificationSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
-//    private CustomTimePickerDialog customTimePickerDialog;
+    //    private CustomTimePickerDialog customTimePickerDialog;
     private final String[] weeks = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
     private final String[] months = {"Beginning of the month", "Middle of the month", "End of the month"};
 
@@ -53,6 +54,7 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
         setupSharedPreferences();
         setupNotificationToggle();
         setupUpdateButton();
+        setupResetButton();
 //        setupTimePicker();
         initListPref(GeneralKeys.KEY_IMAGE_SIZE);
 
@@ -81,6 +83,11 @@ public class ScheduledNotificationSettingsFragment extends PreferenceFragment im
         String title = getString(R.string.app_name).concat(": ").concat(BuildConfig.VERSION_NAME);
         preference.setTitle(title);
         preference.setSummary(FieldSightUserSession.getServerUrl(Collect.getInstance()));
+    }
+
+    private void setupResetButton() {
+        Preference preference = findPreference(KEY_APP_RESET);
+        preference.setOnPreferenceClickListener(this);
     }
 
 

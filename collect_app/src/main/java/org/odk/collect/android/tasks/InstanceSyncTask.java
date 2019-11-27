@@ -79,6 +79,7 @@ public class InstanceSyncTask extends AsyncTask<Void, String, String> {
             currentStatus = "";
             return currentStatus;
         }
+
         int instance = ++counter;
         Timber.i("[%d] doInBackground begins!", instance);
 

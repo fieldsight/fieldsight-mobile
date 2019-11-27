@@ -263,7 +263,6 @@ public class FieldSightUserSession {
             FieldSightConfigDatabase.getDatabase(context).clearAllTables();
         });
 
-
         Completable purgeSharedPref = Completable.fromAction(new Action() {
             @Override
             public void run() {

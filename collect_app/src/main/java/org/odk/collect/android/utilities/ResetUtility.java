@@ -64,7 +64,6 @@ public class ResetUtility {
                     if (deleteFolderContents(Configuration.getInstance().getOsmdroidTileCache().getPath())) {
                         failedResetActions.remove(ResetAction.RESET_OSM_DROID);
                     }
-                    break;
             }
         }
 
@@ -80,7 +79,7 @@ public class ResetUtility {
 
         boolean deletedSettingsFile = !new File(Collect.ODK_ROOT + "/collect.settings").exists()
                 || (new File(Collect.ODK_ROOT + "/collect.settings").delete());
-        
+
         new LocaleHelper().updateLocale(context);
 
         if (deletedSettingsFolderContest && deletedSettingsFile) {

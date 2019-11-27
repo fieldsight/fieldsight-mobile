@@ -11,6 +11,7 @@ public final class SettingsKeys {
     public static final String KEY_NOTIFICATION_SWITCH_WEEKLY = "switch_notification_weekly";
     public static final String KEY_NOTIFICATION_SWITCH_MONTHLY = "switch_notification_monthly";
     public static final String KEY_APP_URL = "app_update";
+    public static final String KEY_APP_RESET = "reset_fieldsight";
 
 
     public final static HashMap<String, Object> DEFAULTVALUES = new HashMap<>();
