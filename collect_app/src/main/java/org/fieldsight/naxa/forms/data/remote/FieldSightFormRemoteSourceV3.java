@@ -78,12 +78,21 @@ public class FieldSightFormRemoteSourceV3 {
                 .doOnNext(new Consumer<ArrayList<FieldsightFormDetailsv3>>() {
                     @Override
                     public void accept(ArrayList<FieldsightFormDetailsv3> fieldSightFormDetails) {
+
                         String[] projectIds = new String[projects.size()];
                         for (int i = 0; i < projects.size(); i++) {
                             projectIds[i] = projects.get(i).getId();
                         }
 
-                        FieldSightFormsLocalSourcev3.getInstance().updateAll(fieldSightFormDetails, projectIds);
+                        if (fieldSightFormDetails.isEmpty()) {
+                            for (String projectId : projectIds) {
+                                SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
+                            }
+                        } else {
+                            FieldSightFormsLocalSourcev3.getInstance().updateAll(fieldSightFormDetails, projectIds);
+                        }
+
+
                     }
                 })
                 .flatMap((Function<ArrayList<FieldsightFormDetailsv3>, ObservableSource<Pair<FieldsightFormDetailsv3, String>>>) fieldSightFormDetails -> {
