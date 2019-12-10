@@ -96,9 +96,8 @@ public class RxErrorHandlingCallAdapterFactory extends CallAdapter.Factory {
                 return RetrofitException.httpError(response.raw().request().url().toString(), response, retrofit);
             }
 
-
             if (throwable instanceof UnknownHostException) {
-                return RetrofitException.networkError("Server Not Found", (IOException) throwable, url);
+                return RetrofitException.networkError("No Internet connection or server not found.", (IOException) throwable, url);
             }
 
             // A network error happened

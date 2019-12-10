@@ -1,7 +1,5 @@
 package org.fieldsight.naxa.login;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -11,11 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.cardview.widget.CardView;
 
 import com.google.android.gms.common.SignInButton;
 
@@ -41,14 +40,10 @@ import static org.odk.collect.android.application.Collect.allowClick;
 public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     // UI references.
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
-
+    private EditText edt_email;
+    private EditText edt_password;
+    CardView email_sign_in_button;
     private LoginPresenter loginPresenter;
-    private Button mEmailSignInButton;
-
     private SignInButton btnGmailLogin;
     private boolean isFromGooleSignin;
 
@@ -57,13 +52,11 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        mEmailView = findViewById(R.id.email);
+        edt_email = findViewById(R.id.email);
+        edt_password = findViewById(R.id.password);
+        email_sign_in_button = findViewById(R.id.email_sign_in_button);
 
-        mPasswordView = findViewById(R.id.password);
-
-        ImageButton btnChangeUrl = findViewById(R.id.btn_change_server_url);
-        mEmailSignInButton = findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        email_sign_in_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (allowClick(getClass().getName())) {
@@ -84,9 +77,10 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
             }
         });
 
+        ImageView iv_setting = findViewById(R.id.iv_setting);
         if (!BuildConfig.BUILD_TYPE.equals("release")) {
-            btnChangeUrl.setVisibility(View.VISIBLE);
-            btnChangeUrl.setOnClickListener(new OnClickListener() {
+            iv_setting.setVisibility(View.VISIBLE);
+            iv_setting.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (allowClick(getClass().getName())) {
@@ -96,9 +90,12 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
                 }
             });
         }
-        mLoginFormView = findViewById(R.id.logo);
-        mProgressView = findViewById(R.id.login_progress);
+//        mLoginFormView = findViewById(R.id.logo);
+//        mProgressView = findViewById(R.id.login_progress);
 
+        findViewById(R.id.iv_back).setOnClickListener(v -> {
+            finish();
+        });
 
         findViewById(R.id.tv_forgot_pwd).setOnClickListener(new OnClickListener() {
             @Override
@@ -114,8 +111,6 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         });
 
         loginPresenter = new LoginPresenterImpl(this);
-
-
     }
 
     @Override
@@ -137,14 +132,11 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
      */
     private void attemptLogin() {
         // Reset errors.
-        mEmailView.setError(null);
-        mPasswordView.setError(null);
-
+        edt_email.setError(null);
+        edt_password.setError(null);
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
-
-
+        String email = edt_email.getText().toString();
+        String password = edt_password.getText().toString();
         loginPresenter.validateCredentials(email, password);
 
     }
@@ -152,54 +144,54 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
     @Override
     public void showProgress(final boolean show) {
 
-        runOnUiThread(() -> {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_longAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-
-            mEmailSignInButton.setEnabled(!show);
-        });
+//        runOnUiThread(() -> {
+//            int shortAnimTime = getResources().getInteger(android.R.integer.config_longAnimTime);
+//
+//            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+//            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+//                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+//
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+//                }
+//            });
+//
+//            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+//            mProgressView.animate().setDuration(shortAnimTime).alpha(
+//                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+//
+//                @Override
+//                public void onAnimationEnd(Animator animation) {
+//                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+//                }
+//            });
+//
+//            mEmailSignInButton.setEnabled(!show);
+//        });
 
     }
 
     @Override
     public void showPasswordError(int resourceId) {
-        mPasswordView.setError(getString(resourceId));
-        mPasswordView.requestFocus();
+        edt_password.setError(getString(resourceId));
+        edt_password.requestFocus();
 
     }
 
     @Override
     public void showUsernameError(int resourceId) {
-        mEmailView.setError(getString(resourceId));
-        mEmailView.requestFocus();
+        edt_email.setError(getString(resourceId));
+        edt_password.requestFocus();
     }
 
     @Override
     public void successAction() {
 
-        boolean hasOldAccount = new MigrationHelper(mEmailView.getText().toString()).hasOldAccount();
+        boolean hasOldAccount = new MigrationHelper(edt_email.getText().toString()).hasOldAccount();
 
         if (hasOldAccount) {
-            MigrateFieldSightActivity.start(this, mEmailView.getText().toString());
+            MigrateFieldSightActivity.start(this, edt_email.getText().toString());
         } else {
             startActivity(new Intent(this, ProjectListActivityV3.class));
         }

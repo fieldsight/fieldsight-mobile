@@ -104,7 +104,9 @@ the specific language governing permissions and limitations under the License.
         <!--Activities from FieldSight [starts]-->
         <activity
             android:name="org.fieldsight.naxa.login.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
+
         <activity android:name="org.fieldsight.naxa.project.ProjectListActivity" />
         <activity android:name="org.fieldsight.naxa.site.FragmentHostActivity" />
         <activity android:name="org.fieldsight.naxa.site.ProjectDashboardActivity" />

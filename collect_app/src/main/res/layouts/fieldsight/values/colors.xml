@@ -55,5 +55,7 @@
     <color name="subject">#111111</color>
     <color name="message">#7a7a7a</color>
     <color name="colorButton">#0277bd</color>
-
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#727272</color>
+    <color name="light_grey">#707070</color>
 </resources>
