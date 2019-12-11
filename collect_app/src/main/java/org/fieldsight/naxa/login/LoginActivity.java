@@ -1,6 +1,7 @@
 package org.fieldsight.naxa.login;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -71,7 +72,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
             @Override
             public void onClick(View v) {
                 isFromGooleSignin = true;
-                showProgress(true);
+                showProgress("Logging with google, Please wait");
                 gmailSignIn();
                 btnGmailLogin.setEnabled(false);
             }
@@ -142,35 +143,12 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
     }
 
     @Override
-    public void showProgress(final boolean show) {
-
-//        runOnUiThread(() -> {
-//            int shortAnimTime = getResources().getInteger(android.R.integer.config_longAnimTime);
-//
-//            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-//            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-//                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-//
-//                @Override
-//                public void onAnimationEnd(Animator animation) {
-//                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-//                }
-//            });
-//
-//            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-//            mProgressView.animate().setDuration(shortAnimTime).alpha(
-//                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-//
-//                @Override
-//                public void onAnimationEnd(Animator animation) {
-//                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-//                }
-//            });
-//
-//            mEmailSignInButton.setEnabled(!show);
-//        });
-
+    public void showProgress(boolean showProgress) {
+        if (showProgress)
+            showProgress("Signing in please wait");
+        else hideProgress();
     }
+
 
     @Override
     public void showPasswordError(int resourceId) {
@@ -187,9 +165,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     @Override
     public void successAction() {
-
         boolean hasOldAccount = new MigrationHelper(edt_email.getText().toString()).hasOldAccount();
-
         if (hasOldAccount) {
             MigrateFieldSightActivity.start(this, edt_email.getText().toString());
         } else {
@@ -201,12 +177,11 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     @Override
     public void showError(String msg) {
-        showProgress(false);
         showErrorDialog(msg);
     }
 
     private void showErrorDialog(String msg) {
-        if(isFinishing()){
+        if (isFinishing()) {
             return;
         }
         Dialog dialog = DialogFactory.createActionDialog(this, "Login Failed", msg)
@@ -219,7 +194,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
                 })
                 .setNegativeButton(R.string.dialog_action_dismiss, null)
                 .create();
-       dialog.show();
+        dialog.show();
     }
 
     /**
@@ -247,6 +222,12 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         } else {
             attemptLogin();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        hideProgress();
     }
 }
 

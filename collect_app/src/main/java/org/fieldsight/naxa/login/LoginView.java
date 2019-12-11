@@ -1,8 +1,7 @@
 package org.fieldsight.naxa.login;
 
 public interface LoginView {
-
-    void showProgress(boolean show);
+    void showProgress(boolean showProgress);
 
     void showPasswordError(int resourceId);
 

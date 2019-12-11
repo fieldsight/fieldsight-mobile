@@ -38,7 +38,6 @@ public class LoginModelImpl implements LoginModel {
                 .flatMap(new Function<AuthResponse, ObservableSource<FCMParameter>>() {
                     @Override
                     public ObservableSource<FCMParameter> apply(AuthResponse authResponse) {
-
                         ServiceGenerator.clearInstance();
                         return ServiceGenerator
                                 .createService(ApiInterface.class)

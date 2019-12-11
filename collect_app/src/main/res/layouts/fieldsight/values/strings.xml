@@ -294,7 +294,7 @@
     <string name="msg_yes_open_missing_version">Yes, open in the current version</string>
     <string name="msg_no_open_missing_version">No, I want to fill a new form</string>
     <string name="msg_matching_form_verion_not_found">Matching form version not found</string>
-    <string name="signin_greeting">Welcome back\nPlease sign in</string>
+    <string name="signin_greeting">Welcome back.\nPlease sign in.</string>
     <string name="mesg_remember_me">Remember me</string>
     <string name="signin_text">Sign in with email</string>
     <string name="or">OR</string>

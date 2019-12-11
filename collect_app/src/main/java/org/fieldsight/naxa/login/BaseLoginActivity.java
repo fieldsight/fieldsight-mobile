@@ -30,7 +30,7 @@ import java.io.InputStreamReader;
 
 import timber.log.Timber;
 
-public abstract class BaseLoginActivity extends AppCompatActivity {
+public abstract class BaseLoginActivity extends CollectAbstractActivity {
     protected static final String TAG = "BaseLoginActivity";
 
 
