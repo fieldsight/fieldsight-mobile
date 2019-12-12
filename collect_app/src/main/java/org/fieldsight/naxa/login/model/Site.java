@@ -48,7 +48,7 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "typeId")
     private String typeId;
 
-    @SerializedName("type_label")
+    @SerializedName("type__name")
     @ColumnInfo(name = "typeLabel")
     private String typeLabel;
 
@@ -116,6 +116,9 @@ public class Site implements Parcelable {
         this.site = site;
     }
 
+    @SerializedName("users")
+    @ColumnInfo(name = "users")
+    private int users;
 
     private String site;
 
@@ -419,6 +422,13 @@ public class Site implements Parcelable {
         this.siteUploadError = siteUploadError;
     }
 
+    public int getUsers() {
+        return users;
+    }
+
+    public void setUsers(int users) {
+        this.users = users;
+    }
 
     public String getRegionId() {
         return regionId;

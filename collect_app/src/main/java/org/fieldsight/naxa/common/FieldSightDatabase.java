@@ -72,7 +72,7 @@ import java.io.File;
                 FieldsightFormDetailsv3.class
 
         },
-        version = 21)
+        version = 22)
 @TypeConverters({SiteMetaAttributesTypeConverter.class, RegionConverter.class})
 
 
@@ -125,7 +125,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
                         .allowMainThreadQueries()//used in org.bcss.naxa.jobs.LocalNotificationJob
                         .addMigrations(MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9,
                                 MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14,
-                                MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21)
+                                MIGRATION_14_15, MIGRATION_15_16, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19, MIGRATION_19_20, MIGRATION_20_21, MIGRATION_21_22)
 
                         .build();
             }
@@ -275,6 +275,14 @@ public abstract class FieldSightDatabase extends RoomDatabase {
             database.execSQL("CREATE TABLE IF NOT EXISTS `fieldsight_forms` (`fieldSightFormId` TEXT NOT NULL, `formDeployedSiteId` TEXT, `formDeployedProjectId` TEXT, `projectId` INTEGER, `odkFormName` TEXT, `formDescriptionText` TEXT, `odkFormVersion` TEXT, `metadata` TEXT, `formOrder` INTEGER, `formType` TEXT, `totalFormsInProject` INTEGER NOT NULL, `errorStr` TEXT, `formName` TEXT, `downloadUrl` TEXT, `manifestUrl` TEXT, `formID` TEXT, `formVersion` TEXT, `hash` TEXT, `manifestFileHash` TEXT, `isNewerFormVersionAvailable` INTEGER NOT NULL, `areNewerMediaFilesAvailable` INTEGER NOT NULL, PRIMARY KEY(`fieldSightFormId`))");
         }
     };
+
+    private static final Migration MIGRATION_21_22 = new Migration(21, 22) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE sites" + " ADD COLUMN `users` INTEGER NOT NULL DEFAULT 0");
+        }
+    };
+
 
 
 }

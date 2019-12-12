@@ -74,6 +74,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
