@@ -301,7 +301,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     private static final Migration MIGRATION_24_25 = new Migration(24, 25) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE sites" + " ADD COLUMN `site_logo` TEXT");
+            database.execSQL("ALTER TABLE sites" + " ADD COLUMN `site_logo` TEXT ");
         }
     };
 

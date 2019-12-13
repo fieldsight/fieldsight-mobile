@@ -87,7 +87,7 @@ public class Site implements Parcelable {
 
     @SerializedName("current_progress")
     @ColumnInfo(name = "current_progress")
-    private String current_progress;
+    private int current_progress;
 
     @SerializedName("site_logo")
     @ColumnInfo(name = "site_logo")
@@ -264,11 +264,11 @@ public class Site implements Parcelable {
         this.scheduleFormDeployedForm = scheduleFormDeployedForm;
     }
 
-    public String getCurrent_progress() {
+    public int getCurrent_progress() {
         return current_progress;
     }
 
-    public void setCurrent_progress(String current_progress) {
+    public void setCurrent_progress(int current_progress) {
         this.current_progress = current_progress;
     }
 

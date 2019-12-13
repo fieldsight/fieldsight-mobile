@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 25,
-    "identityHash": "adf86fabf008adbb9dcaea460ed05f5d",
+    "identityHash": "ea38e35d3380ff65488c6b335c0c9bb4",
     "entities": [
       {
         "tableName": "sites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `latitude` TEXT, `longitude` TEXT, `identifier` TEXT, `name` TEXT, `typeId` TEXT, `typeLabel` TEXT, `phone` TEXT, `address` TEXT, `publicDesc` TEXT, `additionalDesc` TEXT, `logo` TEXT, `isActive` INTEGER, `location` TEXT, `isSurvey` INTEGER, `dateCreated` TEXT, `project` TEXT, `current_progress` TEXT, `site_logo` TEXT, `isSiteVerified` INTEGER NOT NULL, `siteTypeError` TEXT, `metaAttributes` TEXT, `siteDocuments` TEXT, `regionId` TEXT, `submissions` INTEGER NOT NULL, `users` INTEGER NOT NULL, `site` TEXT, `generalFormDeployedFrom` TEXT, `stagedFormDeployedFrom` TEXT, `scheduleFormDeployedForm` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `latitude` TEXT, `longitude` TEXT, `identifier` TEXT, `name` TEXT, `typeId` TEXT, `typeLabel` TEXT, `phone` TEXT, `address` TEXT, `publicDesc` TEXT, `additionalDesc` TEXT, `logo` TEXT, `isActive` INTEGER, `location` TEXT, `isSurvey` INTEGER, `dateCreated` TEXT, `project` TEXT, `current_progress` INTEGER NOT NULL, `site_logo` TEXT, `isSiteVerified` INTEGER NOT NULL, `siteTypeError` TEXT, `metaAttributes` TEXT, `siteDocuments` TEXT, `regionId` TEXT, `submissions` INTEGER NOT NULL, `users` INTEGER NOT NULL, `site` TEXT, `generalFormDeployedFrom` TEXT, `stagedFormDeployedFrom` TEXT, `scheduleFormDeployedForm` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -113,8 +113,8 @@
           {
             "fieldPath": "current_progress",
             "columnName": "current_progress",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "site_logo",
@@ -1626,7 +1626,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"adf86fabf008adbb9dcaea460ed05f5d\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ea38e35d3380ff65488c6b335c0c9bb4\")"
     ]
   }
 }
