@@ -15,7 +15,7 @@ public interface ApiV3Interface {
     @GET(APIEndpoint.V3.GET_PROJECTS)
     Single<ResponseBody> getProjects();
 
-    @GET(APIEndpoint.V3.GET_SITES)
+    @GET(APIEndpoint.V4.GET_SITES)
     Single<SiteResponse> getSites(@QueryMap Map<String, String> options);
 
     @GET
