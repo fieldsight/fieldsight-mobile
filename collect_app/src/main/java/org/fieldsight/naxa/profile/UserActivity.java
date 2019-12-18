@@ -141,7 +141,6 @@ public class UserActivity extends CollectAbstractActivity {
                             fabPictureEdit.setVisibility(View.GONE);
                             fabEditProfile.setImageResource(R.drawable.ic_edit);
                             setInputLayoutEnabledStatus(false);
-
                             userProfileViewModel.setUser(mUser);
                             userProfileViewModel.save();
                         }

@@ -1,257 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="#2D70BC"
+        android:gravity="center_vertical"
+        android:minHeight="?attr/actionBarSize"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#2D70BC"
-            android:minHeight="?attr/actionBarSize" />
+            android:tint="@android:color/white"
+            app:srcCompat="@drawable/ic_arrow_back" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/iv_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="#FFFFFF"
+            app:srcCompat="@drawable/ic_mobile_vertical_dots_major_monotone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2D70BC"
+        android:minHeight="250dp"
+        android:orientation="vertical"
+        android:padding="16dp">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#2D70BC"
-            android:minHeight="250dp"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="wrap_content">
 
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_site_image"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    app:srcCompat="@drawable/ic_launcher_background" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp">
-
-                    <TextView
-                        android:id="@+id/tv_site_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        tool:text="New Construction Training" />
-
-                    <TextView
-                        android:id="@+id/tv_sub_site_identifier"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#DCDCDC"
-                        android:textSize="12sp"
-                        tool:text="23-58-4-0-56" />
-
-                </LinearLayout>
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/iv_site_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:srcCompat="@drawable/ic_launcher_background" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#DCDCDC"
-                        android:textSize="12sp"
-                        tool:text="Regions" />
-
-                    <TextView
-                        android:id="@+id/tv_region_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        tool:text="Sindhupalchowk" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#DCDCDC"
-                        android:textSize="12sp"
-                        tool:text="Type" />
-
-                    <TextView
-                        android:id="@+id/tv_site_type"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        tool:text="Model House\n (Strong back)" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_site_progress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
-                        android:drawablePadding="8dp"
-                        android:text="36%"
-                        android:textColor="@android:color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="24dp"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#DCDCDC"
-                        android:textSize="12sp"
-                        tool:text="Progress" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="42dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="#93C5ED" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_site_no_of_users"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_customers_major_monotone"
-                        android:drawablePadding="8dp"
-                        android:text="48"
-                        android:textColor="@android:color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="24dp"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#DCDCDC"
-                        android:textSize="12sp"
-                        tool:text="Users" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="42dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:background="#93C5ED" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_submissions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_checklist_major_monotone"
-                        android:drawablePadding="8dp"
-                        android:text="11"
-                        android:textColor="@android:color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="24dp"
-                        android:layout_marginTop="4dp"
-                        android:textColor="#DCDCDC"
-                        android:textSize="12sp"
-                        tool:text="Submissions" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="#93C5ED" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
                 <TextView
-                    android:id="@+id/tv_site_documents"
-                    android:layout_width="0dp"
+                    android:id="@+id/tv_site_name"
+                    tool:text="New Construction Training"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableLeft="@drawable/ic_note_major_monotone"
-                    android:drawablePadding="8dp"
-                    android:text="Site Documents"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
 
                 <TextView
-                    android:id="@+id/tv_view_more"
-                    android:layout_width="0dp"
+                    android:id="@+id/tv_sub_site_identifier"
+                    tool:text="23-58-4-0-56"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableRight="@drawable/ic_chevron_left_minor"
-                    android:drawablePadding="8dp"
-                    android:gravity="right"
-                    android:text="View More"
-                    android:textColor="@android:color/white" />
+                    android:layout_marginTop="4dp"
+                    android:textColor="#DCDCDC"
+                    android:textSize="16sp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -259,144 +89,335 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Regions"
+                    android:textColor="#DCDCDC"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_region_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Sindhupalchowk"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Type"
+                    android:textColor="#DCDCDC"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_site_type"
+                    tool:text="Model House\n (Strong back)"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_site_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
+                    android:drawablePadding="8dp"
+                    android:text="36%"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Progress"
+                    android:textColor="#DCDCDC"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="42dp"
+                android:background="#93C5ED" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_site_no_of_users"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_customers_major_monotone"
+                    android:drawablePadding="8dp"
+                    android:text="48"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Users"
+                    android:textColor="#DCDCDC"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="42dp"
+                android:background="#93C5ED" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_submissions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_checklist_major_monotone"
+                    android:drawablePadding="8dp"
+                    android:text="11"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Submissions"
+                    android:textColor="#DCDCDC"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="#93C5ED" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/tv_site_documents"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_note_major_monotone"
+                android:drawablePadding="8dp"
+                android:text="Site Documents"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/tv_view_more"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableRight="@drawable/ic_chevron_left_minor"
+                android:drawablePadding="8dp"
+                android:gravity="right"
+                android:text="View More"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/ll_general_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_rectangle_border_stroke_highlight"
+            android:gravity="center_vertical"
             android:padding="16dp">
 
-            <LinearLayout
-                android:id="@+id/ll_general_form"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:srcCompat="@drawable/ic_list_major_monotone" />
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_rectangle_border_stroke_highlight"
-                android:gravity="center_vertical"
-                android:padding="16dp">
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="General Forms"
+                android:textColor="#3A8FDC"
+                android:textSize="16sp" />
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_list_major_monotone" />
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:tint="#2D70BC"
+                app:srcCompat="@drawable/ic_action_forward" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_weight="1"
-                    android:text="General Forms"
-                    android:textColor="#3A8FDC"
-                    android:textSize="16sp" />
+        <LinearLayout
+            android:id="@+id/ll_scheduled_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_rectangle_border_stroke_highlight"
+            android:gravity="center_vertical"
+            android:padding="16dp">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:tint="#2D70BC"
-                    app:srcCompat="@drawable/ic_action_forward" />
-            </LinearLayout>
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:srcCompat="@drawable/ic_clock_major_monotone" />
 
-            <LinearLayout
-                android:id="@+id/ll_scheduled_form"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_rectangle_border_stroke_highlight"
-                android:gravity="center_vertical"
-                android:padding="16dp">
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="Scheduled Forms"
+                android:textColor="#3A8FDC"
+                android:textSize="16sp" />
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_list_major_monotone" />
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:tint="#2D70BC"
+                app:srcCompat="@drawable/ic_action_forward" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_weight="1"
-                    android:text="Scheduled Forms"
-                    android:textColor="#3A8FDC"
-                    android:textSize="16sp" />
+        <LinearLayout
+            android:id="@+id/ll_stage_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/rounded_rectangle_border_stroke_highlight"
+            android:gravity="center_vertical"
+            android:padding="16dp">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:tint="#2D70BC"
-                    app:srcCompat="@drawable/ic_action_forward" />
-            </LinearLayout>
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:srcCompat="@drawable/ic_grammar_major_monotone" />
 
-            <LinearLayout
-                android:id="@+id/ll_stage_form"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_rectangle_border_stroke_highlight"
-                android:gravity="center_vertical"
-                android:padding="16dp">
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:text="Staged Forms"
+                android:textColor="#3A8FDC"
+                android:textSize="16sp" />
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    app:srcCompat="@drawable/ic_list_major_monotone" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_weight="1"
-                    android:text="Staged Forms"
-                    android:textColor="#3A8FDC"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:tint="#2D70BC"
-                    app:srcCompat="@drawable/ic_action_forward" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="16dp"
-                android:gravity="center_vertical"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:id="@+id/site_option_frag_btn_delete_form"
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="48dp"
-                    android:layout_toRightOf="@+id/site_option_frag_btn_edit_saved_form"
-                    android:stateListAnimator="@null"
-                    android:textSize="12sp"
-                    android:text="@string/nav_delete_saved_form" />
-
-
-                <Button
-                    android:id="@+id/site_option_frag_btn_edit_saved_form"
-                    android:layout_width="0dp"
-                    android:layout_weight="1.5"
-                    android:layout_height="48dp"
-                    android:textSize="12sp"
-                    android:layout_centerInParent="true"
-                    android:stateListAnimator="@null"
-                    android:text="@string/nav_edit_saved_form" />
-
-                <Button
-                    android:id="@+id/site_option_frag_btn_send_form"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:textSize="12sp"
-                    android:layout_weight="2"
-                    android:layout_toLeftOf="@+id/site_option_frag_btn_edit_saved_form"
-                    android:stateListAnimator="@null"
-                    android:text="@string/nav_send_final_form" />
-
-            </LinearLayout>
-
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:tint="#2D70BC"
+                app:srcCompat="@drawable/ic_action_forward" />
         </LinearLayout>
 
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-</ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <Button
+            android:id="@+id/site_option_frag_btn_delete_form"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_toRightOf="@+id/site_option_frag_btn_edit_saved_form"
+            android:layout_weight="2"
+            android:stateListAnimator="@null"
+            android:text="@string/nav_delete_saved_form"
+            android:textSize="14sp" />
+
+
+        <Button
+            android:id="@+id/site_option_frag_btn_edit_saved_form"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:layout_weight="1.5"
+            android:stateListAnimator="@null"
+            android:text="@string/nav_edit_saved_form"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/site_option_frag_btn_send_form"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_toLeftOf="@+id/site_option_frag_btn_edit_saved_form"
+            android:layout_weight="2"
+            android:stateListAnimator="@null"
+            android:text="@string/nav_send_final_form"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+</LinearLayout>
+
 
 
 

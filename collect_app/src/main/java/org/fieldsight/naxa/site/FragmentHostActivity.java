@@ -104,6 +104,10 @@ public class FragmentHostActivity extends CollectAbstractActivity {
             Timber.i("hasProject = %s", (project != null));
         }
 
+       openFragment();
+    }
+
+    void openFragment() {
         Fragment fragment;
         openSubmissionScreen = TextUtils.equals(Constant.FormStatus.FLAGGED, extraMessage)
                 || TextUtils.equals(Constant.FormStatus.REJECTED, extraMessage);
