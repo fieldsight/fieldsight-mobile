@@ -14,6 +14,7 @@ import org.odk.collect.android.logic.FormDetails;
 
 public class FieldSightFormVH extends RecyclerView.ViewHolder {
 //    private final TextView tvTitle, tvSubtitle, tvIconText;
+
 //    private final Button btnViewSubmission, btnViewEduMaterial;
     TextView tvFormName, tvLastSubmittedDate;
     ImageView ivEducationMaterials;
