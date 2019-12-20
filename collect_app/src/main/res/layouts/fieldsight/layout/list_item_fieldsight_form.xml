@@ -1,124 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view_form_list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/margin_small"
-    android:layout_marginRight="@dimen/margin_small"
-    android:foreground="?selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="72dp"
+    android:orientation="horizontal">
 
-
-    app:cardCornerRadius="@dimen/corner_radius"
-    app:cardElevation="0dp"
-    app:cardUseCompatPadding="true">
-
-    <RelativeLayout
-        android:id="@+id/rl_form_list_item"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true">
-
-        <RelativeLayout
-            android:id="@+id/rela_round"
-            android:layout_width="@dimen/icon_width_height"
-            android:layout_height="@dimen/icon_width_height"
-
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginTop="21dp"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_large">
-
-
-            <ImageView
-                android:id="@+id/iv_form_circle"
-                android:layout_width="@dimen/icon_width_height"
-                android:layout_height="@dimen/icon_width_height"
-                android:src="@drawable/circle_blue" />
-
-            <TextView
-                android:id="@+id/form_icon_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="T"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_small" />
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/circle_green"
-                android:src="@drawable/ic_check"
-                android:visibility="gone" />
-
-        </RelativeLayout>
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_toLeftOf="@id/status"
-            android:id="@+id/tv_form_primary"
+            android:id="@+id/tv_form_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_toEndOf="@id/rela_round"
-            android:layout_toRightOf="@id/rela_round"
-            android:text="Title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:layout_toStartOf="@id/status" />
+            android:text="Form name"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_small" />
 
         <TextView
-            android:id="@+id/tv_form_secondary"
+            android:id="@+id/tv_last_submitted"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_form_primary"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_toEndOf="@id/rela_round"
-            android:layout_toRightOf="@id/rela_round"
+            android:layout_marginTop="4dp"
+            android:textSize="12sp"
             android:text="@string/form_last_submission_datetime"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textColor="@color/text_secondary" />
 
-        <Button
-            android:id="@+id/btn_form_responses"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_form_secondary"
-            android:layout_marginStart="65dp"
-            android:layout_marginLeft="65dp"
-            android:minWidth="0dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:text="@string/btn_previous_submissions" />
+    </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_form_edu"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_form_secondary"
-            android:layout_toEndOf="@id/btn_form_responses"
-            android:layout_toRightOf="@id/btn_form_responses"
-            android:text="@string/btn_education_materials" />
+    <ImageView
+        android:id="@+id/iv_education_materials"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_vocabulary_major_monotone" />
 
 
-        <TextView
+</LinearLayout>
 
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"
-            tools:text="Stage 1"
-            android:textAppearance="@style/ColoredCaption"
-            android:layout_marginEnd="@dimen/margin_large" />
-
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>

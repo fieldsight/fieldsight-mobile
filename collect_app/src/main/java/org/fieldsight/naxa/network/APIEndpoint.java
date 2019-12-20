@@ -63,6 +63,12 @@ public class APIEndpoint {
         public static final String GET_MY_FLAGGED_SUBMISSIONS_V2 = "/fv3/api/v2/my/submissions/";
     }
 
+
+    public static class V4 {
+        public static final String GET_SITES = "/fv3/api/sites/v4/";
+    }
+
+
     public class PARAMS {
         public static final String PROJECT_ID = "project_id";
         public static final String REGION_ID = "region_id";

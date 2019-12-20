@@ -99,6 +99,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         setHasOptionsMenu(true);
     }
 
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -173,7 +176,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);
     }
-
 
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
@@ -263,7 +265,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     public MutableLiveData<ArrayList<FilterOption>> getFilterOptionForSites() {
-
 
 
         List<Region> siteRegions;
