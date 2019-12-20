@@ -104,7 +104,7 @@ public class FragmentHostActivity extends CollectAbstractActivity {
             Timber.i("hasProject = %s", (project != null));
         }
 
-       openFragment();
+        openFragment();
     }
 
     void openFragment() {

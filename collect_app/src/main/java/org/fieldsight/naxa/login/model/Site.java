@@ -3,6 +3,7 @@ package org.fieldsight.naxa.login.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -322,7 +323,7 @@ public class Site implements Parcelable {
     }
 
     public String getTypeId() {
-        return typeId == null ? "" : typeId;
+        return TextUtils.isEmpty(typeId) ? "" : typeId;
     }
 
     public void setTypeId(String typeId) {

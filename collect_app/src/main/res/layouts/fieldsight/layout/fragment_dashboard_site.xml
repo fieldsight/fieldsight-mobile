@@ -16,7 +16,8 @@
         android:minHeight="?attr/actionBarSize"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_back"

@@ -58,4 +58,6 @@
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#727272</color>
     <color name="light_grey">#707070</color>
+
+    <color name="new_design_blue">#2D70BC</color>
 </resources>

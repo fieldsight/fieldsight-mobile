@@ -7,7 +7,7 @@
     android:background="@color/background_grey"
     android:orientation="vertical">
 
-    <include layout="@layout/general_toolbar" />
+    <include layout="@layout/main_toolbar" />
 
     <FrameLayout
         android:id="@+id/fragment_container"

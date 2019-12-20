@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,6 +21,7 @@ import android.widget.ToggleButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -126,6 +129,7 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
     @BindView(R.id.site_option_frag_btn_send_form)
     Button btnUpload;
 
+
     private PopupMenu popupMenu;
 
 
@@ -162,7 +166,6 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
         project = getArguments().getParcelable(EXTRA_PROJECT);
 
 
-//        bindUI(rootView);
 
         /*
          *https://medium.com/@BladeCoder/architecture-components-pitfalls-part-1-9300dd969808
@@ -172,60 +175,36 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
                     if (site == null) {
                         return;
                     }
-
                     this.loadedSite = site;
-//                    hideSendButtonIfMockedSite(rootView);
                     setupPopup();
                     updateUi(loadedSite);
-//                    setupToolbar();
-
-//                    tvSiteAddress.setText(loadedSite.getAddress());
-//                    tvSiteName.setText(loadedSite.getName());
-//                    showOrHide(tvSiteType, loadedSite.getTypeLabel());
-
-//                    tvSiteType.setOnLongClickListener(view -> {
-//                        ToastUtils.showLongToast(loadedSite.getTypeId());
-//                        return true;
-//                    });
-//
-//                    tvSiteType.setOnClickListener(view -> DialogFactory.createMessageDialog(getActivity(),
-//                            "Information", String.format("Only %s type sub stages will be displayed for %s", loadedSite.getTypeLabel(), loadedSite.getName())).show());
-
-
-//                    TODO: this is need to call in delete from actionbar
-//                    rootView.findViewById(R.id.site_option_btn_delete_site)
-//                            .setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View view) {
-//                                    showDeleteWarningDialog();
-//                                }
-//                            });
-//                    setupFinalizedButton();
+                    setupToolbar();
                 });
 
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menu_site_map:
-//                checkPermissionAndOpenMap();
-//                break;
-//            case R.id.menu_upload:
-//                showSiteUploadConfirmationDialog();
-//            case R.id.menu_delete:
-//                showDeleteWarningDialog();
-//                break;
-//
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
-//    @Override
-//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-//        inflater.inflate(R.menu.menu_site_dashboard, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_site_map:
+                checkPermissionAndOpenMap();
+                break;
+            case R.id.menu_upload:
+                showSiteUploadConfirmationDialog();
+            case R.id.menu_delete:
+                showDeleteWarningDialog();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_site_dashboard, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
 
     private String checkIfEmpty(String text) {
@@ -283,16 +262,13 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
                     break;
             }
         });
-
-
     }
 
 
-//    private void setupToolbar() {
-//        Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-//        toolbar.setTitle(R.string.toolbar_form_types);
-//        toolbar.setSubtitle(loadedSite.getName());
-//    }
+    private void setupToolbar() {
+        Toolbar toolbar = requireActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+    }
 
     private void setupPopup() {
         popupMenu = new PopupMenu(requireActivity(), iv_more);
@@ -354,69 +330,6 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
         }
 
     }
-
-
-//    private void bindUI(View rootView) {
-//        tvSiteName = rootView.findViewById(R.id.site_option_frag_site_name);
-//        tvSiteAddress = rootView.findViewById(R.id.site_option_frag_site_address);
-//        tvSiteType = rootView.findViewById(R.id.site_option_frag_site_type);
-//
-//        btnToggleFinalized = rootView.findViewById(R.id.site_option_btn_finalize_site);
-//        btnShowInfo = rootView.findViewById(R.id.site_option_frag_btn_info);
-//        btnShowInfo.setOnClickListener(this);
-//        CardView cvStageform = rootView.findViewById(R.id.cv_stageform);
-
-//        Timber.d("SitesdashboardFragment, isParentsite = %s", isParent);
-//        cvStageform.setVisibility(isParent ? View.GONE : View.VISIBLE);
-
-//        rootView.findViewById(R.id.site_option_frag_btn_delete_form).setOnClickListener(this);
-//        rootView.findViewById(R.id.site_option_frag_btn_edit_saved_form).setOnClickListener(this);
-//        rootView.findViewById(R.id.site_option_frag_btn_send_form).setOnClickListener(this);
-
-//        rootView.findViewById(R.id.site_option_frag_general_form).setOnClickListener(this);
-//        rootView.findViewById(R.id.site_option_frag_schedule_form).setOnClickListener(this);
-//        rootView.findViewById(R.id.site_option_frag_staged_form).setOnClickListener(this);
-
-//    }
-
-//    @Override
-//    public void onPrepareOptionsMenu(@NonNull Menu menu) {
-//        boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
-////        boolean isEditedSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
-//        if (isOfflineSite) {
-//            menu.findItem(R.id.menu_delete).setEnabled(true);
-//            menu.findItem(R.id.menu_upload).setEnabled(true);
-//        } else {
-//            menu.findItem(R.id.menu_delete).setEnabled(false);
-//            menu.findItem(R.id.menu_upload).setEnabled(false);
-//        }
-//        super.onPrepareOptionsMenu(menu);
-//    }
-
-//    private void hideSendButtonIfMockedSite(View rootView) {
-//
-//        boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
-//        boolean isEditedSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
-//
-//        if (isOfflineSite) {
-//            rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(false);
-//            rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(true);
-////            rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.VISIBLE); (delete in menu)
-////            rootView.findViewById(R.id.site_option_btn_upload_site).setVisibility(View.VISIBLE); (upload in menu)
-//            rootView.findViewById(R.id.site_option_btn_upload_edited_site).setVisibility(View.GONE);
-//        } else if (isEditedSite) {
-//            rootView.findViewById(R.id.site_option_btn_upload_edited_site).setVisibility(View.VISIBLE);
-////            rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.GONE); (delete in menu)
-////            rootView.findViewById(R.id.site_option_btn_upload_site).setVisibility(View.GONE); (upload in menu)
-//        } else {
-//            rootView.findViewById(R.id.site_option_frag_btn_send_form).setEnabled(true);
-//            rootView.findViewById(R.id.site_option_btn_finalize_site).setEnabled(false);
-////            rootView.findViewById(R.id.site_option_btn_delete_site).setVisibility(View.GONE); (delete in menu)
-////            rootView.findViewById(R.id.site_option_btn_upload_site).setVisibility(View.GONE); (upload in menu)
-//            rootView.findViewById(R.id.site_option_btn_upload_edited_site).setVisibility(View.GONE);
-//        }
-//
-//    }
 
     @OnClick(R.id.tv_site_documents)
     void openSiteDocuments() {
@@ -625,6 +538,26 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
                 });
     }
 
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        Integer[] itemsToRemove = new Integer[]{
+                R.id.action_refresh,
+                R.id.action_logout,
+                R.id.action_setting,
+                R.id.action_notificaiton,
+        };
+
+        for (Integer itemId : itemsToRemove) {
+            MenuItem menuItem = menu.findItem(itemId);
+            if (menuItem != null) {
+                menuItem.setVisible(false);
+            }
+        }
+
+
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -705,15 +638,4 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-    }
 }
