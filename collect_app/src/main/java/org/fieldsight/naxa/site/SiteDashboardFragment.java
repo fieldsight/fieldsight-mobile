@@ -128,9 +128,7 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
 
     @BindView(R.id.site_option_frag_btn_send_form)
     Button btnUpload;
-
-
-    private PopupMenu popupMenu;
+    private Menu menu;
 
 
     public static SiteDashboardFragment newInstance(Site site, boolean isParent, Project project) {
@@ -176,7 +174,7 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
                         return;
                     }
                     this.loadedSite = site;
-                    setupPopup();
+
                     updateUi(loadedSite);
                     setupToolbar();
                 });
@@ -191,7 +189,15 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
                 checkPermissionAndOpenMap();
                 break;
             case R.id.menu_upload:
-                showSiteUploadConfirmationDialog();
+                boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
+                boolean isEditedSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
+
+                if (isOfflineSite) {
+                    showSiteUploadConfirmationDialog();
+                } else if (isEditedSite) {
+                    showEditedSiteUploadDialog();
+                }
+                break;
             case R.id.menu_delete:
                 showDeleteWarningDialog();
                 break;
@@ -271,46 +277,31 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
     }
 
     private void setupPopup() {
-        popupMenu = new PopupMenu(requireActivity(), iv_more);
-        popupMenu.getMenuInflater().inflate(R.menu.menu_site_dashboard, popupMenu.getMenu());
+        if (this.menu == null) {
+            return;
+        }
+
         boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
         boolean isEditedSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
-        Menu menu = popupMenu.getMenu();
+
+
         if (isOfflineSite) {
-            menu.findItem(R.id.menu_delete).setEnabled(true);
-            menu.findItem(R.id.menu_upload).setEnabled(true);
+            this.menu.findItem(R.id.menu_delete).setEnabled(true);
+            this.menu.findItem(R.id.menu_upload).setEnabled(true);
 
             btnUpload.setEnabled(false);
 
         } else if (isEditedSite) {
             btnUpload.setEnabled(true);
-            menu.findItem(R.id.menu_delete).setEnabled(false);
-            menu.findItem(R.id.menu_upload).setEnabled(true);
+            this.menu.findItem(R.id.menu_delete).setEnabled(false);
+            this.menu.findItem(R.id.menu_upload).setEnabled(true);
         } else {
             btnUpload.setEnabled(true);
-            menu.findItem(R.id.menu_delete).setEnabled(false);
-            menu.findItem(R.id.menu_upload).setEnabled(false);
+            this.menu.findItem(R.id.menu_delete).setEnabled(false);
+            this.menu.findItem(R.id.menu_upload).setEnabled(false);
         }
-        popupMenu.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.menu_site_map:
-                    checkPermissionAndOpenMap();
-                    break;
-                case R.id.menu_upload:
-                    if (isOfflineSite) {
-                        showSiteUploadConfirmationDialog();
-                    } else if (isEditedSite) {
-                        showEditedSiteUploadDialog();
-                    }
-                    break;
-                case R.id.menu_delete:
-                    showDeleteWarningDialog();
-                    break;
-
-            }
-            return true;
-        });
     }
+
 
     private void checkPermissionAndOpenMap() {
         if (!checkIfLocationPermissionsGranted(requireActivity())) {
@@ -390,12 +381,6 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
         startActivity(intent);
     }
 
-    @OnClick(R.id.iv_more)
-    void showMenuOption() {
-        Timber.i("SiteDashboardFragment, showMenu option selected");
-        popupMenu.show();
-    }
-
 
     @Override
     public void onDestroyView() {
@@ -404,7 +389,7 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
     }
 
 
-    public void showSiteUploadConfirmationDialog() {
+    void showSiteUploadConfirmationDialog() {
 
         DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_sites))
                 .setPositiveButton(R.string.dialog_action_upload_site_and_form, (dialog, which) -> {
@@ -541,7 +526,12 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        disableMenuItems(menu);
+        this.menu = menu;
+        setupPopup();
+    }
 
+    private void disableMenuItems(Menu menu) {
         Integer[] itemsToRemove = new Integer[]{
                 R.id.action_refresh,
                 R.id.action_logout,
@@ -555,8 +545,6 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
                 menuItem.setVisible(false);
             }
         }
-
-
     }
 
     @Override
