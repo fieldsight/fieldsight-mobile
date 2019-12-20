@@ -3,9 +3,9 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tool="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
@@ -68,20 +68,20 @@
 
                 <TextView
                     android:id="@+id/tv_site_name"
-                    tool:text="New Construction Training"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    tool:text="New Construction Training" />
 
                 <TextView
                     android:id="@+id/tv_sub_site_identifier"
-                    tool:text="23-58-4-0-56"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:textColor="#DCDCDC"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tool:text="23-58-4-0-56" />
 
             </LinearLayout>
         </LinearLayout>
@@ -133,13 +133,13 @@
 
                 <TextView
                     android:id="@+id/tv_site_type"
-                    tool:text="Model House\n (Strong back)"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tool:text="Model House\n (Strong back)" />
 
             </LinearLayout>
         </LinearLayout>
@@ -372,17 +372,18 @@
 
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:padding="16dp">
 
         <Button
             android:id="@+id/site_option_frag_btn_delete_form"

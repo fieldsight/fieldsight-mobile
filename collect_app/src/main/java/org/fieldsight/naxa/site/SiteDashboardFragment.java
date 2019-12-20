@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -122,7 +123,10 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
     @BindView(R.id.iv_more)
     ImageView iv_more;
 
-    PopupMenu popupMenu;
+    @BindView(R.id.site_option_frag_btn_send_form)
+    Button btnUpload;
+
+    private PopupMenu popupMenu;
 
 
     public static SiteDashboardFragment newInstance(Site site, boolean isParent, Project project) {
@@ -208,7 +212,7 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
 //                checkPermissionAndOpenMap();
 //                break;
 //            case R.id.menu_upload:
-//                showConfirmationDialog();
+//                showSiteUploadConfirmationDialog();
 //            case R.id.menu_delete:
 //                showDeleteWarningDialog();
 //                break;
@@ -294,11 +298,20 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
         popupMenu = new PopupMenu(requireActivity(), iv_more);
         popupMenu.getMenuInflater().inflate(R.menu.menu_site_dashboard, popupMenu.getMenu());
         boolean isOfflineSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
+        boolean isEditedSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
         Menu menu = popupMenu.getMenu();
         if (isOfflineSite) {
             menu.findItem(R.id.menu_delete).setEnabled(true);
             menu.findItem(R.id.menu_upload).setEnabled(true);
+
+            btnUpload.setEnabled(false);
+
+        } else if (isEditedSite) {
+            btnUpload.setEnabled(true);
+            menu.findItem(R.id.menu_delete).setEnabled(false);
+            menu.findItem(R.id.menu_upload).setEnabled(true);
         } else {
+            btnUpload.setEnabled(true);
             menu.findItem(R.id.menu_delete).setEnabled(false);
             menu.findItem(R.id.menu_upload).setEnabled(false);
         }
@@ -308,7 +321,11 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
                     checkPermissionAndOpenMap();
                     break;
                 case R.id.menu_upload:
-                    showConfirmationDialog();
+                    if (isOfflineSite) {
+                        showSiteUploadConfirmationDialog();
+                    } else if (isEditedSite) {
+                        showEditedSiteUploadDialog();
+                    }
                     break;
                 case R.id.menu_delete:
                     showDeleteWarningDialog();
@@ -337,22 +354,6 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
         }
 
     }
-
-//    TODO check this what is for ?
-//    private void setupFinalizedButton() {
-//        boolean isFinalizedSite = loadedSite.getIsSiteVerified() == Constant.SiteStatus.IS_FINALIZED;
-//        btnToggleFinalized.setChecked(isFinalizedSite);
-//
-//        btnToggleFinalized.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-//            if (isChecked) {
-//                ToastUtils.showShortToast("Marked Finalized");
-//                SiteLocalSource.getInstance().setSiteAsFinalized(loadedSite.getId());
-//            } else {
-//                ToastUtils.showShortToast("Marked (Not) Finalized");
-//                SiteLocalSource.getInstance().setSiteAsNotFinalized(loadedSite.getId());
-//            }
-//        });
-//    }
 
 
 //    private void bindUI(View rootView) {
@@ -462,8 +463,8 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
     @OnClick(R.id.iv_back)
     void finishActivity() {
         Timber.i("SiteDashboardFragment, back option selected");
-        if(getActivity() instanceof FragmentHostActivity) {
-            ((FragmentHostActivity)getActivity()).openFragment();
+        if (getActivity() instanceof FragmentHostActivity) {
+            ((FragmentHostActivity) getActivity()).openFragment();
         } else {
             Timber.i("HostActivity not known");
         }
@@ -489,58 +490,8 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
         unbinder.unbind();
     }
 
-//    @Override
-//    public void onClick(View view) {
-////        Intent intent = null;
-//
-//        switch (view.getId()) {
-////            case R.id.site_option_frag_general_form:
-////                toForms();
-////                break;
-////            case R.id.site_option_frag_schedule_form:
-////                toScheduleList();
-////                break;
-////            case R.id.site_option_frag_staged_form:
-////                toStageList();
-////                break;
-////            case R.id.site_option_frag_btn_delete_form:
-////
-////                intent = new Intent(requireActivity(), FileManagerTabs.class);
-////                intent.putExtra(EXTRA_OBJECT, loadedSite);
-////                startActivity(intent);
-////
-////                break;
-////            case R.id.site_option_frag_btn_edit_saved_form:
-////                Intent i = new Intent(requireActivity(), FSInstanceChooserList.class);
-////                i.putExtra(EXTRA_OBJECT, loadedSite);
-////                i.putExtra(ApplicationConstants.BundleKeys.FORM_MODE,
-////                        ApplicationConstants.FormModes.EDIT_SAVED);
-////                startActivity(i);
-////                break;
-////            case R.id.site_option_frag_btn_send_form:
-////                intent = new Intent(requireActivity(), FSInstanceUploaderListActivity.class);
-////                intent.putExtra(EXTRA_OBJECT, loadedSite);
-////                startActivity(intent);
-////                break;
-////            case R.id.site_option_frag_btn_info:
-////                popup.show();
-//
-////                break;
-//        }
-//    }
 
-//    @OnLongClick(R.id.site_option_frag_btn_info)
-//    public boolean showSiteDebugInfo() {
-//        if (BuildConfig.DEBUG) {
-//            DialogFactory.createSimpleOkErrorDialog(getActivity(), "", loadedSite.toString()).show();
-//            return true;
-//        }
-//
-//        return false;
-//    }
-
-
-    public void showConfirmationDialog() {
+    public void showSiteUploadConfirmationDialog() {
 
         DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_sites))
                 .setPositiveButton(R.string.dialog_action_upload_site_and_form, (dialog, which) -> {
@@ -556,17 +507,16 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
 
 
     }
-// TODO check this
-//    @OnClick(R.id.site_option_btn_upload_edited_site)
-//    public void showEditedSiteUploadDialog() {
-//
-//        DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_edited_sites))
-//                .setPositiveButton(R.string.upload, (dialog, which) -> {
-//                    uploadEditedSites(Collections.singletonList(loadedSite));
-//                })
-//                .setNegativeButton(R.string.dialog_action_dismiss, null)
-//                .show();
-//    }
+
+    void showEditedSiteUploadDialog() {
+
+        DialogFactory.createActionDialog(requireActivity(), getString(R.string.dialog_title_upload_sites), getString(R.string.dialog_msg_upload_edited_sites))
+                .setPositiveButton(R.string.upload, (dialog, which) -> {
+                    uploadEditedSites(Collections.singletonList(loadedSite));
+                })
+                .setNegativeButton(R.string.dialog_action_dismiss, null)
+                .show();
+    }
 
     private void uploadEditedSites(List<Site> sites) {
         String progressMessage = getString(R.string.dialog_msg_uploading_sites);
