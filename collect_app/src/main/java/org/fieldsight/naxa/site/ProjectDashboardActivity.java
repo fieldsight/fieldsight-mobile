@@ -133,7 +133,7 @@ public class ProjectDashboardActivity extends BaseActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_project_dashboard);
+        setContentView(R.layout.old_activity_project_dashboard);
 
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);

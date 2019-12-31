@@ -18,6 +18,7 @@ package org.odk.collect.android.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -133,4 +134,5 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
             Timber.e(e);
         }
     }
+
 }

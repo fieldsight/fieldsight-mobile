@@ -22,59 +22,14 @@
             android:transitionName="@string/shared_transition_toolbar">
 
 
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/act_dashboard_collapsing_toolbar_layout"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/act_dashboard_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                app:contentScrim="@drawable/toolbar_gradient"
-                app:expandedTitleMarginBottom="94dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-
-
-                <ImageView
-                    android:id="@+id/iv_bg_toolbar"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/sand_city_illustration"
-
-                    tools:ignore="ContentDescription" />
-
-                <ImageView
-                    android:background="@color/colorTransparentBlue"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:tint="@color/colorTransparentBlue"
-                    tools:ignore="ContentDescription" />
-
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/act_dashboard_toolbar"
-                    android:layout_width="match_parent"
-
-                    android:layout_height="?android:attr/actionBarSize"
-                    android:background="@null"
-                    app:layout_collapseMode="pin"
-                    app:navigationIcon="@drawable/navigate_back_button"
-                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                    app:subtitle="Sites"
-                    app:title="Project Name"
-                    app:titleTextColor="@android:color/white" />
-
-                    <include
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="?actionBarSize"
-                        layout="@layout/toolbar_progressbar"/>
-
-
-                <include
-
-
-                    layout="@layout/search_layout_dashboard" />
-
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@null"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@drawable/navigate_back_button"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
         </com.google.android.material.appbar.AppBarLayout>
