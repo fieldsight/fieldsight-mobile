@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.login.model.Project;
-import org.fieldsight.naxa.site.ProjectDashboardActivity;
+import org.fieldsight.naxa.site.OldProjectDashboardActivity;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.application.Collect;
@@ -52,7 +52,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
             void itemClicked(int index) {
                 Project project = projectList.get(index);
                 if (project.isSynced()) {
-                    ProjectDashboardActivity.start(viewGroup.getContext(), projectList.get(index));
+                    OldProjectDashboardActivity.start(viewGroup.getContext(), projectList.get(index));
                     return;
                 }
                 boolean isSyncRunning = Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0

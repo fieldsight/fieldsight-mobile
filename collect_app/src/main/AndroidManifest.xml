@@ -108,7 +108,7 @@ the specific language governing permissions and limitations under the License.
 
         <activity android:name="org.fieldsight.naxa.project.ProjectListActivity" />
         <activity android:name="org.fieldsight.naxa.site.FragmentHostActivity" />
-        <activity android:name="org.fieldsight.naxa.site.ProjectDashboardActivity" />
+        <activity android:name="org.fieldsight.naxa.ProjectDashboardActivity" />
         <activity android:name="org.fieldsight.naxa.site.CreateSiteActivity" />
         <activity android:name="org.fieldsight.naxa.submissions.PreviousSubmissionListActivity" />
         <activity android:name="org.fieldsight.naxa.submissions.PreviousSubmissionDetailActivity" />

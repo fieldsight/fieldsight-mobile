@@ -10,32 +10,250 @@
     tools:openDrawer="end">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/cl_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="org.fieldsight.collect.android.fieldsight.activities.DashboardActivity">
+
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/act_dashboard_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:transitionName="@string/shared_transition_toolbar">
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/act_dashboard_toolbar"
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
-                android:background="@null"
-                app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/navigate_back_button"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                android:layout_height="300dp"
+                app:contentScrim="?colorPrimary"
+                app:layout_scrollFlags="exitUntilCollapsed|scroll">
 
+                <LinearLayout
+                    android:id="@+id/ll_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/new_design_blue"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    app:layout_collapseMode="parallax">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:src="@drawable/ic_launcher_fieldsight" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="DFID 32 district retrofitting"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="Build change"
+                                android:textColor="@android:color/white"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_regions"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
+                                android:drawablePadding="8dp"
+                                android:text="36%"
+                                android:textColor="@android:color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="24dp"
+                                android:layout_marginTop="4dp"
+                                android:text="Regions"
+                                android:textColor="#DCDCDC"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_sites"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
+                                android:drawablePadding="8dp"
+                                android:text="36"
+                                android:textColor="@android:color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="24dp"
+                                android:layout_marginTop="4dp"
+                                android:text="Sites"
+                                android:textColor="#DCDCDC"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_users"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
+                                android:drawablePadding="8dp"
+                                android:text="36%"
+                                android:textColor="@android:color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="24dp"
+                                android:layout_marginTop="4dp"
+                                android:text="Users"
+                                android:textColor="#DCDCDC"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_submissions"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
+                                android:drawablePadding="8dp"
+                                android:text="34"
+                                android:textColor="@android:color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="24dp"
+                                android:layout_marginTop="4dp"
+                                android:text="Submissions"
+                                android:textColor="#DCDCDC"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="DFID 31 district retrofitting is the projects you"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/more"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="4dp"
+                        android:background="@color/blue" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="8dp"
+                        android:drawableLeft="@drawable/ic_circle_plus_major_monotone"
+                        android:drawablePadding="8dp"
+                        android:text="@string/project_forms"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/act_dashboard_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:background="@color/new_design_blue"
+                    android:elevation="0dp"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="fill_parent"
+                android:layout_height="35dp"
+                android:background="@color/colorPrimaryDark"
+                app:tabIndicatorColor="@android:color/white"
+                app:tabIndicatorHeight="2dp"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@android:color/white"
+                app:tabTextColor="@android:color/white" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-
-        <include layout="@layout/dashboard_tab" />
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

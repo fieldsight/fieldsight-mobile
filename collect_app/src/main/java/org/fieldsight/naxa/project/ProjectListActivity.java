@@ -25,6 +25,7 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.BackupActivity;
+import org.fieldsight.naxa.ProjectDashboardActivity;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.InternetUtils;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
@@ -37,7 +38,7 @@ import org.fieldsight.naxa.preferences.SettingsActivity;
 import org.fieldsight.naxa.project.adapter.MyProjectsAdapter;
 import org.fieldsight.naxa.project.data.ProjectViewModel;
 import org.fieldsight.naxa.report.ReportActivity;
-import org.fieldsight.naxa.site.ProjectDashboardActivity;
+import org.fieldsight.naxa.site.OldProjectDashboardActivity;
 import org.fieldsight.naxa.sync.ContentDownloadActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -225,9 +226,9 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     public void onItemClick(Project project) {
 
 
-        Pair<View, String> p1 = Pair.create(appbarGeneral, ViewCompat.getTransitionName(appbarGeneral));
+//        Pair<View, String> p1 = Pair.create(appbarGeneral, ViewCompat.getTransitionName(appbarGeneral));
         //inspection
-        ProjectDashboardActivity.start(this, project, p1);
+        ProjectDashboardActivity.start(this, project);
 
     }
 
