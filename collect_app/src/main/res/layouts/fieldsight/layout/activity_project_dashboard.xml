@@ -246,7 +246,7 @@
                 app:tabIndicatorColor="@color/new_design_blue"
                 app:tabIndicatorHeight="2dp"
                 app:tabGravity="fill"
-                app:tabMode="fixed"
+                app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/new_design_blue"
                 app:tabTextColor="@color/text_primary" />
 
