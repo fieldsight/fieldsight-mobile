@@ -1,7 +1,6 @@
 package org.fieldsight.naxa.login;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -27,7 +25,7 @@ import org.fieldsight.naxa.common.SettingsActivity;
 import org.fieldsight.naxa.migrate.MigrateFieldSightActivity;
 import org.fieldsight.naxa.migrate.MigrationHelper;
 import org.fieldsight.naxa.network.APIEndpoint;
-import org.fieldsight.naxa.v3.ProjectListActivityV3;
+import org.fieldsight.naxa.v3.project.ProjectListActivityV3;
 
 import timber.log.Timber;
 

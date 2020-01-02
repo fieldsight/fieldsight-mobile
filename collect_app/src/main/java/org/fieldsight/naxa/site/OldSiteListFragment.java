@@ -68,7 +68,7 @@ import timber.log.Timber;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.InstanceUploaderListActivity.INSTANCE_UPLOADER;
 
-public class SiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener {
+public class OldSiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -84,10 +84,10 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     TermsLabels tl;
 
 
-    public static SiteListFragment newInstance(Project project) {
+    public static OldSiteListFragment newInstance(Project project) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(EXTRA_OBJECT, project);
-        SiteListFragment siteListFragment = new SiteListFragment();
+        OldSiteListFragment siteListFragment = new OldSiteListFragment();
         siteListFragment.setArguments(bundle);
         return siteListFragment;
     }

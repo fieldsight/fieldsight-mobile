@@ -34,7 +34,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static int currentSelectedIndex = -1;
     private boolean reverseAllAnimations;
 
-    SiteListAdapter(List<Site> sitelist, SiteListAdapter.SiteListAdapterListener listener) {
+    public SiteListAdapter(List<Site> sitelist, SiteListAdapter.SiteListAdapterListener listener) {
 
         this.listener = listener;
         this.selectedItems = new SparseBooleanArray();

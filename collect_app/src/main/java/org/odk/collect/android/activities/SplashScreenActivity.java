@@ -32,7 +32,7 @@ import android.widget.LinearLayout;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.login.LoginActivity;
-import org.fieldsight.naxa.v3.ProjectListActivityV3;
+import org.fieldsight.naxa.v3.project.ProjectListActivityV3;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.preferences.GeneralKeys;

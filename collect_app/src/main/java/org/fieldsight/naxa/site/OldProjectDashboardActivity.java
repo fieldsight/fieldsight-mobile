@@ -488,7 +488,7 @@ public class OldProjectDashboardActivity extends BaseActivity {
 
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        SiteListFragment siteListFragment = SiteListFragment.newInstance(loadedProject);
+        OldSiteListFragment siteListFragment = OldSiteListFragment.newInstance(loadedProject);
         ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.newInstance();
 
         ProjectMapFragment mapFragment = ProjectMapFragment.newInstance(loadedProject);

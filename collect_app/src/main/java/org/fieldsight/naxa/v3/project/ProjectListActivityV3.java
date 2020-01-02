@@ -1,4 +1,4 @@
-package org.fieldsight.naxa.v3;
+package org.fieldsight.naxa.v3.project;
 
 import android.content.ContentValues;
 import android.content.Intent;
