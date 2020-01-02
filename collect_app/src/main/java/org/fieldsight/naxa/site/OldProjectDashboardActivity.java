@@ -523,17 +523,17 @@ public class OldProjectDashboardActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItem = menu.findItem(R.id.action_app_settings);
-        menuItem.setVisible((BuildConfig.BUILD_TYPE.equals("internal")));
-        // change the title of the filter with terms and labels case
-        if (tl != null) {
-            menu.findItem(R.id.action_filter).setTitle("Filter " + tl.site);
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        MenuItem menuItem = menu.findItem(R.id.action_app_settings);
+//        menuItem.setVisible((BuildConfig.BUILD_TYPE.equals("internal")));
+//        // change the title of the filter with terms and labels case
+//        if (tl != null) {
+//            menu.findItem(R.id.action_filter).setTitle("Filter " + tl.site);
+//        }
+//
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

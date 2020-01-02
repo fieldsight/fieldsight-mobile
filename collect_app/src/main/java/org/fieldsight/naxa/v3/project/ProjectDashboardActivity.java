@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -29,23 +30,31 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.FSInstanceChooserList;
 import org.fieldsight.naxa.FSInstanceUploaderListActivity;
 import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.common.InternetUtils;
+import org.fieldsight.naxa.common.SettingsActivity;
 import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.User;
+import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.profile.UserActivity;
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.CreateSiteActivity;
 import org.fieldsight.naxa.site.FragmentHostActivity;
+import org.fieldsight.naxa.site.OldProjectDashboardActivity;
+import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
 import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +62,7 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
+import static org.odk.collect.android.application.Collect.allowClick;
 
 public class ProjectDashboardActivity extends CollectAbstractActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -123,7 +133,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        setTitle("Project Dashboard");
+        setTitle("");
 
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
@@ -225,6 +235,55 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         } catch (IllegalArgumentException e) {
             Timber.e(e);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_notificaiton:
+                NotificationListActivity.start(this);
+                break;
+
+            case R.id.action_logout:
+                showProgress();
+                InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {
+                    @Override
+                    public void onConnectionSuccess() {
+                        FieldSightUserSession.showLogoutDialog(ProjectDashboardActivity.this);
+                    }
+
+                    @Override
+                    public void onConnectionFailure() {
+                        FieldSightUserSession.stopLogoutDialog(ProjectDashboardActivity.this);
+                    }
+
+                    @Override
+                    public void onCheckComplete() {
+                        hideProgress();
+                    }
+                });
+                break;
+            case R.id.action_refresh:
+                Bundle bundle = new Bundle();
+                ArrayList<Project> projectArrayList = new ArrayList<>();
+                projectArrayList.add(loadedProject);
+                bundle.putParcelableArrayList("projects", projectArrayList);
+                bundle.getBoolean("auto", true);
+                startActivity(new Intent(this, SyncActivity.class)
+                        .putExtra("params", bundle));
+                break;
+            case R.id.action_app_settings:
+                if (allowClick(getClass().getName())) {
+                    startActivity(new Intent(this, SettingsActivity.class));
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

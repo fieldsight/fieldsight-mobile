@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/iv_site_logo"
-        android:layout_width="@dimen/icon_width_height"
-        android:layout_height="@dimen/icon_width_height"
+        android:layout_width="@dimen/instance_list_icon_size"
+        android:layout_height="@dimen/instance_list_icon_size"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_medium"

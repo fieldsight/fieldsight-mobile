@@ -163,11 +163,11 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        sortActionFilter = menu.findItem(R.id.action_filter);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        sortActionFilter = menu.findItem(R.id.action_filter);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
 
     private void setupRecycleView() {
@@ -320,15 +320,15 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.action_filter) {
-            bottomSheetDialog.show();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        if (item.getItemId() == R.id.action_filter) {
+//            bottomSheetDialog.show();
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
     @Override
