@@ -171,7 +171,7 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
 
 
     private void setupRecycleView() {
-        siteListAdapter = new SiteListAdapter(new ArrayList<>(0), this);
+        siteListAdapter = new SiteListAdapter(getActivity(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);
@@ -332,17 +332,12 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
 
 
     @Override
-    public void onIconClicked(int position) {
-
-    }
-
-    @Override
     public void onRowLongClicked(int position) {
         enableActionMode(position);
     }
 
     @Override
-    public void onUselessLayoutClicked(Site site) {
+    public void onRowClick(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
             if (site.getSite() == null) {
                 List<Site> subSitesList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
@@ -365,10 +360,10 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
         }).show();
     }
 
-    @Override
-    public void onSurveyFormClicked() {
-        FragmentHostActivity.startWithSurveyForm(requireActivity(), loadedProject);
-    }
+//    @Override
+//    public void onSurveyFormClicked() {
+//        FragmentHostActivity.startWithSurveyForm(requireActivity(), loadedProject);
+//    }
 
 
     private void enableActionMode(int position) {
@@ -380,7 +375,7 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
     }
 
     private void toggleSelection(int position) {
-        siteListAdapter.toggleSelection(position);
+//        siteListAdapter.toggleSelection(position);
         int count = siteListAdapter.getSelectedItemCount();
 
         if (count == 0) {

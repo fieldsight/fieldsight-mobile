@@ -47,6 +47,7 @@
                         android:gravity="center_vertical">
 
                         <ImageView
+                            android:id="@+id/iv_project"
                             android:layout_width="42dp"
                             android:layout_height="42dp"
                             android:src="@drawable/ic_launcher_fieldsight" />
@@ -59,6 +60,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_project_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="DFID 32 district retrofitting"
@@ -66,6 +68,7 @@
                                 android:textSize="16sp" />
 
                             <TextView
+                                android:id="@+id/tv_project_organization"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
@@ -217,6 +220,7 @@
                         android:background="@color/blue" />
 
                     <TextView
+                        android:id="@+id/tv_project_forms"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
@@ -246,7 +250,9 @@
                 app:tabIndicatorColor="@color/new_design_blue"
                 app:tabIndicatorHeight="2dp"
                 app:tabGravity="fill"
-                app:tabMode="scrollable"
+                app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
+                app:tabMode="auto"
+                app:tabMaxWidth="0dp"
                 app:tabSelectedTextColor="@color/new_design_blue"
                 app:tabTextColor="@color/text_primary" />
 

@@ -1,23 +1,35 @@
 package org.fieldsight.naxa.v3.project;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Pair;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -26,6 +38,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.primitives.Longs;
 
@@ -34,12 +47,17 @@ import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FilterDialogAdapter;
 import org.fieldsight.naxa.common.FilterOption;
+import org.fieldsight.naxa.common.RxSearchObservable;
+import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.common.rx.RetrofitException;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.project.TermsLabels;
+import org.fieldsight.naxa.site.CreateSiteActivity;
 import org.fieldsight.naxa.site.FragmentHostActivity;
+import org.fieldsight.naxa.site.OldProjectDashboardActivity;
+import org.fieldsight.naxa.site.SearchAdapter;
 import org.fieldsight.naxa.site.SiteListAdapter;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
@@ -51,18 +69,24 @@ import org.odk.collect.android.activities.InstanceUploaderActivity;
 import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ThemeUtils;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -70,10 +94,23 @@ import timber.log.Timber;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.activities.InstanceUploaderListActivity.INSTANCE_UPLOADER;
 
-public class SiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener {
+public class SiteListFragment extends Fragment implements SiteListAdapter.SiteListAdapterListener, SearchView.OnQueryTextListener {
 
-    @BindView(R.id.recycler_view)
+    @BindView(R.id.rv_project_sitelist)
     RecyclerView recyclerView;
+
+    @BindView(R.id.switcher)
+    ViewSwitcher switcher;
+
+    @BindView(R.id.ll_menu)
+    LinearLayout ll_menu;
+
+    @BindView(R.id.tv_add_site)
+    TextView tv_add_site;
+
+    @BindView(R.id.sv_sites)
+    SearchView searchView;
+
 
     private Project loadedProject;
     private Unbinder unbinder;
@@ -85,7 +122,8 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     private SiteUploadActionModeCallback siteUploadActionModeCallback;
     private MenuItem sortActionFilter;
     TermsLabels tl;
-
+    boolean searchViewShowing = false;
+    Handler searchHandler = new Handler();
 
     public static SiteListFragment newInstance(Project project) {
         Bundle bundle = new Bundle();
@@ -98,7 +136,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_site_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_project_sites, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -113,12 +151,45 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
         tl = getTermsAndLabels();
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(() -> {
+           searchViewShowing = true;
+           toggleSearchView();
+           return true;
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.iv_filter)
+    void openSiteFilter() {
+        Timber.i("filter is clicked");
+        if (bottomSheetDialog.isShowing()) {
+            bottomSheetDialog.dismiss();
+        } else {
+            bottomSheetDialog.show();
+        }
+    }
+
+    @OnClick(R.id.tv_add_site)
+    void addSite() {
+        String siteLabel = "Site";
+        String regionLabel = "Region";
+        if (tl != null) {
+            siteLabel = tl.site;
+            regionLabel = tl.region;
+        }
+        CreateSiteActivity.start(getActivity(), loadedProject, null, siteLabel, regionLabel);
+    }
+
+    @OnClick(R.id.iv_search)
+    void toggleSearchView() {
+        switcher.setDisplayedChild(searchViewShowing ? 0 : 1);
+        searchViewShowing = !searchViewShowing;
     }
 
     private String getSiteName() {
@@ -146,7 +217,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         if (loadedProject == null) {
             return null;
         }
-        if (!TextUtils.isEmpty(loadedProject.getTerms_and_labels())) {
+        if (!TextUtils.isEmpty(loadedProject.getTerms_and_labels()) && !TextUtils.equals(loadedProject.getTerms_and_labels(), "null")) {
             try {
                 Timber.i("ProjectDashBoardActivity:: terms and labels = %s", loadedProject.getTerms_and_labels());
                 JSONObject tlJson = new JSONObject(loadedProject.getTerms_and_labels());
@@ -169,7 +240,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     private void setupRecycleView() {
-        siteListAdapter = new SiteListAdapter(new ArrayList<>(0), this);
+        siteListAdapter = new SiteListAdapter(getActivity(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);
@@ -306,28 +377,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
                     }
                 });
-
-
         return sortingOptionsMutableLive;
-
-
-    }
-
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//        if (item.getItemId() == R.id.action_filter) {
-//            bottomSheetDialog.show();
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
-
-    @Override
-    public void onIconClicked(int position) {
-
     }
 
     @Override
@@ -336,7 +386,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     @Override
-    public void onUselessLayoutClicked(Site site) {
+    public void onRowClick(Site site) {
         if (siteListAdapter.getSelectedItemCount() == 0) {
             if (site.getSite() == null) {
                 List<Site> subSitesList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
@@ -359,12 +409,6 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         }).show();
     }
 
-    @Override
-    public void onSurveyFormClicked() {
-        FragmentHostActivity.startWithSurveyForm(requireActivity(), loadedProject);
-    }
-
-
     private void enableActionMode(int position) {
         if (actionMode == null) {
             AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -374,7 +418,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     }
 
     private void toggleSelection(int position) {
-        siteListAdapter.toggleSelection(position);
+//        siteListAdapter.toggleSelection(position);
         int count = siteListAdapter.getSelectedItemCount();
 
         if (count == 0) {
@@ -383,6 +427,29 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
             actionMode.setTitle(String.valueOf(count));
             actionMode.invalidate();
         }
+    }
+
+
+    boolean canSearch = true;
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        siteListAdapter.getFilter().filter(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        if (canSearch) {
+            canSearch = false;
+            searchHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    canSearch = true;
+                    siteListAdapter.getFilter().filter(query);
+                }
+            }, 500);
+        }
+        return false;
     }
 
     public class SiteUploadActionModeCallback implements ActionMode.Callback {
@@ -432,14 +499,9 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     }
 
-
     private void uploadSelectedSites(ArrayList<Site> selected, boolean uploadForms) {
-
         String progressMessage = "Uploading " + getSiteName();
-
         final int progressNotifyId = FieldSightNotificationUtils.getINSTANCE().notifyProgress(progressMessage, progressMessage, FieldSightNotificationUtils.ProgressType.UPLOAD);
-
-
         Observable<Site> createSiteObservable = SiteRemoteSource.getInstance().uploadMultipleSites(selected);
         createSiteObservable
                 .filter(site -> uploadForms)

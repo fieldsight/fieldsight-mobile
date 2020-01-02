@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_site_lst_row"
+    android:id="@+id/root_layout_message_list_row"
     android:layout_width="match_parent"
+    android:padding="16dp"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/corner_radius"
-    app:cardUseCompatPadding="true"
-    app:contentPadding="@dimen/margin_large">
+    android:gravity="center_vertical">
 
-    <RelativeLayout
-        android:id="@+id/root_layout_message_list_row"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/iv_site_logo"
+        android:layout_width="@dimen/icon_width_height"
+        android:layout_height="@dimen/icon_width_height"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:src="@drawable/fieldsight_logo" />
+
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <include
-            layout="@layout/item_text_circle"
-            android:layout_width="@dimen/icon_width_height"
-            android:layout_height="@dimen/icon_width_height"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginRight="@dimen/margin_medium" />
-
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <TextView
             android:id="@+id/tv_site_name"
@@ -36,7 +38,7 @@
             tools:text="Narayan Primary School" />
 
         <TextView
-            android:id="@+id/tv_identifier"
+            android:id="@+id/tv_site_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_site_name"
@@ -45,33 +47,9 @@
             android:textColor="@color/black_160"
             android:textSize="@dimen/msg_text_secondary"
             android:textStyle="normal"
-            tools:text="identifier" />
-
-        <TextView
-            android:id="@+id/txt_secondary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_identifier"
-            android:layout_toEndOf="@id/icon_container"
-            android:layout_toRightOf="@id/icon_container"
-            android:textColor="@color/black_160"
-            android:textSize="@dimen/msg_text_secondary"
-            tools:text="Baluwatar, Kathmandu" />
-
-    </RelativeLayout>
+            tools:text="Site address" />
+    </LinearLayout>
+</LinearLayout>
 
 
-    <TextView
 
-        android:id="@+id/timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:padding="@dimen/padding_large"
-        android:textColor="@color/colorAccent"
-        android:textSize="@dimen/timestamp"
-        android:textStyle="bold"
-        tools:text="Offline Site" />
-
-
-</androidx.cardview.widget.CardView>

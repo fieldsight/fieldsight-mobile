@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     android:orientation="vertical">
 
 
     <ViewSwitcher
         android:id="@+id/switcher"
         android:layout_width="match_parent"
+        android:padding="16dp"
         android:layout_height="wrap_content">
 
 
@@ -21,6 +21,7 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/tv_add_site"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -47,9 +48,10 @@
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/sv_sites"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_width="match_parent"
+            app:queryHint="@string/search_sites"
+            android:focusedByDefault="true"
+            android:layout_height="wrap_content" />
 
     </ViewSwitcher>
 

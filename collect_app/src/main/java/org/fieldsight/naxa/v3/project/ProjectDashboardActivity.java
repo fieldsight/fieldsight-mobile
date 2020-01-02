@@ -20,6 +20,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,6 +48,7 @@ import org.odk.collect.android.utilities.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
@@ -84,6 +87,15 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     @BindView(R.id.activity_dashboard_drawer_layout)
     DrawerLayout drawerLayout;
 
+    @BindView(R.id.tv_project_organization)
+    TextView organizationName;
+
+    @BindView(R.id.iv_project)
+    ImageView projectImage;
+
+    @BindView(R.id.tv_project_name)
+    TextView projectName;
+
     public static void start(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
@@ -121,11 +133,19 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 navigationView.getMenu().findItem(R.id.nav_view_site_dashboard).setTitle(String.format("My %s", tl.site));
             }
         }
-
+        addProjectInfoInView();
         adapter = new ProjectViewPagerAdapter(getSupportFragmentManager(), loadedProject);
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    void addProjectInfoInView() {
+        projectName.setText(loadedProject.getName());
+        organizationName.setText(loadedProject.getOrganizationName());
+        if(!TextUtils.isEmpty(loadedProject.getUrl())) {
+            Glide.with(this).load(loadedProject.getUrl()).apply(RequestOptions.circleCropTransform()).into(projectImage);
+        }
     }
 
     void addDrawerToggle() {
@@ -148,6 +168,11 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
             return null;
         }
 
+    }
+
+    @OnClick(R.id.tv_project_forms)
+    void openProjectSurveyForm() {
+        FragmentHostActivity.startWithSurveyForm(this, loadedProject);
     }
 
 
