@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.site.map.ProjectMapFragment;
 
 public class ProjectViewPagerAdapter extends FragmentStatePagerAdapter {
     static String titles[] = {"Sites", "Users", "Submissions", "Map"};
@@ -22,6 +23,9 @@ public class ProjectViewPagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
+        if(position == 3) {
+            return ProjectMapFragment.newInstance(project);
+        }
       return SiteListFragment.newInstance(project);
     }
 
