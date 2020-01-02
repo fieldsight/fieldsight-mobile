@@ -245,9 +245,10 @@
                 android:background="@android:color/white"
                 app:tabIndicatorColor="@color/new_design_blue"
                 app:tabIndicatorHeight="2dp"
-                app:tabMode="scrollable"
-                app:tabSelectedTextColor="@android:color/white"
-                app:tabTextColor="@android:color/white" />
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="@color/new_design_blue"
+                app:tabTextColor="@color/text_primary" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

@@ -125,6 +125,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         adapter = new ProjectViewPagerAdapter(getSupportFragmentManager(), loadedProject);
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     void addDrawerToggle() {
