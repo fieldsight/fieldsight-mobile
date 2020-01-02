@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -96,6 +97,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     @BindView(R.id.tv_project_name)
     TextView projectName;
 
+    @BindView(R.id.tv_desc)
+    TextView tvDescription;
+
+    @BindView(R.id.ll_desc)
+    LinearLayout llDesc;
+
     public static void start(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
@@ -146,6 +153,10 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         if(!TextUtils.isEmpty(loadedProject.getUrl())) {
             Glide.with(this).load(loadedProject.getUrl()).apply(RequestOptions.circleCropTransform()).into(projectImage);
         }
+        if(!TextUtils.isEmpty(loadedProject.getDescription())) {
+            llDesc.setVisibility(View.VISIBLE);
+            tvDescription.setText(loadedProject.getDescription());
+        }
     }
 
     void addDrawerToggle() {
@@ -168,6 +179,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
             return null;
         }
 
+    }
+
+    @OnClick(R.id.tv_more)
+    void moreDesc() {
+       //TODO : what to do either open in new page or expand the text ?
+       //TODO: what to do if text are long ?
     }
 
     @OnClick(R.id.tv_project_forms)

@@ -55,7 +55,7 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginLeft="16dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
@@ -95,7 +95,7 @@
                                 android:id="@+id/tv_regions"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
+                                android:drawableLeft="@drawable/ic_location_major_monotone"
                                 android:drawablePadding="8dp"
                                 android:text="36%"
                                 android:textColor="@android:color/white" />
@@ -120,7 +120,7 @@
                                 android:id="@+id/tv_sites"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
+                                android:drawableLeft="@drawable/ic_inventory_major_monotone"
                                 android:drawablePadding="8dp"
                                 android:text="36"
                                 android:textColor="@android:color/white" />
@@ -151,7 +151,7 @@
                                 android:id="@+id/tv_users"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
+                                android:drawableLeft="@drawable/ic_customers_major_monotone"
                                 android:drawablePadding="8dp"
                                 android:text="36%"
                                 android:textColor="@android:color/white" />
@@ -176,7 +176,7 @@
                                 android:id="@+id/tv_submissions"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:drawableLeft="@drawable/ic_circle_tick_outline_minor"
+                                android:drawableLeft="@drawable/ic_checklist_major_monotone"
                                 android:drawablePadding="8dp"
                                 android:text="34"
                                 android:textColor="@android:color/white" />
@@ -193,18 +193,23 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_desc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:layout_marginTop="16dp">
 
                         <TextView
+                            android:id="@+id/tv_desc"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:maxLines="1"
                             android:text="DFID 31 district retrofitting is the projects you"
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_more"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/more"
