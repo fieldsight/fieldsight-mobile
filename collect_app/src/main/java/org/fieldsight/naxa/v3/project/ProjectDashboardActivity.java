@@ -44,6 +44,7 @@ import org.fieldsight.naxa.common.SettingsActivity;
 import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.User;
+import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.profile.UserActivity;
 import org.fieldsight.naxa.project.TermsLabels;
@@ -192,8 +193,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         addProjectInfoInView();
         navigationView.setNavigationItemSelectedListener(this);
         // get the projectdashboard stat
-        getRxClient()
-                .create(ApiV3Interface.class).getProjectDashboardStat(loadedProject.getId())
+        ServiceGenerator.createCacheService(ApiV3Interface.class).getProjectDashboardStat(loadedProject.getId())
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new Observer<ResponseBody>() {
@@ -211,6 +211,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
             public void onError(Throwable e) {
                 ToastUtils.showShortToast(e.getMessage());
                 initPager(null);
+                hideProgress();
             }
 
             @Override

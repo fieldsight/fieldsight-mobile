@@ -14,7 +14,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
         android:visibility="gone"
         android:text="No user loaded, please try again when you are online"
         android:textColor="@color/text_primary"/>

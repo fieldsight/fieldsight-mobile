@@ -49,8 +49,8 @@
         android:id="@+id/tv_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ll_main"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true"
         android:text="Submissions not available for this form type"
         android:textColor="@color/text_primary"
         android:textSize="16sp" />
