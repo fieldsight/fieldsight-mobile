@@ -14,15 +14,12 @@
             android:id="@+id/tabs"
             app:tabIndicatorHeight="0dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="32dp"
             app:tabGravity="fill"
             android:layout_marginTop="4dp"
-            app:tabMode="scrollable"
-            app:tabPaddingStart="8dp"
-            app:tabPaddingEnd="8dp"
+            app:tabMode="auto"
             app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
-            app:tabBackground="@drawable/rounded_rectangle_border_highlight"
-            android:minHeight="32dp">
+            app:tabBackground="@drawable/rounded_rectangle_border_highlight">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"

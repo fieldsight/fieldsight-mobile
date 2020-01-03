@@ -108,6 +108,8 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
         formList.add(1, scheduleList);
         formList.add(2, stagedFormList);
         tabLayout.addOnTabSelectedListener(this);
+        tabLayout.getTabAt(0).select();
+        updateList(0);
     }
 
     @Override
@@ -116,13 +118,16 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
         unbinder.unbind();
     }
 
-    @Override
-    public void onTabSelected(TabLayout.Tab tab) {
-        List<Object> selectedList = formList.get(tab.getPosition());
+    void updateList(int pos) {
+        List<Object> selectedList = formList.get(pos);
         rvForms.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvForms.setAdapter(new FormsAdapter(selectedList));
         rvForms.setHasFixedSize(true);
         tv_error.setVisibility(selectedList.size() == 0 ? View.VISIBLE : View.GONE);
+    }
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+       updateList(tab.getPosition());
     }
 
     @Override
