@@ -12,6 +12,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -20,6 +21,7 @@ import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -47,6 +49,7 @@ import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.CreateSiteActivity;
 import org.fieldsight.naxa.site.FragmentHostActivity;
 import org.fieldsight.naxa.site.OldProjectDashboardActivity;
+import org.fieldsight.naxa.v3.network.ApiV3Interface;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -55,13 +58,22 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.ResponseBody;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
+import static org.fieldsight.naxa.network.ServiceGenerator.getRxClient;
 import static org.odk.collect.android.application.Collect.allowClick;
 
 public class ProjectDashboardActivity extends CollectAbstractActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -113,6 +125,13 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     @BindView(R.id.ll_desc)
     LinearLayout llDesc;
 
+    public class ProjectFragment {
+        public String title, data;
+        public Fragment fragment;
+    }
+
+    List<ProjectFragment> projectFragmentList = new ArrayList<>();
+
     public static void start(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
@@ -155,6 +174,32 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
         navigationView.setNavigationItemSelectedListener(this);
+        // get the projectdashboard stat
+        getRxClient()
+                .create(ApiV3Interface.class).getProjectDashboardStat(loadedProject.getId())
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new Observer<ResponseBody>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(ResponseBody responseBody) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ToastUtils.showShortToast(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     void addProjectInfoInView() {
@@ -332,4 +377,5 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         }
         return false;
     }
+
 }
