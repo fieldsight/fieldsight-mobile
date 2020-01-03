@@ -31,6 +31,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.JsonArray;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
@@ -49,8 +50,10 @@ import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.CreateSiteActivity;
 import org.fieldsight.naxa.site.FragmentHostActivity;
 import org.fieldsight.naxa.site.OldProjectDashboardActivity;
+import org.fieldsight.naxa.site.map.ProjectMapFragment;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
 import org.fieldsight.naxa.v3.network.SyncActivity;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
@@ -125,9 +128,26 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     @BindView(R.id.ll_desc)
     LinearLayout llDesc;
 
+    @BindView(R.id.tv_regions)
+    TextView tvRegions;
+
+    @BindView(R.id.tv_sites)
+    TextView tvSites;
+
+    @BindView(R.id.tv_users)
+    TextView tvUsers;
+
+    @BindView(R.id.tv_submissions)
+    TextView tvSubmissions;
+
     public class ProjectFragment {
-        public String title, data;
+        public String title;
         public Fragment fragment;
+
+        public ProjectFragment(String title, Fragment fragment) {
+            this.title = title;
+            this.fragment = fragment;
+        }
     }
 
     List<ProjectFragment> projectFragmentList = new ArrayList<>();
@@ -170,9 +190,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
             }
         }
         addProjectInfoInView();
-        adapter = new ProjectViewPagerAdapter(getSupportFragmentManager(), loadedProject);
-        pager.setAdapter(adapter);
-        tabLayout.setupWithViewPager(pager);
         navigationView.setNavigationItemSelectedListener(this);
         // get the projectdashboard stat
         getRxClient()
@@ -187,19 +204,54 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
             @Override
             public void onNext(ResponseBody responseBody) {
-
+                initPager(responseBody);
             }
 
             @Override
             public void onError(Throwable e) {
                 ToastUtils.showShortToast(e.getMessage());
+                initPager(null);
             }
 
             @Override
             public void onComplete() {
-
+                hideProgress();
             }
         });
+        showProgress("Loading project info, Please wait ");
+    }
+
+    void updateCountUI(int totalRegions, int sitesCount, int usersCount, int submissonCount) {
+        tvRegions.setText(totalRegions+"");
+        tvSites.setText(sitesCount+"");
+        tvUsers.setText(usersCount+"");
+        tvSubmissions.setText(submissonCount+"");
+    }
+
+    void initPager(ResponseBody responseBody) {
+        String users = "", forms = "";
+        if(responseBody != null) {
+            try {
+                String data = responseBody.string();
+                JSONObject dataJSON = new JSONObject(data);
+                forms = dataJSON.optString("forms");
+                users = dataJSON.optString("users");
+                int totalRegions = dataJSON.optInt("total_regions");
+                int sitesCount = dataJSON.optInt("total_sites");
+                int usersCount = dataJSON.optJSONArray("users").length();
+                int submissonCount = dataJSON.optInt("total_submissions");
+                updateCountUI(totalRegions, sitesCount, usersCount, submissonCount);
+            } catch (Exception e) {
+
+            }
+        }
+        projectFragmentList.add(new ProjectFragment("Sites", SiteListFragment.newInstance(loadedProject)));
+        projectFragmentList.add(new ProjectFragment("Users", UsersFragment.getInstance(users)));
+        projectFragmentList.add(new ProjectFragment("Submissions", SubmissionFragment.getInstance(forms)));
+        projectFragmentList.add(new ProjectFragment("Map", ProjectMapFragment.newInstance(loadedProject)));
+        adapter = new ProjectViewPagerAdapter(getSupportFragmentManager(), projectFragmentList);
+        pager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(pager);
     }
 
     void addProjectInfoInView() {
@@ -360,7 +412,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
                 return true;
             case R.id.nav_view_site_dashboard:
-
                 return true;
             case R.id.nav_backup:
                 startActivity(new Intent(this, BackupActivity.class));

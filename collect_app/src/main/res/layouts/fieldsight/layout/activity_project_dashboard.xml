@@ -97,7 +97,7 @@
                                 android:layout_height="wrap_content"
                                 android:drawableLeft="@drawable/ic_location_major_monotone"
                                 android:drawablePadding="8dp"
-                                android:text="36%"
+                                android:text="NA"
                                 android:textColor="@android:color/white" />
 
                             <TextView
@@ -122,7 +122,7 @@
                                 android:layout_height="wrap_content"
                                 android:drawableLeft="@drawable/ic_inventory_major_monotone"
                                 android:drawablePadding="8dp"
-                                android:text="36"
+                                android:text="NA"
                                 android:textColor="@android:color/white" />
 
                             <TextView
@@ -153,7 +153,7 @@
                                 android:layout_height="wrap_content"
                                 android:drawableLeft="@drawable/ic_customers_major_monotone"
                                 android:drawablePadding="8dp"
-                                android:text="36%"
+                                android:text="NA"
                                 android:textColor="@android:color/white" />
 
                             <TextView
@@ -178,7 +178,7 @@
                                 android:layout_height="wrap_content"
                                 android:drawableLeft="@drawable/ic_checklist_major_monotone"
                                 android:drawablePadding="8dp"
-                                android:text="34"
+                                android:text="NA"
                                 android:textColor="@android:color/white" />
 
                             <TextView

@@ -13,34 +13,30 @@ import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.site.map.ProjectMapFragment;
 
+import java.util.List;
+
 public class ProjectViewPagerAdapter extends FragmentStatePagerAdapter {
-    static String titles[] = {"Sites", "Users", "Submissions", "Map"};
-    Project project;
-    public ProjectViewPagerAdapter(FragmentManager fm, Project project) {
-       super(fm);
-       this.project = project;
+    List<ProjectDashboardActivity.ProjectFragment> projectFragmentList;
+
+    public ProjectViewPagerAdapter(FragmentManager fm, List<ProjectDashboardActivity.ProjectFragment> projectFragmentList) {
+        super(fm);
+        this.projectFragmentList = projectFragmentList;
     }
+
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if(position == 3) {
-            return ProjectMapFragment.newInstance(project);
-        }
-      return SiteListFragment.newInstance(project);
+        return projectFragmentList.get(position).fragment;
     }
 
     @Override
     public int getCount() {
-        return titles.length;
-    }
-
-    public static String[] getTitles() {
-        return titles;
+        return projectFragmentList.size();
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return titles[position];
+        return projectFragmentList.get(position).title;
     }
 }

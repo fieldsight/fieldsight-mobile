@@ -32,6 +32,16 @@ public class UsersFragment extends Fragment {
     @BindView(R.id.tv_users)
     TextView tv_users;
 
+    private UsersFragment() {}
+
+    public static UsersFragment getInstance(String data) {
+        Bundle bundle = new Bundle();
+        bundle.putString("users", data);
+        UsersFragment usersFragment = new UsersFragment();
+        usersFragment.setArguments(bundle);
+        return usersFragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
