@@ -25,6 +25,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import timber.log.Timber;
 
 public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelectedListener {
 
@@ -41,11 +43,13 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
     List<Object> stagedFormList = new ArrayList<>();
     List<List<Object>> formList = new ArrayList<>();
 
+    private Unbinder unbinder;
+
     class SubmissonFormsStat {
         String name;
         int responseCount;
         public SubmissonFormsStat(JSONObject json) {
-            this.name = json.optString("name");
+            this.name = json.has("name") ? json.optString("name") : json.optString("title");
             this.responseCount = json.optInt("response_count");
         }
     }
@@ -64,7 +68,7 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_project_submission, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -75,6 +79,7 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
             return;
         }
         String forms = getArguments().getString("forms");
+        Timber.i("forms = %s", forms);
         try{
             JSONObject jsonObject = new JSONObject(forms);
             JSONArray generalFormArray = jsonObject.optJSONArray("general_forms");
@@ -102,8 +107,13 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
         formList.add(0, generalFormList);
         formList.add(1, scheduleList);
         formList.add(2, stagedFormList);
-
         tabLayout.addOnTabSelectedListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     @Override
@@ -124,65 +134,63 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+}
+class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    List<Object> submissionList;
+    int HeaderType = 0, dataType = 1;
+    public FormsAdapter(List<Object> submissionList) {
+        this.submissionList = submissionList;
+    }
+    @Override
+    public int getItemViewType(int position) {
+        return submissionList.get(position) instanceof String ? HeaderType : dataType;
+    }
 
-    class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        List<Object> submissionList;
-        int HeaderType = 0, dataType = 1;
-        public FormsAdapter(List<Object> submissionList) {
-            this.submissionList = submissionList;
-        }
-        @Override
-        public int getItemViewType(int position) {
-            return submissionList.get(position) instanceof String ? HeaderType : dataType;
-        }
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            if (viewType == HeaderType) {
-                return new FormTitleViewHolder(LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_1, parent, false));
-            } else {
-                return new FormsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.form_project_item, parent, false));
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            if(holder instanceof FormTitleViewHolder) {
-                FormTitleViewHolder mHolder = (FormTitleViewHolder)holder;
-                String name = (String) submissionList.get(position);
-                ((TextView)mHolder.itemView).setText(name);
-            }
-            else {
-                FormsViewHolder mHolder = (FormsViewHolder)holder;
-                SubmissonFormsStat sStat = (SubmissonFormsStat) submissionList.get(position);
-                mHolder.formName.setText(sStat.name);
-                mHolder.submissonCount.setText(sStat.responseCount+"");
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return submissionList.size();
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == HeaderType) {
+            return new FormTitleViewHolder(LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false));
+        } else {
+            return new FormsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.form_project_item, parent, false));
         }
     }
 
-    class FormTitleViewHolder extends RecyclerView.ViewHolder {
-        public FormTitleViewHolder(@NonNull View itemView) {
-            super(itemView);
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof FormTitleViewHolder) {
+            FormTitleViewHolder mHolder = (FormTitleViewHolder)holder;
+            String name = (String) submissionList.get(position);
+            ((TextView)mHolder.itemView).setText(name);
         }
-    }
-    class FormsViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tv_form_name)
-        TextView formName;
-
-        @BindView(R.id.tv_submissonCount)
-        TextView submissonCount;
-
-        public FormsViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        else {
+            FormsViewHolder mHolder = (FormsViewHolder)holder;
+            SubmissionFragment.SubmissonFormsStat sStat = (SubmissionFragment.SubmissonFormsStat) submissionList.get(position);
+            mHolder.formName.setText(sStat.name);
+            mHolder.submissonCount.setText(sStat.responseCount+"");
         }
     }
 
+    @Override
+    public int getItemCount() {
+        return submissionList.size();
+    }
+}
+
+class FormTitleViewHolder extends RecyclerView.ViewHolder {
+    public FormTitleViewHolder(@NonNull View itemView) {
+        super(itemView);
+    }
+}
+class FormsViewHolder extends RecyclerView.ViewHolder {
+    @BindView(R.id.tv_form_name)
+    TextView formName;
+
+    @BindView(R.id.tv_submissonCount)
+    TextView submissonCount;
+
+    public FormsViewHolder(@NonNull View itemView) {
+        super(itemView);
+        ButterKnife.bind(this, itemView);
+    }
 }

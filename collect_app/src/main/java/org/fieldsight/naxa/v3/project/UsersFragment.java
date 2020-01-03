@@ -24,13 +24,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class UsersFragment extends Fragment {
     @BindView(R.id.rv_users)
     RecyclerView rvUsers;
 
-    @BindView(R.id.tv_users)
-    TextView tv_users;
+    @BindView(R.id.tv_error)
+    TextView errors;
+    private Unbinder unbinder;
 
     private UsersFragment() {}
 
@@ -46,7 +48,7 @@ public class UsersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_project_users, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -61,7 +63,7 @@ public class UsersFragment extends Fragment {
         }
 
         if(TextUtils.isEmpty(users) || Users.toList(users).size() == 0) {
-            tv_users.setVisibility(View.VISIBLE);
+            errors.setVisibility(View.VISIBLE);
         } else {
              // show userslist
              List<Users> usersList = Users.toList(users);
@@ -99,20 +101,25 @@ public class UsersFragment extends Fragment {
         }
     }
 
-    class UserViewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.tv_user_name)
-        TextView userName;
-
-        @BindView(R.id.tv_user_role)
-        TextView userRole;
-
-        @BindView(R.id.iv_user)
-        ImageView userImage;
-
-        public UserViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
+}
 
+class UserViewHolder extends RecyclerView.ViewHolder{
+    @BindView(R.id.tv_user_name)
+    TextView userName;
+
+    @BindView(R.id.tv_user_role)
+    TextView userRole;
+
+    @BindView(R.id.iv_user)
+    ImageView userImage;
+
+    public UserViewHolder(@NonNull View itemView) {
+        super(itemView);
+        ButterKnife.bind(this, itemView);
+    }
 }
