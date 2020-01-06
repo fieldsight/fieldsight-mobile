@@ -338,17 +338,17 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
 
     @Override
     public void onRowClick(Site site) {
-        if (siteListAdapter.getSelectedItemCount() == 0) {
-            if (site.getSite() == null) {
-                List<Site> subSitesList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
-                if (subSitesList.size() > 0) {
-                    subSitesList.add(0, site);
-                    showSubSiteDialog(subSitesList);
-                } else {
-                    FragmentHostActivity.start(getActivity(), site, false);
-                }
-            }
-        }
+//        if (siteListAdapter.getSelectedItemCount() == 0) {
+//            if (site.getSite() == null) {
+//                List<Site> subSitesList = SiteLocalSource.getInstance().getSitesByParentId(site.getId());
+//                if (subSitesList.size() > 0) {
+//                    subSitesList.add(0, site);
+//                    showSubSiteDialog(subSitesList);
+//                } else {
+//                    FragmentHostActivity.start(getActivity(), site, false);
+//                }
+//            }
+//        }
     }
 
     private void showSubSiteDialog(List<Site> subsiteList) {
@@ -371,20 +371,20 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
             AppCompatActivity activity = (AppCompatActivity) getActivity();
             actionMode = activity.startSupportActionMode(siteUploadActionModeCallback);
         }
-        toggleSelection(position);
+//        toggleSelection(position);
     }
 
-    private void toggleSelection(int position) {
-//        siteListAdapter.toggleSelection(position);
-        int count = siteListAdapter.getSelectedItemCount();
-
-        if (count == 0) {
-            actionMode.finish();
-        } else {
-            actionMode.setTitle(String.valueOf(count));
-            actionMode.invalidate();
-        }
-    }
+//    private void toggleSelection(int position) {
+////        siteListAdapter.toggleSelection(position);
+//        int count = siteListAdapter.getSelectedItemCount();
+//
+//        if (count == 0) {
+//            actionMode.finish();
+//        } else {
+//            actionMode.setTitle(String.valueOf(count));
+//            actionMode.invalidate();
+//        }
+//    }
 
     public class SiteUploadActionModeCallback implements ActionMode.Callback {
         @Override
@@ -420,16 +420,16 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
     }
 
     private void showConfirmationDialog() {
-        DialogFactory.createActionDialog(requireActivity(), "Upload selected " + getSiteName(), "Upload selected " + getSiteName() + " along with their filled form(s) ?")
-                .setPositiveButton("Yes, upload " + getSiteName() + " and Form(s)", (dialog, which) -> {
-                    uploadSelectedSites(siteListAdapter.getSelected(), true);
-                })
-                .setNegativeButton("No, Upload " + getSiteName() + " only", (dialog, which) -> {
-                    uploadSelectedSites(siteListAdapter.getSelected(), false);
-                })
-                .setOnDismissListener(dialog -> actionMode.finish())
-                .setNeutralButton(R.string.dialog_action_dismiss, null)
-                .show();
+//        DialogFactory.createActionDialog(requireActivity(), "Upload selected " + getSiteName(), "Upload selected " + getSiteName() + " along with their filled form(s) ?")
+//                .setPositiveButton("Yes, upload " + getSiteName() + " and Form(s)", (dialog, which) -> {
+//                    uploadSelectedSites(siteListAdapter.getSelected(), true);
+//                })
+//                .setNegativeButton("No, Upload " + getSiteName() + " only", (dialog, which) -> {
+//                    uploadSelectedSites(siteListAdapter.getSelected(), false);
+//                })
+//                .setOnDismissListener(dialog -> actionMode.finish())
+//                .setNeutralButton(R.string.dialog_action_dismiss, null)
+//                .show();
 
     }
 
