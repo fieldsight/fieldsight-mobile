@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.v3.project;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,13 +49,15 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
     class SubmissonFormsStat {
         String name;
         int responseCount;
+
         public SubmissonFormsStat(JSONObject json) {
             this.name = json.has("name") ? json.optString("name") : json.optString("title");
             this.responseCount = json.optInt("response_count");
         }
     }
 
-    private SubmissionFragment() {}
+    private SubmissionFragment() {
+    }
 
     public static SubmissionFragment getInstance(String data) {
         Bundle bundle = new Bundle();
@@ -66,7 +69,7 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_project_submission, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
@@ -75,35 +78,37 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(getArguments() == null || !getArguments().containsKey("forms")) {
+        if (getArguments() == null || !getArguments().containsKey("forms")) {
             return;
         }
         String forms = getArguments().getString("forms");
         Timber.i("forms = %s", forms);
-        try{
+        try {
             JSONObject jsonObject = new JSONObject(forms);
             JSONArray generalFormArray = jsonObject.optJSONArray("general_forms");
             JSONArray scheduledArray = jsonObject.optJSONArray("scheduled_forms");
             JSONArray stagedFromArray = jsonObject.optJSONArray("staged_forms");
 
-            for(int i = 0; i < generalFormArray.length(); i ++) {
-               generalFormList.add(new SubmissonFormsStat(generalFormArray.optJSONObject(i)));
+            for (int i = 0; i < generalFormArray.length(); i++) {
+                generalFormList.add(new SubmissonFormsStat(generalFormArray.optJSONObject(i)));
             }
 
-            for(int i = 0; i < scheduledArray.length(); i ++) {
+            for (int i = 0; i < scheduledArray.length(); i++) {
                 scheduleList.add(new SubmissonFormsStat(scheduledArray.optJSONObject(i)));
             }
 
-            for(int i = 0; i < stagedFromArray.length(); i ++) {
+            for (int i = 0; i < stagedFromArray.length(); i++) {
                 JSONObject stageJSON = stagedFromArray.optJSONObject(i);
                 String name = stageJSON.optString("name");
                 stagedFormList.add(name);
                 JSONArray subStageArray = stageJSON.optJSONArray("sub_stages");
-                for(int j = 0; j < subStageArray.length(); j++) {
+                for (int j = 0; j < subStageArray.length(); j++) {
                     stagedFormList.add(new SubmissonFormsStat(subStageArray.optJSONObject(j)));
                 }
             }
-            } catch (Exception e) { e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         formList.add(0, generalFormList);
         formList.add(1, scheduleList);
         formList.add(2, stagedFormList);
@@ -125,9 +130,10 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
         rvForms.setHasFixedSize(true);
         tv_error.setVisibility(selectedList.size() == 0 ? View.VISIBLE : View.GONE);
     }
+
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-       updateList(tab.getPosition());
+        updateList(tab.getPosition());
     }
 
     @Override
@@ -140,12 +146,15 @@ public class SubmissionFragment extends Fragment implements TabLayout.OnTabSelec
 
     }
 }
+
 class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<Object> submissionList;
     int HeaderType = 0, dataType = 1;
+
     public FormsAdapter(List<Object> submissionList) {
         this.submissionList = submissionList;
     }
+
     @Override
     public int getItemViewType(int position) {
         return submissionList.get(position) instanceof String ? HeaderType : dataType;
@@ -155,7 +164,9 @@ class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == HeaderType) {
-            return new FormTitleViewHolder(LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false));
+            TextView tv = (TextView) LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1, parent, false);
+            tv.setTypeface(null, Typeface.BOLD);
+            return new FormTitleViewHolder(tv);
         } else {
             return new FormsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.form_project_item, parent, false));
         }
@@ -163,16 +174,16 @@ class FormsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof FormTitleViewHolder) {
-            FormTitleViewHolder mHolder = (FormTitleViewHolder)holder;
+        if (holder instanceof FormTitleViewHolder) {
+            FormTitleViewHolder mHolder = (FormTitleViewHolder) holder;
             String name = (String) submissionList.get(position);
-            ((TextView)mHolder.itemView).setText(name);
-        }
-        else {
-            FormsViewHolder mHolder = (FormsViewHolder)holder;
+            ((TextView) mHolder.itemView).setText(name);
+        } else {
+            FormsViewHolder mHolder = (FormsViewHolder) holder;
             SubmissionFragment.SubmissonFormsStat sStat = (SubmissionFragment.SubmissonFormsStat) submissionList.get(position);
-            mHolder.formName.setText(sStat.name);
-            mHolder.submissonCount.setText(sStat.responseCount+"");
+            mHolder.formName.setText("  " + sStat.name);
+
+            mHolder.submissonCount.setText(String.valueOf(sStat.responseCount));
         }
     }
 
@@ -187,6 +198,7 @@ class FormTitleViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
     }
 }
+
 class FormsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_form_name)
     TextView formName;
