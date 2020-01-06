@@ -30,6 +30,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.primitives.Longs;
 
 import org.bcss.collect.android.R;;
+import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FilterDialogAdapter;
@@ -300,6 +301,7 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
                     @Override
                     public void onSuccess(List<Pair> pairs) {
                         ArrayList<FilterOption> filterOptions = new ArrayList<>();
+
 
                         filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Region", pairs));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));

@@ -157,13 +157,14 @@ public class FilterDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemViewType(int position) {
 
         switch (sortList.get(position).getType()) {
+            case OFFLINE_SITES:
             case SELECTED_REGION:
             case SITE:
                 return VIEW_TYPE_SPINNER;
             case CONFIRM_BUTTON:
                 return VIEW_TYPE_BUTTON;
             case ALL_SITES:
-            case OFFLINE_SITES:
+
             default:
                 return VIEW_TYPE_TEXT;
         }

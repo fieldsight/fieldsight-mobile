@@ -43,6 +43,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.common.primitives.Longs;
 
 import org.bcss.collect.android.R;
+import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.FieldSightNotificationUtils;
 import org.fieldsight.naxa.common.FilterDialogAdapter;
@@ -365,6 +366,14 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     @Override
                     public void onSuccess(List<Pair> pairs) {
                         ArrayList<FilterOption> filterOptions = new ArrayList<>();
+
+                        List<Pair> offlineSitePair = new ArrayList<>();
+                        offlineSitePair.add(Pair.create(Constant.SiteStatus.IS_ONLINE, "All " + getSiteName()));
+                        offlineSitePair.add(Pair.create(Constant.SiteStatus.IS_EDITED, "Edited " + getSiteName()));
+                        offlineSitePair.add(Pair.create(Constant.SiteStatus.IS_OFFLINE, "Offline " + getSiteName()));
+
+
+                        filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES,"Offline Site",offlineSitePair));
 
                         filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Region", pairs));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
