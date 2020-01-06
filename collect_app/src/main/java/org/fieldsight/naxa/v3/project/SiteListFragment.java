@@ -32,6 +32,7 @@ import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -73,6 +74,7 @@ import org.odk.collect.android.utilities.ThemeUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -112,11 +114,13 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     @BindView(R.id.sv_sites)
     SearchView searchView;
 
+    @BindView(R.id.tv_offline_sites)
+    TextView tvOfflineSites;
+
 
     private Project loadedProject;
     private Unbinder unbinder;
     private SiteListAdapter siteListAdapter;
-    private LiveData<List<Site>> allSitesLiveData;
     private BottomSheetDialog bottomSheetDialog;
 
     private ActionMode actionMode;
@@ -125,6 +129,10 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     TermsLabels tl;
     boolean searchViewShowing = false;
     Handler searchHandler = new Handler();
+    MediatorLiveData<Pair<List<Site>, Boolean>> mediatorLiveData = new MediatorLiveData<>();
+    private LiveData<List<Site>> allSitesLiveData;
+    private LiveData<List<Site>> offlineSiteLiveData;
+    List<Site> siteList;
 
     public static SiteListFragment newInstance(Project project) {
         Bundle bundle = new Bundle();
@@ -146,9 +154,25 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         loadedProject = getArguments().getParcelable(EXTRA_OBJECT);
-        setupRecycleView();
+        siteList = new ArrayList<>();
         allSitesLiveData = SiteLocalSource.getInstance().getAllParentSite(loadedProject.getId());
-        collectFilterAndApply(new ArrayList<>());
+        offlineSiteLiveData = SiteLocalSource.getInstance().getByIdAndSiteStatus(loadedProject.getId(), Constant.SiteStatus.IS_OFFLINE);
+        setupRecycleView();
+        mediatorLiveData.addSource(allSitesLiveData, new Observer<List<Site>>() {
+            @Override
+            public void onChanged(List<Site> sites) {
+                mediatorLiveData.setValue(new Pair<>(sites, false));
+            }
+        });
+
+        mediatorLiveData.addSource(offlineSiteLiveData, new Observer<List<Site>>() {
+            @Override
+            public void onChanged(List<Site> sites) {
+                mediatorLiveData.setValue(new Pair<>(sites, true));
+                // listen all sites for only once
+                mediatorLiveData.removeSource(allSitesLiveData);
+            }
+        });
 
         siteUploadActionModeCallback = new SiteUploadActionModeCallback();
         tl = getTermsAndLabels();
@@ -157,6 +181,34 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
             searchViewShowing = true;
             toggleSearchView();
             return true;
+        });
+        mediatorLiveData.observe(this, new Observer<Pair<List<Site>, Boolean>>() {
+            @Override
+            public void onChanged(Pair<List<Site>, Boolean> sitesPair) {
+                List<Site> siteList = new ArrayList<>();
+                if(sitesPair.second) {
+                    // offline sites
+                    // remove all offline sites from list
+                    Timber.i("======>> offline sites, size = %d", sitesPair.first.size());
+                    for( int i = 0; i < siteList.size(); i ++) {
+                        if(siteList.get(i).getIsSiteVerified() != Constant.SiteStatus.IS_OFFLINE) {
+                            break;
+                        }
+                        siteList.remove(siteList.get(i));
+                    }
+                    Timber.i("======>> sites after removing offline, size = %d", siteList.size());
+
+                    // add changed offline sites again at the top of the list
+                    siteList.addAll(0, sitesPair.first);
+                    if(sitesPair.first.size() == 0) {
+                        tvOfflineSites.setVisibility(View.GONE);
+                    }
+                    Timber.i("======>> sites after adding offline, size = %d", siteList.size());
+                } else {
+                    siteList.addAll(sitesPair.first);
+                }
+                siteListAdapter.notifyDataSetChanged();
+            }
         });
     }
 
@@ -241,7 +293,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
 
     private void setupRecycleView() {
-        siteListAdapter = new SiteListAdapter(getActivity(), this);
+        siteListAdapter = new SiteListAdapter(getActivity(), siteList, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);
@@ -278,6 +330,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
         });
 
     }
+
 
 
     @Override

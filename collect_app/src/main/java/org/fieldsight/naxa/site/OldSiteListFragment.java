@@ -172,7 +172,7 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
 
 
     private void setupRecycleView() {
-        siteListAdapter = new SiteListAdapter(getActivity(), this);
+        siteListAdapter = new SiteListAdapter(getActivity(), new ArrayList<>(), this);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(siteListAdapter);

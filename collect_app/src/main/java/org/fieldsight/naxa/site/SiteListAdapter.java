@@ -34,15 +34,16 @@ import butterknife.OnLongClick;
 
 public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
-    private List<Site> siteList = new ArrayList<>();
+    private List<Site> siteList;
 
     private final SiteListAdapter.SiteListAdapterListener listener;
     private Context contextCompat;
     private List<Site> orginalList;
 
-    public SiteListAdapter(Context context, SiteListAdapter.SiteListAdapterListener listener) {
+    public SiteListAdapter(Context context, List<Site> siteList, SiteListAdapter.SiteListAdapterListener listener) {
         this.listener = listener;
         this.contextCompat = context;
+        this.siteList = siteList;
         this.orginalList = this.siteList;
 
     }

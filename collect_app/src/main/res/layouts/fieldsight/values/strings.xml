@@ -301,6 +301,7 @@
     <string name="login_notice">By signing in, you agree to <b>User Notice </b> and <b>Privacy Policy</b></string>
     <string name="project_forms">Project Forms</string>
     <string name="more">More</string>
+    <string name="offline_site">Offline SItes</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>

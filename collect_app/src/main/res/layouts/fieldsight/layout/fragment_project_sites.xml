@@ -56,6 +56,13 @@
 
     </ViewSwitcher>
 
+    <TextView
+        android:id="@+id/tv_offline_sites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/offline_site"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_project_sitelist"
         android:layout_width="match_parent"
