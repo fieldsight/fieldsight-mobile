@@ -250,25 +250,27 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
 
     private void collectFilterAndApply(ArrayList<FilterOption> sortList) {
         String selectedRegion = "0";
+        int siteStatus = Constant.SiteStatus.ALL_SITES;
 
         for (FilterOption filterOption : sortList) {
             switch (filterOption.getType()) {
                 case SELECTED_REGION:
                     selectedRegion = filterOption.getSelectionId();
-
+                case OFFLINE_SITES:
+                    siteStatus = Integer.parseInt(filterOption.getSelectionId());
                     break;
+
             }
         }
-
         LiveData<List<Site>> source;
-        switch (selectedRegion) {
-            case "0":
-                source = allSitesLiveData;
-                break;
-            default:
-                source = SiteLocalSource.getInstance()
-                        .getByIdStatusAndCluster(loadedProject.getId(), selectedRegion);
-                break;
+        boolean isDefaultRegion = TextUtils.equals("0", selectedRegion);
+        if (isDefaultRegion && siteStatus == Constant.SiteStatus.ALL_SITES) {
+            source = allSitesLiveData;
+        } else if (isDefaultRegion) {
+            source = allSitesLiveData;
+        } else {
+            source = SiteLocalSource.getInstance()
+                    .getByIdStatusAndClusterAnStatus(loadedProject.getId(), selectedRegion, siteStatus);
         }
 
         source.observe(this, sites -> {
@@ -367,13 +369,15 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                     public void onSuccess(List<Pair> pairs) {
                         ArrayList<FilterOption> filterOptions = new ArrayList<>();
 
-                        List<Pair> offlineSitePair = new ArrayList<>();
-                        offlineSitePair.add(Pair.create(Constant.SiteStatus.IS_ONLINE, "All " + getSiteName()));
-                        offlineSitePair.add(Pair.create(Constant.SiteStatus.IS_EDITED, "Edited " + getSiteName()));
-                        offlineSitePair.add(Pair.create(Constant.SiteStatus.IS_OFFLINE, "Offline " + getSiteName()));
-
-
-                        filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES,"Offline Site",offlineSitePair));
+//                        List<Pair> offlineSitePair = new ArrayList<>();
+//
+//
+//                        offlineSitePair.add(Pair.create(Constant.SiteStatus.IS_OFFLINE, "Offline " + getSiteName()));
+//                        offlineSitePair.add(Pair.create(Constant.SiteStatus.IS_EDITED, "Edited " + getSiteName()));
+//                        offlineSitePair.add(Pair.create(Constant.SiteStatus.ALL_SITES, "All " + getSiteName()));
+//
+//
+//                        filterOptions.add(new FilterOption(FilterOption.FilterType.OFFLINE_SITES, "Offline Site", offlineSitePair));
 
                         filterOptions.add(new FilterOption(FilterOption.FilterType.SELECTED_REGION, "Region", pairs));
                         filterOptions.add(new FilterOption(FilterOption.FilterType.CONFIRM_BUTTON, "Apply", null));
