@@ -168,11 +168,12 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Timber.i(" ========> total sites = %d", siteList.size());
         Timber.i("======> offline sites = %d", offlineSiteCount);
         int swappedLastPos = 0;
+        boolean offlineSiteFound = false;
         if(offlineSiteCount > 0) {
-            listener.hasOfflineSite(true);
             for (int i = 0; i < siteList.size(); i++) {
                 Site mSite = siteList.get(i);
                 if (mSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE) {
+                    if(!offlineSiteFound) offlineSiteFound = true;
                     if(swappedLastPos < offlineSiteCount) {
                         Collections.swap(siteList, i, swappedLastPos);
                         swappedLastPos ++;
@@ -181,6 +182,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
             }
+            listener.hasOfflineSite(offlineSiteFound);
         } else {
             listener.hasOfflineSite(false);
         }
