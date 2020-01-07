@@ -172,6 +172,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
                 int offlineSiteCount = SiteLocalSource.getInstance().getOfflineSiteCount(loadedProject.getId());
                 Timber.i("onChanged:: offlineSiteCount = %d", offlineSiteCount);
                 siteListAdapter.setOfflineSiteCount(offlineSiteCount);
+                siteListAdapter.setDataFromDb(msiteList);
                 siteListAdapter.updateList(msiteList);
             }
         });

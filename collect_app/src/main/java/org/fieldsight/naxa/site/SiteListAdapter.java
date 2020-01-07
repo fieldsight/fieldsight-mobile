@@ -52,7 +52,10 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.contextCompat = context;
         this.siteList = siteList;
         this.orginalList = this.siteList;
+    }
 
+    public void setDataFromDb(List<Site> mSiteList) {
+        this.orginalList = mSiteList;
     }
 
     public void setOfflineSiteCount(int count) {
@@ -106,14 +109,14 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                String queryText = constraint.toString();
+                String queryText = constraint.toString().toLowerCase();
                 FilterResults filterResults = new FilterResults();
                 List<Site> filteredList = new ArrayList<>();
                 if (TextUtils.isEmpty(queryText)) {
                     filteredList.addAll(orginalList);
                 } else {
                     for (Site site : orginalList) {
-                        if (site.getName().contains(queryText) || site.getIdentifier().contains(queryText) || site.getAddress().contains(queryText)) {
+                        if (site.getName().toLowerCase().contains(queryText) || site.getIdentifier().toLowerCase().contains(queryText) || site.getAddress().toLowerCase().contains(queryText)) {
                             filteredList.add(site);
                         }
                     }
