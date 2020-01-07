@@ -73,6 +73,7 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
+
     private Project loadedProject;
     private Unbinder unbinder;
     private SiteListAdapter siteListAdapter;
@@ -351,6 +352,11 @@ public class OldSiteListFragment extends Fragment implements SiteListAdapter.Sit
 //                }
 //            }
 //        }
+    }
+
+    @Override
+    public void hasOfflineSite(boolean available) {
+
     }
 
     private void showSubSiteDialog(List<Site> subsiteList) {

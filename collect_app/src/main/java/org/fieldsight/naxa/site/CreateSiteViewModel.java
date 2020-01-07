@@ -179,7 +179,8 @@ public class CreateSiteViewModel extends ViewModel {
 
         if (lat == null || lat.length() <= 0) {
             formStatus.setValue(CreateSiteFormStatus.EMPTY_SITE_LOCATION);
-            return false;
+            // TODO change to false
+            return true;
         }
 
 

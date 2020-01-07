@@ -86,6 +86,9 @@ public interface SiteDao {
     @Query("SELECT * from sites WHERE isSiteVerified =:siteStatus")
     Single<List<Site>> getAllByStatus(int siteStatus);
 
-    @Query("SELECT * from sites WHERE site IS NULL AND project=:projectId AND isSiteVerified=0")
+    @Query("SELECT * from sites WHERE site IS NULL AND project=:projectId")
     LiveData<List<Site>> getParentSite(String projectId);
+
+    @Query("SELECT COUNT(*) FROM sites WHERE project=:projectId AND isSiteVerified=0")
+    int getOfflineSiteCount(String projectId);
 }

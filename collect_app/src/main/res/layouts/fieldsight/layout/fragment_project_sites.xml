@@ -61,7 +61,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginLeft="16dp"
         android:text="@string/offline_site"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_project_sitelist"

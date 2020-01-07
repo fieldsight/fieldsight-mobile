@@ -42,6 +42,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return siteLocalSource;
     }
 
+    public int getOfflineSiteCount(String id) {
+        return dao.getOfflineSiteCount(id);
+    }
+
 
     @Override
     public LiveData<List<Site>> getAll() {
