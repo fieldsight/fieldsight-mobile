@@ -9,10 +9,15 @@
     android:padding="8dp"
     android:gravity="center_vertical">
 
+    <View
+        android:id="@+id/view_space"
+        android:layout_width="24dp"
+        android:layout_height="24dp"/>
+
     <ImageView
         android:id="@+id/iv_site_logo"
         android:layout_width="@dimen/instance_list_icon_size"
-        android:layout_height="@dimen/instance_list_icon_size"
+        android:layout_height="27dp"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_medium"
@@ -23,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
+        android:paddingLeft="8dp"
         android:paddingRight="16dp">
 
         <TextView

@@ -46,7 +46,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context contextCompat;
     private List<Site> orginalList;
     private int offlineSiteCount = 0;
-    private final int offlineSite = 0, onlineSite = 1;
     public SiteListAdapter(Context context, List<Site> siteList, SiteListAdapter.SiteListAdapterListener listener) {
         this.listener = listener;
         this.contextCompat = context;
@@ -62,11 +61,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.offlineSiteCount = count;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return siteList.get(position).getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE ? offlineSite : onlineSite;
-    }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -74,11 +68,6 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 .inflate(R.layout.site_list_item, parent, false);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         Timber.i(" ======> oncreateViewHolder margin added for %d", viewType);
-        if(viewType == offlineSite) {
-            layoutParams.setMargins(24, 0,0,0);
-        } else {
-            layoutParams.setMargins(16, 0, 0, 0);
-        }
         view.setLayoutParams(layoutParams);
         return new SiteViewHolder(view);
     }
@@ -90,6 +79,11 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         siteViewHolder.siteName.setText(site.getName());
         siteViewHolder.siteAddress.setVisibility(TextUtils.isEmpty(site.getAddress()) ? View.GONE : View.VISIBLE);
         siteViewHolder.siteAddress.setText(site.getAddress());
+        if(site.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE) {
+            siteViewHolder.viewSpace.setVisibility(View.VISIBLE);
+        } else {
+            siteViewHolder.viewSpace.setVisibility(View.GONE);
+        }
         if (!TextUtils.isEmpty(site.getSite_logo())) {
             Glide.with(contextCompat).load(site.getSite_logo()).apply(RequestOptions.circleCropTransform()).into(siteViewHolder.siteLogo);
         }
@@ -139,6 +133,8 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         ImageView siteLogo;
         @BindView(R.id.tv_site_address)
         TextView siteAddress;
+        @BindView(R.id.view_space)
+        View viewSpace;
 
         @OnClick(R.id.root_layout_message_list_row)
         void itemClick() {
