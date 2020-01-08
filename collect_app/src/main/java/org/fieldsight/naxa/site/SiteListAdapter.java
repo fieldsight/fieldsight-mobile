@@ -38,6 +38,8 @@ import butterknife.OnClick;
 import butterknife.OnLongClick;
 import timber.log.Timber;
 
+import static org.fieldsight.naxa.common.ViewUtils.loadImageWithFallback;
+
 public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     private List<Site> siteList;
@@ -46,6 +48,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context contextCompat;
     private List<Site> orginalList;
     private int offlineSiteCount = 0;
+
     public SiteListAdapter(Context context, List<Site> siteList, SiteListAdapter.SiteListAdapterListener listener) {
         this.listener = listener;
         this.contextCompat = context;
@@ -79,13 +82,15 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         siteViewHolder.siteName.setText(site.getName());
         siteViewHolder.siteAddress.setVisibility(TextUtils.isEmpty(site.getAddress()) ? View.GONE : View.VISIBLE);
         siteViewHolder.siteAddress.setText(site.getAddress());
-        if(site.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE) {
+        if (site.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE) {
             siteViewHolder.viewSpace.setVisibility(View.VISIBLE);
         } else {
             siteViewHolder.viewSpace.setVisibility(View.GONE);
         }
         if (!TextUtils.isEmpty(site.getSite_logo())) {
-            Glide.with(contextCompat).load(site.getSite_logo()).apply(RequestOptions.circleCropTransform()).into(siteViewHolder.siteLogo);
+            loadImageWithFallback(contextCompat, site.getSite_logo()).into(siteViewHolder.siteLogo);
+        } else {
+            siteViewHolder.siteLogo.setImageResource(R.drawable.fieldsight_logo);
         }
     }
 
@@ -121,7 +126,7 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-               updateList((List<Site>) results.values);
+                updateList((List<Site>) results.values);
             }
         };
     }
@@ -157,10 +162,9 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
 
-
     public void updateList(List<Site> newList) {
         this.siteList.clear();
-        if(newList == null) {
+        if (newList == null) {
             this.siteList.addAll(this.orginalList);
         } else {
             this.siteList.addAll(newList);
@@ -169,14 +173,14 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         Timber.i("======> offline sites = %d", offlineSiteCount);
         int swappedLastPos = 0;
         boolean offlineSiteFound = false;
-        if(offlineSiteCount > 0) {
+        if (offlineSiteCount > 0) {
             for (int i = 0; i < siteList.size(); i++) {
                 Site mSite = siteList.get(i);
                 if (mSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE) {
-                    if(!offlineSiteFound) offlineSiteFound = true;
-                    if(swappedLastPos < offlineSiteCount) {
+                    if (!offlineSiteFound) offlineSiteFound = true;
+                    if (swappedLastPos < offlineSiteCount) {
                         Collections.swap(siteList, i, swappedLastPos);
-                        swappedLastPos ++;
+                        swappedLastPos++;
                     } else {
                         break;
                     }
@@ -193,7 +197,9 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public interface SiteListAdapterListener {
         void onRowLongClicked(int position);
+
         void onRowClick(Site site);
+
         void hasOfflineSite(boolean available);
     }
 }
