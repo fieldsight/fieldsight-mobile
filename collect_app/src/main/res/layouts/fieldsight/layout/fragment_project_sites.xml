@@ -33,17 +33,20 @@
 
 
             <ImageView
+                android:id="@+id/iv_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                app:srcCompat="@drawable/ic_search_minor"
+                android:layout_marginEnd="16dp" />
+
+            <ImageView
                 android:id="@+id/iv_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_filter_major_monotone" />
 
-            <ImageView
-                android:id="@+id/iv_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                app:srcCompat="@drawable/ic_search_minor" />
+
 
         </LinearLayout>
 
