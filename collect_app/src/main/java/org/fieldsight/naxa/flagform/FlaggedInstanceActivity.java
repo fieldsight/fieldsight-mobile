@@ -236,7 +236,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
         recyclerViewImages = findViewById(R.id.comment_session_rv_images);
 
         tvSiteName = findViewById(R.id.tv_site_name);
-        tvSiteIdentifier = findViewById(R.id.tv_identifier);
+//        tvSiteIdentifier = findViewById(R.id.tv_identifier);
         ivCircleSite = findViewById(R.id.icon_profile);
         tvIconText = findViewById(R.id.icon_text);
         tvSiteAddress = findViewById(R.id.txt_secondary);

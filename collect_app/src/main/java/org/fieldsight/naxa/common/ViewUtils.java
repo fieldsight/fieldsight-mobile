@@ -19,8 +19,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.bcss.collect.android.R;
 import org.odk.collect.android.application.Collect;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -110,6 +112,23 @@ public final class ViewUtils {
     public static GlideRequest<Drawable> loadRemoteImage(Context context, String path) {
         return GlideApp.with(context)
                 .load(path)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .centerInside()
+                .skipMemoryCache(false)
+                .priority(Priority.LOW)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+    }
+
+    public static GlideRequest<Drawable> loadImageWithFallback(Context context, String path) {
+
+        RequestOptions requestOptions = new RequestOptions();
+//        requestOptions.placeholder(R.drawable.fieldsight_logo);
+        requestOptions.error(R.drawable.fieldsight_logo);
+
+        return GlideApp.with(context)
+                .setDefaultRequestOptions(requestOptions)
+                .load(path)
+
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .centerInside()
                 .skipMemoryCache(false)

@@ -5,19 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_layout_message_list_row"
     android:layout_width="match_parent"
+    android:padding="16dp"
     android:layout_height="wrap_content"
-    android:padding="8dp"
     android:gravity="center_vertical">
 
-    <View
-        android:id="@+id/view_space"
-        android:layout_width="24dp"
-        android:layout_height="24dp"/>
-
     <ImageView
-        android:id="@+id/iv_site_logo"
+        android:id="@+id/iv_user"
         android:layout_width="@dimen/instance_list_icon_size"
-        android:layout_height="27dp"
+        android:layout_height="@dimen/instance_list_icon_size"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_medium"
@@ -28,11 +23,11 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingLeft="8dp"
+        android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/tv_site_name"
+            android:id="@+id/tv_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/icon_container"
@@ -43,7 +38,7 @@
             tools:text="Narayan Primary School" />
 
         <TextView
-            android:id="@+id/tv_site_address"
+            android:id="@+id/tv_user_role"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_site_name"

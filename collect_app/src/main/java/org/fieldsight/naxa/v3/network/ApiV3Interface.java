@@ -8,6 +8,7 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
@@ -34,4 +35,6 @@ public interface ApiV3Interface {
     @GET
     Observable<ResponseBody> getMyFlaggedSubmissionAsRaw(@Url String url);
 
+    @GET(APIEndpoint.V3.GET_PROJECT_DASHBOARD+"/{projectId}")
+    Observable<ResponseBody> getProjectDashboardStat(@Path("projectId") String projectId);
 }

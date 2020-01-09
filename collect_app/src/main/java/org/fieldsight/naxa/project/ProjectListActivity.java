@@ -4,10 +4,8 @@ package org.fieldsight.naxa.project;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -15,7 +13,6 @@ import android.view.animation.LayoutAnimationController;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +22,7 @@ import com.google.android.material.appbar.AppBarLayout;
 
 import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.BackupActivity;
+import org.fieldsight.naxa.v3.project.ProjectDashboardActivity;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.InternetUtils;
 import org.fieldsight.naxa.common.RecyclerViewEmptySupport;
@@ -37,7 +35,6 @@ import org.fieldsight.naxa.preferences.SettingsActivity;
 import org.fieldsight.naxa.project.adapter.MyProjectsAdapter;
 import org.fieldsight.naxa.project.data.ProjectViewModel;
 import org.fieldsight.naxa.report.ReportActivity;
-import org.fieldsight.naxa.site.ProjectDashboardActivity;
 import org.fieldsight.naxa.sync.ContentDownloadActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -225,9 +222,9 @@ public class ProjectListActivity extends CollectAbstractActivity implements MyPr
     public void onItemClick(Project project) {
 
 
-        Pair<View, String> p1 = Pair.create(appbarGeneral, ViewCompat.getTransitionName(appbarGeneral));
+//        Pair<View, String> p1 = Pair.create(appbarGeneral, ViewCompat.getTransitionName(appbarGeneral));
         //inspection
-        ProjectDashboardActivity.start(this, project, p1);
+        ProjectDashboardActivity.start(this, project);
 
     }
 

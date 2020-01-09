@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/nav_header_root_layout"
-    android:layout_width="match_parent"
-    android:layout_height="200dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorTransparentBlueTop"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?selectableItemBackground">
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@color/colorTransparentBlueTop"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
         <ImageView
             android:layout_width="match_parent"
@@ -58,4 +54,3 @@
 
     </RelativeLayout>
 
-</FrameLayout>

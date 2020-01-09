@@ -90,11 +90,8 @@ import timber.log.Timber;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.application.Collect.allowClick;
 
-public class ProjectDashboardActivity extends BaseActivity {
-
+public class OldProjectDashboardActivity extends BaseActivity {
     private Project loadedProject;
-
-
     private NonSwipeableViewPager pager;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -112,7 +109,7 @@ public class ProjectDashboardActivity extends BaseActivity {
     TermsLabels tl;
 
     public static void start(Context context, Project project) {
-        Intent intent = new Intent(context, ProjectDashboardActivity.class);
+        Intent intent = new Intent(context, OldProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
         context.startActivity(intent);
     }
@@ -120,7 +117,7 @@ public class ProjectDashboardActivity extends BaseActivity {
 
     @SafeVarargs
     public static void start(Activity context, Project project, Pair<View, String>... pairs) {
-        Intent intent = new Intent(context, ProjectDashboardActivity.class);
+        Intent intent = new Intent(context, OldProjectDashboardActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
         context.startActivity(intent);
     }
@@ -133,7 +130,7 @@ public class ProjectDashboardActivity extends BaseActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_project_dashboard);
+        setContentView(R.layout.old_activity_project_dashboard);
 
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
@@ -491,7 +488,7 @@ public class ProjectDashboardActivity extends BaseActivity {
 
 
         ArrayList<Fragment> fragments = new ArrayList<>();
-        SiteListFragment siteListFragment = SiteListFragment.newInstance(loadedProject);
+        OldSiteListFragment siteListFragment = OldSiteListFragment.newInstance(loadedProject);
         ProjectContactsFragment projectContactsFragment = ProjectContactsFragment.newInstance();
 
         ProjectMapFragment mapFragment = ProjectMapFragment.newInstance(loadedProject);
@@ -526,17 +523,17 @@ public class ProjectDashboardActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItem = menu.findItem(R.id.action_app_settings);
-        menuItem.setVisible((BuildConfig.BUILD_TYPE.equals("internal")));
-        // change the title of the filter with terms and labels case
-        if (tl != null) {
-            menu.findItem(R.id.action_filter).setTitle("Filter " + tl.site);
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        MenuItem menuItem = menu.findItem(R.id.action_app_settings);
+//        menuItem.setVisible((BuildConfig.BUILD_TYPE.equals("internal")));
+//        // change the title of the filter with terms and labels case
+//        if (tl != null) {
+//            menu.findItem(R.id.action_filter).setTitle("Filter " + tl.site);
+//        }
+//
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -569,12 +566,12 @@ public class ProjectDashboardActivity extends BaseActivity {
                 InternetUtils.checkInterConnectivity(new InternetUtils.OnConnectivityListener() {
                     @Override
                     public void onConnectionSuccess() {
-                        FieldSightUserSession.showLogoutDialog(ProjectDashboardActivity.this);
+                        FieldSightUserSession.showLogoutDialog(OldProjectDashboardActivity.this);
                     }
 
                     @Override
                     public void onConnectionFailure() {
-                        FieldSightUserSession.stopLogoutDialog(ProjectDashboardActivity.this);
+                        FieldSightUserSession.stopLogoutDialog(OldProjectDashboardActivity.this);
                     }
 
                     @Override
@@ -667,7 +664,7 @@ public class ProjectDashboardActivity extends BaseActivity {
                 Site mySiteLocationPojo = searchAdapter.getMySiteLocationPojo(position);
                 listSearch.setVisibility(View.GONE);
                 toolbarSearchDialog.dismiss();
-                FragmentHostActivity.start(ProjectDashboardActivity.this, mySiteLocationPojo, false);
+                FragmentHostActivity.start(OldProjectDashboardActivity.this, mySiteLocationPojo, false);
             }
         });
 
