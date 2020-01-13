@@ -175,6 +175,9 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle("");
 
+        // this is for demonstration how can we manage the code with git with multiple developers
+
+
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
         } catch (NullPointerException e) {
