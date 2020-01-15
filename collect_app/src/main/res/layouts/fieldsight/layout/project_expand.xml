@@ -50,18 +50,6 @@
 
         </RelativeLayout>
 
-        <CheckBox
-            android:id="@+id/chkbx_sync"
-            android:layout_width="19dp"
-            android:layout_height="19dp"
-            android:button="@drawable/cb_circular_pressed_state_bg"
-            app:layout_constraintBottom_toBottomOf="@id/rela_round"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:checked="true"
-            android:visibility="gone"
-            android:layout_marginLeft="53dp"
-            />
-
 
         <TextView
             android:id="@+id/primary_text"
@@ -90,6 +78,15 @@
             app:layout_constraintStart_toEndOf="@+id/rela_round"
             app:layout_constraintTop_toBottomOf="@+id/primary_text" />
 
+        <ImageView
+            android:id="@+id/iv_sync"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:srcCompat="@drawable/ic_circle_tick_outline_minor"
+            android:tint="@color/blue"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
         <TextView
             android:id="@+id/tv_synced_date"
             android:layout_width="0dp"
@@ -97,6 +94,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="7dp"
+            android:layout_margin="16dp"
             android:text="Not synced yet"
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
             android:textSize="10sp"
