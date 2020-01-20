@@ -11,7 +11,7 @@
     android:animateLayoutChanges="true"
     app:cardCornerRadius="8dp"
     app:contentPadding="16dp"
-    app:cardBackgroundColor="#E3F1FA"
+    app:cardBackgroundColor="@color/new_design_light_blue"
     app:cardElevation="0dp"
     tools:ignore="ContentDescription">
 
@@ -77,6 +77,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="8dp"
             android:text="A project by Build Change"
+            android:textColor="@color/new_design_blue"
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
             app:layout_constraintBottom_toTopOf="@+id/tv_synced_date"
             app:layout_constraintEnd_toEndOf="parent"
