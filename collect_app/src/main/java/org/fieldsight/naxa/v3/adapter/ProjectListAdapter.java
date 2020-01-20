@@ -67,26 +67,26 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
     }
 
     public void notifyProjectisSynced(List<ProjectNameTuple> projecttuple) {
-        for (int i = 0; i < projectList.size(); i++) {
-            for (int j = 0; j < projecttuple.size(); j++) {
-                if (projectList.get(i).getId().equals(projecttuple.get(j).projectId)) {
-                    int status = projecttuple.get(j).status;
-                    if (status == Constant.DownloadStatus.RUNNING) {
-                        projectList.get(i).setStatusMessage("Syncing project");
-                    } else if (status == Constant.DownloadStatus.COMPLETED) {
-                        projectList.get(i).setSynced(true);
-                        projectList.get(i).setSyncedDate(projecttuple.get(j).createdDate);
-                        projectList.get(i).setStatusMessage("Synced On " + DateTimeUtils.getFormattedDate("yyyy-MM-dd, HH:mm", projectList.get(i).getSyncedDate()));
-                    } else if (status == Constant.DownloadStatus.FAILED) {
-                        projectList.get(i).setSynced(false);
-                        projectList.get(i).setStatusMessage("Sync failed");
-                    } else {
-                        projectList.get(i).setStatusMessage("");
-                    }
-                }
-            }
-        }
-        notifyDataSetChanged();
+//        for (int i = 0; i < projectList.size(); i++) {
+//            for (int j = 0; j < projecttuple.size(); j++) {
+//                if (projectList.get(i).getId().equals(projecttuple.get(j).projectId)) {
+//                    int status = projecttuple.get(j).status;
+//                    if (status == Constant.DownloadStatus.RUNNING) {
+//                        projectList.get(i).setStatusMessage("Syncing project");
+//                    } else if (status == Constant.DownloadStatus.COMPLETED) {
+//                        projectList.get(i).setSynced(true);
+//                        projectList.get(i).setSyncedDate(projecttuple.get(j).createdDate);
+//                        projectList.get(i).setStatusMessage("Synced On " + DateTimeUtils.getFormattedDate("yyyy-MM-dd, HH:mm", projectList.get(i).getSyncedDate()));
+//                    } else if (status == Constant.DownloadStatus.FAILED) {
+//                        projectList.get(i).setSynced(false);
+//                        projectList.get(i).setStatusMessage("Sync failed");
+//                    } else {
+//                        projectList.get(i).setStatusMessage("");
+//                    }
+//                }
+//            }
+//        }
+//        notifyDataSetChanged();
     }
 
     public boolean anyProjectSelectedForSync() {

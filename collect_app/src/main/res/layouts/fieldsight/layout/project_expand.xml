@@ -11,7 +11,6 @@
     android:animateLayoutChanges="true"
     app:cardCornerRadius="8dp"
     app:contentPadding="16dp"
-    app:cardBackgroundColor="@color/new_design_light_blue"
     app:cardElevation="0dp"
     tools:ignore="ContentDescription">
 

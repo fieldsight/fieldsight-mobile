@@ -15,6 +15,8 @@ import com.bumptech.glide.request.RequestOptions;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.login.model.Project;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -40,6 +42,18 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.iv_project_thumbnail)
     ImageView ivThumbnail;
 
+    @BindView(R.id.tv_regions)
+    TextView tvRegions;
+
+    @BindView(R.id.tv_submissions)
+    TextView tvSubmissions;
+
+    @BindView(R.id.tv_sites)
+    TextView tvSites;
+
+    @BindView(R.id.tv_users)
+    TextView tvUsers;
+
     public ProjectViewHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -57,7 +71,12 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
 //        imageView.setImageResource(PROJECT.isSynced() ? R.drawable.ic_action_check : android.R.drawable.stat_sys_download_done);
         Timber.i("project image = %s", project.getUrl());
         Glide.with(itemView.getContext()).load(project.getUrl()).apply(RequestOptions.circleCropTransform()).into(ivThumbnail);
+        tvRegions.setText(String.format(Locale.ENGLISH, "%d", project.getTotalRegions()));
+        tvUsers.setText(String.format(Locale.ENGLISH, "%d", project.getTotalUsers()));
+        tvSubmissions.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSubmissions()));
+        tvSites.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSites()));
     }
+
 
     void checkBoxChanged(int index, boolean isChecked) {
 
