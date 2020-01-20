@@ -171,6 +171,7 @@
                     android:textColor="@color/text_primary" />
 
                 <TextView
+                    android:id="@+id/tv_label_regions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
@@ -196,6 +197,7 @@
                     android:textColor="@color/text_primary" />
 
                 <TextView
+                    android:id="@+id/tv_label_sites"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
@@ -226,6 +228,7 @@
                     android:textColor="@color/text_primary" />
 
                 <TextView
+                    android:id="@+id/tv_label_users"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
@@ -251,6 +254,7 @@
                     android:textColor="@color/text_primary" />
 
                 <TextView
+                    android:id="@+id/tv_label_submission"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"

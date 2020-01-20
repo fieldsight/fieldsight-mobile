@@ -57,6 +57,20 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_users)
     TextView tvUsers;
 
+    @BindView(R.id.tv_label_regions)
+    TextView regionLabel;
+
+    @BindView(R.id.tv_label_submission)
+    TextView submissionLabel;
+
+    @BindView(R.id.tv_label_sites)
+    TextView sitesLabel;
+
+    @BindView(R.id.tv_label_users)
+    TextView userLabel;
+
+
+
     public ProjectViewHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -72,6 +86,8 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
 //        chkbxSync.setChecked(project.isChecked());
 //        chkbxSync.setVisibility(allTrue ? View.VISIBLE : View.GONE);
 //        imageView.setImageResource(PROJECT.isSynced() ? R.drawable.ic_action_check : android.R.drawable.stat_sys_download_done);
+        Timber.i("project image = %s", project.getUrl());
+        Glide.with(itemView.getContext()).load(project.getUrl()).apply(RequestOptions.circleCropTransform()).into(ivThumbnail);
         tvRegions.setText(String.format(Locale.ENGLISH, "%d", project.getTotalRegions()));
         tvUsers.setText(String.format(Locale.ENGLISH, "%d", project.getTotalUsers()));
         tvSubmissions.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSubmissions()));
@@ -94,6 +110,11 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
         tvSites.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
         tvSubmissions.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
         tvUsers.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        tvUsers.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        regionLabel.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        sitesLabel.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        userLabel.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        submissionLabel.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
         tvRegions.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
         ivSync.setVisibility(checked ? View.VISIBLE : View.GONE);
     }
