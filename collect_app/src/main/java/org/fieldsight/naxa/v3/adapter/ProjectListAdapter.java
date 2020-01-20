@@ -61,6 +61,9 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
                 if (isSyncRunning) {
                     viewGroup.getContext().startActivity(new Intent(viewGroup.getContext(), SyncActivity.class));
                     return;
+                } else {
+                    project.setChecked(!project.isChecked());
+                    notifyItemChanged(index);
                 }
             }
         };

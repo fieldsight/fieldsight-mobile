@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.v3.adapter;
 
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -21,7 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-;
 
 class ProjectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.primary_text)
@@ -75,6 +75,18 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
         tvUsers.setText(String.format(Locale.ENGLISH, "%d", project.getTotalUsers()));
         tvSubmissions.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSubmissions()));
         tvSites.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSites()));
+        toggleSelectedColor(project.isChecked());
+    }
+
+    private void toggleSelectedColor(boolean checked) {
+        Resources resources = itemView.getContext().getResources();
+        itemView.setBackgroundColor(checked ? resources.getColor(R.color.new_design_blue) : resources.getColor(R.color.primaryColor));
+        primaryText.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        tvSites.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        tvSubmissions.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        tvUsers.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        tvRegions.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        ivSync.setVisibility(checked ? View.VISIBLE : View.GONE);
     }
 
 
