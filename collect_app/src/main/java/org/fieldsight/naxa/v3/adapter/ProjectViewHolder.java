@@ -82,6 +82,7 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
         Resources resources = itemView.getContext().getResources();
         itemView.setBackgroundColor(checked ? resources.getColor(R.color.new_design_blue) : resources.getColor(android.R.color.white));
         primaryText.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
+        textView.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
         tvSites.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
         tvSubmissions.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
         tvUsers.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
