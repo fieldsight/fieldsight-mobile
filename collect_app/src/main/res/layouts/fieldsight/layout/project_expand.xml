@@ -10,6 +10,8 @@
     android:layout_marginEnd="@dimen/margin_large"
     android:animateLayoutChanges="true"
     app:cardCornerRadius="8dp"
+    app:contentPadding="16dp"
+    app:cardBackgroundColor="#E3F1FA"
     app:cardElevation="0dp"
     tools:ignore="ContentDescription">
 
@@ -28,8 +30,6 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginLeft="12dp"
             android:layout_marginTop="19dp"
             android:layout_marginBottom="23dp"
             app:layout_constraintDimensionRatio="H,16:9"
@@ -103,6 +103,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
             android:textSize="10sp"
             app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@+id/rela_round"
             app:layout_constraintTop_toBottomOf="@+id/sub_text" />
 
@@ -151,89 +152,112 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/tv_download_counter"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/tv_regions"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:drawableLeft="@drawable/ic_location_major_monotone"
+                    android:drawablePadding="8dp"
+                    android:text="NA"
+                    android:textColor="@color/text_primary" />
 
-                    <TextView
-                        android:id="@+id/tv_users"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_customers_major_monotone"
-                        android:drawablePadding="8dp"
-                        android:text="NA"
-                        android:textColor="@android:color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="24dp"
-                        android:layout_marginTop="4dp"
-                        android:text="Users"
-                        android:textColor="#DCDCDC"
-                        android:textSize="14sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_submissions"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_checklist_major_monotone"
-                        android:drawablePadding="8dp"
-                        android:text="NA"
-                        android:textColor="@android:color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="24dp"
-                        android:layout_marginTop="4dp"
-                        android:text="Submissions"
-                        android:textColor="#DCDCDC"
-                        android:textSize="14sp" />
-                </LinearLayout>
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Regions"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_desc"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_marginTop="16dp">
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_desc"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:maxLines="1"
-                    android:text="DFID 31 district retrofitting is the projects you"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tv_more"
+                    android:id="@+id/tv_sites"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/more"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    android:drawableLeft="@drawable/ic_inventory_major_monotone"
+                    android:drawablePadding="8dp"
+                    android:text="NA"
+                    android:textColor="@color/text_primary" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Sites"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_users"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_customers_major_monotone"
+                    android:drawablePadding="8dp"
+                    android:text="NA"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Users"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_submissions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_checklist_major_monotone"
+                    android:drawablePadding="8dp"
+                    android:text="NA"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginTop="4dp"
+                    android:text="Submissions"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
