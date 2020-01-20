@@ -80,7 +80,7 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
 
     private void toggleSelectedColor(boolean checked) {
         Resources resources = itemView.getContext().getResources();
-        itemView.setBackgroundColor(checked ? resources.getColor(R.color.new_design_blue) : resources.getColor(R.color.primaryColor));
+        itemView.setBackgroundColor(checked ? resources.getColor(R.color.new_design_blue) : resources.getColor(android.R.color.white));
         primaryText.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
         tvSites.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
         tvSubmissions.setTextColor(checked ? resources.getColor(android.R.color.white) : resources.getColor(R.color.text_primary));
