@@ -25,6 +25,10 @@ public class ProjectBuilder {
     public String url;
     private List<SiteMetaAttribute> metaAttributes;
     private String termsAndLabels;
+    private int totalSubmissions;
+    private int totalUsers;
+    private int totalSites;
+    private int totalRegions;
 
     private Parcel in;
 
@@ -116,12 +120,29 @@ public class ProjectBuilder {
         this.in = in;
         return this;
     }
+    public ProjectBuilder setTotalSubmission(int totalSubmissions) {
+        this.totalSubmissions = totalSubmissions;
+        return this;
+    }
+    public ProjectBuilder setTotaluser(int totalUser) {
+        this.totalUsers = totalUser;
+        return this;
+    }
+    public ProjectBuilder setTotalRegion(int totalRegions) {
+        this.totalRegions = totalRegions;
+        return this;
+
+    }
+    public ProjectBuilder setTotalSites(int totalSites) {
+        this.totalSites = totalSites;
+        return this;
+    }
     public ProjectBuilder setTermsAndLabels(String termsAndLabels) {
         this.termsAndLabels = termsAndLabels;
         return this;
     }
 
      public Project createProject() {
-        return new Project(id, name, description, address, lat, lon, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, metaAttributes, url, termsAndLabels);
+         return new Project(id, name, description, address, lat, lon, url, siteClusters, organizationName, organizationlogourl, hasClusteredSites, typeId, typeLabel, phone, isSyncedWithRemote, totalRegions, totalSites, totalUsers, totalSubmissions, termsAndLabels, metaAttributes);
     }
 } 

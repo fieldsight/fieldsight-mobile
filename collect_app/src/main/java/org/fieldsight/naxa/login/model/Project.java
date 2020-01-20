@@ -334,7 +334,7 @@ public class Project implements Parcelable {
         isSyncedWithRemote = syncedWithRemote;
     }
 
-    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String url, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, boolean checked, boolean isSynced, String statusMessage, int totalRegions, int totalSites, int totalUsers, int totalSubmissions, String terms_and_labels, long syncedDate, List<Region> regionList, List<SiteMetaAttribute> siteMetaAttributes) {
+    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String url, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, int totalRegions, int totalSites, int totalUsers, int totalSubmissions, String terms_and_labels, List<SiteMetaAttribute> siteMetaAttributes) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -350,15 +350,11 @@ public class Project implements Parcelable {
         this.typeLabel = typeLabel;
         this.phone = phone;
         this.isSyncedWithRemote = isSyncedWithRemote;
-        this.checked = checked;
-        this.isSynced = isSynced;
-        this.statusMessage = statusMessage;
         this.totalRegions = totalRegions;
         this.totalSites = totalSites;
         this.totalUsers = totalUsers;
         this.totalSubmissions = totalSubmissions;
         this.terms_and_labels = terms_and_labels;
-        this.syncedDate = syncedDate;
         this.regionList = regionList;
         this.siteMetaAttributes = siteMetaAttributes;
     }
