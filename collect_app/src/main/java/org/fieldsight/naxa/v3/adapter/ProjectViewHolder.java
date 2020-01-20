@@ -28,8 +28,8 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.sub_text)
     TextView textView;
 
-    @BindView(R.id.chkbx_sync)
-    CheckBox chkbxSync;
+    @BindView(R.id.iv_sync)
+    ImageView ivSync;
 
     @BindView(R.id.tv_synced_date)
     TextView tvSyncedDate;
@@ -45,15 +45,15 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
 
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener((v) -> itemClicked(getLayoutPosition()));
-        chkbxSync.setOnClickListener((v -> checkBoxChanged(getLayoutPosition(), ((CheckBox) v).isChecked())));
+//        chkbxSync.setOnClickListener((v -> checkBoxChanged(getLayoutPosition(), ((CheckBox) v).isChecked())));
     }
 
     void bindView(Project project, boolean allTrue) {
         primaryText.setText(project.getName());
         textView.setText(String.format("A project by %s", project.getOrganizationName()));
         tvSyncedDate.setText(project.getStatusMessage());
-        chkbxSync.setChecked(project.isChecked());
-        chkbxSync.setVisibility(allTrue ? View.VISIBLE : View.GONE);
+//        chkbxSync.setChecked(project.isChecked());
+//        chkbxSync.setVisibility(allTrue ? View.VISIBLE : View.GONE);
 //        imageView.setImageResource(PROJECT.isSynced() ? R.drawable.ic_action_check : android.R.drawable.stat_sys_download_done);
         Timber.i("project image = %s", project.getUrl());
         Glide.with(itemView.getContext()).load(project.getUrl()).apply(RequestOptions.circleCropTransform()).into(ivThumbnail);

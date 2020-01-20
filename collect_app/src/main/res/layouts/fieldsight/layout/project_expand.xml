@@ -83,7 +83,6 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             app:srcCompat="@drawable/ic_circle_tick_outline_minor"
-            android:tint="@color/blue"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 

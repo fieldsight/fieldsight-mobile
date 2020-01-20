@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -97,6 +98,22 @@ public class Project implements Parcelable {
     @Expose
     @Ignore
     String statusMessage = "";
+
+    @SerializedName("total_regions")
+    @ColumnInfo(name = "total_regions")
+    private int totalRegions;
+
+    @SerializedName("total_sites")
+    @ColumnInfo(name = "total_sites")
+    private int totalSites;
+
+    @SerializedName("total_users")
+    @ColumnInfo(name = "total_users")
+    private int totalUsers;
+
+    @SerializedName("total_submissions")
+    @ColumnInfo(name = "total_submissions")
+    private int totalSubmissions;
 
     public String getTerms_and_labels() {
         return terms_and_labels;

@@ -60,6 +60,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
                 Timber.i("ProjectListAdapter, isSyncRunning : " + isSyncRunning);
                 if (isSyncRunning) {
                     viewGroup.getContext().startActivity(new Intent(viewGroup.getContext(), SyncActivity.class));
+                    return;
                 }
             }
         };
