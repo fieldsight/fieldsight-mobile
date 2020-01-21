@@ -79,7 +79,9 @@
                 android:background="@color/new_design_blue"
                 android:gravity="center"
                 android:padding="8dp"
+                android:minHeight="48dp"
                 android:text="Sync Now"
+                android:layout_marginBottom="8dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
                 android:textColor="@color/white"
                 android:visibility="visible" />

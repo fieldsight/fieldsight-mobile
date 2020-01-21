@@ -99,7 +99,10 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
         observer = new RecyclerView.AdapterDataObserver() {
             @Override
-            public void onChanged() {
+            public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
+                super.onItemRangeChanged(positionStart, itemCount, payload);
+                Timber.i("adapter changed call");
+                ToastUtils.showShortToast("adapter called");
                 int selectedNum;
                 for (selectedNum = 0; selectedNum < projectList.size(); selectedNum++) {
                     if (projectList.get(selectedNum).isChecked()) {
@@ -114,7 +117,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 } else {
                     tvSyncProject.setVisibility(View.VISIBLE);
                     tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
-                    tvSyncProject.setText(String.format(Locale.getDefault(), "Sync %d projects Now", selectedNum));
+                    tvSyncProject.setText("Sync Now");
                 }
             }
         };
@@ -161,9 +164,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             if (TextUtils.equals("null", lastItem)) {
                 String where = InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + "=?";
 
-                String[] whereArgs = {
-                        instance.getSubmissionUri()
-                };
+                String[] whereArgs = {instance.getSubmissionUri()};
 
                 String fixedUrl = FSInstancesDao.generateSubmissionUrl(PROJECT, "0", fsFormId);
 
