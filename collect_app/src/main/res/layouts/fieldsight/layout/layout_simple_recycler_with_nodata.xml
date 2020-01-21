@@ -84,7 +84,7 @@
                 android:text="Sync Projects"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
                 android:textColor="@color/white"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </RelativeLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

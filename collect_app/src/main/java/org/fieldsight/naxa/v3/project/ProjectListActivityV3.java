@@ -100,21 +100,21 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         observer = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
-                int selected = 0;
-                for (int i = 0; i < projectList.size(); i++) {
-                    if (projectList.get(i).isChecked()) {
-                        selected++;
+                int selectedNum;
+                for (selectedNum = 0; selectedNum < projectList.size(); selectedNum++) {
+                    if (projectList.get(selectedNum).isChecked()) {
+                        break;
                     }
                 }
-                Timber.d("project list counter is %d", selected);
-                if (selected > 0) {
-                    tvSyncProject.setVisibility(View.VISIBLE);
-                    tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
-                    tvSyncProject.setText(String.format(Locale.getDefault(), "Sync %d projects", selected));
-                } else {
+                Timber.d("project list counter is %d", selectedNum);
+                if (selectedNum == projectList.size()) {
                     tvSyncProject.setVisibility(View.GONE);
                     allSelected = false;
                     invalidateOptionsMenu();
+                } else {
+                    tvSyncProject.setVisibility(View.VISIBLE);
+                    tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
+                    tvSyncProject.setText(String.format(Locale.getDefault(), "Sync %d projects", selectedNum));
                 }
             }
         };
