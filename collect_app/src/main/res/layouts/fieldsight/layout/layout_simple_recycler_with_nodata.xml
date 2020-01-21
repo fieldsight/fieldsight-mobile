@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    app:cardBackgroundColor="@color/primaryColor"
+                    app:cardBackgroundColor="@color/new_design_blue"
                     app:cardCornerRadius="8dp"
                     app:cardUseCompatPadding="true"
                     app:contentPadding="8dp">
@@ -62,7 +62,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="@color/primaryColor"
                         android:text="Sync project again"
                         android:textColor="@android:color/white" />
 
@@ -77,11 +76,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:background="@color/primaryColor"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_legacy_24dp"
-                android:gravity="end|center_vertical"
+                android:background="@color/new_design_blue"
+                android:gravity="center"
                 android:padding="8dp"
-                android:text="Sync Projects"
+                android:text="Sync Now"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
                 android:textColor="@color/white"
                 android:visibility="visible" />

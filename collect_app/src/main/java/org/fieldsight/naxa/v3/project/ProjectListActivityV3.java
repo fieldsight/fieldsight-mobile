@@ -114,7 +114,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 } else {
                     tvSyncProject.setVisibility(View.VISIBLE);
                     tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
-                    tvSyncProject.setText(String.format(Locale.getDefault(), "Sync %d projects", selectedNum));
+                    tvSyncProject.setText(String.format(Locale.getDefault(), "Sync %d projects Now", selectedNum));
                 }
             }
         };
