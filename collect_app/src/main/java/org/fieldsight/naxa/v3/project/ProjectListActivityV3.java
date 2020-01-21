@@ -101,8 +101,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             @Override
             public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
                 super.onItemRangeChanged(positionStart, itemCount, payload);
-                Timber.i("adapter changed call");
-                ToastUtils.showShortToast("adapter called");
                 int selectedNum;
                 for (selectedNum = 0; selectedNum < projectList.size(); selectedNum++) {
                     if (projectList.get(selectedNum).isChecked()) {
