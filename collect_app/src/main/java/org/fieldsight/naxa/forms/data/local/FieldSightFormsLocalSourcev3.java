@@ -192,13 +192,14 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                     @Override
                     public boolean test(FieldsightFormDetailsv3 formDetailsv3) {
                         Timber.i("getSortedPages, metaAttributes:: %s", formDetailsv3.getMetaAttributes());
+                        // if site value is not null, always show the form, this refers that form is created from site and do not need to filter
                         // regions and types should not be empty array
 
                         // undefined case
                         // if form types and form regions both has undefined value -0,0 and sites types is null and sites region is null - always show
                         // else check form types and regions contains the site type and region
                         //form type undefined and region [1,2,3] =>
-                        if(!TextUtils.isEmpty(formDetailsv3.getSite()) || !formDetailsv3.getSite().equals("null")) {
+                        if(!TextUtils.isEmpty(formDetailsv3.getSite()) && !formDetailsv3.getSite().equals("null")) {
                             return true;
                         }
                         int newsiteTypeId = TextUtils.isEmpty(siteTypeId) ? 0 : Integer.parseInt(siteTypeId);
