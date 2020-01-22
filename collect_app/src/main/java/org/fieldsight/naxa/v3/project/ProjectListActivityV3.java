@@ -80,8 +80,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
 
     RecyclerView.AdapterDataObserver observer;
 
-    @BindView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
+//    @BindView(R.id.swipe_container)
+//    SwipeRefreshLayout swipeRefreshLayout;
 
     boolean allSelected;
     LiveData<List<ProjectNameTuple>> projectIds;
@@ -135,13 +135,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             invalidateOptionsMenu();
         };
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getDataFromServer();
-
-            }
-        });
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                getDataFromServer();
+//
+//            }
+//        });
 
         try {
             fixNullUrl();
@@ -228,7 +228,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 adapter.clearAndUpdate(projects);
                 manageNodata(false);
                 Timber.e("data found with %d size", projects.size());
-                swipeRefreshLayout.setRefreshing(false);
+//                swipeRefreshLayout.setRefreshing(false);
                 refreshSyncStatus();
             }
 
@@ -236,7 +236,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             public void onDataNotAvailable() {
                 Timber.d("data not available");
                 manageNodata(false);
-                swipeRefreshLayout.setRefreshing(false);
+//                swipeRefreshLayout.setRefreshing(false);
                 refreshSyncStatus();
             }
         });
@@ -256,6 +256,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     }
 
     void openDownloadAActivity() {
+        // changing the list as syncing and unsyncing
+
         ArrayList<Project> syncProjectList = manageSyncList();
         if (syncProjectList.size() > 0) {
             Intent intent = new Intent(this, SyncActivity.class);
