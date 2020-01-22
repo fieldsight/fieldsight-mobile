@@ -198,7 +198,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         // if form types and form regions both has undefined value -0,0 and sites types is null and sites region is null - always show
                         // else check form types and regions contains the site type and region
                         //form type undefined and region [1,2,3] =>
-                        if(!TextUtils.isEmpty(formDetailsv3.getSite()) || !formDetailsv3.getSite().equals("null")) {
+                        if(!TextUtils.isEmpty(formDetailsv3.getSite()) && !formDetailsv3.getSite().equals("null")) {
                             return true;
                         }
                         int newsiteTypeId = TextUtils.isEmpty(siteTypeId) ? 0 : Integer.parseInt(siteTypeId);
