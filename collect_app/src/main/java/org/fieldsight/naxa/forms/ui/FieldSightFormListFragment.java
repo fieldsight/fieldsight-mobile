@@ -86,7 +86,7 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                     } else {
                         for (FieldsightFormDetailsv3 fieldsightFormDetailsv3 : fieldSightForms) {
                             Timber.i("loadForm :: formsettings = %s", fieldsightFormDetailsv3.getSettings());
-                            if(!TextUtils.isEmpty(fieldsightFormDetailsv3.getSite()) || !TextUtils.equals(fieldsightFormDetailsv3.getSite(), "null") && TextUtils.equals(loadedSite.getId(), fieldsightFormDetailsv3.getSite())) {
+                            if(!TextUtils.isEmpty(fieldsightFormDetailsv3.getSite()) && !TextUtils.equals(fieldsightFormDetailsv3.getSite(), "null") && TextUtils.equals(loadedSite.getId(), fieldsightFormDetailsv3.getSite())) {
                                 filteredList.add(fieldsightFormDetailsv3);
                                 continue;
                             }

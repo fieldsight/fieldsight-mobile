@@ -53,9 +53,10 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         Timber.i("getFormByType, formType = %s, projectId = %s, siteId = %s, siteTypeId = %s, regionId = %s", formType, projectId, siteId, siteTypeId, siteRegionId);
         MediatorLiveData<List<FieldsightFormDetailsv3>> mediator = new MediatorLiveData<>();
         LiveData<List<FieldsightFormDetailsv3>> formSource = dao.getFormByType(formType, projectId, siteId);
+
         mediator.addSource(formSource, forms -> {
             if (TextUtils.equals(formType, Constant.FormType.STAGED)) {
-                getSortedStages(forms, siteTypeId, siteRegionId, project)
+                getSortedStages(forms, siteTypeId, siteRegionId, project, siteId)
                         .subscribe(new SingleObserver<List<FieldsightFormDetailsv3>>() {
                             @Override
                             public void onSubscribe(Disposable d) {
@@ -92,7 +93,7 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
         MediatorLiveData<List<Stage>> mediator = new MediatorLiveData<>();
         LiveData<List<FieldsightFormDetailsv3>> formSource = dao.getFormByType(Constant.FormType.STAGED, projectId, siteId);
         mediator.addSource(formSource, forms -> {
-            getStageAndSubStages(forms, siteTypeId, siteRegionId, project)
+            getStageAndSubStages(forms, siteTypeId, siteRegionId, project, siteId)
                     .subscribe(new SingleObserver<List<Stage>>() {
                         @Override
                         public void onSubscribe(Disposable d) {
@@ -118,9 +119,9 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
     }
 
 
-    public Single<List<Stage>> getStageAndSubStages(List<FieldsightFormDetailsv3> forms, String siteTypeId, String siteRegionId, Project project) {
+    public Single<List<Stage>> getStageAndSubStages(List<FieldsightFormDetailsv3> forms, String siteTypeId, String siteRegionId, Project project, String siteId) {
         Timber.i("getStageAndSubstages, formsSize = %d", forms.size());
-        return getSortedStages(forms, siteTypeId, siteRegionId, project)
+        return getSortedStages(forms, siteTypeId, siteRegionId, project, siteId)
                 .map(new Function<List<FieldsightFormDetailsv3>, List<Stage>>() {
                     @Override
                     public List<Stage> apply(List<FieldsightFormDetailsv3> formDetailsv3s) throws Exception {
@@ -184,8 +185,8 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
     }
 
     private Single<List<FieldsightFormDetailsv3>> getSortedStages
-            (List<FieldsightFormDetailsv3> forms, final String siteTypeId, String siteRegionId, Project project) {
-        Timber.i("getSortedPages, formsSize = %d, siteTypeId = %s, siteRegionId = %s", forms.size(), siteTypeId, siteRegionId);
+            (List<FieldsightFormDetailsv3> forms, final String siteTypeId, String siteRegionId, Project project, String siteId) {
+        Timber.i("getSortedPages, formsSize = %d, siteTypeId = %s, siteRegionId = %s, siteId = %s", forms.size(), siteTypeId, siteRegionId,  siteId);
         return Observable.just(forms)
                 .flatMapIterable((Function<List<FieldsightFormDetailsv3>, Iterable<FieldsightFormDetailsv3>>) formDetailsv3s -> formDetailsv3s)
                 .filter(new Predicate<FieldsightFormDetailsv3>() {
@@ -200,7 +201,8 @@ public class FieldSightFormsLocalSourcev3 implements BaseLocalDataSourceRX<Field
                         // else check form types and regions contains the site type and region
                         //form type undefined and region [1,2,3] =>
                         if(!TextUtils.isEmpty(formDetailsv3.getSite()) && !formDetailsv3.getSite().equals("null")) {
-                            return true;
+                           // if site id, and id of site from where user came is matched return true else return false
+                            return formDetailsv3.getSite().equals(siteId);
                         }
                         int newsiteTypeId = TextUtils.isEmpty(siteTypeId) ? 0 : Integer.parseInt(siteTypeId);
                         int newsiteRegionId = TextUtils.isEmpty(siteRegionId) ? 0 : Integer.parseInt(siteRegionId);
