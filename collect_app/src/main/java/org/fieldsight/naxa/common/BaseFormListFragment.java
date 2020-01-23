@@ -118,8 +118,6 @@ public class BaseFormListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fieldsight_list_fragment, container, false);
         recyclerView = view.findViewById(R.id.recycler_view_list);
         emptyLayout = view.findViewById(R.id.root_layout_empty_layout);
-        View swipeToRefresh = view.findViewById(R.id.swipe_container);
-        swipeToRefresh.setEnabled(false);
         return view;
     }
 

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 22,
-    "identityHash": "5940fba9456110e288f089bba811bca8",
+    "identityHash": "c7c07bf47a1f45c94665f6a69a71c350",
     "entities": [
       {
         "tableName": "sites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `latitude` TEXT, `longitude` TEXT, `identifier` TEXT, `name` TEXT, `typeId` TEXT, `typeLabel` TEXT, `phone` TEXT, `address` TEXT, `publicDesc` TEXT, `additionalDesc` TEXT, `logo` TEXT, `isActive` INTEGER, `location` TEXT, `isSurvey` INTEGER, `dateCreated` TEXT, `project` TEXT, `isSiteVerified` INTEGER NOT NULL, `siteTypeError` TEXT, `metaAttributes` TEXT, `siteDocuments` TEXT, `regionId` TEXT, `site` TEXT, `generalFormDeployedFrom` TEXT, `stagedFormDeployedFrom` TEXT, `scheduleFormDeployedForm` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `latitude` TEXT, `longitude` TEXT, `identifier` TEXT, `name` TEXT, `typeId` TEXT, `typeLabel` TEXT, `phone` TEXT, `address` TEXT, `publicDesc` TEXT, `additionalDesc` TEXT, `logo` TEXT, `isActive` INTEGER, `location` TEXT, `isSurvey` INTEGER, `dateCreated` TEXT, `project` TEXT, `isSiteVerified` INTEGER NOT NULL, `siteTypeError` TEXT, `metaAttributes` TEXT, `siteDocuments` TEXT, `regionId` TEXT, `users` INTEGER NOT NULL, `site` TEXT, `generalFormDeployedFrom` TEXT, `stagedFormDeployedFrom` TEXT, `scheduleFormDeployedForm` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -141,6 +141,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "users",
+            "columnName": "users",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "site",
             "columnName": "site",
             "affinity": "TEXT",
@@ -176,7 +182,7 @@
       },
       {
         "tableName": "project",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `description` TEXT, `address` TEXT, `lat` TEXT, `lon` TEXT, `url` TEXT, `siteClusters` TEXT, `organizationName` TEXT, `organizationlogourl` TEXT, `hasClusteredSites` INTEGER, `typeId` INTEGER, `typeLabel` TEXT, `phone` TEXT, `isSyncedWithRemote` INTEGER NOT NULL, `terms_and_labels` TEXT, `regionList` TEXT, `typesList` TEXT, `siteMetaAttributes` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT, `description` TEXT, `address` TEXT, `lat` TEXT, `lon` TEXT, `url` TEXT, `siteClusters` TEXT, `organizationName` TEXT, `organizationlogourl` TEXT, `hasClusteredSites` INTEGER, `typeId` INTEGER, `typeLabel` TEXT, `phone` TEXT, `isSyncedWithRemote` INTEGER NOT NULL, `terms_and_labels` TEXT, `regionList` TEXT, `siteMetaAttributes` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -277,12 +283,6 @@
           {
             "fieldPath": "regionList",
             "columnName": "regionList",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "typesList",
-            "columnName": "typesList",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -1606,10 +1606,9 @@
         "foreignKeys": []
       }
     ],
-    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5940fba9456110e288f089bba811bca8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c7c07bf47a1f45c94665f6a69a71c350\")"
     ]
   }
 }

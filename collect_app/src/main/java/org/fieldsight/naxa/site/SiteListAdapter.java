@@ -1,140 +1,97 @@
 package org.fieldsight.naxa.site;
 
+import android.content.Context;
+import android.text.TextUtils;
 import android.util.SparseBooleanArray;
-import android.view.HapticFeedbackConstants;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.bcss.collect.android.R;;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
-import org.fieldsight.naxa.common.anim.FlipAnimator;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.login.model.SiteBuilder;
+import org.fieldsight.naxa.site.db.SiteLocalSource;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.OnLongClick;
+import timber.log.Timber;
 
-    private static final int VIEW_TYPE_SURVEY_FORM = 0, VIEW_TYPE_SITE = 1;
+import static org.fieldsight.naxa.common.ViewUtils.loadImageWithFallback;
 
-    private final List<Site> siteList;
+public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
-    private final SparseBooleanArray selectedItems;
-    private final SparseBooleanArray animationItemsIndex;
+    private List<Site> siteList;
+
     private final SiteListAdapter.SiteListAdapterListener listener;
-    private static int currentSelectedIndex = -1;
-    private boolean reverseAllAnimations;
+    private Context contextCompat;
+    private List<Site> orginalList;
+    private int offlineSiteCount = 0;
 
-    SiteListAdapter(List<Site> sitelist, SiteListAdapter.SiteListAdapterListener listener) {
-
+    public SiteListAdapter(Context context, List<Site> siteList, SiteListAdapter.SiteListAdapterListener listener) {
         this.listener = listener;
-        this.selectedItems = new SparseBooleanArray();
-        this.animationItemsIndex = new SparseBooleanArray();
+        this.contextCompat = context;
+        this.siteList = siteList;
+        this.orginalList = this.siteList;
+    }
 
-        ArrayList<Site> surveyFormAndSites = new ArrayList<>();
-        surveyFormAndSites.add(new SiteBuilder()
-                .setName("project_survey")
-                .setId("0")
-                .createSite());
-        surveyFormAndSites.addAll(sitelist);
+    public void setDataFromDb(List<Site> mSiteList) {
+        this.orginalList = mSiteList;
+    }
 
-        this.siteList = surveyFormAndSites;
-
-
-
+    public void setOfflineSiteCount(int count) {
+        this.offlineSiteCount = count;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder holder = null;
-        View itemView = null;
-
-        switch (viewType) {
-            case VIEW_TYPE_SURVEY_FORM:
-                itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.survey_list_item, parent, false);
-                holder = new SurveyViewHolder(itemView);
-                break;
-            case VIEW_TYPE_SITE:
-            default:
-                itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.site_list_item, parent, false);
-                holder = new SiteViewHolder(itemView);
-                break;
-        }
-        return holder;
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.site_list_item, parent, false);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        Timber.i(" ======> oncreateViewHolder margin added for %d", viewType);
+        view.setLayoutParams(layoutParams);
+        return new SiteViewHolder(view);
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-        switch (holder.getItemViewType()) {
-            case VIEW_TYPE_SURVEY_FORM:
-                break;
-            default:
-                SiteViewHolder siteViewHolder = (SiteViewHolder) holder;
-                Site site = siteList.get(holder.getAdapterPosition());
-                siteViewHolder.siteName.setText(site.getName());
-                siteViewHolder.iconText.setText(site.getName().substring(0, 1));
-                siteViewHolder.identifier.setText(site.getIdentifier());
-                siteViewHolder.message.setText(site.getAddress());
-                siteViewHolder.imgProfile.setImageResource(R.drawable.circle_blue);
-
-                applyIconAnimation(siteViewHolder, position);
-                applyOffilineSiteTag(siteViewHolder, site);
-                break;
-        }
-
-
-    }
-
-
-    private void applyIconAnimation(SiteViewHolder holder, int position) {
-        if (selectedItems.get(position, false)) {
-            holder.iconFront.setVisibility(View.GONE);
-            resetIconYAxis(holder.iconBack);
-            holder.iconBack.setVisibility(View.VISIBLE);
-            holder.iconBack.setAlpha(1);
-            if (currentSelectedIndex == position) {
-                FlipAnimator.flipView(holder.iconBack.getContext(), holder.iconBack, holder.iconFront, true);
-                resetCurrentIndex();
-            }
-
-            holder.rootLayout.setActivated(true);
+        SiteViewHolder siteViewHolder = (SiteViewHolder) holder;
+        Site site = siteList.get(holder.getAdapterPosition());
+        siteViewHolder.siteName.setText(site.getName());
+        siteViewHolder.siteAddress.setVisibility(TextUtils.isEmpty(site.getAddress()) ? View.GONE : View.VISIBLE);
+        siteViewHolder.siteAddress.setText(site.getAddress());
+        if (site.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE) {
+            siteViewHolder.viewSpace.setVisibility(View.VISIBLE);
         } else {
-            holder.iconBack.setVisibility(View.GONE);
-            resetIconYAxis(holder.iconFront);
-            holder.iconFront.setVisibility(View.VISIBLE);
-            holder.iconFront.setAlpha(1);
-            if ((reverseAllAnimations && animationItemsIndex.get(position, false)) || currentSelectedIndex == position) {
-                FlipAnimator.flipView(holder.iconBack.getContext(), holder.iconBack, holder.iconFront, false);
-                resetCurrentIndex();
-            }
-
-
-            holder.rootLayout.setActivated(false);
+            siteViewHolder.viewSpace.setVisibility(View.GONE);
         }
-    }
-
-    private void resetIconYAxis(View view) {
-        if (view.getRotationY() != 0) {
-            view.setRotationY(0);
+        if (!TextUtils.isEmpty(site.getSite_logo())) {
+            loadImageWithFallback(contextCompat, site.getSite_logo()).into(siteViewHolder.siteLogo);
+        } else {
+            siteViewHolder.siteLogo.setImageResource(R.drawable.fieldsight_logo);
         }
-    }
-
-    private void resetCurrentIndex() {
-        currentSelectedIndex = -1;
     }
 
     @Override
@@ -142,179 +99,107 @@ public class SiteListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return siteList.size();
     }
 
-
-    @Override
-    public int getItemViewType(int position) {
-        switch (position) {
-            case 0:
-                return VIEW_TYPE_SURVEY_FORM;
-            default:
-                return VIEW_TYPE_SITE;
-        }
-    }
-
-    void resetAnimationIndex() {
-        reverseAllAnimations = false;
-        animationItemsIndex.clear();
-    }
-
-    public void clearSelections() {
-        reverseAllAnimations = true;
-        selectedItems.clear();
-        notifyDataSetChanged();
-    }
-
     public List<Site> getAll() {
         return siteList;
     }
 
-    public class SurveyViewHolder extends RecyclerView.ViewHolder {
-
-        private final RelativeLayout rootLayout;
-
-        SurveyViewHolder(View itemView) {
-            super(itemView);
-            rootLayout = itemView.findViewById(R.id.root_layout_survey_form_list_item);
-            rootLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onSurveyFormClicked();
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String queryText = constraint.toString().toLowerCase();
+                FilterResults filterResults = new FilterResults();
+                List<Site> filteredList = new ArrayList<>();
+                if (TextUtils.isEmpty(queryText)) {
+                    filteredList.addAll(orginalList);
+                } else {
+                    for (Site site : orginalList) {
+                        if (site.getName().toLowerCase().contains(queryText) || site.getIdentifier().toLowerCase().contains(queryText) || site.getAddress().toLowerCase().contains(queryText)) {
+                            filteredList.add(site);
+                        }
+                    }
                 }
-            });
+                filterResults.values = filteredList;
+                return filterResults;
+            }
 
-        }
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                updateList((List<Site>) results.values);
+            }
+        };
     }
 
-    public class SiteViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
-        private final TextView siteName, identifier, message, iconText, offlinetag;
-        private final ImageView imgProfile;
-        private final RelativeLayout iconContainer, iconBack, iconFront;
-        private final View rootLayout;
+    public class SiteViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.tv_site_name)
+        TextView siteName;
+        @BindView(R.id.iv_site_logo)
+        ImageView siteLogo;
+        @BindView(R.id.tv_site_address)
+        TextView siteAddress;
+        @BindView(R.id.view_space)
+        View viewSpace;
+
+        @OnClick(R.id.root_layout_message_list_row)
+        void itemClick() {
+            listener.onRowClick(siteList.get(getAdapterPosition()));
+        }
+
+        @OnLongClick(R.id.root_layout_message_list_row)
+        void itemLongClick() {
+            if (Constant.SiteStatus.IS_ONLINE != siteList.get(getAdapterPosition()).getIsSiteVerified()
+                    && Constant.SiteStatus.IS_EDITED != siteList.get(getAdapterPosition()).getIsSiteVerified()) {
+                listener.onRowLongClicked(getAdapterPosition());
+
+            }
+        }
 
         SiteViewHolder(View view) {
             super(view);
-            siteName = view.findViewById(R.id.tv_site_name);
-            identifier = view.findViewById(R.id.tv_identifier);
-            message = view.findViewById(R.id.txt_secondary);
-            iconText = view.findViewById(R.id.icon_text);
-            offlinetag = view.findViewById(R.id.timestamp);
-            iconBack = view.findViewById(R.id.icon_back);
-            iconFront = view.findViewById(R.id.icon_front);
-            imgProfile = view.findViewById(R.id.icon_profile);
-            iconContainer = view.findViewById(R.id.icon_container);
-            rootLayout = view.findViewById(R.id.root_layout_message_list_row);
-
-            rootLayout.setOnLongClickListener(this);
-            rootLayout.setOnClickListener(this);
-
+            ButterKnife.bind(this, view);
         }
-
-        @Override
-        public boolean onLongClick(View view) {
-
-            if (Constant.SiteStatus.IS_ONLINE != siteList.get(getAdapterPosition()).getIsSiteVerified()
-                    && Constant.SiteStatus.IS_EDITED != siteList.get(getAdapterPosition()).getIsSiteVerified()) {
-
-                listener.onRowLongClicked(getAdapterPosition());
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-
-                return true;
-            }
-
-            return false;
-        }
-
-        @Override
-        public void onClick(View v) {
-            listener.onUselessLayoutClicked(siteList.get(getAdapterPosition()));
-        }
-    }
-
-
-    private void applyOffilineSiteTag(SiteViewHolder holder, Site siteLocationPojo) {
-        boolean isChecked = selectedItems.get(holder.getAdapterPosition(), false);
-        boolean isUnVerifiedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
-        boolean isEditedSite = siteLocationPojo.getIsSiteVerified() == Constant.SiteStatus.IS_EDITED;
-        holder.offlinetag.setVisibility(View.GONE);
-
-        if (isChecked) {
-//            holder.siteName.setTypeface(null, Typeface.BOLD);
-//            holder.identifier.setTypeface(null, Typeface.BOLD);
-            holder.siteName.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.from));
-            holder.identifier.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
-        }
-
-
-        if (isEditedSite) {
-            holder.offlinetag.setVisibility(View.VISIBLE);
-            holder.offlinetag.setText("Edited Site");
-        }
-
-        if (isUnVerifiedSite) {
-            holder.offlinetag.setVisibility(View.VISIBLE);
-            holder.offlinetag.setText("Offline Site");
-//            holder.siteName.setTypeface(null, Typeface.NORMAL);
-//            holder.identifier.setTypeface(null, Typeface.NORMAL);
-            holder.siteName.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.subject));
-            holder.identifier.setTextColor(ContextCompat.getColor(holder.siteName.getContext(), R.color.message));
-        }
-
-
     }
 
 
     public void updateList(List<Site> newList) {
-
-        ArrayList<Site> surveyFormAndSites = new ArrayList<>();
-        surveyFormAndSites.add(new SiteBuilder()
-                .setName("project_survey")
-                .setId("0")
-                .createSite());
-        surveyFormAndSites.addAll(newList);
-
         this.siteList.clear();
-        this.siteList.addAll(surveyFormAndSites);
-
-
+        if (newList == null) {
+            this.siteList.addAll(this.orginalList);
+        } else {
+            this.siteList.addAll(newList);
+        }
+        Timber.i(" ========> total sites = %d", siteList.size());
+        Timber.i("======> offline sites = %d", offlineSiteCount);
+        int swappedLastPos = 0;
+        boolean offlineSiteFound = false;
+        if (offlineSiteCount > 0) {
+            for (int i = 0; i < siteList.size(); i++) {
+                Site mSite = siteList.get(i);
+                if (mSite.getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE) {
+                    if (!offlineSiteFound) offlineSiteFound = true;
+                    if (swappedLastPos < offlineSiteCount) {
+                        Collections.swap(siteList, i, swappedLastPos);
+                        swappedLastPos++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            listener.hasOfflineSite(offlineSiteFound);
+        } else {
+            listener.hasOfflineSite(false);
+        }
+        Timber.i("sites total = %d", siteList.size());
         notifyDataSetChanged();
 
-
-    }
-
-    public ArrayList<Site> getSelected() {
-        ArrayList<Site> items = new ArrayList<>();
-        for (int i = 0; i < selectedItems.size(); i++) {
-            items.add(siteList.get(selectedItems.keyAt(i)));
-        }
-
-        return items;
-    }
-
-
-    public int getSelectedItemCount() {
-        return selectedItems.size();
-    }
-
-    public void toggleSelection(int pos) {
-        currentSelectedIndex = pos;
-        if (selectedItems.get(pos, false)) {
-            selectedItems.delete(pos);
-            animationItemsIndex.delete(pos);
-        } else {
-
-            selectedItems.put(pos, true);
-            animationItemsIndex.put(pos, true);
-        }
-        notifyItemChanged(pos);
     }
 
     public interface SiteListAdapterListener {
-        void onIconClicked(int position);
-
         void onRowLongClicked(int position);
 
-        void onUselessLayoutClicked(Site site);
+        void onRowClick(Site site);
 
-        void onSurveyFormClicked();
+        void hasOfflineSite(boolean available);
     }
 }

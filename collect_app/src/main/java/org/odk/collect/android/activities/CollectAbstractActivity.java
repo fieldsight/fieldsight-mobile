@@ -18,6 +18,7 @@ package org.odk.collect.android.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -74,6 +75,7 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -96,20 +98,22 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
     }
 
     public void showProgress() {
+       showProgress("");
+    }
+
+    public void showProgress(String message) {
         try {
             RelativeLayout relativeLayout = findViewById(R.id.fl_toolbar_progress_wrapper);
             if (relativeLayout != null) {
                 ViewUtils.animateViewVisibility(relativeLayout, View.VISIBLE);
-//                relativeLayout.setVisibility(View.VISIBLE);
             } else {
-                progressDialog = DialogFactory.createProgressDialogHorizontal(this, getString(R.string.please_wait));
+                progressDialog = DialogFactory.createProgressDialogHorizontal(this, message.isEmpty() ? getString(R.string.please_wait) : message);
                 progressDialog.show();
             }
         } catch (Exception e) {
             SnackBarUtils.showFlashbar(this, e.getMessage());
             Timber.e(e);
         }
-
     }
 
     public void hideProgress() {
@@ -117,11 +121,13 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
             RelativeLayout relativeLayout = findViewById(R.id.fl_toolbar_progress_wrapper);
             if (relativeLayout != null) {
                 ViewUtils.animateViewVisibility(relativeLayout,View.GONE);
-//                relativeLayout.setVisibility(View.GONE);
             } else {
-                if (progressDialog != null && progressDialog.isShowing()) {
-                    ToastUtils.showLongToast("Dismiss");
+                Timber.i("hide progress dialog");
+                if (progressDialog != null) {
+//                    ToastUtils.showLongToast("Dismiss");
+                    Timber.i("progress dialog dismissed");
                     progressDialog.dismiss();
+                    progressDialog = null;
                 }
             }
         } catch (Exception e) {
@@ -129,4 +135,5 @@ public abstract class CollectAbstractActivity extends AppCompatActivity {
             Timber.e(e);
         }
     }
+
 }

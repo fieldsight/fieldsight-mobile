@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,10 +62,13 @@ public class StageListAdapter extends
 
         int stageNumber = position + 1;
         viewHolder.tvStageName.setText(stage.getName());
-        viewHolder.tvSubTitle.setText(stage.getDescription());
+        if(TextUtils.isEmpty(stage.getDescription()) || TextUtils.equals(stage.getDescription(), "null")) {
+            viewHolder.tvSubTitle.setVisibility(View.GONE);
+        } else {
+            viewHolder.tvSubTitle.setVisibility(View.VISIBLE);
+            viewHolder.tvSubTitle.setText(stage.getDescription());
+        }
         viewHolder.tvIconText.setText(String.valueOf(stageNumber));
-
-
     }
 
     @Override

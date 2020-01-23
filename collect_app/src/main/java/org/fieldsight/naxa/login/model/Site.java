@@ -3,6 +3,7 @@ package org.fieldsight.naxa.login.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -48,7 +49,7 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "typeId")
     private String typeId;
 
-    @SerializedName("type_label")
+    @SerializedName("type__name")
     @ColumnInfo(name = "typeLabel")
     private String typeLabel;
 
@@ -85,6 +86,14 @@ public class Site implements Parcelable {
     @ColumnInfo(name = "project")
     private String project;
 
+    @SerializedName("current_progress")
+    @ColumnInfo(name = "current_progress")
+    private int current_progress;
+
+    @SerializedName("site_logo")
+    @ColumnInfo(name = "site_logo")
+    private String site_logo;
+
     @ColumnInfo(name = "isSiteVerified")
     private int isSiteVerified = Constant.SiteStatus.IS_ONLINE;
 
@@ -97,7 +106,6 @@ public class Site implements Parcelable {
     @Ignore
     private String siteUploadError;
 
-
     private String metaAttributes;
 
     @TypeConverters(StringListTypeConvertor.class)
@@ -106,6 +114,10 @@ public class Site implements Parcelable {
 
     @SerializedName("region")
     private String regionId;
+
+    @SerializedName("submissions")
+    @ColumnInfo(name = "submissions")
+    private int submissions;
 
 
     public String getSite() {
@@ -116,6 +128,9 @@ public class Site implements Parcelable {
         this.site = site;
     }
 
+    @SerializedName("users")
+    @ColumnInfo(name = "users")
+    private int users;
 
     private String site;
 
@@ -250,6 +265,13 @@ public class Site implements Parcelable {
         this.scheduleFormDeployedForm = scheduleFormDeployedForm;
     }
 
+    public int getCurrent_progress() {
+        return current_progress;
+    }
+
+    public void setCurrent_progress(int current_progress) {
+        this.current_progress = current_progress;
+    }
 
     public int getIsSiteVerified() {
         return isSiteVerified;
@@ -301,13 +323,20 @@ public class Site implements Parcelable {
     }
 
     public String getTypeId() {
-        return typeId == null ? "" : typeId;
+        return TextUtils.isEmpty(typeId) ? "" : typeId;
     }
 
     public void setTypeId(String typeId) {
         this.typeId = typeId;
     }
 
+    public int getSubmissions() {
+        return submissions;
+    }
+
+    public void setSubmissions(int submissions) {
+        this.submissions = submissions;
+    }
 
     public String getRegion() {
         return regionId == null ? "" : regionId;
@@ -419,6 +448,21 @@ public class Site implements Parcelable {
         this.siteUploadError = siteUploadError;
     }
 
+    public int getUsers() {
+        return users;
+    }
+
+    public String getSite_logo() {
+        return site_logo;
+    }
+
+    public void setSite_logo(String site_logo) {
+        this.site_logo = site_logo;
+    }
+
+    public void setUsers(int users) {
+        this.users = users;
+    }
 
     public String getRegionId() {
         return regionId;

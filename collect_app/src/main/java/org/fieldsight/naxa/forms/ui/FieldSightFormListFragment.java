@@ -70,8 +70,8 @@ public class FieldSightFormListFragment extends BaseFormListFragment {
                     // filter form by setting
                     // for the form that belongs to all the site not having regions and types, it will have 0 value
 
-                    int newSiteTypeId = TextUtils.isEmpty(loadedSite.getTypeId()) ? 0 : Integer.parseInt(loadedSite.getTypeId());
-                    int newSiteRegionId = TextUtils.isEmpty(loadedSite.getRegionId()) ? 0 : Integer.parseInt(loadedSite.getRegionId());
+                    int newSiteTypeId = TextUtils.isEmpty(loadedSite.getTypeId()) ? 0 : Double.valueOf(loadedSite.getTypeId()).intValue();
+                    int newSiteRegionId = TextUtils.isEmpty(loadedSite.getRegionId()) ? 0 : Double.valueOf(loadedSite.getRegionId()).intValue();
 
                     List<FieldsightFormDetailsv3> filteredList = new ArrayList<>();
 

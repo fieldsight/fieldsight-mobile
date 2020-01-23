@@ -42,6 +42,10 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return siteLocalSource;
     }
 
+    public int getOfflineSiteCount(String id) {
+        return dao.getOfflineSiteCount(id);
+    }
+
 
     @Override
     public LiveData<List<Site>> getAll() {
@@ -73,6 +77,11 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
     public LiveData<List<Site>> getByIdStatusAndCluster(String projectId, String cluster) {
 
         return dao.getSiteFromFilter(projectId, cluster);
+    }
+
+    public LiveData<List<Site>> getByIdStatusAndClusterAnStatus(String projectId, String cluster,int status) {
+
+        return dao.getSiteFromFilterV2(projectId, cluster,status);
     }
 
     public List<Site> getSitesByParentId(String siteId) {

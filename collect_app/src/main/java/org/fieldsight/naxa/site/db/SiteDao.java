@@ -73,6 +73,10 @@ public interface SiteDao {
     @Query("SELECT * from sites where site IS NULL AND project =:projectId and regionId=:cluster ")
     LiveData<List<Site>> getSiteFromFilter(String projectId, String cluster);
 
+    @Query("SELECT * from sites where site IS NULL AND (project =:projectId  and regionId=:cluster) OR isSiteVerified=:siteStatus")
+    LiveData<List<Site>> getSiteFromFilterV2(String projectId, String cluster, int siteStatus);
+
+
     @Query("SELECT * from sites where site =:parentId")
     List<Site> getSiteByParentId(String parentId);
 
@@ -84,4 +88,7 @@ public interface SiteDao {
 
     @Query("SELECT * from sites WHERE site IS NULL AND project=:projectId")
     LiveData<List<Site>> getParentSite(String projectId);
+
+    @Query("SELECT COUNT(*) FROM sites WHERE project=:projectId AND isSiteVerified=0")
+    int getOfflineSiteCount(String projectId);
 }

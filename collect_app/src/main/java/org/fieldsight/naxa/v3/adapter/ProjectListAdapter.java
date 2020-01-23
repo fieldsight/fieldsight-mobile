@@ -8,9 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.bcss.collect.android.R;;
+import org.fieldsight.naxa.v3.project.ProjectDashboardActivity;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.login.model.Project;
-import org.fieldsight.naxa.site.ProjectDashboardActivity;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.odk.collect.android.application.Collect;

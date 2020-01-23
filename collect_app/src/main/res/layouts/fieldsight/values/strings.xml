@@ -294,6 +294,14 @@
     <string name="msg_yes_open_missing_version">Yes, open in the current version</string>
     <string name="msg_no_open_missing_version">No, I want to fill a new form</string>
     <string name="msg_matching_form_verion_not_found">Matching form version not found</string>
+    <string name="signin_greeting">Welcome back.\nPlease sign in.</string>
+    <string name="mesg_remember_me">Remember me</string>
+    <string name="signin_text">Sign in with email</string>
+    <string name="or">OR</string>
+    <string name="login_notice">By signing in, you agree to <b>User Notice </b> and <b>Privacy Policy</b></string>
+    <string name="project_forms">Project Forms</string>
+    <string name="more">More</string>
+    <string name="offline_site">Offline Sites</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>
