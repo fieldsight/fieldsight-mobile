@@ -14,10 +14,14 @@
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content">-->
 
-
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:orientation="vertical">
 
             <TextView
@@ -119,4 +123,5 @@
 
         </RelativeLayout>
 <!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
