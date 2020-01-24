@@ -76,6 +76,7 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="8dp"
             android:text="A project by Build Change"
+            android:textStyle="bold"
             android:textColor="@color/new_design_blue"
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
             app:layout_constraintBottom_toTopOf="@+id/tv_synced_date"
@@ -168,6 +169,7 @@
                     android:drawableLeft="@drawable/ic_location_major_monotone"
                     android:drawablePadding="8dp"
                     android:text="NA"
+                    android:textStyle="bold"
                     android:textColor="@color/text_primary" />
 
                 <TextView
@@ -194,6 +196,7 @@
                     android:drawableLeft="@drawable/ic_inventory_major_monotone"
                     android:drawablePadding="8dp"
                     android:text="NA"
+                    android:textStyle="bold"
                     android:textColor="@color/text_primary" />
 
                 <TextView
@@ -225,6 +228,7 @@
                     android:drawableLeft="@drawable/ic_customers_major_monotone"
                     android:drawablePadding="8dp"
                     android:text="NA"
+                    android:textStyle="bold"
                     android:textColor="@color/text_primary" />
 
                 <TextView
@@ -251,6 +255,7 @@
                     android:drawableLeft="@drawable/ic_checklist_major_monotone"
                     android:drawablePadding="8dp"
                     android:text="NA"
+                    android:textStyle="bold"
                     android:textColor="@color/text_primary" />
 
                 <TextView

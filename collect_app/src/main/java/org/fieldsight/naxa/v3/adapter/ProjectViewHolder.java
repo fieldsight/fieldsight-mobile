@@ -81,7 +81,7 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
 
     public void bindView(Project project, boolean allTrue) {
         primaryText.setText(project.getName());
-        textView.setText(String.format("A project by %s", project.getOrganizationName()));
+        textView.setText(String.format("%s", project.getOrganizationName()));
         tvSyncedDate.setText(project.getStatusMessage());
 //        chkbxSync.setChecked(project.isChecked());
 //        chkbxSync.setVisibility(allTrue ? View.VISIBLE : View.GONE);

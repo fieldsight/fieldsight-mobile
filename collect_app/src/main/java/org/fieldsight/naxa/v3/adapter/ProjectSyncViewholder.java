@@ -32,9 +32,6 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
     @BindView(R.id.sub_text)
     TextView textView;
 
-    @BindView(R.id.iv_sync)
-    ImageView ivSync;
-
     @BindView(R.id.tv_synced_date)
     TextView tvSyncedDate;
 
@@ -77,7 +74,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
 
     public void bindView(Project project, boolean allTrue) {
         primaryText.setText(project.getName());
-        textView.setText(String.format("A project by %s", project.getOrganizationName()));
+        textView.setText(String.format("%s", project.getOrganizationName()));
         tvSyncedDate.setText(project.getStatusMessage());
         Timber.i("project image = %s", project.getUrl());
         Glide.with(itemView.getContext()).load(project.getUrl()).apply(RequestOptions.circleCropTransform()).into(ivThumbnail);
