@@ -315,11 +315,4 @@ public abstract class FieldSightDatabase extends RoomDatabase {
         }
     };
 
-    private static final Migration MIGRATION_26_27 = new Migration(26, 27) {
-        @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
-
-        }
-    };
-
 }

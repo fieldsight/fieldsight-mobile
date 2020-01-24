@@ -20,16 +20,40 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_projectlist_syncing"
-                android:layout_width="match_parent"
-                android:layout_above="@id/rv_projectlist"
+            <TextView
+                android:id="@+id/tv_sync"
+                android:text="Sync"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/secondaryTextColor"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
                 android:layout_height="wrap_content"/>
 
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_projectlist_syncing"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_below="@id/tv_sync"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tv_unsync"
+                android:text="Unsync"
+                android:layout_below="@id/rv_projectlist_syncing"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/secondaryTextColor"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_projectlist"
                 android:layout_width="match_parent"
+                android:layout_below="@id/tv_unsync"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="48dp" />
 

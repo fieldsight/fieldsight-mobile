@@ -26,7 +26,7 @@ import timber.log.Timber;
 import static org.fieldsight.naxa.common.ViewUtils.loadImageWithFallback;
 
 
-class ProjectViewHolder extends RecyclerView.ViewHolder {
+public class ProjectViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.primary_text)
     TextView primaryText;
 
@@ -79,7 +79,7 @@ class ProjectViewHolder extends RecyclerView.ViewHolder {
 //        chkbxSync.setOnClickListener((v -> checkBoxChanged(getLayoutPosition(), ((CheckBox) v).isChecked())));
     }
 
-    void bindView(Project project, boolean allTrue) {
+    public void bindView(Project project, boolean allTrue) {
         primaryText.setText(project.getName());
         textView.setText(String.format("A project by %s", project.getOrganizationName()));
         tvSyncedDate.setText(project.getStatusMessage());

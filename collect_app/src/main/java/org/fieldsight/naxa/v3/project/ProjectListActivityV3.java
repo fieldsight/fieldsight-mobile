@@ -75,6 +75,15 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @BindView(R.id.cv_resync)
     CardView cvResync;
 
+    @BindView(R.id.rv_projectlist_syncing)
+    RecyclerView rvSyncing;
+
+    @BindView(R.id.tv_sync)
+    TextView tvSync;
+
+    @BindView(R.id.tv_unsync)
+    TextView tvUnsync;
+
     ProjectListAdapter adapter;
     List<Project> projectList = new ArrayList<>();
 
@@ -111,7 +120,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 if (selectedNum == projectList.size()) {
                     tvSyncProject.setVisibility(View.GONE);
                     allSelected = false;
-                    invalidateOptionsMenu();
+                    tvSync.setVisibility(View.GONE);
+                    tvUnsync.setVisibility(View.GONE);
+//                    invalidateOptionsMenu();
                 } else {
                     tvSyncProject.setVisibility(View.VISIBLE);
                     tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
@@ -127,7 +138,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         getDataFromServer();
         manageNodata(true);
 
-        tvSyncProject.setOnClickListener(v -> openDownloadAActivity());
+//        tvSyncProject.setOnClickListener(v -> openDownloadAActivity());
         projectObserver = projectNameList -> {
             Timber.i("list live data = %d", projectNameList.size());
             adapter.notifyProjectisSynced(projectNameList);
@@ -148,6 +159,17 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         } catch (Exception e) {
             Timber.e(e);
         }
+    }
+
+    @OnClick(R.id.tv_sync_project)
+    void addInSyncList() {
+        ArrayList<Project> syncProjectList = manageSyncList();
+        Timber.i("=======>>>>> syncproject length = %d", syncProjectList.size());
+        SyncingProjectAdapter adapter = new SyncingProjectAdapter(syncProjectList);
+        rvSyncing.setLayoutManager(new LinearLayoutManager(this));
+        rvSyncing.setAdapter(adapter);
+        tvSync.setVisibility(View.VISIBLE);
+        tvUnsync.setVisibility(View.VISIBLE);
     }
 
 
@@ -247,29 +269,34 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     //    Clear the sync PROJECT list and add the selected projects
     ArrayList<Project> manageSyncList() {
         ArrayList<Project> syncProjectList = new ArrayList<>();
-        for (Project project : projectList) {
+        ArrayList<Project> filteredList = new ArrayList<>();
+        for (int i = 0; i < projectList.size(); i++) {
+            Project project = projectList.get(i);
             if (project.isChecked()) {
                 syncProjectList.add(project);
+            } else {
+                filteredList.add(project);
             }
         }
+        adapter.clearAndUpdate(filteredList);
         return syncProjectList;
     }
 
-    void openDownloadAActivity() {
-        // changing the list as syncing and unsyncing
+//    void openDownloadAActivity() {
+    // changing the list as syncing and unsyncing
 
-        ArrayList<Project> syncProjectList = manageSyncList();
-        if (syncProjectList.size() > 0) {
-            Intent intent = new Intent(this, SyncActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("projects", syncProjectList);
-            bundle.putBoolean("auto", true);
-            intent.putExtra("params", bundle);
-            startActivity(intent);
-        } else {
-            ToastUtils.showShortToastInMiddle("Please select at least one projects");
-        }
-    }
+//        ArrayList<Project> syncProjectList = manageSyncList();
+//        if (syncProjectList.size() > 0) {
+//            Intent intent = new Intent(this, SyncActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putParcelableArrayList("projects", syncProjectList);
+//            bundle.putBoolean("auto", true);
+//            intent.putExtra("params", bundle);
+//            startActivity(intent);
+//        } else {
+//            ToastUtils.showShortToastInMiddle("Please select at least one projects");
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,19 +304,19 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-//        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
-        if (showSyncMenu) {
-            menu.findItem(R.id.action_refresh).setIcon(allSelected ?
-                    R.drawable.ic_cancel_white_24dp :
-                    R.drawable.ic_action_sync
-            );
-            menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+////        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
+//        if (showSyncMenu) {
+//            menu.findItem(R.id.action_refresh).setIcon(allSelected ?
+//                    R.drawable.ic_cancel_white_24dp :
+//                    R.drawable.ic_action_sync
+//            );
+//            menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
+//        }
+//
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -299,17 +326,17 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 return true;
             case R.id.action_refresh:
 //                check all the PROJECT and make auto true
-                allSelected = !allSelected;
-                for (Project project : projectList) {
-//                    if (!PROJECT.isSynced()) {
-                    project.setChecked(allSelected);
-//                    } else {
-//                        PROJECT.setChecked(false);
-//                    }
-                }
-                adapter.toggleAllSelected(allSelected);
-                adapter.notifyDataSetChanged();
-                invalidateOptionsMenu();
+//                allSelected = !allSelected;
+//                for (Project project : projectList) {
+////                    if (!PROJECT.isSynced()) {
+//                    project.setChecked(allSelected);
+////                    } else {
+////                        PROJECT.setChecked(false);
+////                    }
+//                }
+//                adapter.toggleAllSelected(allSelected);
+//                adapter.notifyDataSetChanged();
+//                invalidateOptionsMenu();
                 break;
             case R.id.action_notificaiton:
                 NotificationListActivity.start(this);
