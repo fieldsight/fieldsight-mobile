@@ -283,14 +283,16 @@
                 android:text="@string/downloading"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/iv_cancel"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 app:srcCompat="@drawable/ic_circle_cancel_major_monotone"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginLeft="16dp"
+                android:visibility="gone"
                 app:srcCompat="@drawable/ic_pause_circle_major_monotone"/>
 
         </LinearLayout>

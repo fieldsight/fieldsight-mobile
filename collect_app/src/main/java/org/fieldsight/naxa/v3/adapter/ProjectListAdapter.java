@@ -7,17 +7,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.bcss.collect.android.R;;
-import org.fieldsight.naxa.v3.project.ProjectDashboardActivity;
-import org.fieldsight.naxa.common.Constant;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
+import org.fieldsight.naxa.v3.project.ProjectDashboardActivity;
 import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.utilities.DateTimeUtils;
-
 import java.util.List;
-
 import timber.log.Timber;
 
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
@@ -90,6 +86,11 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
 //            }
 //        }
 //        notifyDataSetChanged();
+    }
+
+    public void push(Project project, int index) {
+        this.projectList.add(index, project);
+        notifyItemChanged(index);
     }
 
     public boolean anyProjectSelectedForSync() {

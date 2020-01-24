@@ -15,10 +15,23 @@ import org.fieldsight.naxa.v3.adapter.ProjectViewHolder;
 import java.util.List;
 
 public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewholder> {
-    List<Project> projectList;
+    public interface Callback {
+        void onCancelClicked(int pos);
+    }
 
-    public SyncingProjectAdapter(List<Project> projectList) {
+    List<Project> projectList;
+    Callback callback;
+
+    public SyncingProjectAdapter(List<Project> projectList, Callback callback) {
         this.projectList = projectList;
+        this.callback = callback;
+    }
+
+    public Project popItem(int index) {
+        Project project = projectList.get(index);
+        projectList.remove(index);
+        notifyDataSetChanged();
+        return project;
     }
 
     @NonNull
@@ -32,6 +45,7 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
     public void onBindViewHolder(@NonNull ProjectSyncViewholder holder, int position) {
         Project project = projectList.get(position);
         holder.bindView(project, false);
+        holder.itemView.findViewById(R.id.iv_cancel).setOnClickListener(v -> callback.onCancelClicked(position));
     }
 
     @Override

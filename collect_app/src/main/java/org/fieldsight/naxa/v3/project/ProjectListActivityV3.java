@@ -53,7 +53,7 @@ import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
-public class ProjectListActivityV3 extends CollectAbstractActivity {
+public class ProjectListActivityV3 extends CollectAbstractActivity implements SyncingProjectAdapter.Callback {
     @BindView(R.id.rv_projectlist)
     RecyclerView rvProjectlist;
 
@@ -165,7 +165,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     void addInSyncList() {
         ArrayList<Project> syncProjectList = manageSyncList();
         Timber.i("=======>>>>> syncproject length = %d", syncProjectList.size());
-        SyncingProjectAdapter adapter = new SyncingProjectAdapter(syncProjectList);
+        SyncingProjectAdapter syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
         rvSyncing.setLayoutManager(new LinearLayoutManager(this));
         rvSyncing.setAdapter(adapter);
         tvSync.setVisibility(View.VISIBLE);
@@ -350,8 +350,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             case R.id.action_submit_report:
                 startActivity(new Intent(this, ReportActivity.class));
                 return true;
-
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -383,6 +381,14 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 exit = true;
             }
         }
+    }
+
+    @Override
+    public void onCancelClicked(int pos) {
+        Timber.i("cancel clicked");
+//        Project project = syncAdapter.popItem(pos);
+//        project.setChecked(false);
+//        adapter.push(project, pos);
     }
 }
 

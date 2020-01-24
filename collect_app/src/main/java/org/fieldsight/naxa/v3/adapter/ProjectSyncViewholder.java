@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.ViewUtils.loadImageWithFallback;
@@ -65,7 +66,8 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_label_users)
     TextView userLabel;
 
-
+    @BindView(R.id.iv_cancel)
+    ImageView ivCancel;
 
     public ProjectSyncViewholder(@NonNull View itemView) {
         super(itemView);
