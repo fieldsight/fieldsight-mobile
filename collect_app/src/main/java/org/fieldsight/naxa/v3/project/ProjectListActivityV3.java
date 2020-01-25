@@ -167,7 +167,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         Timber.i("=======>>>>> syncproject length = %d", syncProjectList.size());
         SyncingProjectAdapter syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
         rvSyncing.setLayoutManager(new LinearLayoutManager(this));
-        rvSyncing.setAdapter(adapter);
+        rvSyncing.setAdapter(syncAdapter);
         tvSync.setVisibility(View.VISIBLE);
         tvUnsync.setVisibility(View.VISIBLE);
     }
@@ -386,9 +386,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     @Override
     public void onCancelClicked(int pos) {
         Timber.i("cancel clicked");
-//        Project project = syncAdapter.popItem(pos);
-//        project.setChecked(false);
-//        adapter.push(project, pos);
+        Project project = ((SyncingProjectAdapter)rvSyncing.getAdapter()).popItem(pos);
+        project.setChecked(false);
+        adapter.push(project, pos);
     }
 }
 
