@@ -78,8 +78,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     @BindView(R.id.rv_projectlist_syncing)
     RecyclerView rvSyncing;
 
-    @BindView(R.id.tv_sync)
-    TextView tvSync;
+//    @BindView(R.id.tv_sync)
+//    TextView tvSync;
 
     @BindView(R.id.tv_unsync)
     TextView tvUnsync;
@@ -120,7 +120,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 if (selectedNum == projectList.size()) {
                     tvSyncProject.setVisibility(View.GONE);
                     allSelected = false;
-                    tvSync.setVisibility(View.GONE);
+//                    tvSync.setVisibility(View.GONE);
                     tvUnsync.setVisibility(View.GONE);
 //                    invalidateOptionsMenu();
                 } else {
@@ -168,7 +168,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         SyncingProjectAdapter syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
         rvSyncing.setLayoutManager(new LinearLayoutManager(this));
         rvSyncing.setAdapter(syncAdapter);
-        tvSync.setVisibility(View.VISIBLE);
+//        tvSync.setVisibility(View.VISIBLE);
         tvUnsync.setVisibility(View.VISIBLE);
     }
 
