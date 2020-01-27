@@ -185,7 +185,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
         syncObserver = syncStats -> {
             Timber.i("sync stats size = %d", syncStats.size());
-//            adapterv3.notifyBySyncStat(syncStats);
+            // check if project is syncomplete or not
+            // if sync complete, remove the downloading section from the item list
+
         };
 
         syncdata = SyncLocalSource3.getInstance().getAll();
@@ -200,9 +202,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         };
         runningLiveData = SyncLocalSource3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING, Constant.DownloadStatus.QUEUED);
         runningLiveData.observe(this, runningLiveDataObserver);
-        if (syncing) {
-            enableDisableAdapter(syncing);
-        }
+//        if (syncing) {
+//            enableDisableAdapter(syncing);
+//        }
 
     }
 

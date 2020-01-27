@@ -263,6 +263,12 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_downloading_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -295,6 +301,7 @@
                 android:visibility="gone"
                 app:srcCompat="@drawable/ic_pause_circle_major_monotone"/>
 
+        </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

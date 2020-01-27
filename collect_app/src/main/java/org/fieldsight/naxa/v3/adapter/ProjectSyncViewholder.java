@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -69,6 +70,9 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
     @BindView(R.id.iv_cancel)
     ImageView ivCancel;
 
+    @BindView(R.id.ll_downloading_section)
+    LinearLayout downloadingSection;
+
     public ProjectSyncViewholder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -90,5 +94,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         } else {
            ivThumbnail.setImageResource(R.drawable.fieldsight_logo);
         }
+
+        downloadingSection.setVisibility(project.isSynced() ? View.GONE : View.VISIBLE);
     }
 }
