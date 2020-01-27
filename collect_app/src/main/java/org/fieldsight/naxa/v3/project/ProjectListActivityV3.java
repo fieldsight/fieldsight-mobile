@@ -24,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.BackupActivity;
+import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.login.model.Project;
@@ -38,6 +39,7 @@ import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.fieldsight.naxa.v3.network.SyncLocalSource3;
 import org.fieldsight.naxa.v3.network.SyncServiceV3;
+import org.fieldsight.naxa.v3.network.SyncStat;
 import org.fieldsight.naxa.v3.network.Syncable;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
@@ -107,6 +109,15 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     // Hashmap to track the syncing progress
     HashMap<String, List<Syncable>> syncableMap;
 
+    // livedata for runnning live data observer
+    LiveData<Integer> runningLiveData;
+
+    // Observes the syncing or queued syncing project count
+    Observer<Integer> runningLiveDataObserver;
+
+    LiveData<List<SyncStat>> syncdata;
+    Observer<List<SyncStat>> syncObserver;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,6 +181,29 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         } catch (Exception e) {
             Timber.e(e);
         }
+
+
+        syncObserver = syncStats -> {
+            Timber.i("sync stats size = %d", syncStats.size());
+//            adapterv3.notifyBySyncStat(syncStats);
+        };
+
+        syncdata = SyncLocalSource3.getInstance().getAll();
+        syncdata.observe(this, syncObserver);
+
+        runningLiveDataObserver = count -> {
+            Timber.i("SyncActivity ===============>>>>> syncing::  count = %d", count);
+            if (count == 0) {
+                Timber.i("SyncActivity ===============>>> enable called");
+                adapter.disableAdapter(false);
+            }
+        };
+        runningLiveData = SyncLocalSource3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING, Constant.DownloadStatus.QUEUED);
+        runningLiveData.observe(this, runningLiveDataObserver);
+        if (syncing) {
+            enableDisableAdapter(syncing);
+        }
+
     }
 
     // this class will manage the sync list to determine which should be synced

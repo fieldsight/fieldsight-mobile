@@ -72,52 +72,52 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
         /// getting the selected PROJECT list from the projectlist activity
         Timber.i("SyncActivity, alreadySyncing:: " + (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0));
-        if (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0) {
-            syncing = true;
-            projectList = Collect.selectedProjectList;
-            syncableMap = Collect.syncableMap;
-        } else {
-            Bundle bundle = getIntent().getBundleExtra("params");
-            projectList = bundle.getParcelableArrayList("projects");
-            auto = bundle.getBoolean("auto", true);
-        }
+//        if (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0) {
+//            syncing = true;
+//            projectList = Collect.selectedProjectList;
+//            syncableMap = Collect.syncableMap;
+//        } else {
+//            Bundle bundle = getIntent().getBundleExtra("params");
+//            projectList = bundle.getParcelableArrayList("projects");
+//            auto = bundle.getBoolean("auto", true);
+//        }
 
-        if (projectList == null || projectList.size() == 0) {
-            return;
-        }
-
-        Timber.i("SyncActivity, isSyncing = " + syncing);
-        // clear the sync stat table if it is not syncing when opened
-        if (!syncing) {
-//            SyncLocalSource3.getInstance().delete();
-        }
+//        if (projectList == null || projectList.size() == 0) {
+//            return;
+//        }
+//
+//        Timber.i("SyncActivity, isSyncing = " + syncing);
+//        // clear the sync stat table if it is not syncing when opened
+//        if (!syncing) {
+////            SyncLocalSource3.getInstance().delete();
+//        }
 
         setTitle(String.format(Locale.getDefault(), "Projects (%d)", projectList.size()));
         /// create the map of the syncing
-        if (syncableMap == null) {
-            createSyncableList(projectList);
-        }
+//        if (syncableMap == null) {
+//            createSyncableList(projectList);
+//        }
 
-        adapterv3 = new SyncAdapterv3(auto, projectList, syncableMap);
-        adapterv3.setAdapterCallback(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapterv3);
+//        adapterv3 = new SyncAdapterv3(auto, projectList, syncableMap);
+//        adapterv3.setAdapterCallback(this);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setAdapter(adapterv3);
 
-        findViewById(R.id.download_button).setOnClickListener(v -> {
-            if (NetworkUtils.isNetworkConnected()) {
-                ToastUtils.showShortToast("Download starts");
-                Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
-                syncIntent.putParcelableArrayListExtra("projects", projectList);
-                syncIntent.putExtra("selection", syncableMap);
-                startService(syncIntent);
-
-                Collect.selectedProjectList = projectList;
-                Collect.syncableMap = syncableMap;
-                enableDisableAdapter(true);
-            } else {
-                Toast.makeText(this, getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        findViewById(R.id.download_button).setOnClickListener(v -> {
+//            if (NetworkUtils.isNetworkConnected()) {
+//                ToastUtils.showShortToast("Download starts");
+//                Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+//                syncIntent.putParcelableArrayListExtra("projects", projectList);
+//                syncIntent.putExtra("selection", syncableMap);
+//                startService(syncIntent);
+//
+//                Collect.selectedProjectList = projectList;
+//                Collect.syncableMap = syncableMap;
+//                enableDisableAdapter(true);
+//            } else {
+//                Toast.makeText(this, getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         syncObserver = syncStats -> {
             Timber.i("sync stats size = %d", syncStats.size());
