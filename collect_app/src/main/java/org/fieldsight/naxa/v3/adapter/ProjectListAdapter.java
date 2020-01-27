@@ -19,7 +19,7 @@ import timber.log.Timber;
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
     private final List<Project> projectList;
     boolean allTrue;
-
+    boolean disable = false;
     public ProjectListAdapter(List<Project> projectList, boolean allTrue) {
         this.projectList = projectList;
         this.allTrue = allTrue;
@@ -113,11 +113,16 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
-        projectViewHolder.bindView(projectList.get(i), allTrue);
+        projectViewHolder.bindView(projectList.get(i), allTrue, disable);
     }
 
     @Override
     public int getItemCount() {
         return projectList.size();
+    }
+
+    public void disableAdapter(boolean disable) {
+        this.disable = disable;
+        notifyDataSetChanged();
     }
 }

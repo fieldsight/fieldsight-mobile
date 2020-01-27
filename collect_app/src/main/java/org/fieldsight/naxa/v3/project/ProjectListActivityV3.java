@@ -37,12 +37,16 @@ import org.fieldsight.naxa.v3.network.LoadProjectCallback;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.fieldsight.naxa.v3.network.SyncLocalSource3;
+import org.fieldsight.naxa.v3.network.SyncServiceV3;
+import org.fieldsight.naxa.v3.network.Syncable;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -97,6 +101,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     Observer<List<ProjectNameTuple>> projectObserver;
     boolean showSyncMenu = true;
 
+    // flag to maintain the status of the syncing process is started or not
+    boolean syncStarts = false;
+
+    // Hashmap to track the syncing progress
+    HashMap<String, List<Syncable>> syncableMap;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,10 +133,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //                    tvSync.setVisibility(View.GONE);
                     tvUnsync.setVisibility(View.GONE);
 //                    invalidateOptionsMenu();
-                } else {
+                } else if(!syncStarts) {
                     tvSyncProject.setVisibility(View.VISIBLE);
                     tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
                     tvSyncProject.setText("Sync Now");
+                    tvUnsync.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -161,6 +172,39 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         }
     }
 
+    // this class will manage the sync list to determine which should be synced
+    private ArrayList<Syncable> createList() {
+        // -1 refers here as never started
+        return new ArrayList<Syncable>() {{
+            add(0, new Syncable("Regions and sites", -1));
+            add(1, new Syncable("Forms",  -1));
+            add(2, new Syncable("Materials", -1));
+        }};
+    }
+
+    private void updateSyncableMap(List<Project> selectedProjectList) {
+        if(syncableMap == null) {
+            syncableMap = new HashMap<>();
+        }
+        for (Project project : selectedProjectList) {
+            syncableMap.put(project.getId(), createList());
+        }
+    }
+
+    private void startSyncing(ArrayList<Project> selectedProjectList) {
+        if (NetworkUtils.isNetworkConnected()) {
+            ToastUtils.showShortToast("Download starts");
+            Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+            syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
+            syncIntent.putExtra("selection", syncableMap);
+            startService(syncIntent);
+            adapter.disableAdapter(true);
+            syncStarts = true;
+        } else {
+            Toast.makeText(this, getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @OnClick(R.id.tv_sync_project)
     void addInSyncList() {
         ArrayList<Project> syncProjectList = manageSyncList();
@@ -168,8 +212,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         SyncingProjectAdapter syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
         rvSyncing.setLayoutManager(new LinearLayoutManager(this));
         rvSyncing.setAdapter(syncAdapter);
-//        tvSync.setVisibility(View.VISIBLE);
         tvUnsync.setVisibility(View.VISIBLE);
+
+
     }
 
 

@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions;
 
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.login.model.Project;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.Locale;
 
@@ -73,13 +74,10 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
 
     public ProjectViewHolder(@NonNull View itemView) {
         super(itemView);
-
         ButterKnife.bind(this, itemView);
-        itemView.setOnClickListener((v) -> itemClicked(getLayoutPosition()));
-//        chkbxSync.setOnClickListener((v -> checkBoxChanged(getLayoutPosition(), ((CheckBox) v).isChecked())));
     }
 
-    public void bindView(Project project, boolean allTrue) {
+    public void bindView(Project project, boolean allTrue, boolean disable) {
         primaryText.setText(project.getName());
         textView.setText(String.format("%s", project.getOrganizationName()));
         tvSyncedDate.setText(project.getStatusMessage());
@@ -98,8 +96,14 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
         } else {
            ivThumbnail.setImageResource(R.drawable.fieldsight_logo);
         }
-
         toggleSelectedColor(project.isChecked());
+        itemView.setOnClickListener(v -> {
+            if(!disable) {
+                itemClicked(getLayoutPosition());
+            } else {
+                ToastUtils.showLongToast("Syncing project, Please wait until project sync complete");
+            }
+        });
     }
 
     private void toggleSelectedColor(boolean checked) {
