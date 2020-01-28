@@ -187,6 +187,10 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             Timber.i("sync stats size = %d", syncStats.size());
             // check if project is syncomplete or not
             // if sync complete, remove the downloading section from the item list
+            // TODO check here how can we implement the form loading counter ???????????????????
+            for( SyncStat stat : syncStats) {
+
+            }
 
         };
 
@@ -249,8 +253,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         rvSyncing.setLayoutManager(new LinearLayoutManager(this));
         rvSyncing.setAdapter(syncAdapter);
         tvUnsync.setVisibility(View.VISIBLE);
-
-
     }
 
 
