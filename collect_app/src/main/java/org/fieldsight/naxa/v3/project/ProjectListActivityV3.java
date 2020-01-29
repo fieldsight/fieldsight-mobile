@@ -20,9 +20,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import org.bcss.collect.android.R;;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightUserSession;
@@ -36,13 +35,11 @@ import org.fieldsight.naxa.report.ReportActivity;
 import org.fieldsight.naxa.v3.adapter.ProjectListAdapter;
 import org.fieldsight.naxa.v3.network.LoadProjectCallback;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
-import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.fieldsight.naxa.v3.network.SyncLocalSource3;
 import org.fieldsight.naxa.v3.network.SyncServiceV3;
 import org.fieldsight.naxa.v3.network.SyncStat;
 import org.fieldsight.naxa.v3.network.Syncable;
 import org.odk.collect.android.activities.CollectAbstractActivity;
-import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ToastUtils;
@@ -50,7 +47,6 @@ import org.odk.collect.android.utilities.ToastUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +54,8 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+
+;
 
 public class ProjectListActivityV3 extends CollectAbstractActivity implements SyncingProjectAdapter.Callback {
     @BindView(R.id.rv_projectlist)
@@ -117,6 +115,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     LiveData<List<SyncStat>> syncdata;
     Observer<List<SyncStat>> syncObserver;
+    SyncingProjectAdapter syncAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -189,7 +188,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             // if sync complete, remove the downloading section from the item list
             // TODO check here how can we implement the form loading counter ???????????????????
             for( SyncStat stat : syncStats) {
-
+                if(stat.getStatus() == Constant.DownloadStatus.COMPLETED) {
+                    String completedProjectId = stat.getProjectId();
+                    // notifiy running syncing adapter the project sync has been completed
+                    if(syncAdapter != null) {
+                        syncAdapter.notifyProjectSyncStatusChange(completedProjectId);
+                    }
+                }
             }
 
         };
@@ -204,6 +209,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 adapter.disableAdapter(false);
             }
         };
+
         runningLiveData = SyncLocalSource3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING, Constant.DownloadStatus.QUEUED);
         runningLiveData.observe(this, runningLiveDataObserver);
 //        if (syncing) {
@@ -249,7 +255,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     void addInSyncList() {
         ArrayList<Project> syncProjectList = manageSyncList();
         Timber.i("=======>>>>> syncproject length = %d", syncProjectList.size());
-        SyncingProjectAdapter syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
+        syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
         rvSyncing.setLayoutManager(new LinearLayoutManager(this));
         rvSyncing.setAdapter(syncAdapter);
         tvUnsync.setVisibility(View.VISIBLE);
@@ -308,6 +314,15 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         if (projectIds != null && projectIds.hasObservers() && projectObserver != null) {
             projectIds.removeObserver(projectObserver);
         }
+
+        // close all sync listening observers from live data
+        if (syncdata != null && syncdata.hasObservers()) {
+            syncdata.removeObserver(syncObserver);
+        }
+        if (runningLiveData != null && runningLiveData.hasObservers()) {
+            runningLiveData.removeObserver(runningLiveDataObserver);
+        }
+
     }
 
     void manageNodata(boolean loading) {

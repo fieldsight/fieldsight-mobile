@@ -48,6 +48,22 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
         holder.itemView.findViewById(R.id.iv_cancel).setOnClickListener(v -> callback.onCancelClicked(position));
     }
 
+    public void notifyProjectSyncStatusChange(String projectId) {
+        // get the index of the selected project id
+        int foundIndex = -1;
+        for(int i = 0; i < this.projectList.size(); i++) {
+            if(projectId.equals(projectList.get(i).getId())) {
+                foundIndex = i;
+                break;
+            }
+        }
+
+        if(foundIndex > -1) {
+            this.projectList.get(foundIndex).setSynced(true);
+            notifyItemChanged(foundIndex);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return projectList.size();

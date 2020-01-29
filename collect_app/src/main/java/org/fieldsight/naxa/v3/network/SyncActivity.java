@@ -142,22 +142,22 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     }
 
-    // this class will manage the sync list to determine which should be synced
-    ArrayList<Syncable> createList() {
-        // -1 refers here as never started
-        return new ArrayList<Syncable>() {{
-            add(0, new Syncable("Regions and sites", auto, -1));
-            add(1, new Syncable("Forms", auto, -1));
-            add(2, new Syncable("Materials", auto, -1));
-        }};
-    }
+//    // this class will manage the sync list to determine which should be synced
+//    ArrayList<Syncable> createList() {
+//        // -1 refers here as never started
+//        return new ArrayList<Syncable>() {{
+//            add(0, new Syncable("Regions and sites", auto, -1));
+//            add(1, new Syncable("Forms", auto, -1));
+//            add(2, new Syncable("Materials", auto, -1));
+//        }};
+//    }
 
-    void createSyncableList(List<Project> selectedProjectList) {
-        syncableMap = new HashMap<>();
-        for (Project project : selectedProjectList) {
-            syncableMap.put(project.getId(), createList());
-        }
-    }
+//    void createSyncableList(List<Project> selectedProjectList) {
+//        syncableMap = new HashMap<>();
+//        for (Project project : selectedProjectList) {
+//            syncableMap.put(project.getId(), createList());
+//        }
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -224,11 +224,12 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     }
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {
-        String logString = "";
-        for (Syncable syncable : list) {
-            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.isSync();
-        }
-        return String.format("%s \n params = %s", projectName, logString);
+//        String logString = "";
+//        for (Syncable syncable : list) {
+//            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.isSync();
+//        }
+//        return String.format("%s \n params = %s", projectName, logString);
+        return "";
     }
 
     @Override
