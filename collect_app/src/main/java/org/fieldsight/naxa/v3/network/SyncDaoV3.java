@@ -23,6 +23,9 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
     @Query("SELECT * FROM syncstat")
     LiveData<List<SyncStat>> all();
 
+    @Query("SELECT project_id FROM syncstat")
+    String[] getProjectIds();
+
     @Query("SELECT * FROM syncstat where project_id = :projectId")
     LiveData<List<SyncStat>> filterByProjectId(String projectId);
 

@@ -166,9 +166,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //        tvSyncProject.setOnClickListener(v -> openDownloadAActivity());
         projectObserver = projectNameList -> {
             Timber.i("list live data = %d", projectNameList.size());
-            adapter.notifyProjectisSynced(projectNameList);
-            showSyncMenu = projectNameList.size() == 0 || projectNameList.size() < adapter.getItemCount();
-            invalidateOptionsMenu();
+//            adapter.notifyProjectisSynced(projectNameList);
+//            showSyncMenu = projectNameList.size() == 0 || projectNameList.size() < adapter.getItemCount();
+//            invalidateOptionsMenu();
+
+            // observes the running project
+
         };
 
 //        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -353,24 +356,48 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     void getDataFromServer() {
         ProjectRepository.getInstance().getAll(new LoadProjectCallback() {
             @Override
-            public void onProjectLoaded(List<Project> projects) {
+            public void onProjectLoaded(List<Project> mProjectList, boolean fromOnline) {
                 manageNodata(false);
-                // seprate sync and unsync data
-                List<Project> syncedProjects = new ArrayList<>();
-                List<Project> unSyncedProjects = new ArrayList<>();
+                /** seprate sync and unsync data
+                    check in syncstat table to findout which projects are synced or scheduled for sync already
+                    separate yet to sync projects and populate syncing and yet to sync in different adapter
+                 **/
+
+                /**
+                 *  get the project ids from sync stat table
+                 *  Check if project ids is empty or not
+                 *  if projectids is empty , none of the project are scheduled for the syncing
+                 *
+                  */
+
+                List<Project> mSyncedOrSyncingProjectList = new ArrayList<>();
+                List<Project> mUnSyncedProjectList = new ArrayList<>();
+
+                String[] syncStatprojectIds = SyncLocalSource3.getInstance().getProjectIdsFromSyncStat();
+
+                if(syncStatprojectIds.length == 0) {
+                    mUnSyncedProjectList.addAll(mProjectList);
+                } else {
+                    // separate the list
+                    for( int i = 0; i < mProjectList.size(); i ++) {
+                        int j;
+                        for(j = 0; j < syncStatprojectIds.length; j++) {
+                            if(mProjectList.get(i).equals(syncStatprojectIds[j])) {
+                                break;
+                            }
+                        }
+                        if(j == syncStatprojectIds.length) {
+                            mUnSyncedProjectList.add(mProjectList.get(i));
+                        } else {
+                            mSyncedOrSyncingProjectList.add(projectList.get(i));
+                        }
+                    }
+                    Timber.i(" getDataFromServer :: ===========>>>>>> syncProjectList Size = %d, unSyncProjectList size = %d", mSyncedOrSyncingProjectList.size(), mUnSyncedProjectList.size());
+                }
 
                 // check if the project is synced or not if the project is from online
-
-
-                for( Project project : projects) {
-                    if(project.isSynced()) {
-                        syncedProjects.add(project);
-                    } else {
-                        unSyncedProjects.add(project);
-                    }
-                }
-                adapter.clearAndUpdate(syncedProjects);
-                syncAdapter.updateAdapter(unSyncedProjects);
+                adapter.clearAndUpdate(mUnSyncedProjectList);
+                syncAdapter.updateAdapter(mSyncedOrSyncingProjectList);
                 if(projectIds == null || !projectIds.hasObservers()) {
                     refreshSyncStatus();
                 }

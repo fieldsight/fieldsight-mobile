@@ -97,7 +97,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                         if (NetworkUtils.isNetworkConnected()) {
                             getProjectFromRemoteSource(callback);
                         } else {
-                            callback.onProjectLoaded(projects);
+                            callback.onProjectLoaded(projects, false);
                         }
 
                     }
@@ -188,7 +188,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                     @Override
                     public void onSuccess(List<Project> list) {
                         localSource.save((ArrayList<Project>) list);
-                        callback.onProjectLoaded(list);
+                        callback.onProjectLoaded(list, true);
                     }
 
                     @Override

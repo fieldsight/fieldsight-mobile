@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
+import org.fieldsight.naxa.v3.project.ProjectDashboardActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
@@ -41,10 +43,10 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
             @Override
             void itemClicked(int index) {
                 Project project = projectList.get(index);
-//                if (project.isSynced()) {
-//                    ProjectDashboardActivity.start(viewGroup.getContext(), projectList.get(index));
-//                    return;
-//                }
+                if (project.isSynced()) {
+                    ProjectDashboardActivity.start(viewGroup.getContext(), projectList.get(index));
+                    return;
+                }
 //                boolean isSyncRunning = Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0
 //                        && Collect.syncableMap != null && Collect.syncableMap.size() > 0;
 //                Timber.i("ProjectListAdapter, isSyncRunning : " + isSyncRunning);
@@ -86,6 +88,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
         this.projectList.add(index, project);
         notifyItemChanged(index);
     }
+
 
     public boolean anyProjectSelectedForSync() {
         boolean found = false;
