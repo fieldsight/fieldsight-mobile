@@ -55,8 +55,6 @@ import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
-;
-
 public class ProjectListActivityV3 extends CollectAbstractActivity implements SyncingProjectAdapter.Callback {
     @BindView(R.id.rv_projectlist)
     RecyclerView rvProjectlist;
@@ -128,7 +126,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setTitle("Projects");
+
+        // adapter to manage the synced projects
         adapter = new ProjectListAdapter(projectList);
+        // adapter to manage the syncing and synced projects
+        syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
 
         observer = new RecyclerView.AdapterDataObserver() {
             @Override
@@ -156,6 +158,10 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             }
         };
 
+
+        rvSyncing.setLayoutManager(new LinearLayoutManager(this));
+        rvSyncing.setAdapter(syncAdapter);
+
         adapter.registerAdapterDataObserver(observer);
         rvProjectlist.setLayoutManager(new LinearLayoutManager(this));
         rvProjectlist.setAdapter(adapter);
@@ -166,21 +172,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //        tvSyncProject.setOnClickListener(v -> openDownloadAActivity());
         projectObserver = projectNameList -> {
             Timber.i("list live data = %d", projectNameList.size());
-//            adapter.notifyProjectisSynced(projectNameList);
-//            showSyncMenu = projectNameList.size() == 0 || projectNameList.size() < adapter.getItemCount();
-//            invalidateOptionsMenu();
-
-            // observes the running project
 
         };
 
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                getDataFromServer();
-//
-//            }
-//        });
 
         try {
             fixNullUrl();
@@ -223,11 +217,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //            enableDisableAdapter(syncing);
 //        }
 
-        // syncing
 
-        syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
-        rvSyncing.setLayoutManager(new LinearLayoutManager(this));
-        rvSyncing.setAdapter(syncAdapter);
 
     }
 
@@ -338,7 +328,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     }
 
     void manageNodata(boolean loading) {
-        if (adapter.getItemCount() == 0) {
+        if (syncAdapter.getItemCount() == 0 && adapter.getItemCount() == 0) {
             llNodata.setVisibility(View.VISIBLE);
             cvResync.setVisibility(loading ? View.GONE : View.VISIBLE);
         } else {
@@ -375,6 +365,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
                 String[] syncStatprojectIds = SyncLocalSource3.getInstance().getProjectIdsFromSyncStat();
 
+                Timber.i("getDataFromServer :: ===========>>>>>>>> syncprojectids = %d ", syncStatprojectIds.length);
+
                 if (syncStatprojectIds.length == 0) {
                     mUnSyncedProjectList.addAll(mProjectList);
                 } else {
@@ -386,10 +378,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                                 break;
                             }
                         }
+
+                        Timber.i("getDataFromServer :: ========>>>>>> j = %d", j);
                         if (j == syncStatprojectIds.length) {
                             mUnSyncedProjectList.add(mProjectList.get(i));
                         } else {
-                            mSyncedOrSyncingProjectList.add(projectList.get(i));
+                            mSyncedOrSyncingProjectList.add(mProjectList.get(i));
                         }
                     }
                     Timber.i(" getDataFromServer :: ===========>>>>>> syncProjectList Size = %d, unSyncProjectList size = %d", mSyncedOrSyncingProjectList.size(), mUnSyncedProjectList.size());
@@ -401,6 +395,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 if (projectIds == null || !projectIds.hasObservers()) {
                     refreshSyncStatus();
                 }
+                manageNodata(false);
             }
 
             @Override
