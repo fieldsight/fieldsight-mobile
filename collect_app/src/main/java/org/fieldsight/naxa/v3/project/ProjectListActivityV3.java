@@ -240,6 +240,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     private void startSyncing(ArrayList<Project> selectedProjectList) {
         if (NetworkUtils.isNetworkConnected()) {
             ToastUtils.showShortToast("Download starts");
+            updateSyncableMap(selectedProjectList);
             Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
             syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
             syncIntent.putExtra("selection", syncableMap);
@@ -259,6 +260,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         rvSyncing.setLayoutManager(new LinearLayoutManager(this));
         rvSyncing.setAdapter(syncAdapter);
         tvUnsync.setVisibility(View.VISIBLE);
+        startSyncing(syncProjectList);
     }
 
 

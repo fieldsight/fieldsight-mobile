@@ -18,6 +18,9 @@ public class Syncable implements Serializable {
     private int total;
     private int progress;
     public int status;
+    // sync is forcably set to true to allow all sites, forms, and others to downloads.
+
+    public boolean sync = true;
 
     /**
      * @param title  - title that is show in the list
@@ -34,6 +37,7 @@ public class Syncable implements Serializable {
         this.status = status;
         this.total = total;
         this.progress = progress;
+        this.sync = true;
     }
 
     public int getTotal() {
@@ -74,5 +78,9 @@ public class Syncable implements Serializable {
 
     public boolean isProgressBarEnabled() {
         return getTotal() > 0;
+    }
+
+    public boolean isSync() {
+        return this.sync;
     }
 }

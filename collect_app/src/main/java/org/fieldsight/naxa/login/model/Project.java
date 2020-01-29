@@ -334,6 +334,7 @@ public class Project implements Parcelable {
         isSyncedWithRemote = syncedWithRemote;
     }
 
+    @Ignore
     public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String url, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, int totalRegions, int totalSites, int totalUsers, int totalSubmissions, String terms_and_labels, List<SiteMetaAttribute> siteMetaAttributes) {
         this.id = id;
         this.name = name;
@@ -394,6 +395,7 @@ public class Project implements Parcelable {
         dest.writeTypedList(this.siteMetaAttributes);
     }
 
+    @Ignore
     protected Project(Parcel in) {
         this.id = in.readString();
         this.name = in.readString();
