@@ -22,6 +22,7 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
     }
 
     public interface Callback {
+        void syncedProjectClicked(Project project);
         void onCancelClicked(int pos);
     }
 
@@ -51,6 +52,11 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
     public void onBindViewHolder(@NonNull ProjectSyncViewholder holder, int position) {
         Project project = projectList.get(position);
         holder.bindView(project, false);
+        holder.itemView.setOnClickListener(v -> {
+            if(project.isSynced()) {
+                callback.syncedProjectClicked(project);
+            }
+        });
         holder.itemView.findViewById(R.id.iv_cancel).setOnClickListener(v -> callback.onCancelClicked(position));
     }
 

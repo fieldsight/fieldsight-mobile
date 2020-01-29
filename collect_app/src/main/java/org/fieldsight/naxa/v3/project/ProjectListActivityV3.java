@@ -359,8 +359,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             public void onProjectLoaded(List<Project> mProjectList, boolean fromOnline) {
                 manageNodata(false);
                 /** seprate sync and unsync data
-                    check in syncstat table to findout which projects are synced or scheduled for sync already
-                    separate yet to sync projects and populate syncing and yet to sync in different adapter
+                 check in syncstat table to findout which projects are synced or scheduled for sync already
+                 separate yet to sync projects and populate syncing and yet to sync in different adapter
                  **/
 
                 /**
@@ -368,25 +368,25 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                  *  Check if project ids is empty or not
                  *  if projectids is empty , none of the project are scheduled for the syncing
                  *
-                  */
+                 */
 
                 List<Project> mSyncedOrSyncingProjectList = new ArrayList<>();
                 List<Project> mUnSyncedProjectList = new ArrayList<>();
 
                 String[] syncStatprojectIds = SyncLocalSource3.getInstance().getProjectIdsFromSyncStat();
 
-                if(syncStatprojectIds.length == 0) {
+                if (syncStatprojectIds.length == 0) {
                     mUnSyncedProjectList.addAll(mProjectList);
                 } else {
                     // separate the list
-                    for( int i = 0; i < mProjectList.size(); i ++) {
+                    for (int i = 0; i < mProjectList.size(); i++) {
                         int j;
-                        for(j = 0; j < syncStatprojectIds.length; j++) {
-                            if(mProjectList.get(i).equals(syncStatprojectIds[j])) {
+                        for (j = 0; j < syncStatprojectIds.length; j++) {
+                            if (mProjectList.get(i).equals(syncStatprojectIds[j])) {
                                 break;
                             }
                         }
-                        if(j == syncStatprojectIds.length) {
+                        if (j == syncStatprojectIds.length) {
                             mUnSyncedProjectList.add(mProjectList.get(i));
                         } else {
                             mSyncedOrSyncingProjectList.add(projectList.get(i));
@@ -398,7 +398,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 // check if the project is synced or not if the project is from online
                 adapter.clearAndUpdate(mUnSyncedProjectList);
                 syncAdapter.updateAdapter(mSyncedOrSyncingProjectList);
-                if(projectIds == null || !projectIds.hasObservers()) {
+                if (projectIds == null || !projectIds.hasObservers()) {
                     refreshSyncStatus();
                 }
             }
@@ -525,6 +525,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 exit = true;
             }
         }
+    }
+
+    @Override
+    public void syncedProjectClicked(Project project) {
+        ProjectDashboardActivity.start(this, project);
     }
 
     @Override

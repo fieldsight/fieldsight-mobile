@@ -89,6 +89,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         tvSubmissions.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSubmissions()));
         tvSites.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSites()));
 
+
         if (!TextUtils.isEmpty(project.getUrl())) {
             loadImageWithFallback(itemView.getContext(), project.getUrl()).into(ivThumbnail);
         } else {
