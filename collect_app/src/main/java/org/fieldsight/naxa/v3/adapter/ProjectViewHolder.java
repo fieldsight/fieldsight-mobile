@@ -77,7 +77,7 @@ public class ProjectViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bindView(Project project, boolean allTrue, boolean disable) {
+    public void bindView(Project project, boolean disable) {
         primaryText.setText(project.getName());
         textView.setText(String.format("%s", project.getOrganizationName()));
         tvSyncedDate.setText(project.getStatusMessage());

@@ -12,9 +12,15 @@ import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.v3.adapter.ProjectSyncViewholder;
 import org.fieldsight.naxa.v3.adapter.ProjectViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewholder> {
+    public void updateAdapter(List<Project> syncProjectList) {
+        this.projectList.addAll(0,syncProjectList);
+        notifyItemRangeChanged(0, syncProjectList.size());
+    }
+
     public interface Callback {
         void onCancelClicked(int pos);
     }

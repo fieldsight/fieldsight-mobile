@@ -1,6 +1,5 @@
 package org.fieldsight.naxa.v3.adapter;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -10,29 +9,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
-import org.fieldsight.naxa.v3.network.SyncActivity;
-import org.fieldsight.naxa.v3.project.ProjectDashboardActivity;
-import org.odk.collect.android.application.Collect;
+
 import java.util.List;
-import timber.log.Timber;
 
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
     private final List<Project> projectList;
-    boolean allTrue;
     boolean disable = false;
-    public ProjectListAdapter(List<Project> projectList, boolean allTrue) {
+    public ProjectListAdapter(List<Project> projectList) {
         this.projectList = projectList;
-        this.allTrue = allTrue;
     }
 
-    public void toggleAllSelected(boolean allSelected) {
-        this.allTrue = allSelected;
-    }
+//    public void toggleAllSelected(boolean allSelected) {
+//        this.allTrue = allSelected;
+//    }
 
-    public void toggleAllSelectedAndNotify(boolean allSelected) {
-        this.allTrue = allSelected;
-        notifyDataSetChanged();
-    }
+//    public void toggleAllSelectedAndNotify(boolean allSelected) {
+//        this.allTrue = allSelected;
+//        notifyDataSetChanged();
+//    }
 
     @NonNull
     @Override
@@ -47,20 +41,20 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
             @Override
             void itemClicked(int index) {
                 Project project = projectList.get(index);
-                if (project.isSynced()) {
-                    ProjectDashboardActivity.start(viewGroup.getContext(), projectList.get(index));
-                    return;
-                }
-                boolean isSyncRunning = Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0
-                        && Collect.syncableMap != null && Collect.syncableMap.size() > 0;
-                Timber.i("ProjectListAdapter, isSyncRunning : " + isSyncRunning);
-                if (isSyncRunning) {
-                    viewGroup.getContext().startActivity(new Intent(viewGroup.getContext(), SyncActivity.class));
-                    return;
-                } else {
+//                if (project.isSynced()) {
+//                    ProjectDashboardActivity.start(viewGroup.getContext(), projectList.get(index));
+//                    return;
+//                }
+//                boolean isSyncRunning = Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0
+//                        && Collect.syncableMap != null && Collect.syncableMap.size() > 0;
+//                Timber.i("ProjectListAdapter, isSyncRunning : " + isSyncRunning);
+//                if (isSyncRunning) {
+//                    viewGroup.getContext().startActivity(new Intent(viewGroup.getContext(), SyncActivity.class));
+//                    return;
+//                } else {
                     project.setChecked(!project.isChecked());
                     notifyItemChanged(index);
-                }
+//                }
             }
         };
     }
@@ -113,7 +107,7 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder projectViewHolder, int i) {
-        projectViewHolder.bindView(projectList.get(i), allTrue, disable);
+        projectViewHolder.bindView(projectList.get(i), disable);
     }
 
     @Override

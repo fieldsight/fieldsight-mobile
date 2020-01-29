@@ -93,6 +93,8 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         return dao.getAllSiteSyncingProject();
     }
 
+
+
     public Single<SyncStat> getFailedUrls(String projectId, int type) {
         return dao.getFailedUrls(projectId, type);
     }
