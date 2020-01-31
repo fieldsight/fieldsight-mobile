@@ -119,6 +119,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             Syncable educationAndMaterialSyncStat  = syncableList.get(2);
             if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
                 downloadingSection.setVisibility(View.GONE);
+                ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
             } else {
                 StringBuilder failedSync = new StringBuilder();
                 if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED) {
@@ -136,8 +137,10 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                     downloadingSection.setVisibility(View.VISIBLE);
                     tvDownloading.setText(failedSync.toString() + " failed to sync");
                     tvDownloading.setTextColor(Color.parseColor("#FF0000"));
+                    ivCancel.setImageResource(R.drawable.ic_refresh);
                 } else {
                     downloadingSection.setVisibility(View.VISIBLE);
+                    ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
                 }
             }
         }
