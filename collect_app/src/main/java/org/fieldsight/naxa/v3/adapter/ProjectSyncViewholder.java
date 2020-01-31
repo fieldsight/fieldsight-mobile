@@ -120,6 +120,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
                 downloadingSection.setVisibility(View.GONE);
                 ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
+                hasSyncComplete(getLayoutPosition());
             } else {
                 StringBuilder failedSync = new StringBuilder();
                 if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED) {
@@ -130,7 +131,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 }
 
                 if(educationAndMaterialSyncStat.status == Constant.DownloadStatus.FAILED) {
-                    failedSync.append(formSyncStat.getTitle());
+                    failedSync.append(educationAndMaterialSyncStat.getTitle());
                 }
 
                 if(failedSync.length() > 0) {
@@ -138,12 +139,17 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                     tvDownloading.setText(failedSync.toString() + " failed to sync");
                     tvDownloading.setTextColor(Color.parseColor("#FF0000"));
                     ivCancel.setImageResource(R.drawable.ic_refresh);
+                    hasSyncComplete(getLayoutPosition());
                 } else {
                     downloadingSection.setVisibility(View.VISIBLE);
                     ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
                 }
             }
         }
+
+    }
+
+    public void hasSyncComplete(int index) {
 
     }
 }
