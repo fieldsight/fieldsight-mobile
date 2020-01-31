@@ -46,9 +46,15 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
     @Query("DELETE FROM syncstat")
     void delete();
 
-    @Query("SELECT project_id, created_date, status FROM syncstat WHERE type=0 AND status > 0")
+    @Query("SELECT project_id, created_date, status FROM syncstat WHERE status > 0 AND status < 4")
     LiveData<List<ProjectNameTuple>> getAllSiteSyncingProject();
 
     @Query("SELECT * from syncstat WHERE project_id=:projectId AND type=:type")
     Single<SyncStat> getFailedUrls(String projectId, int type);
+
+    @Query("SELECT project_id FROM syncstat WHERE (type = 0 AND status=4) AND (type = 1 AND status =4) AND (type = 2 AND status = 4)")
+    String[] getSyncedProjectIds();
+
+    @Query("SELECT * FROM syncstat WHERE project_id in (:projectIds)")
+    LiveData<List<SyncStat>> getSyncStatus(String... projectIds);
 }

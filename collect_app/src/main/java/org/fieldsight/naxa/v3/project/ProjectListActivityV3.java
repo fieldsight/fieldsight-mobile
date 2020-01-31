@@ -180,8 +180,26 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         manageNodata(true);
 
 //        tvSyncProject.setOnClickListener(v -> openDownloadAActivity());
+        /**
+         * regions and sites type = 0
+         * forms type = 1
+         * education materials type = 2
+         */
+
         projectObserver = projectNameList -> {
             Timber.i("list live data = %d", projectNameList.size());
+
+//            // check if project is completed or not
+//            for(String key : syncableMap.keySet()) {
+//                List<Syncable> syncableList = syncableMap.get(key);
+//                boolean isSiteSynced = false, isFormSynced = false, isEducationMaterialSynced = false;
+//                for(int i = 0; i < projectNameList.size(); i ++ ) {
+//                   ProjectNameTuple projectNameTuple = projectNameList.get(i);
+//                   if(!projectNameTuple.projectId.equals(key)) continue;
+//                   // get the type from list
+//
+//                }
+//            }
 
         };
 
@@ -244,6 +262,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     private void updateSyncableMap(List<Project> selectedProjectList) {
         if (syncableMap == null) {
             syncableMap = new HashMap<>();
+        } else {
+            syncableMap.clear();
         }
         for (Project project : selectedProjectList) {
             syncableMap.put(project.getId(), createList());
@@ -268,12 +288,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     @OnClick(R.id.tv_sync_project)
     void addInSyncList() {
-        List<Project> toSyncList = manageSyncList();
-        this.syncProjectList.addAll(0, toSyncList);
-        syncAdapter.updateAdapter(toSyncList);
+        ArrayList<Project> toSyncList = manageSyncList();
 
+        this.syncProjectList.addAll(0, toSyncList);
+        syncAdapter.notifyItemRangeChanged(0, toSyncList.size()-1);
         tvUnsync.setVisibility(View.VISIBLE);
-        startSyncing(syncProjectList);
+
+        startSyncing(toSyncList);
         // hide sync button when sync started
         tvSyncProject.setVisibility(View.GONE);
     }
@@ -374,7 +395,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                  *
                  */
 
-                String[] syncStatprojectIds = SyncLocalSource3.getInstance().getProjectIdsFromSyncStat();
+                String[] syncStatprojectIds = SyncLocalSource3.getInstance().getSyncedProjectIds();
 
                 Timber.i("getDataFromServer :: ===========>>>>>>>> sync project ids = %d ", syncStatprojectIds.length);
 
@@ -384,30 +405,32 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                     // separate the list
                     for (int i = 0; i < mProjectList.size(); i++) {
                         int j;
+                        boolean found = false;
                         for (j = 0; j < syncStatprojectIds.length; j++) {
-                            if (mProjectList.get(i).equals(syncStatprojectIds[j])) {
+                            if (mProjectList.get(i).getId().equals(syncStatprojectIds[j])) {
+                                found = true;
                                 break;
                             }
                         }
 
-                        Timber.i("getDataFromServer :: ========>>>>>> j = %d", j);
-                        if (j == syncStatprojectIds.length) {
-                            unSyncedprojectList.add(mProjectList.get(i));
-                        } else {
+                        Timber.i("getDataFromServer :: ========>>>>>> found = " + found);
+                        if (found) {
                             syncProjectList.add(mProjectList.get(i));
+                        } else {
+                            unSyncedprojectList.add(mProjectList.get(i));
                         }
                     }
-                    Timber.i(" getDataFromServer :: ===========>>>>>> syncProjectList Size = %d, unSyncProjectList size = %d", unSyncedprojectList.size(), syncProjectList.size());
                 }
 
                 // check if the project is synced or not if the project is from online
-
-                unSyncedAdapter.clearAndUpdate(unSyncedprojectList);
-                syncAdapter.updateAdapter(syncProjectList);
-
-                if (projectIds == null || !projectIds.hasObservers()) {
-                    refreshSyncStatus();
+                Timber.i(" getDataFromServer :: ===========>>>>>> syncProjectList Size = %d, unSyncProjectList size = %d", unSyncedprojectList.size(), syncProjectList.size());
+                unSyncedAdapter.notifyDataSetChanged();
+                if(syncProjectList.size() > 0) {
+                    syncAdapter.notifyDataSetChanged();
                 }
+
+                refreshSyncStatus();
+
                 manageNodata(false);
             }
 
@@ -420,9 +443,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     }
 
     //    Clear the sync PROJECT list and add the selected projects
-    List<Project> manageSyncList() {
-        List<Project> checkedProjectList = new ArrayList<>();
-        List<Project> unCheckedProjectList = new ArrayList<>();
+    ArrayList<Project> manageSyncList() {
+        ArrayList<Project> checkedProjectList = new ArrayList<>();
+        ArrayList<Project> unCheckedProjectList = new ArrayList<>();
 
         for (int i = 0; i < unSyncedprojectList.size(); i++) {
             Project project = unSyncedprojectList.get(i);
@@ -432,10 +455,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 unCheckedProjectList.add(project);
             }
         }
+
         this.unSyncedprojectList.clear();
         this.unSyncedprojectList.addAll(unCheckedProjectList);
-        unSyncedAdapter.clearAndUpdate(unCheckedProjectList);
+        unSyncedAdapter.notifyDataSetChanged();
 
+        Timber.i("manageSyncList ==========>>>>>>>> checkedProjectList size = %d ", checkedProjectList.size());
         return checkedProjectList;
     }
 
