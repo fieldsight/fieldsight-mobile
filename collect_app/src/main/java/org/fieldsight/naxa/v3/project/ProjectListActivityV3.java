@@ -291,7 +291,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         ArrayList<Project> toSyncList = manageSyncList();
 
         this.syncProjectList.addAll(0, toSyncList);
-        syncAdapter.notifyItemRangeChanged(0, toSyncList.size()-1);
+        syncAdapter.notifyDataSetChanged();
         tvUnsync.setVisibility(View.VISIBLE);
 
         startSyncing(toSyncList);
