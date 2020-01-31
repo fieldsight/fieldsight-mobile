@@ -55,6 +55,14 @@ import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
+/** TODO
+ * retry handle the failed
+ * last synced on
+ * date time format today, yesterday, and date
+ * discuss :: add sentence on the top of project list
+ *
+ */
+
 public class ProjectListActivityV3 extends CollectAbstractActivity implements SyncingProjectAdapter.Callback {
     @BindView(R.id.rv_projectlist)
     RecyclerView rvProjectlist;
@@ -86,8 +94,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     @BindView(R.id.tv_unsync)
     TextView tvUnsync;
 
-    ProjectListAdapter adapter;
-    List<Project> projectList = new ArrayList<>();
+    ProjectListAdapter unSyncedAdapter;
+
 
     RecyclerView.AdapterDataObserver observer;
 
@@ -118,6 +126,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     // for syncing
     ArrayList<Project> syncProjectList = new ArrayList<>();
+    // unsynced array list i.e. yet to sync
+    List<Project> unSyncedprojectList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,7 +138,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         setTitle("Projects");
 
         // adapter to manage the synced projects
-        adapter = new ProjectListAdapter(projectList);
+        unSyncedAdapter = new ProjectListAdapter(unSyncedprojectList);
         // adapter to manage the syncing and synced projects
         syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
 
@@ -137,13 +147,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
                 super.onItemRangeChanged(positionStart, itemCount, payload);
                 int selectedNum;
-                for (selectedNum = 0; selectedNum < projectList.size(); selectedNum++) {
-                    if (projectList.get(selectedNum).isChecked()) {
+                for (selectedNum = 0; selectedNum < unSyncedprojectList.size(); selectedNum++) {
+                    if (unSyncedprojectList.get(selectedNum).isChecked()) {
                         break;
                     }
                 }
                 Timber.d("project list counter is %d", selectedNum);
-                if (selectedNum == projectList.size()) {
+                if (selectedNum == unSyncedprojectList.size()) {
                     tvSyncProject.setVisibility(View.GONE);
                     allSelected = false;
 //                    tvSync.setVisibility(View.GONE);
@@ -162,9 +172,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         rvSyncing.setLayoutManager(new LinearLayoutManager(this));
         rvSyncing.setAdapter(syncAdapter);
 
-        adapter.registerAdapterDataObserver(observer);
+        unSyncedAdapter.registerAdapterDataObserver(observer);
         rvProjectlist.setLayoutManager(new LinearLayoutManager(this));
-        rvProjectlist.setAdapter(adapter);
+        rvProjectlist.setAdapter(unSyncedAdapter);
 
         getDataFromServer();
         manageNodata(true);
@@ -207,7 +217,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             Timber.i("SyncActivity ===============>>>>> syncing::  count = %d", count);
             if (count == 0) {
                 Timber.i("SyncActivity ===============>>> enable called");
-                adapter.disableAdapter(false);
+                unSyncedAdapter.disableAdapter(false);
             }
         };
 
@@ -248,7 +258,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
             syncIntent.putExtra("selection", syncableMap);
             startService(syncIntent);
-            adapter.disableAdapter(true);
+
+            unSyncedAdapter.disableAdapter(true);
             syncStarts = true;
         } else {
             Toast.makeText(this, getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
@@ -257,12 +268,15 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     @OnClick(R.id.tv_sync_project)
     void addInSyncList() {
-        this.syncProjectList = manageSyncList();
-        syncAdapter.updateAdapter(syncProjectList);
+        List<Project> toSyncList = manageSyncList();
+        this.syncProjectList.addAll(0, toSyncList);
+        syncAdapter.updateAdapter(toSyncList);
+
         tvUnsync.setVisibility(View.VISIBLE);
         startSyncing(syncProjectList);
+        // hide sync button when sync started
+        tvSyncProject.setVisibility(View.GONE);
     }
-
 
     private void fixNullUrl() throws Exception {
         FSInstancesDao instancesDao = new FSInstancesDao();
@@ -291,8 +305,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     @Override
     protected void onResume() {
         super.onResume();
-        Timber.i("ProjectListActivityv3 :: anyProject checked = " + adapter.anyProjectSelectedForSync());
-        if (tvSyncProject.getVisibility() == View.VISIBLE && !adapter.anyProjectSelectedForSync()) {
+        Timber.i("ProjectListActivityv3 :: anyProject checked = " + unSyncedAdapter.anyProjectSelectedForSync());
+        if (tvSyncProject.getVisibility() == View.VISIBLE && !unSyncedAdapter.anyProjectSelectedForSync()) {
             tvSyncProject.setVisibility(View.GONE);
         }
     }
@@ -311,7 +325,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     protected void onDestroy() {
         super.onDestroy();
         if (observer != null) {
-            adapter.unregisterAdapterDataObserver(observer);
+            unSyncedAdapter.unregisterAdapterDataObserver(observer);
         }
         if (projectIds != null && projectIds.hasObservers() && projectObserver != null) {
             projectIds.removeObserver(projectObserver);
@@ -328,7 +342,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     }
 
     void manageNodata(boolean loading) {
-        if (syncAdapter.getItemCount() == 0 && adapter.getItemCount() == 0) {
+        if (syncAdapter.getItemCount() == 0 && unSyncedAdapter.getItemCount() == 0) {
             llNodata.setVisibility(View.VISIBLE);
             cvResync.setVisibility(loading ? View.GONE : View.VISIBLE);
         } else {
@@ -360,15 +374,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                  *
                  */
 
-                List<Project> mSyncedOrSyncingProjectList = new ArrayList<>();
-                List<Project> mUnSyncedProjectList = new ArrayList<>();
-
                 String[] syncStatprojectIds = SyncLocalSource3.getInstance().getProjectIdsFromSyncStat();
 
-                Timber.i("getDataFromServer :: ===========>>>>>>>> syncprojectids = %d ", syncStatprojectIds.length);
+                Timber.i("getDataFromServer :: ===========>>>>>>>> sync project ids = %d ", syncStatprojectIds.length);
 
                 if (syncStatprojectIds.length == 0) {
-                    mUnSyncedProjectList.addAll(mProjectList);
+                    unSyncedprojectList.addAll(mProjectList);
                 } else {
                     // separate the list
                     for (int i = 0; i < mProjectList.size(); i++) {
@@ -381,17 +392,19 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
                         Timber.i("getDataFromServer :: ========>>>>>> j = %d", j);
                         if (j == syncStatprojectIds.length) {
-                            mUnSyncedProjectList.add(mProjectList.get(i));
+                            unSyncedprojectList.add(mProjectList.get(i));
                         } else {
-                            mSyncedOrSyncingProjectList.add(mProjectList.get(i));
+                            syncProjectList.add(mProjectList.get(i));
                         }
                     }
-                    Timber.i(" getDataFromServer :: ===========>>>>>> syncProjectList Size = %d, unSyncProjectList size = %d", mSyncedOrSyncingProjectList.size(), mUnSyncedProjectList.size());
+                    Timber.i(" getDataFromServer :: ===========>>>>>> syncProjectList Size = %d, unSyncProjectList size = %d", unSyncedprojectList.size(), syncProjectList.size());
                 }
 
                 // check if the project is synced or not if the project is from online
-                adapter.clearAndUpdate(mUnSyncedProjectList);
-                syncAdapter.updateAdapter(mSyncedOrSyncingProjectList);
+
+                unSyncedAdapter.clearAndUpdate(unSyncedprojectList);
+                syncAdapter.updateAdapter(syncProjectList);
+
                 if (projectIds == null || !projectIds.hasObservers()) {
                     refreshSyncStatus();
                 }
@@ -407,18 +420,23 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     }
 
     //    Clear the sync PROJECT list and add the selected projects
-    ArrayList<Project> manageSyncList() {
-        ArrayList<Project> syncProjectList = new ArrayList<>();
-        ArrayList<Project> filteredList = new ArrayList<>();
-        for (int i = 0; i < projectList.size(); i++) {
-            Project project = projectList.get(i);
+    List<Project> manageSyncList() {
+        List<Project> checkedProjectList = new ArrayList<>();
+        List<Project> unCheckedProjectList = new ArrayList<>();
+
+        for (int i = 0; i < unSyncedprojectList.size(); i++) {
+            Project project = unSyncedprojectList.get(i);
             if (project.isChecked()) {
-                syncProjectList.add(project);
+                checkedProjectList.add(project);
             } else {
-                filteredList.add(project);
+                unCheckedProjectList.add(project);
             }
         }
-        return syncProjectList;
+        this.unSyncedprojectList.clear();
+        this.unSyncedprojectList.addAll(unCheckedProjectList);
+        unSyncedAdapter.clearAndUpdate(unCheckedProjectList);
+
+        return checkedProjectList;
     }
 
 //    void openDownloadAActivity() {
@@ -532,7 +550,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         Timber.i("cancel clicked");
         Project project = ((SyncingProjectAdapter) rvSyncing.getAdapter()).popItem(pos);
         project.setChecked(false);
-        adapter.push(project, pos);
+        unSyncedAdapter.push(project, pos);
     }
 }
 

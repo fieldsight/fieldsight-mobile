@@ -2,32 +2,27 @@ package org.fieldsight.naxa.v3.network;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.bcss.collect.android.R;;
-import org.odk.collect.android.application.Collect;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.forms.FieldSightFormDownloadList;
 import org.fieldsight.naxa.login.model.Project;
-import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.v3.adapter.SyncAdapterv3;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ApplicationConstants;
-import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +32,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+
+;
 
 public class SyncActivity extends CollectAbstractActivity implements SyncAdapterCallback {
     @BindView(R.id.toolbar)
