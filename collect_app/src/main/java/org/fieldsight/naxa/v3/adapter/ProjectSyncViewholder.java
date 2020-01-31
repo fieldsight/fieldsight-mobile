@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.login.model.Project;
+import org.fieldsight.naxa.onboarding.SyncableItem;
 import org.fieldsight.naxa.v3.network.Syncable;
 
 import java.util.HashMap;
@@ -86,7 +87,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bindView(Project project, boolean allTrue, HashMap<String, List<Syncable>> syncableMap) {
+    public void bindView(Project project, boolean allTrue, List<Syncable> syncableList) {
         primaryText.setText(project.getName());
         textView.setText(String.format("%s", project.getOrganizationName()));
         tvSyncedDate.setText(project.getStatusMessage());
@@ -101,53 +102,55 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         if (!TextUtils.isEmpty(project.getUrl())) {
             loadImageWithFallback(itemView.getContext(), project.getUrl()).into(ivThumbnail);
         } else {
-           ivThumbnail.setImageResource(R.drawable.fieldsight_logo);
+            ivThumbnail.setImageResource(R.drawable.fieldsight_logo);
         }
-        updateBySyncStat(syncableMap);
+        if (syncableList != null && syncableList.size() > 0)
+            updateBySyncStat(syncableList);
 
     }
 
-    private void updateBySyncStat(HashMap<String, List<Syncable>> syncableMap) {
-        for (String key : syncableMap.keySet()) {
-            // key -> projectId
-            // 0 -> sites and regions
-            // 1 -> forms
-            // 2 - education materials
-            List<Syncable> syncableList = syncableMap.get(key);
-            Syncable sitesAndRegionsSyncStat  = syncableList.get(0);
-            Syncable formSyncStat  = syncableList.get(1);
-            Syncable educationAndMaterialSyncStat  = syncableList.get(2);
-            if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
-                downloadingSection.setVisibility(View.GONE);
-                ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
+    private void updateBySyncStat(List<Syncable> syncableList) {
+//        for (String key : syncableMap.keySet()) {
+        // key -> projectId
+        // 0 -> sites and regions
+        // 1 -> forms
+        // 2 - education materials
+//            List<Syncable> syncableList = syncableMap.get(key);
+        Syncable sitesAndRegionsSyncStat = syncableList.get(0);
+        Syncable formSyncStat = syncableList.get(1);
+        Syncable educationAndMaterialSyncStat = syncableList.get(2);
+        tvDownloading.setText("Downloading");
+        if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
+            downloadingSection.setVisibility(View.GONE);
+            ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
+            hasSyncComplete(getLayoutPosition());
+        } else {
+            StringBuilder failedSync = new StringBuilder();
+            if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED) {
+                failedSync.append(sitesAndRegionsSyncStat.getTitle() + ", ");
+            }
+            if (formSyncStat.status == Constant.DownloadStatus.FAILED) {
+                failedSync.append(formSyncStat.getTitle() + ", ");
+            }
+
+            if (educationAndMaterialSyncStat.status == Constant.DownloadStatus.FAILED) {
+                failedSync.append(educationAndMaterialSyncStat.getTitle());
+            }
+
+            if (failedSync.length() > 0) {
+                downloadingSection.setVisibility(View.VISIBLE);
+                tvDownloading.setText(failedSync.toString() + " failed to sync");
+                tvDownloading.setTextColor(Color.parseColor("#FF0000"));
+                ivCancel.setImageResource(R.drawable.ic_refresh);
                 hasSyncComplete(getLayoutPosition());
             } else {
-                StringBuilder failedSync = new StringBuilder();
-                if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED) {
-                    failedSync.append(sitesAndRegionsSyncStat.getTitle() + ", ");
-                }
-                if(formSyncStat.status == Constant.DownloadStatus.FAILED) {
-                    failedSync.append(formSyncStat.getTitle() + ", ");
-                }
-
-                if(educationAndMaterialSyncStat.status == Constant.DownloadStatus.FAILED) {
-                    failedSync.append(educationAndMaterialSyncStat.getTitle());
-                }
-
-                if(failedSync.length() > 0) {
-                    downloadingSection.setVisibility(View.VISIBLE);
-                    tvDownloading.setText(failedSync.toString() + " failed to sync");
-                    tvDownloading.setTextColor(Color.parseColor("#FF0000"));
-                    ivCancel.setImageResource(R.drawable.ic_refresh);
-                    hasSyncComplete(getLayoutPosition());
-                } else {
-                    downloadingSection.setVisibility(View.VISIBLE);
-                    ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
-                }
+                downloadingSection.setVisibility(View.VISIBLE);
+                ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
             }
         }
-
     }
+
+//    }
 
     public void hasSyncComplete(int index) {
 

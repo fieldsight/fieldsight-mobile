@@ -62,7 +62,7 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
     @Override
     public void onBindViewHolder(@NonNull ProjectSyncViewholder holder, int position) {
         Project project = projectList.get(position);
-        holder.bindView(project, false, syncableMap);
+        holder.bindView(project, false, syncableMap.containsKey(project.getId()) ? syncableMap.get(project.getId()) : null);
         holder.itemView.setOnClickListener(v -> {
             if(project.isSynced()) {
                 callback.syncedProjectClicked(project);
