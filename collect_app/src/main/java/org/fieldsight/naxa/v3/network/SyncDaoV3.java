@@ -57,4 +57,11 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
 
     @Query("SELECT * FROM syncstat WHERE project_id in (:projectIds)")
     LiveData<List<SyncStat>> getSyncStatus(String... projectIds);
+
+    @Query("SELECT * FROM syncstat WHERE status > 0 AND status < 4")
+    List<SyncStat> getRunningSyncStatList();
+
+    @Query("SELECT * FROM syncstat")
+    List<SyncStat> getAllItems();
+
 }

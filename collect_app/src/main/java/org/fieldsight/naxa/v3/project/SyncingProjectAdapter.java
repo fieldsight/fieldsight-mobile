@@ -11,15 +11,20 @@ import org.bcss.collect.android.R;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.v3.adapter.ProjectSyncViewholder;
 import org.fieldsight.naxa.v3.adapter.ProjectViewHolder;
+import org.fieldsight.naxa.v3.network.Syncable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewholder> {
+
     public void updateAdapter(List<Project> syncProjectList) {
         this.projectList.addAll(0,syncProjectList);
         notifyItemRangeChanged(0, syncProjectList.size());
     }
+
+
 
     public interface Callback {
         void syncedProjectClicked(Project project);
@@ -28,6 +33,7 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
 
     List<Project> projectList;
     Callback callback;
+    HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
 
     public SyncingProjectAdapter(List<Project> projectList, Callback callback) {
         this.projectList = projectList;
@@ -51,13 +57,19 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
     @Override
     public void onBindViewHolder(@NonNull ProjectSyncViewholder holder, int position) {
         Project project = projectList.get(position);
-        holder.bindView(project, false);
+        holder.bindView(project, false, syncableMap);
         holder.itemView.setOnClickListener(v -> {
             if(project.isSynced()) {
                 callback.syncedProjectClicked(project);
             }
         });
+
         holder.itemView.findViewById(R.id.iv_cancel).setOnClickListener(v -> callback.onCancelClicked(position));
+    }
+
+    public void updateSyncMap(HashMap<String, List<Syncable>> syncableMap) {
+        this.syncableMap = syncableMap;
+        notifyDataSetChanged();
     }
 
     public void notifyProjectSyncStatusChange(String projectId) {

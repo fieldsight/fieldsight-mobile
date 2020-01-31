@@ -55,12 +55,12 @@ import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
-/** TODO
+/**
+ * TODO
  * retry handle the failed
  * last synced on
  * date time format today, yesterday, and date
  * discuss :: add sentence on the top of project list
- *
  */
 
 public class ProjectListActivityV3 extends CollectAbstractActivity implements SyncingProjectAdapter.Callback {
@@ -111,7 +111,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     boolean syncStarts = false;
 
     // Hashmap to track the syncing progress
-    HashMap<String, List<Syncable>> syncableMap;
+    HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
 
     // livedata for runnning live data observer
     LiveData<Integer> runningLiveData;
@@ -217,14 +217,15 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             // if sync complete, remove the downloading section from the item list
             // TODO check here how can we implement the form loading counter ???????????????????
             for (SyncStat stat : syncStats) {
-                if (stat.getStatus() == Constant.DownloadStatus.COMPLETED) {
-                    String completedProjectId = stat.getProjectId();
-                    // notifiy running syncing adapter the project sync has been completed
-                    if (syncAdapter != null) {
-                        syncAdapter.notifyProjectSyncStatusChange(completedProjectId);
-                    }
+                String projectId = stat.getProjectId();
+                if (syncableMap.containsKey(projectId)) {
+                    List<Syncable> syncableList = syncableMap.get(projectId);
+                    syncableList.get(Integer.parseInt(stat.getType())).setStatus(stat.getStatus());
+                    syncableMap.put(projectId, syncableList);
                 }
             }
+
+            syncAdapter.updateSyncMap(syncableMap);
 
         };
 
@@ -244,9 +245,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //        if (syncing) {
 //            enableDisableAdapter(syncing);
 //        }
-
-
-
     }
 
     // this class will manage the sync list to determine which should be synced
@@ -260,11 +258,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     }
 
     private void updateSyncableMap(List<Project> selectedProjectList) {
-        if (syncableMap == null) {
-            syncableMap = new HashMap<>();
-        } else {
-            syncableMap.clear();
-        }
+       if(syncableMap.size() > 0) syncableMap.clear();
         for (Project project : selectedProjectList) {
             syncableMap.put(project.getId(), createList());
         }
@@ -374,8 +368,23 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     }
 
     void refreshSyncStatus() {
-        projectIds = SyncLocalSource3.getInstance().getAllSiteSyncingProject();
-        projectIds.observe(ProjectListActivityV3.this, projectObserver);
+        List<SyncStat> mSyncStatList = SyncLocalSource3.getInstance().getAllList();
+        for(SyncStat stat : mSyncStatList) {
+            String title = stat.getType().equals("0") ? "Sites and Regions" : stat.getType().equals("1") ? " forms" : "Education Materials";
+            Syncable syncable = new Syncable(title, stat.getStatus());
+            if(syncableMap.containsKey(stat.getProjectId())) {
+                List<Syncable> syncableList = syncableMap.get(stat.getProjectId());
+                syncableList.add(syncable);
+                syncableMap.put(stat.getProjectId(), syncableList);
+            } else {
+                List<Syncable> mSyncableList = new ArrayList<>();
+                mSyncableList.add(syncable);
+                syncableMap.put(stat.getProjectId(), mSyncableList);
+            }
+        }
+        syncAdapter.updateSyncMap(syncableMap);
+
+//        projectIds.observe(ProjectListActivityV3.this, projectObserver);
     }
 
     void getDataFromServer() {
@@ -395,19 +404,19 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                  *
                  */
 
-                String[] syncStatprojectIds = SyncLocalSource3.getInstance().getSyncedProjectIds();
+                List<SyncStat> mSyncStatList = SyncLocalSource3.getInstance().getAllList();
 
-                Timber.i("getDataFromServer :: ===========>>>>>>>> sync project ids = %d ", syncStatprojectIds.length);
+                Timber.i("getDataFromServer :: ===========>>>>>>>> sync project ids = %d ", mSyncStatList.size());
 
-                if (syncStatprojectIds.length == 0) {
+                if (mSyncStatList.size() == 0) {
                     unSyncedprojectList.addAll(mProjectList);
                 } else {
                     // separate the list
                     for (int i = 0; i < mProjectList.size(); i++) {
                         int j;
                         boolean found = false;
-                        for (j = 0; j < syncStatprojectIds.length; j++) {
-                            if (mProjectList.get(i).getId().equals(syncStatprojectIds[j])) {
+                        for (j = 0; j < mSyncStatList.size(); j++) {
+                            if (mProjectList.get(i).getId().equals(mSyncStatList.get(j).getProjectId())) {
                                 found = true;
                                 break;
                             }
@@ -425,7 +434,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 // check if the project is synced or not if the project is from online
                 Timber.i(" getDataFromServer :: ===========>>>>>> syncProjectList Size = %d, unSyncProjectList size = %d", unSyncedprojectList.size(), syncProjectList.size());
                 unSyncedAdapter.notifyDataSetChanged();
-                if(syncProjectList.size() > 0) {
+                if (syncProjectList.size() > 0) {
                     syncAdapter.notifyDataSetChanged();
                 }
 

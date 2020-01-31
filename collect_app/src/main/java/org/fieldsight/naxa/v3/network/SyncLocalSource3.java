@@ -94,6 +94,10 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         return dao.getAllSiteSyncingProject();
     }
 
+    public List<SyncStat> getRunningSyncStat () {
+        return dao.getRunningSyncStatList();
+    }
+
     public String[] getProjectIdsFromSyncStat() {
         return dao.getProjectIds();
     }
@@ -102,6 +106,9 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         return dao.getSyncedProjectIds();
     }
 
+    public List<SyncStat> getAllList() {
+        return dao.getAllItems();
+    }
 
     public LiveData<List<SyncStat>> getSyncStatusByProjectIds(String... projectIds){
         return dao.getSyncStatus(projectIds);

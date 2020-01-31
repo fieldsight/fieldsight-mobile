@@ -1,6 +1,7 @@
 package org.fieldsight.naxa.v3.adapter;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,8 +16,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.bcss.collect.android.R;
+import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.login.model.Project;
+import org.fieldsight.naxa.v3.network.Syncable;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -70,6 +75,9 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
     @BindView(R.id.iv_cancel)
     ImageView ivCancel;
 
+    @BindView(R.id.tv_downloading)
+    TextView tvDownloading;
+
     @BindView(R.id.ll_downloading_section)
     LinearLayout downloadingSection;
 
@@ -78,7 +86,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bindView(Project project, boolean allTrue) {
+    public void bindView(Project project, boolean allTrue, HashMap<String, List<Syncable>> syncableMap) {
         primaryText.setText(project.getName());
         textView.setText(String.format("%s", project.getOrganizationName()));
         tvSyncedDate.setText(project.getStatusMessage());
@@ -95,7 +103,44 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         } else {
            ivThumbnail.setImageResource(R.drawable.fieldsight_logo);
         }
+        updateBySyncStat(syncableMap);
 
-        downloadingSection.setVisibility(project.isSynced() ? View.GONE : View.VISIBLE);
+    }
+
+    private void updateBySyncStat(HashMap<String, List<Syncable>> syncableMap) {
+        for (String key : syncableMap.keySet()) {
+            // key -> projectId
+            // 0 -> sites and regions
+            // 1 -> forms
+            // 2 - education materials
+            List<Syncable> syncableList = syncableMap.get(key);
+            Syncable sitesAndRegionsSyncStat  = syncableList.get(0);
+            Syncable formSyncStat  = syncableList.get(1);
+            Syncable educationAndMaterialSyncStat  = syncableList.get(2);
+            if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
+                downloadingSection.setVisibility(View.GONE);
+            } else {
+                StringBuilder failedSync = new StringBuilder();
+                if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED) {
+                    failedSync.append(sitesAndRegionsSyncStat.getTitle() + ", ");
+                }
+                if(formSyncStat.status == Constant.DownloadStatus.FAILED) {
+                    failedSync.append(formSyncStat.getTitle() + ", ");
+                }
+
+                if(educationAndMaterialSyncStat.status == Constant.DownloadStatus.FAILED) {
+                    failedSync.append(formSyncStat.getTitle());
+                }
+
+                if(failedSync.length() > 0) {
+                    downloadingSection.setVisibility(View.VISIBLE);
+                    tvDownloading.setText(failedSync.toString() + " failed to sync");
+                    tvDownloading.setTextColor(Color.parseColor("#FF0000"));
+                } else {
+                    downloadingSection.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
     }
 }
