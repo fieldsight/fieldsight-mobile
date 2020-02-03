@@ -227,7 +227,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             }
 
             syncAdapter.updateSyncMap(syncableMap);
-
         };
 
         syncdata = SyncLocalSource3.getInstance().getAll();
@@ -237,6 +236,15 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             Timber.i("SyncActivity ===============>>>>> syncing::  count = %d", count);
             if (count == 0) {
                 Timber.i("SyncActivity ===============>>> enable called");
+                syncStarts = false;
+
+                // change all unsynced to synced
+                for(int i = 0; i < syncProjectList.size(); i ++) {
+                    if(!syncProjectList.get(i).isSynced()) {
+                        syncProjectList.get(i).setSynced(true);
+                    }
+                }
+                syncAdapter.notifyDataSetChanged();
                 unSyncedAdapter.disableAdapter(false);
             }
         };
