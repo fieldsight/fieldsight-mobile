@@ -64,4 +64,6 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
     @Query("SELECT * FROM syncstat")
     List<SyncStat> getAllItems();
 
+    @Query("DELETE FROM syncstat WHERE project_id=:projectId")
+    void deleteById(String projectId);
 }

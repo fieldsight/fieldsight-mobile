@@ -12,6 +12,7 @@ import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.v3.adapter.ProjectSyncViewholder;
 import org.fieldsight.naxa.v3.adapter.ProjectViewHolder;
 import org.fieldsight.naxa.v3.network.Syncable;
+import org.odk.collect.android.utilities.TextUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
     public interface Callback {
         void syncedProjectClicked(Project project);
         void onCancelClicked(int pos);
+        void retryClicked(int pos);
     }
 
     List<Project> projectList;
@@ -69,7 +71,13 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
             }
         });
 
-        holder.itemView.findViewById(R.id.iv_cancel).setOnClickListener(v -> callback.onCancelClicked(position));
+        holder.itemView.findViewById(R.id.iv_cancel).setOnClickListener(v -> {
+            if(v.getTag().equals("syncing")) {
+                callback.onCancelClicked(position);
+            } else if(v.getTag().equals("retry")){
+                callback.retryClicked(position);
+            }
+        });
     }
 
     public void updateSyncMap(HashMap<String, List<Syncable>> syncableMap) {
