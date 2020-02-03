@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import org.fieldsight.naxa.login.model.Project;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.Constant;
@@ -92,6 +93,28 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
     public LiveData<List<ProjectNameTuple>> getAllSiteSyncingProject() {
         return dao.getAllSiteSyncingProject();
     }
+
+    public List<SyncStat> getRunningSyncStat () {
+        return dao.getRunningSyncStatList();
+    }
+
+    public String[] getProjectIdsFromSyncStat() {
+        return dao.getProjectIds();
+    }
+
+    public String[] getSyncedProjectIds() {
+        return dao.getSyncedProjectIds();
+    }
+
+    public List<SyncStat> getAllList() {
+        return dao.getAllItems();
+    }
+
+    public LiveData<List<SyncStat>> getSyncStatusByProjectIds(String... projectIds){
+        return dao.getSyncStatus(projectIds);
+    }
+
+
 
     public Single<SyncStat> getFailedUrls(String projectId, int type) {
         return dao.getFailedUrls(projectId, type);

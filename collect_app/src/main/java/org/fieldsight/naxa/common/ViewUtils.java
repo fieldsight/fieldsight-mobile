@@ -122,18 +122,17 @@ public final class ViewUtils {
     public static GlideRequest<Drawable> loadImageWithFallback(Context context, String path) {
 
         RequestOptions requestOptions = new RequestOptions();
-//        requestOptions.placeholder(R.drawable.fieldsight_logo);
         requestOptions.error(R.drawable.fieldsight_logo);
 
         return GlideApp.with(context)
                 .setDefaultRequestOptions(requestOptions)
                 .load(path)
-
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .centerInside()
                 .skipMemoryCache(false)
                 .priority(Priority.LOW)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .apply(RequestOptions.circleCropTransform());
     }
 
     static Drawable getProgressBarIndeterminate() {
@@ -148,12 +147,6 @@ public final class ViewUtils {
     }
 
 
-    /**
-     * Generate a value suitable for use in {@link #setId(int)}.
-     * This value will not collide with ID values generated at build time by aapt for R.id.
-     *
-     * @return a generated ID value
-     */
     public static int generateViewId() {
         for (; ; ) {
             final int result = S_NEXT_GENERATED_ID.get();

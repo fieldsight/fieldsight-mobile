@@ -1,9 +1,5 @@
 package org.fieldsight.naxa.v3.network;
 
-
-
-
-
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -22,6 +18,9 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
 
     @Query("SELECT * FROM syncstat")
     LiveData<List<SyncStat>> all();
+
+    @Query("SELECT project_id FROM syncstat")
+    String[] getProjectIds();
 
     @Query("SELECT * FROM syncstat where project_id = :projectId")
     LiveData<List<SyncStat>> filterByProjectId(String projectId);
@@ -47,9 +46,22 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
     @Query("DELETE FROM syncstat")
     void delete();
 
-    @Query("SELECT project_id, created_date, status FROM syncstat WHERE type=0 AND status > 0")
+    @Query("SELECT project_id, created_date, status FROM syncstat WHERE status > 0 AND status < 4")
     LiveData<List<ProjectNameTuple>> getAllSiteSyncingProject();
 
     @Query("SELECT * from syncstat WHERE project_id=:projectId AND type=:type")
     Single<SyncStat> getFailedUrls(String projectId, int type);
+
+    @Query("SELECT project_id FROM syncstat WHERE (type = 0 AND status=4) AND (type = 1 AND status =4) AND (type = 2 AND status = 4)")
+    String[] getSyncedProjectIds();
+
+    @Query("SELECT * FROM syncstat WHERE project_id in (:projectIds)")
+    LiveData<List<SyncStat>> getSyncStatus(String... projectIds);
+
+    @Query("SELECT * FROM syncstat WHERE status > 0 AND status < 4")
+    List<SyncStat> getRunningSyncStatList();
+
+    @Query("SELECT * FROM syncstat")
+    List<SyncStat> getAllItems();
+
 }

@@ -136,7 +136,7 @@ public class SyncAdapterv3 extends RecyclerView.Adapter<SyncViewHolder> {
                 Timber.i("Syncadapterv3, PROJECT details clicked");
                 if (callback != null) {
                     Project p = selectedProjectList.get(parentPos);
-                    syncableMap.get(p.getId()).get(pos).toggleSync();
+//                    syncableMap.get(p.getId()).get(pos).toggleSync();
                     notifyDataSetChanged();
                     callback.childDownloadListSelectionChange(p, syncableMap.get(p.getId()));
                 }

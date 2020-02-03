@@ -2,32 +2,27 @@ package org.fieldsight.naxa.v3.network;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.bcss.collect.android.R;;
-import org.odk.collect.android.application.Collect;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.forms.FieldSightFormDownloadList;
 import org.fieldsight.naxa.login.model.Project;
-import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.v3.adapter.SyncAdapterv3;
 import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ApplicationConstants;
-import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +32,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+
+;
 
 public class SyncActivity extends CollectAbstractActivity implements SyncAdapterCallback {
     @BindView(R.id.toolbar)
@@ -72,52 +69,52 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
         /// getting the selected PROJECT list from the projectlist activity
         Timber.i("SyncActivity, alreadySyncing:: " + (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0));
-        if (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0) {
-            syncing = true;
-            projectList = Collect.selectedProjectList;
-            syncableMap = Collect.syncableMap;
-        } else {
-            Bundle bundle = getIntent().getBundleExtra("params");
-            projectList = bundle.getParcelableArrayList("projects");
-            auto = bundle.getBoolean("auto", true);
-        }
+//        if (Collect.selectedProjectList != null && Collect.selectedProjectList.size() > 0) {
+//            syncing = true;
+//            projectList = Collect.selectedProjectList;
+//            syncableMap = Collect.syncableMap;
+//        } else {
+//            Bundle bundle = getIntent().getBundleExtra("params");
+//            projectList = bundle.getParcelableArrayList("projects");
+//            auto = bundle.getBoolean("auto", true);
+//        }
 
-        if (projectList == null || projectList.size() == 0) {
-            return;
-        }
-
-        Timber.i("SyncActivity, isSyncing = " + syncing);
-        // clear the sync stat table if it is not syncing when opened
-        if (!syncing) {
-//            SyncLocalSource3.getInstance().delete();
-        }
+//        if (projectList == null || projectList.size() == 0) {
+//            return;
+//        }
+//
+//        Timber.i("SyncActivity, isSyncing = " + syncing);
+//        // clear the sync stat table if it is not syncing when opened
+//        if (!syncing) {
+////            SyncLocalSource3.getInstance().delete();
+//        }
 
         setTitle(String.format(Locale.getDefault(), "Projects (%d)", projectList.size()));
         /// create the map of the syncing
-        if (syncableMap == null) {
-            createSyncableList(projectList);
-        }
+//        if (syncableMap == null) {
+//            createSyncableList(projectList);
+//        }
 
-        adapterv3 = new SyncAdapterv3(auto, projectList, syncableMap);
-        adapterv3.setAdapterCallback(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapterv3);
+//        adapterv3 = new SyncAdapterv3(auto, projectList, syncableMap);
+//        adapterv3.setAdapterCallback(this);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setAdapter(adapterv3);
 
-        findViewById(R.id.download_button).setOnClickListener(v -> {
-            if (NetworkUtils.isNetworkConnected()) {
-                ToastUtils.showShortToast("Download starts");
-                Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
-                syncIntent.putParcelableArrayListExtra("projects", projectList);
-                syncIntent.putExtra("selection", syncableMap);
-                startService(syncIntent);
-
-                Collect.selectedProjectList = projectList;
-                Collect.syncableMap = syncableMap;
-                enableDisableAdapter(true);
-            } else {
-                Toast.makeText(this, getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        findViewById(R.id.download_button).setOnClickListener(v -> {
+//            if (NetworkUtils.isNetworkConnected()) {
+//                ToastUtils.showShortToast("Download starts");
+//                Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+//                syncIntent.putParcelableArrayListExtra("projects", projectList);
+//                syncIntent.putExtra("selection", syncableMap);
+//                startService(syncIntent);
+//
+//                Collect.selectedProjectList = projectList;
+//                Collect.syncableMap = syncableMap;
+//                enableDisableAdapter(true);
+//            } else {
+//                Toast.makeText(this, getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         syncObserver = syncStats -> {
             Timber.i("sync stats size = %d", syncStats.size());
@@ -142,22 +139,22 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
 
     }
 
-    // this class will manage the sync list to determine which should be synced
-    ArrayList<Syncable> createList() {
-        // -1 refers here as never started
-        return new ArrayList<Syncable>() {{
-            add(0, new Syncable("Regions and sites", auto, -1));
-            add(1, new Syncable("Forms", auto, -1));
-            add(2, new Syncable("Materials", auto, -1));
-        }};
-    }
+//    // this class will manage the sync list to determine which should be synced
+//    ArrayList<Syncable> createList() {
+//        // -1 refers here as never started
+//        return new ArrayList<Syncable>() {{
+//            add(0, new Syncable("Regions and sites", auto, -1));
+//            add(1, new Syncable("Forms", auto, -1));
+//            add(2, new Syncable("Materials", auto, -1));
+//        }};
+//    }
 
-    void createSyncableList(List<Project> selectedProjectList) {
-        syncableMap = new HashMap<>();
-        for (Project project : selectedProjectList) {
-            syncableMap.put(project.getId(), createList());
-        }
-    }
+//    void createSyncableList(List<Project> selectedProjectList) {
+//        syncableMap = new HashMap<>();
+//        for (Project project : selectedProjectList) {
+//            syncableMap.put(project.getId(), createList());
+//        }
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -224,11 +221,12 @@ public class SyncActivity extends CollectAbstractActivity implements SyncAdapter
     }
 
     private String readaableSyncParams(String projectName, List<Syncable> list) {
-        String logString = "";
-        for (Syncable syncable : list) {
-            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.isSync();
-        }
-        return String.format("%s \n params = %s", projectName, logString);
+//        String logString = "";
+//        for (Syncable syncable : list) {
+//            logString += "\n title = " + syncable.getTitle() + ", sync = " + syncable.isSync();
+//        }
+//        return String.format("%s \n params = %s", projectName, logString);
+        return "";
     }
 
     @Override

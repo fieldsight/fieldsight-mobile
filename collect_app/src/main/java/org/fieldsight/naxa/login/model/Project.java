@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -98,6 +99,22 @@ public class Project implements Parcelable {
     @Ignore
     String statusMessage = "";
 
+    @SerializedName("total_regions")
+    @ColumnInfo(name = "total_regions")
+    private int totalRegions;
+
+    @SerializedName("total_sites")
+    @ColumnInfo(name = "total_sites")
+    private int totalSites;
+
+    @SerializedName("total_users")
+    @ColumnInfo(name = "total_users")
+    private int totalUsers;
+
+    @SerializedName("total_submissions")
+    @ColumnInfo(name = "total_submissions")
+    private int totalSubmissions;
+
     public String getTerms_and_labels() {
         return terms_and_labels;
     }
@@ -179,6 +196,38 @@ public class Project implements Parcelable {
 
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
+    }
+
+    public int getTotalRegions() {
+        return totalRegions;
+    }
+
+    public void setTotalRegions(int totalRegions) {
+        this.totalRegions = totalRegions;
+    }
+
+    public int getTotalSites() {
+        return totalSites;
+    }
+
+    public void setTotalSites(int totalSites) {
+        this.totalSites = totalSites;
+    }
+
+    public int getTotalUsers() {
+        return totalUsers;
+    }
+
+    public void setTotalUsers(int totalUsers) {
+        this.totalUsers = totalUsers;
+    }
+
+    public int getTotalSubmissions() {
+        return totalSubmissions;
+    }
+
+    public void setTotalSubmissions(int totalSubmissions) {
+        this.totalSubmissions = totalSubmissions;
     }
 
     public String getOrganizationlogourl() {
@@ -285,15 +334,15 @@ public class Project implements Parcelable {
         isSyncedWithRemote = syncedWithRemote;
     }
 
-
-
-    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, List<SiteMetaAttribute> metaAttributes, String url, String terms_and_labels) {
+    @Ignore
+    public Project(@NonNull String id, String name, String description, String address, String lat, String lon, String url, String siteClusters, String organizationName, String organizationlogourl, Boolean hasClusteredSites, Integer typeId, String typeLabel, String phone, boolean isSyncedWithRemote, int totalRegions, int totalSites, int totalUsers, int totalSubmissions, String terms_and_labels, List<SiteMetaAttribute> siteMetaAttributes) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.address = address;
         this.lat = lat;
         this.lon = lon;
+        this.url = url;
         this.siteClusters = siteClusters;
         this.organizationName = organizationName;
         this.organizationlogourl = organizationlogourl;
@@ -302,10 +351,13 @@ public class Project implements Parcelable {
         this.typeLabel = typeLabel;
         this.phone = phone;
         this.isSyncedWithRemote = isSyncedWithRemote;
-        this.siteMetaAttributes = metaAttributes;
-        this.url = url;
+        this.totalRegions = totalRegions;
+        this.totalSites = totalSites;
+        this.totalUsers = totalUsers;
+        this.totalSubmissions = totalSubmissions;
         this.terms_and_labels = terms_and_labels;
-
+        this.regionList = regionList;
+        this.siteMetaAttributes = siteMetaAttributes;
     }
 
     @Override
@@ -335,10 +387,15 @@ public class Project implements Parcelable {
         dest.writeString(this.statusMessage);
         dest.writeString(this.terms_and_labels);
         dest.writeLong(this.syncedDate);
+        dest.writeInt(this.totalRegions);
+        dest.writeInt(this.totalSites);
+        dest.writeInt(this.totalSubmissions);
+        dest.writeInt(this.totalUsers);
         dest.writeTypedList(this.regionList);
         dest.writeTypedList(this.siteMetaAttributes);
     }
 
+    @Ignore
     protected Project(Parcel in) {
         this.id = in.readString();
         this.name = in.readString();
@@ -361,6 +418,10 @@ public class Project implements Parcelable {
         this.terms_and_labels = in.readString();
         this.syncedDate = in.readLong();
         this.regionList = in.createTypedArrayList(Region.CREATOR);
+        this.totalRegions = in.readInt();
+        this.totalSites = in.readInt();
+        this.totalSubmissions = in.readInt();
+        this.totalUsers = in.readInt();
         this.siteMetaAttributes = in.createTypedArrayList(SiteMetaAttribute.CREATOR);
     }
 

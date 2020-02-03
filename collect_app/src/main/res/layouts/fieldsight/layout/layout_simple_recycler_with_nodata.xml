@@ -4,88 +4,132 @@
     android:id="@+id/ll_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
-    <include layout="@layout/general_toolbar" />
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:elevation="0dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-        <RelativeLayout
+
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/swipe_container"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:orientation="vertical">
 
+<!--            <TextView-->
+<!--                android:id="@+id/tv_sync"-->
+<!--                android:text="Sync"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:textColor="@color/secondaryTextColor"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:visibility="gone"-->
+<!--                android:layout_height="wrap_content"/>-->
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_projectlist_syncing"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tv_unsync"
+                android:text="Unsync"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/secondaryTextColor"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_projectlist"
                 android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="48dp" />
+        </LinearLayout>
+<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+    </androidx.core.widget.NestedScrollView>
+        <LinearLayout
+            android:id="@+id/ll_nodata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
 
-
-            <LinearLayout
-                android:id="@+id/ll_nodata"
+            <ProgressBar
+                android:id="@+id/prgbar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ProgressBar
-                    android:id="@+id/prgbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/tv_nodata"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Loading please wait"
-                    android:textColor="@color/secondaryColor"
-                    android:textSize="16sp" />
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_resync"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardBackgroundColor="@color/primaryColor"
-                    app:cardCornerRadius="8dp"
-                    app:cardUseCompatPadding="true"
-                    app:contentPadding="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@color/primaryColor"
-                        android:text="Sync project again"
-                        android:textColor="@android:color/white" />
-
-
-                </androidx.cardview.widget.CardView>
-
-
-            </LinearLayout>
+                android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/tv_sync_project"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_nodata"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@color/primaryColor"
-                android:drawableRight="@drawable/ic_keyboard_arrow_right_legacy_24dp"
-                android:gravity="end|center_vertical"
-                android:padding="8dp"
-                android:text="Sync Projects"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
-                android:textColor="@color/white"
-                android:visibility="gone" />
+                android:layout_marginTop="8dp"
+                android:text="Loading please wait"
+                android:textColor="@color/secondaryColor"
+                android:textSize="16sp" />
 
-        </RelativeLayout>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_resync"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/new_design_blue"
+                app:cardCornerRadius="8dp"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Sync project again"
+                    android:textColor="@android:color/white" />
+
+
+            </androidx.cardview.widget.CardView>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_sync_project"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/new_design_blue"
+            android:gravity="center"
+            android:padding="8dp"
+            android:minHeight="48dp"
+            android:text="Sync Now"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
+            android:textColor="@color/white"
+            android:visibility="visible" />
+    </RelativeLayout>
 </LinearLayout>

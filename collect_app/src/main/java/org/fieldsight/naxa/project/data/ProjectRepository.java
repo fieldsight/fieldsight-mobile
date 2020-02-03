@@ -97,7 +97,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                         if (NetworkUtils.isNetworkConnected()) {
                             getProjectFromRemoteSource(callback);
                         } else {
-                            callback.onProjectLoaded(projects);
+                            callback.onProjectLoaded(projects, false);
                         }
 
                     }
@@ -133,6 +133,10 @@ public class ProjectRepository implements BaseRepository<Project> {
                                 .setMetaAttributes(mapJSONtoMetaArributes(json.optJSONArray("meta_attributes").toString()))
                                 .setOrganizationName(json.getJSONObject("organization").optString("name"))
                                 .setHasClusteredSites(json.optBoolean("has_site_role"))
+                                .setTotalRegion(json.optInt("total_regions"))
+                                .setTotalSubmission(json.optInt("total_submissions"))
+                                .setTotaluser(json.optInt("total_users"))
+                                .setTotalSites(json.optInt("total_sites"))
                                 .createProject();
 
                         p.setRegionList(mapJSONtoRegionList(json.getJSONArray("project_region").toString()));
@@ -184,7 +188,7 @@ public class ProjectRepository implements BaseRepository<Project> {
                     @Override
                     public void onSuccess(List<Project> list) {
                         localSource.save((ArrayList<Project>) list);
-                        callback.onProjectLoaded(list);
+                        callback.onProjectLoaded(list, true);
                     }
 
                     @Override

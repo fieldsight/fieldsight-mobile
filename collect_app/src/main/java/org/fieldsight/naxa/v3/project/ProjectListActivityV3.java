@@ -20,10 +20,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import org.bcss.collect.android.R;;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
+import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.login.model.Project;
@@ -35,16 +35,18 @@ import org.fieldsight.naxa.report.ReportActivity;
 import org.fieldsight.naxa.v3.adapter.ProjectListAdapter;
 import org.fieldsight.naxa.v3.network.LoadProjectCallback;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
-import org.fieldsight.naxa.v3.network.SyncActivity;
 import org.fieldsight.naxa.v3.network.SyncLocalSource3;
+import org.fieldsight.naxa.v3.network.SyncServiceV3;
+import org.fieldsight.naxa.v3.network.SyncStat;
+import org.fieldsight.naxa.v3.network.Syncable;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.dto.Instance;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,7 +55,15 @@ import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
-public class ProjectListActivityV3 extends CollectAbstractActivity {
+/**
+ * TODO
+ * retry handle the failed
+ * last synced on
+ * date time format today, yesterday, and date
+ * discuss :: add sentence on the top of project list
+ */
+
+public class ProjectListActivityV3 extends CollectAbstractActivity implements SyncingProjectAdapter.Callback {
     @BindView(R.id.rv_projectlist)
     RecyclerView rvProjectlist;
 
@@ -75,18 +85,49 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @BindView(R.id.cv_resync)
     CardView cvResync;
 
-    ProjectListAdapter adapter;
-    List<Project> projectList = new ArrayList<>();
+    @BindView(R.id.rv_projectlist_syncing)
+    RecyclerView rvSyncing;
+
+//    @BindView(R.id.tv_sync)
+//    TextView tvSync;
+
+    @BindView(R.id.tv_unsync)
+    TextView tvUnsync;
+
+    ProjectListAdapter unSyncedAdapter;
+
 
     RecyclerView.AdapterDataObserver observer;
 
-    @BindView(R.id.swipe_container)
-    SwipeRefreshLayout swipeRefreshLayout;
+//    @BindView(R.id.swipe_container)
+//    SwipeRefreshLayout swipeRefreshLayout;
 
     boolean allSelected;
     LiveData<List<ProjectNameTuple>> projectIds;
     Observer<List<ProjectNameTuple>> projectObserver;
     boolean showSyncMenu = true;
+
+    // flag to maintain the status of the syncing process is started or not
+    boolean syncStarts = false;
+
+    // Hashmap to track the syncing progress
+    HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
+
+    // livedata for runnning live data observer
+    LiveData<Integer> runningLiveData;
+
+    // Observes the syncing or queued syncing project count
+    Observer<Integer> runningLiveDataObserver;
+
+    LiveData<List<SyncStat>> syncdata;
+    Observer<List<SyncStat>> syncObserver;
+    SyncingProjectAdapter syncAdapter;
+
+
+    // for syncing
+    ArrayList<Project> syncProjectList = new ArrayList<>();
+    // unsynced array list i.e. yet to sync
+    List<Project> unSyncedprojectList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,60 +136,163 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setTitle("Projects");
-        adapter = new ProjectListAdapter(projectList, allSelected);
+
+        // adapter to manage the synced projects
+        unSyncedAdapter = new ProjectListAdapter(unSyncedprojectList);
+        // adapter to manage the syncing and synced projects
+        syncAdapter = new SyncingProjectAdapter(syncProjectList, this);
 
         observer = new RecyclerView.AdapterDataObserver() {
             @Override
-            public void onChanged() {
-                int selected = 0;
-                for (int i = 0; i < projectList.size(); i++) {
-                    if (projectList.get(i).isChecked()) {
-                        selected++;
+            public void onItemRangeChanged(int positionStart, int itemCount, @Nullable Object payload) {
+                super.onItemRangeChanged(positionStart, itemCount, payload);
+                int selectedNum;
+                for (selectedNum = 0; selectedNum < unSyncedprojectList.size(); selectedNum++) {
+                    if (unSyncedprojectList.get(selectedNum).isChecked()) {
+                        break;
                     }
                 }
-                Timber.d("project list counter is %d", selected);
-                if (selected > 0) {
-                    tvSyncProject.setVisibility(View.VISIBLE);
-                    tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
-                    tvSyncProject.setText(String.format(Locale.getDefault(), "Sync %d projects", selected));
-                } else {
+                Timber.d("project list counter is %d", selectedNum);
+                // TODO check here, for tv sync not showing again
+                if (selectedNum == unSyncedprojectList.size()) {
                     tvSyncProject.setVisibility(View.GONE);
                     allSelected = false;
-                    invalidateOptionsMenu();
+//                    tvSync.setVisibility(View.GONE);
+                    tvUnsync.setVisibility(View.GONE);
+//                    invalidateOptionsMenu();
+                } else if (!syncStarts) {
+                    tvSyncProject.setVisibility(View.VISIBLE);
+                    tvSyncProject.setBackgroundColor(getResources().getColor(R.color.secondaryColor));
+                    tvSyncProject.setText("Sync Now");
+                    tvUnsync.setVisibility(View.VISIBLE);
                 }
             }
         };
 
-        adapter.registerAdapterDataObserver(observer);
+
+        rvSyncing.setLayoutManager(new LinearLayoutManager(this));
+        rvSyncing.setAdapter(syncAdapter);
+
+        unSyncedAdapter.registerAdapterDataObserver(observer);
         rvProjectlist.setLayoutManager(new LinearLayoutManager(this));
-        rvProjectlist.setAdapter(adapter);
+        rvProjectlist.setAdapter(unSyncedAdapter);
 
         getDataFromServer();
         manageNodata(true);
 
-        tvSyncProject.setOnClickListener(v -> openDownloadAActivity());
+//        tvSyncProject.setOnClickListener(v -> openDownloadAActivity());
+        /**
+         * regions and sites type = 0
+         * forms type = 1
+         * education materials type = 2
+         */
+
         projectObserver = projectNameList -> {
             Timber.i("list live data = %d", projectNameList.size());
-            adapter.notifyProjectisSynced(projectNameList);
-            showSyncMenu = projectNameList.size() == 0 || projectNameList.size() < adapter.getItemCount();
-            invalidateOptionsMenu();
+
+//            // check if project is completed or not
+//            for(String key : syncableMap.keySet()) {
+//                List<Syncable> syncableList = syncableMap.get(key);
+//                boolean isSiteSynced = false, isFormSynced = false, isEducationMaterialSynced = false;
+//                for(int i = 0; i < projectNameList.size(); i ++ ) {
+//                   ProjectNameTuple projectNameTuple = projectNameList.get(i);
+//                   if(!projectNameTuple.projectId.equals(key)) continue;
+//                   // get the type from list
+//
+//                }
+//            }
+
         };
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getDataFromServer();
-
-            }
-        });
 
         try {
             fixNullUrl();
         } catch (Exception e) {
             Timber.e(e);
         }
+
+
+        syncObserver = syncStats -> {
+            Timber.i("sync stats size = %d", syncStats.size());
+            // check if project is syncomplete or not
+            // if sync complete, remove the downloading section from the item list
+            // TODO check here how can we implement the form loading counter ???????????????????
+            for (SyncStat stat : syncStats) {
+                String projectId = stat.getProjectId();
+                if (syncableMap.containsKey(projectId)) {
+                    List<Syncable> syncableList = syncableMap.get(projectId);
+                    syncableList.get(Integer.parseInt(stat.getType())).setStatus(stat.getStatus());
+                    syncableMap.put(projectId, syncableList);
+                }
+            }
+
+            syncAdapter.updateSyncMap(syncableMap);
+
+        };
+
+        syncdata = SyncLocalSource3.getInstance().getAll();
+        syncdata.observe(this, syncObserver);
+
+        runningLiveDataObserver = count -> {
+            Timber.i("SyncActivity ===============>>>>> syncing::  count = %d", count);
+            if (count == 0) {
+                Timber.i("SyncActivity ===============>>> enable called");
+                unSyncedAdapter.disableAdapter(false);
+            }
+        };
+
+        runningLiveData = SyncLocalSource3.getInstance().getCountByStatus(Constant.DownloadStatus.RUNNING, Constant.DownloadStatus.QUEUED);
+        runningLiveData.observe(this, runningLiveDataObserver);
+//        if (syncing) {
+//            enableDisableAdapter(syncing);
+//        }
     }
 
+    // this class will manage the sync list to determine which should be synced
+    private ArrayList<Syncable> createList() {
+        // -1 refers here as never started
+        return new ArrayList<Syncable>() {{
+            add(0, new Syncable("Regions and sites", -1));
+            add(1, new Syncable("Forms", -1));
+            add(2, new Syncable("Materials", -1));
+        }};
+    }
+
+    private void updateSyncableMap(List<Project> selectedProjectList) {
+       if(syncableMap.size() > 0) syncableMap.clear();
+        for (Project project : selectedProjectList) {
+            syncableMap.put(project.getId(), createList());
+        }
+    }
+
+    private void startSyncing(ArrayList<Project> selectedProjectList) {
+        if (NetworkUtils.isNetworkConnected()) {
+            ToastUtils.showShortToast("Download starts");
+            updateSyncableMap(selectedProjectList);
+            Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+            syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
+            syncIntent.putExtra("selection", syncableMap);
+            startService(syncIntent);
+
+            unSyncedAdapter.disableAdapter(true);
+            syncStarts = true;
+        } else {
+            Toast.makeText(this, getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @OnClick(R.id.tv_sync_project)
+    void addInSyncList() {
+        ArrayList<Project> toSyncList = manageSyncList();
+
+        this.syncProjectList.addAll(0, toSyncList);
+        syncAdapter.notifyDataSetChanged();
+        tvUnsync.setVisibility(View.VISIBLE);
+
+        startSyncing(toSyncList);
+        // hide sync button when sync started
+        tvSyncProject.setVisibility(View.GONE);
+    }
 
     private void fixNullUrl() throws Exception {
         FSInstancesDao instancesDao = new FSInstancesDao();
@@ -161,9 +305,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             if (TextUtils.equals("null", lastItem)) {
                 String where = InstanceProviderAPI.InstanceColumns.SUBMISSION_URI + "=?";
 
-                String[] whereArgs = {
-                        instance.getSubmissionUri()
-                };
+                String[] whereArgs = {instance.getSubmissionUri()};
 
                 String fixedUrl = FSInstancesDao.generateSubmissionUrl(PROJECT, "0", fsFormId);
 
@@ -179,8 +321,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Timber.i("ProjectListActivityv3 :: anyProject checked = " + adapter.anyProjectSelectedForSync());
-        if (tvSyncProject.getVisibility() == View.VISIBLE && !adapter.anyProjectSelectedForSync()) {
+        Timber.i("ProjectListActivityv3 :: anyProject checked = " + unSyncedAdapter.anyProjectSelectedForSync());
+        if (tvSyncProject.getVisibility() == View.VISIBLE && !unSyncedAdapter.anyProjectSelectedForSync()) {
             tvSyncProject.setVisibility(View.GONE);
         }
     }
@@ -199,76 +341,154 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (observer != null) {
-            adapter.unregisterAdapterDataObserver(observer);
+            unSyncedAdapter.unregisterAdapterDataObserver(observer);
         }
         if (projectIds != null && projectIds.hasObservers() && projectObserver != null) {
             projectIds.removeObserver(projectObserver);
         }
+
+        // close all sync listening observers from live data
+        if (syncdata != null && syncdata.hasObservers()) {
+            syncdata.removeObserver(syncObserver);
+        }
+        if (runningLiveData != null && runningLiveData.hasObservers()) {
+            runningLiveData.removeObserver(runningLiveDataObserver);
+        }
+
     }
 
     void manageNodata(boolean loading) {
-        if (adapter.getItemCount() == 0) {
+        if (syncAdapter.getItemCount() == 0 && unSyncedAdapter.getItemCount() == 0) {
             llNodata.setVisibility(View.VISIBLE);
             cvResync.setVisibility(loading ? View.GONE : View.VISIBLE);
         } else {
             llNodata.setVisibility(View.GONE);
         }
         prgbar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        tvNodata.setText(loading ? "Loading data ... " : "Error in syncing the project");
+        tvNodata.setText(loading ? "Loading projects ... " : "Error in syncing the project");
     }
 
     void refreshSyncStatus() {
-        projectIds = SyncLocalSource3.getInstance().getAllSiteSyncingProject();
-        projectIds.observe(ProjectListActivityV3.this, projectObserver);
+        List<SyncStat> mSyncStatList = SyncLocalSource3.getInstance().getAllList();
+        for(SyncStat stat : mSyncStatList) {
+            String title = stat.getType().equals("0") ? "Sites and Regions" : stat.getType().equals("1") ? " forms" : "Education Materials";
+            Syncable syncable = new Syncable(title, stat.getStatus());
+            if(syncableMap.containsKey(stat.getProjectId())) {
+                List<Syncable> syncableList = syncableMap.get(stat.getProjectId());
+                syncableList.add(syncable);
+                syncableMap.put(stat.getProjectId(), syncableList);
+            } else {
+                List<Syncable> mSyncableList = new ArrayList<>();
+                mSyncableList.add(syncable);
+                syncableMap.put(stat.getProjectId(), mSyncableList);
+            }
+        }
+        syncAdapter.updateSyncMap(syncableMap);
+
+//        projectIds.observe(ProjectListActivityV3.this, projectObserver);
     }
 
     void getDataFromServer() {
         ProjectRepository.getInstance().getAll(new LoadProjectCallback() {
             @Override
-            public void onProjectLoaded(List<Project> projects) {
-                adapter.clearAndUpdate(projects);
+            public void onProjectLoaded(List<Project> mProjectList, boolean fromOnline) {
                 manageNodata(false);
-                Timber.e("data found with %d size", projects.size());
-                swipeRefreshLayout.setRefreshing(false);
+                /** seprate sync and unsync data
+                 check in syncstat table to findout which projects are synced or scheduled for sync already
+                 separate yet to sync projects and populate syncing and yet to sync in different adapter
+                 **/
+
+                /**
+                 *  get the project ids from sync stat table
+                 *  Check if project ids is empty or not
+                 *  if projectids is empty , none of the project are scheduled for the syncing
+                 *
+                 */
+
+                List<SyncStat> mSyncStatList = SyncLocalSource3.getInstance().getAllList();
+
+                Timber.i("getDataFromServer :: ===========>>>>>>>> sync project ids = %d ", mSyncStatList.size());
+
+                if (mSyncStatList.size() == 0) {
+                    unSyncedprojectList.addAll(mProjectList);
+                } else {
+                    // separate the list
+                    for (int i = 0; i < mProjectList.size(); i++) {
+                        int j;
+                        boolean found = false;
+                        for (j = 0; j < mSyncStatList.size(); j++) {
+                            if (mProjectList.get(i).getId().equals(mSyncStatList.get(j).getProjectId())) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        Timber.i("getDataFromServer :: ========>>>>>> found = " + found);
+                        if (found) {
+                            syncProjectList.add(mProjectList.get(i));
+                        } else {
+                            unSyncedprojectList.add(mProjectList.get(i));
+                        }
+                    }
+                }
+
+                // check if the project is synced or not if the project is from online
+                Timber.i(" getDataFromServer :: ===========>>>>>> syncProjectList Size = %d, unSyncProjectList size = %d", unSyncedprojectList.size(), syncProjectList.size());
+                unSyncedAdapter.notifyDataSetChanged();
+                if (syncProjectList.size() > 0) {
+                    syncAdapter.notifyDataSetChanged();
+                }
+
                 refreshSyncStatus();
+
+                manageNodata(false);
             }
 
             @Override
             public void onDataNotAvailable() {
                 Timber.d("data not available");
                 manageNodata(false);
-                swipeRefreshLayout.setRefreshing(false);
-                refreshSyncStatus();
             }
         });
-
-
     }
 
     //    Clear the sync PROJECT list and add the selected projects
     ArrayList<Project> manageSyncList() {
-        ArrayList<Project> syncProjectList = new ArrayList<>();
-        for (Project project : projectList) {
+        ArrayList<Project> checkedProjectList = new ArrayList<>();
+        ArrayList<Project> unCheckedProjectList = new ArrayList<>();
+
+        for (int i = 0; i < unSyncedprojectList.size(); i++) {
+            Project project = unSyncedprojectList.get(i);
             if (project.isChecked()) {
-                syncProjectList.add(project);
+                checkedProjectList.add(project);
+            } else {
+                unCheckedProjectList.add(project);
             }
         }
-        return syncProjectList;
+
+        this.unSyncedprojectList.clear();
+        this.unSyncedprojectList.addAll(unCheckedProjectList);
+        unSyncedAdapter.notifyDataSetChanged();
+
+        Timber.i("manageSyncList ==========>>>>>>>> checkedProjectList size = %d ", checkedProjectList.size());
+        return checkedProjectList;
     }
 
-    void openDownloadAActivity() {
-        ArrayList<Project> syncProjectList = manageSyncList();
-        if (syncProjectList.size() > 0) {
-            Intent intent = new Intent(this, SyncActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("projects", syncProjectList);
-            bundle.putBoolean("auto", true);
-            intent.putExtra("params", bundle);
-            startActivity(intent);
-        } else {
-            ToastUtils.showShortToastInMiddle("Please select at least one projects");
-        }
-    }
+//    void openDownloadAActivity() {
+    // changing the list as syncing and unsyncing
+
+//        ArrayList<Project> syncProjectList = manageSyncList();
+//        if (syncProjectList.size() > 0) {
+//            Intent intent = new Intent(this, SyncActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putParcelableArrayList("projects", syncProjectList);
+//            bundle.putBoolean("auto", true);
+//            intent.putExtra("params", bundle);
+//            startActivity(intent);
+//        } else {
+//            ToastUtils.showShortToastInMiddle("Please select at least one projects");
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -276,19 +496,19 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-//        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
-        if (showSyncMenu) {
-            menu.findItem(R.id.action_refresh).setIcon(allSelected ?
-                    R.drawable.ic_cancel_white_24dp :
-                    R.drawable.ic_action_sync
-            );
-            menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+////        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
+//        if (showSyncMenu) {
+//            menu.findItem(R.id.action_refresh).setIcon(allSelected ?
+//                    R.drawable.ic_cancel_white_24dp :
+//                    R.drawable.ic_action_sync
+//            );
+//            menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
+//        }
+//
+//        return super.onPrepareOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -298,17 +518,17 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 return true;
             case R.id.action_refresh:
 //                check all the PROJECT and make auto true
-                allSelected = !allSelected;
-                for (Project project : projectList) {
-//                    if (!PROJECT.isSynced()) {
-                    project.setChecked(allSelected);
-//                    } else {
-//                        PROJECT.setChecked(false);
-//                    }
-                }
-                adapter.toggleAllSelected(allSelected);
-                adapter.notifyDataSetChanged();
-                invalidateOptionsMenu();
+//                allSelected = !allSelected;
+//                for (Project project : projectList) {
+////                    if (!PROJECT.isSynced()) {
+//                    project.setChecked(allSelected);
+////                    } else {
+////                        PROJECT.setChecked(false);
+////                    }
+//                }
+//                adapter.toggleAllSelected(allSelected);
+//                adapter.notifyDataSetChanged();
+//                invalidateOptionsMenu();
                 break;
             case R.id.action_notificaiton:
                 NotificationListActivity.start(this);
@@ -322,8 +542,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
             case R.id.action_submit_report:
                 startActivity(new Intent(this, ReportActivity.class));
                 return true;
-
-
         }
         return super.onOptionsItemSelected(item);
     }
@@ -333,13 +551,13 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
     @Override
     public void finish() {
         if (allSelected) {
-            allSelected = false;
-            for (Project project : projectList) {
-                project.setChecked(allSelected);
-            }
-            adapter.toggleAllSelected(allSelected);
-            adapter.notifyDataSetChanged();
-            invalidateOptionsMenu();
+//            allSelected = false;
+//            for (Project project : projectList) {
+//                project.setChecked(allSelected);
+//            }
+////            adapter.toggleAllSelected(allSelected);
+//            adapter.notifyDataSetChanged();
+//            invalidateOptionsMenu();
         } else {
             // exit the app in double back pressed
             if (exit) {
@@ -355,6 +573,19 @@ public class ProjectListActivityV3 extends CollectAbstractActivity {
                 exit = true;
             }
         }
+    }
+
+    @Override
+    public void syncedProjectClicked(Project project) {
+        ProjectDashboardActivity.start(this, project);
+    }
+
+    @Override
+    public void onCancelClicked(int pos) {
+        Timber.i("cancel clicked");
+        Project project = ((SyncingProjectAdapter) rvSyncing.getAdapter()).popItem(pos);
+        project.setChecked(false);
+        unSyncedAdapter.push(project, pos);
     }
 }
 
