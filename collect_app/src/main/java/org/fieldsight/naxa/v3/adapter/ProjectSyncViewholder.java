@@ -97,6 +97,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         tvUsers.setText(String.format(Locale.ENGLISH, "%d", project.getTotalUsers()));
         tvSubmissions.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSubmissions()));
         tvSites.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSites()));
+        ivCancel.setTag("syncing");
 
 
         if (!TextUtils.isEmpty(project.getUrl())) {
@@ -123,6 +124,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
             downloadingSection.setVisibility(View.GONE);
             ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
+            ivCancel.setTag("synced");
             hasSyncComplete(getLayoutPosition());
         } else {
             StringBuilder failedSync = new StringBuilder();
@@ -142,10 +144,12 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 tvDownloading.setText(failedSync.toString() + " failed to sync");
                 tvDownloading.setTextColor(Color.parseColor("#FF0000"));
                 ivCancel.setImageResource(R.drawable.ic_refresh);
+                ivCancel.setTag("retry");
                 hasSyncComplete(getLayoutPosition());
             } else {
                 downloadingSection.setVisibility(View.VISIBLE);
                 ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
+                ivCancel.setTag("syncing");
             }
         }
     }

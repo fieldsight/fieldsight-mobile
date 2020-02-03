@@ -128,6 +128,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     ArrayList<Project> syncProjectList = new ArrayList<>();
     // unsynced array list i.e. yet to sync
     List<Project> unSyncedprojectList = new ArrayList<>();
+    Intent syncIntent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -239,8 +240,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 syncStarts = false;
 
                 // change all unsynced to synced
-                for(int i = 0; i < syncProjectList.size(); i ++) {
-                    if(!syncProjectList.get(i).isSynced()) {
+                for (int i = 0; i < syncProjectList.size(); i++) {
+                    if (!syncProjectList.get(i).isSynced()) {
                         syncProjectList.get(i).setSynced(true);
                     }
                 }
@@ -267,7 +268,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     }
 
     private void updateSyncableMap(List<Project> selectedProjectList) {
-       if(syncableMap.size() > 0) syncableMap.clear();
+        if (syncableMap.size() > 0) syncableMap.clear();
         for (Project project : selectedProjectList) {
             syncableMap.put(project.getId(), createList());
         }
@@ -277,7 +278,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         if (NetworkUtils.isNetworkConnected()) {
             ToastUtils.showShortToast("Download starts");
             updateSyncableMap(selectedProjectList);
-            Intent syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+            syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
             syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
             syncIntent.putExtra("selection", syncableMap);
             startService(syncIntent);
@@ -378,10 +379,10 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     void refreshSyncStatus() {
         List<SyncStat> mSyncStatList = SyncLocalSource3.getInstance().getAllList();
-        for(SyncStat stat : mSyncStatList) {
+        for (SyncStat stat : mSyncStatList) {
             String title = stat.getType().equals("0") ? "Sites and Regions" : stat.getType().equals("1") ? " forms" : "Education Materials";
             Syncable syncable = new Syncable(title, stat.getStatus());
-            if(syncableMap.containsKey(stat.getProjectId())) {
+            if (syncableMap.containsKey(stat.getProjectId())) {
                 List<Syncable> syncableList = syncableMap.get(stat.getProjectId());
                 syncableList.add(syncable);
                 syncableMap.put(stat.getProjectId(), syncableList);
@@ -590,10 +591,20 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     @Override
     public void onCancelClicked(int pos) {
+        if (syncIntent != null) {
+            stopService(syncIntent);
+            Timber.i("Service closed down");
+        }
         Timber.i("cancel clicked");
         Project project = ((SyncingProjectAdapter) rvSyncing.getAdapter()).popItem(pos);
         project.setChecked(false);
         unSyncedAdapter.push(project, pos);
+        ToastUtils.showLongToast("Project sync cancelled by user");
+    }
+
+    @Override
+    public void retryClicked(int pos) {
+
     }
 }
 
