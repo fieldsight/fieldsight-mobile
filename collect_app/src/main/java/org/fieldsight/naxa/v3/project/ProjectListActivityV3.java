@@ -153,6 +153,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                     }
                 }
                 Timber.d("project list counter is %d", selectedNum);
+                // TODO check here, for tv sync not showing again
                 if (selectedNum == unSyncedprojectList.size()) {
                     tvSyncProject.setVisibility(View.GONE);
                     allSelected = false;
