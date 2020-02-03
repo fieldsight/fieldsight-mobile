@@ -505,7 +505,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         getMenuInflater().inflate(R.menu.main_menu_fieldsight, menu);
         menu.findItem(R.id.action_refresh).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor),  PorterDuff.Mode.SRC_IN);
         menu.findItem(R.id.action_notificaiton).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor),  PorterDuff.Mode.SRC_IN);
-
         return super.onCreateOptionsMenu(menu);
     }
 
