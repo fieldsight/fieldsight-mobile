@@ -35,7 +35,6 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         return syncLocalSource3;
     }
 
-
     @Override
     public LiveData<List<SyncStat>> getAll() {
         return dao.all();
@@ -88,6 +87,10 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
     public void delete() {
         dao.delete();
+    }
+
+    public void deleteByid(String projectId) {
+        dao.deleteById(projectId);
     }
 
     public LiveData<List<ProjectNameTuple>> getAllSiteSyncingProject() {

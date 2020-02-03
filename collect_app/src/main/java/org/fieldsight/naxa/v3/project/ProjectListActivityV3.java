@@ -599,6 +599,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         Project project = ((SyncingProjectAdapter) rvSyncing.getAdapter()).popItem(pos);
         project.setChecked(false);
         unSyncedAdapter.push(project, pos);
+        // remove this from sync stats
+        SyncLocalSource3.getInstance().deleteByid(project.getId());
         ToastUtils.showLongToast("Project sync cancelled by user");
     }
 
