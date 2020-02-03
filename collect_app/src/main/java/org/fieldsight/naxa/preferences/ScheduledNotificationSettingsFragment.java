@@ -35,8 +35,6 @@ import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME
 import static org.fieldsight.naxa.preferences.SettingsKeys.KEY_NOTIFICATION_TIME_WEEKLY;
 import static org.odk.collect.android.preferences.AdminKeys.ALLOW_OTHER_WAYS_OF_EDITING_FORM;
 
-;
-
 
 public class ScheduledNotificationSettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
 

@@ -2,6 +2,7 @@ package org.fieldsight.naxa.v3.project;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -493,6 +494,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu_fieldsight, menu);
+        menu.findItem(R.id.action_refresh).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor),  PorterDuff.Mode.SRC_IN);
+        menu.findItem(R.id.action_notificaiton).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor),  PorterDuff.Mode.SRC_IN);
+
         return super.onCreateOptionsMenu(menu);
     }
 
