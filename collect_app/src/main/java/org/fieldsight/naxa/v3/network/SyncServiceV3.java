@@ -386,7 +386,7 @@ public class SyncServiceV3 extends IntentService {
                                     }
                                 }
 
-                                if (!hasErrorBeenThrown) {//error has been thrown
+                                if (!hasErrorBeenThrown || failedSiteUrls.size() == 0) {//error has been thrown
                                     markAsCompleted(project.getId(), 0);
                                 }
                                 Timber.i("SyncService, failedUrl Size = %d", failedSiteUrls.size());
