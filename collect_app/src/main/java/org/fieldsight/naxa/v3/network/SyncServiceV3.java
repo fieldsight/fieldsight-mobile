@@ -321,6 +321,7 @@ public class SyncServiceV3 extends IntentService {
         return new Function<Project, Observable<List<Object>>>() {
             @Override
             public Observable<List<Object>> apply(Project project) throws Exception {
+
                 Observable<Object> regionSitesObservable = Observable.just(project.getRegionList())
                         .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
                         .filter(region -> !TextUtils.isEmpty(region.id))
@@ -367,7 +368,9 @@ public class SyncServiceV3 extends IntentService {
                         .doOnSubscribe(disposable -> markAsRunning(project.getId(), 0))
                         .onErrorReturn(throwable -> {
                             String url = getFailedFormUrl(throwable)[0];
-                            failedSiteUrls.add(url);
+                            if(!TextUtils.isEmpty(url)) {
+                                failedSiteUrls.add(url);
+                            }
                             return project.getId();
                         })
                         .toList()
@@ -386,8 +389,10 @@ public class SyncServiceV3 extends IntentService {
                                 if (!hasErrorBeenThrown) {//error has been thrown
                                     markAsCompleted(project.getId(), 0);
                                 }
+                                Timber.i("SyncService, failedUrl Size = %d", failedSiteUrls.size());
 
                                 if (failedSiteUrls.size() > 0) {
+                                    Timber.i("SyncService, failedUrl url = " + failedSiteUrls.get(0));
                                     markAsFailed(project.getId(), 0, failedSiteUrls.toString());
                                     failedSiteUrls.clear();
                                 }
@@ -396,6 +401,7 @@ public class SyncServiceV3 extends IntentService {
                         .doOnDispose(new Action() {
                             @Override
                             public void run() throws Exception {
+                                Timber.i("SyncService, sites do on dispose called");
                                 markAsFailed(project.getId(), 0, "");
                             }
                         })
