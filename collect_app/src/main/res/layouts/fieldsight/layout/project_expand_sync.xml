@@ -285,7 +285,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/downloading"
+                android:text="@string/syncing_project"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp" />
 

@@ -303,6 +303,7 @@
     <string name="more">More</string>
     <string name="offline_site">Offline Sites</string>
     <string name="downloading">Downloading</string>
+    <string name="syncing_project">Syncing project</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>
