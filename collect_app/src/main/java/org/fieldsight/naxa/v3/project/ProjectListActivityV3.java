@@ -123,7 +123,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     LiveData<List<SyncStat>> syncdata;
     Observer<List<SyncStat>> syncObserver;
     SyncingProjectAdapter syncAdapter;
-
+    ArrayList<Project> toSyncList;
 
     // for syncing
     ArrayList<Project> syncProjectList = new ArrayList<>();
@@ -299,8 +299,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     @OnClick(R.id.tv_sync_project)
     void addInSyncList() {
         ArrayList<Project> toSyncList = manageSyncList();
-
         this.syncProjectList.addAll(0, toSyncList);
+
         syncAdapter.notifyDataSetChanged();
         tvUnsync.setVisibility(View.VISIBLE);
 

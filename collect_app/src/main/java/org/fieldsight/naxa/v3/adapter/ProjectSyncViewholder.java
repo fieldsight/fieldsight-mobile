@@ -97,7 +97,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         tvUsers.setText(String.format(Locale.ENGLISH, "%d", project.getTotalUsers()));
         tvSubmissions.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSubmissions()));
         tvSites.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSites()));
-        ivCancel.setTag("syncing");
+//        ivCancel.setTag("syncing");
 
 
         if (!TextUtils.isEmpty(project.getUrl())) {
@@ -106,8 +106,14 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             ivThumbnail.setImageResource(R.drawable.fieldsight_logo);
         }
         Timber.i("projectsyncviewholder, project name = %s and hasSyncablelist isnotnull = " + (syncableList != null), project.getName());
-        if (syncableList != null && syncableList.size() > 0)
-            updateBySyncStat(syncableList);
+        if(syncableList == null) {
+            downloadingSection.setVisibility(View.GONE);
+        } else {
+            if (syncableList != null && syncableList.size() > 0) {
+                Timber.i("projectsync, notifying sync for project = " + project.getName());
+                updateBySyncStat(syncableList);
+            }
+        }
 
     }
 
@@ -121,19 +127,19 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         Syncable sitesAndRegionsSyncStat = syncableList.get(0);
         Syncable formSyncStat = syncableList.get(1);
         Syncable educationAndMaterialSyncStat = syncableList.get(2);
-//        tvDownloading.setText("Downloading");
         if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
             Timber.i("upddate sync by status, complete");
-//            downloadingSection.setVisibility(View.GONE);
             ivCancel.setVisibility(View.GONE);
             ivCancel.setTag("synced");
             tvDownloading.setText("Sync complete");
+            downloadingSection.setVisibility(View.GONE);
             hasSyncComplete(getLayoutPosition());
         } else if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.RUNNING || formSyncStat.status == Constant.DownloadStatus.RUNNING || educationAndMaterialSyncStat.status == Constant.DownloadStatus.RUNNING) {
             Timber.i("upddate sync by status, syncing");
-            downloadingSection.setVisibility(View.VISIBLE);
             ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
+            tvDownloading.setText("Syncing project");
             ivCancel.setTag("syncing");
+            downloadingSection.setVisibility(View.VISIBLE);
         } else {
             downloadingSection.setVisibility(View.VISIBLE);
             StringBuilder failedSync = new StringBuilder();

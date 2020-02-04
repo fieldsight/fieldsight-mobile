@@ -82,7 +82,7 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
 
     public void updateSyncMap(HashMap<String, List<Syncable>> syncableMap) {
         this.syncableMap = syncableMap;
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     public List<Project> getUnsyncedProject() {
