@@ -99,17 +99,14 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         tvSites.setText(String.format(Locale.ENGLISH, "%d", project.getTotalSites()));
 //        ivCancel.setTag("syncing");
 
-        if(!TextUtils.equals(ivThumbnail.getTag().toString(), project.getId())) {
-            if (!TextUtils.isEmpty(project.getUrl())) {
-                loadImageWithFallback(itemView.getContext(), project.getUrl()).into(ivThumbnail);
-            } else {
-                ivThumbnail.setImageResource(R.drawable.fieldsight_logo);
-            }
-            ivThumbnail.setTag(project.getId());
+        if (!TextUtils.isEmpty(project.getUrl())) {
+            loadImageWithFallback(itemView.getContext(), project.getUrl()).into(ivThumbnail);
+        } else {
+            ivThumbnail.setImageResource(R.drawable.fieldsight_logo);
         }
 
         Timber.i("projectsyncviewholder, project name = %s and hasSyncablelist isnotnull = " + (syncableList != null), project.getName());
-        if(syncableList == null) {
+        if (syncableList == null) {
             downloadingSection.setVisibility(View.GONE);
         } else {
             if (syncableList != null && syncableList.size() > 0) {
