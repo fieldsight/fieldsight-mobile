@@ -105,6 +105,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         } else {
             ivThumbnail.setImageResource(R.drawable.fieldsight_logo);
         }
+        Timber.i("projectsyncviewholder, project name = %s and hasSyncablelist isnotnull = " + (syncableList != null), project.getName());
         if (syncableList != null && syncableList.size() > 0)
             updateBySyncStat(syncableList);
 
@@ -120,13 +121,21 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         Syncable sitesAndRegionsSyncStat = syncableList.get(0);
         Syncable formSyncStat = syncableList.get(1);
         Syncable educationAndMaterialSyncStat = syncableList.get(2);
-        tvDownloading.setText("Downloading");
+//        tvDownloading.setText("Downloading");
         if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
-            downloadingSection.setVisibility(View.GONE);
-            ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
+            Timber.i("upddate sync by status, complete");
+//            downloadingSection.setVisibility(View.GONE);
+            ivCancel.setVisibility(View.GONE);
             ivCancel.setTag("synced");
+            tvDownloading.setText("Sync complete");
             hasSyncComplete(getLayoutPosition());
+        } else if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.RUNNING || formSyncStat.status == Constant.DownloadStatus.RUNNING || educationAndMaterialSyncStat.status == Constant.DownloadStatus.RUNNING) {
+            Timber.i("upddate sync by status, syncing");
+            downloadingSection.setVisibility(View.VISIBLE);
+            ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
+            ivCancel.setTag("syncing");
         } else {
+            downloadingSection.setVisibility(View.VISIBLE);
             StringBuilder failedSync = new StringBuilder();
             if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED) {
                 failedSync.append(sitesAndRegionsSyncStat.getTitle() + ", ");
@@ -140,16 +149,12 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             }
 
             if (failedSync.length() > 0) {
-                downloadingSection.setVisibility(View.VISIBLE);
+                Timber.i("upddate sync by status, failed");
                 tvDownloading.setText(failedSync.toString() + " failed to sync");
                 tvDownloading.setTextColor(Color.parseColor("#FF0000"));
                 ivCancel.setImageResource(R.drawable.ic_refresh);
                 ivCancel.setTag("retry");
                 hasSyncComplete(getLayoutPosition());
-            } else {
-                downloadingSection.setVisibility(View.VISIBLE);
-                ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
-                ivCancel.setTag("syncing");
             }
         }
     }

@@ -33,7 +33,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-;
 
 public class SyncActivity extends CollectAbstractActivity implements SyncAdapterCallback {
     @BindView(R.id.toolbar)

@@ -79,6 +79,12 @@ public class SyncServiceV3 extends IntentService {
             selectedProject = Objects.requireNonNull(intent).getParcelableArrayListExtra("projects");
             Timber.i("SyncServiceV3 selectedProject size = %d", selectedProject.size());
 
+            if(selectedProject != null) {
+                for (int i = 0; i < selectedProject.size(); i++) {
+                    Timber.i("SyncServiceV3, selected project name = " + selectedProject.get(i).getName());
+                }
+
+            }
             selectedMap = (HashMap<String, List<Syncable>>) intent.getSerializableExtra("selection");
             for (String key : selectedMap.keySet()) {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));

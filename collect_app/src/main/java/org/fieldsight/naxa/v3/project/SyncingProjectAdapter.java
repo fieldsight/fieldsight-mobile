@@ -85,6 +85,16 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
         notifyDataSetChanged();
     }
 
+    public List<Project> getUnsyncedProject() {
+        List<Project> unsynced = new ArrayList<>();
+        for(int i = 0; i < this.projectList.size(); i ++) {
+            if(!this.projectList.get(i).isSynced()) {
+                unsynced.add(this.projectList.get(i));
+            }
+        }
+        return unsynced;
+    }
+
     public void notifyProjectSyncStatusChange(String projectId) {
         // get the index of the selected project id
         int foundIndex = -1;

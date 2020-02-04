@@ -248,6 +248,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 }
                 syncAdapter.notifyDataSetChanged();
                 unSyncedAdapter.disableAdapter(false);
+
+                Timber.i("SyncAdapter ===============>>> remaining unsynced = %d", syncAdapter.getUnsyncedProject().size());
+
             }
         };
 
@@ -279,6 +282,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         if (NetworkUtils.isNetworkConnected()) {
             ToastUtils.showShortToast("Download starts");
             updateSyncableMap(selectedProjectList);
+
+            Timber.i("ProjectListtActivityv3, syncable map = " + syncableMap.toString());
             syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
             syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
             syncIntent.putExtra("selection", syncableMap);
