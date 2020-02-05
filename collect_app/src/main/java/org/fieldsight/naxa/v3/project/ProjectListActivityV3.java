@@ -225,9 +225,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 String projectId = stat.getProjectId();
                 if (syncableMap.containsKey(projectId)) {
                     List<Syncable> syncableList = syncableMap.get(projectId);
-                    if(syncProjectList.size() < 3) {
-                        continue;
-                    }
+                    Timber.i("ProjectListActivityv3, syncProjectlist size = %d", syncProjectList.size());
                     Syncable mSyncable = syncableList.get(Integer.parseInt(stat.getType()));
                     mSyncable.setStatus(stat.getStatus());
                     mSyncable.setProgress(stat.getProgress());

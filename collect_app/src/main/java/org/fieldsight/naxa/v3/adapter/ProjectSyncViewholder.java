@@ -120,8 +120,6 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             if (syncableList != null && syncableList.size() == 3) {
                 Timber.i("projectsync, notifying sync for project = " + project.getName());
                 updateBySyncStat(syncableList);
-            } else {
-                downloadingSection.setVisibility(View.GONE);
             }
         }
 
