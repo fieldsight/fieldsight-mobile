@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -83,6 +84,12 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
     @BindView(R.id.ll_downloading_section)
     LinearLayout downloadingSection;
 
+    @BindView(R.id.prgbar_sync)
+    ProgressBar prgBarSync;
+
+    @BindView(R.id.tv_count)
+    TextView tvCount;
+
     public ProjectSyncViewholder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -141,6 +148,8 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
             tvDownloading.setText("Syncing project");
             ivCancel.setTag("syncing");
+            tvCount.setText(formSyncStat.getProgress() + "/" + formSyncStat.getTotal());
+            prgBarSync.setProgress(formSyncStat.getProgress()/formSyncStat.getTotal()*100);
             downloadingSection.setVisibility(View.VISIBLE);
         } else {
             downloadingSection.setVisibility(View.VISIBLE);
