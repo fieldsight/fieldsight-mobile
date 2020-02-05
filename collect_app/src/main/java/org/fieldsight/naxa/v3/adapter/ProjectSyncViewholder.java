@@ -149,7 +149,9 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             tvDownloading.setText("Syncing project");
             ivCancel.setTag("syncing");
             tvCount.setText(formSyncStat.getProgress() + "/" + formSyncStat.getTotal());
-            prgBarSync.setProgress(formSyncStat.getProgress()/formSyncStat.getTotal()*100);
+            if(formSyncStat.getProgress() > 0) {
+                prgBarSync.setProgress(formSyncStat.getProgress() / formSyncStat.getTotal() * 100);
+            }
             downloadingSection.setVisibility(View.VISIBLE);
         } else {
             downloadingSection.setVisibility(View.VISIBLE);
