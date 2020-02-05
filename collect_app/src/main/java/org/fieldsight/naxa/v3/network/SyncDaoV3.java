@@ -72,4 +72,8 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
 
     @Query("DELETE FROM syncstat WHERE cancel_by_user=1")
     void removeCancelledSync();
+
+    @Query("DELETE FROm syncstat WHERE project_id in (:projectIds)")
+    void deleteByIds(String... projectIds);
+
 }

@@ -80,6 +80,10 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         save(syncStat);
     }
 
+    public void deleteByIds(String... projectIds) {
+        dao.deleteByIds(projectIds);
+    }
+
     @Override
     public void save(ArrayList<SyncStat> items) {
         throw new RuntimeException("Not Implemented yet");
