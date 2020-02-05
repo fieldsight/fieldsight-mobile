@@ -434,37 +434,37 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 // update the value with syncstat
                 List<SyncStat> mSyncStatList = SyncLocalSource3.getInstance().getAllList();
 
-//                HashMap<String, Integer> projectSyncalbeCount = new HashMap<>();
-//
-//                // calculate the total count for each project id
-//                for(SyncStat mStat : mSyncStatList) {
-//                    if(projectSyncalbeCount.containsKey(mStat.getProjectId())) {
-//                        int count = projectSyncalbeCount.get(mStat.getProjectId());
-//                        projectSyncalbeCount.put(mStat.getProjectId(),  count + 1);
-//                    } else {
-//                        projectSyncalbeCount.put(mStat.getProjectId(),  1);
-//                    }
-//                }
-//                Timber.i("ProjectListActivityv3, sync stat by project = %s", projectSyncalbeCount.toString());
-//                // clean syncstat , i.e. failed case, cancelled case
-//
-//                // get project ids which list size is less than 3
-//                List<String> unCompleteProjects = new ArrayList<>();
-//                for(String key: projectSyncalbeCount.keySet()) {
-//                    if(projectSyncalbeCount.get(key) < 3) {
-//                        unCompleteProjects.add(key);
-//                    }
-//                }
-//                Timber.i("ProjectListActivityv3, uncomplete project size = %d", unCompleteProjects.size());
-//
-//                // delete the uncomplete project list
-//                String[] idsArray = unCompleteProjects.toArray(new String[unCompleteProjects.size()]);
-//                SyncLocalSource3.getInstance().deleteByIds(idsArray);
-//
-//                Timber.i("getDataFromServer :: ===========>>>>>>>> sync project ids = %d ", mSyncStatList.size());
-//
-//                // get syncstat list again
-//                mSyncStatList = SyncLocalSource3.getInstance().getAllList();
+                HashMap<String, Integer> projectSyncalbeCount = new HashMap<>();
+
+                // calculate the total count for each project id
+                for(SyncStat mStat : mSyncStatList) {
+                    if(projectSyncalbeCount.containsKey(mStat.getProjectId())) {
+                        int count = projectSyncalbeCount.get(mStat.getProjectId());
+                        projectSyncalbeCount.put(mStat.getProjectId(),  count + 1);
+                    } else {
+                        projectSyncalbeCount.put(mStat.getProjectId(),  1);
+                    }
+                }
+                Timber.i("ProjectListActivityv3, sync stat by project = %s", projectSyncalbeCount.toString());
+                // clean syncstat , i.e. failed case, cancelled case
+
+                // get project ids which list size is less than 3
+                List<String> unCompleteProjects = new ArrayList<>();
+                for(String key: projectSyncalbeCount.keySet()) {
+                    if(projectSyncalbeCount.get(key) < 3) {
+                        unCompleteProjects.add(key);
+                    }
+                }
+                Timber.i("ProjectListActivityv3, uncomplete project size = %d", unCompleteProjects.size());
+
+                // delete the uncomplete project list
+                String[] idsArray = unCompleteProjects.toArray(new String[unCompleteProjects.size()]);
+                SyncLocalSource3.getInstance().deleteByIds(idsArray);
+
+                Timber.i("getDataFromServer :: ===========>>>>>>>> sync project ids = %d ", mSyncStatList.size());
+
+                // get syncstat list again
+                mSyncStatList = SyncLocalSource3.getInstance().getAllList();
 
                 if (mSyncStatList.size() == 0) {
                     unSyncedprojectList.addAll(mProjectList);

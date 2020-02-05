@@ -148,8 +148,8 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
             tvDownloading.setText("Syncing project");
             ivCancel.setTag("syncing");
-            if(formSyncStat.getProgress() > 0) {
-                tvCount.setText("Syncing forms" + formSyncStat.getProgress() + "/" + formSyncStat.getTotal());
+            if(formSyncStat.getProgress() > 0 && formSyncStat.getTotal()  > 0) {
+                tvCount.setText("Syncing forms " + formSyncStat.getProgress() + "/" + formSyncStat.getTotal());
                 int percentageProgress = (formSyncStat.getProgress() / formSyncStat.getTotal())*100;
                 Timber.i("projectSyncViewholder, progress percent = %dd", percentageProgress);
                 prgBarSync.setProgress(percentageProgress);
