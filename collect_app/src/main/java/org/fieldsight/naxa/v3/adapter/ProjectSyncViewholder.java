@@ -127,6 +127,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         Syncable sitesAndRegionsSyncStat = syncableList.get(0);
         Syncable formSyncStat = syncableList.get(1);
         Syncable educationAndMaterialSyncStat = syncableList.get(2);
+        Timber.i("sync projectid, formprogress = %d total = %d", formSyncStat.getProgress(), formSyncStat.getTotal() );
         if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
             Timber.i("upddate sync by status, complete");
             ivCancel.setVisibility(View.GONE);

@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="4dp"
             android:layout_margin="16dp"
             android:text="Not synced yet"
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"

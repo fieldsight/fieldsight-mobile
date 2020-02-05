@@ -26,6 +26,7 @@ import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightUserSession;
+import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.network.NetworkUtils;
@@ -279,7 +280,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     }
 
     private void startSyncing(ArrayList<Project> selectedProjectList) {
-        if (NetworkUtils.isNetworkConnected()) {
+
             ToastUtils.showShortToast("Download starts");
             updateSyncableMap(selectedProjectList);
 
@@ -288,25 +289,25 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
             syncIntent.putExtra("selection", syncableMap);
             startService(syncIntent);
-
             unSyncedAdapter.disableAdapter(true);
             syncStarts = true;
-        } else {
-            Toast.makeText(this, getString(R.string.no_internet_body), Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     @OnClick(R.id.tv_sync_project)
     void addInSyncList() {
-        ArrayList<Project> toSyncList = manageSyncList();
-        this.syncProjectList.addAll(0, toSyncList);
+        if (NetworkUtils.isNetworkConnected()) {
+            ArrayList<Project> toSyncList = manageSyncList();
+            this.syncProjectList.addAll(0, toSyncList);
+            syncAdapter.notifyDataSetChanged();
+            tvUnsync.setVisibility(View.VISIBLE);
 
-        syncAdapter.notifyDataSetChanged();
-        tvUnsync.setVisibility(View.VISIBLE);
-
-        startSyncing(toSyncList);
-        // hide sync button when sync started
-        tvSyncProject.setVisibility(View.GONE);
+            startSyncing(toSyncList);
+            // hide sync button when sync started
+            tvSyncProject.setVisibility(View.GONE);
+        } else {
+            SnackBarUtils.showErrorFlashbar(this, getString(R.string.no_internet_body));
+        }
     }
 
     private void fixNullUrl() throws Exception {
