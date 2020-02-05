@@ -427,7 +427,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                  *  if projectids is empty , none of the project are scheduled for the syncing
                  *
                  */
-
+                // remove all cancelled projects
+                SyncLocalSource3.getInstance().removeCancelledProject();
+                // update the value with syncstat
                 List<SyncStat> mSyncStatList = SyncLocalSource3.getInstance().getAllList();
 
                 Timber.i("getDataFromServer :: ===========>>>>>>>> sync project ids = %d ", mSyncStatList.size());
@@ -616,7 +618,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         project.setChecked(false);
         unSyncedAdapter.push(project, pos);
         // remove this from sync stats
-        SyncLocalSource3.getInstance().deleteByid(project.getId());
+        SyncLocalSource3.getInstance().setProjectCancelled(project.getId());
         ToastUtils.showLongToast("Project sync cancelled by user");
     }
 
