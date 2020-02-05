@@ -18,9 +18,22 @@ public class Syncable implements Serializable {
     private int total;
     private int progress;
     public int status;
+    public long createdDate;
     // sync is forcably set to true to allow all sites, forms, and others to downloads.
 
     public boolean sync = true;
+
+    public Set<String> getLastFailedUrl() {
+        return lastFailedUrl;
+    }
+
+    public long getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(long createdDate) {
+        this.createdDate = createdDate;
+    }
 
     /**
      * @param title  - title that is show in the list
@@ -32,7 +45,7 @@ public class Syncable implements Serializable {
         this.status = status;
     }
 
-    Syncable(String title, int status, int total, int progress) {
+    public Syncable(String title, int status, int total, int progress) {
         this.title = title;
         this.status = status;
         this.total = total;

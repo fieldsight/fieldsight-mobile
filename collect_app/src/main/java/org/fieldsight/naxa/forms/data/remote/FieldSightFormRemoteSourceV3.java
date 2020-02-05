@@ -127,6 +127,7 @@ public class FieldSightFormRemoteSourceV3 {
                                 int projectId = getProjectId(fieldSightFormDetailV3);
                                 int progressCount = downloadProjectFormProgressUrlMap.get(projectId, 0) + 1;
                                 downloadProjectFormProgressUrlMap.put(projectId, progressCount);
+                                Timber.i("FieldsightFormRemoteSourem, Update download progress, projectId = %s, progressCount = %d", projectId, progressCount);
                                 SyncLocalSource3.getInstance().updateDownloadProgress(String.valueOf(projectId), progressCount, projectIdUrlMap.get(projectId));
                                 return downloadSingleForm(fieldSightFormDetailV3);
                             })

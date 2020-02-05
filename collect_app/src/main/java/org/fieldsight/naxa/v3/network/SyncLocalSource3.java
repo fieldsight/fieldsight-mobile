@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Single;
+import timber.log.Timber;
 
 public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
@@ -124,6 +125,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
     }
 
     public void updateDownloadProgress(String projectId, int progress, int totalFormsInProject) {
+        Timber.i("SyncLocalService, =========>>  updateDownloadProgress :: projectId = %s, progress = %d, totalFormsInProject = %d ", projectId, progress, totalFormsInProject);
         SyncStat syncStat = new SyncStat(projectId, String.valueOf(1) , "", false, Constant.DownloadStatus.RUNNING, System.currentTimeMillis());
         syncStat.setProgress(progress);
         syncStat.setTotal(totalFormsInProject);

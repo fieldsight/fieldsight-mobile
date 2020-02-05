@@ -224,7 +224,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 String projectId = stat.getProjectId();
                 if (syncableMap.containsKey(projectId)) {
                     List<Syncable> syncableList = syncableMap.get(projectId);
-                    syncableList.get(Integer.parseInt(stat.getType())).setStatus(stat.getStatus());
+                    Syncable mSyncable = syncableList.get(Integer.parseInt(stat.getType()));
+                    mSyncable.setStatus(stat.getStatus());
+                    mSyncable.setProgress(stat.getProgress());
+                    mSyncable.setTotal(stat.getTotal());
+                    mSyncable.setCreatedDate(stat.getCreated_date());
+                    syncableList.set(Integer.parseInt(stat.getType()), mSyncable);
                     syncableMap.put(projectId, syncableList);
                 }
             }
@@ -266,9 +271,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     private ArrayList<Syncable> createList() {
         // -1 refers here as never started
         return new ArrayList<Syncable>() {{
-            add(0, new Syncable("Regions and sites", -1));
-            add(1, new Syncable("Forms", -1));
-            add(2, new Syncable("Materials", -1));
+            add(0, new Syncable("Regions and sites", -1, 0, 0));
+            add(1, new Syncable("Forms", -1, 0, 0));
+            add(2, new Syncable("Materials", -1, 0, 0));
         }};
     }
 
@@ -301,7 +306,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             this.syncProjectList.addAll(0, toSyncList);
             syncAdapter.notifyDataSetChanged();
             tvUnsync.setVisibility(View.VISIBLE);
-
             startSyncing(toSyncList);
             // hide sync button when sync started
             tvSyncProject.setVisibility(View.GONE);
@@ -400,6 +404,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             }
         }
         syncAdapter.updateSyncMap(syncableMap);
+        if(syncAdapter.getItemCount() > 0) {
+            tvUnsync.setVisibility(View.VISIBLE);
+        }
 
 //        projectIds.observe(ProjectListActivityV3.this, projectObserver);
     }
