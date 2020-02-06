@@ -291,13 +291,20 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         updateSyncableMap(selectedProjectList);
 
         Timber.i("ProjectListtActivityv3, syncable map = " + syncableMap.toString());
+
+//        // clear synstat table before starting
+//        String[] projectIds = new String[selectedProjectList.size()];
+//        for(int i = 0; i < selectedProjectList.size(); i++) {
+//            projectIds[i] = selectedProjectList.get(i).getId();
+//        }
+//        SyncLocalSource3.getInstance().deleteByIds(projectIds);
+
         syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
         syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
         syncIntent.putExtra("selection", syncableMap);
         startService(syncIntent);
         unSyncedAdapter.disableAdapter(true);
         syncStarts = true;
-
     }
 
     @OnClick(R.id.tv_sync_project)
@@ -681,12 +688,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     @Override
     public void onCancelClicked(int pos) {
-        Project project = ((SyncingProjectAdapter) rvSyncing.getAdapter()).popItem(pos);
-        project.setChecked(false);
-        SyncLocalSource3.getInstance().setProjectCancelled(project.getId());
-        unSyncedAdapter.push(pos, project);
-        // remove this from sync stats
-        ToastUtils.showLongToast("Project sync cancelled by user");
+//        Project project = ((SyncingProjectAdapter) rvSyncing.getAdapter()).popItem(pos);
+//        project.setChecked(false);
+//        SyncLocalSource3.getInstance().setProjectCancelled(project.getId());
+//        unSyncedAdapter.push(pos, project);
+//        // remove this from sync stats
+//        ToastUtils.showLongToast("Project sync cancelled by user");
     }
 
     @Override

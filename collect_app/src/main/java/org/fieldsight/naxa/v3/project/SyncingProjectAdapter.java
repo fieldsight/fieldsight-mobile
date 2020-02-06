@@ -71,13 +71,13 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
             }
         });
 
-        holder.itemView.findViewById(R.id.iv_cancel).setOnClickListener(v -> {
-            if(v.getTag().equals("syncing")) {
-                callback.onCancelClicked(position);
-            } else if(v.getTag().equals("retry")){
-                callback.retryClicked(position);
-            }
-        });
+//        holder.itemView.findViewById(R.id.iv_cancel).setOnClickListener(v -> {
+//            if(v.getTag()== null || v.getTag().equals("syncing")) {
+//                callback.onCancelClicked(position);
+//            } else if(v.equals("retry")){
+//                callback.retryClicked(position);
+//            }
+//        });
     }
 
     public void updateSyncMap(HashMap<String, List<Syncable>> syncableMap) {
