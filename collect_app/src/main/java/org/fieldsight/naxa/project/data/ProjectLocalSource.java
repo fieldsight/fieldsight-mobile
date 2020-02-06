@@ -4,13 +4,12 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.fieldsight.naxa.login.model.Project;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Single;
