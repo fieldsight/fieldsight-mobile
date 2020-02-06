@@ -310,6 +310,7 @@
                 android:id="@+id/iv_cancel"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:visibility="gone"
                 app:srcCompat="@drawable/ic_circle_cancel_major_monotone"/>
 
             <ImageView
