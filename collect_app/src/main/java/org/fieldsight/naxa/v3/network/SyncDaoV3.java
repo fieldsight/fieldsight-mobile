@@ -67,8 +67,8 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
     @Query("DELETE FROM syncstat WHERE project_id=:projectId")
     void deleteById(String projectId);
 
-    @Query("UPDATE syncstat set cancel_by_user=1 WHERE project_id=:projectId")
-    void setSyncCancelled(String projectId);
+    @Query("UPDATE syncstat set cancel_by_user=1 WHERE project_id in (:projectId)")
+    void setSyncCancelled(String... projectId);
 
     @Query("DELETE FROM syncstat WHERE cancel_by_user=1")
     void removeCancelledSync();

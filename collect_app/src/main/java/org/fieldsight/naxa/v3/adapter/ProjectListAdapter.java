@@ -10,6 +10,8 @@ import org.bcss.collect.android.R;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.v3.network.ProjectNameTuple;
 import org.fieldsight.naxa.v3.project.ProjectDashboardActivity;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> {
@@ -82,8 +84,12 @@ public class ProjectListAdapter extends RecyclerView.Adapter<ProjectViewHolder> 
 //        notifyDataSetChanged();
     }
 
-    public void push(Project project, int index) {
-        this.projectList.add(index, project);
+    public void push(int index, Project... projects) {
+        List<Project> mProjectList = new ArrayList<>();
+        for(Project project : projects) {
+            mProjectList.add(project);
+        }
+        this.projectList.addAll(index, mProjectList);
         notifyItemChanged(index);
     }
 

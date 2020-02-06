@@ -28,7 +28,7 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         this.dao = database.getSyncDaoV3();
     }
 
-    public void setProjectCancelled(String projectId) {
+    public void setProjectCancelled(String... projectId) {
         this.dao.setSyncCancelled(projectId);
     }
 

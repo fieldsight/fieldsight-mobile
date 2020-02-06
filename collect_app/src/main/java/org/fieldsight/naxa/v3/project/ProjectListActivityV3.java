@@ -1,6 +1,8 @@
 package org.fieldsight.naxa.v3.project;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -431,7 +433,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                  *
                  */
                 // remove all cancelled projects
-                SyncLocalSource3.getInstance().removeCancelledProject();
+//                SyncLocalSource3.getInstance().removeCancelledProject();
                 // update the value with syncstat
                 List<SyncStat> mSyncStatList = SyncLocalSource3.getInstance().getAllList();
 
@@ -635,6 +637,38 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         }
     }
 
+    private void cancelAllSync() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cancel sync process");
+        builder.setMessage("Project is syncing, Canceling the syncing will stop syncing this project.")
+                .setPositiveButton("Cancel Sync", (dialog, which) -> {
+                    if (syncIntent != null) {
+                        DisposableManager.dispose();
+                        stopService(syncIntent);
+                        Timber.i("Service closed down");
+
+                        // set cancelled only to those projects which is not completed
+                        List<String> syncingIds = new ArrayList<>();
+                        for(String key : syncableMap.keySet()) {
+                            boolean sitesSynced = syncableMap.get(key).get(0).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            boolean formsSynnced = syncableMap.get(key).get(1).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            boolean educationMaterialSynced = syncableMap.get(key).get(3).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            Timber.i(" ProjectListActivityv3, projectId = " + key + " sitesSynced = " + sitesSynced + " formsSynced = " + formsSynnced + " educationMaterialSynced = " + educationMaterialSynced);
+                            if(sitesSynced && formsSynnced && educationMaterialSynced) continue;
+                            syncingIds.add(key);
+                        }
+                        Timber.i("syncing key size = %d", syncingIds.size());
+                        if(syncingIds.size() > 0) {
+                            String[] ids = syncingIds.toArray(new String[syncingIds.size()]);
+                            SyncLocalSource3.getInstance().deleteByIds(ids);
+                        }
+                    }
+
+                    Timber.i("cancel clicked");
+                    ToastUtils.showLongToast("Project sync cancelled by user");
+                }).setNegativeButton("Close", null).create().show();
+    }
+
     @Override
     public void syncedProjectClicked(Project project) {
         ProjectDashboardActivity.start(this, project);
@@ -642,17 +676,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     @Override
     public void onCancelClicked(int pos) {
-        if (syncIntent != null) {
-            DisposableManager.dispose();
-            stopService(syncIntent);
-            Timber.i("Service closed down");
-        }
-        Timber.i("cancel clicked");
         Project project = ((SyncingProjectAdapter) rvSyncing.getAdapter()).popItem(pos);
         project.setChecked(false);
-        unSyncedAdapter.push(project, pos);
-        // remove this from sync stats
         SyncLocalSource3.getInstance().setProjectCancelled(project.getId());
+        unSyncedAdapter.push(pos, project);
+        // remove this from sync stats
         ToastUtils.showLongToast("Project sync cancelled by user");
     }
 

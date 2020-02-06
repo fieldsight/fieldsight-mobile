@@ -13,8 +13,8 @@
 
     <item
         android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh_white_2"
-        android:title="@string/menu_title_sync"
+        android:icon="@drawable/ic_cancel"
+        android:title="@string/menu_cancel_sync"
         android:iconTint="@android:color/black"
         app:showAsAction="always" />
 
