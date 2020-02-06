@@ -1,6 +1,5 @@
 package org.fieldsight.naxa.v3.adapter;
 
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,17 +18,13 @@ import com.bumptech.glide.request.RequestOptions;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.login.model.Project;
-import org.fieldsight.naxa.onboarding.SyncableItem;
 import org.fieldsight.naxa.v3.network.Syncable;
-import org.odk.collect.android.utilities.DateTimeUtils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.ViewUtils.loadImageWithFallback;
@@ -151,7 +146,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             if(formSyncStat.getProgress() > 0 && formSyncStat.getTotal()  > 0) {
                 tvCount.setText("Syncing forms " + formSyncStat.getProgress() + "/" + formSyncStat.getTotal());
                 int percentageProgress = (int)Math.round((formSyncStat.getProgress()*100)/formSyncStat.getTotal());
-                Timber.i("projectSyncViewholder, progress percent = %dd", percentageProgress);
+                Timber.i("projectSyncViewholder, progress percent = %d", percentageProgress);
                 prgBarSync.setProgress(percentageProgress);
             } else {
                 tvCount.setText("Calculating total form counts");

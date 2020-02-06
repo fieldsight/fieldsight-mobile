@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
@@ -642,6 +643,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     @Override
     public void onCancelClicked(int pos) {
         if (syncIntent != null) {
+            DisposableManager.dispose();
             stopService(syncIntent);
             Timber.i("Service closed down");
         }
