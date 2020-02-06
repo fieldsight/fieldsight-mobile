@@ -287,16 +287,16 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     private void startSyncing(ArrayList<Project> selectedProjectList) {
 
-            ToastUtils.showShortToast("Download starts");
-            updateSyncableMap(selectedProjectList);
+        ToastUtils.showShortToast("Download starts");
+        updateSyncableMap(selectedProjectList);
 
-            Timber.i("ProjectListtActivityv3, syncable map = " + syncableMap.toString());
-            syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
-            syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
-            syncIntent.putExtra("selection", syncableMap);
-            startService(syncIntent);
-            unSyncedAdapter.disableAdapter(true);
-            syncStarts = true;
+        Timber.i("ProjectListtActivityv3, syncable map = " + syncableMap.toString());
+        syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+        syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
+        syncIntent.putExtra("selection", syncableMap);
+        startService(syncIntent);
+        unSyncedAdapter.disableAdapter(true);
+        syncStarts = true;
 
     }
 
@@ -405,7 +405,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             }
         }
         syncAdapter.updateSyncMap(syncableMap);
-        if(syncAdapter.getItemCount() > 0) {
+        if (syncAdapter.getItemCount() > 0) {
             tvUnsync.setVisibility(View.VISIBLE);
         }
 
@@ -440,12 +440,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 HashMap<String, Integer> projectSyncalbeCount = new HashMap<>();
 
                 // calculate the total count for each project id
-                for(SyncStat mStat : mSyncStatList) {
-                    if(projectSyncalbeCount.containsKey(mStat.getProjectId())) {
+                for (SyncStat mStat : mSyncStatList) {
+                    if (projectSyncalbeCount.containsKey(mStat.getProjectId())) {
                         int count = projectSyncalbeCount.get(mStat.getProjectId());
-                        projectSyncalbeCount.put(mStat.getProjectId(),  count + 1);
+                        projectSyncalbeCount.put(mStat.getProjectId(), count + 1);
                     } else {
-                        projectSyncalbeCount.put(mStat.getProjectId(),  1);
+                        projectSyncalbeCount.put(mStat.getProjectId(), 1);
                     }
                 }
                 Timber.i("ProjectListActivityv3, sync stat by project = %s", projectSyncalbeCount.toString());
@@ -453,8 +453,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
                 // get project ids which list size is less than 3
                 List<String> unCompleteProjects = new ArrayList<>();
-                for(String key: projectSyncalbeCount.keySet()) {
-                    if(projectSyncalbeCount.get(key) < 3) {
+                for (String key : projectSyncalbeCount.keySet()) {
+                    if (projectSyncalbeCount.get(key) < 3) {
                         unCompleteProjects.add(key);
                     }
                 }
@@ -553,8 +553,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu_fieldsight, menu);
-        menu.findItem(R.id.action_refresh).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor),  PorterDuff.Mode.SRC_IN);
-        menu.findItem(R.id.action_notificaiton).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor),  PorterDuff.Mode.SRC_IN);
+        menu.findItem(R.id.action_refresh).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor), PorterDuff.Mode.SRC_IN);
+        menu.findItem(R.id.action_notificaiton).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor), PorterDuff.Mode.SRC_IN);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -590,7 +590,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //                }
 //                adapter.toggleAllSelected(allSelected);
 //                adapter.notifyDataSetChanged();
-//                invalidateOptionsMenu();
+                if (syncStarts) {
+                    cancelAllSync();
+                }
+                else {
+                  ToastUtils.showLongToast("There is no any pending project syncing in queue to cancel");
+                }
                 break;
             case R.id.action_notificaiton:
                 NotificationListActivity.start(this);
@@ -649,16 +654,16 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
                         // set cancelled only to those projects which is not completed
                         List<String> syncingIds = new ArrayList<>();
-                        for(String key : syncableMap.keySet()) {
+                        for (String key : syncableMap.keySet()) {
                             boolean sitesSynced = syncableMap.get(key).get(0).getStatus() == Constant.DownloadStatus.COMPLETED;
                             boolean formsSynnced = syncableMap.get(key).get(1).getStatus() == Constant.DownloadStatus.COMPLETED;
                             boolean educationMaterialSynced = syncableMap.get(key).get(3).getStatus() == Constant.DownloadStatus.COMPLETED;
                             Timber.i(" ProjectListActivityv3, projectId = " + key + " sitesSynced = " + sitesSynced + " formsSynced = " + formsSynnced + " educationMaterialSynced = " + educationMaterialSynced);
-                            if(sitesSynced && formsSynnced && educationMaterialSynced) continue;
+                            if (sitesSynced && formsSynnced && educationMaterialSynced) continue;
                             syncingIds.add(key);
                         }
                         Timber.i("syncing key size = %d", syncingIds.size());
-                        if(syncingIds.size() > 0) {
+                        if (syncingIds.size() > 0) {
                             String[] ids = syncingIds.toArray(new String[syncingIds.size()]);
                             SyncLocalSource3.getInstance().deleteByIds(ids);
                         }
