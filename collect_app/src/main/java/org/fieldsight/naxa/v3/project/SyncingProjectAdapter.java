@@ -109,6 +109,7 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
             }
             if(found) {
                 this.projectList.get(i).setSynced(false);
+                this.projectList.get(i).setChecked(false);
                 newSyncedList.add(this.projectList.get(i));
             }else {
                 filteredList.add(this.projectList.get(i));
