@@ -673,9 +673,10 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                         if (syncingIds.size() > 0) {
                             String[] ids = syncingIds.toArray(new String[syncingIds.size()]);
                             SyncLocalSource3.getInstance().deleteByIds(ids);
+                           List<Project> projectList = syncAdapter.popItemByIds(ids);
+                           unSyncedAdapter.push(0, projectList.toArray(new Project[projectList.size()]));
                         }
                     }
-
                     Timber.i("cancel clicked");
                     ToastUtils.showLongToast("Project sync cancelled by user");
                 }).setNegativeButton("Close", null).create().show();

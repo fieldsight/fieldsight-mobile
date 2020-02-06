@@ -95,6 +95,34 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
         return unsynced;
     }
 
+    public List<Project> popItemByIds(String... ids) {
+        List<Project> newSyncedList = new ArrayList<>();
+        List<Project> filteredList = new ArrayList<>();
+        for( int i =0; i < this.projectList.size(); i++) {
+            boolean found = false;
+            int j;
+            for(j = 0; j < ids.length; j ++) {
+                if (this.projectList.get(i).getId().equals(ids[j])) {
+                    found = true;
+                    break;
+                }
+            }
+            if(found) {
+                this.projectList.get(i).setSynced(false);
+                newSyncedList.add(this.projectList.get(i));
+            }else {
+                filteredList.add(this.projectList.get(i));
+            }
+
+        }
+
+
+        this.projectList.clear();
+        this.projectList.addAll(filteredList);
+        notifyDataSetChanged();
+        return newSyncedList;
+    }
+
     public void notifyProjectSyncStatusChange(String projectId) {
         // get the index of the selected project id
         int foundIndex = -1;
