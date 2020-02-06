@@ -652,7 +652,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                         stopService(syncIntent);
                         Timber.i("Service closed down");
 
-                        // set cancelled only to those projects which is not completed
+                        // delete project form syncstat table which is not completed
                         List<String> syncingIds = new ArrayList<>();
                         for (String key : syncableMap.keySet()) {
                             boolean sitesSynced = syncableMap.get(key).get(0).getStatus() == Constant.DownloadStatus.COMPLETED;
