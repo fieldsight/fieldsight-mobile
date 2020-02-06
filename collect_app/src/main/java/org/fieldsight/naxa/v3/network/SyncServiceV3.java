@@ -19,6 +19,7 @@ import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV3;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.project.data.ProjectLocalSource;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.json.JSONArray;
@@ -93,7 +94,9 @@ public class SyncServiceV3 extends IntentService {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
 
-            if(true)return;
+            selectedProject = ProjectLocalSource.getInstance().getProjectByids(selectedProjectids);
+            Timber.i("SynServicev3, selectedProject size = %d", selectedProject.size());
+
             Disposable sitesObservable = Observable.fromCallable(() -> {
                 URL url = new URL(FieldSightUserSession.getServerUrl(Collect.getInstance()));
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();

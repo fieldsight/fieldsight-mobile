@@ -10,6 +10,7 @@ import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.fieldsight.naxa.login.model.Project;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.Single;
@@ -84,5 +85,15 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
 
     public LiveData<Project> getClusterLabelForProject(String id) {
         return dao.getById(id);
+    }
+
+    public ArrayList<Project> getProjectByids(ArrayList<String> selectedProjectids) {
+        String[] ids = selectedProjectids.toArray(new String[selectedProjectids.size()]);
+        Project[] projectArray =  dao.getByIds(ids);
+        ArrayList<Project> projectList = new ArrayList<>();
+        for( Project project : projectArray) {
+            projectList.add(project);
+        }
+        return projectList;
     }
 }
