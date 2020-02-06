@@ -657,7 +657,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                         for (String key : syncableMap.keySet()) {
                             boolean sitesSynced = syncableMap.get(key).get(0).getStatus() == Constant.DownloadStatus.COMPLETED;
                             boolean formsSynnced = syncableMap.get(key).get(1).getStatus() == Constant.DownloadStatus.COMPLETED;
-                            boolean educationMaterialSynced = syncableMap.get(key).get(3).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            boolean educationMaterialSynced = syncableMap.get(key).get(2).getStatus() == Constant.DownloadStatus.COMPLETED;
                             Timber.i(" ProjectListActivityv3, projectId = " + key + " sitesSynced = " + sitesSynced + " formsSynced = " + formsSynnced + " educationMaterialSynced = " + educationMaterialSynced);
                             if (sitesSynced && formsSynnced && educationMaterialSynced) continue;
                             syncingIds.add(key);
