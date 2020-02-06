@@ -356,7 +356,6 @@ public class Project implements Parcelable {
         this.totalUsers = totalUsers;
         this.totalSubmissions = totalSubmissions;
         this.terms_and_labels = terms_and_labels;
-        this.regionList = regionList;
         this.siteMetaAttributes = siteMetaAttributes;
     }
 

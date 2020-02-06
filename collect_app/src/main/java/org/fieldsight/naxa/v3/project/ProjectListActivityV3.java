@@ -285,6 +285,14 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         }
     }
 
+    private ArrayList<String> getSelectedProjectIds(ArrayList<Project> selectedProjectList) {
+        ArrayList<String> idList = new ArrayList<>();
+        for(int i = 0; i < selectedProjectList.size(); i++) {
+            idList.add(selectedProjectList.get(i).getId());
+        }
+        return idList;
+    }
+
     private void startSyncing(ArrayList<Project> selectedProjectList) {
 
         ToastUtils.showShortToast("Download starts");
@@ -300,7 +308,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //        SyncLocalSource3.getInstance().deleteByIds(projectIds);
 
         syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
-        syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
+        syncIntent.putStringArrayListExtra("projects", getSelectedProjectIds(selectedProjectList));
         syncIntent.putExtra("selection", syncableMap);
         startService(syncIntent);
         unSyncedAdapter.disableAdapter(true);

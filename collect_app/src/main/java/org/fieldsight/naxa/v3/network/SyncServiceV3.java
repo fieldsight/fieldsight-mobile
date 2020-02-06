@@ -78,21 +78,22 @@ public class SyncServiceV3 extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
-            selectedProject = Objects.requireNonNull(intent).getParcelableArrayListExtra("projects");
-            Timber.i("SyncServiceV3 selectedProject size = %d", selectedProject.size());
+            ArrayList<String> selectedProjectids = Objects.requireNonNull(intent).getStringArrayListExtra("projects");
 
-//            if(selectedProject != null) {
-//                for (int i = 0; i < selectedProject.size(); i++) {
-//                    Timber.i("SyncServiceV3, selected project name = " + selectedProject.get(i).getName());
-//                }
-//
-//            }
+            Timber.i("SyncServiceV3 selectedProject size = %d", selectedProjectids.size());
+
+            if(selectedProjectids != null) {
+                for (int i = 0; i < selectedProjectids.size(); i++) {
+                    Timber.i("SyncServiceV3, selected project name = " + selectedProjectids.get(i));
+                }
+
+            }
             selectedMap = (HashMap<String, List<Syncable>>) intent.getSerializableExtra("selection");
             for (String key : selectedMap.keySet()) {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
 
-
+            if(true)return;
             Disposable sitesObservable = Observable.fromCallable(() -> {
                 URL url = new URL(FieldSightUserSession.getServerUrl(Collect.getInstance()));
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
