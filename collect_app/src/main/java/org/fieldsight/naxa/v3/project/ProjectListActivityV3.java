@@ -246,7 +246,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             Timber.i("SyncActivity ===============>>>>> syncing::  count = %d", count);
             if (count == 0) {
                 Timber.i("SyncActivity ===============>>> enable called");
-                syncStarts = false;
 
                 // change all unsynced to synced
                 for (int i = 0; i < syncProjectList.size(); i++) {
@@ -256,6 +255,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 }
                 syncAdapter.notifyDataSetChanged();
                 unSyncedAdapter.disableAdapter(false);
+
+                syncStarts = false;
+                invalidateOptionsMenu();
 
                 Timber.i("SyncAdapter ===============>>> remaining unsynced = %d", syncAdapter.getUnsyncedProject().size());
 
@@ -314,6 +316,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         startService(syncIntent);
         unSyncedAdapter.disableAdapter(true);
         syncStarts = true;
+        invalidateOptionsMenu();
     }
 
     @OnClick(R.id.tv_sync_project)
@@ -578,19 +581,17 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         return super.onCreateOptionsMenu(menu);
     }
 
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-////        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
-//        if (showSyncMenu) {
-//            menu.findItem(R.id.action_refresh).setIcon(allSelected ?
-//                    R.drawable.ic_cancel_white_24dp :
-//                    R.drawable.ic_action_sync
-//            );
-//            menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
-//        }
-//
-//        return super.onPrepareOptionsMenu(menu);
-//    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+//        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
+        if (syncStarts) {
+            menu.findItem(R.id.action_refresh).setVisible(true);
+        }else {
+            menu.findItem(R.id.action_refresh).setVisible(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
