@@ -2,7 +2,6 @@ package org.fieldsight.naxa.v3.project;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,7 +50,6 @@ import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -135,6 +134,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     // unsynced array list i.e. yet to sync
     List<Project> unSyncedprojectList = new ArrayList<>();
     Intent syncIntent;
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView nestedScrollView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -287,7 +288,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     private ArrayList<String> getSelectedProjectIds(ArrayList<Project> selectedProjectList) {
         ArrayList<String> idList = new ArrayList<>();
-        for(int i = 0; i < selectedProjectList.size(); i++) {
+        for (int i = 0; i < selectedProjectList.size(); i++) {
             idList.add(selectedProjectList.get(i).getId());
         }
         return idList;
@@ -325,6 +326,10 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             startSyncing(toSyncList);
             // hide sync button when sync started
             tvSyncProject.setVisibility(View.GONE);
+
+            nestedScrollView.scrollTo(0,0);
+      
+
         } else {
             SnackBarUtils.showErrorFlashbar(this, getString(R.string.no_internet_body));
         }
@@ -607,9 +612,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //                adapter.notifyDataSetChanged();
                 if (syncStarts) {
                     cancelAllSync();
-                }
-                else {
-                  ToastUtils.showLongToast("There is no any pending project syncing in queue to cancel");
+                } else {
+                    ToastUtils.showLongToast("There is no any pending project syncing in queue to cancel");
                 }
                 break;
             case R.id.action_notificaiton:
@@ -681,8 +685,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                         if (syncingIds.size() > 0) {
                             String[] ids = syncingIds.toArray(new String[syncingIds.size()]);
                             SyncLocalSource3.getInstance().deleteByIds(ids);
-                           List<Project> projectList = syncAdapter.popItemByIds(ids);
-                           unSyncedAdapter.push(0, projectList.toArray(new Project[projectList.size()]));
+                            List<Project> projectList = syncAdapter.popItemByIds(ids);
+                            unSyncedAdapter.push(0, projectList.toArray(new Project[projectList.size()]));
                         }
                     }
                     Timber.i("cancel clicked");
