@@ -165,7 +165,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 Timber.i("projectSyncViewholder, progress percent = %d", percentageProgress);
                 prgBarSync.setProgress(percentageProgress);
             } else {
-                tvCount.setText("Calculating total form counts");
+                tvCount.setText("Calculating");
             }
             downloadingSection.setVisibility(View.VISIBLE);
         } else {
