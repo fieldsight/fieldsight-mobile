@@ -713,6 +713,21 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     @Override
     public void retryClicked(int pos) {
         Timber.i("retry clicked");
+        Project project = ((SyncingProjectAdapter) rvSyncing.getAdapter()).popItem(pos);
+        if(!syncStarts) {
+            if (NetworkUtils.isNetworkConnected()) {
+                tvUnsync.setVisibility(View.VISIBLE);
+                toSyncList.clear();
+                toSyncList.add(project);
+                startSyncing(toSyncList);
+                // hide sync button when sync started
+                tvSyncProject.setVisibility(View.GONE);
+            } else {
+                SnackBarUtils.showErrorFlashbar(this, getString(R.string.no_internet_body));
+            }
+        } else {
+            ToastUtils.showLongToast("Please wait until sync completes");
+        }
     }
 }
 
