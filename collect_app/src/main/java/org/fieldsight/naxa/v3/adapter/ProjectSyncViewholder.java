@@ -70,8 +70,8 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_label_users)
     TextView userLabel;
 
-//    @BindView(R.id.iv_cancel)
-//    ImageView ivCancel;
+    @BindView(R.id.iv_cancel)
+    ImageView ivCancel;
 
     @BindView(R.id.tv_downloading)
     TextView tvDownloading;
@@ -110,6 +110,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
 
         Timber.i("projectsyncviewholder, project name = %s and hasSyncablelist isnotnull = " + (syncableList != null), project.getName());
         if (syncableList == null) {
+            ivCancel.setVisibility(View.VISIBLE);
             downloadingSection.setVisibility(View.GONE);
         } else {
             if (syncableList != null && syncableList.size() == 3) {
@@ -133,8 +134,8 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         Timber.i("sync projectid, formprogress = %d total = %d", formSyncStat.getProgress(), formSyncStat.getTotal() );
         if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
             Timber.i("upddate sync by status, complete");
-//            ivCancel.setVisibility(View.GONE);
-//            ivCancel.setTag("synced");
+            ivCancel.setVisibility(View.GONE);
+            ivCancel.setTag("synced");
             tvDownloading.setText("Sync complete");
             downloadingSection.setVisibility(View.GONE);
             hasSyncComplete(getLayoutPosition());
@@ -142,7 +143,10 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             Timber.i("upddate sync by status, syncing");
 //            ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
             tvDownloading.setText("Syncing project");
-//            ivCancel.setTag("syncing");
+            ivCancel.setTag("syncing");
+            ivCancel.setVisibility(View.GONE);
+            prgBarSync.setVisibility(View.VISIBLE);
+            tvCount.setVisibility(View.VISIBLE);
             if(formSyncStat.getProgress() > 0 && formSyncStat.getTotal()  > 0) {
                 tvCount.setText("Syncing forms " + formSyncStat.getProgress() + "/" + formSyncStat.getTotal());
                 int percentageProgress = (int)Math.round((formSyncStat.getProgress()*100)/formSyncStat.getTotal());
@@ -170,8 +174,11 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 Timber.i("upddate sync by status, failed");
                 tvDownloading.setText(failedSync.toString() + " failed to sync");
                 tvDownloading.setTextColor(Color.parseColor("#FF0000"));
-//                ivCancel.setImageResource(R.drawable.ic_refresh);
-//                ivCancel.setTag("retry");
+                ivCancel.setImageResource(R.drawable.ic_refresh);
+                ivCancel.setTag("retry");
+                ivCancel.setVisibility(View.VISIBLE);
+                prgBarSync.setVisibility(View.GONE);
+                tvCount.setVisibility(View.GONE);
                 hasSyncComplete(getLayoutPosition());
             }
         }

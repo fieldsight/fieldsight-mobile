@@ -6,8 +6,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import androidx.lifecycle.LiveData;
-
 import org.apache.commons.io.FilenameUtils;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DisposableManager;
@@ -163,6 +161,7 @@ public class SyncServiceV3 extends IntentService {
                                                 if (hasDowloadFailed) {
                                                     failedProjectId.add(projectId);
                                                     // update the mark as failed. (currently failed will not be shown. new design will be added to handle this)
+                                                    markAsFailed(projectId+"", 1, "");
                                                 }
                                             }
 
