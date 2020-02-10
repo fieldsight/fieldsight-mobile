@@ -153,7 +153,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         } else if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.RUNNING || formSyncStat.status == Constant.DownloadStatus.RUNNING || educationAndMaterialSyncStat.status == Constant.DownloadStatus.RUNNING) {
             Timber.i("upddate sync by status, syncing");
 //            ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
-            tvDownloading.setText("Syncing project");
+            tvDownloading.setText("Syncing data");
             ivCancel.setTag("syncing");
             ivCancel.setVisibility(View.GONE);
             prgBarSync.setVisibility(View.VISIBLE);
