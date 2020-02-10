@@ -124,7 +124,6 @@ public class FieldSightFormRemoteSourceV3 {
                                     if(NetworkUtils.isNetworkConnected()) {
                                         return downloadFile;
                                     } else {
-                                        SyncLocalSource3.getInstance().markAsFailed(getProjectId(fieldsightFormDetailsv3)+"", 1, "");
                                         return false;
                                     }
                                 }
@@ -147,6 +146,14 @@ public class FieldSightFormRemoteSourceV3 {
                                     Timber.i("FieldsightformRemotesourcev3, downloadCount = %d, projectCunt = %d", downloadProjectFormProgressUrlMap.get(projectId), projectIdUrlMap.get(projectId));
                                     if (downloadProjectFormProgressUrlMap.get(projectId) == projectIdUrlMap.get(projectId)) {
                                         SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
+                                    }
+                                }
+                            }).doOnComplete(() -> {
+                                Timber.i("FieldsightformRemotesourcev3, doOncompleted called");
+                                for(int i = 0; i < downloadProjectFormProgressUrlMap.size(); i++) {
+                                    int projectId = downloadProjectFormProgressUrlMap.keyAt(i);
+                                    if (downloadProjectFormProgressUrlMap.get(projectId) == projectIdUrlMap.get(projectId)) {
+                                        SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, "");
                                     }
                                 }
                             });

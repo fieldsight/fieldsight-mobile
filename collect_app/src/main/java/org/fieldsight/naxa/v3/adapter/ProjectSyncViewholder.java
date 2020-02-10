@@ -120,6 +120,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             } else {
                 ivCancel.setVisibility(View.VISIBLE);
                 downloadingSection.setVisibility(View.GONE);
+                tvDownloading.setText("");
                 tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
             }
         } else {
