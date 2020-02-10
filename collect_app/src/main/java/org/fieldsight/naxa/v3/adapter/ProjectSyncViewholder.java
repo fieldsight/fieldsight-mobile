@@ -115,6 +115,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 ivCancel.setVisibility(View.VISIBLE);
                 downloadingSection.setVisibility(View.VISIBLE);
                 tvDownloading.setText("Sync failed");
+                prgBarSync.setVisibility(View.GONE);
                 tvDownloading.setTextColor(Color.parseColor("#FF0000"));
             } else {
                 ivCancel.setVisibility(View.VISIBLE);
@@ -169,21 +170,8 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             downloadingSection.setVisibility(View.VISIBLE);
         } else {
             downloadingSection.setVisibility(View.VISIBLE);
-            StringBuilder failedSync = new StringBuilder();
-            if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED) {
-                failedSync.append(sitesAndRegionsSyncStat.getTitle() + ", ");
-            }
-            if (formSyncStat.status == Constant.DownloadStatus.FAILED) {
-                failedSync.append(formSyncStat.getTitle() + ", ");
-            }
-
-            if (educationAndMaterialSyncStat.status == Constant.DownloadStatus.FAILED) {
-                failedSync.append(educationAndMaterialSyncStat.getTitle());
-            }
-
-            if (failedSync.length() > 0) {
                 Timber.i("upddate sync by status, failed");
-                tvDownloading.setText(failedSync.toString() + " failed to sync");
+                tvDownloading.setText("Sync failed");
                 tvDownloading.setTextColor(Color.parseColor("#FF0000"));
                 ivCancel.setImageResource(R.drawable.ic_refresh);
                 ivCancel.setTag("retry");
@@ -191,11 +179,8 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 prgBarSync.setVisibility(View.GONE);
                 tvCount.setVisibility(View.GONE);
                 hasSyncComplete(getLayoutPosition(), true);
-            }
         }
     }
-
-//    }
 
     public void hasSyncComplete(int index, boolean failed) {
 
