@@ -161,7 +161,7 @@ public class SyncServiceV3 extends IntentService {
                                                 if (hasDowloadFailed) {
                                                     failedProjectId.add(projectId);
                                                     // update the mark as failed. (currently failed will not be shown. new design will be added to handle this)
-                                                    markAsFailed(projectId+"", 1, "");
+//                                                    markAsFailed(projectId+"", 1, "");
                                                 }
                                             }
 
@@ -178,12 +178,15 @@ public class SyncServiceV3 extends IntentService {
 
                         @Override
                         public void onError(Throwable e) {
+                            //unused
+                            Timber.i("=========>>>>>> forms failed");
+                            Timber.i("Syncservicev3, failedproject size = %s", e.getMessage());
                             Timber.e(e);
                         }
 
                         @Override
                         public void onComplete() {
-                            //unused
+
                         }
                     });
 

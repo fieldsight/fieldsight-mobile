@@ -137,6 +137,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             ivCancel.setVisibility(View.GONE);
             ivCancel.setTag("synced");
             tvDownloading.setText("Sync complete");
+            tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
             downloadingSection.setVisibility(View.GONE);
             hasSyncComplete(getLayoutPosition());
         } else if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.RUNNING || formSyncStat.status == Constant.DownloadStatus.RUNNING || educationAndMaterialSyncStat.status == Constant.DownloadStatus.RUNNING) {
@@ -147,6 +148,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             ivCancel.setVisibility(View.GONE);
             prgBarSync.setVisibility(View.VISIBLE);
             tvCount.setVisibility(View.VISIBLE);
+            tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
             if(formSyncStat.getProgress() > 0 && formSyncStat.getTotal()  > 0) {
                 tvCount.setText("Syncing forms " + formSyncStat.getProgress() + "/" + formSyncStat.getTotal());
                 int percentageProgress = (int)Math.round((formSyncStat.getProgress()*100)/formSyncStat.getTotal());
