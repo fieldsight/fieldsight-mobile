@@ -712,7 +712,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     @Override
     public void retryClicked(int pos) {
-
+        Timber.i("retry clicked");
     }
 }
 
