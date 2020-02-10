@@ -110,10 +110,19 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
 
         Timber.i("projectsyncviewholder, project name = %s and hasSyncablelist isnotnull = " + (syncableList != null), project.getName());
         if (syncableList == null) {
-            ivCancel.setVisibility(View.VISIBLE);
-            downloadingSection.setVisibility(View.GONE);
+            // check if it is failed or not
+            if(project.isFailed()) {
+                ivCancel.setVisibility(View.VISIBLE);
+                downloadingSection.setVisibility(View.VISIBLE);
+                tvDownloading.setText("Sync failed");
+                tvDownloading.setTextColor(Color.parseColor("#FF0000"));
+            } else {
+                ivCancel.setVisibility(View.VISIBLE);
+                downloadingSection.setVisibility(View.GONE);
+                tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
+            }
         } else {
-            if (syncableList != null && syncableList.size() == 3) {
+            if (syncableList.size() == 3) {
                 Timber.i("projectsync, notifying sync for project = " + project.getName());
                 updateBySyncStat(syncableList);
             }
@@ -139,7 +148,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
             tvDownloading.setText("Sync complete");
             tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
             downloadingSection.setVisibility(View.GONE);
-            hasSyncComplete(getLayoutPosition());
+            hasSyncComplete(getLayoutPosition(), false);
         } else if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.RUNNING || formSyncStat.status == Constant.DownloadStatus.RUNNING || educationAndMaterialSyncStat.status == Constant.DownloadStatus.RUNNING) {
             Timber.i("upddate sync by status, syncing");
 //            ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
@@ -181,14 +190,14 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 ivCancel.setVisibility(View.VISIBLE);
                 prgBarSync.setVisibility(View.GONE);
                 tvCount.setVisibility(View.GONE);
-                hasSyncComplete(getLayoutPosition());
+                hasSyncComplete(getLayoutPosition(), true);
             }
         }
     }
 
 //    }
 
-    public void hasSyncComplete(int index) {
+    public void hasSyncComplete(int index, boolean failed) {
 
     }
 }

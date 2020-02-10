@@ -55,8 +55,9 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.project_expand_sync, parent, false);
         return new ProjectSyncViewholder(view) {
             @Override
-            public void hasSyncComplete(int index) {
+            public void hasSyncComplete(int index, boolean failed) {
                 projectList.get(index).setSynced(true);
+                projectList.get(index).setFailed(failed);
             }
         };
     }

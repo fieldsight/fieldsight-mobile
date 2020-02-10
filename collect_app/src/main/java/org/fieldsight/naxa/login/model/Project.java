@@ -87,6 +87,11 @@ public class Project implements Parcelable {
     @Ignore
     boolean isSynced = false;
 
+    @Expose
+    @Ignore
+    boolean isFailed = false;
+
+
     public String getStatusMessage() {
         return statusMessage;
     }
@@ -176,6 +181,14 @@ public class Project implements Parcelable {
     public Project(@NonNull String id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public boolean isFailed() {
+        return isFailed;
+    }
+
+    public void setFailed(boolean failed) {
+        isFailed = failed;
     }
 
     public static Creator<Project> getCREATOR() {

@@ -5,10 +5,12 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.util.SparseIntArray;
 
+import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.forms.data.local.FieldSightFormsLocalSourcev3;
 import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.network.APIEndpoint;
+import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.v3.forms.FieldSightFormDownloader;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
@@ -119,7 +121,12 @@ public class FieldSightFormRemoteSourceV3 {
                                         SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(getProjectId(fieldsightFormDetailsv3)), 1);
                                     }
                                     Timber.i("FieldsightFormRemoteSourcev3, downloadFile = " + downloadFile + " skipping download " + fieldsightFormDetailsv3.getFormDetails().getDownloadUrl());
-                                    return downloadFile;
+                                    if(NetworkUtils.isNetworkConnected()) {
+                                        return downloadFile;
+                                    } else {
+                                        SyncLocalSource3.getInstance().markAsFailed(getProjectId(fieldsightFormDetailsv3)+"", 1, "");
+                                        return false;
+                                    }
                                 }
                             })
                             .concatMap((Function<FieldsightFormDetailsv3, ObservableSource<Pair<FieldsightFormDetailsv3, String>>>) fieldSightFormDetailV3 ->

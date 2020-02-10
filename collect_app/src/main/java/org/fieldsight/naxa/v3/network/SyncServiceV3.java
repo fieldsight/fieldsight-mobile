@@ -186,7 +186,7 @@ public class SyncServiceV3 extends IntentService {
 
                         @Override
                         public void onComplete() {
-
+                            Timber.i("=========>>>>>> forms failed");
                         }
                     });
 
