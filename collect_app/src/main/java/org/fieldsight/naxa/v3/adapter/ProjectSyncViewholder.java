@@ -169,7 +169,7 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 tvCount.setText("Calculating");
             }
             downloadingSection.setVisibility(View.VISIBLE);
-        } else {
+        } else if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED || formSyncStat.status == Constant.DownloadStatus.FAILED || educationAndMaterialSyncStat.status == Constant.DownloadStatus.FAILED) {
             downloadingSection.setVisibility(View.VISIBLE);
                 Timber.i("upddate sync by status, failed");
                 tvDownloading.setText("Sync failed");

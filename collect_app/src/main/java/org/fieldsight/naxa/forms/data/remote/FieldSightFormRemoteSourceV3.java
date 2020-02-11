@@ -22,8 +22,11 @@ import org.odk.collect.android.dao.FormsDao;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import io.reactivex.Observable;
@@ -43,6 +46,7 @@ public class FieldSightFormRemoteSourceV3 {
     // holds the projectid and total number of FORMS
     SparseIntArray projectIdUrlMap;
     SparseIntArray downloadProjectFormProgressUrlMap;
+    Set<Integer> failedProjectIdList;
 
     public static FieldSightFormRemoteSourceV3 getInstance() {
         if (fieldSightFormRemoteSourceV3 == null) {
@@ -121,11 +125,12 @@ public class FieldSightFormRemoteSourceV3 {
                                         SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(getProjectId(fieldsightFormDetailsv3)), 1);
                                     }
                                     Timber.i("FieldsightFormRemoteSourcev3, downloadFile = " + downloadFile + " skipping download " + fieldsightFormDetailsv3.getFormDetails().getDownloadUrl());
-                                    if(NetworkUtils.isNetworkConnected()) {
-                                        return downloadFile;
-                                    } else {
-                                        return false;
-                                    }
+                                    return downloadFile;
+//                                    if(NetworkUtils.isNetworkConnected()) {
+//                                        return downloadFile;
+//                                    } else {
+//                                        return false;
+//                                    }
                                 }
                             })
                             .concatMap((Function<FieldsightFormDetailsv3, ObservableSource<Pair<FieldsightFormDetailsv3, String>>>) fieldSightFormDetailV3 ->
@@ -144,16 +149,16 @@ public class FieldSightFormRemoteSourceV3 {
                                     int projectId = getProjectId(fieldSightFormDetailsStringPair.first);
                                     Timber.i("FieldsightformRemotesourcev3, response = %s", message);
                                     Timber.i("FieldsightformRemotesourcev3, downloadCount = %d, projectCunt = %d", downloadProjectFormProgressUrlMap.get(projectId), projectIdUrlMap.get(projectId));
-                                    if (downloadProjectFormProgressUrlMap.get(projectId) == projectIdUrlMap.get(projectId)) {
-                                        SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
+                                    if(!TextUtils.isEmpty(message)) {
+                                        failedProjectIdList.add(projectId);
                                     }
-                                }
-                            }).doOnComplete(() -> {
-                                Timber.i("FieldsightformRemotesourcev3, doOncompleted called");
-                                for(int i = 0; i < downloadProjectFormProgressUrlMap.size(); i++) {
-                                    int projectId = downloadProjectFormProgressUrlMap.keyAt(i);
                                     if (downloadProjectFormProgressUrlMap.get(projectId) == projectIdUrlMap.get(projectId)) {
-                                        SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, "");
+                                        if(failedProjectIdList.contains(projectId)) {
+                                            SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, "");
+                                        } else {
+                                            // check if any projects has failed or not
+                                            SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
+                                        }
                                     }
                                 }
                             });
@@ -163,6 +168,8 @@ public class FieldSightFormRemoteSourceV3 {
     private ArrayList<FieldsightFormDetailsv3> mapToFieldSightFormDetailsV3(ResponseBody responseBody) throws IOException, JSONException {
         projectIdUrlMap = new SparseIntArray();
         downloadProjectFormProgressUrlMap = new SparseIntArray();
+        failedProjectIdList = new HashSet<>();
+
         JSONObject response = new JSONObject(responseBody.string());
         Iterator<String> formTypes = response.keys();
         ArrayList<FieldsightFormDetailsv3> fieldSightFormsv3List = new ArrayList<>();
