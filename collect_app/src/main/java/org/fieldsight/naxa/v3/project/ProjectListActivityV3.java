@@ -329,11 +329,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             startSyncing(toSyncList);
             // hide sync button when sync started
             tvSyncProject.setVisibility(View.GONE);
-
             nestedScrollView.scrollTo(0,0);
-      
-
         } else {
+            syncStarts = false;
             SnackBarUtils.showErrorFlashbar(this, getString(R.string.no_internet_body));
         }
     }
