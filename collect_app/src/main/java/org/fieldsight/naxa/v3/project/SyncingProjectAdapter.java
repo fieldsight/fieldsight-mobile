@@ -18,18 +18,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewholder> {
 
     public void updateAdapter(List<Project> syncProjectList) {
-        this.projectList.addAll(0,syncProjectList);
+        this.projectList.addAll(0, syncProjectList);
         notifyItemRangeChanged(0, syncProjectList.size());
     }
 
 
-
     public interface Callback {
         void syncedProjectClicked(Project project);
+
         void onCancelClicked(int pos);
+
         void retryClicked(int pos);
     }
 
@@ -67,7 +70,7 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
         Project project = projectList.get(position);
         holder.bindView(project, false, syncableMap.containsKey(project.getId()) ? syncableMap.get(project.getId()) : null);
         holder.itemView.setOnClickListener(v -> {
-            if(project.isSynced()) {
+            if (project.isSynced()) {
                 callback.syncedProjectClicked(project);
             }
         });
@@ -76,9 +79,22 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
 //            if(v.getTag()== null || v.getTag().equals("syncing")) {
 //                callback.onCancelClicked(position);
 //            } else if(v.equals("retry")){
-                callback.retryClicked(position);
+            callback.retryClicked(position);
 //            }
         });
+    }
+
+    public ArrayList<Project> getbyPosition(int... posArray) {
+        ArrayList<Project> projectArrayList = new ArrayList<>();
+        for (int pos : posArray) {
+            if (pos < this.projectList.size()) {
+                projectArrayList.add(this.projectList.get(pos));
+            }
+            else {
+                Timber.v("Index bound out of list %d", pos);
+            }
+        }
+        return projectArrayList;
     }
 
     public void updateSyncMap(HashMap<String, List<Syncable>> syncableMap) {
@@ -88,8 +104,8 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
 
     public List<Project> getUnsyncedProject() {
         List<Project> unsynced = new ArrayList<>();
-        for(int i = 0; i < this.projectList.size(); i ++) {
-            if(!this.projectList.get(i).isSynced()) {
+        for (int i = 0; i < this.projectList.size(); i++) {
+            if (!this.projectList.get(i).isSynced()) {
                 unsynced.add(this.projectList.get(i));
             }
         }
@@ -99,20 +115,20 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
     public List<Project> popItemByIds(String... ids) {
         List<Project> newSyncedList = new ArrayList<>();
         List<Project> filteredList = new ArrayList<>();
-        for( int i =0; i < this.projectList.size(); i++) {
+        for (int i = 0; i < this.projectList.size(); i++) {
             boolean found = false;
             int j;
-            for(j = 0; j < ids.length; j ++) {
+            for (j = 0; j < ids.length; j++) {
                 if (this.projectList.get(i).getId().equals(ids[j])) {
                     found = true;
                     break;
                 }
             }
-            if(found) {
+            if (found) {
                 this.projectList.get(i).setSynced(false);
                 this.projectList.get(i).setChecked(false);
                 newSyncedList.add(this.projectList.get(i));
-            }else {
+            } else {
                 filteredList.add(this.projectList.get(i));
             }
 
@@ -128,14 +144,14 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
     public void notifyProjectSyncStatusChange(String projectId) {
         // get the index of the selected project id
         int foundIndex = -1;
-        for(int i = 0; i < this.projectList.size(); i++) {
-            if(projectId.equals(projectList.get(i).getId())) {
+        for (int i = 0; i < this.projectList.size(); i++) {
+            if (projectId.equals(projectList.get(i).getId())) {
                 foundIndex = i;
                 break;
             }
         }
 
-        if(foundIndex > -1) {
+        if (foundIndex > -1) {
             this.projectList.get(foundIndex).setSynced(true);
             notifyItemChanged(foundIndex);
         }
