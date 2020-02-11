@@ -24,7 +24,7 @@ Track project progress with user friendly dashboards that visualize data in the 
 ## Setting up your development environment
 1. Download and install [Git](https://git-scm.com/downloads) and add it to your PATH
 1. Download and install [Android Studio](https://developer.android.com/studio/index.html) 
-1. Clone your fork of the project locally. At the command line:
+1. Clone the project locally. At the command line:
 
         git clone https://github.com/fieldsight/fieldsight-mobile
 
@@ -32,7 +32,7 @@ Track project progress with user friendly dashboards that visualize data in the 
 1. Use Android Studio to import the project from its Gradle settings. To run the project, click on the green arrow at the top of the screen.
 
 ## Creating signed releases for Google Play Store
-Maintainers keep a folder with a clean checkout of the code and use [jenv.be](https://www.jenv.be) in that folder to ensure compilation with Java 1.8.
+Maintainers keep a folder with a clean checkout of the code
 
 Maintainers have a `local.properties` file in the root folder with the following:
 ```
@@ -48,7 +48,7 @@ RELEASE_KEY_ALIAS=key-alias
 RELEASE_KEY_PASSWORD=secure-alias-password
 ```
 
-Maintainers also have a `google-services.json` file in the `collect_app/google-services.json` folder.
+Maintainers also have a `google-services.json` [file](https://firebase.google.com/docs/android/setup) in the `collect_app/google-services.json` folder.
 
 To generate official signed releases, you'll need the keystore file, the keystore passwords, a configured `collect_app/secrets.properties` file, Then run ` ./gradlew assembleRelease`. If successful, a signed release will be at `collect_app/build/outputs/apk`.
 
