@@ -60,14 +60,6 @@ import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
 
-/**
- * TODO
- * retry handle the failed
- * last synced on
- * date time format today, yesterday, and date
- * discuss :: add sentence on the top of project list
- */
-
 public class ProjectListActivityV3 extends CollectAbstractActivity implements SyncingProjectAdapter.Callback {
     @BindView(R.id.rv_projectlist)
     RecyclerView rvProjectlist;
