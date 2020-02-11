@@ -350,7 +350,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                         }
                     }
 
-                    CreateSiteActivity.start(this, termsAndLabels, loadedSite, siteLabel, regionLabel);
+                    CreateSiteActivity.start(this, termsAndLabels.getId(), loadedSite, siteLabel, regionLabel);
 
 
                 });

@@ -37,6 +37,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;;
+import org.fieldsight.naxa.project.data.ProjectLocalSource;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.PermissionListener;
 import org.fieldsight.naxa.common.Constant;
@@ -124,7 +125,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private boolean isUpdate;
 
 
-    public static void start(Context context, @NonNull Project project, @Nullable Site site, String siteLabel, String regionLabel) {
+    public static void start(Context context, @NonNull String project, @Nullable Site site, String siteLabel, String regionLabel) {
         Intent intent = new Intent(context, CreateSiteActivity.class);
         intent.putExtra(EXTRA_OBJECT, project);
         if (site != null) {
@@ -141,12 +142,12 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_site_create);
         ButterKnife.bind(this);
-
-
         Project project;
 
         try {
-            project = getIntent().getExtras().getParcelable(EXTRA_OBJECT);
+            String projectId = getIntent().getStringExtra(EXTRA_OBJECT);
+            project = ProjectLocalSource.getInstance().getProject(projectId);
+            Timber.i("createsite, project is not null: " + (project!=null));
         } catch (Exception e) {
             Timber.e("Can't start activity without PROJECT extra_object");
             ToastUtils.showLongToast(getString(R.string.msg_failed_to_load));

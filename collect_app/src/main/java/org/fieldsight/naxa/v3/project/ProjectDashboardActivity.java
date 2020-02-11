@@ -176,8 +176,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         setTitle("");
 
         // this is for demonstration how can we manage the code with git with multiple developers
-
-
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
         } catch (NullPointerException e) {
@@ -397,7 +395,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                     siteLabel = tl.site;
                     regionLabel = tl.region;
                 }
-                CreateSiteActivity.start(this, loadedProject, null, siteLabel, regionLabel);
+                CreateSiteActivity.start(this, loadedProject.getId(), null, siteLabel, regionLabel);
                 return true;
             case R.id.nav_delete_saved_form:
 
