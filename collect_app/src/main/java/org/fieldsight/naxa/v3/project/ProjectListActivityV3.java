@@ -298,7 +298,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     private void startSyncing(ArrayList<Project> selectedProjectList) {
 
-        ToastUtils.showShortToast("Download starts");
+        ToastUtils.showLongToast("Data starts syncing");
         updateSyncableMap(selectedProjectList);
 
         Timber.i("ProjectListtActivityv3, syncable map = " + syncableMap.toString());
