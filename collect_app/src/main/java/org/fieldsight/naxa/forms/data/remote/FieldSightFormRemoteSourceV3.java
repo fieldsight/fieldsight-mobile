@@ -149,14 +149,22 @@ public class FieldSightFormRemoteSourceV3 {
                                     int projectId = getProjectId(fieldSightFormDetailsStringPair.first);
                                     Timber.i("FieldsightformRemotesourcev3, response = %s", message);
                                     Timber.i("FieldsightformRemotesourcev3, downloadCount = %d, projectCunt = %d", downloadProjectFormProgressUrlMap.get(projectId), projectIdUrlMap.get(projectId));
-                                    if(!TextUtils.isEmpty(message)) {
+//                                    This part is commented because unsure of whether all form links working fine or not
+//                                    need to check in live
+//                                    if(!TextUtils.isEmpty(message)) {
+//                                        failedProjectIdList.add(projectId);
+//                                    }
+//                                    Hacky way for internet failed only
+                                    if(!NetworkUtils.isNetworkConnected()) {
                                         failedProjectIdList.add(projectId);
                                     }
                                     if (downloadProjectFormProgressUrlMap.get(projectId) == projectIdUrlMap.get(projectId)) {
                                         if(failedProjectIdList.contains(projectId)) {
+                                            Timber.i("FieldsightformRemotesourcev3, failed projectid = %d", projectId);
                                             SyncLocalSource3.getInstance().markAsFailed(String.valueOf(projectId), 1, "");
                                         } else {
                                             // check if any projects has failed or not
+                                            Timber.i("FieldsightformRemotesourcev3, success projectid = %d", projectId);
                                             SyncLocalSource3.getInstance().markAsCompleted(String.valueOf(projectId), 1);
                                         }
                                     }

@@ -124,6 +124,10 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
             }
         } else {
+            tvDownloading.setText("Syncing data");
+            tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
+            ivCancel.setVisibility(View.GONE);
+
             if (syncableList.size() == 3) {
                 Timber.i("projectsync, notifying sync for project = " + project.getName());
                 updateBySyncStat(syncableList);
