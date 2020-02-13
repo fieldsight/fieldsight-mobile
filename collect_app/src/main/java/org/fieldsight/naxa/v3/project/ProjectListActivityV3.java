@@ -2,7 +2,6 @@ package org.fieldsight.naxa.v3.project;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,7 +50,6 @@ import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,14 +59,6 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
-
-/**
- * TODO
- * retry handle the failed
- * last synced on
- * date time format today, yesterday, and date
- * discuss :: add sentence on the top of project list
- */
 
 public class ProjectListActivityV3 extends CollectAbstractActivity implements SyncingProjectAdapter.Callback {
     @BindView(R.id.rv_projectlist)
@@ -135,6 +126,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
     // unsynced array list i.e. yet to sync
     List<Project> unSyncedprojectList = new ArrayList<>();
     Intent syncIntent;
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView nestedScrollView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -245,7 +238,6 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             Timber.i("SyncActivity ===============>>>>> syncing::  count = %d", count);
             if (count == 0) {
                 Timber.i("SyncActivity ===============>>> enable called");
-                syncStarts = false;
 
                 // change all unsynced to synced
                 for (int i = 0; i < syncProjectList.size(); i++) {
@@ -255,6 +247,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 }
                 syncAdapter.notifyDataSetChanged();
                 unSyncedAdapter.disableAdapter(false);
+
+                syncStarts = false;
+                invalidateOptionsMenu();
 
                 Timber.i("SyncAdapter ===============>>> remaining unsynced = %d", syncAdapter.getUnsyncedProject().size());
 
@@ -285,9 +280,17 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         }
     }
 
+    private ArrayList<String> getSelectedProjectIds(ArrayList<Project> selectedProjectList) {
+        ArrayList<String> idList = new ArrayList<>();
+        for (int i = 0; i < selectedProjectList.size(); i++) {
+            idList.add(selectedProjectList.get(i).getId());
+        }
+        return idList;
+    }
+
     private void startSyncing(ArrayList<Project> selectedProjectList) {
 
-        ToastUtils.showShortToast("Download starts");
+        ToastUtils.showLongToast("Data starts syncing");
         updateSyncableMap(selectedProjectList);
 
         Timber.i("ProjectListtActivityv3, syncable map = " + syncableMap.toString());
@@ -300,11 +303,12 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //        SyncLocalSource3.getInstance().deleteByIds(projectIds);
 
         syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
-        syncIntent.putParcelableArrayListExtra("projects", selectedProjectList);
+        syncIntent.putStringArrayListExtra("projects", getSelectedProjectIds(selectedProjectList));
         syncIntent.putExtra("selection", syncableMap);
         startService(syncIntent);
         unSyncedAdapter.disableAdapter(true);
         syncStarts = true;
+        invalidateOptionsMenu();
     }
 
     @OnClick(R.id.tv_sync_project)
@@ -317,7 +321,9 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
             startSyncing(toSyncList);
             // hide sync button when sync started
             tvSyncProject.setVisibility(View.GONE);
+            nestedScrollView.scrollTo(0,0);
         } else {
+            syncStarts = false;
             SnackBarUtils.showErrorFlashbar(this, getString(R.string.no_internet_body));
         }
     }
@@ -459,6 +465,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 // clean syncstat , i.e. failed case, cancelled case
 
                 // get project ids which list size is less than 3
+
+
                 List<String> unCompleteProjects = new ArrayList<>();
                 for (String key : projectSyncalbeCount.keySet()) {
                     if (projectSyncalbeCount.get(key) < 3) {
@@ -565,19 +573,17 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         return super.onCreateOptionsMenu(menu);
     }
 
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-////        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
-//        if (showSyncMenu) {
-//            menu.findItem(R.id.action_refresh).setIcon(allSelected ?
-//                    R.drawable.ic_cancel_white_24dp :
-//                    R.drawable.ic_action_sync
-//            );
-//            menu.findItem(R.id.action_refresh).setTitle(allSelected ? "Cancel" : "sync");
-//        }
-//
-//        return super.onPrepareOptionsMenu(menu);
-//    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+//        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
+        if (syncStarts) {
+            menu.findItem(R.id.action_refresh).setVisible(true);
+        }else {
+            menu.findItem(R.id.action_refresh).setVisible(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -599,9 +605,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 //                adapter.notifyDataSetChanged();
                 if (syncStarts) {
                     cancelAllSync();
-                }
-                else {
-                  ToastUtils.showLongToast("There is no any pending project syncing in queue to cancel");
+                } else {
+                    ToastUtils.showLongToast("There is no any pending project syncing in queue to cancel");
                 }
                 break;
             case R.id.action_notificaiton:
@@ -673,8 +678,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                         if (syncingIds.size() > 0) {
                             String[] ids = syncingIds.toArray(new String[syncingIds.size()]);
                             SyncLocalSource3.getInstance().deleteByIds(ids);
-                           List<Project> projectList = syncAdapter.popItemByIds(ids);
-                           unSyncedAdapter.push(0, projectList.toArray(new Project[projectList.size()]));
+                            List<Project> projectList = syncAdapter.popItemByIds(ids);
+                            unSyncedAdapter.push(0, projectList.toArray(new Project[projectList.size()]));
                         }
                     }
                     Timber.i("cancel clicked");
@@ -699,7 +704,20 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
     @Override
     public void retryClicked(int pos) {
-
+        Timber.i("retry clicked");
+        if(!syncStarts) {
+            if (NetworkUtils.isNetworkConnected()) {
+                tvUnsync.setVisibility(View.VISIBLE);
+                tvSyncProject.setVisibility(View.GONE);
+                ArrayList<Project> retryList = ((SyncingProjectAdapter) rvSyncing.getAdapter()).getbyPosition(pos);
+                startSyncing(retryList);
+                // hide sync button when sync started
+            } else {
+                SnackBarUtils.showErrorFlashbar(this, getString(R.string.no_internet_body));
+            }
+        } else {
+            ToastUtils.showLongToast("Please wait until sync completes");
+        }
     }
 }
 

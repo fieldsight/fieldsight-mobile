@@ -203,7 +203,7 @@ public class SiteListFragment extends Fragment implements SiteListAdapter.SiteLi
             siteLabel = tl.site;
             regionLabel = tl.region;
         }
-        CreateSiteActivity.start(getActivity(), loadedProject, null, siteLabel, regionLabel);
+        CreateSiteActivity.start(getActivity(), loadedProject.getId(), null, siteLabel, regionLabel);
     }
 
     @OnClick(R.id.iv_search)

@@ -65,6 +65,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="22dp"
+            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/rela_round"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Project Sight first" />
@@ -311,7 +312,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:visibility="gone"
-                app:srcCompat="@drawable/ic_circle_cancel_major_monotone"/>
+                app:srcCompat="@drawable/ic_refresh"/>
 
             <ImageView
                 android:layout_width="24dp"

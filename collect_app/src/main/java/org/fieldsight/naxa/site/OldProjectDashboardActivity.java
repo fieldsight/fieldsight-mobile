@@ -364,7 +364,7 @@ public class OldProjectDashboardActivity extends BaseActivity {
                     siteLabel = tl.site;
                     regionLabel = tl.region;
                 }
-                CreateSiteActivity.start(this, loadedProject, null, siteLabel, regionLabel);
+                CreateSiteActivity.start(this, loadedProject.getId(), null, siteLabel, regionLabel);
                 break;
             case R.id.nav_delete_saved_form:
 

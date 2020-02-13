@@ -70,8 +70,8 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_label_users)
     TextView userLabel;
 
-//    @BindView(R.id.iv_cancel)
-//    ImageView ivCancel;
+    @BindView(R.id.iv_cancel)
+    ImageView ivCancel;
 
     @BindView(R.id.tv_downloading)
     TextView tvDownloading;
@@ -110,9 +110,25 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
 
         Timber.i("projectsyncviewholder, project name = %s and hasSyncablelist isnotnull = " + (syncableList != null), project.getName());
         if (syncableList == null) {
-            downloadingSection.setVisibility(View.GONE);
+            // check if it is failed or not
+            if(project.isFailed()) {
+                ivCancel.setVisibility(View.VISIBLE);
+                downloadingSection.setVisibility(View.VISIBLE);
+                tvDownloading.setText("Sync failed");
+                prgBarSync.setVisibility(View.GONE);
+                tvDownloading.setTextColor(Color.parseColor("#FF0000"));
+            } else {
+                ivCancel.setVisibility(View.VISIBLE);
+                downloadingSection.setVisibility(View.GONE);
+                tvDownloading.setText("");
+                tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
+            }
         } else {
-            if (syncableList != null && syncableList.size() == 3) {
+            tvDownloading.setText("Syncing data");
+            tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
+            ivCancel.setVisibility(View.GONE);
+
+            if (syncableList.size() == 3) {
                 Timber.i("projectsync, notifying sync for project = " + project.getName());
                 updateBySyncStat(syncableList);
             }
@@ -133,53 +149,45 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         Timber.i("sync projectid, formprogress = %d total = %d", formSyncStat.getProgress(), formSyncStat.getTotal() );
         if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
             Timber.i("upddate sync by status, complete");
-//            ivCancel.setVisibility(View.GONE);
-//            ivCancel.setTag("synced");
+            ivCancel.setVisibility(View.GONE);
+            ivCancel.setTag("synced");
             tvDownloading.setText("Sync complete");
+            tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
             downloadingSection.setVisibility(View.GONE);
-            hasSyncComplete(getLayoutPosition());
+            hasSyncComplete(getLayoutPosition(), false);
         } else if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.RUNNING || formSyncStat.status == Constant.DownloadStatus.RUNNING || educationAndMaterialSyncStat.status == Constant.DownloadStatus.RUNNING) {
             Timber.i("upddate sync by status, syncing");
 //            ivCancel.setImageResource(R.drawable.ic_circle_cancel_major_monotone);
-            tvDownloading.setText("Syncing project");
-//            ivCancel.setTag("syncing");
+            tvDownloading.setText("Syncing data");
+            ivCancel.setTag("syncing");
+            ivCancel.setVisibility(View.GONE);
+            prgBarSync.setVisibility(View.VISIBLE);
+            tvCount.setVisibility(View.VISIBLE);
+            tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
             if(formSyncStat.getProgress() > 0 && formSyncStat.getTotal()  > 0) {
                 tvCount.setText("Syncing forms " + formSyncStat.getProgress() + "/" + formSyncStat.getTotal());
                 int percentageProgress = (int)Math.round((formSyncStat.getProgress()*100)/formSyncStat.getTotal());
                 Timber.i("projectSyncViewholder, progress percent = %d", percentageProgress);
                 prgBarSync.setProgress(percentageProgress);
             } else {
-                tvCount.setText("Calculating total form counts");
+                tvCount.setText("Calculating");
             }
             downloadingSection.setVisibility(View.VISIBLE);
-        } else {
+        } else if(sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED || formSyncStat.status == Constant.DownloadStatus.FAILED || educationAndMaterialSyncStat.status == Constant.DownloadStatus.FAILED) {
             downloadingSection.setVisibility(View.VISIBLE);
-            StringBuilder failedSync = new StringBuilder();
-            if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.FAILED) {
-                failedSync.append(sitesAndRegionsSyncStat.getTitle() + ", ");
-            }
-            if (formSyncStat.status == Constant.DownloadStatus.FAILED) {
-                failedSync.append(formSyncStat.getTitle() + ", ");
-            }
-
-            if (educationAndMaterialSyncStat.status == Constant.DownloadStatus.FAILED) {
-                failedSync.append(educationAndMaterialSyncStat.getTitle());
-            }
-
-            if (failedSync.length() > 0) {
                 Timber.i("upddate sync by status, failed");
-                tvDownloading.setText(failedSync.toString() + " failed to sync");
+                tvDownloading.setText("Sync failed");
                 tvDownloading.setTextColor(Color.parseColor("#FF0000"));
-//                ivCancel.setImageResource(R.drawable.ic_refresh);
-//                ivCancel.setTag("retry");
-                hasSyncComplete(getLayoutPosition());
-            }
+                ivCancel.setImageResource(R.drawable.ic_refresh);
+                ivCancel.setTag("retry");
+                ivCancel.setVisibility(View.VISIBLE);
+                prgBarSync.setVisibility(View.GONE);
+                tvCount.setVisibility(View.GONE);
+                hasSyncComplete(getLayoutPosition(), true);
         }
     }
 
-//    }
-
-    public void hasSyncComplete(int index) {
+    public void hasSyncComplete(int index, boolean failed) {
 
     }
 }

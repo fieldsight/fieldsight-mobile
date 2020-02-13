@@ -6,8 +6,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import androidx.lifecycle.LiveData;
-
 import org.apache.commons.io.FilenameUtils;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DisposableManager;
@@ -19,6 +17,7 @@ import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV3;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.project.data.ProjectLocalSource;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.json.JSONArray;
@@ -78,20 +77,23 @@ public class SyncServiceV3 extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
-            selectedProject = Objects.requireNonNull(intent).getParcelableArrayListExtra("projects");
-            Timber.i("SyncServiceV3 selectedProject size = %d", selectedProject.size());
+            ArrayList<String> selectedProjectids = Objects.requireNonNull(intent).getStringArrayListExtra("projects");
 
-//            if(selectedProject != null) {
-//                for (int i = 0; i < selectedProject.size(); i++) {
-//                    Timber.i("SyncServiceV3, selected project name = " + selectedProject.get(i).getName());
-//                }
-//
-//            }
+            Timber.i("SyncServiceV3 selectedProject size = %d", selectedProjectids.size());
+
+            if(selectedProjectids != null) {
+                for (int i = 0; i < selectedProjectids.size(); i++) {
+                    Timber.i("SyncServiceV3, selected project name = " + selectedProjectids.get(i));
+                }
+
+            }
             selectedMap = (HashMap<String, List<Syncable>>) intent.getSerializableExtra("selection");
             for (String key : selectedMap.keySet()) {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
 
+            selectedProject = ProjectLocalSource.getInstance().getProjectByids(selectedProjectids);
+            Timber.i("SynServicev3, selectedProject size = %d", selectedProject.size());
 
             Disposable sitesObservable = Observable.fromCallable(() -> {
                 URL url = new URL(FieldSightUserSession.getServerUrl(Collect.getInstance()));
@@ -159,6 +161,7 @@ public class SyncServiceV3 extends IntentService {
                                                 if (hasDowloadFailed) {
                                                     failedProjectId.add(projectId);
                                                     // update the mark as failed. (currently failed will not be shown. new design will be added to handle this)
+//                                                    markAsFailed(projectId+"", 1, "");
                                                 }
                                             }
 
@@ -175,12 +178,15 @@ public class SyncServiceV3 extends IntentService {
 
                         @Override
                         public void onError(Throwable e) {
+                            //unused
+                            Timber.i("=========>>>>>> forms failed");
+                            Timber.i("Syncservicev3, failedproject size = %s", e.getMessage());
                             Timber.e(e);
                         }
 
                         @Override
                         public void onComplete() {
-                            //unused
+                            Timber.i("=========>>>>>> forms failed");
                         }
                     });
 
