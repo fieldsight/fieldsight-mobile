@@ -97,6 +97,9 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     private ActionBarDrawerToggle drawerToggle;
 
     private boolean mapIsVisible;
+
+
+
     private View navigationHeader;
     private int mapExistReachesPosition;
     TermsLabels tl;
@@ -566,4 +569,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+        if(syncStarts){
+            Toast.makeText(this, "Please wait!!\nProject is syncing", Toast.LENGTH_SHORT).show();
+        }else {
+            super.onBackPressed();
+        }
+    }
 }
