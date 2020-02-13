@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -79,8 +79,14 @@ import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.application.Collect.allowClick;
 
-public class ProjectDashboardActivity extends CollectAbstractActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class ProjectDashboardActivity extends CollectAbstractActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    @BindView(R.id.prgbar_sync)
+    ProgressBar prgbarSync;
+    @BindView(R.id.tv_count)
+    TextView tvCount;
+    @BindView(R.id.ll_sync_project_progress_count)
+    LinearLayout llSyncProjectProgressCount;
     private Project loadedProject;
     private CardView searchView;
     private AppBarLayout appBarLayout;
@@ -101,7 +107,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     boolean isTotalNotCounted = true;
     int totalProjectCount = 0;
     int totalProjectProgressCount = 0;
-
 
 
     @BindView(R.id.cl_main)
@@ -171,6 +176,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     }
 
     ProjectViewPagerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -185,6 +191,10 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle("");
+
+        prgbarSync.setMax(totalProjectCount);
+        prgbarSync.setProgress(totalProjectProgressCount);
+
 
         // this is for demonstration how can we manage the code with git with multiple developers
         try {
@@ -206,31 +216,31 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         navigationView.setNavigationItemSelectedListener(this);
         // get the projectdashboard stat
         ServiceGenerator.createCacheService(ApiV3Interface.class).getProjectDashboardStat(loadedProject.getId())
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<ResponseBody>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            }
+                    }
 
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                initPager(responseBody);
-            }
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        initPager(responseBody);
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                ToastUtils.showShortToast(e.getMessage());
-                initPager(null);
-                hideProgress();
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtils.showShortToast(e.getMessage());
+                        initPager(null);
+                        hideProgress();
+                    }
 
-            @Override
-            public void onComplete() {
-                hideProgress();
-            }
-        });
+                    @Override
+                    public void onComplete() {
+                        hideProgress();
+                    }
+                });
         showProgress("Loading project info, Please wait ");
 
 //        Observer
@@ -251,16 +261,22 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                         mSyncable.setTotal(stat.getTotal());
                         mSyncable.setCreatedDate(stat.getCreated_date());
 
-                        if(isTotalNotCounted){
-                            if(mSyncable.getTotal() != 0){
+                        if (isTotalNotCounted) {
+                            if (mSyncable.getTotal() != 0) {
                                 totalProjectCount = mSyncable.getTotal();
                                 isTotalNotCounted = false;
+                                prgbarSync.setMax(totalProjectCount);
+
                             }
                         }
-                        if(mSyncable.getProgress() >totalProjectProgressCount && totalProjectProgressCount<=totalProjectCount){
+                        if (mSyncable.getProgress() > totalProjectProgressCount && totalProjectProgressCount <= totalProjectCount) {
                             totalProjectProgressCount = mSyncable.getProgress();
-                            if(totalProjectProgressCount ==totalProjectCount){
+                            prgbarSync.setProgress(totalProjectProgressCount);
+                            tvCount.setText(totalProjectProgressCount +"/"+ totalProjectCount);
+                            if (totalProjectProgressCount == totalProjectCount) {
+
                                 syncStarts = false;
+                                llSyncProjectProgressCount.setVisibility(View.GONE);
                                 invalidateOptionsMenu();
                             }
                         }
@@ -291,15 +307,15 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     }
 
     void updateCountUI(int totalRegions, int sitesCount, int usersCount, int submissonCount) {
-        tvRegions.setText(totalRegions+"");
-        tvSites.setText(sitesCount+"");
-        tvUsers.setText(usersCount+"");
-        tvSubmissions.setText(submissonCount+"");
+        tvRegions.setText(totalRegions + "");
+        tvSites.setText(sitesCount + "");
+        tvUsers.setText(usersCount + "");
+        tvSubmissions.setText(submissonCount + "");
     }
 
     void initPager(ResponseBody responseBody) {
         String users = "", forms = "";
-        if(responseBody != null) {
+        if (responseBody != null) {
             try {
                 String data = responseBody.string();
                 JSONObject dataJSON = new JSONObject(data);
@@ -326,17 +342,17 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     void addProjectInfoInView() {
         projectName.setText(loadedProject.getName());
         organizationName.setText(loadedProject.getOrganizationName());
-        if(!TextUtils.isEmpty(loadedProject.getUrl())) {
+        if (!TextUtils.isEmpty(loadedProject.getUrl())) {
             Glide.with(this).load(loadedProject.getUrl()).apply(RequestOptions.circleCropTransform()).into(projectImage);
         }
-        if(!TextUtils.isEmpty(loadedProject.getDescription())) {
+        if (!TextUtils.isEmpty(loadedProject.getDescription())) {
             llDesc.setVisibility(View.VISIBLE);
             tvDescription.setText(loadedProject.getDescription());
         }
     }
 
     void addDrawerToggle() {
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.app_name, R.string.app_name);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
     }
@@ -359,8 +375,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
     @OnClick(R.id.tv_more)
     void moreDesc() {
-       //TODO : what to do either open in new page or expand the text ?
-       //TODO: what to do if text are long ?
+        //TODO : what to do either open in new page or expand the text ?
+        //TODO: what to do if text are long ?
     }
 
     @OnClick(R.id.tv_project_forms)
@@ -416,7 +432,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 //        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
         if (syncStarts) {
             menu.findItem(R.id.action_refresh).setVisible(false);
-        }else {
+        } else {
             menu.findItem(R.id.action_refresh).setVisible(true);
         }
 
@@ -461,6 +477,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 syncIntent.putExtra("selection", syncableMap);
                 startService(syncIntent);
                 syncStarts = true;
+                llSyncProjectProgressCount.setVisibility(View.VISIBLE);
+
                 invalidateOptionsMenu();
 
                 break;
