@@ -119,9 +119,10 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
                 tvDownloading.setTextColor(Color.parseColor("#FF0000"));
             } else {
                 ivCancel.setVisibility(View.VISIBLE);
-                downloadingSection.setVisibility(View.GONE);
-                tvDownloading.setText("");
-                tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));
+                downloadingSection.setVisibility(View.VISIBLE);
+                tvDownloading.setText("Synced");
+                prgBarSync.setVisibility(View.GONE);
+                tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.primaryColor));
             }
         } else {
             tvDownloading.setText("Syncing data");
@@ -149,7 +150,8 @@ public class ProjectSyncViewholder extends RecyclerView.ViewHolder {
         Timber.i("sync projectid, formprogress = %d total = %d", formSyncStat.getProgress(), formSyncStat.getTotal() );
         if (sitesAndRegionsSyncStat.status == Constant.DownloadStatus.COMPLETED && formSyncStat.status == Constant.DownloadStatus.COMPLETED && educationAndMaterialSyncStat.status == Constant.DownloadStatus.COMPLETED) {
             Timber.i("upddate sync by status, complete");
-            ivCancel.setVisibility(View.GONE);
+            // changed here
+            ivCancel.setVisibility(View.VISIBLE);
             ivCancel.setTag("synced");
             tvDownloading.setText("Sync complete");
             tvDownloading.setTextColor(itemView.getContext().getResources().getColor(R.color.text_primary));

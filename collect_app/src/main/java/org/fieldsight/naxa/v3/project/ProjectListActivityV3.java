@@ -465,6 +465,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 // clean syncstat , i.e. failed case, cancelled case
 
                 // get project ids which list size is less than 3
+
+
                 List<String> unCompleteProjects = new ArrayList<>();
                 for (String key : projectSyncalbeCount.keySet()) {
                     if (projectSyncalbeCount.get(key) < 3) {
