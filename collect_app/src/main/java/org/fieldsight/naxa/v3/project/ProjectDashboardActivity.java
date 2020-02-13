@@ -12,7 +12,6 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -23,6 +22,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -32,9 +32,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.JsonArray;
 
-import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.FSInstanceChooserList;
@@ -51,14 +49,12 @@ import org.fieldsight.naxa.profile.UserActivity;
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.CreateSiteActivity;
 import org.fieldsight.naxa.site.FragmentHostActivity;
-import org.fieldsight.naxa.site.OldProjectDashboardActivity;
 import org.fieldsight.naxa.site.map.ProjectMapFragment;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
-import org.fieldsight.naxa.v3.network.SyncActivity;
+import org.fieldsight.naxa.v3.network.SyncLocalSource3;
 import org.fieldsight.naxa.v3.network.SyncServiceV3;
 import org.fieldsight.naxa.v3.network.SyncStat;
 import org.fieldsight.naxa.v3.network.Syncable;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
@@ -68,7 +64,6 @@ import org.odk.collect.android.utilities.ToastUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,18 +71,15 @@ import butterknife.OnClick;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import timber.log.Timber;
 
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
-import static org.fieldsight.naxa.network.ServiceGenerator.getRxClient;
 import static org.odk.collect.android.application.Collect.allowClick;
-import static org.odk.collect.android.application.Collect.selectedProjectList;
 
-public class ProjectDashboardActivity extends CollectAbstractActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ProjectDashboardActivity extends CollectAbstractActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private Project loadedProject;
     private CardView searchView;
@@ -103,9 +95,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     // Hashmap to track the syncing progress
     HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
     LiveData<List<SyncStat>> syncdata;
-    Observer<List<SyncStat>> syncObserver;
+    androidx.lifecycle.Observer<List<SyncStat>> syncObserver;
     Intent syncIntent;
     boolean syncStarts = false;
+    boolean isTotalNotCounted = true;
+    int totalProjectCount = 0;
+    int totalProjectProgressCount = 0;
 
 
 
@@ -237,6 +232,62 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
             }
         });
         showProgress("Loading project info, Please wait ");
+
+//        Observer
+        syncObserver = new androidx.lifecycle.Observer<List<SyncStat>>() {
+            @Override
+            public void onChanged(List<SyncStat> syncStats) {
+                Timber.i("sync stats size = %d", syncStats.size());
+                // check if project is syncomplete or not
+                // if sync complete, remove the downloading section from the item list
+                // TODO check here how can we implement the form loading counter ??????????????????
+                for (SyncStat stat : syncStats) {
+                    String projectId = stat.getProjectId();
+                    if (syncableMap.containsKey(projectId)) {
+                        List<Syncable> syncableList = syncableMap.get(projectId);
+                        Syncable mSyncable = syncableList.get(Integer.parseInt(stat.getType()));
+                        mSyncable.setStatus(stat.getStatus());
+                        mSyncable.setProgress(stat.getProgress());
+                        mSyncable.setTotal(stat.getTotal());
+                        mSyncable.setCreatedDate(stat.getCreated_date());
+
+                        if(isTotalNotCounted){
+                            if(mSyncable.getTotal() != 0){
+                                totalProjectCount = mSyncable.getTotal();
+                                isTotalNotCounted = false;
+                            }
+                        }
+                        if(mSyncable.getProgress() >totalProjectProgressCount && totalProjectProgressCount<=totalProjectCount){
+                            totalProjectProgressCount = mSyncable.getProgress();
+                            if(totalProjectProgressCount ==totalProjectCount){
+                                syncStarts = false;
+                                invalidateOptionsMenu();
+                            }
+                        }
+
+                        Timber.i("sync stats Total = %d", totalProjectCount);
+                        Timber.i("sync stats Progress = %d", totalProjectProgressCount);
+
+
+//                        syncableList.set(Integer.parseInt(stat.getType()), mSyncable);
+//                        syncableMap.put(projectId, syncableList);
+                    }
+                }
+            }
+        };
+
+        // observer the syncing or sync progress
+        syncdata = SyncLocalSource3.getInstance().getAll();
+        syncdata.observe(this, syncObserver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // close all sync listening observers from live data
+        if (syncdata != null && syncdata.hasObservers()) {
+            syncdata.removeObserver(syncObserver);
+        }
     }
 
     void updateCountUI(int totalRegions, int sitesCount, int usersCount, int submissonCount) {
@@ -421,7 +472,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     // this class will manage the sync list to determine which should be synced
     private ArrayList<Syncable> createList() {
