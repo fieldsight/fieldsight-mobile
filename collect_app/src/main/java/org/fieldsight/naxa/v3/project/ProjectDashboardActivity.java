@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -87,6 +88,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     TextView tvCount;
     @BindView(R.id.ll_sync_project_progress_count)
     LinearLayout llSyncProjectProgressCount;
+    @BindView(R.id.ll_touch_control)
+    LinearLayout llTouchControl;
     private Project loadedProject;
     private CardView searchView;
     private AppBarLayout appBarLayout;
@@ -156,6 +159,11 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
     @BindView(R.id.tv_submissions)
     TextView tvSubmissions;
+
+    @OnClick(R.id.ll_touch_control)
+    public void onViewClicked() {
+        Toast.makeText(this, "Please wait!!\nProject is syncing", Toast.LENGTH_SHORT).show();
+    }
 
     public class ProjectFragment {
         public String title;
@@ -269,10 +277,11 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                         if (mSyncable.getProgress() > totalProjectProgressCount && totalProjectProgressCount <= totalProjectCount) {
                             totalProjectProgressCount = mSyncable.getProgress();
                             prgbarSync.setProgress(totalProjectProgressCount);
-                            tvCount.setText(totalProjectProgressCount +"/"+ totalProjectCount);
+                            tvCount.setText(totalProjectProgressCount + "/" + totalProjectCount);
                             if (totalProjectProgressCount == totalProjectCount) {
 
                                 syncStarts = false;
+                                llTouchControl.setVisibility(View.GONE);
                                 llSyncProjectProgressCount.setVisibility(View.GONE);
 
 
@@ -480,7 +489,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
     private void syncProject() {
         isTotalNotCounted = true;
-        totalProjectCount =0;
+        totalProjectCount = 0;
         totalProjectProgressCount = 0;
         prgbarSync.setMax(totalProjectCount);
         prgbarSync.setProgress(totalProjectProgressCount);
@@ -495,6 +504,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         syncIntent.putExtra("selection", syncableMap);
         startService(syncIntent);
         syncStarts = true;
+        llTouchControl.setVisibility(View.VISIBLE);
         llSyncProjectProgressCount.setVisibility(View.VISIBLE);
 
         invalidateOptionsMenu();
