@@ -192,9 +192,6 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle("");
 
-        prgbarSync.setMax(totalProjectCount);
-        prgbarSync.setProgress(totalProjectProgressCount);
-
 
         // this is for demonstration how can we manage the code with git with multiple developers
         try {
@@ -277,6 +274,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
                                 syncStarts = false;
                                 llSyncProjectProgressCount.setVisibility(View.GONE);
+
+
                                 invalidateOptionsMenu();
                             }
                         }
@@ -467,19 +466,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 break;
             case R.id.action_refresh:
 
-                ArrayList<String> projectIds = new ArrayList<>();
-                projectIds.add(loadedProject.getId());
-
-                syncableMap.put(loadedProject.getId(), createList());
-
-                syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
-                syncIntent.putStringArrayListExtra("projects", projectIds);
-                syncIntent.putExtra("selection", syncableMap);
-                startService(syncIntent);
-                syncStarts = true;
-                llSyncProjectProgressCount.setVisibility(View.VISIBLE);
-
-                invalidateOptionsMenu();
+                syncProject();
 
                 break;
             case R.id.action_app_settings:
@@ -489,6 +476,28 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void syncProject() {
+        isTotalNotCounted = true;
+        totalProjectCount =0;
+        totalProjectProgressCount = 0;
+        prgbarSync.setMax(totalProjectCount);
+        prgbarSync.setProgress(totalProjectProgressCount);
+
+        ArrayList<String> projectIds = new ArrayList<>();
+        projectIds.add(loadedProject.getId());
+
+        syncableMap.put(loadedProject.getId(), createList());
+
+        syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+        syncIntent.putStringArrayListExtra("projects", projectIds);
+        syncIntent.putExtra("selection", syncableMap);
+        startService(syncIntent);
+        syncStarts = true;
+        llSyncProjectProgressCount.setVisibility(View.VISIBLE);
+
+        invalidateOptionsMenu();
     }
 
     // this class will manage the sync list to determine which should be synced
