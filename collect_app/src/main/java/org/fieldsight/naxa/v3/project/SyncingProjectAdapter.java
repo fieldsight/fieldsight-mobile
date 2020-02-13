@@ -99,6 +99,7 @@ public class SyncingProjectAdapter extends RecyclerView.Adapter<ProjectSyncViewh
 
     public void updateSyncMap(HashMap<String, List<Syncable>> syncableMap) {
         this.syncableMap = syncableMap;
+        Timber.i("SyncProjectAdapter, syncableMap = %s", syncableMap.toString());
         this.notifyDataSetChanged();
     }
 
