@@ -76,6 +76,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import timber.log.Timber;
 
+import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.network.ServiceGenerator.getRxClient;
 import static org.odk.collect.android.application.Collect.allowClick;
@@ -339,6 +340,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.action_refresh).setShowAsAction(SHOW_AS_ACTION_ALWAYS);
+
         return true;
     }
     @Override
