@@ -253,6 +253,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
                 Timber.i("SyncAdapter ===============>>> remaining unsynced = %d", syncAdapter.getUnsyncedProject().size());
 
+            }else {
+                syncStarts = true;
             }
         };
 

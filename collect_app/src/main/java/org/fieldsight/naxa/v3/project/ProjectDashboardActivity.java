@@ -22,6 +22,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -54,6 +55,9 @@ import org.fieldsight.naxa.site.OldProjectDashboardActivity;
 import org.fieldsight.naxa.site.map.ProjectMapFragment;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
 import org.fieldsight.naxa.v3.network.SyncActivity;
+import org.fieldsight.naxa.v3.network.SyncServiceV3;
+import org.fieldsight.naxa.v3.network.SyncStat;
+import org.fieldsight.naxa.v3.network.Syncable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
@@ -62,6 +66,7 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 
@@ -80,6 +85,7 @@ import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.network.ServiceGenerator.getRxClient;
 import static org.odk.collect.android.application.Collect.allowClick;
+import static org.odk.collect.android.application.Collect.selectedProjectList;
 
 public class ProjectDashboardActivity extends CollectAbstractActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -93,6 +99,15 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     private View navigationHeader;
     private int mapExistReachesPosition;
     TermsLabels tl;
+
+    // Hashmap to track the syncing progress
+    HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
+    LiveData<List<SyncStat>> syncdata;
+    Observer<List<SyncStat>> syncObserver;
+    Intent syncIntent;
+    boolean syncStarts = false;
+
+
 
     @BindView(R.id.cl_main)
     CoordinatorLayout clMain;
@@ -344,6 +359,19 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+//        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
+        if (syncStarts) {
+            menu.findItem(R.id.action_refresh).setVisible(false);
+        }else {
+            menu.findItem(R.id.action_refresh).setVisible(true);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -371,13 +399,19 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 });
                 break;
             case R.id.action_refresh:
-                Bundle bundle = new Bundle();
-                ArrayList<Project> projectArrayList = new ArrayList<>();
-                projectArrayList.add(loadedProject);
-                bundle.putParcelableArrayList("projects", projectArrayList);
-                bundle.getBoolean("auto", true);
-                startActivity(new Intent(this, SyncActivity.class)
-                        .putExtra("params", bundle));
+
+                ArrayList<String> projectIds = new ArrayList<>();
+                projectIds.add(loadedProject.getId());
+
+                syncableMap.put(loadedProject.getId(), createList());
+
+                syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+                syncIntent.putStringArrayListExtra("projects", projectIds);
+                syncIntent.putExtra("selection", syncableMap);
+                startService(syncIntent);
+                syncStarts = true;
+                invalidateOptionsMenu();
+
                 break;
             case R.id.action_app_settings:
                 if (allowClick(getClass().getName())) {
@@ -386,6 +420,17 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    // this class will manage the sync list to determine which should be synced
+    private ArrayList<Syncable> createList() {
+        // -1 refers here as never started
+        return new ArrayList<Syncable>() {{
+            add(0, new Syncable("Regions and sites", -1, 0, 0));
+            add(1, new Syncable("Forms", -1, 0, 0));
+            add(2, new Syncable("Materials", -1, 0, 0));
+        }};
     }
 
     @Override
