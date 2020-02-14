@@ -7,6 +7,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 
 import org.jetbrains.annotations.NotNull;
+
 @SuppressWarnings("PMD")
 @Entity(tableName = "syncstat", primaryKeys = {"project_id", "type"})
 
@@ -36,6 +37,9 @@ public class SyncStat {
     private int total;
     private int progress;
 
+    @ColumnInfo(name = "cancel_by_user")
+    int cancelByUser = 0;
+
     SyncStat() {
     }
 
@@ -57,6 +61,14 @@ public class SyncStat {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public int getCancelByUser() {
+        return cancelByUser;
+    }
+
+    public void setCancelByUser(int cancelByUser) {
+        this.cancelByUser = cancelByUser;
     }
 
     public int getTotal() {

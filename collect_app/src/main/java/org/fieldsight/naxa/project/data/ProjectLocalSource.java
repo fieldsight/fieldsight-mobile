@@ -4,10 +4,10 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.FieldSightDatabase;
 import org.fieldsight.naxa.login.model.Project;
+import org.odk.collect.android.application.Collect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,5 +84,15 @@ public class ProjectLocalSource implements BaseLocalDataSource<Project> {
 
     public LiveData<Project> getClusterLabelForProject(String id) {
         return dao.getById(id);
+    }
+
+    public ArrayList<Project> getProjectByids(ArrayList<String> selectedProjectids) {
+        String[] ids = selectedProjectids.toArray(new String[selectedProjectids.size()]);
+        Project[] projectArray =  dao.getByIds(ids);
+        ArrayList<Project> projectList = new ArrayList<>();
+        for( Project project : projectArray) {
+            projectList.add(project);
+        }
+        return projectList;
     }
 }

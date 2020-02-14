@@ -11,6 +11,7 @@
     android:animateLayoutChanges="true"
     app:cardCornerRadius="8dp"
     app:contentPadding="16dp"
+    app:cardBackgroundColor="@color/new_design_light_blue"
     app:cardElevation="2dp"
     tools:ignore="ContentDescription">
 
@@ -64,6 +65,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="22dp"
+            android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/rela_round"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Project Sight first" />
@@ -75,8 +77,8 @@
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="8dp"
-            android:text="A project by Build Change"
             android:textStyle="bold"
+            android:text="A project by Build Change"
             android:textColor="@color/new_design_blue"
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
             app:layout_constraintBottom_toTopOf="@+id/tv_synced_date"
@@ -84,21 +86,13 @@
             app:layout_constraintStart_toEndOf="@+id/rela_round"
             app:layout_constraintTop_toBottomOf="@+id/primary_text" />
 
-        <ImageView
-            android:id="@+id/iv_sync"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            app:srcCompat="@drawable/ic_circle_tick_outline_minor"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
         <TextView
             android:id="@+id/tv_synced_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="4dp"
             android:layout_margin="16dp"
             android:text="Not synced yet"
             android:textAppearance="@style/TextAppearance.MaterialComponents.SyncProjectsSubtitle"
@@ -269,5 +263,66 @@
                     android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_downloading_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/white"
+            android:layout_marginTop="8dp"/>
+
+
+            <ProgressBar
+                android:id="@+id/prgbar_sync"
+                style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/0"
+                android:textSize="12sp"
+                android:layout_gravity="right"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="2dp"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_downloading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/syncing_project"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/iv_cancel"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_refresh"/>
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="16dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_pause_circle_major_monotone"/>
+
+        </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

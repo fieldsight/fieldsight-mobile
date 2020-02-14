@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import org.fieldsight.naxa.login.model.Project;
 import org.odk.collect.android.application.Collect;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.Constant;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Single;
+import timber.log.Timber;
 
 public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
 
@@ -26,6 +28,14 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         this.dao = database.getSyncDaoV3();
     }
 
+    public void setProjectCancelled(String... projectId) {
+        this.dao.setSyncCancelled(projectId);
+    }
+
+    public void removeCancelledProject() {
+        this.dao.removeCancelledSync();
+    }
+
 
     public synchronized static SyncLocalSource3 getInstance() {
         if (syncLocalSource3 == null) {
@@ -33,7 +43,6 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         }
         return syncLocalSource3;
     }
-
 
     @Override
     public LiveData<List<SyncStat>> getAll() {
@@ -71,6 +80,10 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         save(syncStat);
     }
 
+    public void deleteByIds(String... projectIds) {
+        dao.deleteByIds(projectIds);
+    }
+
     @Override
     public void save(ArrayList<SyncStat> items) {
         throw new RuntimeException("Not Implemented yet");
@@ -89,18 +102,49 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         dao.delete();
     }
 
+    public void deleteByid(String projectId) {
+        dao.deleteById(projectId);
+    }
+
     public LiveData<List<ProjectNameTuple>> getAllSiteSyncingProject() {
         return dao.getAllSiteSyncingProject();
     }
+
+    public List<SyncStat> getRunningSyncStat () {
+        return dao.getRunningSyncStatList();
+    }
+
+    public String[] getProjectIdsFromSyncStat() {
+        return dao.getProjectIds();
+    }
+
+    public String[] getSyncedProjectIds() {
+        return dao.getSyncedProjectIds();
+    }
+
+    public List<SyncStat> getAllList() {
+        return dao.getAllItems();
+    }
+
+    public LiveData<List<SyncStat>> getSyncStatusByProjectIds(String... projectIds){
+        return dao.getSyncStatus(projectIds);
+    }
+
+
 
     public Single<SyncStat> getFailedUrls(String projectId, int type) {
         return dao.getFailedUrls(projectId, type);
     }
 
     public void updateDownloadProgress(String projectId, int progress, int totalFormsInProject) {
+        Timber.i("SyncLocalService, =========>>  updateDownloadProgress :: projectId = %s, progress = %d, totalFormsInProject = %d ", projectId, progress, totalFormsInProject);
         SyncStat syncStat = new SyncStat(projectId, String.valueOf(1) , "", false, Constant.DownloadStatus.RUNNING, System.currentTimeMillis());
         syncStat.setProgress(progress);
         syncStat.setTotal(totalFormsInProject);
         save(syncStat);
+    }
+
+    public void setSyncCompleted(String... iDs) {
+        dao.setSyncComplete(iDs);
     }
 }

@@ -83,19 +83,31 @@
                 android:singleLine="true"
                 android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/password"
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPasswordLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:passwordToggleEnabled="true"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/rounded_rectangle_border_stroke"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:maxLines="1"
-                android:minHeight="48dp"
-                android:padding="8dp"
-                android:singleLine="true"
-                android:textSize="14sp" />
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:focusableInTouchMode = "true"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_rectangle_border_stroke"
+                    android:hint=""
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:minHeight="48dp"
+                    android:padding="8dp"
+                    android:singleLine="true"
+                    android:textSize="14sp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
 
 
             <LinearLayout
@@ -147,6 +159,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:visibility="gone"
                 android:layout_marginTop="20dp"
                 android:text="@string/login_notice"
                 android:textColor="@color/light_grey"

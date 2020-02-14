@@ -14,30 +14,43 @@ import java.util.Set;
 public class Syncable implements Serializable {
 
     private final String title;
-    boolean sync; // this flag is used to enable it to sync or not
     private final Set<String> lastFailedUrl = new HashSet<>();
     private int total;
     private int progress;
     public int status;
+    public long createdDate;
+    // sync is forcably set to true to allow all sites, forms, and others to downloads.
+
+    public boolean sync = true;
+
+    public Set<String> getLastFailedUrl() {
+        return lastFailedUrl;
+    }
+
+    public long getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(long createdDate) {
+        this.createdDate = createdDate;
+    }
 
     /**
      * @param title  - title that is show in the list
-     * @param sync   - selector to include in the downlod or not. if no need to download {@code sync = false }
      * @param status - status of the download
      */
 
-    Syncable(String title, boolean sync, int status) {
+    public Syncable(String title, int status) {
         this.title = title;
-        this.sync = sync;
         this.status = status;
     }
 
-    Syncable(String title, boolean sync, int status, int total, int progress) {
+    public Syncable(String title, int status, int total, int progress) {
         this.title = title;
-        this.sync = sync;
         this.status = status;
         this.total = total;
         this.progress = progress;
+        this.sync = true;
     }
 
     public int getTotal() {
@@ -50,18 +63,6 @@ public class Syncable implements Serializable {
 
     public String getTitle() {
         return this.title;
-    }
-
-    public void setSync(boolean sync) {
-        this.sync = sync;
-    }
-
-    public boolean isSync() {
-        return this.sync;
-    }
-
-    public void toggleSync() {
-        this.sync = !this.sync;
     }
 
     public Set<String> getFailedUrl() {
@@ -90,5 +91,9 @@ public class Syncable implements Serializable {
 
     public boolean isProgressBarEnabled() {
         return getTotal() > 0;
+    }
+
+    public boolean isSync() {
+        return this.sync;
     }
 }

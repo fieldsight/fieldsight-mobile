@@ -88,7 +88,7 @@ public class Site implements Parcelable {
 
     @SerializedName("current_progress")
     @ColumnInfo(name = "current_progress")
-    private int current_progress;
+    private double current_progress;
 
     @SerializedName("site_logo")
     @ColumnInfo(name = "site_logo")
@@ -265,12 +265,16 @@ public class Site implements Parcelable {
         this.scheduleFormDeployedForm = scheduleFormDeployedForm;
     }
 
-    public int getCurrent_progress() {
+    public double getCurrent_progress() {
         return current_progress;
     }
 
-    public void setCurrent_progress(int current_progress) {
+    public void setCurrent_progress(double current_progress) {
         this.current_progress = current_progress;
+    }
+
+    public boolean isHasSubSites() {
+        return hasSubSites;
     }
 
     public int getIsSiteVerified() {
@@ -546,6 +550,9 @@ public class Site implements Parcelable {
         dest.writeString(this.stagedFormDeployedFrom);
         dest.writeString(this.scheduleFormDeployedForm);
         dest.writeString(this.site);
+        dest.writeDouble(this.current_progress);
+        dest.writeInt(this.users);
+        dest.writeInt(this.submissions);
     }
 
     protected Site(Parcel in) {
@@ -575,6 +582,9 @@ public class Site implements Parcelable {
         this.generalFormDeployedFrom = in.readString();
         this.stagedFormDeployedFrom = in.readString();
         this.scheduleFormDeployedForm = in.readString();
+        this.current_progress = in.readDouble();
+        this.submissions = in.readInt();
+        this.users = in.readInt();
         this.site = in.readString();
     }
 

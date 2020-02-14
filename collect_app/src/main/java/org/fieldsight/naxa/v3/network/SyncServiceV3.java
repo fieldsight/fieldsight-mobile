@@ -17,6 +17,7 @@ import org.fieldsight.naxa.forms.data.local.FieldsightFormDetailsv3;
 import org.fieldsight.naxa.forms.data.remote.FieldSightFormRemoteSourceV3;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
+import org.fieldsight.naxa.project.data.ProjectLocalSource;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.db.SiteRemoteSource;
 import org.json.JSONArray;
@@ -76,14 +77,23 @@ public class SyncServiceV3 extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         try {
-            selectedProject = Objects.requireNonNull(intent).getParcelableArrayListExtra("projects");
-            Timber.i("SyncServiceV3 selectedProject size = %d", selectedProject.size());
+            ArrayList<String> selectedProjectids = Objects.requireNonNull(intent).getStringArrayListExtra("projects");
 
+            Timber.i("SyncServiceV3 selectedProject size = %d", selectedProjectids.size());
+
+            if(selectedProjectids != null) {
+                for (int i = 0; i < selectedProjectids.size(); i++) {
+                    Timber.i("SyncServiceV3, selected project name = " + selectedProjectids.get(i));
+                }
+
+            }
             selectedMap = (HashMap<String, List<Syncable>>) intent.getSerializableExtra("selection");
             for (String key : selectedMap.keySet()) {
                 Timber.i(readaableSyncParams(key, selectedMap.get(key)));
             }
 
+            selectedProject = ProjectLocalSource.getInstance().getProjectByids(selectedProjectids);
+            Timber.i("SynServicev3, selectedProject size = %d", selectedProject.size());
 
             Disposable sitesObservable = Observable.fromCallable(() -> {
                 URL url = new URL(FieldSightUserSession.getServerUrl(Collect.getInstance()));
@@ -151,6 +161,7 @@ public class SyncServiceV3 extends IntentService {
                                                 if (hasDowloadFailed) {
                                                     failedProjectId.add(projectId);
                                                     // update the mark as failed. (currently failed will not be shown. new design will be added to handle this)
+//                                                    markAsFailed(projectId+"", 1, "");
                                                 }
                                             }
 
@@ -167,12 +178,15 @@ public class SyncServiceV3 extends IntentService {
 
                         @Override
                         public void onError(Throwable e) {
+                            //unused
+                            Timber.i("=========>>>>>> forms failed");
+                            Timber.i("Syncservicev3, failedproject size = %s", e.getMessage());
                             Timber.e(e);
                         }
 
                         @Override
                         public void onComplete() {
-                            //unused
+                            Timber.i("=========>>>>>> forms failed");
                         }
                     });
 
@@ -321,6 +335,7 @@ public class SyncServiceV3 extends IntentService {
         return new Function<Project, Observable<List<Object>>>() {
             @Override
             public Observable<List<Object>> apply(Project project) throws Exception {
+
                 Observable<Object> regionSitesObservable = Observable.just(project.getRegionList())
                         .flatMapIterable((Function<List<Region>, Iterable<Region>>) regions -> regions)
                         .filter(region -> !TextUtils.isEmpty(region.id))
@@ -367,7 +382,9 @@ public class SyncServiceV3 extends IntentService {
                         .doOnSubscribe(disposable -> markAsRunning(project.getId(), 0))
                         .onErrorReturn(throwable -> {
                             String url = getFailedFormUrl(throwable)[0];
-                            failedSiteUrls.add(url);
+                            if(!TextUtils.isEmpty(url)) {
+                                failedSiteUrls.add(url);
+                            }
                             return project.getId();
                         })
                         .toList()
@@ -383,11 +400,13 @@ public class SyncServiceV3 extends IntentService {
                                     }
                                 }
 
-                                if (!hasErrorBeenThrown) {//error has been thrown
+                                if (!hasErrorBeenThrown || failedSiteUrls.size() == 0) {//error has been thrown
                                     markAsCompleted(project.getId(), 0);
                                 }
+                                Timber.i("SyncService, failedUrl Size = %d", failedSiteUrls.size());
 
                                 if (failedSiteUrls.size() > 0) {
+                                    Timber.i("SyncService, failedUrl url = " + failedSiteUrls.get(0));
                                     markAsFailed(project.getId(), 0, failedSiteUrls.toString());
                                     failedSiteUrls.clear();
                                 }
@@ -396,6 +415,7 @@ public class SyncServiceV3 extends IntentService {
                         .doOnDispose(new Action() {
                             @Override
                             public void run() throws Exception {
+                                Timber.i("SyncService, sites do on dispose called");
                                 markAsFailed(project.getId(), 0, "");
                             }
                         })

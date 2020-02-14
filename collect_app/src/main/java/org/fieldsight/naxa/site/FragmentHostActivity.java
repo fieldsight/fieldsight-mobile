@@ -37,6 +37,7 @@ import java.util.ArrayList;
 
 import timber.log.Timber;
 
+import static org.fieldsight.naxa.common.Constant.EXTRA_ID;
 import static org.fieldsight.naxa.common.Constant.EXTRA_MESSAGE;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.fieldsight.naxa.common.Constant.EXTRA_PROJECT;
@@ -58,17 +59,17 @@ public class FragmentHostActivity extends CollectAbstractActivity {
     }
 
 
-    public static void startWithSurveyForm(Context context, Project project) {
+    public static void startWithSurveyForm(Context context, String projectId) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
-        intent.putExtra(EXTRA_PROJECT, project);
+        intent.putExtra(EXTRA_ID, projectId);
         intent.putExtra(EXTRA_MESSAGE, "open_survey_form");
         context.startActivity(intent);
     }
 
-    public static void startFlaggedForm(Context context, String type, Project project) {
+    public static void startFlaggedForm(Context context, String type, String projectId) {
         Intent intent = new Intent(context, FragmentHostActivity.class);
         intent.putExtra(EXTRA_MESSAGE, type);
-        intent.putExtra(EXTRA_PROJECT, project);
+        intent.putExtra(EXTRA_ID, projectId);
         context.startActivity(intent);
     }
 
@@ -97,8 +98,9 @@ public class FragmentHostActivity extends CollectAbstractActivity {
         isParent = extras.getBoolean("isParent");
 
 
-        if (extras.containsKey(EXTRA_PROJECT)) {
-            project = extras.getParcelable(EXTRA_PROJECT);
+        if (extras.containsKey(EXTRA_ID)) {
+            String projectId = extras.getString(EXTRA_ID);
+            project = ProjectLocalSource.getInstance().getProject(projectId);
         } else if (loadedSite != null) {
             project = ProjectLocalSource.getInstance().getProject(loadedSite.getProject());
             Timber.i("hasProject = %s", (project != null));

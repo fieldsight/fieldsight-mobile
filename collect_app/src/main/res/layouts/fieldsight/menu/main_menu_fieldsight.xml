@@ -7,13 +7,15 @@
         android:icon="@drawable/ic_notifications_white"
         android:orderInCategory="100"
         android:title="@string/menu_title_notification"
+        android:iconTint="@android:color/black"
         app:showAsAction="always" />
 
 
     <item
         android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh_white_2"
-        android:title="@string/menu_title_sync"
+        android:icon="@drawable/ic_cancel"
+        android:title="@string/menu_cancel_sync"
+        android:iconTint="@android:color/black"
         app:showAsAction="always" />
 
 
@@ -21,6 +23,7 @@
         android:id="@+id/action_backup"
         android:icon="@drawable/ic_action_backup"
         android:title="@string/backup_data"
+        android:iconTint="@android:color/black"
         app:showAsAction="never" />
 
 
@@ -29,16 +32,19 @@
         android:id="@+id/action_submit_report"
         android:icon="@android:drawable/ic_menu_report_image"
         android:title="@string/send_report"
+        android:iconTint="@android:color/black"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_setting"
         android:icon="@drawable/ic_setting"
         android:title="@string/menu_title_settings"
+        android:iconTint="@android:color/black"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_logout"
         android:title="@string/menu_title_logout"
+        android:iconTint="@android:color/black"
         app:showAsAction="never" />
 
 
