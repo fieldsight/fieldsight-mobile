@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.v3.project;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +24,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -31,30 +34,32 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
-import com.google.gson.JsonArray;
 
-import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.FSInstanceChooserList;
 import org.fieldsight.naxa.FSInstanceUploaderListActivity;
+import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.InternetUtils;
 import org.fieldsight.naxa.common.SettingsActivity;
 import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.User;
+import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.profile.UserActivity;
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.CreateSiteActivity;
 import org.fieldsight.naxa.site.FragmentHostActivity;
-import org.fieldsight.naxa.site.OldProjectDashboardActivity;
 import org.fieldsight.naxa.site.map.ProjectMapFragment;
 import org.fieldsight.naxa.v3.network.ApiV3Interface;
-import org.fieldsight.naxa.v3.network.SyncActivity;
-import org.json.JSONArray;
+import org.fieldsight.naxa.v3.network.SyncLocalSource3;
+import org.fieldsight.naxa.v3.network.SyncServiceV3;
+import org.fieldsight.naxa.v3.network.SyncStat;
+import org.fieldsight.naxa.v3.network.Syncable;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.FileManagerTabs;
@@ -62,8 +67,8 @@ import org.odk.collect.android.utilities.ApplicationConstants;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,17 +76,24 @@ import butterknife.OnClick;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import timber.log.Timber;
 
+import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
-import static org.fieldsight.naxa.network.ServiceGenerator.getRxClient;
 import static org.odk.collect.android.application.Collect.allowClick;
 
 public class ProjectDashboardActivity extends CollectAbstractActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    @BindView(R.id.prgbar_sync)
+    ProgressBar prgbarSync;
+    @BindView(R.id.tv_count)
+    TextView tvCount;
+    @BindView(R.id.ll_sync_project_progress_count)
+    LinearLayout llSyncProjectProgressCount;
+    @BindView(R.id.ll_touch_control)
+    LinearLayout llTouchControl;
     private Project loadedProject;
     private CardView searchView;
     private AppBarLayout appBarLayout;
@@ -89,9 +101,23 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     private ActionBarDrawerToggle drawerToggle;
 
     private boolean mapIsVisible;
+
+
+
     private View navigationHeader;
     private int mapExistReachesPosition;
     TermsLabels tl;
+
+    // Hashmap to track the syncing progress
+    HashMap<String, List<Syncable>> syncableMap = new HashMap<>();
+    LiveData<List<SyncStat>> syncdata;
+    androidx.lifecycle.Observer<List<SyncStat>> syncObserver;
+    Intent syncIntent;
+    boolean syncStarts = false;
+    boolean isTotalNotCounted = true;
+    int totalProjectCount = 0;
+    int totalProjectProgressCount = 0;
+
 
     @BindView(R.id.cl_main)
     CoordinatorLayout clMain;
@@ -141,6 +167,11 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     @BindView(R.id.tv_submissions)
     TextView tvSubmissions;
 
+    @OnClick(R.id.ll_touch_control)
+    public void onViewClicked() {
+        Toast.makeText(this, "Please wait!!\nProject is syncing", Toast.LENGTH_SHORT).show();
+    }
+
     public class ProjectFragment {
         public String title;
         public Fragment fragment;
@@ -160,6 +191,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     }
 
     ProjectViewPagerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -175,6 +207,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         setTitle("");
 
+
         // this is for demonstration how can we manage the code with git with multiple developers
         try {
             loadedProject = getIntent().getParcelableExtra(EXTRA_OBJECT);
@@ -188,51 +221,116 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         if (tl != null) {
             if (!TextUtils.isEmpty(tl.site)) {
                 navigationView.getMenu().findItem(R.id.nav_create_offline_site).setTitle(String.format("Create New %s", tl.site));
-                navigationView.getMenu().findItem(R.id.nav_view_site_dashboard).setTitle(String.format("My %s", tl.site));
+//                navigationView.getMenu().findItem(R.id.nav_view_site_dashboard).setTitle(String.format("My %s", tl.site));
             }
         }
         addProjectInfoInView();
         navigationView.setNavigationItemSelectedListener(this);
         // get the projectdashboard stat
         ServiceGenerator.createCacheService(ApiV3Interface.class).getProjectDashboardStat(loadedProject.getId())
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Observer<ResponseBody>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-            }
+                    }
 
-            @Override
-            public void onNext(ResponseBody responseBody) {
-                initPager(responseBody);
-            }
+                    @Override
+                    public void onNext(ResponseBody responseBody) {
+                        initPager(responseBody);
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                ToastUtils.showShortToast(e.getMessage());
-                initPager(null);
-                hideProgress();
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        ToastUtils.showShortToast(e.getMessage());
+                        initPager(null);
+                        hideProgress();
+                    }
 
-            @Override
-            public void onComplete() {
-                hideProgress();
-            }
-        });
+                    @Override
+                    public void onComplete() {
+                        hideProgress();
+                    }
+                });
         showProgress("Loading project info, Please wait ");
+
+//        Observer
+        syncObserver = new androidx.lifecycle.Observer<List<SyncStat>>() {
+            @Override
+            public void onChanged(List<SyncStat> syncStats) {
+                Timber.i("sync stats size = %d", syncStats.size());
+                // check if project is syncomplete or not
+                // if sync complete, remove the downloading section from the item list
+                // TODO check here how can we implement the form loading counter ??????????????????
+                for (SyncStat stat : syncStats) {
+                    String projectId = stat.getProjectId();
+                    if (syncableMap.containsKey(projectId)) {
+                        List<Syncable> syncableList = syncableMap.get(projectId);
+                        Syncable mSyncable = syncableList.get(Integer.parseInt(stat.getType()));
+                        mSyncable.setStatus(stat.getStatus());
+                        mSyncable.setProgress(stat.getProgress());
+                        mSyncable.setTotal(stat.getTotal());
+                        mSyncable.setCreatedDate(stat.getCreated_date());
+
+                        if (isTotalNotCounted) {
+                            if (mSyncable.getTotal() != 0) {
+                                totalProjectCount = mSyncable.getTotal();
+                                isTotalNotCounted = false;
+                                prgbarSync.setMax(totalProjectCount);
+
+                            }
+                        }
+                        if (mSyncable.getProgress() > totalProjectProgressCount && totalProjectProgressCount <= totalProjectCount) {
+                            totalProjectProgressCount = mSyncable.getProgress();
+                            prgbarSync.setProgress(totalProjectProgressCount);
+                            tvCount.setText(totalProjectProgressCount + "/" + totalProjectCount);
+                            if (totalProjectProgressCount == totalProjectCount) {
+
+                                syncStarts = false;
+                                llTouchControl.setVisibility(View.GONE);
+                                llSyncProjectProgressCount.setVisibility(View.GONE);
+
+
+                                invalidateOptionsMenu();
+                            }
+                        }
+
+                        Timber.i("sync stats Total = %d", totalProjectCount);
+                        Timber.i("sync stats Progress = %d", totalProjectProgressCount);
+
+
+//                        syncableList.set(Integer.parseInt(stat.getType()), mSyncable);
+//                        syncableMap.put(projectId, syncableList);
+                    }
+                }
+            }
+        };
+
+        // observer the syncing or sync progress
+        syncdata = SyncLocalSource3.getInstance().getAll();
+        syncdata.observe(this, syncObserver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // close all sync listening observers from live data
+        if (syncdata != null && syncdata.hasObservers()) {
+            syncdata.removeObserver(syncObserver);
+        }
     }
 
     void updateCountUI(int totalRegions, int sitesCount, int usersCount, int submissonCount) {
-        tvRegions.setText(totalRegions+"");
-        tvSites.setText(sitesCount+"");
-        tvUsers.setText(usersCount+"");
-        tvSubmissions.setText(submissonCount+"");
+        tvRegions.setText(totalRegions + "");
+        tvSites.setText(sitesCount + "");
+        tvUsers.setText(usersCount + "");
+        tvSubmissions.setText(submissonCount + "");
     }
 
     void initPager(ResponseBody responseBody) {
         String users = "", forms = "";
-        if(responseBody != null) {
+        if (responseBody != null) {
             try {
                 String data = responseBody.string();
                 JSONObject dataJSON = new JSONObject(data);
@@ -259,17 +357,17 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     void addProjectInfoInView() {
         projectName.setText(loadedProject.getName());
         organizationName.setText(loadedProject.getOrganizationName());
-        if(!TextUtils.isEmpty(loadedProject.getUrl())) {
+        if (!TextUtils.isEmpty(loadedProject.getUrl())) {
             Glide.with(this).load(loadedProject.getUrl()).apply(RequestOptions.circleCropTransform()).into(projectImage);
         }
-        if(!TextUtils.isEmpty(loadedProject.getDescription())) {
+        if (!TextUtils.isEmpty(loadedProject.getDescription())) {
             llDesc.setVisibility(View.VISIBLE);
             tvDescription.setText(loadedProject.getDescription());
         }
     }
 
     void addDrawerToggle() {
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar, R.string.app_name, R.string.app_name);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
     }
@@ -292,8 +390,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
     @OnClick(R.id.tv_more)
     void moreDesc() {
-       //TODO : what to do either open in new page or expand the text ?
-       //TODO: what to do if text are long ?
+        //TODO : what to do either open in new page or expand the text ?
+        //TODO: what to do if text are long ?
     }
 
     @OnClick(R.id.tv_project_forms)
@@ -339,8 +437,26 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.action_refresh).setShowAsAction(SHOW_AS_ACTION_ALWAYS);
+
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+//        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
+        if (syncStarts) {
+//            menu.findItem(R.id.action_refresh).setVisible(false);
+            menu.findItem(R.id.action_refresh).setIcon(getResources().getDrawable(R.drawable.ic_cancel_white_24dp));
+        } else {
+//            menu.findItem(R.id.action_refresh).setVisible(true);
+            menu.findItem(R.id.action_refresh).setIcon(getResources().getDrawable(R.drawable.ic_refresh_white_2));
+
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -368,13 +484,17 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 });
                 break;
             case R.id.action_refresh:
-                Bundle bundle = new Bundle();
-                ArrayList<Project> projectArrayList = new ArrayList<>();
-                projectArrayList.add(loadedProject);
-                bundle.putParcelableArrayList("projects", projectArrayList);
-                bundle.getBoolean("auto", true);
-                startActivity(new Intent(this, SyncActivity.class)
-                        .putExtra("params", bundle));
+
+                if(syncStarts){
+                    cancelAllSync();
+                }else {
+                    if(NetworkUtils.isNetworkConnected()) {
+                        syncProject();
+                    }else {
+                        Toast.makeText(this, "No internet Connection. please retry later!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
                 break;
             case R.id.action_app_settings:
                 if (allowClick(getClass().getName())) {
@@ -383,6 +503,79 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void syncProject() {
+        isTotalNotCounted = true;
+        totalProjectCount = 0;
+        totalProjectProgressCount = 0;
+        prgbarSync.setMax(totalProjectCount);
+        prgbarSync.setProgress(totalProjectProgressCount);
+
+        ArrayList<String> projectIds = new ArrayList<>();
+        projectIds.add(loadedProject.getId());
+
+        syncableMap.put(loadedProject.getId(), createList());
+
+        syncIntent = new Intent(getApplicationContext(), SyncServiceV3.class);
+        syncIntent.putStringArrayListExtra("projects", projectIds);
+        syncIntent.putExtra("selection", syncableMap);
+        startService(syncIntent);
+        syncStarts = true;
+        llTouchControl.setVisibility(View.VISIBLE);
+        llSyncProjectProgressCount.setVisibility(View.VISIBLE);
+
+        invalidateOptionsMenu();
+    }
+
+    private void cancelAllSync() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cancel sync process");
+        builder.setMessage("Project is syncing, Canceling the syncing will stop syncing this project.")
+                .setPositiveButton("Cancel Sync", (dialog, which) -> {
+                    if (syncIntent != null) {
+                        DisposableManager.dispose();
+                        stopService(syncIntent);
+                        Timber.i("Service closed down");
+
+                        // delete project form syncstat table which is not completed
+                        List<String> syncingIds = new ArrayList<>();
+                        for (String key : syncableMap.keySet()) {
+                            boolean sitesSynced = syncableMap.get(key).get(0).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            boolean formsSynnced = syncableMap.get(key).get(1).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            boolean educationMaterialSynced = syncableMap.get(key).get(2).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            Timber.i(" ProjectListActivityv3, projectId = " + key + " sitesSynced = " + sitesSynced + " formsSynced = " + formsSynnced + " educationMaterialSynced = " + educationMaterialSynced);
+                            if (sitesSynced && formsSynnced && educationMaterialSynced) continue;
+                            syncingIds.add(key);
+                        }
+                        Timber.i("syncing key size = %d", syncingIds.size());
+                        if (syncingIds.size() > 0) {
+                            String[] ids = syncingIds.toArray(new String[syncingIds.size()]);
+//                            SyncLocalSource3.getInstance().deleteByIds(ids);
+                            SyncLocalSource3.getInstance().setSyncCompleted(ids);
+                        }
+                    }
+                    Timber.i("cancel clicked");
+                    ToastUtils.showLongToast("Project sync cancelled by user");
+
+                    llTouchControl.setVisibility(View.GONE);
+                    llSyncProjectProgressCount.setVisibility(View.GONE);
+                    syncStarts = false;
+                    invalidateOptionsMenu();
+                }).setNegativeButton("Close", null).create().show();
+
+
+    }
+
+    // this class will manage the sync list to determine which should be synced
+    private ArrayList<Syncable> createList() {
+        // -1 refers here as never started
+        return new ArrayList<Syncable>() {{
+            add(0, new Syncable("Regions and sites", -1, 0, 0));
+            add(1, new Syncable("Forms", -1, 0, 0));
+            add(2, new Syncable("Materials", -1, 0, 0));
+        }};
     }
 
     @Override
@@ -413,8 +606,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
             case R.id.nav_view_finalized_offline_site:
 
                 return true;
-            case R.id.nav_view_site_dashboard:
-                return true;
+//            case R.id.nav_view_site_dashboard:
+//                return true;
             case R.id.nav_backup:
                 startActivity(new Intent(this, BackupActivity.class));
                 return true;
@@ -431,4 +624,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+        if(syncStarts){
+            Toast.makeText(this, "Please wait!!\nProject is syncing", Toast.LENGTH_SHORT).show();
+        }else {
+            super.onBackPressed();
+        }
+    }
 }

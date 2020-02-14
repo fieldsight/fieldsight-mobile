@@ -143,4 +143,8 @@ public class SyncLocalSource3 implements BaseLocalDataSource<SyncStat> {
         syncStat.setTotal(totalFormsInProject);
         save(syncStat);
     }
+
+    public void setSyncCompleted(String... iDs) {
+        dao.setSyncComplete(iDs);
+    }
 }

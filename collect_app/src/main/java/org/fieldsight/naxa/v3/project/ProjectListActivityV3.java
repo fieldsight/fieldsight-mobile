@@ -212,26 +212,29 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         }
 
 
-        syncObserver = syncStats -> {
-            Timber.i("sync stats size = %d", syncStats.size());
-            // check if project is syncomplete or not
-            // if sync complete, remove the downloading section from the item list
-            // TODO check here how can we implement the form loading counter ??????????????????
-            for (SyncStat stat : syncStats) {
-                String projectId = stat.getProjectId();
-                if (syncableMap.containsKey(projectId)) {
-                    List<Syncable> syncableList = syncableMap.get(projectId);
-                    Timber.i("ProjectListActivityv3, syncProjectlist size = %d", syncProjectList.size());
-                    Syncable mSyncable = syncableList.get(Integer.parseInt(stat.getType()));
-                    mSyncable.setStatus(stat.getStatus());
-                    mSyncable.setProgress(stat.getProgress());
-                    mSyncable.setTotal(stat.getTotal());
-                    mSyncable.setCreatedDate(stat.getCreated_date());
-                    syncableList.set(Integer.parseInt(stat.getType()), mSyncable);
-                    syncableMap.put(projectId, syncableList);
+        syncObserver = new Observer<List<SyncStat>>() {
+            @Override
+            public void onChanged(List<SyncStat> syncStats) {
+                Timber.i("sync stats size = %d", syncStats.size());
+                // check if project is syncomplete or not
+                // if sync complete, remove the downloading section from the item list
+                // TODO check here how can we implement the form loading counter ??????????????????
+                for (SyncStat stat : syncStats) {
+                    String projectId = stat.getProjectId();
+                    if (syncableMap.containsKey(projectId)) {
+                        List<Syncable> syncableList = syncableMap.get(projectId);
+                        Timber.i("ProjectListActivityv3, syncProjectlist size = %d", syncProjectList.size());
+                        Syncable mSyncable = syncableList.get(Integer.parseInt(stat.getType()));
+                        mSyncable.setStatus(stat.getStatus());
+                        mSyncable.setProgress(stat.getProgress());
+                        mSyncable.setTotal(stat.getTotal());
+                        mSyncable.setCreatedDate(stat.getCreated_date());
+                        syncableList.set(Integer.parseInt(stat.getType()), mSyncable);
+                        syncableMap.put(projectId, syncableList);
+                    }
                 }
+                syncAdapter.updateSyncMap(syncableMap);
             }
-            syncAdapter.updateSyncMap(syncableMap);
         };
 
         runningLiveDataObserver = count -> {
@@ -253,6 +256,8 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
                 Timber.i("SyncAdapter ===============>>> remaining unsynced = %d", syncAdapter.getUnsyncedProject().size());
 
+            }else {
+                syncStarts = true;
             }
         };
 
