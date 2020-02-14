@@ -10,6 +10,15 @@
         android:iconTint="@android:color/black"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_server_change"
+        android:icon="@drawable/ic_setting"
+        android:orderInCategory="100"
+        android:title="@string/main_menu_settings"
+        android:iconTint="@color/primaryColor"
+        app:showAsAction="always"
+        android:visible="false"/>
+
 
     <item
         android:id="@+id/action_refresh"

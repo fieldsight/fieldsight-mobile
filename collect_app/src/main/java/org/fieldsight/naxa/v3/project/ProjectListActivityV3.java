@@ -24,6 +24,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.common.Constant;
@@ -31,10 +32,12 @@ import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.helpers.FSInstancesDao;
+import org.fieldsight.naxa.login.LoginActivity;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.preferences.SettingsActivity;
+import org.fieldsight.naxa.project.ProjectListActivity;
 import org.fieldsight.naxa.project.data.ProjectRepository;
 import org.fieldsight.naxa.report.ReportActivity;
 import org.fieldsight.naxa.v3.adapter.ProjectListAdapter;
@@ -59,6 +62,7 @@ import butterknife.OnClick;
 import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.FormDeploymentFrom.PROJECT;
+import static org.odk.collect.android.application.Collect.allowClick;
 
 public class ProjectListActivityV3 extends CollectAbstractActivity implements SyncingProjectAdapter.Callback {
     @BindView(R.id.rv_projectlist)
@@ -575,6 +579,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
         getMenuInflater().inflate(R.menu.main_menu_fieldsight, menu);
         menu.findItem(R.id.action_refresh).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor), PorterDuff.Mode.SRC_IN);
         menu.findItem(R.id.action_notificaiton).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor), PorterDuff.Mode.SRC_IN);
+
+        if (!BuildConfig.BUILD_TYPE.equals("release")) {
+            menu.findItem(R.id.action_server_change).setVisible(true);
+            menu.findItem(R.id.action_server_change).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor), PorterDuff.Mode.SRC_IN);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -616,6 +625,11 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
                 break;
             case R.id.action_notificaiton:
                 NotificationListActivity.start(this);
+                break;
+                case R.id.action_server_change:
+                    if (allowClick(getClass().getName())) {
+                        startActivity(new Intent(ProjectListActivityV3.this, org.fieldsight.naxa.common.SettingsActivity.class));
+                    }
                 break;
             case R.id.action_logout:
                 FieldSightUserSession.showLogoutDialog(this);
