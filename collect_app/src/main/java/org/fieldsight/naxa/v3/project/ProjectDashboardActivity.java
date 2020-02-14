@@ -47,6 +47,7 @@ import org.fieldsight.naxa.common.SettingsActivity;
 import org.fieldsight.naxa.common.ViewUtils;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.User;
+import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.network.ServiceGenerator;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
 import org.fieldsight.naxa.profile.UserActivity;
@@ -487,7 +488,11 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 if(syncStarts){
                     cancelAllSync();
                 }else {
-                    syncProject();
+                    if(NetworkUtils.isNetworkConnected()) {
+                        syncProject();
+                    }else {
+                        Toast.makeText(this, "No internet Connection. please retry later!", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 break;
@@ -517,7 +522,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         syncIntent.putExtra("selection", syncableMap);
         startService(syncIntent);
         syncStarts = true;
-//        llTouchControl.setVisibility(View.VISIBLE);
+        llTouchControl.setVisibility(View.VISIBLE);
         llSyncProjectProgressCount.setVisibility(View.VISIBLE);
 
         invalidateOptionsMenu();
@@ -547,12 +552,13 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                         Timber.i("syncing key size = %d", syncingIds.size());
                         if (syncingIds.size() > 0) {
                             String[] ids = syncingIds.toArray(new String[syncingIds.size()]);
-                            SyncLocalSource3.getInstance().deleteByIds(ids);
+//                            SyncLocalSource3.getInstance().deleteByIds(ids);
+                            SyncLocalSource3.getInstance().setSyncCompleted(ids);
                         }
                     }
                     Timber.i("cancel clicked");
                     ToastUtils.showLongToast("Project sync cancelled by user");
-                    
+
                     llTouchControl.setVisibility(View.GONE);
                     llSyncProjectProgressCount.setVisibility(View.GONE);
                     syncStarts = false;

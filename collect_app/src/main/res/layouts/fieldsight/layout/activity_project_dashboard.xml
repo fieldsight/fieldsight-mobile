@@ -9,6 +9,11 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="end">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/cl_main"
         android:layout_width="match_parent"
@@ -321,6 +326,8 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
@@ -330,16 +337,18 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+
     <LinearLayout
         android:id="@+id/ll_touch_control"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:visibility="gone">
 
     </LinearLayout>
 
-
+    </RelativeLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/activity_dashboard_navigation_view"
         android:layout_width="wrap_content"

@@ -76,4 +76,6 @@ public interface SyncDaoV3 extends BaseDaoFieldSight<SyncStat> {
     @Query("DELETE FROm syncstat WHERE project_id in (:projectIds)")
     void deleteByIds(String... projectIds);
 
+    @Query("UPDATE syncstat set status=4 WHERE project_id in (:iDs)")
+    void setSyncComplete(String[] iDs);
 }
