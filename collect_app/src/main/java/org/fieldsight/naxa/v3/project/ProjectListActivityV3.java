@@ -582,6 +582,7 @@ public class ProjectListActivityV3 extends CollectAbstractActivity implements Sy
 
         if (!BuildConfig.BUILD_TYPE.equals("release")) {
             menu.findItem(R.id.action_server_change).setVisible(true);
+            menu.findItem(R.id.action_server_change).getIcon().setColorFilter(getResources().getColor(R.color.primaryColor), PorterDuff.Mode.SRC_IN);
         }
         return super.onCreateOptionsMenu(menu);
     }
