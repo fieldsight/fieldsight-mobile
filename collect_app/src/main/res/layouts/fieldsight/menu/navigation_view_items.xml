@@ -12,10 +12,10 @@
             android:title="@string/nav_finalized_offline_site"
             android:visible="false" />
 
-        <item
-            android:id="@+id/nav_view_site_dashboard"
-            android:icon="@drawable/ic_format_list_bulleted"
-            android:title="@string/nav_site_dashboard" />
+<!--        <item-->
+<!--            android:id="@+id/nav_view_site_dashboard"-->
+<!--            android:icon="@drawable/ic_format_list_bulleted"-->
+<!--            android:title="@string/nav_site_dashboard" />-->
     </group>
 
 
