@@ -298,7 +298,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
     @OnClick(R.id.tv_project_forms)
     void openProjectSurveyForm() {
-        FragmentHostActivity.startWithSurveyForm(this, loadedProject);
+        FragmentHostActivity.startWithSurveyForm(this, loadedProject.getId());
     }
 
 
@@ -422,10 +422,10 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 startActivity(new Intent(this, org.fieldsight.naxa.preferences.SettingsActivity.class));
                 return true;
             case R.id.nav_flagged_form:
-                FragmentHostActivity.startFlaggedForm(this, "Flagged", loadedProject);
+                FragmentHostActivity.startFlaggedForm(this, "Flagged", loadedProject.getId());
                 return true;
             case R.id.nav_rejected_form:
-                FragmentHostActivity.startFlaggedForm(this, "Rejected", loadedProject);
+                FragmentHostActivity.startFlaggedForm(this, "Rejected", loadedProject.getId());
                 return true;
         }
         return false;

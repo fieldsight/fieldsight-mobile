@@ -10,7 +10,7 @@
     <style name="Theme.Collect.Dark" parent="Theme.Collect.BaseDark">
         <item name="android:buttonStyle">@style/Widget.Collect.Button.Custom</item>
         <item name="imageButtonStyle">@style/Widget.Collect.ImageButton.Custom.Dark</item>
-
+        <item name="colorButtonNormal">@color/new_design_blue</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
@@ -26,7 +26,7 @@
     <style name="Theme.Collect.Light" parent="Theme.Collect.BaseLight">
         <item name="android:buttonStyle">@style/Widget.Collect.Button.Custom</item>
         <item name="imageButtonStyle">@style/Widget.Collect.ImageButton.Custom.Light</item>
-
+        <item name="colorButtonNormal">@color/new_design_blue</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
