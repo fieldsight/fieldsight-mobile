@@ -12,9 +12,9 @@
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:windowBackground">@color/background_grey</item>
 
-        <item name="colorControlNormal">@color/base</item>
+        <item name="colorControlNormal">@color/new_design_blue</item>
         <item name="colorControlActivated">@color/new_design_blue</item>
-        <item name="colorControlHighlight">@color/iron</item>
+        <item name="colorControlHighlight">@color/new_design_blue</item>
         <item name="android:textColorHint">@color/new_design_blue</item>
         <item name="colorButtonNormal">@color/new_design_blue</item>
     </style>

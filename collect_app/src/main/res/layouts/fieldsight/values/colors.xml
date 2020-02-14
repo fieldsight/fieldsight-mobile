@@ -3,8 +3,8 @@
     <drawable name="white">#ffffffff</drawable>
     <drawable name="black">#ff000000</drawable>
     <color name="black_160">#a0000000</color>
-    <color name="colorPrimary">#00628e</color>
-    <color name="colorPrimaryDark">#003860</color>
+    <color name="colorPrimary">@color/new_design_light_blue</color>
+    <color name="colorPrimaryDark">@color/new_design_blue</color>
     <color name="colorAccent">#4b8fbe</color>
     <color name="colorAccentTransparent">#5b4b8fbe</color>
     <color name="colorTransparentBlueTop">#f000628e</color>

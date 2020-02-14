@@ -221,7 +221,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         if (tl != null) {
             if (!TextUtils.isEmpty(tl.site)) {
                 navigationView.getMenu().findItem(R.id.nav_create_offline_site).setTitle(String.format("Create New %s", tl.site));
-                navigationView.getMenu().findItem(R.id.nav_view_site_dashboard).setTitle(String.format("My %s", tl.site));
+//                navigationView.getMenu().findItem(R.id.nav_view_site_dashboard).setTitle(String.format("My %s", tl.site));
             }
         }
         addProjectInfoInView();
@@ -396,7 +396,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
 
     @OnClick(R.id.tv_project_forms)
     void openProjectSurveyForm() {
-        FragmentHostActivity.startWithSurveyForm(this, loadedProject);
+        FragmentHostActivity.startWithSurveyForm(this, loadedProject.getId());
     }
 
 
@@ -606,8 +606,8 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
             case R.id.nav_view_finalized_offline_site:
 
                 return true;
-            case R.id.nav_view_site_dashboard:
-                return true;
+//            case R.id.nav_view_site_dashboard:
+//                return true;
             case R.id.nav_backup:
                 startActivity(new Intent(this, BackupActivity.class));
                 return true;
@@ -615,10 +615,10 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 startActivity(new Intent(this, org.fieldsight.naxa.preferences.SettingsActivity.class));
                 return true;
             case R.id.nav_flagged_form:
-                FragmentHostActivity.startFlaggedForm(this, "Flagged", loadedProject);
+                FragmentHostActivity.startFlaggedForm(this, "Flagged", loadedProject.getId());
                 return true;
             case R.id.nav_rejected_form:
-                FragmentHostActivity.startFlaggedForm(this, "Rejected", loadedProject);
+                FragmentHostActivity.startFlaggedForm(this, "Rejected", loadedProject.getId());
                 return true;
         }
         return false;
