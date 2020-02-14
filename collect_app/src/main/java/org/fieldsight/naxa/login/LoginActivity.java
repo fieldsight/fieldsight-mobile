@@ -54,6 +54,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         // Set up the login form.
         edt_email = findViewById(R.id.email);
         edt_password = findViewById(R.id.password);
+        edt_password.setHint(getResources().getString(R.string.password));
         email_sign_in_button = findViewById(R.id.email_sign_in_button);
 
         email_sign_in_button.setOnClickListener(new OnClickListener() {
@@ -111,6 +112,16 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         });
 
         loginPresenter = new LoginPresenterImpl(this);
+
+
+        edt_password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    edt_password.setHint("");
+                else
+                    edt_password.setHint(getResources().getString(R.string.password));
+            }
+        });
     }
 
     @Override
