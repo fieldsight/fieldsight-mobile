@@ -1,5 +1,6 @@
 package org.fieldsight.naxa.v3.project;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -38,6 +39,8 @@ import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.FSInstanceChooserList;
 import org.fieldsight.naxa.FSInstanceUploaderListActivity;
+import org.fieldsight.naxa.common.Constant;
+import org.fieldsight.naxa.common.DisposableManager;
 import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.InternetUtils;
 import org.fieldsight.naxa.common.SettingsActivity;
@@ -442,9 +445,12 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     public boolean onPrepareOptionsMenu(Menu menu) {
 //        menu.findItem(R.id.action_refresh).setVisible(showSyncMenu);
         if (syncStarts) {
-            menu.findItem(R.id.action_refresh).setVisible(false);
+//            menu.findItem(R.id.action_refresh).setVisible(false);
+            menu.findItem(R.id.action_refresh).setIcon(getResources().getDrawable(R.drawable.ic_cancel_white_24dp));
         } else {
-            menu.findItem(R.id.action_refresh).setVisible(true);
+//            menu.findItem(R.id.action_refresh).setVisible(true);
+            menu.findItem(R.id.action_refresh).setIcon(getResources().getDrawable(R.drawable.ic_refresh_white_2));
+
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -478,7 +484,11 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 break;
             case R.id.action_refresh:
 
-                syncProject();
+                if(syncStarts){
+                    cancelAllSync();
+                }else {
+                    syncProject();
+                }
 
                 break;
             case R.id.action_app_settings:
@@ -507,10 +517,49 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
         syncIntent.putExtra("selection", syncableMap);
         startService(syncIntent);
         syncStarts = true;
-        llTouchControl.setVisibility(View.VISIBLE);
+//        llTouchControl.setVisibility(View.VISIBLE);
         llSyncProjectProgressCount.setVisibility(View.VISIBLE);
 
         invalidateOptionsMenu();
+    }
+
+    private void cancelAllSync() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cancel sync process");
+        builder.setMessage("Project is syncing, Canceling the syncing will stop syncing this project.")
+                .setPositiveButton("Cancel Sync", (dialog, which) -> {
+                    if (syncIntent != null) {
+                        DisposableManager.dispose();
+                        stopService(syncIntent);
+                        Timber.i("Service closed down");
+
+                        // delete project form syncstat table which is not completed
+                        List<String> syncingIds = new ArrayList<>();
+                        for (String key : syncableMap.keySet()) {
+                            boolean sitesSynced = syncableMap.get(key).get(0).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            boolean formsSynnced = syncableMap.get(key).get(1).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            boolean educationMaterialSynced = syncableMap.get(key).get(2).getStatus() == Constant.DownloadStatus.COMPLETED;
+                            Timber.i(" ProjectListActivityv3, projectId = " + key + " sitesSynced = " + sitesSynced + " formsSynced = " + formsSynnced + " educationMaterialSynced = " + educationMaterialSynced);
+                            if (sitesSynced && formsSynnced && educationMaterialSynced) continue;
+                            syncingIds.add(key);
+                        }
+                        Timber.i("syncing key size = %d", syncingIds.size());
+                        if (syncingIds.size() > 0) {
+                            String[] ids = syncingIds.toArray(new String[syncingIds.size()]);
+                            SyncLocalSource3.getInstance().deleteByIds(ids);
+                        }
+                    }
+                    Timber.i("cancel clicked");
+                    ToastUtils.showLongToast("Project sync cancelled by user");
+                    
+                    llTouchControl.setVisibility(View.GONE);
+                    llSyncProjectProgressCount.setVisibility(View.GONE);
+                    syncStarts = false;
+                    invalidateOptionsMenu();
+                }).setNegativeButton("Close", null).create().show();
+
+
     }
 
     // this class will manage the sync list to determine which should be synced
