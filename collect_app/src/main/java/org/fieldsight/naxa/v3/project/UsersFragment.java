@@ -18,12 +18,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.bcss.collect.android.R;
+import org.fieldsight.naxa.contact.ContactDetailsBottomSheetFragment;
 import org.fieldsight.naxa.login.model.User;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class UsersFragment extends Fragment {
@@ -34,7 +36,8 @@ public class UsersFragment extends Fragment {
     TextView errors;
     private Unbinder unbinder;
 
-    private UsersFragment() {}
+    private UsersFragment() {
+    }
 
     public static UsersFragment getInstance(String data) {
         Bundle bundle = new Bundle();
@@ -56,41 +59,43 @@ public class UsersFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         String users;
-        if(getArguments() != null && getArguments().containsKey("users")) {
+        if (getArguments() != null && getArguments().containsKey("users")) {
             users = getArguments().getString("users");
         } else {
             return;
         }
 
-        if(TextUtils.isEmpty(users) || Users.toList(users).size() == 0) {
+        if (TextUtils.isEmpty(users) || Users.toList(users).size() == 0) {
             errors.setVisibility(View.VISIBLE);
         } else {
-             // show userslist
-             List<Users> usersList = Users.toList(users);
-             rvUsers.setLayoutManager(new LinearLayoutManager(getActivity()));
-             rvUsers.setAdapter(new UserAdapter(usersList));
-             rvUsers.setHasFixedSize(true);
+            // show userslist
+            List<Users> usersList = Users.toList(users);
+            rvUsers.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rvUsers.setAdapter(new UserAdapter(usersList));
+            rvUsers.setHasFixedSize(true);
         }
     }
 
     class UserAdapter extends RecyclerView.Adapter<UserViewHolder> {
         List<Users> userList;
 
-        public UserAdapter(List<Users> userList) {
+        UserAdapter(List<Users> userList) {
             this.userList = userList;
         }
+
         @NonNull
         @Override
         public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             return new UserViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_list_item, parent, false));
         }
 
+
         @Override
         public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
             Users user = userList.get(position);
             holder.userName.setText(user.fullName);
             holder.userRole.setText(user.role);
-            if(!TextUtils.isEmpty(user.profilePicture)) {
+            if (!TextUtils.isEmpty(user.profilePicture)) {
                 Glide.with(holder.itemView.getContext()).load(user.profilePicture).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
             }
         }
@@ -108,7 +113,7 @@ public class UsersFragment extends Fragment {
     }
 }
 
-class UserViewHolder extends RecyclerView.ViewHolder{
+class UserViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.tv_user_name)
     TextView userName;
 
@@ -118,8 +123,16 @@ class UserViewHolder extends RecyclerView.ViewHolder{
     @BindView(R.id.iv_user)
     ImageView userImage;
 
-    public UserViewHolder(@NonNull View itemView) {
+    UserViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+
     }
+
+    @OnClick(R.id.root_layout_user_list_item)
+    public void openUserDetail() {
+
+    }
+
+
 }
