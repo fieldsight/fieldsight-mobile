@@ -23,8 +23,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import org.osmdroid.tileprovider.MapTile;
+
 import org.osmdroid.tileprovider.tilesource.BitmapTileSourceBase;
+import org.osmdroid.util.MapTileIndex;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -119,14 +120,14 @@ public class OsmMBTileSource extends BitmapTileSourceBase {
         return value;
     }
 
-    public InputStream getInputStream(MapTile mapTile) {
+    public InputStream getInputStream(long pMapTileIndex) {
 
         try {
             InputStream ret = null;
             final String[] tile = {COL_TILES_TILE_DATA};
-            final String[] xyz = {Integer.toString(mapTile.getX()),
-                    Double.toString(Math.pow(2, mapTile.getZoomLevel()) - mapTile.getY() - 1),
-                    Integer.toString(mapTile.getZoomLevel())};
+            final String[] xyz = {Integer.toString(MapTileIndex.getX(pMapTileIndex)),
+                    Double.toString(Math.pow(2, MapTileIndex.getX(pMapTileIndex)) - MapTileIndex.getY(pMapTileIndex) - 1),
+                    Integer.toString(MapTileIndex.getZoom(pMapTileIndex))};
 
             final Cursor cur = database.query(TABLE_TILES,
                     tile,
@@ -148,7 +149,7 @@ public class OsmMBTileSource extends BitmapTileSourceBase {
             }
 
         } catch (final Throwable e) {
-            Timber.w(e, "Error getting db stream: %s", mapTile);
+            Timber.w(e, "Error getting db stream: %s", pMapTileIndex);
         }
         return null;
     }

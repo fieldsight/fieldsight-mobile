@@ -80,7 +80,12 @@ public class ProjectMapFragment extends OsmMapFragment {
                                 && TextUtils.isEmpty(site.getLatitude());
                         boolean isBadValue = TextUtils.equals(site.getLatitude(), "0") &&
                                 TextUtils.equals(site.getLongitude(), "0");
-                        return !cantParseLocation && !isBadValue;
+
+                        boolean isEmptyValue = TextUtils.equals(site.getLatitude(), "0.0") &&
+                                TextUtils.equals(site.getLongitude(), "0.0");
+
+                        return !cantParseLocation && !isBadValue && !isEmptyValue;
+
                     })
                     .map(new Function<Site, IGeoPoint>() {
                         @Override
@@ -120,7 +125,11 @@ public class ProjectMapFragment extends OsmMapFragment {
 
                             final SimpleFastPointOverlay sfpo = new SimpleFastPointOverlay(pt, opt);
                             if (sfpo.getBoundingBox() != null) {
+
                                 map.zoomToBoundingBox(sfpo.getBoundingBox(), true);
+//                                map.setScrollableAreaLimitDouble(sfpo.getBoundingBox());
+                                map.setVerticalMapRepetitionEnabled(false);
+                                map.setHorizontalMapRepetitionEnabled(false);
                             }
 
                             sfpo.setOnClickListener((points1, point) -> {
@@ -133,7 +142,7 @@ public class ProjectMapFragment extends OsmMapFragment {
 
                         @Override
                         public void onError(Throwable e) {
-
+                            Timber.i(e);
                         }
                     });
 
