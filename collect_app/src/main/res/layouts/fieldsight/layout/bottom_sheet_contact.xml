@@ -10,7 +10,6 @@
         android:layout_height="wrap_content">
 
 
-
         <ImageView
             android:id="@+id/iv_contactdetail_image"
             android:layout_width="match_parent"
@@ -23,21 +22,20 @@
             android:src="@drawable/black_transparent_top_graident" />
 
 
-
         <Button
             android:id="@+id/btn_phone_call"
-            android:textColor="@color/white"
-            android:layout_margin="@dimen/margin_medium"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/margin_medium"
-
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/margin_medium"
             android:drawableStart="@drawable/ic_local_phone"
             android:drawableLeft="@drawable/ic_local_phone"
-            android:text="Call Now" />
+
+            android:drawablePadding="@dimen/margin_medium"
+            android:text="Call Now"
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_info"
@@ -70,7 +68,8 @@
             android:paddingTop="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
             android:text="Username"
-            android:textSize="@dimen/text_size_small" />
+            android:textSize="@dimen/text_size_small"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_contactdetail_role"
@@ -130,7 +129,8 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:background="@color/colorPrimary"
             android:padding="2dp"
-            android:src="@android:drawable/ic_dialog_email" />
+            android:src="@android:drawable/ic_dialog_email"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_contactdetail_email"
