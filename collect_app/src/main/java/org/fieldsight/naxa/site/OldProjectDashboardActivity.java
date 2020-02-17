@@ -154,7 +154,7 @@ public class OldProjectDashboardActivity extends BaseActivity {
         if (tl != null) {
             if (!TextUtils.isEmpty(tl.site)) {
                 navigationView.getMenu().findItem(R.id.nav_create_offline_site).setTitle(String.format("Create New %s", tl.site));
-                navigationView.getMenu().findItem(R.id.nav_view_site_dashboard).setTitle(String.format("My %s", tl.site));
+//                navigationView.getMenu().findItem(R.id.nav_view_site_dashboard).setTitle(String.format("My %s", tl.site));
             }
         }
     }
@@ -384,9 +384,9 @@ public class OldProjectDashboardActivity extends BaseActivity {
             case R.id.nav_view_finalized_offline_site:
 
                 break;
-            case R.id.nav_view_site_dashboard:
-
-                break;
+//            case R.id.nav_view_site_dashboard:
+//
+//                break;
             case R.id.nav_backup:
                 startActivity(new Intent(this, BackupActivity.class));
                 return;

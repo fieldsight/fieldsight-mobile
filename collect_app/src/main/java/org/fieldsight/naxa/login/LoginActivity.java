@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.gms.common.SignInButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.bcss.collect.android.BuildConfig;
 import org.bcss.collect.android.R;
@@ -40,7 +41,7 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     // UI references.
     private EditText edt_email;
-    private EditText edt_password;
+    private TextInputEditText edt_password;
     CardView email_sign_in_button;
     private LoginPresenter loginPresenter;
     private SignInButton btnGmailLogin;
@@ -110,6 +111,17 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         });
 
         loginPresenter = new LoginPresenterImpl(this);
+
+
+        edt_password.setHint(getResources().getString(R.string.password));
+        edt_password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                    edt_password.setHint("");
+                else
+                    edt_password.setHint(getResources().getString(R.string.password));
+            }
+        });
     }
 
     @Override
