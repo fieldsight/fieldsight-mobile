@@ -78,6 +78,7 @@ import org.odk.collect.android.utilities.LocaleHelper;
 import org.odk.collect.android.utilities.NotificationUtils;
 import org.odk.collect.android.utilities.PRNGFixes;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
+import org.osmdroid.tileprovider.modules.ConfigurablePriorityThreadFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -270,8 +271,6 @@ public class Collect extends Application {
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this);
         }
-
-        OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
 
         installTls12();
         setupDagger();
