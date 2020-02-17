@@ -20,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions;
 import org.bcss.collect.android.R;
 import org.fieldsight.naxa.contact.ContactDetailsBottomSheetFragment;
 import org.fieldsight.naxa.login.model.User;
+import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.List;
 
@@ -98,6 +99,12 @@ public class UsersFragment extends Fragment {
             if (!TextUtils.isEmpty(user.profilePicture)) {
                 Glide.with(holder.itemView.getContext()).load(user.profilePicture).apply(RequestOptions.circleCropTransform()).into(holder.userImage);
             }
+
+            holder.rootLayout.setOnClickListener(view -> {
+                ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.newInstance();
+                contactDetailsBottomSheetFragmentDialog.setContact(user);
+                contactDetailsBottomSheetFragmentDialog.show(requireFragmentManager(), "Contact Bottom Sheet");
+            });
         }
 
         @Override
@@ -123,14 +130,12 @@ class UserViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.iv_user)
     ImageView userImage;
 
+    @BindView(R.id.root_layout_user_list_item)
+    View rootLayout;
+
     UserViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
-
-    }
-
-    @OnClick(R.id.root_layout_user_list_item)
-    public void openUserDetail() {
 
     }
 

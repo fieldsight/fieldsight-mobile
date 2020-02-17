@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Users {
-    String profilePicture, role, id, fullName;
+    public String profilePicture, role, id, fullName;
 
     private Users(JSONObject jsonObject) {
         this.profilePicture = jsonObject.optString("profile_picture");
