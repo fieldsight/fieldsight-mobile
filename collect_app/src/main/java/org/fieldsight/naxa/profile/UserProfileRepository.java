@@ -4,6 +4,8 @@ import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.login.model.User;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ApiInterface;
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.application.Collect;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -48,7 +50,7 @@ public class UserProfileRepository {
 //        if (user.getProfilepic().isEmpty()) {
         userObservable = getRxClient()
                 .create(ApiInterface.class)
-                .updateUserProfileNoImage(APIEndpoint.BASE_URL + "/users/api/profile/" + "303" + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
+                .updateUserProfileNoImage(FieldSightUserSession.getServerUrl(Collect.getInstance().getApplicationContext()) + "/users/api/profile/" + "303" + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
                         officeIn, viberIn, whatsAppIn, wechatIn, lineIn, tangoIn, hikeIn, qqIn, googleTalkIn, twitterIn, organizationIn);
 //        } else {
 //            File image = new File(user.getProfilepic());
