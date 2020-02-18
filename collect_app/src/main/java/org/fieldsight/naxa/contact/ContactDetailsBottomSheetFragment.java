@@ -1,5 +1,7 @@
 package org.fieldsight.naxa.contact;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,24 +9,33 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import org.bcss.collect.android.R;;
+import org.bcss.collect.android.R;
+import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.GlideApp;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
+import org.fieldsight.naxa.profile.UserProfileRepository;
 import org.fieldsight.naxa.v3.project.Users;
+import org.odk.collect.android.utilities.ToastUtils;
 
 
 public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment {
 
     private View rootView;
     private Users contactDetail;
-    private TextView fullname, username, role, address, gender, email, skype, twitter, tango, hike, qq, googletalk, viber, whatsapp, wechat;
+    private Button btnCallNow;
+    private boolean isEditEnabled;
+    private int intialUserHash;
+
 
     public static ContactDetailsBottomSheetFragment newInstance() {
         return new ContactDetailsBottomSheetFragment();
@@ -32,20 +43,41 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
     public void setContact(Users contactDetail) {
         this.contactDetail = contactDetail;
+
+        this.intialUserHash = contactDetail.hashCode();
     }
 
+    public void setEditEnabled() {
+        isEditEnabled = true;
+    }
+
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        boolean userHasChangedValues = contactDetail.hashCode() != intialUserHash;
+        if (userHasChangedValues) {
+            uploadChanges(contactDetail);
+        }
+
+
+    }
+
+    private void uploadChanges(Users contactDetail) {
+        UserProfileRepository.getInstance().upload(contactDetail);
+    }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.bottom_sheet_contact, container, false);
+        contactDetailToViews();
 
-        ContactDetailToViews();
 
         return rootView;
     }
 
-    private void ContactDetailToViews() {
-        ImageView profilePicture = rootView.findViewById(R.id.iv_contactdetail_image);
+    private void contactDetailToViews() {
+        ImageView profilePicture = rootView.findViewById(R.id.user_profile_profile_picture);
         if (contactDetail.profilePicture != null) {
             GlideApp.with(this)
                     .load(contactDetail.profilePicture)
@@ -53,47 +85,119 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
                     .into(profilePicture);
         }
 
-        bindAndSetOrHide(fullname, R.id.tv_contactdetail_fullname, contactDetail.fullName);
+        btnCallNow = rootView.findViewById(R.id.user_profile_call_now);
+        boolean hasPhoneNumber = !TextUtils.isEmpty(contactDetail.primaryNumber) || !TextUtils.isEmpty(contactDetail.phone);
+        btnCallNow.setEnabled(hasPhoneNumber);
+        btnCallNow.setOnClickListener(view -> onCallNow());
 
 
-        bindAndSetOrHide(role, R.id.tv_contactdetail_role, contactDetail.role);
+        Button btnEmailNow = rootView.findViewById(R.id.user_profile_email_now);
+        boolean hasEmail = !TextUtils.isEmpty(contactDetail.email);
+        btnEmailNow.setEnabled(hasEmail);
+        btnEmailNow.setOnClickListener(view -> onEmailNow());
 
-        bindAndSetOrHide(address, R.id.tv_contactdetail_address, contactDetail.address);
 
-        bindAndSetOrHide(gender, R.id.tv_contactdetail_gender, contactDetail.gender);
+        bindAndSetOrHide(R.id.user_profile_skype, contactDetail.skype, updatedValue -> {
+            contactDetail.skype = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_viber, contactDetail.viber, updatedValue -> {
+            contactDetail.viber = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_whatsapp, contactDetail.whatsApp, updatedValue -> {
+            contactDetail.whatsApp = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_wechat, contactDetail.weChat, updatedValue -> {
+            contactDetail.weChat = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_google_talk, contactDetail.googleTalk, updatedValue -> {
+            contactDetail.googleTalk = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_tango, contactDetail.tango, updatedValue -> {
+            contactDetail.tango = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_twitter, contactDetail.twitter, updatedValue -> {
+            contactDetail.twitter = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_hike, contactDetail.hike, updatedValue -> {
+            contactDetail.hike = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_qq, contactDetail.qq, updatedValue -> {
+            contactDetail.qq = updatedValue;
+            contactDetailToViews();
+        });
+
+        bindAndSetOrHide(R.id.user_profile_phone, contactDetail.phone, updatedValue -> {
+            contactDetail.phone = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_primary_phone, contactDetail.primaryNumber, updatedValue -> {
+            contactDetail.primaryNumber = updatedValue;
+            contactDetailToViews();
+        });
+
+        bindAndSetOrHide(R.id.user_profile_location, contactDetail.address, updatedValue -> {
+            contactDetail.address = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_email, contactDetail.email, updatedValue -> {
+            contactDetail.email = updatedValue;
+            contactDetailToViews();
+        });
+
+        bindAndSetOrHide(R.id.user_profile_name, contactDetail.fullName, updatedValue -> {
+            contactDetail.fullName = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_role, TextUtils.isEmpty(contactDetail.role) ? "Site Supervisor" : contactDetail.role, null);
+    }
 
 
-        bindAndSetOrHide(skype, R.id.tv_contactdetail_skype, contactDetail.skype, R.id.iv_skype_icon);
+    private void onEmailNow() {
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.putExtra(Intent.EXTRA_EMAIL, new String[]{contactDetail.email});
+        email.setType("message/rfc822");
+        startActivity(Intent.createChooser(email, "Choose an Email client :"));
+    }
 
-        bindAndSetOrHide(twitter, R.id.tv_contactdetail_twitter, contactDetail.twitter, R.id.iv_twitter_icon);
+    private void onCallNow() {
 
-        bindAndSetOrHide(tango, R.id.tv_contactdetail_tango, contactDetail.tango, R.id.iv_tango_icon);
+        PopupMenu popupMenu = new PopupMenu(requireActivity(), btnCallNow);
+        if (!TextUtils.isEmpty(contactDetail.primaryNumber)) {
+            popupMenu.getMenu().add(contactDetail.primaryNumber);
+        }
+        if (!TextUtils.isEmpty(contactDetail.phone)) {
+            popupMenu.getMenu().add(contactDetail.phone);
+        }
 
-        bindAndSetOrHide(hike, R.id.tv_contactdetail_hike, contactDetail.hike, R.id.iv_hike_icon);
+        if (!TextUtils.isEmpty(contactDetail.secondaryNumber)) {
+            popupMenu.getMenu().add(contactDetail.secondaryNumber);
+        }
 
-        bindAndSetOrHide(qq, R.id.tv_contactdetail_qq, contactDetail.qq, R.id.iv_qq_icon);
+        if (!TextUtils.isEmpty(contactDetail.officeNumber)) {
+            popupMenu.getMenu().add(contactDetail.officeNumber);
+        }
 
-        bindAndSetOrHide(googletalk, R.id.tv_contactdetail_googletalk, contactDetail.googleTalk, R.id.iv_googletalk_icon);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            call(item.getTitle().toString());
+            return false;
+        });
+        popupMenu.show();
+    }
 
-        bindAndSetOrHide(viber, R.id.tv_contactdetail_viber, contactDetail.viber, R.id.iv_viber_icon);
 
-        bindAndSetOrHide(whatsapp, R.id.tv_contactdetail_whatsapp, contactDetail.whatsApp, R.id.iv_whatsapp_icon);
-
-        bindAndSetOrHide(wechat, R.id.tv_contactdetail_wechat, contactDetail.weChat, R.id.iv_wechat_icon);
-
-        boolean isValidPhoneNumber = !TextUtils.isEmpty(contactDetail.phone);
-
-        rootView.findViewById(R.id.btn_phone_call).setVisibility(isValidPhoneNumber ? View.VISIBLE : View.GONE);
-
-        rootView.findViewById(R.id.btn_phone_call)
-                .setOnClickListener(v -> {
-                    Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactDetail.phone, null));
-                    if (canDeviceHandleCall(callIntent)) {
-                        startActivity(callIntent);
-                    }
-
-                });
-
+    private void call(String number) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number, null));
+        if (canDeviceHandleCall(callIntent)) {
+            startActivity(callIntent);
+        }
     }
 
     private boolean canDeviceHandleCall(Intent callIntent) {
@@ -105,23 +209,47 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         return false;
     }
 
-    private void bindAndSetOrHide(TextView textView, int viewId, String string) {
-        textView = rootView.findViewById(viewId);
-        if (TextUtils.isEmpty(string) || TextUtils.equals("null", string)) {
-            textView.setVisibility(View.GONE);
+    private void bindAndSetOrHide(int viewId, String string, ContentUpdateListener contentUpdateListener) {
+        View view = rootView.findViewById(viewId);
+
+
+
+
+        view.setOnClickListener(view1 -> {
+            if (isEditEnabled && contentUpdateListener != null) {
+                DialogFactory.showInputDialog(requireActivity(), R.layout.layout_text_input, string, contentUpdateListener)
+                        .setTitle(String.format("Update %s", string))
+                        .show();
+            } else {
+                copyTextToClipboard(requireContext(), string);
+            }
+        });
+
+        boolean doesNotHaveValue = TextUtils.isEmpty(string) || TextUtils.equals("null", string);
+        if (doesNotHaveValue && !isEditEnabled) {
+            view.setVisibility(View.GONE);
         } else {
-            textView.setText(string);
+            ((TextView) view).setText(string);
+        }
+
+        if(isEditEnabled && TextUtils.isEmpty(string)){
+            ((TextView) view).setText(R.string.not_avaliable);
         }
     }
 
-    private void bindAndSetOrHide(TextView textView, int viewId, String string, int iconId) {
-        textView = rootView.findViewById(viewId);
-        if (TextUtils.isEmpty(string) || TextUtils.equals("null", string)) {
-            textView.setVisibility(View.GONE);
-            rootView.findViewById(iconId).setVisibility(View.GONE);
-        } else {
-            textView.setText(string);
-        }
+    public interface ContentUpdateListener {
+        void onUpdate(String updatedValue);
+
+
+    }
+
+
+    private void copyTextToClipboard(Context context, String text) {
+        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
+        clipboard.setPrimaryClip(clip);
+
+        ToastUtils.showLongToast(String.format("Copied %s to clipboard", text));
     }
 
 

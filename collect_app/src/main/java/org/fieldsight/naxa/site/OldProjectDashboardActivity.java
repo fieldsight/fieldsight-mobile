@@ -46,8 +46,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
-import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.BackupActivity;
 import org.fieldsight.naxa.BaseActivity;
 import org.fieldsight.naxa.FSInstanceChooserList;
@@ -64,7 +63,7 @@ import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.login.model.User;
 import org.fieldsight.naxa.notificationslist.NotificationListActivity;
-import org.fieldsight.naxa.profile.UserActivity;
+
 import org.fieldsight.naxa.project.TermsLabels;
 import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.site.map.ProjectMapFragment;
@@ -89,6 +88,8 @@ import timber.log.Timber;
 
 import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
 import static org.odk.collect.android.application.Collect.allowClick;
+
+;
 
 public class OldProjectDashboardActivity extends BaseActivity {
     private Project loadedProject;
@@ -236,7 +237,7 @@ public class OldProjectDashboardActivity extends BaseActivity {
 
             ImageView ivProfilePicture = navigationHeader.findViewById(R.id.image_profile);
 
-            ViewUtils.loadRemoteImage(this, user.getProfilepic())
+            ViewUtils.loadRemoteImage(this, user.getProfilePic())
                     .circleCrop()
                     .into(ivProfilePicture);
 
@@ -245,7 +246,7 @@ public class OldProjectDashboardActivity extends BaseActivity {
                 toggleNavDrawer();
                 new Handler()
                         .postDelayed(() -> {
-                            UserActivity.start(this);
+
                         }, 250);
             });
         } catch (IllegalArgumentException e) {
