@@ -2,7 +2,7 @@
 
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/new_design_blue</item>
-        <item name="colorPrimaryDark">@color/new_design_blue</item>
+        <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">@color/new_design_blue</item>
 
         <item name="windowActionBar">false</item>

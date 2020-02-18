@@ -305,6 +305,9 @@
     <string name="downloading">Downloading</string>
     <string name="syncing_project">Syncing project</string>
     <string name="menu_cancel_sync">Cancel Sync</string>
+    <string name="user_profile_btn_call">Call</string>
+    <string name="user_profile_btn_email">Email</string>
+    <string name="not_avaliable">N.A.</string>
     <string-array name="bug_type">
         <item>Select error type</item>
         <item>Bug</item>

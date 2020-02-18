@@ -1,362 +1,274 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-    <RelativeLayout
-
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <ImageView
-            android:id="@+id/iv_contactdetail_image"
+
+            android:id="@+id/user_profile_profile_picture"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="250dp"
+            android:contentDescription="profile picture of the logged in user"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/new_design_blue"
+            tools:ignore="HardcodedText"
+            tools:src="@drawable/fieldsight_logo" />
 
         <ImageView
+
 
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:src="@drawable/black_transparent_top_graident" />
+            android:layout_height="250dp"
+            android:background="@drawable/transparent_black_gradient_shape"
+            android:contentDescription="profile picture of the logged in user"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
 
+            tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/btn_phone_call"
-            style="@style/Widget.AppCompat.Button.Borderless"
+        <TextView
+            android:id="@+id/user_profile_name"
+            style="@style/TextAppearance.AppCompat.Title.Inverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/margin_medium"
-            android:drawableStart="@drawable/ic_local_phone"
-            android:drawableLeft="@drawable/ic_local_phone"
+            android:textColor="@color/white"
 
-            android:drawablePadding="@dimen/margin_medium"
-            android:text="Call Now"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:id="@+id/tv_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_contactdetail_image"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:paddingLeft="@dimen/margin_large"
-            android:text="Info"
-            android:textColor="@drawable/black"
-            android:textSize="@dimen/text_size_medium" />
+            app:layout_constraintBottom_toBottomOf="@id/user_profile_profile_picture"
+            app:layout_constraintLeft_toLeftOf="@id/user_profile_profile_picture"
+            app:layout_constraintRight_toRightOf="@id/user_profile_profile_picture"
+            app:layout_constraintTop_toTopOf="@id/user_profile_profile_picture"
+            app:layout_constraintVertical_bias="0.81"
+            tools:text="Nishon Tandukar" />
 
         <TextView
-            android:id="@+id/tv_contactdetail_fullname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_info"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Full Name"
-            android:textSize="@dimen/text_size_small" />
-
-        <TextView
-            android:id="@+id/tv_contactdetail_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_contactdetail_fullname"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Username"
-            android:textSize="@dimen/text_size_small"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_contactdetail_role"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_contactdetail_username"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Role"
-            android:textSize="@dimen/text_size_small"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_contactdetail_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_contactdetail_role"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Address"
-            android:textSize="@dimen/text_size_small" />
-
-        <TextView
-            android:id="@+id/tv_contactdetail_gender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_contactdetail_address"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Gender"
-            android:textSize="@dimen/text_size_small" />
-
-
-        <TextView
-            android:id="@+id/tv_contact"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_contactdetail_gender"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_medium"
-            android:paddingRight="@dimen/margin_medium"
-            android:text="Contact"
-            android:textColor="@drawable/black"
-            android:textSize="@dimen/text_size_medium" />
-
-
-        <ImageView
-            android:id="@+id/iv_email_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/tv_contact"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-            android:background="@color/colorPrimary"
-            android:padding="2dp"
-            android:src="@android:drawable/ic_dialog_email"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_contactdetail_email"
+            android:id="@+id/user_profile_role"
+            style="@style/TextAppearance.AppCompat.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_contact"
-            android:layout_toRightOf="@id/iv_email_icon"
-            android:autoLink="email"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Email"
-            android:textSize="@dimen/text_size_small" />
+            android:textColor="@color/white"
 
-        <ImageView
-            android:id="@+id/iv_skype_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/iv_email_icon"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
+            app:layout_constraintBottom_toBottomOf="@id/user_profile_profile_picture"
+            app:layout_constraintLeft_toLeftOf="@id/user_profile_profile_picture"
+            app:layout_constraintRight_toRightOf="@id/user_profile_profile_picture"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_name"
 
-            android:padding="2dp"
-            android:src="@drawable/ic_skype_icon" />
+            app:layout_constraintVertical_bias="0.050000012"
+            android:text="Site Supervisor"
+             />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@color/new_design_blue"
+            android:enabled="true"
+            android:id="@+id/user_profile_call_now"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:stateListAnimator="@null"
+            android:text="@string/user_profile_btn_call"
+            android:theme="@style/AppTheme.Light"
+            android:textColor="@color/white"
+            app:layout_constraintLeft_toRightOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture"
+            tools:targetApi="lollipop" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:theme="@style/AppTheme.Light"
+            android:id="@+id/user_profile_email_now"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_rectangle_border_stroke_highlight_no_corner"
+            android:stateListAnimator="@null"
+            android:text="@string/user_profile_btn_email"
+            android:textColor="@color/new_design_blue"
+            app:layout_constraintRight_toLeftOf="@id/guideline_end"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture"
+            tools:ignore="UnusedAttribute" />
 
 
         <TextView
-            android:id="@+id/tv_contactdetail_skype"
+
+            android:id="@+id/user_profile_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_email_icon"
-            android:layout_toRightOf="@id/iv_skype_icon"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Skype"
-            android:textSize="@dimen/text_size_small" />
-
-        <ImageView
-            android:id="@+id/iv_twitter_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/iv_skype_icon"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-
-            android:padding="2dp"
-            android:src="@drawable/ic_twitter_icon" />
+            android:layout_marginTop="@dimen/margin_large"
+            android:drawableStart="@drawable/ic_location"
+            android:drawableLeft="@drawable/ic_location"
+            android:drawablePadding="16dp"
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_call_now"
+            tools:text="Kathmandu, Nepal" />
 
         <TextView
-            android:id="@+id/tv_contactdetail_twitter"
+            android:id="@+id/user_profile_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_skype_icon"
-            android:layout_toRightOf="@id/iv_twitter_icon"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Twitter"
-            android:textSize="@dimen/text_size_small" />
+            android:layout_marginTop="@dimen/margin_large"
+            android:drawableStart="@drawable/ic_phone"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawablePadding="16dp"
 
-        <ImageView
-            android:id="@+id/iv_tango_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/iv_twitter_icon"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-
-            android:padding="2dp"
-            android:src="@drawable/ic_tango" />
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_location"
+            tools:text="+977 9849515489" />
 
         <TextView
-            android:id="@+id/tv_contactdetail_tango"
+            android:id="@+id/user_profile_primary_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_twitter_icon"
-            android:layout_toRightOf="@id/iv_tango_icon"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Tango"
-            android:textSize="@dimen/text_size_small" />
+            android:layout_marginTop="@dimen/margin_large"
+            android:drawableStart="@drawable/ic_phone"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawablePadding="16dp"
 
-        <ImageView
-            android:id="@+id/iv_hike_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/iv_tango_icon"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-
-            android:padding="2dp"
-            android:src="@drawable/ic_hike" />
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_phone"
+            tools:text="+977 9849515489" />
 
         <TextView
-            android:id="@+id/tv_contactdetail_hike"
+            android:id="@+id/user_profile_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_tango_icon"
-            android:layout_toRightOf="@id/iv_hike_icon"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Hike"
-            android:textSize="@dimen/text_size_small" />
+            android:layout_marginTop="@dimen/margin_large"
+            android:drawableStart="@drawable/ic_email"
+            android:drawableLeft="@drawable/ic_email"
+            android:drawablePadding="16dp"
 
-        <ImageView
-            android:id="@+id/iv_qq_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/iv_hike_icon"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-
-            android:padding="2dp"
-            android:src="@drawable/ic_qq" />
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_primary_phone"
+            tools:text="mail@mail.com.np" />
 
 
-        <TextView
-            android:id="@+id/tv_contactdetail_qq"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_hike_icon"
-            android:layout_toRightOf="@id/iv_qq_icon"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="QQ"
-            android:textSize="@dimen/text_size_small" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
 
-        <ImageView
-            android:id="@+id/iv_googletalk_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/iv_qq_icon"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-
-            android:padding="2dp"
-            android:src="@drawable/ic_google_talk" />
-
-        <TextView
-            android:id="@+id/tv_contactdetail_googletalk"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_qq_icon"
-            android:layout_toRightOf="@id/iv_googletalk_icon"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Google Talk"
-            android:textSize="@dimen/text_size_small" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
 
-        <ImageView
-            android:id="@+id/iv_viber_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/iv_googletalk_icon"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-
-            android:padding="2dp"
-            android:src="@drawable/ic_viber" />
-
-        <TextView
-            android:id="@+id/tv_contactdetail_viber"
+        <HorizontalScrollView
+            android:id="@+id/use_profile_wrapper_social_media"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/iv_googletalk_icon"
-            android:layout_toRightOf="@id/iv_viber_icon"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Viber"
-            android:textSize="@dimen/text_size_small" />
+            android:layout_marginTop="@dimen/margin_extra_large"
 
-        <ImageView
-            android:id="@+id/iv_whatsapp_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/iv_viber_icon"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
+            android:scrollbars="none"
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_email">
 
-            android:padding="2dp"
-            android:src="@drawable/ic_whatsapp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/user_profile_skype"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_skype_icon"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_whatsapp"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_viber"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_wechat"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_whatsapp"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_viber"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_wechat"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_google_talk"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_google_talk"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_tango"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_tango"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_twitter"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_twitter_icon"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_hike"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_hike"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_qq"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_qq"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
 
 
-        <TextView
-            android:id="@+id/tv_contactdetail_whatsapp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_viber_icon"
-            android:layout_toRightOf="@id/iv_whatsapp_icon"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="Whats App"
-            android:textSize="@dimen/text_size_small" />
-
-        <ImageView
-            android:id="@+id/iv_wechat_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@id/iv_whatsapp_icon"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginBottom="@dimen/margin_small"
-
-            android:padding="2dp"
-            android:src="@drawable/ic_wechat" />
+            </LinearLayout>
+        </HorizontalScrollView>
 
 
-        <TextView
-            android:id="@+id/tv_contactdetail_wechat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_whatsapp_icon"
-            android:layout_toRightOf="@id/iv_wechat_icon"
-            android:paddingLeft="@dimen/margin_large"
-            android:paddingTop="@dimen/margin_small"
-            android:paddingRight="@dimen/margin_small"
-            android:text="We Chat"
-            android:textSize="@dimen/text_size_small" />
-
-
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

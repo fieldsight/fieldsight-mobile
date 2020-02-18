@@ -116,8 +116,10 @@ public interface ApiInterface {
     @Multipart
     @POST
     Observable<User> updateUserProfileNoImage(@Url String url,
+                                              @Part("full_name") RequestBody fullName,
                                               @Part("first_name") RequestBody firstName,
                                               @Part("last_name") RequestBody lastName,
+                                              @Part("email") RequestBody email,
                                               @Part("address") RequestBody address,
                                               @Part("gender") RequestBody gender,
                                               @Part("phone") RequestBody phone,
@@ -133,8 +135,8 @@ public interface ApiInterface {
                                               @Part("hike") RequestBody hike,
                                               @Part("qq") RequestBody qq,
                                               @Part("google_talk") RequestBody googleTalk,
-                                              @Part("twitter") RequestBody twitter,
-                                              @Part("organization") RequestBody organization);
+                                              @Part("twitter") RequestBody twitter
+                                              );
 
     @Multipart
     @POST

@@ -13,17 +13,25 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import org.bcss.collect.android.R;;
+import org.fieldsight.naxa.contact.ContactDetailsBottomSheetFragment;
 import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.application.Collect;
 
@@ -33,7 +41,7 @@ import java.util.List;
 
 public final class DialogFactory {
 
-    private DialogFactory(){
+    private DialogFactory() {
 
     }
 
@@ -205,9 +213,9 @@ public final class DialogFactory {
         return builder;
     }
 
-    private static AlertDialog.Builder showCustomLayoutDialog(Context context, View view) {
+    public static AlertDialog.Builder showCustomLayoutDialog(Context context, View view) {
 
-        return new AlertDialog.Builder(context)
+        return new AlertDialog.Builder(context, R.style.RiseUpDialog)
                 .setView(view)
                 .setCancelable(false);
 //        Dialog dialog = new Dialog(context);
@@ -215,6 +223,19 @@ public final class DialogFactory {
 //        dialog.setCancelable(false);
 //        dialog.setContentView(view);
 //        return dialog;
+    }
+
+    public static AlertDialog.Builder showInputDialog(Context context, @LayoutRes int layoutId, String defaultValue, ContactDetailsBottomSheetFragment.ContentUpdateListener contentUpdateListener) {
+
+        View viewInflated = LayoutInflater.from(Collect.getInstance()).inflate(layoutId, null, false);
+        TextInputLayout textInputLayout = viewInflated.findViewById(R.id.text_input_layout);
+        textInputLayout.getEditText().setText(defaultValue);
+
+        return showCustomLayoutDialog(context, viewInflated).setPositiveButton(R.string.save, (dialogInterface, i) -> {
+            String text = textInputLayout.getEditText().getText().toString();
+            contentUpdateListener.onUpdate(text);
+
+        }).setNegativeButton(R.string.dialog_action_dismiss, null);
     }
 
 
