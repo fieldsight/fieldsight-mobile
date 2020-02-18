@@ -111,12 +111,16 @@ public class ProjectRepository implements BaseRepository<Project> {
     }
 
 
+
     private void getProjectFromRemoteSource(LoadProjectCallback callback) {
         ProjectRemoteSource.getInstance().getProjects()
                 .toObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap((Function<ResponseBody, ObservableSource<JSONObject>>) responseBody -> {
+
+                    // call another api for project detail count
+
                     JSONArray jsonArray = new JSONArray(responseBody.string());
                     return Observable.range(0, jsonArray.length())
                             .map(jsonArray::getJSONObject);
