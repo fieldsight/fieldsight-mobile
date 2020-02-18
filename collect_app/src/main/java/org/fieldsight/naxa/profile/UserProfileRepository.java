@@ -5,12 +5,17 @@ import org.fieldsight.naxa.contact.ContactRemoteSource;
 import org.fieldsight.naxa.login.model.User;
 import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.ApiInterface;
+
+import org.odk.collect.android.activities.CollectAbstractActivity;
+import org.odk.collect.android.application.Collect;
+
 import org.fieldsight.naxa.v3.project.Users;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.utilities.ToastUtils;
 
 import java.util.concurrent.TimeUnit;
+
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
