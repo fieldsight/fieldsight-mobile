@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@drawable/rounded_rectangle_border_stroke_highlight_no_corner"
             android:stateListAnimator="@null"
             android:text="@string/user_profile_btn_email"
             android:textColor="@color/new_design_blue"

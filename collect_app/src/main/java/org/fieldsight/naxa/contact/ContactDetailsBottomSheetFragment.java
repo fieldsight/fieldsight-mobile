@@ -32,7 +32,6 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
     private View rootView;
     private Users contactDetail;
-    private Users intialContactDetail;
     private Button btnCallNow;
     private boolean isEditEnabled;
     private int intialUserHash;
@@ -44,7 +43,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
     public void setContact(Users contactDetail) {
         this.contactDetail = contactDetail;
-        this.intialContactDetail = contactDetail;
+
         this.intialUserHash = contactDetail.hashCode();
     }
 
@@ -214,6 +213,8 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         View view = rootView.findViewById(viewId);
 
 
+
+
         view.setOnClickListener(view1 -> {
             if (isEditEnabled && contentUpdateListener != null) {
                 DialogFactory.showInputDialog(requireActivity(), R.layout.layout_text_input, string, contentUpdateListener)
@@ -229,6 +230,10 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
             view.setVisibility(View.GONE);
         } else {
             ((TextView) view).setText(string);
+        }
+
+        if(isEditEnabled && TextUtils.isEmpty(string)){
+            ((TextView) view).setText(R.string.not_avaliable);
         }
     }
 
