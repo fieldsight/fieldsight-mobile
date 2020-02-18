@@ -9,6 +9,7 @@ import io.reactivex.Single;
 import okhttp3.ResponseBody;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
@@ -28,8 +29,8 @@ public interface ApiV3Interface {
     @GET(APIEndpoint.V3.GET_SITE_DOCUMENTS)
     Single<ResponseBody> getSiteDocuments(@QueryMap Map<String, String> queryParams);
 
-    @GET(APIEndpoint.V3.GET_PROJECT_ATTR_COUNT+"/?{projectIdsParams}")
-    Single<ResponseBody> getProjectAttrCount(@Path("projectIdsParams") String projectIdParams);
+    @GET(APIEndpoint.V3.GET_PROJECT_ATTR_COUNT)
+    Single<ResponseBody> getProjectAttrCount(@Query("projectIdsParams") String projectIdParams);
 
     @GET
     Observable<ResponseBody> getFormsFromUrlAsRaw(@Url String url);
