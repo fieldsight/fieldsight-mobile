@@ -11,6 +11,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+
             android:id="@+id/user_profile_profile_picture"
             android:layout_width="match_parent"
             android:layout_height="250dp"
@@ -19,61 +20,107 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/new_design_blue"
             tools:ignore="HardcodedText"
             tools:src="@drawable/fieldsight_logo" />
 
-        <LinearLayout
-            android:id="@+id/user_profile_action_buttons"
+        <ImageView
+
+
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="16dp"
-            android:weightSum="2"
+            android:layout_height="250dp"
+            android:background="@drawable/transparent_black_gradient_shape"
+            android:contentDescription="profile picture of the logged in user"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
 
-            app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture">
-
-            <Button
-                android:id="@+id/user_profile_call_now"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:stateListAnimator="@null"
-                android:text="@string/user_profile_btn_call"
-                android:textColor="@color/white"
-                tools:targetApi="lollipop" />
-
-            <Button
-                android:id="@+id/user_profile_email_now"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:stateListAnimator="@null"
-                android:text="@string/user_profile_btn_email"
-                tools:ignore="UnusedAttribute" />
-        </LinearLayout>
+            tools:ignore="HardcodedText" />
 
         <TextView
+            android:id="@+id/user_profile_name"
+            style="@style/TextAppearance.AppCompat.Title.Inverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+
+            app:layout_constraintBottom_toBottomOf="@id/user_profile_profile_picture"
+            app:layout_constraintLeft_toLeftOf="@id/user_profile_profile_picture"
+            app:layout_constraintRight_toRightOf="@id/user_profile_profile_picture"
+            app:layout_constraintTop_toTopOf="@id/user_profile_profile_picture"
+            app:layout_constraintVertical_bias="0.81"
+            tools:text="Nishon Tandukar" />
+
+        <TextView
+            android:id="@+id/user_profile_role"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+
+            app:layout_constraintBottom_toBottomOf="@id/user_profile_profile_picture"
+            app:layout_constraintLeft_toLeftOf="@id/user_profile_profile_picture"
+            app:layout_constraintRight_toRightOf="@id/user_profile_profile_picture"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_name"
+
+            app:layout_constraintVertical_bias="0.050000012"
+            android:text="Site Supervisor"
+             />
+
+
+        <Button
+            android:id="@+id/user_profile_call_now"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_weight="1"
+            android:background="@color/new_design_blue"
+            android:stateListAnimator="@null"
+            android:text="@string/user_profile_btn_call"
+            android:textColor="@color/white"
+            app:layout_constraintLeft_toRightOf="@id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture"
+            tools:targetApi="lollipop" />
+
+        <Button
+            android:id="@+id/user_profile_email_now"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:stateListAnimator="@null"
+            android:text="@string/user_profile_btn_email"
+            android:textColor="@color/new_design_blue"
+            app:layout_constraintRight_toLeftOf="@id/guideline_end"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture"
+            tools:ignore="UnusedAttribute" />
+
+
+        <TextView
+
             android:id="@+id/user_profile_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
             android:drawableStart="@drawable/ic_location"
             android:drawableLeft="@drawable/ic_location"
             android:drawablePadding="16dp"
-            android:paddingBottom="16dp"
             app:layout_constraintLeft_toRightOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@id/user_profile_action_buttons"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_call_now"
             tools:text="Kathmandu, Nepal" />
 
         <TextView
             android:id="@+id/user_profile_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
             android:drawableStart="@drawable/ic_phone"
             android:drawableLeft="@drawable/ic_phone"
             android:drawablePadding="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="16dp"
+
             app:layout_constraintLeft_toRightOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@id/user_profile_location"
             tools:text="+977 9849515489" />
@@ -82,11 +129,11 @@
             android:id="@+id/user_profile_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
             android:drawableStart="@drawable/ic_email"
             android:drawableLeft="@drawable/ic_email"
             android:drawablePadding="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="16dp"
+
             app:layout_constraintLeft_toRightOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@id/user_profile_phone"
             tools:text="mail@mail.com.np" />
@@ -110,11 +157,11 @@
             android:id="@+id/use_profile_wrapper_social_media"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/margin_extra_large"
+
             android:scrollbars="none"
-            android:visibility="gone"
             app:layout_constraintLeft_toRightOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@id/user_profile_call_now">
+            app:layout_constraintTop_toBottomOf="@id/user_profile_email">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -205,6 +252,7 @@
 
             </LinearLayout>
         </HorizontalScrollView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -75,6 +75,9 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         bindAndSetOrHide(R.id.user_profile_phone,contactDetail.phone);
         bindAndSetOrHide(R.id.user_profile_location,contactDetail.address);
         bindAndSetOrHide(R.id.user_profile_email,contactDetail.email);
+
+        bindAndSetOrHide(R.id.user_profile_name,contactDetail.fullName);
+        bindAndSetOrHide(R.id.user_profile_role,contactDetail.role);
     }
 
     private void onCallNow() {
