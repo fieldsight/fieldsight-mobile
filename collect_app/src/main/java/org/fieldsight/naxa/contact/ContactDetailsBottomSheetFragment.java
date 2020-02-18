@@ -70,7 +70,11 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         bindAndSetOrHide(R.id.user_profile_tango, contactDetail.tango);
         bindAndSetOrHide(R.id.user_profile_twitter, contactDetail.twitter);
         bindAndSetOrHide(R.id.user_profile_hike, contactDetail.hike);
-        bindAndSetOrHide(R.id.user_profile_qq, "nishon");
+        bindAndSetOrHide(R.id.user_profile_qq, contactDetail.qq);
+
+        bindAndSetOrHide(R.id.user_profile_phone,contactDetail.phone);
+        bindAndSetOrHide(R.id.user_profile_location,contactDetail.address);
+        bindAndSetOrHide(R.id.user_profile_email,contactDetail.email);
     }
 
     private void onCallNow() {

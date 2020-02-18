@@ -22,33 +22,74 @@
             tools:ignore="HardcodedText"
             tools:src="@drawable/fieldsight_logo" />
 
-        <Button
-            android:id="@+id/user_profile_call_now"
-            android:layout_width="160dp"
+        <LinearLayout
+            android:id="@+id/user_profile_action_buttons"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:stateListAnimator="@null"
-            android:text="@string/user_profile_btn_call"
-            android:textColor="@color/white"
-            app:layout_constraintEnd_toStartOf="@+id/user_profile_email_now"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toRightOf="@+id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture" />
+            android:orientation="horizontal"
+            android:paddingBottom="16dp"
+            android:weightSum="2"
 
-        <Button
-            android:id="@+id/user_profile_email_now"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="160dp"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture">
+
+            <Button
+                android:id="@+id/user_profile_call_now"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:stateListAnimator="@null"
+                android:text="@string/user_profile_btn_call"
+                android:textColor="@color/white"
+                tools:targetApi="lollipop" />
+
+            <Button
+                android:id="@+id/user_profile_email_now"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:stateListAnimator="@null"
+                android:text="@string/user_profile_btn_email"
+                tools:ignore="UnusedAttribute" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/user_profile_location"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_rectangle_border_stroke_highlight"
-            android:stateListAnimator="@null"
-            android:text="@string/user_profile_btn_email"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_call_now"
-            app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture" />
+            android:drawableStart="@drawable/ic_location"
+            android:drawableLeft="@drawable/ic_location"
+            android:drawablePadding="16dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_action_buttons"
+            tools:text="Kathmandu, Nepal" />
+
+        <TextView
+            android:id="@+id/user_profile_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_phone"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawablePadding="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_location"
+            tools:text="+977 9849515489" />
+
+        <TextView
+            android:id="@+id/user_profile_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_email"
+            android:drawableLeft="@drawable/ic_email"
+            android:drawablePadding="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_phone"
+            tools:text="mail@mail.com.np" />
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -58,12 +99,20 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="16dp" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
         <HorizontalScrollView
             android:id="@+id/use_profile_wrapper_social_media"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:scrollbars="none"
+            android:visibility="gone"
             app:layout_constraintLeft_toRightOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@id/user_profile_call_now">
 
