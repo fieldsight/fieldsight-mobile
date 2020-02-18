@@ -5,9 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -38,14 +41,14 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.bottom_sheet_contact, container, false);
-
         ContactDetailToViews();
+
 
         return rootView;
     }
 
     private void ContactDetailToViews() {
-        ImageView profilePicture = rootView.findViewById(R.id.iv_contactdetail_image);
+        ImageView profilePicture = rootView.findViewById(R.id.user_profile_profile_picture);
         if (contactDetail.profilePicture != null) {
             GlideApp.with(this)
                     .load(contactDetail.profilePicture)
@@ -53,48 +56,28 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
                     .into(profilePicture);
         }
 
-        bindAndSetOrHide(fullname, R.id.tv_contactdetail_fullname, contactDetail.fullName);
-
-
-        bindAndSetOrHide(role, R.id.tv_contactdetail_role, contactDetail.role);
-
-        bindAndSetOrHide(address, R.id.tv_contactdetail_address, contactDetail.address);
-
-        bindAndSetOrHide(gender, R.id.tv_contactdetail_gender, contactDetail.gender);
-
-
-        bindAndSetOrHide(skype, R.id.tv_contactdetail_skype, contactDetail.skype, R.id.iv_skype_icon);
-
-        bindAndSetOrHide(twitter, R.id.tv_contactdetail_twitter, contactDetail.twitter, R.id.iv_twitter_icon);
-
-        bindAndSetOrHide(tango, R.id.tv_contactdetail_tango, contactDetail.tango, R.id.iv_tango_icon);
-
-        bindAndSetOrHide(hike, R.id.tv_contactdetail_hike, contactDetail.hike, R.id.iv_hike_icon);
-
-        bindAndSetOrHide(qq, R.id.tv_contactdetail_qq, contactDetail.qq, R.id.iv_qq_icon);
-
-        bindAndSetOrHide(googletalk, R.id.tv_contactdetail_googletalk, contactDetail.googleTalk, R.id.iv_googletalk_icon);
-
-        bindAndSetOrHide(viber, R.id.tv_contactdetail_viber, contactDetail.viber, R.id.iv_viber_icon);
-
-        bindAndSetOrHide(whatsapp, R.id.tv_contactdetail_whatsapp, contactDetail.whatsApp, R.id.iv_whatsapp_icon);
-
-        bindAndSetOrHide(wechat, R.id.tv_contactdetail_wechat, contactDetail.weChat, R.id.iv_wechat_icon);
-
-        boolean isValidPhoneNumber = !TextUtils.isEmpty(contactDetail.phone);
-
-        rootView.findViewById(R.id.btn_phone_call).setVisibility(isValidPhoneNumber ? View.VISIBLE : View.GONE);
-
-        rootView.findViewById(R.id.btn_phone_call)
-                .setOnClickListener(v -> {
-                    Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactDetail.phone, null));
-                    if (canDeviceHandleCall(callIntent)) {
-                        startActivity(callIntent);
-                    }
-
-                });
-
+        rootView.findViewById(R.id.user_profile_call_now).setOnClickListener(view -> {
+            Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactDetail.phone, null));
+            if (canDeviceHandleCall(callIntent)) {
+                startActivity(callIntent);
+            }
+        });
     }
+
+//    private void buttonPopupMenu_onClick(View view) {
+//        PopupMenu popupMenu = new PopupMenu(requireActivity(), buttonPopupMenu);
+//        popupMenu.getMenu().add(MENU1, MENU_1_ITEM, 0, getText(R.string.menu1));
+//        popupMenu.getMenu().add(MENU2, MENU_2_ITEM, 1, getText(R.string.menu2));
+//
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//
+//                return false;
+//            }
+//        });
+//        popupMenu.show();
+//    }
 
     private boolean canDeviceHandleCall(Intent callIntent) {
         if (callIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
