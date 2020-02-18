@@ -42,7 +42,7 @@ public class Users {
         this.qq = jsonObject.optString("qq");
         this.fullName = jsonObject.optString("full_name");
         this.email = jsonObject.optString("email");
-        this.username = jsonObject.optString("username");
+        this.username                                                                                                                                                                                                                                                                                     = jsonObject.optString("username");
     }
 
 

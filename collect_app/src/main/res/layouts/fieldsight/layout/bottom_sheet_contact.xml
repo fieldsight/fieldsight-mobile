@@ -69,21 +69,22 @@
              />
 
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
+            android:enabled="true"
             android:id="@+id/user_profile_call_now"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:layout_weight="1"
-            android:background="@color/new_design_blue"
             android:stateListAnimator="@null"
             android:text="@string/user_profile_btn_call"
+            android:theme="@style/AppTheme.Light"
             android:textColor="@color/white"
             app:layout_constraintLeft_toRightOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture"
             tools:targetApi="lollipop" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
+            android:theme="@style/AppTheme.Light"
             android:id="@+id/user_profile_email_now"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="180dp"
@@ -126,6 +127,19 @@
             tools:text="+977 9849515489" />
 
         <TextView
+            android:id="@+id/user_profile_primary_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:drawableStart="@drawable/ic_phone"
+            android:drawableLeft="@drawable/ic_phone"
+            android:drawablePadding="16dp"
+
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_phone"
+            tools:text="+977 9849515489" />
+
+        <TextView
             android:id="@+id/user_profile_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -135,7 +149,7 @@
             android:drawablePadding="16dp"
 
             app:layout_constraintLeft_toRightOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@id/user_profile_phone"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_primary_phone"
             tools:text="mail@mail.com.np" />
 
 

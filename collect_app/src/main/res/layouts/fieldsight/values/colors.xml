@@ -60,5 +60,6 @@
     <color name="light_grey">#707070</color>
 
     <color name="new_design_blue">#2D70BC</color>
+    <color name="new_design_blue_light">#802D70BC</color>
     <color name="new_design_light_blue">#E3F1FA</color>
 </resources>

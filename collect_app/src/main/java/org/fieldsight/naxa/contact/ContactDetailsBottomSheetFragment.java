@@ -29,8 +29,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
     private View rootView;
     private Users contactDetail;
-    private TextView fullname, username, role, address, gender, email, skype, twitter, tango, hike, qq, googletalk, viber, whatsapp, wechat;
-    Button btnCallNow;
+    private Button btnCallNow, btnEmailNow;
 
     public static ContactDetailsBottomSheetFragment newInstance() {
         return new ContactDetailsBottomSheetFragment();
@@ -58,10 +57,19 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
                     .centerCrop()
                     .into(profilePicture);
         }
+
         btnCallNow = rootView.findViewById(R.id.user_profile_call_now);
-        btnCallNow.setOnClickListener(view -> {
-            onCallNow();
-        });
+        boolean hasPhoneNumber = !TextUtils.isEmpty(contactDetail.primaryNumber) || !TextUtils.isEmpty(contactDetail.phone);
+        btnCallNow.setEnabled(hasPhoneNumber);
+        btnCallNow.setOnClickListener(view -> onCallNow());
+
+
+        btnEmailNow = rootView.findViewById(R.id.user_profile_email_now);
+        boolean hasEmail = !TextUtils.isEmpty(contactDetail.email);
+        btnEmailNow.setEnabled(hasEmail);
+        btnEmailNow.setOnClickListener(view -> onEmailNow());
+
+
         bindAndSetOrHide(R.id.user_profile_skype, contactDetail.skype);
         bindAndSetOrHide(R.id.user_profile_viber, contactDetail.viber);
         bindAndSetOrHide(R.id.user_profile_whatsapp, contactDetail.whatsApp);
@@ -72,16 +80,28 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         bindAndSetOrHide(R.id.user_profile_hike, contactDetail.hike);
         bindAndSetOrHide(R.id.user_profile_qq, contactDetail.qq);
 
-        bindAndSetOrHide(R.id.user_profile_phone,contactDetail.phone);
-        bindAndSetOrHide(R.id.user_profile_location,contactDetail.address);
-        bindAndSetOrHide(R.id.user_profile_email,contactDetail.email);
+        bindAndSetOrHide(R.id.user_profile_phone, contactDetail.phone);
+        bindAndSetOrHide(R.id.user_profile_primary_phone, contactDetail.primaryNumber);
 
-        bindAndSetOrHide(R.id.user_profile_name,contactDetail.fullName);
-        bindAndSetOrHide(R.id.user_profile_role,contactDetail.role);
+        bindAndSetOrHide(R.id.user_profile_location, contactDetail.address);
+        bindAndSetOrHide(R.id.user_profile_email, contactDetail.email);
+
+        bindAndSetOrHide(R.id.user_profile_name, contactDetail.fullName);
+        bindAndSetOrHide(R.id.user_profile_role, TextUtils.isEmpty(contactDetail.role) ? "Site Supervisor" : contactDetail.role);
+    }
+
+
+    private void onEmailNow() {
+        Intent email = new Intent(Intent.ACTION_SEND);
+        email.putExtra(Intent.EXTRA_EMAIL, new String[]{contactDetail.email});
+        email.setType("message/rfc822");
+        startActivity(Intent.createChooser(email, "Choose an Email client :"));
     }
 
     private void onCallNow() {
-        boolean hasMultiplePhoneNumbers = false;
+        boolean hasMultiplePhoneNumbers = !TextUtils.isEmpty(contactDetail.primaryNumber) && !TextUtils.isEmpty(contactDetail.phone);
+
+
         if (hasMultiplePhoneNumbers) {
             PopupMenu popupMenu = new PopupMenu(requireActivity(), btnCallNow);
 //            popupMenu.getMenu().add(MENU1, MENU_1_ITEM, 0, getText(R.string.menu1));
@@ -112,15 +132,6 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
         SnackBarUtils.showFlashbar(requireActivity(), "Device does not support phone calls");
         return false;
-    }
-
-    private void bindAndSetOrHide(TextView textView, int viewId, String string) {
-        textView = rootView.findViewById(viewId);
-        if (TextUtils.isEmpty(string) || TextUtils.equals("null", string)) {
-            textView.setVisibility(View.GONE);
-        } else {
-            textView.setText(string);
-        }
     }
 
     private void bindAndSetOrHide(int viewId, String string) {
