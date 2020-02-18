@@ -64,8 +64,6 @@ public class UserProfileRepository {
                         checkAndReturnStringBody(contactDetail.googleTalk),
                         checkAndReturnStringBody(contactDetail.twitter))
                 .subscribeOn(Schedulers.io())
-
-                .retry(3)
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new DisposableObserver<User>() {
             @Override
             public void onNext(User user) {
