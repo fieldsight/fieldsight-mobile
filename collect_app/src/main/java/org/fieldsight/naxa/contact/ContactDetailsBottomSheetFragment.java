@@ -57,7 +57,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         super.onDismiss(dialog);
         boolean userHasChangedValues = contactDetail.hashCode() != intialUserHash;
         if (userHasChangedValues) {
-            ToastUtils.showLongToast("Updating changes");
+            ToastUtils.showLongToast(String.format("Updating changes %s", contactDetail.id));
         }
 
 

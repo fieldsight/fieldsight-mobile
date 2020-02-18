@@ -27,32 +27,32 @@ public class UserProfileRepository {
 
         Observable<User> userObservable = null;
 
-        RequestBody fIn = checkAndReturnStringBody(user.getFirstName());
-        RequestBody lIn = checkAndReturnStringBody(user.getLastName());
-        RequestBody addIn = checkAndReturnStringBody(user.getAddress());
-        RequestBody genderIn = checkAndReturnStringBody(user.getGender());
-        RequestBody phoneIn = checkAndReturnStringBody(user.getPhone());
-        RequestBody skypeIn = checkAndReturnStringBody(user.getSkype());
-        RequestBody primaryIn = checkAndReturnStringBody(user.getPrimaryNumber());
-        RequestBody secondIn = checkAndReturnStringBody(user.getSecondaryNumber());
-        RequestBody officeIn = checkAndReturnStringBody(user.getOfficeNumber());
-        RequestBody viberIn = checkAndReturnStringBody(user.getViber());
-        RequestBody whatsAppIn = checkAndReturnStringBody(user.getWhatsApp());
-        RequestBody wechatIn = checkAndReturnStringBody(user.getWechat());
-        RequestBody lineIn = checkAndReturnStringBody(user.getLine());
-        RequestBody tangoIn = checkAndReturnStringBody(user.getTango());
-        RequestBody hikeIn = checkAndReturnStringBody(user.getHike());
-        RequestBody qqIn = checkAndReturnStringBody(user.getQq());
-        RequestBody googleTalkIn = checkAndReturnStringBody(user.getGoogleTalk());
-        RequestBody twitterIn = checkAndReturnStringBody(user.getTwitter());
-        RequestBody organizationIn = checkAndReturnStringBody(user.getOrganization());
+//        RequestBody fIn = checkAndReturnStringBody(user.getFirstName());
+//        RequestBody lIn = checkAndReturnStringBody(user.getLastName());
+//        RequestBody addIn = checkAndReturnStringBody(user.getAddress());
+//        RequestBody genderIn = checkAndReturnStringBody(user.getGender());
+//        RequestBody phoneIn = checkAndReturnStringBody(user.getPhone());
+//        RequestBody skypeIn = checkAndReturnStringBody(user.getSkype());
+//        RequestBody primaryIn = checkAndReturnStringBody(user.getPrimaryNumber());
+//        RequestBody secondIn = checkAndReturnStringBody(user.getSecondaryNumber());
+//        RequestBody officeIn = checkAndReturnStringBody(user.getOfficeNumber());
+//        RequestBody viberIn = checkAndReturnStringBody(user.getViber());
+//        RequestBody whatsAppIn = checkAndReturnStringBody(user.getWhatsApp());
+//        RequestBody wechatIn = checkAndReturnStringBody(user.getWechat());
+//        RequestBody lineIn = checkAndReturnStringBody(user.getLine());
+//        RequestBody tangoIn = checkAndReturnStringBody(user.getTango());
+//        RequestBody hikeIn = checkAndReturnStringBody(user.getHike());
+//        RequestBody qqIn = checkAndReturnStringBody(user.getQq());
+//        RequestBody googleTalkIn = checkAndReturnStringBody(user.getGoogleTalk());
+//        RequestBody twitterIn = checkAndReturnStringBody(user.getTwitter());
+//        RequestBody organizationIn = checkAndReturnStringBody(user.getOrganization());
 
 //        if (user.getProfilepic().isEmpty()) {
-        userObservable = getRxClient()
-                .create(ApiInterface.class)
-                .updateUserProfileNoImage(FieldSightUserSession.getServerUrl(Collect.getInstance().getApplicationContext()) + "/users/api/profile/" + "303" + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
-                        officeIn, viberIn, whatsAppIn, wechatIn, lineIn, tangoIn, hikeIn, qqIn, googleTalkIn, twitterIn, organizationIn);
-//        } else {
+//        userObservable = getRxClient()
+//                .create(ApiInterface.class)
+//                .updateUserProfileNoImage(FieldSightUserSession.getServerUrl(Collect.getInstance().getApplicationContext()) + "/users/api/profile/" + "303" + "/", fIn, lIn, addIn, genderIn, phoneIn, skypeIn, primaryIn, secondIn,
+//                        officeIn, viberIn, whatsAppIn, wechatIn, lineIn, tangoIn, hikeIn, qqIn, googleTalkIn, twitterIn, organizationIn);
+////        } else {
 //            File image = new File(user.getProfilepic());
 //            RequestBody imageRequestBody = RequestBody.create(MediaType.parse("image/*"), image);
 //            MultipartBody.Part imageIn = MultipartBody.Part.createFormData(image.getName(), image.getName(), imageRequestBody);

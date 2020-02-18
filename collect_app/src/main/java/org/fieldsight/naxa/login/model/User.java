@@ -1,167 +1,65 @@
+
 package org.fieldsight.naxa.login.model;
 
-import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-/**
- * Created by Susan on 11/21/2016.
- */
 public class User {
 
-    @SerializedName("my_sites")
-    private List<MySites> mySitesModel = new ArrayList<MySites>();
     @SerializedName("username")
-    private String userName;
-    @SerializedName("server_time")
-    private String serverTime;
-    private String id;
-
-    @SerializedName("full_name")
     @Expose
-    private String fullName;
-
+    private String username;
     @SerializedName("profile_pic")
     @Expose
-    private String profilepic;
-    @SerializedName("first_name")
+    private String profilePic;
+    @SerializedName("server_time")
     @Expose
-    private String firstName;
-    @SerializedName("last_name")
+    private String serverTime;
+    @SerializedName("address")
     @Expose
-    private String lastName;
-
-    private String email;
+    private String address;
     @SerializedName("phone")
     @Expose
     private String phone;
-    @SerializedName("address")
-    private String address;
-    @SerializedName("gender")
+    @SerializedName("full_name")
     @Expose
-    private String gender;
+    private String fullName;
     @SerializedName("skype")
     @Expose
     private String skype;
-    @SerializedName("primary_number")
+    @SerializedName("profile_data")
     @Expose
-    private String primaryNumber;
-    @SerializedName("secondary_number")
+    private ProfileData profileData;
+    @SerializedName("is_supervisor")
     @Expose
-    private String secondaryNumber;
-    @SerializedName("office_number")
+    private Boolean isSupervisor;
+    @SerializedName("last_login")
     @Expose
-    private String officeNumber;
-    @SerializedName("viber")
-    @Expose
-    private String viber;
-    @SerializedName("whatsapp")
-    @Expose
-    private String whatsApp;
-    @SerializedName("wechat")
-    @Expose
-    private String wechat;
-    @SerializedName("line")
-    @Expose
-    private String line;
-    @SerializedName("tango")
-    @Expose
-    private String tango;
-    @SerializedName("hike")
-    @Expose
-    private String hike;
-    @SerializedName("qq")
-    @Expose
-    private String qq;
-    @SerializedName("google_talk")
-    @Expose
-    private String googleTalk;
-    @SerializedName("twitter")
-    @Expose
-    private String twitter;
+    private String lastLogin;
     @SerializedName("organization")
     @Expose
     private String organization;
-    private String project;
-
-    @SerializedName("is_supervisor")
-    private Boolean isSupervisor;
-    @SerializedName("last_login")
-    private String lastLogin;
     @SerializedName("organization_url")
+    @Expose
     private String organizationUrl;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private boolean sync;
+    @SerializedName("email")
+    @Expose
+    private String email;
 
-
-    /**
-     * @return The mySitesModel
-     */
-    public List<MySites> getMySitesModel() {
-        return mySitesModel;
+    public String getUsername() {
+        return username;
     }
 
-    /**
-     * @return The isSupervisor
-     */
-    public Boolean getIsSupervisor() {
-        return isSupervisor;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getId() {
-        return id;
+    public String getProfilePic() {
+        return profilePic;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    /**
-     * @return The email
-     */
-    public String getEmail() {
-        return email;
-    }
-
-    /**
-     * @param email The email
-     */
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public void setMySitesModel(List<MySites> mySitesModel) {
-        this.mySitesModel = mySitesModel;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getProfilepic() {
-        return profilepic;
-    }
-
-    public void setProfilepic(String profilepic) {
-        this.profilepic = profilepic;
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
     }
 
     public String getServerTime() {
@@ -172,177 +70,12 @@ public class User {
         this.serverTime = serverTime;
     }
 
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getAddress() {
         return address;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getSkype() {
-        return skype;
-    }
-
-    public void setSkype(String skype) {
-        this.skype = skype;
-    }
-
-    public String getPrimaryNumber() {
-        return primaryNumber;
-    }
-
-    public void setPrimaryNumber(String primaryNumber) {
-        this.primaryNumber = primaryNumber;
-    }
-
-    public String getSecondaryNumber() {
-        return secondaryNumber;
-    }
-
-    public void setSecondaryNumber(String secondaryNumber) {
-        this.secondaryNumber = secondaryNumber;
-    }
-
-    public String getOfficeNumber() {
-        return officeNumber;
-    }
-
-    public void setOfficeNumber(String officeNumber) {
-        this.officeNumber = officeNumber;
-    }
-
-    public String getViber() {
-        return viber;
-    }
-
-    public void setViber(String viber) {
-        this.viber = viber;
-    }
-
-    public String getWhatsApp() {
-        return whatsApp;
-    }
-
-    public void setWhatsApp(String whatsApp) {
-        this.whatsApp = whatsApp;
-    }
-
-    public String getWechat() {
-        return wechat;
-    }
-
-    public void setWechat(String wechat) {
-        this.wechat = wechat;
-    }
-
-    public String getLine() {
-        return line;
-    }
-
-    public void setLine(String line) {
-        this.line = line;
-    }
-
-    public String getTango() {
-        return tango;
-    }
-
-    public void setTango(String tango) {
-        this.tango = tango;
-    }
-
-    public String getHike() {
-        return hike;
-    }
-
-    public void setHike(String hike) {
-        this.hike = hike;
-    }
-
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-
-    public String getGoogleTalk() {
-        return googleTalk;
-    }
-
-    public void setGoogleTalk(String googleTalk) {
-        this.googleTalk = googleTalk;
-    }
-
-    public String getTwitter() {
-        return twitter;
-    }
-
-    public void setTwitter(String twitter) {
-        this.twitter = twitter;
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public Boolean getSupervisor() {
-        return isSupervisor;
-    }
-
-    public void setSupervisor(Boolean supervisor) {
-        isSupervisor = supervisor;
-    }
-
-    public String getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(String lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-
-    public String getOrganizationUrl() {
-        return organizationUrl;
     }
 
     public String getPhone() {
@@ -353,69 +86,68 @@ public class User {
         this.phone = phone;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getSkype() {
+        return skype;
+    }
+
+    public void setSkype(String skype) {
+        this.skype = skype;
+    }
+
+    public ProfileData getProfileData() {
+        return profileData;
+    }
+
+    public void setProfileData(ProfileData profileData) {
+        this.profileData = profileData;
+    }
+
+    public Boolean getIsSupervisor() {
+        return isSupervisor;
+    }
+
+    public void setIsSupervisor(Boolean isSupervisor) {
+        this.isSupervisor = isSupervisor;
+    }
+
+    public String getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(String lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public String getOrganizationUrl() {
+        return organizationUrl;
+    }
+
     public void setOrganizationUrl(String organizationUrl) {
         this.organizationUrl = organizationUrl;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return additionalProperties;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
-        this.additionalProperties = additionalProperties;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public boolean isSync() {
-        return sync;
-    }
-
-    public void setSync(boolean sync) {
-        this.sync = sync;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        User user = (User) o;
-        return sync == user.sync &&
-                Objects.equal(mySitesModel, user.mySitesModel) &&
-                Objects.equal(userName, user.userName) &&
-                Objects.equal(serverTime, user.serverTime) &&
-                Objects.equal(profilepic, user.profilepic) &&
-                Objects.equal(firstName, user.firstName) &&
-                Objects.equal(lastName, user.lastName) &&
-                Objects.equal(email, user.email) &&
-                Objects.equal(phone, user.phone) &&
-                Objects.equal(address, user.address) &&
-                Objects.equal(gender, user.gender) &&
-                Objects.equal(skype, user.skype) &&
-                Objects.equal(primaryNumber, user.primaryNumber) &&
-                Objects.equal(secondaryNumber, user.secondaryNumber) &&
-                Objects.equal(officeNumber, user.officeNumber) &&
-                Objects.equal(viber, user.viber) &&
-                Objects.equal(whatsApp, user.whatsApp) &&
-                Objects.equal(wechat, user.wechat) &&
-                Objects.equal(line, user.line) &&
-                Objects.equal(tango, user.tango) &&
-                Objects.equal(hike, user.hike) &&
-                Objects.equal(qq, user.qq) &&
-                Objects.equal(googleTalk, user.googleTalk) &&
-                Objects.equal(twitter, user.twitter) &&
-                Objects.equal(organization, user.organization) &&
-                Objects.equal(project, user.project) &&
-                Objects.equal(isSupervisor, user.isSupervisor) &&
-                Objects.equal(lastLogin, user.lastLogin) &&
-                Objects.equal(organizationUrl, user.organizationUrl) &&
-                Objects.equal(additionalProperties, user.additionalProperties);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(mySitesModel, userName, serverTime, profilepic, firstName, lastName, email, phone, address, gender, skype, primaryNumber, secondaryNumber, officeNumber, viber, whatsApp, wechat, line, tango, hike, qq, googleTalk, twitter, organization, project, isSupervisor, lastLogin, organizationUrl, additionalProperties, sync);
-    }
 }
