@@ -28,14 +28,14 @@ public interface ApiV3Interface {
     @GET(APIEndpoint.V3.GET_SITE_DOCUMENTS)
     Single<ResponseBody> getSiteDocuments(@QueryMap Map<String, String> queryParams);
 
-    @GET
-    Single<ResponseBody> getProjectAttrCount()
+    @GET(APIEndpoint.V3.GET_PROJECT_DASHBOARD+"/{projectIdsParams}")
+    Single<ResponseBody> getProjectAttrCount(@Path("projectIdsParams") String projectIdParams);
 
     @GET
     Observable<ResponseBody> getFormsFromUrlAsRaw(@Url String url);
 
-    @GET(APIEndpoint.V3.GET_PROJECT_ATTR_COUNT+"/{projectIdParams}")
-    Observable<ResponseBody> getMyFlaggedSubmissionAsRaw(@Path("projectIdParams") String projectIdParams);
+    @GET
+    Observable<ResponseBody> getMyFlaggedSubmissionAsRaw(@Url String url);
 
     @GET(APIEndpoint.V3.GET_PROJECT_DASHBOARD+"/{projectId}")
     Observable<ResponseBody> getProjectDashboardStat(@Path("projectId") String projectId);

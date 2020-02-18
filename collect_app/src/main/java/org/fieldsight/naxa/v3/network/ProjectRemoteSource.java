@@ -25,7 +25,7 @@ public class ProjectRemoteSource {
 
     public Single<ResponseBody> getProjectCounts(String projectIdsParams) {
         return ServiceGenerator.getRxClient().create(ApiV3Interface.class)
-                .getProjects()
+                .getProjectAttrCount(projectIdsParams)
                 .subscribeOn(Schedulers.io());
     }
 }
