@@ -144,8 +144,8 @@ public class ProjectRepository implements BaseRepository<Project> {
             for (int i = 0; i < projectArray.length(); i++) {
                 if (!first) {
                     urlParams += "&";
-                    first = false;
                 }
+                first = false;
                 urlParams += "project_id=" + projectArray.optJSONObject(i).optString("id");
             }
 
