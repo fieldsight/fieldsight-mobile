@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import org.fieldsight.naxa.common.BaseRepository;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.SiteMetaAttribute;
+import org.fieldsight.naxa.network.APIEndpoint;
 import org.fieldsight.naxa.network.NetworkUtils;
 import org.fieldsight.naxa.site.SiteType;
 import org.fieldsight.naxa.site.SiteTypeLocalSource;
@@ -148,8 +149,10 @@ public class ProjectRepository implements BaseRepository<Project> {
                 first = false;
                 urlParams += "project_id=" + projectArray.optJSONObject(i).optString("id");
             }
+            String mUrl = APIEndpoint.V3.GET_PROJECT_ATTR_COUNT + "/?"+urlParams;
+            Timber.i("newUrl = %s", mUrl);
 
-            ProjectRemoteSource.getInstance().getProjectCounts(urlParams).toObservable()
+            ProjectRemoteSource.getInstance().getProjectCounts(mUrl).toObservable()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
 

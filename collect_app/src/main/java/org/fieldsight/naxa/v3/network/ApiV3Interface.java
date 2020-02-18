@@ -29,8 +29,8 @@ public interface ApiV3Interface {
     @GET(APIEndpoint.V3.GET_SITE_DOCUMENTS)
     Single<ResponseBody> getSiteDocuments(@QueryMap Map<String, String> queryParams);
 
-    @GET(APIEndpoint.V3.GET_PROJECT_ATTR_COUNT)
-    Single<ResponseBody> getProjectAttrCount(@Query("projectIdsParams") String projectIdParams);
+    @GET
+    Single<ResponseBody> getProjectAttrCount(@Url String projectIdParams);
 
     @GET
     Observable<ResponseBody> getFormsFromUrlAsRaw(@Url String url);
