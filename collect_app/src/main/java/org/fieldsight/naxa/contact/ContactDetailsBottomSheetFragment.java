@@ -23,6 +23,7 @@ import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.GlideApp;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
+import org.fieldsight.naxa.profile.UserProfileRepository;
 import org.fieldsight.naxa.v3.project.Users;
 import org.odk.collect.android.utilities.ToastUtils;
 
@@ -57,10 +58,14 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         super.onDismiss(dialog);
         boolean userHasChangedValues = contactDetail.hashCode() != intialUserHash;
         if (userHasChangedValues) {
-            ToastUtils.showLongToast(String.format("Updating changes %s", contactDetail.id));
+            uploadChanges(contactDetail);
         }
 
 
+    }
+
+    private void uploadChanges(Users contactDetail) {
+        UserProfileRepository.getInstance().upload(contactDetail);
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -219,7 +224,8 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
             }
         });
 
-        if (TextUtils.isEmpty(string) || TextUtils.equals("null", string)) {
+        boolean doesNotHaveValue = TextUtils.isEmpty(string) || TextUtils.equals("null", string);
+        if (doesNotHaveValue && !isEditEnabled) {
             view.setVisibility(View.GONE);
         } else {
             ((TextView) view).setText(string);

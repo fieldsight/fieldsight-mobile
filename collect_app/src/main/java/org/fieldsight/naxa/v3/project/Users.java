@@ -20,7 +20,8 @@ import timber.log.Timber;
 public class Users {
     public String profilePicture, role, id, fullName, gender, googleTalk, line,
             officeNumber, phone, primaryNumber, secondaryNumber, skype, tango,
-            twitter, viber, weChat, whatsApp, address, hike, qq, email, username;
+            twitter, viber, weChat, whatsApp, address, hike, qq, email, username,
+            firstName, lastName;
 
 
     private Users(JSONObject jsonObject) {
@@ -62,6 +63,9 @@ public class Users {
         this.whatsApp = profileData.optString("whatsapp");
         this.hike = profileData.optString("hike");
         this.qq = profileData.optString("qq");
+        this.gender = profileData.optString("gender");
+        this.firstName = profileData.optString("first_name");
+        this.lastName = profileData.optString("last_name");
     }
 
 

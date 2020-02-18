@@ -411,7 +411,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     private void setupNavigationHeader() {
         try {
             navigationHeader = navigationView.getHeaderView(0);
-            Users user = FieldSightUserSession.getUserV2();
+            Users user = FieldSightUserSession.getUserV2(false);
             ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.fullName);
             ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText("");
             if (tl != null && !TextUtils.isEmpty(tl.siteSupervisor)) {

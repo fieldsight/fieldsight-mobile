@@ -353,9 +353,9 @@ public class FieldSightUserSession {
     }
 
 
-    public static Users getUserV2() throws IllegalArgumentException {
+    public static Users getUserV2(boolean forceUpdate) throws IllegalArgumentException {
         String userString = getUserString();
-        if (userString == null || userString.length() == 0) {
+        if (userString == null || userString.length() == 0 || forceUpdate) {
 
             ServiceGenerator.getRxClient().create(ApiInterface.class)
                     .getUser()
