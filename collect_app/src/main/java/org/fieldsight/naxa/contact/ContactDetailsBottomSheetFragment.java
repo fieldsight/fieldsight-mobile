@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,7 +19,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import org.bcss.collect.android.R;;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.GlideApp;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
@@ -32,7 +31,8 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
     private View rootView;
     private Users contactDetail;
-    private Button btnCallNow, btnEmailNow;
+    private Users intialContactDetail;
+    private Button btnCallNow;
     private boolean isEditEnabled;
     private int intialUserHash;
 
@@ -43,6 +43,7 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
     public void setContact(Users contactDetail) {
         this.contactDetail = contactDetail;
+        this.intialContactDetail = contactDetail;
         this.intialUserHash = contactDetail.hashCode();
     }
 
@@ -58,6 +59,8 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         if (userHasChangedValues) {
             ToastUtils.showLongToast("Updating changes");
         }
+
+
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -84,29 +87,71 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         btnCallNow.setOnClickListener(view -> onCallNow());
 
 
-        btnEmailNow = rootView.findViewById(R.id.user_profile_email_now);
+        Button btnEmailNow = rootView.findViewById(R.id.user_profile_email_now);
         boolean hasEmail = !TextUtils.isEmpty(contactDetail.email);
         btnEmailNow.setEnabled(hasEmail);
         btnEmailNow.setOnClickListener(view -> onEmailNow());
 
 
-        bindAndSetOrHide(R.id.user_profile_skype, contactDetail.skype, updatedValue -> contactDetail.skype = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_viber, contactDetail.viber, updatedValue -> contactDetail.viber = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_whatsapp, contactDetail.whatsApp, updatedValue -> contactDetail.whatsApp = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_wechat, contactDetail.weChat, updatedValue -> contactDetail.weChat = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_google_talk, contactDetail.googleTalk, updatedValue -> contactDetail.googleTalk = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_tango, contactDetail.tango, updatedValue -> contactDetail.tango = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_twitter, contactDetail.twitter, updatedValue -> contactDetail.twitter = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_hike, contactDetail.hike, updatedValue -> contactDetail.hike = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_qq, contactDetail.qq, updatedValue -> contactDetail.qq = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_skype, contactDetail.skype, updatedValue -> {
+            contactDetail.skype = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_viber, contactDetail.viber, updatedValue -> {
+            contactDetail.viber = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_whatsapp, contactDetail.whatsApp, updatedValue -> {
+            contactDetail.whatsApp = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_wechat, contactDetail.weChat, updatedValue -> {
+            contactDetail.weChat = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_google_talk, contactDetail.googleTalk, updatedValue -> {
+            contactDetail.googleTalk = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_tango, contactDetail.tango, updatedValue -> {
+            contactDetail.tango = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_twitter, contactDetail.twitter, updatedValue -> {
+            contactDetail.twitter = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_hike, contactDetail.hike, updatedValue -> {
+            contactDetail.hike = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_qq, contactDetail.qq, updatedValue -> {
+            contactDetail.qq = updatedValue;
+            contactDetailToViews();
+        });
 
-        bindAndSetOrHide(R.id.user_profile_phone, contactDetail.phone, updatedValue -> contactDetail.phone = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_primary_phone, contactDetail.primaryNumber, updatedValue -> contactDetail.primaryNumber = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_phone, contactDetail.phone, updatedValue -> {
+            contactDetail.phone = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_primary_phone, contactDetail.primaryNumber, updatedValue -> {
+            contactDetail.primaryNumber = updatedValue;
+            contactDetailToViews();
+        });
 
-        bindAndSetOrHide(R.id.user_profile_location, contactDetail.address, updatedValue -> contactDetail.address = updatedValue);
-        bindAndSetOrHide(R.id.user_profile_email, contactDetail.email, updatedValue -> contactDetail.email = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_location, contactDetail.address, updatedValue -> {
+            contactDetail.address = updatedValue;
+            contactDetailToViews();
+        });
+        bindAndSetOrHide(R.id.user_profile_email, contactDetail.email, updatedValue -> {
+            contactDetail.email = updatedValue;
+            contactDetailToViews();
+        });
 
-        bindAndSetOrHide(R.id.user_profile_name, contactDetail.fullName, updatedValue -> contactDetail.fullName = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_name, contactDetail.fullName, updatedValue -> {
+            contactDetail.fullName = updatedValue;
+            contactDetailToViews();
+        });
         bindAndSetOrHide(R.id.user_profile_role, TextUtils.isEmpty(contactDetail.role) ? "Site Supervisor" : contactDetail.role, null);
     }
 
@@ -136,12 +181,9 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
             popupMenu.getMenu().add(contactDetail.officeNumber);
         }
 
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                call(item.getTitle().toString());
-                return false;
-            }
+        popupMenu.setOnMenuItemClickListener(item -> {
+            call(item.getTitle().toString());
+            return false;
         });
         popupMenu.show();
     }
@@ -186,6 +228,8 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
     public interface ContentUpdateListener {
         void onUpdate(String updatedValue);
+
+
     }
 
 

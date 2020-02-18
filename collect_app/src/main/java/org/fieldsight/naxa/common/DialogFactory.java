@@ -235,7 +235,7 @@ public final class DialogFactory {
             String text = textInputLayout.getEditText().getText().toString();
             contentUpdateListener.onUpdate(text);
 
-        }).setNegativeButton(R.string.discard, null);
+        });
     }
 
 
