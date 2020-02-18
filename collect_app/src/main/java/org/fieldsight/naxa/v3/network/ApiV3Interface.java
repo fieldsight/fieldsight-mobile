@@ -34,8 +34,8 @@ public interface ApiV3Interface {
     @GET
     Observable<ResponseBody> getFormsFromUrlAsRaw(@Url String url);
 
-    @GET
-    Observable<ResponseBody> getMyFlaggedSubmissionAsRaw(@Url String url);
+    @GET(APIEndpoint.V3.GET_PROJECT_ATTR_COUNT+"/{projectIdParams}")
+    Observable<ResponseBody> getMyFlaggedSubmissionAsRaw(@Path("projectIdParams") String projectIdParams);
 
     @GET(APIEndpoint.V3.GET_PROJECT_DASHBOARD+"/{projectId}")
     Observable<ResponseBody> getProjectDashboardStat(@Path("projectId") String projectId);
