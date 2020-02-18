@@ -430,6 +430,7 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
                 toggleNavDrawer();
                 ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.newInstance();
                 contactDetailsBottomSheetFragmentDialog.setContact(user);
+                contactDetailsBottomSheetFragmentDialog.setEditEnabled();
                 contactDetailsBottomSheetFragmentDialog.show(getSupportFragmentManager(), "Contact Bottom Sheet");
             });
         } catch (IllegalArgumentException e) {

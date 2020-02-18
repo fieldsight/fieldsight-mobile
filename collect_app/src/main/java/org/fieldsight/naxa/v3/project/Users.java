@@ -2,6 +2,8 @@ package org.fieldsight.naxa.v3.project;
 
 import android.text.TextUtils;
 
+import com.google.common.base.Objects;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -45,6 +47,12 @@ public class Users {
         this.username                                                                                                                                                                                                                                                                                     = jsonObject.optString("username");
     }
 
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(profilePicture, role, id, fullName, gender, googleTalk, line, officeNumber, phone, primaryNumber, secondaryNumber, skype, tango, twitter, viber, weChat, whatsApp, address, hike, qq, email, username);
+    }
 
     public static List<Users> toList(String users) {
         List<Users> usersList = new ArrayList<>();

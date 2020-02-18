@@ -1,6 +1,7 @@
 package org.fieldsight.naxa.contact;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,11 +15,13 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.bcss.collect.android.R;;
+import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.GlideApp;
 import org.fieldsight.naxa.common.utilities.SnackBarUtils;
 import org.fieldsight.naxa.v3.project.Users;
@@ -30,6 +33,9 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
     private View rootView;
     private Users contactDetail;
     private Button btnCallNow, btnEmailNow;
+    private boolean isEditEnabled;
+    private int intialUserHash;
+
 
     public static ContactDetailsBottomSheetFragment newInstance() {
         return new ContactDetailsBottomSheetFragment();
@@ -37,8 +43,22 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
 
     public void setContact(Users contactDetail) {
         this.contactDetail = contactDetail;
+        this.intialUserHash = contactDetail.hashCode();
     }
 
+    public void setEditEnabled() {
+        isEditEnabled = true;
+    }
+
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        boolean userHasChangedValues = contactDetail.hashCode() != intialUserHash;
+        if (userHasChangedValues) {
+            ToastUtils.showLongToast("Updating changes");
+        }
+    }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -70,24 +90,24 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         btnEmailNow.setOnClickListener(view -> onEmailNow());
 
 
-        bindAndSetOrHide(R.id.user_profile_skype, contactDetail.skype);
-        bindAndSetOrHide(R.id.user_profile_viber, contactDetail.viber);
-        bindAndSetOrHide(R.id.user_profile_whatsapp, contactDetail.whatsApp);
-        bindAndSetOrHide(R.id.user_profile_wechat, contactDetail.weChat);
-        bindAndSetOrHide(R.id.user_profile_google_talk, contactDetail.googleTalk);
-        bindAndSetOrHide(R.id.user_profile_tango, contactDetail.tango);
-        bindAndSetOrHide(R.id.user_profile_twitter, contactDetail.twitter);
-        bindAndSetOrHide(R.id.user_profile_hike, contactDetail.hike);
-        bindAndSetOrHide(R.id.user_profile_qq, contactDetail.qq);
+        bindAndSetOrHide(R.id.user_profile_skype, contactDetail.skype, updatedValue -> contactDetail.skype = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_viber, contactDetail.viber, updatedValue -> contactDetail.viber = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_whatsapp, contactDetail.whatsApp, updatedValue -> contactDetail.whatsApp = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_wechat, contactDetail.weChat, updatedValue -> contactDetail.weChat = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_google_talk, contactDetail.googleTalk, updatedValue -> contactDetail.googleTalk = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_tango, contactDetail.tango, updatedValue -> contactDetail.tango = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_twitter, contactDetail.twitter, updatedValue -> contactDetail.twitter = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_hike, contactDetail.hike, updatedValue -> contactDetail.hike = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_qq, contactDetail.qq, updatedValue -> contactDetail.qq = updatedValue);
 
-        bindAndSetOrHide(R.id.user_profile_phone, contactDetail.phone);
-        bindAndSetOrHide(R.id.user_profile_primary_phone, contactDetail.primaryNumber);
+        bindAndSetOrHide(R.id.user_profile_phone, contactDetail.phone, updatedValue -> contactDetail.phone = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_primary_phone, contactDetail.primaryNumber, updatedValue -> contactDetail.primaryNumber = updatedValue);
 
-        bindAndSetOrHide(R.id.user_profile_location, contactDetail.address);
-        bindAndSetOrHide(R.id.user_profile_email, contactDetail.email);
+        bindAndSetOrHide(R.id.user_profile_location, contactDetail.address, updatedValue -> contactDetail.address = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_email, contactDetail.email, updatedValue -> contactDetail.email = updatedValue);
 
-        bindAndSetOrHide(R.id.user_profile_name, contactDetail.fullName);
-        bindAndSetOrHide(R.id.user_profile_role, TextUtils.isEmpty(contactDetail.role) ? "Site Supervisor" : contactDetail.role);
+        bindAndSetOrHide(R.id.user_profile_name, contactDetail.fullName, updatedValue -> contactDetail.fullName = updatedValue);
+        bindAndSetOrHide(R.id.user_profile_role, TextUtils.isEmpty(contactDetail.role) ? "Site Supervisor" : contactDetail.role, null);
     }
 
 
@@ -99,30 +119,39 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
     }
 
     private void onCallNow() {
-        boolean hasMultiplePhoneNumbers = !TextUtils.isEmpty(contactDetail.primaryNumber) && !TextUtils.isEmpty(contactDetail.phone);
 
-
-        if (hasMultiplePhoneNumbers) {
-            PopupMenu popupMenu = new PopupMenu(requireActivity(), btnCallNow);
-//            popupMenu.getMenu().add(MENU1, MENU_1_ITEM, 0, getText(R.string.menu1));
-//            popupMenu.getMenu().add(MENU2, MENU_2_ITEM, 1, getText(R.string.menu2));
-//            popupMenu.getMenu().add(MENU2, MENU_2_ITEM, 1, getText(R.string.menu2));
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-
-                    return false;
-                }
-            });
-            popupMenu.show();
-        } else {
-            Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contactDetail.phone, null));
-            if (canDeviceHandleCall(callIntent)) {
-                startActivity(callIntent);
-            }
+        PopupMenu popupMenu = new PopupMenu(requireActivity(), btnCallNow);
+        if (!TextUtils.isEmpty(contactDetail.primaryNumber)) {
+            popupMenu.getMenu().add(contactDetail.primaryNumber);
+        }
+        if (!TextUtils.isEmpty(contactDetail.phone)) {
+            popupMenu.getMenu().add(contactDetail.phone);
         }
 
+        if (!TextUtils.isEmpty(contactDetail.secondaryNumber)) {
+            popupMenu.getMenu().add(contactDetail.secondaryNumber);
+        }
 
+        if (!TextUtils.isEmpty(contactDetail.officeNumber)) {
+            popupMenu.getMenu().add(contactDetail.officeNumber);
+        }
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                call(item.getTitle().toString());
+                return false;
+            }
+        });
+        popupMenu.show();
+    }
+
+
+    private void call(String number) {
+        Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number, null));
+        if (canDeviceHandleCall(callIntent)) {
+            startActivity(callIntent);
+        }
     }
 
     private boolean canDeviceHandleCall(Intent callIntent) {
@@ -134,9 +163,19 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
         return false;
     }
 
-    private void bindAndSetOrHide(int viewId, String string) {
+    private void bindAndSetOrHide(int viewId, String string, ContentUpdateListener contentUpdateListener) {
         View view = rootView.findViewById(viewId);
-        view.setOnClickListener(view1 -> copyTextToClipboard(requireContext(), string));
+
+
+        view.setOnClickListener(view1 -> {
+            if (isEditEnabled && contentUpdateListener != null) {
+                DialogFactory.showInputDialog(requireActivity(), R.layout.layout_text_input, string, contentUpdateListener)
+                        .setTitle(String.format("Update %s", string))
+                        .show();
+            } else {
+                copyTextToClipboard(requireContext(), string);
+            }
+        });
 
         if (TextUtils.isEmpty(string) || TextUtils.equals("null", string)) {
             view.setVisibility(View.GONE);
@@ -144,6 +183,11 @@ public class ContactDetailsBottomSheetFragment extends BottomSheetDialogFragment
             ((TextView) view).setText(string);
         }
     }
+
+    public interface ContentUpdateListener {
+        void onUpdate(String updatedValue);
+    }
+
 
     private void copyTextToClipboard(Context context, String text) {
         android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);

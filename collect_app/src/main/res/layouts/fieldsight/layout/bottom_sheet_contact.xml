@@ -70,6 +70,7 @@
 
 
         <androidx.appcompat.widget.AppCompatButton
+            android:background="@color/new_design_blue"
             android:enabled="true"
             android:id="@+id/user_profile_call_now"
             android:layout_width="180dp"
