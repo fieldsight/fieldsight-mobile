@@ -14,6 +14,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.bcss.collect.android.R;;
 import org.fieldsight.naxa.v3.network.SyncServiceV3;
+import org.fieldsight.naxa.v3.project.Users;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.DeleteFormsListener;
 import org.odk.collect.android.listeners.DeleteInstancesListener;
@@ -317,7 +318,7 @@ public class FieldSightUserSession {
         }
     }
 
-
+    @Deprecated
     @NonNull
     public static User getUser() throws IllegalArgumentException {
         String userString = getUserString();
@@ -350,6 +351,40 @@ public class FieldSightUserSession {
 
         return GSONInstance.getInstance().fromJson(userString, User.class);
     }
+
+
+    public static Users getUserV2() throws IllegalArgumentException {
+        String userString = getUserString();
+        if (userString == null || userString.length() == 0) {
+
+            ServiceGenerator.getRxClient().create(ApiInterface.class)
+                    .getUser()
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new DisposableObserver<MeResponse>() {
+                        @Override
+                        public void onNext(MeResponse meResponse) {
+                            String user = GSONInstance.getInstance().toJson(meResponse.getData());
+                            SharedPreferenceUtils.saveToPrefs(Collect.getInstance(), SharedPreferenceUtils.PREF_KEY.USER, user);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Timber.i(e);
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+
+            throw new IllegalArgumentException("User information is missing from cache");
+        }
+
+
+        return Users.toUser(userString);
+    }
+
 
     private static String getUserString() {
         return SharedPreferenceUtils.getFromPrefs(Collect.getInstance().getApplicationContext(), SharedPreferenceUtils.PREF_KEY.USER, "");

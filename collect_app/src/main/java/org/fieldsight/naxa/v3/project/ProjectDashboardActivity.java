@@ -45,6 +45,7 @@ import org.fieldsight.naxa.common.FieldSightUserSession;
 import org.fieldsight.naxa.common.InternetUtils;
 import org.fieldsight.naxa.common.SettingsActivity;
 import org.fieldsight.naxa.common.ViewUtils;
+import org.fieldsight.naxa.contact.ContactDetailsBottomSheetFragment;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.User;
 import org.fieldsight.naxa.network.NetworkUtils;
@@ -412,22 +413,24 @@ public class ProjectDashboardActivity extends CollectAbstractActivity implements
     private void setupNavigationHeader() {
         try {
             navigationHeader = navigationView.getHeaderView(0);
-            User user = FieldSightUserSession.getUser();
-            ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.getFullName());
-            ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText(user.getEmail());
+            Users user = FieldSightUserSession.getUserV2();
+            ((TextView) navigationHeader.findViewById(R.id.tv_user_name)).setText(user.fullName);
+            ((TextView) navigationHeader.findViewById(R.id.tv_email)).setText("");
             if (tl != null && !TextUtils.isEmpty(tl.siteSupervisor)) {
                 Timber.i("ProjectDashboardActivity, data:: sitesv = %s", tl.siteSupervisor);
                 ((TextView) navigationHeader.findViewById(R.id.tv_user_post)).setText(tl.siteSupervisor);
             }
 
             ImageView ivProfilePicture = navigationHeader.findViewById(R.id.image_profile);
-            ViewUtils.loadRemoteImage(this, user.getProfilepic())
+            ViewUtils.loadRemoteImage(this, user.profilePicture)
                     .circleCrop()
                     .into(ivProfilePicture);
 
             navigationHeader.setOnClickListener(v -> {
                 toggleNavDrawer();
-                UserActivity.start(this);
+                ContactDetailsBottomSheetFragment contactDetailsBottomSheetFragmentDialog = ContactDetailsBottomSheetFragment.newInstance();
+                contactDetailsBottomSheetFragmentDialog.setContact(user);
+                contactDetailsBottomSheetFragmentDialog.show(getSupportFragmentManager(), "Contact Bottom Sheet");
             });
         } catch (IllegalArgumentException e) {
             Timber.e(e);
