@@ -23,31 +23,139 @@
             tools:src="@drawable/fieldsight_logo" />
 
         <Button
-            android:stateListAnimator="@null"
             android:id="@+id/user_profile_call_now"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:stateListAnimator="@null"
             android:text="@string/user_profile_btn_call"
             android:textColor="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/user_profile_email_now"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture" />
 
         <Button
-            android:stateListAnimator="@null"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:background="@drawable/rounded_rectangle_border_stroke_highlight"
             android:id="@+id/user_profile_email_now"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_rectangle_border_stroke_highlight"
+            android:stateListAnimator="@null"
             android:text="@string/user_profile_btn_email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/user_profile_call_now"
             app:layout_constraintTop_toBottomOf="@id/user_profile_profile_picture" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <HorizontalScrollView
+            android:id="@+id/use_profile_wrapper_social_media"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:scrollbars="none"
+            app:layout_constraintLeft_toRightOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_call_now">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/user_profile_skype"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_skype_icon"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_whatsapp"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_viber"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_wechat"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_whatsapp"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_viber"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_wechat"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_google_talk"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_google_talk"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_tango"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_tango"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_twitter"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_twitter_icon"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_hike"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_hike"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+                <Button
+                    android:id="@+id/user_profile_qq"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_qq"
+                    android:textColor="@color/new_design_blue"
+                    tools:text="nishon.tan" />
+
+
+            </LinearLayout>
+        </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
