@@ -287,7 +287,7 @@ public abstract class FieldSightDatabase extends RoomDatabase {
     private static final Migration MIGRATION_22_23 = new Migration(22, 23) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL("ALTER TABLE sites" + " ADD COLUMN `current_progress` INTEGER NOT NULL DEFAULT 0");
+            database.execSQL("ALTER TABLE sites" + " ADD COLUMN `current_progress` REAL NOT NULL DEFAULT 0");
         }
     };
 
