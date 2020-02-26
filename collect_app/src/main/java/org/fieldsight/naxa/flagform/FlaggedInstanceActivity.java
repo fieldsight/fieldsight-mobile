@@ -95,13 +95,13 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private FormsDao formsDao;
     private FSInstancesDao instancesDao;
-    private TextView tvSiteIdentifier;
+
     private TextView tvSiteName;
-    private TextView tvIconText;
+
     private TextView tvSiteAddress;
-    private ImageView ivCircleSite;
+
     private TextView tvSiteMissing;
-    private RelativeLayout cardViewSite;
+    private View cardViewSite;
     private String message;
 
 
@@ -211,12 +211,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
     private void setSiteData(String siteName, String siteIdentifier, String address) {
         tvSiteName.setText(siteName);
-        if (siteName != null && siteName.trim().length() > 0) {
-            tvIconText.setText(siteName.substring(0, 1));
-        }
-        tvSiteIdentifier.setText(siteIdentifier);
         tvSiteAddress.setText(address);
-        ivCircleSite.setImageResource(R.drawable.circle_blue);
     }
 
     @Override
@@ -237,9 +232,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
 
         tvSiteName = findViewById(R.id.tv_site_name);
 //        tvSiteIdentifier = findViewById(R.id.tv_identifier);
-        ivCircleSite = findViewById(R.id.icon_profile);
-        tvIconText = findViewById(R.id.icon_text);
-        tvSiteAddress = findViewById(R.id.txt_secondary);
+        tvSiteAddress = findViewById(R.id.tv_site_address);
 
         cardViewSite = findViewById(R.id.root_layout_message_list_row);
         tvSiteMissing = findViewById(R.id.tv_msg_site_missing);

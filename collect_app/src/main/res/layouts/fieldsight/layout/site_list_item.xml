@@ -18,7 +18,6 @@
         android:id="@+id/iv_site_logo"
         android:layout_width="@dimen/instance_list_icon_size"
         android:layout_height="27dp"
-        android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginRight="@dimen/margin_medium"
         android:src="@drawable/fieldsight_logo" />
