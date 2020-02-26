@@ -121,7 +121,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
         setupRecyclerView();
 
         SiteLocalSource.getInstance()
-                .getBySiteId(siteId)
+                .getBySiteIdAsLiveData(siteId)
                 .observe(this, (loadedSite) -> {
                     if (loadedSite == null) {
                         return;
@@ -350,7 +350,7 @@ public class SiteProfileActivity extends CollectAbstractActivity implements Mult
                         }
                     }
 
-                    CreateSiteActivity.start(this, termsAndLabels.getId(), loadedSite, siteLabel, regionLabel);
+                    CreateSiteActivity.start(this, loadedSite.getProject(), loadedSite.getId(), siteLabel, regionLabel);
 
 
                 });

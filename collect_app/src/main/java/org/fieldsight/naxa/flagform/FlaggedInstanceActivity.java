@@ -190,7 +190,7 @@ public class FlaggedInstanceActivity extends BaseActivity implements View.OnClic
     }
 
     private void setupSiteCard(FieldSightNotification loadedFieldSightNotification) {
-        SiteLocalSource.getInstance().getBySiteId(loadedFieldSightNotification.getSiteId())
+        SiteLocalSource.getInstance().getBySiteIdAsLiveData(loadedFieldSightNotification.getSiteId())
                 .observe(this, site -> {
                     if (site == null) {
                         cardViewSite.setVisibility(View.GONE);

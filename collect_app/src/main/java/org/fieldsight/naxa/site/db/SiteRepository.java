@@ -43,7 +43,7 @@ public class SiteRepository implements BaseRepository<GeneralForm> {
     }
 
     public LiveData<Site> getSiteById(String id) {
-        return localSource.getBySiteId(id);
+        return localSource.getBySiteIdAsLiveData(id);
     }
 
     public LiveData<List<Site>> getAllSites() {
