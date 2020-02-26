@@ -168,7 +168,7 @@ public class SiteDashboardFragment extends Fragment /*implements View.OnClickLis
         /*
          *https://medium.com/@BladeCoder/architecture-components-pitfalls-part-1-9300dd969808
          */
-        SiteLocalSource.getInstance().getBySiteId(loadedSite.getId())
+        SiteLocalSource.getInstance().getBySiteIdAsLiveData(loadedSite.getId())
                 .observe(getViewLifecycleOwner(), site -> {
                     if (site == null) {
                         return;

@@ -36,10 +36,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.bcss.collect.android.BuildConfig;
-import org.bcss.collect.android.R;;
-import org.fieldsight.naxa.project.data.ProjectLocalSource;
-import org.odk.collect.android.application.Collect;
-import org.odk.collect.android.listeners.PermissionListener;
+import org.bcss.collect.android.R;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.DialogFactory;
 import org.fieldsight.naxa.common.ImageFileUtils;
@@ -50,11 +47,15 @@ import org.fieldsight.naxa.login.model.McqOption;
 import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.fieldsight.naxa.login.model.SiteMetaAttribute;
+import org.fieldsight.naxa.project.data.ProjectLocalSource;
+import org.fieldsight.naxa.site.db.SiteLocalSource;
 import org.fieldsight.naxa.v3.network.Region;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.activities.CollectAbstractActivity;
 import org.odk.collect.android.activities.GeoPointActivity;
+import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.PermissionListener;
 import org.odk.collect.android.utilities.PermissionUtils;
 import org.odk.collect.android.utilities.ToastUtils;
 
@@ -77,7 +78,7 @@ import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
-import static org.fieldsight.naxa.common.Constant.EXTRA_OBJECT;
+import static org.fieldsight.naxa.common.Constant.EXTRA_PROJECT_ID;
 import static org.fieldsight.naxa.common.Constant.MetaAttrsType.NUMBER;
 import static org.fieldsight.naxa.common.ViewUtils.loadLocalImage;
 import static org.odk.collect.android.activities.FormEntryActivity.LOCATION_RESULT;
@@ -125,11 +126,11 @@ public class CreateSiteActivity extends CollectAbstractActivity {
     private boolean isUpdate;
 
 
-    public static void start(Context context, @NonNull String project, @Nullable Site site, String siteLabel, String regionLabel) {
+    public static void start(Context context, @NonNull String projectID, @Nullable String siteId, String siteLabel, String regionLabel) {
         Intent intent = new Intent(context, CreateSiteActivity.class);
-        intent.putExtra(EXTRA_OBJECT, project);
-        if (site != null) {
-            intent.putExtra("site", site);
+        intent.putExtra(EXTRA_PROJECT_ID, projectID);
+        if (siteId != null) {
+            intent.putExtra("site", siteId);
         }
         intent.putExtra("site_label", siteLabel);
         intent.putExtra("region_label", regionLabel);
@@ -145,12 +146,15 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         Project project;
 
         try {
-            String projectId = getIntent().getStringExtra(EXTRA_OBJECT);
+            String projectId = getIntent().getStringExtra(EXTRA_PROJECT_ID);
+            String siteId = getIntent().getStringExtra("site");
+            loadedSite = SiteLocalSource.getInstance().getBySiteId(siteId);
             project = ProjectLocalSource.getInstance().getProject(projectId);
-            Timber.i("createsite, project is not null: " + (project!=null));
+            Timber.i("create site, project is not null: %s", (project != null));
         } catch (Exception e) {
-            Timber.e("Can't start activity without PROJECT extra_object");
+            Timber.e("Can't start activity without project extra_object");
             ToastUtils.showLongToast(getString(R.string.msg_failed_to_load));
+            Timber.e(e);
             finish();
             return;
         }
@@ -162,7 +166,7 @@ public class CreateSiteActivity extends CollectAbstractActivity {
         setupViewModel();
         setupToolbar();
 
-        loadedSite = getIntent().getExtras().getParcelable("site");
+
         if (loadedSite != null) {
             loadFormWithValuesSet(loadedSite);
             isUpdate = true;

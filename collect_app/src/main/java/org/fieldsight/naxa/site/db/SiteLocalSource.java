@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import org.fieldsight.naxa.common.BaseLocalDataSource;
 import org.fieldsight.naxa.common.Constant;
 import org.fieldsight.naxa.common.FieldSightDatabase;
+import org.fieldsight.naxa.login.model.Project;
 import org.fieldsight.naxa.login.model.Site;
 import org.odk.collect.android.application.Collect;
 
@@ -88,9 +89,14 @@ public class SiteLocalSource implements BaseLocalDataSource<Site> {
         return dao.getSiteByParentId(siteId);
     }
 
-    public LiveData<Site> getBySiteId(String siteId) {
+    public LiveData<Site> getBySiteIdAsLiveData(String siteId) {
         return dao.getSiteByIdAsLive(siteId);
     }
+
+    public Site getBySiteId(String id) {
+        return dao.getSiteById(id);
+    }
+
 
     public boolean isSiteOffline(String siteId) {
         return dao.getSiteById(siteId).getIsSiteVerified() == Constant.SiteStatus.IS_OFFLINE;
