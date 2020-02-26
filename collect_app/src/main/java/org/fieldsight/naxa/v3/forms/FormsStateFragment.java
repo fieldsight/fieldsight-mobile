@@ -72,7 +72,7 @@ public class FormsStateFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fieldsight_list_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fieldsight_list_fragment_swipe, container, false);
         submissionStatus = getArguments().getString(EXTRA_MESSAGE);
         project = getArguments().getParcelable(EXTRA_OBJECT);
         bindUI(rootView);
