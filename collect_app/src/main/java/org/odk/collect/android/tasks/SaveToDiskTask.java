@@ -316,19 +316,25 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
             writeFile(payload, submissionXml.getAbsolutePath());
 
             // see if the form is encrypted and we can encrypt it...
-            EncryptedFormInformation formInfo = EncryptionUtils.getEncryptedFormInformation(uri,
-                    formController.getSubmissionMetadata());
-            if (formInfo != null) {
-                // if we are encrypting, the form cannot be reopened afterward
-                canEditAfterCompleted = false;
-                // and encrypt the submission (this is a one-way operation)...
+            try {
+                EncryptedFormInformation formInfo = EncryptionUtils.getEncryptedFormInformation(uri,
+                        formController.getSubmissionMetadata());
+                if (formInfo != null) {
+                    // if we are encrypting, the form cannot be reopened afterward
+                    canEditAfterCompleted = false;
+                    // and encrypt the submission (this is a one-way operation)...
 
-                publishProgress(
-                        Collect.getInstance().getString(R.string.survey_saving_encrypting_message));
+                    publishProgress(
+                            Collect.getInstance().getString(R.string.survey_saving_encrypting_message));
 
-                EncryptionUtils.generateEncryptedSubmission(instanceXml, submissionXml, formInfo);
-                isEncrypted = true;
+                    EncryptionUtils.generateEncryptedSubmission(instanceXml, submissionXml, formInfo);
+                    isEncrypted = true;
+                }
+            } catch (EncryptionException ecne) {
+                // Encription failed, continue regardless...
+                isEncrypted = false;
             }
+
 
             // At this point, we have:
             // 1. the saved original instanceXml,
