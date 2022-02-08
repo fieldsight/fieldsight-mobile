@@ -1,3 +1,5 @@
+# This project is no longer maintained!
+
 # FieldSight Mobile 
 ![Platform](https://img.shields.io/badge/platform-Android-green)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
